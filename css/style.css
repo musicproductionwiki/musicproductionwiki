@@ -1949,19 +1949,17 @@ code {
 }
 
 /* ================================================================
-   SIDEBAR FIX — targets actual DOM structure
+   SIDEBAR FIX — handles both DOM structures
    ================================================================ */
 
-/* Make main a grid with sidebar as second column */
+/* Case 1: aside is outside article-layout (broken HTML) */
 main.container#main-content {
   display: grid;
   grid-template-columns: 1fr 280px;
-  grid-template-rows: auto;
   gap: 0 3.5rem;
   align-items: start;
 }
 
-/* article-layout takes up left column, spans all rows */
 main.container#main-content .article-layout {
   grid-column: 1;
   grid-row: 1;
@@ -1969,7 +1967,6 @@ main.container#main-content .article-layout {
   padding: 2.5rem 0 5rem;
 }
 
-/* aside goes into right column */
 main.container#main-content > aside {
   grid-column: 2;
   grid-row: 1;
@@ -1978,11 +1975,35 @@ main.container#main-content > aside {
   padding-top: 2.5rem;
 }
 
+/* Case 2: aside is correctly inside article-layout (sidechain article) */
+main.container#main-content .article-layout {
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: 3.5rem;
+  align-items: start;
+}
+
+main.container#main-content .article-layout > article {
+  min-width: 0;
+  max-width: var(--content-w);
+  width: 100%;
+}
+
+main.container#main-content .article-layout > aside {
+  position: sticky;
+  top: 1.5rem;
+}
+
 @media (max-width: 900px) {
   main.container#main-content {
     display: block;
   }
-  main.container#main-content > aside {
+  main.container#main-content .article-layout {
+    display: block;
+    padding: 1.5rem 0 3rem;
+  }
+  main.container#main-content > aside,
+  main.container#main-content .article-layout > aside {
     position: static;
     padding-top: 0;
     margin-top: 2rem;
