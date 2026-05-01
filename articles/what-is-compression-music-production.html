@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="What is compression in music production? The clearest explanation on the internet. Threshold, ratio, attack, release, knee — all explained with real examples from real records." />
-  <title>What Is Compression in Music Production? The Clear Explanation — MusicProductionWiki.com</title>
+  <meta name="description" content="What is compression in music production? The complete guide — how compressors work, attack and release explained, VCA vs FET vs optical, settings for every instrument, and what the pros actually do." />
+  <title>What Is Compression in Music Production — MusicProductionWiki.com</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
@@ -12,14 +12,194 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎛️</text></svg>" />
   <style>
     #readingProgress {
-      position: fixed;
-      top: 0; left: 0;
-      height: 3px;
-      background: var(--teal);
-      width: 0%;
-      z-index: 200;
+      position: fixed; top: 0; left: 0;
+      height: 3px; background: var(--teal);
+      width: 0%; z-index: 200;
       transition: width 0.1s linear;
     }
+    .quick-answer {
+      background: linear-gradient(135deg, rgba(0,212,168,0.08), rgba(167,139,250,0.06));
+      border: 1px solid rgba(0,212,168,0.3);
+      border-left: 4px solid var(--teal);
+      border-radius: 8px;
+      padding: 1.5rem 1.75rem;
+      margin: 1.75rem 0;
+    }
+    .quick-answer-label {
+      font-size: .7rem; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--teal); margin-bottom: .6rem;
+    }
+    .quick-answer p { font-size: 1rem; line-height: 1.65; color: var(--text-primary); margin: 0; }
+    .skill-badge {
+      display: inline-block; font-size: .68rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      padding: .2rem .6rem; border-radius: 4px;
+      margin-left: .6rem; vertical-align: middle; position: relative; top: -2px;
+    }
+    .skill-badge--beginner { background: rgba(0,212,168,0.15); color: var(--teal); }
+    .skill-badge--intermediate { background: rgba(251,191,36,0.15); color: #fbbf24; }
+    .skill-badge--advanced { background: rgba(167,139,250,0.15); color: var(--purple); }
+    .settings-table {
+      width: 100%; border-collapse: collapse; font-size: .85rem;
+      margin: 1.75rem 0; overflow: hidden;
+      border-radius: 8px; border: 1px solid var(--border-subtle);
+    }
+    .settings-table th {
+      background: var(--bg-elevated); color: var(--text-primary);
+      font-family: var(--font-display); font-weight: 600;
+      font-size: .78rem; letter-spacing: .04em; text-transform: uppercase;
+      padding: .75rem 1rem; text-align: left; border-bottom: 1px solid var(--border-default);
+    }
+    .settings-table td {
+      padding: .7rem 1rem; border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-secondary); line-height: 1.5;
+    }
+    .settings-table tr:last-child td { border-bottom: none; }
+    .settings-table tr:hover td { background: var(--bg-surface); }
+    .settings-table td:first-child { color: var(--text-primary); font-weight: 500; }
+    .settings-table .mono { font-family: var(--font-mono); font-size: .82rem; color: var(--teal); }
+    .settings-table-label {
+      font-size: .72rem; color: var(--text-muted); text-align: center;
+      margin-top: -.5rem; margin-bottom: 1.75rem; font-style: italic;
+    }
+    .decision-framework {
+      background: var(--bg-surface); border: 1px solid var(--border-subtle);
+      border-radius: 8px; padding: 1.5rem 1.75rem; margin: 1.75rem 0;
+    }
+    .decision-framework-title {
+      font-family: var(--font-display); font-size: .8rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase; color: var(--purple); margin-bottom: 1rem;
+    }
+    .decision-item {
+      display: flex; gap: 1rem; padding: .65rem 0;
+      border-bottom: 1px solid var(--border-subtle);
+      font-size: .88rem; line-height: 1.55;
+    }
+    .decision-item:last-child { border-bottom: none; }
+    .decision-if { color: var(--text-muted); font-style: italic; min-width: 2rem; }
+    .decision-then { color: var(--text-primary); }
+    .decision-then strong { color: var(--teal); }
+    .listening-prescription {
+      background: var(--bg-void); border: 1px solid var(--border-default);
+      border-radius: 8px; padding: 1.5rem 1.75rem; margin: 1.75rem 0; position: relative;
+    }
+    .listening-prescription::before {
+      content: '🎧'; position: absolute; top: -14px; left: 1.5rem;
+      background: var(--bg-void); padding: 0 .4rem; font-size: 1.1rem;
+    }
+    .listening-prescription-label {
+      font-size: .7rem; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--purple); margin-bottom: .75rem;
+    }
+    .listening-prescription p { font-size: .9rem; line-height: 1.7; color: var(--text-secondary); margin: 0 0 .5rem; }
+    .listening-prescription p:last-child { margin-bottom: 0; }
+    .listening-record { font-weight: 600; color: var(--text-primary); }
+    .pro-reference {
+      border-left: 3px solid var(--purple); padding: .75rem 1.25rem;
+      margin: 1.25rem 0; background: rgba(167,139,250,0.05); border-radius: 0 6px 6px 0;
+    }
+    .pro-reference-label {
+      font-size: .68rem; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--purple); margin-bottom: .35rem;
+    }
+    .pro-reference p { font-size: .88rem; line-height: 1.6; color: var(--text-secondary); margin: 0; }
+    .pro-reference strong { color: var(--text-primary); }
+    .mistake-box {
+      background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.2);
+      border-left: 4px solid #ef4444; border-radius: 8px;
+      padding: 1.25rem 1.5rem; margin: 1.25rem 0;
+    }
+    .mistake-box-label {
+      font-size: .68rem; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: #ef4444; margin-bottom: .4rem;
+    }
+    .mistake-box p { font-size: .88rem; line-height: 1.6; color: var(--text-secondary); margin: 0; }
+    .genre-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem; margin: 1.5rem 0;
+    }
+    .genre-card {
+      background: var(--bg-surface); border: 1px solid var(--border-subtle);
+      border-radius: 8px; padding: 1.1rem 1.25rem;
+    }
+    .genre-card-name {
+      font-family: var(--font-display); font-size: .85rem; font-weight: 700;
+      color: var(--teal); margin-bottom: .4rem;
+    }
+    .genre-card p { font-size: .82rem; color: var(--text-secondary); line-height: 1.55; margin: 0; }
+    .exercise-block {
+      background: var(--bg-surface); border: 1px solid var(--border-subtle);
+      border-radius: 8px; padding: 1.5rem 1.75rem; margin: 1.25rem 0;
+    }
+    .exercise-header { display: flex; align-items: center; gap: .75rem; margin-bottom: 1rem; }
+    .exercise-badge {
+      font-size: .68rem; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; padding: .25rem .7rem; border-radius: 4px;
+    }
+    .exercise-badge--beginner { background: rgba(0,212,168,0.15); color: var(--teal); }
+    .exercise-badge--intermediate { background: rgba(251,191,36,0.15); color: #fbbf24; }
+    .exercise-badge--advanced { background: rgba(167,139,250,0.15); color: var(--purple); }
+    .exercise-title { font-family: var(--font-display); font-size: .95rem; font-weight: 700; color: var(--text-primary); }
+    .exercise-block ol { margin: 0; padding-left: 1.25rem; color: var(--text-secondary); font-size: .88rem; line-height: 1.7; }
+    .exercise-block ol li { margin-bottom: .4rem; }
+    .version-line {
+      font-size: .75rem; color: var(--text-muted); font-family: var(--font-mono);
+      background: var(--bg-surface); border: 1px solid var(--border-subtle);
+      border-radius: 4px; padding: .4rem .75rem; margin: .75rem 0 1.5rem; display: inline-block;
+    }
+    .go-deeper {
+      background: var(--bg-surface); border: 1px solid var(--border-subtle);
+      border-radius: 10px; padding: 1.75rem; margin: 2.5rem 0;
+    }
+    .go-deeper-title {
+      font-family: var(--font-display); font-size: 1.1rem; font-weight: 700;
+      color: var(--text-primary); margin-bottom: 1.25rem;
+    }
+    .go-deeper-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
+    .go-deeper-item {
+      background: var(--bg-elevated); border: 1px solid var(--border-subtle);
+      border-radius: 7px; padding: 1rem 1.1rem;
+    }
+    .go-deeper-item-label {
+      font-size: .65rem; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--teal); margin-bottom: .35rem;
+    }
+    .go-deeper-item a {
+      font-size: .88rem; font-weight: 600; color: var(--text-primary);
+      text-decoration: none; line-height: 1.4; display: block;
+    }
+    .go-deeper-item a:hover { color: var(--teal); }
+    .go-deeper-item p { font-size: .78rem; color: var(--text-muted); margin: .3rem 0 0; }
+    .affiliate-cta {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: rgba(0,212,168,0.1); border: 1px solid rgba(0,212,168,0.25);
+      color: var(--teal); font-size: .82rem; font-weight: 600;
+      padding: .45rem .9rem; border-radius: 6px; text-decoration: none; transition: background .15s;
+    }
+    .affiliate-cta:hover { background: rgba(0,212,168,0.18); }
+    .citation { font-size: .78rem; color: var(--text-muted); font-style: italic; margin-top: .25rem; }
+    .diagram-wrap {
+      margin: 1.75rem 0; background: var(--bg-void); border: 1px solid var(--border-subtle);
+      border-radius: 8px; padding: 1.5rem; overflow-x: auto;
+    }
+    .diagram-caption { font-size: .78rem; color: var(--text-muted); text-align: center; margin-top: .75rem; font-style: italic; }
+    .compressor-type-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1rem; margin: 1.5rem 0;
+    }
+    .compressor-type-card {
+      background: var(--bg-surface); border: 1px solid var(--border-subtle);
+      border-radius: 8px; padding: 1.25rem;
+    }
+    .compressor-type-name {
+      font-family: var(--font-display); font-size: .95rem; font-weight: 700;
+      color: var(--text-primary); margin-bottom: .25rem;
+    }
+    .compressor-type-example {
+      font-size: .72rem; font-weight: 600; letter-spacing: .06em;
+      text-transform: uppercase; color: var(--teal); margin-bottom: .6rem;
+    }
+    .compressor-type-card p { font-size: .83rem; color: var(--text-secondary); line-height: 1.6; margin: 0; }
   </style>
 </head>
 <body>
@@ -34,6 +214,9 @@
     </a>
     <nav class="primary-nav" aria-label="Primary navigation">
       <ul class="nav-list">
+        <li><a href="../categories/reviews.html">Reviews</a></li>
+        <li><a href="../categories/comparisons.html">Comparisons</a></li>
+        <li><a href="../categories/ai-music.html">AI Music</a></li>
         <li><a href="../categories/daws.html">DAWs</a></li>
         <li><a href="../categories/plugins.html">Plugins</a></li>
         <li><a href="../categories/gear.html">Gear</a></li>
@@ -67,6 +250,9 @@
     </button>
   </form>
   <ul class="nav-list">
+    <li><a href="../categories/reviews.html">Reviews</a></li>
+    <li><a href="../categories/comparisons.html">Comparisons</a></li>
+    <li><a href="../categories/ai-music.html">AI Music</a></li>
     <li><a href="../categories/daws.html">DAWs</a></li>
     <li><a href="../categories/plugins.html">Plugins</a></li>
     <li><a href="../categories/gear.html">Gear</a></li>
@@ -82,7 +268,7 @@
     <ol>
       <li><a href="../index.html">Home</a></li>
       <li><a href="../categories/techniques.html">Techniques</a></li>
-      <li><span aria-current="page">What Is Compression in Music Production</span></li>
+      <li><span aria-current="page">What Is Compression</span></li>
     </ol>
   </nav>
 </div>
@@ -96,126 +282,474 @@
         <div class="article-tags">
           <span class="article-tag teal">Techniques</span>
         </div>
-        <h1 id="articleTitle">What Is Compression in Music Production? The Clear Explanation</h1>
+        <h1 id="articleTitle">What Is Compression in Music Production</h1>
+        <div class="version-line">First published April 2026 · Updated May 2026 — expanded compressor type guide, added genre applications, new pro record references</div>
         <div class="article-header-meta">
           <div class="article-author">
             <div class="author-avatar" aria-hidden="true">MP</div>
             <span class="author-name">The Music Production Wiki Team</span>
           </div>
           <span class="meta-divider" aria-hidden="true"></span>
-          <span class="meta-item">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            Updated April 2026
-          </span>
+          <span class="meta-item">Updated May 2026</span>
           <span class="meta-divider" aria-hidden="true"></span>
-          <span class="meta-item">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            12 min read
-          </span>
+          <span class="meta-item">18 min read</span>
           <span class="meta-divider" aria-hidden="true"></span>
-          <span class="meta-item">Beginner</span>
+          <span class="meta-item">Beginner → Advanced</span>
         </div>
       </header>
 
       <div class="article-body">
-<p>Every record you have ever heard has been compressed. The punchy kick drum that hits you in the chest. The vocal that sits perfectly in the mix regardless of whether the singer is whispering or belting. The bass that feels consistent and present from note to note. The drums that sound like they were recorded in a room twice the size of the actual room. All of these are the results of compression applied with intention and skill. Understanding compression — really understanding it, not just knowing the names of the parameters — is the single biggest leap most producers make on their journey from amateur to professional results.</p>
 
-        <h2>What Compression Actually Does</h2>
+        <p>Most producers learn compression backwards. They learn what the knobs do before they understand what problem compression is solving — and that single mistake follows them for years. You end up with over-compressed drums that sound like cardboard, vocals that pump and breathe at all the wrong moments, and mixes that feel flat no matter how much you tweak. The fix isn't a better plugin. It's understanding what a compressor actually does to audio, why it was invented, and what it's supposed to sound like when it's working. Once that clicks, the knobs start making sense on their own.</p>
 
-        <p>A compressor is a device — hardware or software — that automatically reduces the gain of an audio signal when that signal exceeds a level you specify. That's it. That's the core function. Everything else — the character, the feel, the musicality, the way different compressors color sound differently — emerges from how that simple function is implemented and controlled.</p>
-
-        <p>Think about what happens when a vocalist performs a song. In the quiet, intimate verse, they might sing softly — the signal level is low. In the powerful chorus, they belt — the signal level is dramatically higher. If you set your fader level to make the verse audible, the chorus will be too loud. If you set it to make the chorus sit correctly, the verse will be too quiet. A compressor solves this problem automatically by reducing the gain of the loud sections — bringing the dynamic range of the performance into a range that can be managed with a single fader position.</p>
-
-        <p>This is compression's most fundamental application: dynamic range control. But it does much more than manage inconsistent performances. The way a compressor controls dynamics — the speed at which it responds, the amount it reduces gain, the way it releases — shapes the feel, the punch, and the character of every sound it touches.</p>
-
-        <h2>The Parameters: What Each Control Actually Does</h2>
-
-        <p>Every compressor — from the simplest free plugin to the most expensive hardware unit — is built around the same core set of controls. Understanding each one transforms compression from a mystery into a tool you can use with precision and intention.</p>
-
-        <h3>Threshold</h3>
-
-        <p>The threshold is the level above which the compressor begins to reduce gain. Set the threshold at -20dBFS and the compressor activates whenever the signal exceeds -20dBFS. Set it at -10dBFS and the compressor only activates on the loudest peaks. Everything below the threshold passes through unaffected.</p>
-
-        <p>Lower threshold settings mean more compression — more of the signal's dynamic range is being managed. Higher threshold settings mean compression only affects the loudest moments. The threshold, combined with the ratio, determines how much the compressor is working and when.</p>
-
-        <h3>Ratio</h3>
-
-        <p>The ratio determines how much the compressor reduces gain once the signal has crossed the threshold. A ratio of 4:1 means that for every 4dB the signal rises above the threshold, only 1dB passes through. A ratio of 2:1 is gentle compression — the output rises 1dB for every 2dB above the threshold. A ratio of 10:1 is aggressive compression — the output barely rises regardless of how far the input exceeds the threshold. A ratio of infinity:1 is limiting — the signal is prevented from exceeding the threshold entirely.</p>
-
-        <p>Low ratios (1.5:1 to 3:1) are used for gentle, transparent compression — controlling dynamics without the listener being aware of the processing. Medium ratios (4:1 to 6:1) are the workhorse range for most mixing applications. High ratios (8:1 and above) create obvious, effect-like compression — the pumping effect in EDM, the aggressive squash on a parallel compressed drum bus.</p>
-
-        <h3>Attack</h3>
-
-        <p>The attack controls how quickly the compressor responds to a signal that has crossed the threshold. Fast attack times — 0.1ms to 5ms — mean the compressor engages almost immediately when the threshold is crossed. Slow attack times — 20ms to 100ms or more — mean the compressor allows the initial transient of a sound to pass through before the gain reduction begins.</p>
-
-        <p>This is where compression gets creative rather than just corrective. A slow attack on a kick drum lets the initial click and punch of the transient pass through before compression engages — preserving the impact that makes a kick drum feel physical. A fast attack clamps down on the transient immediately — reducing the punch but creating a more controlled, consistent sound. Neither is right or wrong. Both are tools for shaping the character of a sound.</p>
-
-        <p>The most common beginner mistake with attack: setting it too fast on everything, which eliminates the natural transients that give music its feel and rhythm. Learn to use attack as a creative tool, not just a technical setting.</p>
-
-        <h3>Release</h3>
-
-        <p>The release controls how quickly the compressor stops reducing gain after the signal has fallen below the threshold. Fast release times mean the compressor snaps back to unity gain quickly. Slow release times mean the compression lingers for longer after the signal has dropped below the threshold.</p>
-
-        <p>Release is the parameter most responsible for the musical feel of a compressor. A release time that is in musical relationship with the tempo of the track — releasing between beats rather than mid-beat — makes compression feel natural and rhythmic. A release that is too fast creates a pumping artifact — the gain reduction snapping back audibly between notes. A release that is too slow over-compresses quiet passages as the compressor recovers from loud ones.</p>
-
-        <p>A starting point for musically-timed release: at 120 BPM, a quarter note is 500ms. A release of 100–200ms releases comfortably between quarter-note hits. Adjust by ear until the compression breathes with the music rather than against it.</p>
-
-        <h3>Knee</h3>
-
-        <p>The knee controls how gradually the compressor transitions from its uncompressed to its compressed state as the signal approaches and crosses the threshold. A hard knee means the transition is immediate — no compression below the threshold, full ratio compression above it. A soft knee means the compressor begins to engage gradually before the signal reaches the threshold, creating a smoother, more transparent transition that is less audible on transient-heavy material.</p>
-
-        <p>For most mixing applications, a medium to soft knee produces more natural-sounding compression. Hard knee settings are useful for limiting applications where you want precise, predictable gain control.</p>
-
-        <h3>Makeup Gain</h3>
-
-        <p>Compression reduces gain. After compression, the signal is quieter than it was before — sometimes significantly. Makeup gain restores the signal to an appropriate level after compression has done its work. Without makeup gain, bypassing the compressor makes the uncompressed signal appear to sound better simply because it's louder — a psychoacoustic trick that fools producers into undervaluing what the compression is actually doing.</p>
-
-        <p>Always match your compressed output level to your uncompressed input level when evaluating whether compression is working. Level-matched listening reveals what the compression is actually doing to the sound, rather than what louder always sounds like (better, to our ears, until we train ourselves otherwise).</p>
-
-        <h2>Types of Compressors and Their Characters</h2>
-
-        <p>Not all compressors sound the same. Beyond the shared control set, different compressor designs have different characters — different ways of coloring sound, different transient responses, different harmonic profiles. Understanding the major compressor types helps you choose the right tool for each application.</p>
-
-        <p><strong>VCA compressors</strong> (Voltage Controlled Amplifier) are fast, precise, and punchy. The SSL G-Bus compressor — standard on virtually every major mixing desk built in the last forty years — is a VCA design. VCA compressors are the workhorses of mixing: fast attack and release, predictable behavior, and the ability to handle a wide range of material. The FabFilter Pro-C2 and Waves SSL G-Master Buss Compressor are the most used software emulations.</p>
-
-        <p><strong>FET compressors</strong> (Field Effect Transistor) are the fastest compressors available — capable of attack times under 1ms — and are responsible for some of the most iconic sounds in recorded music. The Universal Audio 1176 is the defining FET compressor: aggressive, characterful, and responsible for the compressed vocal sound on records from Led Zeppelin to modern pop. The "All Buttons In" mode — where all four ratio buttons are engaged simultaneously — creates a unique pumping compression artifact that has appeared on records for fifty years.</p>
-
-        <p><strong>Optical compressors</strong> use a light-dependent resistor to control gain reduction — a design that produces an inherently musical, program-dependent response that is difficult to describe but immediately recognizable when you hear it. The Teletronix LA-2A is the defining optical compressor, used on more commercial vocal recordings than any other compressor in history. Its two-control interface — Peak Reduction and Output — strips compression down to its essentials and produces results that remain exceptional despite their simplicity.</p>
-
-        <p><strong>Variable-mu tube compressors</strong> are the slowest and most musical of the major compressor types — their gain reduction is driven by the saturation characteristics of tubes, creating a warmth and glue that is difficult to replicate with other designs. The Fairchild 670 and Manley Variable Mu are the defining examples. On a mix bus or mastering chain, variable-mu compression adds a cohesion and density that producers describe as making a collection of tracks feel like a single piece of music rather than individual elements playing simultaneously.</p>
-
-        <h2>The Most Common Compression Mistakes</h2>
-
-        <p>Over-compression is the most common mistake and the hardest to hear when you're making it — because compressed audio often sounds impressive in isolation and only reveals its damage in the context of a full mix or on different playback systems. The signs of over-compression: loss of punch and impact on percussive elements, vocals that feel robotic and lifeless, mixes that sound loud but fatiguing and flat after thirty seconds of listening.</p>
-
-        <p>Compressing everything is the second most common mistake. Not every track in a mix needs a compressor. A well-recorded piano that sits naturally in the mix requires no compression. A synth pad with a slow attack and consistent level requires no compression. Apply compression where dynamic control or character is needed — not as a default step in every channel strip.</p>
-
-        <p>Ignoring the gain reduction meter is the third most common mistake. Watch your gain reduction meter while setting threshold and ratio. If the needle is pinned permanently, you're over-compressing. If it never moves, your threshold is set too high. The gain reduction should be working dynamically — engaging on the loudest moments and releasing on the quieter ones — breathing with the music rather than crushing it uniformly.</p>
-
-      </div>
-        <div class="info-box">
-          <h3>The Exercise That Changes How You Hear Compression</h3>
-          <p>Load a compressor on a drum bus. Set ratio to 4:1, attack to 30ms, release to 150ms. Slowly lower the threshold until you see 6–8dB of gain reduction on the loudest hits. Apply 6dB of makeup gain. Now bypass the compressor. Listen to the difference — not just in loudness, but in the feel of the drums. Notice how the compressed version has more sustain, more room, more glue between the elements. Now adjust the attack from very fast (1ms) to very slow (100ms) and listen to how the transient changes — how the punch appears and disappears. That exercise, done once with real attention, teaches you more about compression than reading about it ever will.</p>
+        <div class="quick-answer">
+          <div class="quick-answer-label">Quick Answer</div>
+          <p>Compression reduces the dynamic range of audio — the difference between the quietest and loudest parts of a signal. When a sound exceeds a set threshold level, the compressor automatically turns it down by a controlled amount, then optionally turns the whole signal back up so nothing is lost in volume. The result is a more consistent, controlled sound that sits better in a mix, translates better on different playback systems, and can be shaped to add punch, glue, or sustain depending on how the settings are dialed in.</p>
         </div>
-      </div>
+
+        <div class="info-box">
+          <strong>What you'll learn:</strong> How compression works at the signal level, what every parameter actually does with real numbers, the four main compressor types and when to use each, starting-point settings for every instrument, what the pros do on specific commercial records, how compression differs across genres, the three mistakes that ruin most mixes, and practical exercises to train your ear to hear compression.
+        </div>
+
+
+        <h2 id="what-compression-does">What Compression Actually Does <span class="skill-badge skill-badge--beginner">Beginner</span></h2>
+
+        <p>Before touching a single knob, get this picture in your head. Imagine a singer recording a vocal take. The quiet, intimate passages are sitting at around -24dBFS on your meter. The big emotional moments peak at -6dBFS. That's an 18dB difference in level — a significant range that creates real problems when you try to place that vocal in a mix. The loud parts mask everything else. The quiet parts get buried. EQ can't fix this. Volume automation helps but takes forever and sounds unnatural. Compression is the tool designed specifically for this problem.</p>
+
+        <p>What a compressor does is simple in principle: it watches the level of the incoming signal, and whenever that signal exceeds a set threshold, it reduces the gain by a controlled ratio. If you set a 4:1 ratio and your threshold is at -18dBFS, a signal that goes 4dB over the threshold will only come out 1dB over it. The compressor is doing the work of turning it down — automatically, in real time, with timing you control. After compression, you use makeup gain to bring the overall level back up. Now the peaks are controlled, the quiet parts are relatively louder, and the whole signal occupies a more consistent level range. That's the whole concept.</p>
+
+        <p>The reason this matters so much in mixing is that every element in your mix is competing for space in the same frequency and dynamic range. Compression is what makes sounds sit together instead of fighting each other. It's what makes a kick drum cut through without being deafeningly loud. It's what keeps a vocal intelligible throughout its performance without constant volume riding. It's what makes a mix feel like a cohesive piece of music rather than a collection of separate sounds playing at the same time.</p>
+
+        <p>Historically, the need for dynamic control predates multitrack recording. The first audio compressors — called limiters — were developed in the 1930s for broadcast radio, where sudden loud peaks could overdrive transmitters and cause signal distortion. Western Electric built some of the earliest devices. The technology migrated into recording studios during the 1950s as engineers realized the same problem existed in cutting vinyl records: a groove that was too wide from a loud peak could cause the needle to skip. Controlling dynamics wasn't an artistic choice then — it was a technical necessity.</p>
+        <p class="citation">Source: Owsinski, Bobby. The Mixing Engineer's Handbook, 4th Edition. (2017). Alfred Music.</p>
+
+        <p>The artistic dimension came later, when engineers discovered that compressors didn't just control level — they shaped the character of sounds in ways that were often more pleasing than the uncompressed original. A compressed vocal felt more present. Compressed drums felt more powerful. The tools built for technical necessity became essential creative instruments.</p>
+
+
+        <h2 id="every-parameter">Every Parameter Explained with Real Numbers <span class="skill-badge skill-badge--beginner">Beginner</span></h2>
+
+        <p>Six parameters appear on almost every compressor. Understanding what each one actually does — not just what it says on the label — is what separates producers who use compression with intention from those who use it by feel and hope.</p>
+
+        <p><strong>Threshold</strong> is the level at which the compressor starts working. Set it at -18dBFS and signals below -18dBFS pass through unaffected. Signals above -18dBFS get compressed. The practical approach: start with a moderate threshold and watch your gain reduction meter. You want to see the needle moving — that means compression is happening — but you don't want it pinned at maximum. Somewhere between 2dB and 8dB of gain reduction is a healthy range for most applications.</p>
+
+        <p><strong>Ratio</strong> is how aggressively the compressor reduces the signal above the threshold. A 2:1 ratio means that for every 2dB the signal goes over the threshold, only 1dB comes out — gentle compression that retains dynamics. A 4:1 ratio is moderate. An 8:1 ratio is aggressive. A ratio of 10:1 or higher is technically limiting rather than compression — almost nothing gets through over the threshold. For most mixing purposes, 2:1 to 4:1 handles the majority of situations. Higher ratios are for problem-solving specific peaks or for creative effects like the heavily compressed New York parallel drums sound.</p>
+
+        <p><strong>Attack</strong> is how quickly the compressor responds once the signal crosses the threshold. This is the most misunderstood parameter in music production. A fast attack (1–5ms) clamps down almost immediately, grabbing the transient — the sharp initial peak of a sound — before it gets through. A slow attack (30–50ms) lets the transient pass before the compressor engages. Here's the critical insight: punch and presence in a sound come from the transient. If you compress the transient too aggressively with a fast attack, you lose the punch. A slower attack preserves the hit and lets the compressor control the body of the sound instead. This is why professional engineers often use slower attack times on drums and faster attacks on vocals or bass — they're making deliberate choices about what they want to preserve versus control.</p>
+
+        <p><strong>Release</strong> is how quickly the compressor stops compressing after the signal drops below the threshold. A fast release (50ms or less) lets the compressor recover quickly, which can cause audible pumping if set too fast on sustained material. A slow release (200ms or more) keeps the compressor working longer, creating a smoother, more consistent level but potentially missing the next transient with any compression still applied. The best release setting for drums is often tied to the tempo of the track — set the release so the compressor has just finished working before the next beat hits, which creates a rhythmic breathing effect that enhances rather than fights the groove.</p>
+
+        <p><strong>Knee</strong> controls how the compressor transitions into compression as the signal approaches the threshold. A hard knee means compression kicks in abruptly the moment the threshold is crossed — which can sound unnatural on signals that ease into peaks, like vocals. A soft knee eases into compression gradually over a range around the threshold, which sounds more transparent and natural on sustained sounds. Hard knee settings work well for drums where you want a definitive compression character. Soft knee settings are better for vocals, acoustic instruments, and mix bus compression where you want the processing to be invisible.</p>
+
+        <p><strong>Makeup Gain</strong> compensates for the volume reduction caused by compression. Because you're turning down the loud parts, the overall signal comes out quieter than it went in. Makeup gain brings it back to an appropriate level. The critical mistake here: if you bypass your compressor and the compressed version sounds louder, you can't make a fair judgment about whether the compression is actually improving the sound. Always level-match your bypassed and compressed signals when evaluating whether the compression is doing what you want.</p>
+
+
+        <h2 id="signal-flow">How a Compressor Fits in Your Signal Chain</h2>
+
+        <div class="diagram-wrap">
+          <svg viewBox="0 0 720 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:720px;display:block;margin:0 auto;">
+            <defs>
+              <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L8,3 z" fill="#00d4a8"/>
+              </marker>
+            </defs>
+            <!-- Input -->
+            <rect x="10" y="75" width="110" height="55" rx="6" fill="#1a2332" stroke="#00d4a8" stroke-width="1.5"/>
+            <text x="65" y="99" text-anchor="middle" fill="#e2e8f0" font-family="Outfit,sans-serif" font-size="11" font-weight="600">Input Signal</text>
+            <text x="65" y="116" text-anchor="middle" fill="#94a3b8" font-family="Outfit,sans-serif" font-size="10">Dynamic audio</text>
+            <!-- Arrow -->
+            <line x1="120" y1="102" x2="158" y2="102" stroke="#00d4a8" stroke-width="1.5" marker-end="url(#arr)"/>
+            <!-- Detector -->
+            <rect x="163" y="55" width="120" height="95" rx="6" fill="#131920" stroke="#a78bfa" stroke-width="1.5" stroke-dasharray="4,2"/>
+            <text x="223" y="78" text-anchor="middle" fill="#a78bfa" font-family="Outfit,sans-serif" font-size="10" font-weight="600">SIDECHAIN DETECTOR</text>
+            <text x="223" y="96" text-anchor="middle" fill="#94a3b8" font-family="Outfit,sans-serif" font-size="10">Watches signal level</text>
+            <text x="223" y="112" text-anchor="middle" fill="#94a3b8" font-family="Outfit,sans-serif" font-size="10">vs Threshold</text>
+            <text x="223" y="128" text-anchor="middle" fill="#94a3b8" font-family="Outfit,sans-serif" font-size="10">Sends control signal ↓</text>
+            <!-- Arrow down to gain -->
+            <line x1="223" y1="150" x2="223" y2="170" stroke="#a78bfa" stroke-width="1.2" marker-end="url(#arr)"/>
+            <!-- Gain Reduction -->
+            <rect x="163" y="170" width="120" height="40" rx="6" fill="#1a2332" stroke="#ef4444" stroke-width="1.5"/>
+            <text x="223" y="186" text-anchor="middle" fill="#e2e8f0" font-family="Outfit,sans-serif" font-size="10" font-weight="600">Gain Reduction Element</text>
+            <text x="223" y="200" text-anchor="middle" fill="#94a3b8" font-family="Outfit,sans-serif" font-size="10">VCA / FET / Opto / Tube</text>
+            <!-- Arrow right from input through gain -->
+            <line x1="120" y1="115" x2="120" y2="190" stroke="#64748b" stroke-width="1" stroke-dasharray="3,2"/>
+            <line x1="120" y1="190" x2="160" y2="190" stroke="#64748b" stroke-width="1" stroke-dasharray="3,2"/>
+            <!-- Arrow out -->
+            <line x1="283" y1="102" x2="320" y2="102" stroke="#00d4a8" stroke-width="1.5" marker-end="url(#arr)"/>
+            <line x1="283" y1="190" x2="310" y2="190" stroke="#00d4a8" stroke-width="1" stroke-dasharray="2,2"/>
+            <line x1="310" y1="190" x2="310" y2="102" stroke="#00d4a8" stroke-width="1" stroke-dasharray="2,2"/>
+            <!-- Makeup Gain -->
+            <rect x="325" y="75" width="110" height="55" rx="6" fill="#1a2332" stroke="#fbbf24" stroke-width="1.5"/>
+            <text x="380" y="99" text-anchor="middle" fill="#e2e8f0" font-family="Outfit,sans-serif" font-size="11" font-weight="600">Makeup Gain</text>
+            <text x="380" y="116" text-anchor="middle" fill="#94a3b8" font-family="Outfit,sans-serif" font-size="10">Restore output level</text>
+            <!-- Arrow -->
+            <line x1="435" y1="102" x2="473" y2="102" stroke="#00d4a8" stroke-width="1.5" marker-end="url(#arr)"/>
+            <!-- Output -->
+            <rect x="478" y="75" width="110" height="55" rx="6" fill="#1a2332" stroke="#00d4a8" stroke-width="1.5"/>
+            <text x="533" y="99" text-anchor="middle" fill="#e2e8f0" font-family="Outfit,sans-serif" font-size="11" font-weight="600">Output Signal</text>
+            <text x="533" y="116" text-anchor="middle" fill="#94a3b8" font-family="Outfit,sans-serif" font-size="10">Controlled dynamics</text>
+            <!-- Labels -->
+            <text x="65" y="50" text-anchor="middle" fill="#64748b" font-family="JetBrains Mono,monospace" font-size="9">Wide dynamic range</text>
+            <text x="533" y="50" text-anchor="middle" fill="#64748b" font-family="JetBrains Mono,monospace" font-size="9">Narrower dynamic range</text>
+          </svg>
+          <p class="diagram-caption">Inside a compressor: the sidechain detector watches the signal level and instructs the gain reduction element how much to turn down. Makeup gain restores output level after reduction.</p>
+        </div>
+
+        <div class="decision-framework">
+          <div class="decision-framework-title">⚡ Quick Compression Diagnostic</div>
+          <div class="decision-item">
+            <span class="decision-if">If</span>
+            <span class="decision-then">your transients are disappearing and the sound feels flat → <strong>your attack is too fast. Slow it down to 20–40ms and let the punch through.</strong></span>
+          </div>
+          <div class="decision-item">
+            <span class="decision-if">If</span>
+            <span class="decision-then">you hear audible pumping you didn't intend → <strong>your release is too fast. Increase to 100–200ms and listen for the pumping to smooth out.</strong></span>
+          </div>
+          <div class="decision-item">
+            <span class="decision-if">If</span>
+            <span class="decision-then">your mix sounds flat and lifeless after compression → <strong>you're over-compressing. Raise the threshold until you're seeing 2–4dB of gain reduction maximum.</strong></span>
+          </div>
+          <div class="decision-item">
+            <span class="decision-if">If</span>
+            <span class="decision-then">the compression sounds harsh and unnatural → <strong>switch to a soft knee setting and try a lower ratio. Not everything needs a 4:1 ratio.</strong></span>
+          </div>
+          <div class="decision-item">
+            <span class="decision-if">If</span>
+            <span class="decision-then">the compressed signal sounds worse than the bypassed version → <strong>level-match first. Louder always sounds better — you're probably hearing the makeup gain, not the compression.</strong></span>
+          </div>
+        </div>
+
+
+        <h2 id="compressor-types">The Four Compressor Types — and When to Use Each <span class="skill-badge skill-badge--intermediate">Intermediate</span></h2>
+
+        <p>This is where most guides go wrong. They list the four compressor types and describe them in generic terms — "VCA is fast and clean, optical is smooth, variable-mu is warm" — without telling you how to make the decision. The decision isn't about which description sounds most appealing. It's about matching the compressor's natural character to what the source material needs.</p>
+
+        <div class="compressor-type-grid">
+          <div class="compressor-type-card">
+            <div class="compressor-type-name">VCA</div>
+            <div class="compressor-type-example">SSL Bus Compressor · dbx 160 · API 2500</div>
+            <p>Voltage Controlled Amplifier. The fastest and most precise compressor type. VCA compressors use an electronic circuit to control gain reduction, which means they can respond extremely quickly and behave very predictably. They sound relatively transparent — they control dynamics without adding much coloration. Best for: mix bus compression where you want glue without character, drum bus compression where you need fast, aggressive control, and any situation where you need the compressor to be invisible. The SSL bus compressor that became standard on pop and rock records from the 1980s onward is a VCA.</p>
+          </div>
+          <div class="compressor-type-card">
+            <div class="compressor-type-name">FET</div>
+            <div class="compressor-type-example">Universal Audio 1176 · Empirical Labs Distressor</div>
+            <p>Field Effect Transistor. The 1176 is the most famous FET compressor and one of the most recorded-on pieces of hardware in history. FET compressors are fast — some of the fastest attack times available — and they add a distinctive character: they make things sound bigger, more present, more aggressive. They impart energy. Best for: vocals where you want presence and punch, snare drums, bass guitar where you want the attack to snap, and any situation where you want the compression to be felt as part of the sound. The "all buttons in" mode on the 1176 is one of the most distinctive compression sounds in recorded music.</p>
+          </div>
+          <div class="compressor-type-card">
+            <div class="compressor-type-name">Optical</div>
+            <div class="compressor-type-example">Teletronix LA-2A · LA-3A · TubeTech CL 1B</div>
+            <p>Optical compressors use a light source and a light-dependent resistor to control gain reduction. The response is inherently non-linear — the compression ratio increases as the signal gets louder, which means optical compressors handle extreme peaks in a particularly musical way. They're slower than VCA and FET designs, which means they're less likely to clamp down on transients and more likely to compress the body and sustain of a sound. Best for: vocals where you want transparency and musicality, bass guitar, acoustic instruments, and any source where you want smoothness rather than punch. The LA-2A is the vocal compressor. If you've heard a great vocal on a pop record, there's a very high probability an LA-2A or an emulation of it was involved.</p>
+          </div>
+          <div class="compressor-type-card">
+            <div class="compressor-type-name">Variable-Mu</div>
+            <div class="compressor-type-example">Fairchild 670 · Manley Variable Mu · Vari-Mu</div>
+            <p>The oldest compressor design, using tubes to control gain reduction. Variable-mu compressors are slow, warm, and deeply colored. They don't provide snap or punch. What they do is add cohesion and a luxurious, finished quality to whatever passes through them — often described as "glue." The compression ratio increases with the amount of gain reduction being applied, which makes extreme peaks behave in an unusually musical way. Best for: mix bus and mastering, bus processing for groups of instruments, and any situation where you want the compressor to make things feel like they belong together. Not a first-choice for individual instruments.</p>
+          </div>
+        </div>
+
+        <p class="citation">Source: Huber, David Miles and Runstein, Robert E. Modern Recording Techniques, 9th Edition. (2018). Focal Press.</p>
+
+
+        <h2 id="settings-reference">Settings Reference Table <span class="skill-badge skill-badge--intermediate">Intermediate</span></h2>
+
+        <p>These are starting points established from professional practice — not rules. The right settings for your specific recording may differ. Use these to get your compressor in the right territory, then adjust by ear. The goal column tells you what you're listening for, which is more useful than any specific number.</p>
+
+        <table class="settings-table" aria-label="Compression settings reference by instrument">
+          <thead>
+            <tr>
+              <th>Source</th>
+              <th>Ratio</th>
+              <th>Attack</th>
+              <th>Release</th>
+              <th>GR Target</th>
+              <th>Goal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Kick Drum</td>
+              <td class="mono">4:1</td>
+              <td class="mono">30ms</td>
+              <td class="mono">100ms</td>
+              <td class="mono">2–4dB</td>
+              <td>Punch and consistency. Let the attack through. Control the body.</td>
+            </tr>
+            <tr>
+              <td>Snare Drum</td>
+              <td class="mono">4:1–6:1</td>
+              <td class="mono">5–15ms</td>
+              <td class="mono">40–80ms</td>
+              <td class="mono">3–6dB</td>
+              <td>Snap on the hit. Controlled sustain. Stays in place in the mix.</td>
+            </tr>
+            <tr>
+              <td>Drum Bus</td>
+              <td class="mono">2:1–4:1</td>
+              <td class="mono">10–30ms</td>
+              <td class="mono">Auto or tempo</td>
+              <td class="mono">2–6dB</td>
+              <td>Glue. All drums feel like one kit. Rhythmic breathing with the track.</td>
+            </tr>
+            <tr>
+              <td>Bass Guitar</td>
+              <td class="mono">4:1</td>
+              <td class="mono">20–40ms</td>
+              <td class="mono">100–200ms</td>
+              <td class="mono">3–6dB</td>
+              <td>Even level across notes. Low end sits consistently without jumping.</td>
+            </tr>
+            <tr>
+              <td>Lead Vocal</td>
+              <td class="mono">3:1–4:1</td>
+              <td class="mono">5–15ms</td>
+              <td class="mono">60–150ms</td>
+              <td class="mono">2–5dB</td>
+              <td>Stays present throughout. Loud peaks controlled, quiet phrases audible.</td>
+            </tr>
+            <tr>
+              <td>Acoustic Guitar</td>
+              <td class="mono">2:1–3:1</td>
+              <td class="mono">10–30ms</td>
+              <td class="mono">150–300ms</td>
+              <td class="mono">2–4dB</td>
+              <td>Smooth and natural. Preserve the pick attack. Control the body level.</td>
+            </tr>
+            <tr>
+              <td>Mix Bus</td>
+              <td class="mono">2:1</td>
+              <td class="mono">30ms</td>
+              <td class="mono">Auto</td>
+              <td class="mono">1–3dB</td>
+              <td>Glue. Mix feels like one piece of music. Never audibly pumping.</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="settings-table-label">Starting points only — adjust by ear. GR = Gain Reduction. All values assume moderate input levels.</p>
+
+
+        <h2 id="what-pros-do">What the Pros Actually Do</h2>
+
+        <p>The fastest way to understand compression at a professional level isn't to read more about it — it's to study specific records and understand the choices that produced what you're hearing. These three examples span different eras and genres and illustrate fundamentally different approaches to compression.</p>
+
+        <div class="pro-reference">
+          <div class="pro-reference-label">📀 Record Reference</div>
+          <p><strong>Led Zeppelin — "When the Levee Breaks" (1971)</strong> — John Bonham's drum sound on this track is arguably the most studied drum recording in history. Engineer Andy Johns recorded the kit at the bottom of a stairwell at Headley Grange using two Beyerdynamic M160 ribbon microphones placed halfway up the stairs, then pushed the room sound through Helios console compressors with extreme settings. The compression isn't subtle — it's the entire sound. The massive, slow attack lets Bonham's explosive hits come through completely before the compressor engages, which is why the transients feel so physical. The slow release, combined with the natural room reverb, creates the iconic extended decay. This is a lesson in using compression to enhance an environmental recording rather than just control a close-miked signal.</p>
+        </div>
+
+        <div class="pro-reference">
+          <div class="pro-reference-label">📀 Record Reference</div>
+          <p><strong>Pink Floyd — The Dark Side of the Moon (1973)</strong> — Engineer Alan Parsons mixed the album at Abbey Road using the TG12345 console, one of the first mixing desks to have compression circuits built into every channel strip. Parsons applied bus compression to the entire mix — but critically, not to the drums, which he wanted to retain full dynamics. This parallel approach, compressing everything except the most dynamic elements, is a technique that's still used by sophisticated engineers. Mirek Stiles of Abbey Road described the TG console's compressors as "some of the most wonderfully brutal sounding in the history of recorded music." The point is that the compression is aggressive but musical — it adds density without destroying dynamics.</p>
+        </div>
+
+        <div class="pro-reference">
+          <div class="pro-reference-label">📀 Record Reference</div>
+          <p><strong>Billie Eilish — "bad guy" (2019)</strong> — Producer Finneas O'Connell recorded and mixed this entirely in a bedroom on a MacBook. The vocal compression is notably restrained — a soft-knee optical-style compressor handling no more than 3–4dB of gain reduction, with a slow attack that preserves the intimate, close-mic quality of Eilish's delivery. The mistake most producers make when attempting to recreate this sound is attacking too fast and losing the breathiness that defines the vocal character. The whispered quality isn't reverb or EQ — it's a compression approach that doesn't fight the natural dynamics of the performance. The lesson: less compression, applied intelligently, beats more compression applied generically.</p>
+        </div>
+        <p class="citation">Sources: Sound On Sound magazine interview with Finneas O'Connell (2020); Parsons, Alan. The Art and Science of Sound Recording (2012). Hal Leonard.</p>
+
+
+        <h2 id="ear-training">Training Your Ear to Hear Compression</h2>
+
+        <p>Reading about compression is necessary but not sufficient. The skill you need to develop is the ability to hear what compression is doing in real time — to identify over-compression, pumping, loss of transients, and the difference between compression that enhances and compression that damages. These exercises develop that skill deliberately.</p>
+
+        <div class="listening-prescription">
+          <div class="listening-prescription-label">Listening Exercise 1 — Hearing Pump and Breathe</div>
+          <p>Put on <span class="listening-record">Daft Punk — "One More Time" (2000)</span> and focus entirely on the kick drum and the relationship it has with the rest of the elements around it.</p>
+          <p>At 0:29 when the full arrangement enters, listen to how the elements surrounding the kick seem to duck slightly on each kick hit and then rise back up in the space between hits. That's sidechain compression creating a rhythmic pumping effect — but one that's deliberate and musical, timed precisely to the tempo. The compression isn't hiding; it's part of the groove.</p>
+          <p>Now contrast this with any heavily over-compressed mix — listen for the same ducking effect happening on material where it wasn't intended. When compression is wrong, it fights the music. When it's right, it drives it. The difference is always in the timing of attack and release relative to the tempo.</p>
+        </div>
+
+        <div class="listening-prescription">
+          <div class="listening-prescription-label">Listening Exercise 2 — Hearing Transient Preservation</div>
+          <p>Put on <span class="listening-record">Kendrick Lamar — "HUMBLE." (2017)</span> and focus on the snare drum throughout.</p>
+          <p>The snare crack is extraordinarily sharp and present throughout the track — it sits on top of everything without the mix feeling out of balance. That's the result of compression with a slow enough attack to let the initial transient — the first 5–10ms of the hit — pass through completely before the compressor engages. The body of the snare is compressed and controlled. The crack is not.</p>
+          <p>Now go back to a track where the drums feel dull or buried. Nine times out of ten, someone compressed the transients too aggressively by setting attack times below 5ms on the drum bus. The kick hits but doesn't punch. The snare is loud but doesn't crack. Hearing this distinction in commercial records is the fastest path to understanding why attack time is the most important parameter on a compressor.</p>
+        </div>
+
+
+        <h2 id="genre-applications">How Compression Differs Across Genres <span class="skill-badge skill-badge--intermediate">Intermediate</span></h2>
+
+        <p>Compression is not one-size-fits-all. The goals of a trap producer applying compression to 808s are fundamentally different from a jazz engineer touching barely anything with a compressor at all. Understanding how the approach changes across genres is what lets you make compression decisions that serve the music rather than fighting it.</p>
+
+        <div class="genre-grid">
+          <div class="genre-card">
+            <div class="genre-card-name">Hip-Hop / Trap</div>
+            <p>The 808 bass is central — optical-style compression with a slower attack (20–40ms) prevents the sub from becoming inconsistent. Hi-hats often go uncompressed to preserve their sharp, metallic character. Parallel compression on drums is standard: heavy compression blended with the dry signal creates density without killing the impact of programmed hits. Vocal compression is aggressive — 4:1 to 6:1 with faster attack to control rap delivery dynamics.</p>
+          </div>
+          <div class="genre-card">
+            <div class="genre-card-name">Electronic / Dance</div>
+            <p>Sidechain compression between the kick and the bass or pads is the defining technique of the genre — the pumping is a feature, not a flaw. Mix bus compression is often heavier than in other genres (4–6dB of GR) because the music is designed for club playback where consistent loudness is more important than dynamic range. Transient shaping plugins are used alongside traditional compression to sculpt electronic sounds precisely.</p>
+          </div>
+          <div class="genre-card">
+            <div class="genre-card-name">Pop</div>
+            <p>Vocal compression is the primary focus — two stages of compression in series (first a FET-style for control, then an optical-style for smoothing) is standard professional practice. The SSL bus compressor set at 2:1 with 30ms attack and auto release, pulling 1–2dB, is on almost every commercial pop mix. The goal throughout is transparency — the listener should never hear the compression.</p>
+          </div>
+          <div class="genre-card">
+            <div class="genre-card-name">Rock / Alternative</div>
+            <p>Live drums in rock require more aggressive drum bus compression than electronic drums — the variation in performance between hits is larger, so 4:1 with faster attack is common. Guitar amp recordings often need minimal compression because the amp itself is already compressing the signal. Mix bus compression at 2:1 to 4:1 with moderate gain reduction keeps rock mixes punchy without squashing the energy.</p>
+          </div>
+          <div class="genre-card">
+            <div class="genre-card-name">Jazz / Soul</div>
+            <p>Less is almost always more. Many jazz engineers use optical compression on individual instruments at very low gain reduction (1–2dB maximum) purely for consistency, not for any audible compression effect. The dynamic range of a live jazz performance is part of what makes it feel alive — heavy compression destroys the musical conversation between players. If you can hear the compression on a jazz record, it's probably wrong.</p>
+          </div>
+          <div class="genre-card">
+            <div class="genre-card-name">Film / TV Scoring</div>
+            <p>Dialogue intelligibility governs everything in post-production — voices need consistent level across wildly different delivery styles. Orchestral scoring uses minimal compression to preserve the natural dynamic arc of a full orchestra, which can span 40dB from pianissimo to fortissimo. Stems for TV delivery must hit specific LUFS targets, which requires careful compression and limiting on the master bus that doesn't compromise the musical quality of the score.</p>
+          </div>
+        </div>
+
+
+        <h2 id="advanced-techniques">Advanced Compression Techniques <span class="skill-badge skill-badge--advanced">Advanced</span></h2>
+
+        <p>These techniques assume solid command of the fundamentals above. Each one addresses a specific situation that basic compression can't handle elegantly.</p>
+
+        <p><strong>Serial compression</strong> — two compressors in series, each doing a small amount of work, often sounds more transparent and musical than one compressor doing all the work. The first stage handles the most extreme peaks, leaving the second stage to work on the more consistent dynamics. Michael Brauer, one of the most respected mixing engineers of the past three decades, uses a parallel compression approach where different compressors handle different frequency ranges of a vocal simultaneously — one for the air, one for the midrange body, one for the low-end weight. This level of control over the dynamic character of a vocal is impossible with a single compressor.</p>
+
+        <p><strong>Sidechain high-pass filtering</strong> — most professional compressors allow you to filter the signal going into the sidechain detector independently of the main signal. Applying a high-pass filter at 80–120Hz to the sidechain means the compressor no longer responds to low-frequency energy, which prevents the kick drum from triggering excessive compression on the mix bus. Without this technique, every kick hit drives the bus compressor to clamp down on everything else in the mix — audible pumping that's unintentional. Every serious mix bus compression situation should involve at least considering whether a sidechain HPF is appropriate.</p>
+
+        <p><strong>Tempo-synced release on drums</strong> — the most musical drum compression happens when the release time is set so the compressor finishes its gain reduction cycle precisely between beats. For a track at 120 BPM, each beat is 500ms apart. A release time of 400–450ms means the compressor has recovered almost completely before the next hit triggers it again, creating a rhythmic breathing that feels like it's part of the groove rather than fighting it. Many engineers use the Auto release setting on SSL-style compressors precisely because the circuit is designed to behave this way automatically.</p>
+
+
+        <h2 id="common-mistakes">What Most Producers Get Wrong</h2>
+
+        <p>These are the compression mistakes that appear in virtually every mix from producers who've learned the theory but haven't yet developed the ear to hear what's happening. They're not beginner mistakes — they're intermediate traps that are easy to fall into because compression meters can look fine while the audio sounds wrong.</p>
+
+        <div class="mistake-box">
+          <div class="mistake-box-label">❌ Mistake 1 — Compressing Everything by Default</div>
+          <p><strong>Not every sound needs a compressor on it.</strong> The default habit of inserting a compressor on every channel, every time, is one of the most damaging things you can do to a mix. A well-performed acoustic guitar part with natural dynamics may not need any compression at all — adding compression could actually make it sound worse by flattening the musical variation in the performance. Ask the question before you reach for the compressor: is this sound creating a problem that compression can solve? If you can't identify a specific problem — inconsistent levels, peaks that are too loud, sustain that dies too quickly — don't compress. The mix will be better for it.</p>
+        </div>
+
+        <div class="mistake-box">
+          <div class="mistake-box-label">❌ Mistake 2 — Setting Attack Too Fast on Drums</div>
+          <p><strong>A fast attack on a kick or snare compresses the transient — the one thing that makes drums sound like drums.</strong> When producers complain that their compressed drums sound "flat" or "dead," the attack time is almost always the culprit. Set your drum compressor to 1ms attack and a moderate ratio, and watch what happens: the snap disappears, the impact disappears, and what remains is just a compressed, lifeless sound with controlled levels but no energy. Start with 20–30ms attack on kick and snare. Listen to the difference. The punch you were trying to preserve is now there because you're letting the transient through before the compressor engages. Move the attack faster or slower from that starting point based on what you hear, not what you think the number should be.</p>
+        </div>
+
+        <div class="mistake-box">
+          <div class="mistake-box-label">❌ Mistake 3 — Using Too Much Gain Reduction</div>
+          <p><strong>More gain reduction is not more compression — it's more damage.</strong> Watching a gain reduction meter hit -10dB or -12dB consistently on a vocal, a bus, or a mix bus is a sign that something has gone wrong. At that level of reduction, the compressor is not controlling dynamics — it's destroying them. The character of the sound is being fundamentally altered. For most mixing situations, 2–4dB of gain reduction is enough to do the job. For heavy-handed effects like the New York parallel compression technique, you might deliberately smash the compressed parallel signal — but then you're blending it back with the uncompressed signal, which protects the dynamics while adding density. Treating heavy gain reduction as the goal misunderstands what compression is trying to achieve.</p>
+        </div>
+
+        <div class="mistake-box">
+          <div class="mistake-box-label">❌ Common Myth — "Louder sounds better, so makeup gain means better compression"</div>
+          <p><strong>The single biggest source of false confidence in compression decisions is failing to level-match the bypassed and compressed signals.</strong> Louder always sounds better to human hearing — it's psychoacoustic reality, not a judgment about quality. If your compressed signal is louder than your bypassed signal when you A/B them, you will perceive the compressed version as better regardless of whether the compression is actually improving anything. This is how producers end up with over-compressed mixes that sounded great in the session and terrible everywhere else. The fix is simple: use your compressor's output gain to match the level of the bypassed signal before evaluating. If the compression still sounds better at the same level, it's actually doing something good. If it now sounds the same or worse — the compression wasn't helping and you were just hearing the volume boost.</p>
+        </div>
+
+
+        <h2 id="practical-exercises">Practical Exercises</h2>
+
+        <p>Each exercise targets a specific skill. Do one per session with focused attention — fifteen minutes of deliberate practice builds ear training faster than hours of passive work.</p>
+
+        <div class="exercise-block">
+          <div class="exercise-header">
+            <span class="exercise-badge exercise-badge--beginner">Beginner</span>
+            <span class="exercise-title">The Threshold Hunt</span>
+          </div>
+          <ol>
+            <li>Load any drum loop or vocal recording into your DAW and insert a compressor with default settings.</li>
+            <li>Set the ratio to 4:1, attack to 20ms, release to 100ms. Leave makeup gain at 0.</li>
+            <li>Turn the threshold all the way up so no compression is happening. Watch the gain reduction meter — it should show zero.</li>
+            <li>Slowly lower the threshold until you see the gain reduction meter moving consistently — aim for 3–5dB of reduction on the loudest hits.</li>
+            <li>Now bypass the compressor. Enable it. Bypass again. Enable again. Listen to what has changed: the peaks are controlled, the overall level has dropped slightly, the sound is more consistent.</li>
+            <li>Use the makeup gain to bring the compressed signal back to the same perceived level as the bypassed signal. Now A/B again and make an honest judgment: is the compression improving the sound, or just controlling it? Sometimes they're the same thing. Sometimes they're not.</li>
+          </ol>
+        </div>
+
+        <div class="exercise-block">
+          <div class="exercise-header">
+            <span class="exercise-badge exercise-badge--intermediate">Intermediate</span>
+            <span class="exercise-title">The Attack Time Experiment</span>
+          </div>
+          <ol>
+            <li>Load a drum loop — preferably a real drum recording, not programmed — and insert a VCA-style compressor. Set ratio to 4:1, release to 100ms, threshold to get about 6dB of gain reduction.</li>
+            <li>Set the attack to 1ms. Listen. Notice how the drums sound — specifically the kick and snare. The transients are being compressed. The punch is reduced. The sound might feel "small" or "squashed."</li>
+            <li>Now move the attack to 30ms. Listen again. The gain reduction is happening at the same ratio, but the first 30ms of each hit is passing through uncompressed. The kick should now have punch. The snare should have crack. The level might be slightly more inconsistent — but the energy is back.</li>
+            <li>Move the attack to 60ms. Notice that now even more of the transient is getting through, but the compressor is having to work harder to control the body of the sound afterward. There's a sweet spot somewhere between these extremes that's specific to this piece of audio.</li>
+            <li>Find that sweet spot by ear, not by a number. Write down where you landed and why it sounded right. Then try the same exercise on a vocal and notice how different the ideal attack time is for a sustained, continuous source versus a percussive, transient-heavy one.</li>
+          </ol>
+        </div>
+
+        <div class="exercise-block">
+          <div class="exercise-header">
+            <span class="exercise-badge exercise-badge--advanced">Advanced</span>
+            <span class="exercise-title">Serial Compression on Vocals</span>
+          </div>
+          <ol>
+            <li>Take a vocal recording with a wide dynamic range — a performance that has both quiet, intimate passages and loud, powerful peaks. Insert two compressors in series on the vocal channel.</li>
+            <li>First compressor: set to FET-style (or 1176 emulation). Ratio 4:1, fast attack (5ms), fast release (40ms), threshold set for 3–4dB of gain reduction only on the loudest peaks. This stage is catching the worst offenders only — it's not meant to compress the whole vocal.</li>
+            <li>Second compressor: set to optical-style (or LA-2A emulation). Threshold set to engage through the majority of the vocal, but ratio is low — 2:1. Release is slow — 200ms. This stage is handling the consistent dynamics, not the peaks. It should be showing 2–3dB of reduction throughout most of the performance.</li>
+            <li>Now bypass each compressor individually and listen to what each one is contributing. The FET stage should sound obvious — big peaks controlled. The optical stage should sound subtle — overall level consistency without an audible compression character.</li>
+            <li>The goal is a vocal that moves naturally, feels present throughout its full dynamic range, and never sounds squashed or robotic. Compare this result to a single compressor set to do all the work at once. The serial approach almost always sounds more natural on complex, dynamic performances.</li>
+          </ol>
+        </div>
+
+
+        <h2 id="recommended-tools">Recommended Compressor Plugins</h2>
+
+        <p>Plugin choice matters less than technique, but some tools genuinely make learning and working easier than others. Here are honest recommendations at three price points — not the most expensive or the most hyped, but the ones that are actually useful.</p>
+
+        <h3 style="font-size:1rem;color:var(--text-primary);margin:1.25rem 0 .5rem;">Free Options</h3>
+        <p><strong>TDR Kotelnikov</strong> — The best free compressor available. Transparent, precise, and genuinely useful on mix bus applications. Doesn't have the character of hardware emulations but is excellent for learning because the meters are detailed and the behavior is predictable. <a href="https://www.tokyodawn.net/tdr-kotelnikov/" class="affiliate-cta" target="_blank" rel="noopener">Download free ↗</a></p>
+
+        <p><strong>Analog Obsession FETISH</strong> — A free FET-style compressor modeled on the 1176 that captures the essential character without cost. Excellent starting point for learning how FET compression sounds and behaves on drums and vocals.</p>
+
+        <h3 style="font-size:1rem;color:var(--text-primary);margin:1.25rem 0 .5rem;">Mid-Range ($50–$200)</h3>
+        <p><strong>Waves CLA-2A and CLA-76</strong> — The industry-standard optical and FET emulations. The CLA-2A on vocals is one of the most reliable tools in professional production — it does exactly what the hardware does, costs a fraction, and requires very little adjustment to get good results. Frequently on sale for under $30. <a href="#" class="affiliate-cta">Check price ↗</a></p>
+
+        <h3 style="font-size:1rem;color:var(--text-primary);margin:1.25rem 0 .5rem;">Professional ($200+)</h3>
+        <p><strong>Universal Audio 1176 Classic Limiter Collection</strong> — If you're working on UA hardware or the UAD platform, the official 1176 emulations are the most accurate and most sonically true to the hardware. The different revisions (Rev A, Rev E, "Blackface") have genuinely different characters that professional engineers choose between deliberately. Worth the investment if you're committing to the UAD ecosystem — less essential if you're not. <a href="#" class="affiliate-cta">Check price ↗</a></p>
+
+
+        <h2 id="faq">Frequently Asked Questions</h2>
+
+        <h3 style="font-size:1rem;color:var(--text-primary);margin:1.25rem 0 .4rem;">Should I compress before or after EQ?</h3>
+        <p>Both are valid and the choice changes the sound. EQ before compression means the compressor responds to the EQ'd signal — if you boosted low end before the compressor, the compressor will react more to low-frequency content and may over-compress bass-heavy signals. EQ after compression means the compressor works on the original spectral balance. The most common professional approach is EQ before compression for corrective EQ that removes problems, and EQ after compression for creative or additive EQ. Many engineers use both — a corrective EQ before and a gentle additive EQ after to shape the final tone.</p>
+
+        <h3 style="font-size:1rem;color:var(--text-primary);margin:1.25rem 0 .4rem;">How much compression is too much?</h3>
+        <p>If you can hear the compression working when you're not actively listening for it — audible pumping, a flattened, lifeless quality to the sound, or a loss of the natural impact of transients — you've applied too much. In practical terms: more than 6dB of gain reduction on individual tracks is usually a sign of a problem. More than 3dB on a mix bus is usually too much. These aren't hard rules, but they're useful calibration points.</p>
+
+        <h3 style="font-size:1rem;color:var(--text-primary);margin:1.25rem 0 .4rem;">What's the difference between compression and limiting?</h3>
+        <p>Limiting is compression with a very high ratio — typically 10:1 or higher. At this ratio, almost nothing gets through above the threshold, which is why limiting is used at the end of the mastering chain to prevent digital clipping. Compression is generally any ratio below 10:1 where some dynamics still get through above the threshold. The terms are sometimes used interchangeably, but technically a limiter is a very aggressive compressor.</p>
+
+        <h3 style="font-size:1rem;color:var(--text-primary);margin:1.25rem 0 .4rem;">Why do my compressed drums sound flat and lifeless?</h3>
+        <p>Almost always an attack time problem. A fast attack compresses the transient — the first few milliseconds of each drum hit — which removes the punch and impact. Try setting attack to 20–30ms and listening to the difference. If the drums still sound lifeless, check whether you're over-compressing with too much gain reduction. High gain reduction on drums (above 8–10dB) will genuinely damage the sound regardless of other settings.</p>
+
+        <h3 style="font-size:1rem;color:var(--text-primary);margin:1.25rem 0 .4rem;">Do I need hardware compressors to get professional results?</h3>
+        <p>No. The difference between quality plugin emulations and their hardware counterparts is real but small — audible to trained ears in controlled listening environments, not a meaningful factor in whether a record sounds professional. The engineers who insist on hardware often do so because they prefer the workflow and the tactile control, not because the plugin versions are deficient. High-quality plugins like the Waves CLA series, FabFilter Pro-C2, or Universal Audio emulations produce professional results. Technique and decision-making matter far more than hardware vs software.</p>
+
+        <h3 style="font-size:1rem;color:var(--text-primary);margin:1.25rem 0 .4rem;">What is parallel compression and when should I use it?</h3>
+        <p>Parallel compression — also called New York compression — blends a heavily compressed version of a signal with the uncompressed original. The result is increased density and sustain without sacrificing the impact of the original transients, because the uncompressed signal preserves them. It's most useful on drums, where you want to add weight and presence without losing the crack of the hits. Create a send from your drum bus to an auxiliary track, apply heavy compression (8:1, fast attack, moderate release, significant gain reduction) to the aux, and blend it back under the original until the drums feel denser without sounding squashed. Start the blend at a low level and bring it up until you can feel the difference but not obviously hear the compressed signal.</p>
+
+
+        <div class="go-deeper">
+          <div class="go-deeper-title">Go Deeper</div>
+          <div class="go-deeper-grid">
+            <div class="go-deeper-item">
+              <div class="go-deeper-item-label">📖 Read Next on This Site</div>
+              <a href="sidechain-compression-guide.html">The Complete Guide to Sidechain Compression</a>
+              <p>Now that you understand how compressors work, sidechain compression is the natural next technique — and one of the most powerful creative tools in modern production.</p>
+            </div>
+            <div class="go-deeper-item">
+              <div class="go-deeper-item-label">📚 External Resource</div>
+              <a href="https://www.bobbyowsinski.com/products/mixing-engineers-handbook" target="_blank" rel="noopener">The Mixing Engineer's Handbook — Bobby Owsinski</a>
+              <p>The most comprehensive written resource on mixing craft. Chapter 5 on dynamics processing goes deeper into compression philosophy than anything else in print.</p>
+            </div>
+            <div class="go-deeper-item">
+              <div class="go-deeper-item-label">🎧 Listening Recommendation</div>
+              <a href="#" target="_blank" rel="noopener">Steely Dan — Aja (1977)</a>
+              <p>One of the most technically precise studio recordings ever made. Listen to how the compression on the drums and bass is virtually inaudible yet clearly present — a masterclass in transparent compression that serves the music without calling attention to itself.</p>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /article-body -->
 
       <footer class="article-footer">
         <div class="article-tags-footer">
           <p class="tags-label">Tags</p>
           <div class="tags-list">
-            <a href="#" class="tag-pill">Techniques</a>
-            <a href="#" class="tag-pill">Compression</a>
-            <a href="#" class="tag-pill">Mixing</a>
-            <a href="#" class="tag-pill">Dynamics</a>
-            <a href="#" class="tag-pill">Plugins</a>
-            <a href="#" class="tag-pill">Beginners</a>
-          </div>
-        </div>
-        <div style="background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
-          <div class="author-avatar" style="width:44px;height:44px;font-size:1rem;flex-shrink:0;" aria-hidden="true">MP</div>
-          <div style="flex:1;">
-            <strong style="font-size:.9rem;color:var(--text-primary);">Written by the Music Production Wiki Team</strong>
-            <p style="font-size:.8rem;color:var(--text-muted);margin:.2rem 0 0;">Our editorial team researches and writes every article on MusicProductionWiki.com. All content is reviewed for accuracy and updated regularly.</p>
+            <a href="../categories/techniques.html" class="tag-pill">Techniques</a>
+            <a href="../categories/techniques.html" class="tag-pill">Mixing</a>
+            <a href="../categories/glossary.html" class="tag-pill">Dynamics</a>
+            <a href="../categories/techniques.html" class="tag-pill">Compression</a>
           </div>
         </div>
       </footer>
@@ -223,32 +757,23 @@
       <section class="related-section" aria-labelledby="relatedHeading">
         <h2 id="relatedHeading" style="font-size:1.35rem;margin-bottom:1.25rem;">Related Articles</h2>
         <div class="related-grid">
-          <a href="sidechain-compression-guide.html" class="article-card">
-            <div class="article-card-img"><div class="article-card-img-inner">🔗</div></div>
-            <div class="article-card-body">
-              <span class="article-tag teal">Techniques</span>
-              <h3 class="article-title">The Complete Guide to Sidechain Compression</h3>
-              <p class="article-excerpt">Put your compression knowledge to work with sidechaining.</p>
-              <div class="article-meta"><span>8 min read</span></div>
-            </div>
+          <a href="sidechain-compression-guide.html" class="related-card">
+            <div class="related-card-tag">Techniques</div>
+            <h3 class="related-card-title">The Complete Guide to Sidechain Compression</h3>
+            <p class="related-card-desc">Create pumping effects, glue your mix, and carve space for kick drums using the most creative compression technique in modern production.</p>
+            <span class="related-card-meta">8 min read →</span>
           </a>
-          <a href="parallel-compression-explained.html" class="article-card">
-            <div class="article-card-img"><div class="article-card-img-inner">🥁</div></div>
-            <div class="article-card-body">
-              <span class="article-tag teal">Techniques</span>
-              <h3 class="article-title">Parallel Compression Explained</h3>
-              <p class="article-excerpt">The New York technique — drums, vocals, and mix bus.</p>
-              <div class="article-meta"><span>10 min read</span></div>
-            </div>
+          <a href="parallel-compression-explained.html" class="related-card">
+            <div class="related-card-tag">Techniques</div>
+            <h3 class="related-card-title">Parallel Compression Explained</h3>
+            <p class="related-card-desc">The New York compression technique that adds density and sustain to drums without sacrificing the impact of the original transients.</p>
+            <span class="related-card-meta">6 min read →</span>
           </a>
-          <a href="what-is-eq-music-production.html" class="article-card">
-            <div class="article-card-img"><div class="article-card-img-inner">🔊</div></div>
-            <div class="article-card-body">
-              <span class="article-tag teal">Techniques</span>
-              <h3 class="article-title">What Is EQ in Music Production?</h3>
-              <p class="article-excerpt">The companion tool to compression — every producer needs both.</p>
-              <div class="article-meta"><span>10 min read</span></div>
-            </div>
+          <a href="what-is-gain-staging.html" class="related-card">
+            <div class="related-card-tag">Techniques</div>
+            <h3 class="related-card-title">What Is Gain Staging</h3>
+            <p class="related-card-desc">The foundational discipline that keeps your signal chain clean and your plugins performing correctly — compression works best when gain staging is right first.</p>
+            <span class="related-card-meta">8 min read →</span>
           </a>
         </div>
       </section>
@@ -264,22 +789,47 @@
         <div class="sidebar-widget-body">
           <ul class="toc-list">
             <li><a href="#what-compression-does">What Compression Actually Does</a></li>
-            <li><a href="#the-parameters">The Parameters: Threshold, Ratio, Attack, Release, Knee, Makeup Gain</a></li>
-            <li><a href="#types-of-compressors">Types of Compressors and Their Characters</a></li>
-            <li><a href="#common-mistakes">The Most Common Compression Mistakes</a></li>
+            <li><a href="#every-parameter">Every Parameter Explained</a></li>
+            <li><a href="#signal-flow">Signal Flow Diagram</a></li>
+            <li><a href="#compressor-types">The Four Compressor Types</a></li>
+            <li><a href="#settings-reference">Settings Reference Table</a></li>
+            <li><a href="#what-pros-do">What the Pros Actually Do</a></li>
+            <li><a href="#ear-training">Training Your Ear</a></li>
+            <li><a href="#genre-applications">Across Genres</a></li>
+            <li><a href="#advanced-techniques">Advanced Techniques</a></li>
+            <li><a href="#common-mistakes">Common Mistakes</a></li>
+            <li><a href="#practical-exercises">Practical Exercises</a></li>
+            <li><a href="#recommended-tools">Recommended Tools</a></li>
+            <li><a href="#faq">FAQ</a></li>
           </ul>
+        </div>
+      </div>
+
+      <div class="sidebar-widget" style="background:var(--bg-void);border-color:var(--border-default);">
+        <div class="sidebar-widget-header">
+          <h2 class="sidebar-widget-title">Producer's Perspective</h2>
+        </div>
+        <div class="sidebar-widget-body" style="padding:1.25rem;">
+          <p style="font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin-bottom:.5rem;">Mixing Engineer</p>
+          <p style="font-size:.82rem;color:var(--text-secondary);line-height:1.6;margin-bottom:1rem;">A mixing engineer thinks about compression as a gain management tool first and a creative tool second. The first question is always: what problem am I solving? Over-compression in the mix is usually caused by using compression as a default rather than a targeted response to a specific issue.</p>
+          <p style="font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin-bottom:.5rem;">Beatmaker / Producer</p>
+          <p style="font-size:.82rem;color:var(--text-secondary);line-height:1.6;margin-bottom:1rem;">For beatmakers, compression is primarily about making programmed drums feel alive and making 808 bass sit consistently in the low end. The challenge is that programmed sounds often need parallel compression rather than direct compression — the dynamics of the original sample are part of its character.</p>
+          <p style="font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#fbbf24;margin-bottom:.5rem;">Mastering Engineer</p>
+          <p style="font-size:.82rem;color:var(--text-secondary);line-height:1.6;">Mastering engineers see the result of every compression decision made earlier in the chain. The most common request: "Can you make it louder without it sounding squashed?" The answer is usually that the mix has too much compression already. Leave headroom. Trust the mastering engineer to handle the final dynamic control.</p>
         </div>
       </div>
 
       <div class="sidebar-widget">
         <div class="sidebar-widget-header">
-          <h2 class="sidebar-widget-title">Techniques Category</h2>
+          <h2 class="sidebar-widget-title">Techniques Articles</h2>
         </div>
         <div class="sidebar-widget-body">
           <ul class="sidebar-list">
-            <li><a href="sidechain-compression-guide.html">Sidechain Compression Guide <span class="sidebar-count">8 min</span></a></li>
-            <li><a href="parallel-compression-explained.html">Parallel Compression <span class="sidebar-count">10 min</span></a></li>
-            <li><a href="what-is-eq-music-production.html">What Is EQ? <span class="sidebar-count">10 min</span></a></li>
+            <li><a href="sidechain-compression-guide.html">Sidechain Compression <span class="sidebar-count">8 min</span></a></li>
+            <li><a href="parallel-compression-explained.html">Parallel Compression <span class="sidebar-count">6 min</span></a></li>
+            <li><a href="what-is-eq-music-production.html">What Is EQ <span class="sidebar-count">10 min</span></a></li>
+            <li><a href="what-is-gain-staging.html">Gain Staging <span class="sidebar-count">8 min</span></a></li>
+            <li><a href="what-is-mastering-music.html">What Is Mastering <span class="sidebar-count">10 min</span></a></li>
             <li><a href="../categories/techniques.html" style="color:var(--teal);">View all Techniques →</a></li>
           </ul>
         </div>
@@ -301,47 +851,48 @@
   </div>
 </main>
 
-<section class="newsletter-section" id="newsletter" aria-labelledby="newsletterHeading2">
+<section class="newsletter-section" id="newsletter" aria-labelledby="newsletterHeading">
   <div class="container">
     <div class="newsletter-inner">
-      <div>
-        <div class="newsletter-badge">Newsletter</div>
-        <h2 id="newsletterHeading2" class="newsletter-heading">The Producer's <em>Briefing</em></h2>
-        <p class="newsletter-desc">A weekly digest of the most important news, techniques, and resources in music production — curated by the Music Production Wiki Team.</p>
-        <ul class="newsletter-perks">
+      <div class="newsletter-content">
+        <p class="newsletter-label">Newsletter</p>
+        <h2 id="newsletterHeading" class="newsletter-title">The Producer's <em>Briefing</em></h2>
+        <p class="newsletter-desc">A weekly digest of the most important news, techniques, and resources in music production — curated and written by the Music Production Wiki Team.</p>
+        <ul class="newsletter-features">
           <li>New articles and in-depth guides every week</li>
           <li>Plugin deals, gear drops, and industry news</li>
-          <li>Exclusive techniques not on the site</li>
+          <li>Exclusive techniques not published on the site</li>
           <li>No spam. Unsubscribe anytime.</li>
         </ul>
       </div>
       <div class="newsletter-form-wrap">
-        <div class="newsletter-form-title">Join 12,000+ producers</div>
-        <p class="newsletter-form-sub">Free. Weekly. Worth it.</p>
-        <form class="form-row newsletter-form-js" novalidate>
-          <input type="text" name="name" class="form-input" placeholder="Your first name" autocomplete="given-name" />
-          <input type="email" name="email" class="form-input" placeholder="Your email address" autocomplete="email" required />
+        <p class="newsletter-social-proof">Free. Weekly. Worth it.</p>
+        <form class="newsletter-form-js" novalidate>
+          <input type="email" name="email" class="form-input" placeholder="Your email address" required />
           <button type="submit" class="btn-newsletter">Subscribe to The Producer's Briefing</button>
-          <p class="form-privacy">We respect your inbox. Unsubscribe anytime.</p>
         </form>
+        <p class="newsletter-disclaimer">By subscribing, you agree to our Privacy Policy. We respect your inbox.</p>
       </div>
     </div>
   </div>
 </section>
 
 <footer class="site-footer" role="contentinfo">
-  <div class="container">
-    <div class="footer-main">
-      <div class="footer-brand">
-        <a href="../index.html" class="site-logo">
-          <span class="logo-wordmark">Music<span>Production</span>Wiki</span>
-          <span class="logo-tagline">The Producer's Reference</span>
-        </a>
-        <p class="footer-desc">A free, independent reference wiki for music producers at every level.</p>
-      </div>
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="../index.html" class="site-logo" aria-label="MusicProductionWiki Home">
+        <span class="logo-wordmark">Music<span>Production</span>Wiki</span>
+        <span class="logo-tagline">The Producer's Reference</span>
+      </a>
+      <p class="footer-desc">A free, independent reference wiki for music producers. Our goal is to be the most accurate, comprehensive, and accessible resource for producers at every level.</p>
+    </div>
+    <nav class="footer-nav" aria-label="Footer navigation">
       <div class="footer-col">
-        <h4>Categories</h4>
+        <h3 class="footer-col-title">Categories</h3>
         <ul>
+          <li><a href="../categories/reviews.html">Reviews</a></li>
+          <li><a href="../categories/comparisons.html">Comparisons</a></li>
+          <li><a href="../categories/ai-music.html">AI Music</a></li>
           <li><a href="../categories/daws.html">DAWs</a></li>
           <li><a href="../categories/plugins.html">Plugins</a></li>
           <li><a href="../categories/gear.html">Gear</a></li>
@@ -351,17 +902,17 @@
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Popular Articles</h4>
+        <h3 class="footer-col-title">Popular Articles</h3>
         <ul>
           <li><a href="sidechain-compression-guide.html">Sidechain Compression</a></li>
-          <li><a href="best-daw-for-beginners.html">Best DAW for Beginners</a></li>
-          <li><a href="how-music-royalties-work.html">How Music Royalties Work</a></li>
-          <li><a href="what-is-eq-music-production.html">What Is EQ?</a></li>
-          <li><a href="ableton-live-beginners-guide.html">Ableton Live Guide</a></li>
+          <li><a href="what-is-eq-music-production.html">What Is EQ</a></li>
+          <li><a href="what-is-reverb-music-production.html">What Is Reverb</a></li>
+          <li><a href="what-is-gain-staging.html">Gain Staging</a></li>
+          <li><a href="what-is-mastering-music.html">What Is Mastering</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h4>About</h4>
+        <h3 class="footer-col-title">About</h3>
         <ul>
           <li><a href="../about.html">About the Wiki</a></li>
           <li><a href="../contribute.html">Contribute</a></li>
@@ -370,10 +921,12 @@
           <li><a href="../privacy.html">Privacy Policy</a></li>
         </ul>
       </div>
-    </div>
-    <div class="footer-bottom">
-      <p class="footer-copy">© <span id="copyrightYear"></span> MusicProductionWiki.com. All rights reserved. Content by the Music Production Wiki Team.</p>
-      <div class="footer-links-bottom">
+    </nav>
+  </div>
+  <div class="footer-bottom">
+    <div class="container">
+      <p>© <span id="copyrightYear"></span> MusicProductionWiki.com. All rights reserved. Content by the Music Production Wiki Team.</p>
+      <div class="footer-bottom-links">
         <a href="../privacy.html">Privacy</a>
         <a href="../terms.html">Terms</a>
         <a href="../sitemap.xml">Sitemap</a>

@@ -3,29 +3,93 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Sound design basics for music producers — oscillators, filters, envelopes, LFOs, and how synthesis works. Everything you need to stop using presets and start building sounds from scratch." />
-  <title>Sound Design Basics: How Synthesis Actually Works — MusicProductionWiki.com</title>
+  <meta name="description" content="Sound design basics for music producers: synthesizer fundamentals, ADSR envelope, oscillators, filters, LFOs, and how to make your own sounds from scratch." />
+  <title>Sound Design Basics: Your First Steps into Synthesis — MusicProductionWiki.com</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
   <link rel="stylesheet" href="../css/style.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎛️</text></svg>" />
   <style>
-    #readingProgress {
-      position: fixed;
-      top: 0; left: 0;
-      height: 3px;
-      background: var(--teal);
-      width: 0%;
-      z-index: 200;
-      transition: width 0.1s linear;
-    }
-  </style>
+    #readingProgress{position:fixed;top:0;left:0;height:3px;background:var(--teal);width:0%;z-index:200;transition:width 0.1s linear;}
+    .quick-answer{background:linear-gradient(135deg,rgba(0,212,168,0.08),rgba(167,139,250,0.06));border:1px solid rgba(0,212,168,0.3);border-left:4px solid var(--teal);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .quick-answer-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.6rem;}
+    .quick-answer p{font-size:1rem;line-height:1.65;color:var(--text-primary);margin:0;}
+    .skill-badge{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .6rem;border-radius:4px;margin-left:.6rem;vertical-align:middle;position:relative;top:-2px;}
+    .skill-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .skill-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .skill-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .settings-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .settings-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .settings-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .settings-table tr:last-child td{border-bottom:none;}
+    .settings-table tr:hover td{background:var(--bg-surface);}
+    .settings-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .settings-table .mono{font-family:var(--font-mono);font-size:.82rem;color:var(--teal);}
+    .mistake-box{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-left:4px solid #ef4444;border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .mistake-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ef4444;margin-bottom:.4rem;}
+    .mistake-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference{border-left:3px solid var(--purple);padding:.75rem 1.25rem;margin:1.25rem 0;background:rgba(167,139,250,0.05);border-radius:0 6px 6px 0;}
+    .pro-reference-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.35rem;}
+    .pro-reference p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference strong{color:var(--text-primary);}
+    .listening-prescription{background:var(--bg-void);border:1px solid var(--border-default);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;position:relative;}
+    .listening-prescription::before{content:'🎧';position:absolute;top:-14px;left:1.5rem;background:var(--bg-void);padding:0 .4rem;font-size:1.1rem;}
+    .listening-prescription-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:.75rem;}
+    .listening-prescription p{font-size:.9rem;line-height:1.7;color:var(--text-secondary);margin:0 0 .5rem;}
+    .listening-record{font-weight:600;color:var(--text-primary);}
+    .decision-framework{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .decision-framework-title{font-family:var(--font-display);font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:1rem;}
+    .decision-item{display:flex;gap:1rem;padding:.65rem 0;border-bottom:1px solid var(--border-subtle);font-size:.88rem;line-height:1.55;}
+    .decision-item:last-child{border-bottom:none;}
+    .decision-if{color:var(--text-muted);font-style:italic;min-width:2rem;}
+    .decision-then{color:var(--text-primary);}
+    .decision-then strong{color:var(--teal);}
+    .exercise-block{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.25rem 0;}
+    .exercise-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;}
+    .exercise-badge{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .7rem;border-radius:4px;}
+    .exercise-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .exercise-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .exercise-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .exercise-title{font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text-primary);}
+    .exercise-block ol{margin:0;padding-left:1.25rem;color:var(--text-secondary);font-size:.88rem;line-height:1.7;}
+    .exercise-block ol li{margin-bottom:.4rem;}
+    .version-line{font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:4px;padding:.4rem .75rem;margin:.75rem 0 1.5rem;display:inline-block;}
+    .go-deeper{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:10px;padding:1.75rem;margin:2.5rem 0;}
+    .go-deeper-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text-primary);margin-bottom:1.25rem;}
+    .go-deeper-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;}
+    .go-deeper-item{background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:7px;padding:1rem 1.1rem;}
+    .go-deeper-item-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.35rem;}
+    .go-deeper-item a{font-size:.88rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;}
+    .go-deeper-item p{font-size:.78rem;color:var(--text-muted);margin:.3rem 0 0;}
+    .citation{font-size:.78rem;color:var(--text-muted);font-style:italic;margin-top:.25rem;}
+    .diagram-wrap{margin:1.75rem 0;background:var(--bg-void);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem;overflow-x:auto;}
+    .diagram-caption{font-size:.78rem;color:var(--text-muted);text-align:center;margin-top:.75rem;font-style:italic;}
+    .highlight-box{background:rgba(0,212,168,0.06);border:1px solid rgba(0,212,168,0.2);border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .highlight-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.4rem;}
+    .highlight-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin:1.5rem 0;}
+    .stat-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem;text-align:center;}
+    .stat-number{font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--teal);display:block;}
+    .stat-label{font-size:.78rem;color:var(--text-secondary);margin-top:.25rem;}
+    .action-steps{counter-reset:steps;list-style:none;padding:0;margin:1.5rem 0;}
+    .action-steps li{counter-increment:steps;display:flex;gap:1rem;padding:.85rem 0;border-bottom:1px solid var(--border-subtle);font-size:.9rem;color:var(--text-secondary);line-height:1.6;}
+    .action-steps li:last-child{border-bottom:none;}
+    .action-steps li::before{content:counter(steps);background:var(--teal);color:#000;font-weight:800;font-size:.75rem;width:1.6rem;height:1.6rem;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem;}
+    .genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:1.5rem 0;}
+    .genre-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem 1.25rem;}
+    .genre-card-name{font-family:var(--font-display);font-size:.85rem;font-weight:700;color:var(--teal);margin-bottom:.4rem;}
+    .genre-card p{font-size:.82rem;color:var(--text-secondary);line-height:1.55;margin:0;}
+    .comparison-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .comparison-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .comparison-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .comparison-table tr:last-child td{border-bottom:none;}
+    .comparison-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .affiliate-cta{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,212,168,0.1);border:1px solid rgba(0,212,168,0.25);color:var(--teal);font-size:.82rem;font-weight:600;padding:.45rem .9rem;border-radius:6px;text-decoration:none;}
+</style>
 </head>
 <body>
-
 <div id="readingProgress" role="progressbar" aria-label="Reading progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-
 <header class="site-header" role="banner">
   <div class="container header-inner">
     <a href="../index.html" class="site-logo" aria-label="MusicProductionWiki Home">
@@ -34,6 +98,9 @@
     </a>
     <nav class="primary-nav" aria-label="Primary navigation">
       <ul class="nav-list">
+        <li><a href="../categories/reviews.html">Reviews</a></li>
+        <li><a href="../categories/comparisons.html">Comparisons</a></li>
+        <li><a href="../categories/ai-music.html">AI Music</a></li>
         <li><a href="../categories/daws.html">DAWs</a></li>
         <li><a href="../categories/plugins.html">Plugins</a></li>
         <li><a href="../categories/gear.html">Gear</a></li>
@@ -57,190 +124,154 @@
     </button>
   </div>
 </header>
-
 <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
-  <form class="search-form mobile-search" role="search">
-    <label for="mobileSearch" class="visually-hidden">Search articles</label>
-    <input type="search" id="mobileSearch" class="search-input" placeholder="Search articles…" name="q" />
-    <button type="submit" class="search-btn" aria-label="Submit search">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    </button>
-  </form>
   <ul class="nav-list">
+    <li><a href="../categories/reviews.html">Reviews</a></li>
+    <li><a href="../categories/comparisons.html">Comparisons</a></li>
+    <li><a href="../categories/ai-music.html">AI Music</a></li>
     <li><a href="../categories/daws.html">DAWs</a></li>
     <li><a href="../categories/plugins.html">Plugins</a></li>
     <li><a href="../categories/gear.html">Gear</a></li>
-    <li><a href="../categories/techniques.html">Techniques</a></li>
+    <li><a href="../categories/techniques.html" class="active">Techniques</a></li>
     <li><a href="../categories/music-business.html">Music Business</a></li>
     <li><a href="../categories/glossary.html">Glossary</a></li>
   </ul>
-  <a href="#newsletter" class="btn btn-primary" style="width:100%;justify-content:center;">Subscribe to The Producer's Briefing</a>
 </nav>
-
 <div class="container">
   <nav class="breadcrumb" aria-label="Breadcrumb">
     <ol>
       <li><a href="../index.html">Home</a></li>
       <li><a href="../categories/techniques.html">Techniques</a></li>
-      <li><span aria-current="page">Sound Design Basics</span></li>
+      <li><span aria-current="page">Sound Design Basics: Your First Steps into Synthesis</span></li>
     </ol>
   </nav>
 </div>
-
 <main class="container" id="main-content">
   <div class="article-layout">
-
     <article aria-labelledby="articleTitle">
-
       <header class="article-header">
-        <div class="article-tags">
-          <span class="article-tag teal">Techniques</span>
-        </div>
-        <h1 id="articleTitle">Sound Design Basics: How Synthesis Actually Works</h1>
+        <div class="article-tags"><span class="article-tag teal">Techniques</span></div>
+        <h1 id="articleTitle">Sound Design Basics: Your First Steps into Synthesis</h1>
+        <div class="version-line">First published May 2026 · Updated May 2026</div>
         <div class="article-header-meta">
-          <div class="article-author">
-            <div class="author-avatar" aria-hidden="true">MP</div>
-            <span class="author-name">The Music Production Wiki Team</span>
-          </div>
+          <div class="article-author"><div class="author-avatar" aria-hidden="true">MP</div><span class="author-name">The Music Production Wiki Team</span></div>
           <span class="meta-divider" aria-hidden="true"></span>
-          <span class="meta-item">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            Updated April 2026
-          </span>
+          <span class="meta-item">Updated May 2026</span>
           <span class="meta-divider" aria-hidden="true"></span>
-          <span class="meta-item">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            12 min read
-          </span>
-          <span class="meta-divider" aria-hidden="true"></span>
-          <span class="meta-item">Beginner</span>
+          <span class="meta-item">Beginner → Advanced</span>
         </div>
       </header>
-
       <div class="article-body">
-<p>The moment you stop using presets and start understanding what the knobs actually do is one of the most significant transitions in a producer's development. Presets are starting points — useful, sometimes excellent, but fundamentally borrowed. Sounds you build from scratch are yours — expressions of your specific aesthetic that cannot be replicated by anyone who hasn't spent the same time learning the same synthesizer. This guide covers the building blocks of subtractive synthesis — the most common synthesis method and the foundation for understanding virtually every synthesizer you will ever use.</p>
-        <h2>The Signal Flow: How a Synthesizer Makes Sound</h2>
-        <p>Every subtractive synthesizer follows the same basic signal flow, even though the interface and controls look different across different instruments. Understanding this flow gives you a mental model that applies across every synthesizer you ever use.</p>
-        <p>The signal starts at the <strong>oscillator</strong> — the sound generator. The oscillator produces a raw waveform at a pitch determined by the MIDI note being played. The waveform is harmonically rich — it contains a fundamental frequency and a series of overtones — and the specific harmonic content of the waveform determines its tonal character.</p>
-        <p>The oscillator's output passes through the <strong>filter</strong> — a circuit that selectively removes certain frequencies from the signal. A low-pass filter removes high frequencies, leaving only low frequencies. A high-pass filter removes low frequencies. A band-pass filter removes both high and low frequencies, leaving only a band in the middle. The filter is the primary tonal shaping tool in subtractive synthesis — you start with a harmonically rich oscillator waveform and subtract frequencies to arrive at the sound you want.</p>
-        <p>The filtered signal passes through the <strong>amplifier</strong> — the circuit that controls the overall volume of the sound. The amplifier's level is typically controlled by an envelope, creating the volume shape of the sound over time.</p>
-        <p><strong>Envelopes</strong> control how parameters change over time when a note is triggered. The volume envelope shapes how the sound's amplitude evolves from the moment a key is pressed to the moment it stops. <strong>LFOs</strong> (Low Frequency Oscillators) add modulation — periodic variation — to parameters, creating vibrato, tremolo, filter sweeps, and rhythmic movement.</p>
-        <h2>Oscillator Waveforms: The Starting Point of Every Sound</h2>
-        <p>The oscillator's waveform is the raw material that everything else shapes. Different waveforms have different harmonic content — different amounts of each overtone — which gives them different tonal characters.</p>
-        <p><strong>Sine wave:</strong> The simplest waveform — a pure fundamental frequency with no overtones. A sine wave sounds smooth, pure, and somewhat hollow. It lacks the richness and complexity of other waveforms, which makes it useful for sub-bass sounds (where overtones would conflict with the kick drum) and for additive synthesis where you build complex tones from multiple sine waves. A pure sine wave on its own rarely sounds interesting as a lead or pad sound because it lacks harmonic content for the filter to sculpt.</p>
-        <p><strong>Sawtooth wave:</strong> The richest common waveform — contains a fundamental and all overtones (both odd and even harmonics) in decreasing amplitude. The result is a bright, buzzy, harmonically dense sound that responds dramatically to filter cutoff changes. The sawtooth wave is the most commonly used oscillator waveform in synthesis because its harmonic richness gives the filter maximum material to work with. Pad sounds, lead sounds, and bass sounds all commonly start with sawtooth waves.</p>
-        <p><strong>Square wave:</strong> Contains a fundamental and only odd harmonics — a harmonic series that creates a hollow, reedy quality reminiscent of woodwind instruments. The pulse width of the square wave — how wide the positive portion of the cycle is relative to the negative — determines its specific harmonic content. A 50% pulse width is a perfect square wave. Other pulse widths create asymmetric waveforms with different harmonic content. Pulse width modulation — continuously varying the pulse width using an LFO — creates the animated, chorusing character associated with classic synthesizer sounds.</p>
-        <p><strong>Triangle wave:</strong> Contains a fundamental and only odd harmonics, similar to the square wave, but with harmonics that decrease in amplitude faster than the square wave. The result is a softer, flute-like tone with less harmonic richness than the square or sawtooth. Triangle waves are useful for softer lead sounds, flute simulations, and as a modulation source rather than a primary oscillator.</p>
-        <p><strong>Noise:</strong> White noise contains all frequencies at equal amplitude — it sounds like radio static. Pink noise has more energy in the low frequencies. Both are used in synthesis as components of percussion sounds (adding the breath and hiss of cymbals and snare drums) and as sources of randomization in modulation chains.</p>
-        <h2>The Filter: The Heart of Subtractive Synthesis</h2>
-        <p>The filter is the most expressive component of a subtractive synthesizer. Its two primary controls — cutoff frequency and resonance — determine the character of the sound more than any other parameter.</p>
-        <p><strong>Cutoff frequency</strong> determines which frequencies pass through the filter and which are removed. In a low-pass filter — the most common filter type — frequencies below the cutoff pass through and frequencies above are attenuated. Turn the cutoff down and the sound becomes darker, removing the high-frequency overtones. Turn it up and the sound becomes brighter, allowing more of the oscillator's harmonic content through. Automating or modulating the cutoff frequency over time creates the filter sweeps that are central to electronic music production — the sound of a synthesizer opening up or closing down as the music evolves.</p>
-        <p><strong>Resonance</strong> (also called emphasis or Q) boosts the frequencies at the cutoff frequency, creating a peak or emphasis at that point in the frequency spectrum. At moderate resonance settings, this adds a characteristic coloration to the filtered sound — a singing, nasal quality that responds to cutoff changes with increased expressiveness. At high resonance settings, the filter begins to self-oscillate — generating its own sine wave at the cutoff frequency independently of the oscillator. Self-oscillation turns the filter into its own sine wave oscillator, useful for sound effects, bass sounds, and specialized tonal applications.</p>
-        <h2>Envelopes: Shaping Sound Over Time</h2>
-        <p>An envelope controls how a parameter changes over time in response to a note being triggered and released. The standard envelope — called an ADSR envelope — has four stages: Attack, Decay, Sustain, and Release.</p>
-        <p><strong>Attack</strong> is the time it takes for the parameter to reach its maximum value after a note is triggered. A fast attack on the volume envelope (close to 0ms) means the sound begins at full volume immediately when a key is pressed — like a drum hit or a plucked string. A slow attack means the sound gradually builds from silence to full volume — like a string section swelling or a pad evolving.</p>
-        <p><strong>Decay</strong> is the time it takes for the parameter to fall from its maximum value to the sustain level after the attack phase completes. A fast decay on the volume envelope gives the sound a percussive quality — it hits hard and falls quickly. A slow decay gives the sound a sustained quality — it stays near its peak level for longer before settling to the sustain level.</p>
-        <p><strong>Sustain</strong> is the level at which the parameter holds while a note is held. Unlike attack, decay, and release — which are time values — sustain is a level value. While you hold a key, the sound maintains its volume at the sustain level. Release the key and the sound begins the release phase.</p>
-        <p><strong>Release</strong> is the time it takes for the parameter to fall from the sustain level to zero after a note is released. A fast release means the sound cuts off abruptly when you lift your finger. A slow release means the sound fades gradually — like reverb on an acoustic piano or the sustain of a string section after the bow lifts.</p>
-        <p>Envelopes can be applied to any parameter — not just volume. Applying an envelope to the filter cutoff creates sounds that evolve tonally over time — starting dark and opening brightly, or starting at full brightness and slowly darkening. This filter envelope is one of the most commonly used techniques in synthesis and one of the primary tools for creating sounds that feel alive and dynamic rather than static.</p>
-        <h2>LFOs: Adding Movement and Modulation</h2>
-        <p>An LFO — Low Frequency Oscillator — is an oscillator that runs at frequencies below the audible range (typically below 20Hz) and is used to modulate — periodically vary — other parameters. Where envelopes shape parameters in response to note triggers, LFOs shape parameters continuously and periodically — creating the sense of movement, animation, and life that distinguishes interesting synthesizer sounds from static ones.</p>
-        <p>An LFO applied to pitch creates vibrato — the periodic pitch variation that singers and string players use expressively. An LFO applied to volume creates tremolo — the periodic amplitude variation used in guitar effects and Rhodes electric pianos. An LFO applied to filter cutoff creates a filter wobble — the animated, evolving quality of many electronic music sounds. An LFO applied to pulse width creates the pulse width modulation described earlier — the chorusing, animated quality of classic synthesizer pad sounds.</p>
-        <p>LFO rate — the speed of the modulation — and LFO depth — the amount by which the modulated parameter varies — are the primary controls. Rate can often be synced to the project tempo, creating modulation that moves in rhythmic relationship to the music rather than independently of it. Tempo-synced LFOs are essential for creating rhythmic filter wobbles, sidechaining effects, and other modulation that needs to align precisely with the beat.</p>
-      </div>
-        <div class="info-box">
-          <h3>The Sound Design Exercise That Teaches Everything</h3>
-          <p>Open any synthesizer. Start from an initialized patch — all settings reset to default. Play a note and listen to the raw oscillator. Now slowly turn down the filter cutoff while holding the note. Listen to the harmonics disappearing as you remove them. Now add resonance and sweep the cutoff again. Now apply an envelope to the filter with a fast attack, medium decay, and low sustain — the sound will have a characteristic pluck at the start that evolves into a darker sustain. Now add an LFO to the filter cutoff at a slow rate — the sound begins to breathe. In fifteen minutes you have covered the fundamental techniques of subtractive synthesis by doing rather than reading. That experimentation, repeated across different synthesizers with different starting points, is how sound designers build their vocabulary.</p>
-        </div>
-      </div>
 
+<div class="quick-answer">
+  <div class="quick-answer-label">Quick Answer</div>
+  <p>Sound design is the process of creating sounds from scratch using synthesizers, rather than using pre-recorded samples. A synthesizer generates sound using oscillators (which produce the initial waveform), filters (which shape the tone), amplifiers (which control the volume), and modulators (like envelopes and LFOs that make the sound change over time). Understanding these four components — oscillators, filters, amplifiers, and modulators — gives you the ability to create virtually any electronic sound.</p>
+</div>
+
+<h2 id="oscillators">Oscillators — Where Sound Starts <span class="skill-badge skill-badge--beginner">Beginner</span></h2>
+
+<p>An oscillator generates a repeating waveform at a specific frequency (pitch). Different waveform shapes have different harmonic content and sound completely different even at the same pitch:</p>
+
+<p><strong>Sine wave:</strong> A pure tone with no harmonics — just the fundamental frequency. Sounds smooth and clean, like a tuning fork or flute tone. Fundamental for bass sub frequencies and smooth pads.</p>
+
+<p><strong>Sawtooth wave:</strong> Contains all harmonics (both odd and even), producing a bright, rich, buzzy tone. The most common starting point for bass sounds, brass emulations, and lead synths. Most of the warm pad sounds in electronic music history start with sawtooth waves processed through filters and effects.</p>
+
+<p><strong>Square wave:</strong> Contains only odd harmonics, producing a hollow, woody, clarinet-like tone. Classic for bass sounds and leads in chiptune and lo-fi contexts.</p>
+
+<p><strong>Triangle wave:</strong> Similar to a sine wave with additional odd harmonics — warmer than a square wave but richer than a sine. Good for mellow pads and flute-like leads.</p>
+
+<p><strong>Noise:</strong> Not a periodic waveform — random frequencies producing a "hiss" sound. Used in percussion synthesis (snare drum synthesis uses white or pink noise filtered by the amp envelope), textural elements, and rhythmic noise effects.</p>
+
+<h2 id="filters">Filters — Shaping the Tone <span class="skill-badge skill-badge--beginner">Beginner</span></h2>
+
+<p>Synthesizer filters remove frequencies from the oscillator's output. The most common type is the low-pass filter (LPF), which passes low frequencies and removes high frequencies above the cutoff frequency. This is the fundamental sound-shaping tool of analog synthesis — it's what gives analog synths their warmth and character.</p>
+
+<p><strong>Cutoff frequency</strong> determines which frequencies are removed. Low cutoff = dark, muffled tone. High cutoff = bright, full-spectrum tone. Sweeping the cutoff from low to high is the classic "filter sweep" effect fundamental to electronic music.</p>
+
+<p><strong>Resonance</strong> (also called Q or emphasis) boosts the frequencies right at the cutoff point, creating a peaked, nasal quality. High resonance values create a whistle-like resonant peak that's useful for specific tonal effects. At maximum resonance on many filter designs, the filter self-oscillates, producing a sine wave at the cutoff frequency — a technique used for specific bass and effects sounds.</p>
+
+<p><strong>High-pass filter (HPF)</strong> removes low frequencies below the cutoff. Used to thin out a sound and remove low-end weight.</p>
+
+<p><strong>Band-pass filter (BPF)</strong> passes a narrow band of frequencies and removes everything above and below. Creates nasal, telephone-quality tones useful for specific effect and creative applications.</p>
+
+<h2 id="adsr">The ADSR Envelope — Shaping Volume Over Time <span class="skill-badge skill-badge--beginner">Beginner</span></h2>
+
+<p>The ADSR envelope is the most fundamental modulation tool in synthesis. It controls how the amplitude of a sound changes over time when a note is triggered. ADSR stands for: Attack, Decay, Sustain, Release.</p>
+
+<p><strong>Attack:</strong> How long it takes for the sound to reach its maximum volume after a note is triggered. Short attack = immediate sound (percussion, plucks). Long attack = slow fade-in (pad swells, ambient textures).</p>
+
+<p><strong>Decay:</strong> After reaching maximum volume, how long it takes to fall to the Sustain level. A fast decay creates a pluck or ping character. A slow decay creates a more gradual settling.</p>
+
+<p><strong>Sustain:</strong> Not a time value — a level. This is how loud the sound is while a note is held. High sustain = the sound stays near its peak as long as the key is held. Zero sustain = the sound decays completely before the note is released (like a piano note or a plucked string).</p>
+
+<p><strong>Release:</strong> After releasing the note, how long the sound takes to fade to silence. Short release = abrupt cut. Long release = gradual fade (typical of pad and string sounds).</p>
+
+<p>The ADSR envelope applied to the filter cutoff (rather than the amplitude) creates a filter envelope — a classic sound design technique. A fast filter attack and short filter decay opens the filter briefly when a note is triggered and then closes it, creating the characteristic "vowel sweep" of funk bass sounds and many lead synth sounds.</p>
+
+<h2 id="lfo">LFO — The Modulation Engine <span class="skill-badge skill-badge--intermediate">Intermediate</span></h2>
+
+<p>LFO stands for Low Frequency Oscillator — an oscillator running so slowly that its frequency is below the range of hearing (below 20Hz). Instead of generating audible sound, the LFO generates a slow waveshape that modulates (moves) other parameters over time.</p>
+
+<p>An LFO applied to pitch creates vibrato — the subtle pitch wavering of a string player or vocalist. An LFO applied to amplitude creates tremolo — a rhythmic volume pulsation. An LFO applied to the filter cutoff creates a wah-wah effect — the filter opens and closes rhythmically. An LFO applied to the stereo position creates auto-panning.</p>
+
+<p>The LFO rate determines how fast the modulation occurs. Slow LFOs (below 1Hz) create gradual, almost imperceptible changes that add life to static sounds without obvious movement. Fast LFOs (5–20Hz) create obvious rhythmic effects. Syncing the LFO rate to the tempo of the track (common in most modern synthesizers) ensures the modulation feels musical rather than random.</p>
+
+<h2 id="first-sound">Building Your First Sound <span class="skill-badge skill-badge--beginner">Beginner</span></h2>
+
+<p>A simple exercise that teaches every major concept: build a basic bass sound from scratch.</p>
+
+<ol style="color:var(--text-secondary);line-height:1.8;padding-left:1.5rem;">
+  <li>Start with initialized (blank) settings on any subtractive synthesizer.</li>
+  <li>Set one oscillator to a sawtooth wave at pitch C2 (or the lowest range your synth offers).</li>
+  <li>Set the filter to low-pass with cutoff at about 30% (fairly closed, dark tone). Set resonance at about 20%.</li>
+  <li>Set ADSR on the amp envelope: Attack 0, Decay 100ms, Sustain 60%, Release 100ms. You now have a sound with a fast attack, a slight settle, and a sustained body.</li>
+  <li>Play a note. You now have a simple bass sound.</li>
+  <li>Now apply the filter envelope: Attack 0, Decay 200ms, Sustain 0%, Release 0. Set the filter envelope amount to about 40%. Now the filter opens briefly when you trigger the note (creating a bright attack transient) and closes quickly to the cutoff position. This is what gives bass sounds that characteristic "punch."</li>
+  <li>Experiment: change the oscillator to a square wave. Change the filter cutoff. Adjust the filter envelope amount. Each change teaches you what each control does in a real sound.</li>
+</ol>
+
+<div class="go-deeper">
+  <div class="go-deeper-title">Go Deeper</div>
+  <div class="go-deeper-grid">
+    <div class="go-deeper-item">
+      <div class="go-deeper-item-label">📖 Essential Companion</div>
+      <a href="what-is-vst-plugin.html">What Is a VST Plugin</a>
+      <p>VST synthesizers are where most modern sound design happens. Understanding the VST ecosystem helps you choose the right tools.</p>
+    </div>
+    <div class="go-deeper-item">
+      <div class="go-deeper-item-label">📖 Related Technique</div>
+      <a href="what-is-midi.html">What Is MIDI</a>
+      <p>Sound design and MIDI are inseparable — MIDI is how you control your synthesizers and record your performances.</p>
+    </div>
+    <div class="go-deeper-item">
+      <div class="go-deeper-item-label">🎧 Listening Study</div>
+      <a href="#" target="_blank" rel="noopener">Kraftwerk — Computer World (1981)</a>
+      <p>The foundational document of modern synthesizer sound design. Every sound on this record was created from scratch on synthesizers. Study how simple oscillator and filter combinations create distinctive, memorable tones.</p>
+    </div>
+  </div>
+</div>
+
+      </div>
       <footer class="article-footer">
-        <div class="article-tags-footer">
-          <p class="tags-label">Tags</p>
-          <div class="tags-list">
-            <a href="#" class="tag-pill">Techniques</a>
-            <a href="#" class="tag-pill">Sound Design</a>
-            <a href="#" class="tag-pill">Synthesis</a>
-            <a href="#" class="tag-pill">Synthesizers</a>
-            <a href="#" class="tag-pill">Beginners</a>
-            <a href="#" class="tag-pill">Plugins</a>
-          </div>
-        </div>
-        <div style="background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--r-lg);padding:1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
-          <div class="author-avatar" style="width:44px;height:44px;font-size:1rem;flex-shrink:0;" aria-hidden="true">MP</div>
-          <div style="flex:1;">
-            <strong style="font-size:.9rem;color:var(--text-primary);">Written by the Music Production Wiki Team</strong>
-            <p style="font-size:.8rem;color:var(--text-muted);margin:.2rem 0 0;">Our editorial team researches and writes every article on MusicProductionWiki.com. All content is reviewed for accuracy and updated regularly.</p>
-          </div>
-        </div>
+        <div class="article-tags-footer"><p class="tags-label">Tags</p><div class="tags-list"><a href="../categories/techniques.html" class="tag-pill">Techniques</a></div></div>
       </footer>
-
       <section class="related-section" aria-labelledby="relatedHeading">
         <h2 id="relatedHeading" style="font-size:1.35rem;margin-bottom:1.25rem;">Related Articles</h2>
-        <div class="related-grid">
-          <a href="best-free-vst-plugins.html" class="article-card">
-            <div class="article-card-img"><div class="article-card-img-inner">🔌</div></div>
-            <div class="article-card-body">
-              <span class="article-tag teal">Plugins</span>
-              <h3 class="article-title">Best Free VST Plugins 2026</h3>
-              <p class="article-excerpt">The best free synthesizers and effects — including Vital and Surge XT.</p>
-              <div class="article-meta"><span>14 min read</span></div>
-            </div>
-          </a>
-          <a href="what-is-eq-music-production.html" class="article-card">
-            <div class="article-card-img"><div class="article-card-img-inner">🔊</div></div>
-            <div class="article-card-body">
-              <span class="article-tag teal">Techniques</span>
-              <h3 class="article-title">What Is EQ in Music Production?</h3>
-              <p class="article-excerpt">How equalizers work — the natural companion to understanding filters in synthesis.</p>
-              <div class="article-meta"><span>10 min read</span></div>
-            </div>
-          </a>
-          <a href="ableton-live-beginners-guide.html" class="article-card">
-            <div class="article-card-img"><div class="article-card-img-inner">🟢</div></div>
-            <div class="article-card-body">
-              <span class="article-tag teal">DAWs</span>
-              <h3 class="article-title">Ableton Live Beginner's Guide</h3>
-              <p class="article-excerpt">Ableton's Wavetable and Operator synths are excellent for learning synthesis.</p>
-              <div class="article-meta"><span>12 min read</span></div>
-            </div>
-          </a>
-        </div>
+        <div class="related-grid"><a href="what-is-midi.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">What Is MIDI</h3><span class="related-card-meta">Read article →</span></a>
+<a href="what-is-vst-plugin.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">What Is a VST Plugin</h3><span class="related-card-meta">Read article →</span></a>
+<a href="best-free-vst-plugins.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">Best Free VST Plugins</h3><span class="related-card-meta">Read article →</span></a>
+</div>
       </section>
-
     </article>
-
     <aside aria-label="Article sidebar">
-
       <div class="sidebar-widget toc-widget" aria-labelledby="tocHeading">
-        <div class="sidebar-widget-header">
-          <h2 class="sidebar-widget-title" id="tocHeading">In This Article</h2>
-        </div>
-        <div class="sidebar-widget-body">
-          <ul class="toc-list">
-            <li><a href="#the-signal-flow">The Signal Flow</a></li>
-            <li><a href="#oscillator-waveforms">Oscillator Waveforms</a></li>
-            <li><a href="#the-filter">The Filter: The Heart of Subtractive Synthesis</a></li>
-            <li><a href="#envelopes">Envelopes: Shaping Sound Over Time</a></li>
-            <li><a href="#lfos">LFOs: Adding Movement and Modulation</a></li>
-          </ul>
-        </div>
+        <div class="sidebar-widget-header"><h2 class="sidebar-widget-title" id="tocHeading">In This Article</h2></div>
+        <div class="sidebar-widget-body"><ul class="toc-list"><li><a href="#oscillators">Oscillators</a></li>
+<li><a href="#filters">Filters</a></li>
+<li><a href="#adsr">The ADSR Envelope</a></li>
+<li><a href="#lfo">LFO</a></li>
+<li><a href="#first-sound">Building Your First Sound</a></li></ul></div>
       </div>
-
-      <div class="sidebar-widget">
-        <div class="sidebar-widget-header">
-          <h2 class="sidebar-widget-title">Techniques Category</h2>
-        </div>
-        <div class="sidebar-widget-body">
-          <ul class="sidebar-list">
-            <li><a href="best-free-vst-plugins.html">Best Free VST Plugins <span class="sidebar-count">14 min</span></a></li>
-            <li><a href="what-is-eq-music-production.html">What Is EQ? <span class="sidebar-count">10 min</span></a></li>
-            <li><a href="how-to-mix-music-beginners-guide.html">How to Mix Music <span class="sidebar-count">15 min</span></a></li>
-            <li><a href="../categories/techniques.html" style="color:var(--teal);">View all Techniques →</a></li>
-          </ul>
-        </div>
-      </div>
-
       <div class="sidebar-widget" style="background:var(--bg-void);border-color:var(--border-default);">
         <div class="sidebar-widget-body" style="padding:1.5rem;">
           <p style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.5rem;">Newsletter</p>
@@ -252,52 +283,38 @@
           </form>
         </div>
       </div>
-
     </aside>
   </div>
 </main>
-
-<section class="newsletter-section" id="newsletter" aria-labelledby="newsletterHeading2">
+<section class="newsletter-section" id="newsletter" aria-labelledby="newsletterHeading">
   <div class="container">
     <div class="newsletter-inner">
-      <div>
-        <div class="newsletter-badge">Newsletter</div>
-        <h2 id="newsletterHeading2" class="newsletter-heading">The Producer's <em>Briefing</em></h2>
-        <p class="newsletter-desc">A weekly digest of the most important news, techniques, and resources in music production — curated by the Music Production Wiki Team.</p>
-        <ul class="newsletter-perks">
-          <li>New articles and in-depth guides every week</li>
-          <li>Plugin deals, gear drops, and industry news</li>
-          <li>Exclusive techniques not on the site</li>
-          <li>No spam. Unsubscribe anytime.</li>
-        </ul>
+      <div class="newsletter-content">
+        <p class="newsletter-label">Newsletter</p>
+        <h2 id="newsletterHeading" class="newsletter-title">The Producer's <em>Briefing</em></h2>
+        <p class="newsletter-desc">Weekly techniques, gear news, and music business insights. Free.</p>
       </div>
       <div class="newsletter-form-wrap">
-        <div class="newsletter-form-title">Join 12,000+ producers</div>
-        <p class="newsletter-form-sub">Free. Weekly. Worth it.</p>
-        <form class="form-row newsletter-form-js" novalidate>
-          <input type="text" name="name" class="form-input" placeholder="Your first name" autocomplete="given-name" />
-          <input type="email" name="email" class="form-input" placeholder="Your email address" autocomplete="email" required />
-          <button type="submit" class="btn-newsletter">Subscribe to The Producer's Briefing</button>
-          <p class="form-privacy">We respect your inbox. Unsubscribe anytime.</p>
+        <form class="newsletter-form-js" novalidate>
+          <input type="email" name="email" class="form-input" placeholder="Your email address" required />
+          <button type="submit" class="btn-newsletter">Subscribe Free</button>
         </form>
       </div>
     </div>
   </div>
 </section>
-
 <footer class="site-footer" role="contentinfo">
-  <div class="container">
-    <div class="footer-main">
-      <div class="footer-brand">
-        <a href="../index.html" class="site-logo">
-          <span class="logo-wordmark">Music<span>Production</span>Wiki</span>
-          <span class="logo-tagline">The Producer's Reference</span>
-        </a>
-        <p class="footer-desc">A free, independent reference wiki for music producers at every level.</p>
-      </div>
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="../index.html" class="site-logo"><span class="logo-wordmark">Music<span>Production</span>Wiki</span><span class="logo-tagline">The Producer's Reference</span></a>
+    </div>
+    <nav class="footer-nav" aria-label="Footer navigation">
       <div class="footer-col">
-        <h4>Categories</h4>
+        <h3 class="footer-col-title">Categories</h3>
         <ul>
+          <li><a href="../categories/reviews.html">Reviews</a></li>
+          <li><a href="../categories/comparisons.html">Comparisons</a></li>
+          <li><a href="../categories/ai-music.html">AI Music</a></li>
           <li><a href="../categories/daws.html">DAWs</a></li>
           <li><a href="../categories/plugins.html">Plugins</a></li>
           <li><a href="../categories/gear.html">Gear</a></li>
@@ -306,38 +323,10 @@
           <li><a href="../categories/glossary.html">Glossary</a></li>
         </ul>
       </div>
-      <div class="footer-col">
-        <h4>Popular Articles</h4>
-        <ul>
-          <li><a href="sidechain-compression-guide.html">Sidechain Compression</a></li>
-          <li><a href="best-daw-for-beginners.html">Best DAW for Beginners</a></li>
-          <li><a href="how-music-royalties-work.html">How Music Royalties Work</a></li>
-          <li><a href="what-is-eq-music-production.html">What Is EQ?</a></li>
-          <li><a href="ableton-live-beginners-guide.html">Ableton Live Guide</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>About</h4>
-        <ul>
-          <li><a href="../about.html">About the Wiki</a></li>
-          <li><a href="../contribute.html">Contribute</a></li>
-          <li><a href="#newsletter">Newsletter</a></li>
-          <li><a href="../contact.html">Contact</a></li>
-          <li><a href="../privacy.html">Privacy Policy</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p class="footer-copy">© <span id="copyrightYear"></span> MusicProductionWiki.com. All rights reserved. Content by the Music Production Wiki Team.</p>
-      <div class="footer-links-bottom">
-        <a href="../privacy.html">Privacy</a>
-        <a href="../terms.html">Terms</a>
-        <a href="../sitemap.xml">Sitemap</a>
-      </div>
-    </div>
+    </nav>
   </div>
+  <div class="footer-bottom"><div class="container"><p>© <span id="copyrightYear"></span> MusicProductionWiki.com. All rights reserved. Content by the Music Production Wiki Team.</p></div></div>
 </footer>
-
 <script src="../js/main.js"></script>
 <script>document.getElementById('copyrightYear').textContent = new Date().getFullYear();</script>
 </body>
