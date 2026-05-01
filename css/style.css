@@ -1840,7 +1840,7 @@ code {
 /* ================================================================
    RESPONSIVE — 1080px
    ================================================================ */
-@media (max-width: 900px) {
+@media (max-width: 1080px) {
   .category-grid    { grid-template-columns: repeat(2, 1fr); }
   .article-grid     { grid-template-columns: repeat(2, 1fr); }
   .article-layout   { grid-template-columns: 1fr; gap: 2rem; }
@@ -1946,4 +1946,45 @@ code {
   min-width: 0;
   max-width: var(--content-w);
   width: 100%;
+}
+
+/* ================================================================
+   SIDEBAR FIX — targets actual DOM structure
+   ================================================================ */
+
+/* Make main a grid with sidebar as second column */
+main.container#main-content {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  grid-template-rows: auto;
+  gap: 0 3.5rem;
+  align-items: start;
+}
+
+/* article-layout takes up left column, spans all rows */
+main.container#main-content .article-layout {
+  grid-column: 1;
+  grid-row: 1;
+  display: block;
+  padding: 2.5rem 0 5rem;
+}
+
+/* aside goes into right column */
+main.container#main-content > aside {
+  grid-column: 2;
+  grid-row: 1;
+  position: sticky;
+  top: 1.5rem;
+  padding-top: 2.5rem;
+}
+
+@media (max-width: 900px) {
+  main.container#main-content {
+    display: block;
+  }
+  main.container#main-content > aside {
+    position: static;
+    padding-top: 0;
+    margin-top: 2rem;
+  }
 }
