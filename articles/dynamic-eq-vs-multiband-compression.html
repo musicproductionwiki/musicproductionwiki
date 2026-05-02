@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <meta name="description" content="Dynamic EQ vs multiband compression: how each works, key technical and sonic differences, when to use each in mixing and mastering, practical examples, common mistakes, and recommended plugins."/>
+  <title>Dynamic EQ vs Multiband Compression: What's the Difference and When to Use Each — MusicProductionWiki.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"/>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1F39B;</text></svg>"/>
+  <style>
+    #readingProgress{position:fixed;top:0;left:0;height:3px;background:var(--teal);width:0%;z-index:200;transition:width 0.1s linear;}
+    .quick-answer{background:linear-gradient(135deg,rgba(0,212,168,0.08),rgba(167,139,250,0.06));border:1px solid rgba(0,212,168,0.3);border-left:4px solid var(--teal);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .quick-answer-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.6rem;}
+    .quick-answer p{font-size:1rem;line-height:1.65;color:var(--text-primary);margin:0;}
+    .skill-badge{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .6rem;border-radius:4px;margin-left:.6rem;vertical-align:middle;position:relative;top:-2px;}
+    .skill-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .skill-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .skill-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .settings-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .settings-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .settings-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .settings-table tr:last-child td{border-bottom:none;}
+    .settings-table tr:hover td{background:var(--bg-surface);}
+    .settings-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .settings-table .mono{font-family:var(--font-mono);font-size:.82rem;color:var(--teal);}
+    .mistake-box{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-left:4px solid #ef4444;border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .mistake-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ef4444;margin-bottom:.4rem;}
+    .mistake-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference{border-left:3px solid var(--purple);padding:.75rem 1.25rem;margin:1.25rem 0;background:rgba(167,139,250,0.05);border-radius:0 6px 6px 0;}
+    .pro-reference-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.35rem;}
+    .pro-reference p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference strong{color:var(--text-primary);}
+    .listening-prescription{background:var(--bg-void);border:1px solid var(--border-default);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;position:relative;}
+    .listening-prescription::before{content:'🎧';position:absolute;top:-14px;left:1.5rem;background:var(--bg-void);padding:0 .4rem;font-size:1.1rem;}
+    .listening-prescription-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:.75rem;}
+    .listening-prescription p{font-size:.9rem;line-height:1.7;color:var(--text-secondary);margin:0 0 .5rem;}
+    .listening-record{font-weight:600;color:var(--text-primary);}
+    .decision-framework{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .decision-framework-title{font-family:var(--font-display);font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:1rem;}
+    .decision-item{display:flex;gap:1rem;padding:.65rem 0;border-bottom:1px solid var(--border-subtle);font-size:.88rem;line-height:1.55;}
+    .decision-item:last-child{border-bottom:none;}
+    .decision-if{color:var(--text-muted);font-style:italic;min-width:2rem;}
+    .decision-then{color:var(--text-primary);}
+    .decision-then strong{color:var(--teal);}
+    .exercise-block{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.25rem 0;}
+    .exercise-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;}
+    .exercise-badge{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .7rem;border-radius:4px;}
+    .exercise-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .exercise-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .exercise-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .exercise-title{font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text-primary);}
+    .exercise-block ol{margin:0;padding-left:1.25rem;color:var(--text-secondary);font-size:.88rem;line-height:1.7;}
+    .exercise-block ol li{margin-bottom:.4rem;}
+    .version-line{font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:4px;padding:.4rem .75rem;margin:.75rem 0 1.5rem;display:inline-block;}
+    .go-deeper{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:10px;padding:1.75rem;margin:2.5rem 0;}
+    .go-deeper-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text-primary);margin-bottom:1.25rem;}
+    .go-deeper-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;}
+    .go-deeper-item{background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:7px;padding:1rem 1.1rem;}
+    .go-deeper-item-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.35rem;}
+    .go-deeper-item a{font-size:.88rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;}
+    .go-deeper-item p{font-size:.78rem;color:var(--text-muted);margin:.3rem 0 0;}
+    .citation{font-size:.78rem;color:var(--text-muted);font-style:italic;margin-top:.25rem;}
+    .diagram-wrap{margin:1.75rem 0;background:var(--bg-void);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem;overflow-x:auto;}
+    .diagram-caption{font-size:.78rem;color:var(--text-muted);text-align:center;margin-top:.75rem;font-style:italic;}
+    .highlight-box{background:rgba(0,212,168,0.06);border:1px solid rgba(0,212,168,0.2);border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .highlight-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.4rem;}
+    .highlight-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin:1.5rem 0;}
+    .stat-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem;text-align:center;}
+    .stat-number{font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--teal);display:block;}
+    .stat-label{font-size:.78rem;color:var(--text-secondary);margin-top:.25rem;}
+    .action-steps{counter-reset:steps;list-style:none;padding:0;margin:1.5rem 0;}
+    .action-steps li{counter-increment:steps;display:flex;gap:1rem;padding:.85rem 0;border-bottom:1px solid var(--border-subtle);font-size:.9rem;color:var(--text-secondary);line-height:1.6;}
+    .action-steps li:last-child{border-bottom:none;}
+    .action-steps li::before{content:counter(steps);background:var(--teal);color:#000;font-weight:800;font-size:.75rem;width:1.6rem;height:1.6rem;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem;}
+    .genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:1.5rem 0;}
+    .genre-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem 1.25rem;}
+    .genre-card-name{font-family:var(--font-display);font-size:.85rem;font-weight:700;color:var(--teal);margin-bottom:.4rem;}
+    .genre-card p{font-size:.82rem;color:var(--text-secondary);line-height:1.55;margin:0;}
+    .comparison-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .comparison-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .comparison-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .comparison-table tr:last-child td{border-bottom:none;}
+    .comparison-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .affiliate-cta{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,212,168,0.1);border:1px solid rgba(0,212,168,0.25);color:var(--teal);font-size:.82rem;font-weight:600;padding:.45rem .9rem;border-radius:6px;text-decoration:none;}
+</style>
+</head>
+<body>
+<div id="readingProgress"></div>
+<header class="site-header" role="banner">
+  <div class="container header-inner">
+    <a href="../index.html" class="site-logo" aria-label="MusicProductionWiki Home">
+      <span class="logo-wordmark">Music<span>Production</span>Wiki</span>
+      <span class="logo-tagline">The Producer's Reference</span>
+    </a>
+    <nav class="primary-nav" aria-label="Primary navigation">
+      <ul class="nav-list">
+        <li><a href="../categories/reviews.html">Reviews</a></li>
+        <li><a href="../categories/comparisons.html">Comparisons</a></li>
+        <li><a href="../categories/ai-music.html">AI Music</a></li>
+        <li><a href="../categories/daws.html">DAWs</a></li>
+        <li><a href="../categories/plugins.html">Plugins</a></li>
+        <li><a href="../categories/gear.html">Gear</a></li>
+        <li><a href="../categories/techniques.html" class="active">Techniques</a></li>
+        <li><a href="../categories/music-business.html">Music Business</a></li>
+        <li><a href="../categories/glossary.html">Glossary</a></li>
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <form class="search-form" role="search" action="#" method="get">
+        <label for="siteSearch" class="visually-hidden">Search articles</label>
+        <input type="search" id="siteSearch" class="search-input" placeholder="Search articles…" name="q" autocomplete="off" />
+        <button type="submit" class="search-btn" aria-label="Submit search">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </button>
+      </form>
+      <a href="#newsletter" class="btn-subscribe">The Producer's Briefing →</a>
+    </div>
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileNav">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+<nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
+  <ul class="nav-list">
+    <li><a href="../categories/reviews.html">Reviews</a></li>
+    <li><a href="../categories/comparisons.html">Comparisons</a></li>
+    <li><a href="../categories/ai-music.html">AI Music</a></li>
+    <li><a href="../categories/daws.html">DAWs</a></li>
+    <li><a href="../categories/plugins.html">Plugins</a></li>
+    <li><a href="../categories/gear.html">Gear</a></li>
+    <li><a href="../categories/techniques.html" class="active">Techniques</a></li>
+    <li><a href="../categories/music-business.html">Music Business</a></li>
+    <li><a href="../categories/glossary.html">Glossary</a></li>
+  </ul>
+</nav>
+<div class="container">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><ol>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../categories/techniques.html">Techniques</a></li>
+    <li><span aria-current="page">Dynamic EQ vs Multiband Compression: What's the Difference and When to Use Each</span></li>
+  </ol></nav>
+</div>
+<main class="container" id="main-content">
+  <div class="article-layout">
+    <article aria-labelledby="articleTitle">
+      <header class="article-header">
+        <div class="article-tags"><span class="article-tag teal">Techniques</span></div>
+        <h1 id="articleTitle">Dynamic EQ vs Multiband Compression: What's the Difference and When to Use Each</h1>
+        <div class="article-header-meta">
+          <div class="article-author"><div class="author-avatar" aria-hidden="true">MP</div><span class="author-name">The Music Production Wiki Team</span></div>
+          <span class="meta-divider"></span><span class="meta-item">Updated May 2025</span>
+          <span class="meta-divider"></span><span class="meta-item">16 min read</span>
+        </div>
+      </header>
+      <div class="article-body">
+<div class="quick-answer">
+  <div class="quick-answer-label">Quick Answer</div>
+  <p>Dynamic EQ and multiband compression both apply frequency-specific gain reduction based on signal level — but they're fundamentally different tools. Dynamic EQ is a parametric EQ where the gain changes dynamically only when a target frequency exceeds a threshold — surgical, transparent, and precise. Multiband compression compresses entire frequency bands independently and continuously — more aggressive, capable of heavy dynamic shaping, but with more character and potential for artefacts. Use dynamic EQ for transparency and precision. Use multiband compression for heavy dynamic control and loudness optimisation.</p>
+</div>
+
+<p>Dynamic EQ and multiband compression are the two most commonly confused mixing and mastering tools. They share surface-level similarity — both process specific frequency ranges based on incoming signal level — and at moderate settings they can produce similar results. At their design intentions and extremes, they are distinct tools solving different problems. Understanding both clearly improves every mixing and mastering decision they're relevant to.</p>
+
+<div class="info-box">
+  <strong>What we'll cover:</strong> How dynamic EQ works mechanically, how multiband compression works mechanically, the key technical differences, their sonic character differences, when to use each in mixing, when to use each in mastering, practical examples with settings, common mistakes, plugin recommendations for each, and a decision framework.
+</div>
+
+<h2 id="dynamic-eq-explained">How Dynamic EQ Works</h2>
+<p>A dynamic EQ band is a standard parametric EQ band where the gain amount — how much it boosts or cuts — is controlled by the signal level at that frequency rather than being a fixed static value. When the signal level at the target frequency exceeds a set threshold, the EQ band engages and applies the specified gain reduction (or boost, for upward dynamic EQ). When the level drops below the threshold, the band returns to 0 dB — transparent, as if it isn't there.</p>
+<p>The processing is frequency-specific: a dynamic cut at 300 Hz only reduces 300 Hz content, only when 300 Hz content is elevated above the threshold. The signal at every other frequency is completely unaffected. This surgical precision is the defining characteristic of dynamic EQ and the reason it produces more transparent results than static EQ at comparable amounts of gain reduction.</p>
+<p><strong>The internal signal flow:</strong> The dynamic EQ's detection circuit analyses the incoming signal level specifically at the target frequency (using a sidechain filter tuned to that frequency). When the detected level exceeds the threshold, the circuit drives the EQ band's gain control — reducing gain proportionally to the amount above threshold, scaled by the ratio parameter. This is fundamentally the same process as a compressor, but instead of controlling the overall signal level, it controls only the EQ band's gain at a specific frequency.</p>
+<p><strong>Key parameters:</strong> Frequency (centre of the EQ band), Q/bandwidth (how wide or narrow the band is — narrow for surgical problems, wider for broad tonal issues), Threshold (level at which the band begins engaging), Ratio (how aggressively the band responds above threshold), Range (maximum gain reduction or boost that the dynamic control can apply), Attack (how quickly the band responds when the threshold is exceeded), Release (how quickly the band returns toward neutral when the level drops).</p>
+
+<h2 id="multiband-explained">How Multiband Compression Works</h2>
+<p>A multiband compressor splits the incoming audio signal into frequency bands using crossover filters — typically three to five bands — and applies independent, full compressors to each band. The compressed bands are recombined at the output. Each band has its own threshold, ratio, attack, release, knee, and output gain controls operating completely independently of the other bands.</p>
+<p>The key difference from dynamic EQ: multiband compression compresses each frequency band as a complete signal whenever any content in that band exceeds the threshold. The low band compressor responds to all content below the crossover frequency — not just a specific frequency within that range. This broader response is both the power and the limitation of multiband compression: it can control the dynamics of an entire frequency region, but it can't target a specific frequency within that region with the surgical precision of a narrow dynamic EQ band.</p>
+<p><strong>The crossover network:</strong> Splitting the signal into bands using filters introduces phase changes at the crossover frequencies — the transition zones where one band hands off to the next. These phase changes are audible as subtle colouration, particularly when individual bands are processed differently and recombined. Linear-phase crossover designs (like FabFilter Pro-MB's linear phase mode) eliminate this colouration but introduce latency. Minimum-phase crossovers (most traditional multiband compressors) are low-latency but introduce some colouration at crossover frequencies. This is a limitation of the architecture — not a flaw in any specific implementation — and explains why some engineers prefer dynamic EQ for transparency-critical mastering applications.</p>
+
+<h2 id="key-differences">The Key Technical Differences</h2>
+<table class="comparison-table">
+  <thead><tr><th>Aspect</th><th>Dynamic EQ</th><th>Multiband Compression</th></tr></thead>
+  <tbody>
+    <tr><td>Processing target</td><td>Specific frequency point or narrow band</td><td>Entire frequency band (below/above crossover)</td></tr>
+    <tr><td>Frequency precision</td><td>Very high — any frequency, any Q</td><td>Low — broad bands defined by crossover</td></tr>
+    <tr><td>Transparency</td><td>High — minimal colouration</td><td>Lower — crossover phase colouration</td></tr>
+    <tr><td>Typical gain reduction</td><td>1–6 dB</td><td>1–15 dB</td></tr>
+    <tr><td>Dynamic range capability</td><td>Subtle to moderate</td><td>Moderate to extreme</td></tr>
+    <tr><td>Best applications</td><td>Surgical frequency problems, mastering polish</td><td>Heavy bus processing, loudness maximisation</td></tr>
+    <tr><td>Learning curve</td><td>Moderate — EQ knowledge + compression concepts</td><td>Moderate — requires understanding crossover setup</td></tr>
+  </tbody>
+</table>
+
+<h2 id="sonic-character">Sonic Character Differences</h2>
+<p>Dynamic EQ sounds like EQ — because it is EQ, applied dynamically. When it engages, the frequency response changes at the target frequency in a way that sounds like someone smoothly adjusting an EQ knob. This transparent, EQ-like quality is why engineers use dynamic EQ for situations requiring surgical precision without audible dynamic artefacts. At carefully chosen settings, dynamic EQ is difficult to hear even when it's doing significant work.</p>
+<p>Multiband compression sounds like compression — because it is compression, applied in frequency bands. When it engages, the dynamics within each band are controlled in a way that produces the characteristic density, sustain, and sometimes pumping of compression. At moderate settings on a mix bus, multiband compression produces a cohesion and loudness maximisation that dynamic EQ can't achieve at comparable amounts of processing. At aggressive settings, the inter-band pumping (bands compressing independently and "breathing" at different rates) becomes audible as a signature character — sometimes desired, sometimes not.</p>
+
+<h2 id="mixing-applications">When to Use Each in Mixing</h2>
+<p><strong>Dynamic EQ — mixing applications:</strong></p>
+<p><em>Intermittent frequency problems on specific instruments:</em> The vocal that gets boxy only when the singer pushes hard into the chorus. A dynamic cut at 300 Hz, threshold set so it only engages on loud phrases, 3:1 ratio, 20 ms attack to let the phrase start, 100 ms release. The quiet verses are completely unaffected. A static cut at 300 Hz would help the loud moments but thin the quiet phrases.</p>
+<p><em>De-essing:</em> A de-esser is functionally a narrow-band dynamic EQ targeting sibilance frequencies (typically 5–10 kHz). FabFilter Pro-Q3's dynamic bands, placed at the specific sibilance frequency with a narrow Q, function as a de-esser with more precision than most dedicated de-essers. The advantage: you can see exactly which frequency is being cut and by how much, and you can set the Q to avoid affecting the non-sibilant high frequencies around the problem.</p>
+<p><em>Resonance control on electric guitar:</em> Distorted guitars often have a specific resonance frequency that becomes painful at higher volumes or in a dense mix — a frequency somewhere in the 2–5 kHz range that peaks on certain chord shapes. A dynamic notch at that frequency cuts the resonance only when it appears without permanently removing midrange presence from the guitar.</p>
+<p><em>Mix bus transparency:</em> Light dynamic EQ on the mix bus (1–2 dB dynamic reduction in specific ranges) can address mix-wide frequency imbalances that only appear on certain musical passages. A dynamic low-end cut that only engages when the bass instruments are particularly heavy, or a dynamic high-mid cut that engages on dense passages to prevent buildup — these are mastering-adjacent decisions that can be made during mixing without the heavy-handed approach of full multiband compression.</p>
+
+<p><strong>Multiband compression — mixing applications:</strong></p>
+<p><em>Heavy bus control:</em> A drum bus with inconsistent bass response — the kick thudding irregularly, some hits heavy and others thin — is the textbook multiband compression application. A low band compressor (crossover at 150–200 Hz) with ratio 4:1, fast attack, medium release controls the bass content of the drum bus independently of the midrange and high frequencies. The kick and bass drum consistency improves dramatically without affecting the snare and cymbal dynamics.</p>
+<p><em>Parallel multiband processing:</em> Blending a heavily multiband-compressed version of the drums with the dry signal (parallel compression) adds density and sustain in specific frequency bands. The low band can be compressed harder than the high band, adding sub weight and kick punch while preserving cymbal dynamics. This parallel approach avoids the full-signal pumping of direct multiband compression while achieving the frequency-specific density enhancement.</p>
+<p><em>OTT-style creative upward compression:</em> OTT (Over The Top, free from Xfer Records) applies aggressive three-band upward compression — boosting quiet parts of each band rather than just reducing loud ones. This upward multiband processing densifies and brightens sounds in a distinctive way used on synths, pads, drums, and full mixes in electronic music. This is a creative effect rather than a transparency-oriented tool, and multiband compression's character serves the creative goal directly.</p>
+
+<h2 id="mastering-applications">When to Use Each in Mastering</h2>
+<p><strong>Dynamic EQ in mastering:</strong> Mastering requires the highest possible transparency — the master should sound as close to the mix as possible while addressing specific issues. Dynamic EQ is the preferred tool for frequency issues in mastering because its surgical precision and minimal phase colouration preserve the mix's character while addressing problems. A dynamic cut that only engages when the bass frequencies of the mix are particularly elevated (due to a bass-heavy passage or kick heavy section) addresses the problem without permanently altering the mix's frequency response. A dynamic high-frequency cut that catches harsh moments on loud passages while preserving presence on moderate passages is achievable with dynamic EQ and not practically achievable with static EQ or multiband compression at the same quality level.</p>
+<p><strong>Multiband compression in mastering:</strong> Multiband compression is appropriate in mastering for heavy-handed loudness maximisation (genres where competitive loudness is a priority), broadcast delivery requiring consistent loudness across the frequency spectrum, and material with severe dynamic imbalances between frequency ranges that require more intervention than dynamic EQ can provide. The transparency concern that limits dynamic EQ's effect size doesn't apply when the mastering goal explicitly requires heavy dynamic shaping rather than surgical transparency.</p>
+
+<h2 id="mistakes">Common Mistakes</h2>
+<div class="mistake-box">
+  <div class="mistake-box-label">Mistake 1</div>
+  <p><strong>Using multiband compression where dynamic EQ would be more appropriate.</strong> If you're applying multiband compression with very narrow band splits to target a specific frequency problem, you're essentially using a multiband compressor as a clunky dynamic EQ. Narrow, precise frequency problems belong to dynamic EQ. Multiband compression's strength is controlling broad frequency regions, not targeting narrow frequency points.</p>
+</div>
+<div class="mistake-box">
+  <div class="mistake-box-label">Mistake 2</div>
+  <p><strong>Setting crossovers poorly in multiband compression.</strong> Crossover frequencies should be placed where the frequency content of different instruments transitions — the kick's fundamental below the crossover, the bass guitar's body above it, for example. Arbitrary crossover placement creates unnatural splits that divide instrument content between bands and produces poor results regardless of the compression settings.</p>
+</div>
+<div class="mistake-box">
+  <div class="mistake-box-label">Mistake 3</div>
+  <p><strong>Using dynamic EQ at too-fast attack times on transient content.</strong> A very fast dynamic EQ attack (under 5 ms) on a transient-rich source will catch the transients themselves and compress the attack — effectively acting as a transient shaper on that frequency. This can remove the punch from a kick's click frequency or the crack from a snare's presence range. Use slower attacks (10–30 ms) on transient material to let the initial hit through before the dynamic engagement begins.</p>
+</div>
+<div class="mistake-box">
+  <div class="mistake-box-label">Mistake 4</div>
+  <p><strong>Overusing multiband compression on the master bus without a specific need.</strong> Many beginning engineers apply multiband compression to the master bus because "that's what the professionals do" — without identifying a specific problem it's solving. Multiband compression on the master bus adds colouration and potentially reduces dynamic range without providing a clear benefit if the mix doesn't have band-specific dynamic problems. Apply it when you have a specific reason: the bass is too dynamic, the high end needs controlling. Not as a default finishing step.</p>
+</div>
+
+<h2 id="plugins">Plugin Recommendations</h2>
+<p><strong>Dynamic EQ plugins:</strong> FabFilter Pro-Q3 ($179) — the benchmark, with up to 24 dynamic bands, excellent visual feedback, and per-band stereo/M-S processing. TDR Nova (free) — four dynamic bands comparable in quality to Pro-Q3's dynamic mode. iZotope Neutron's Dynamic EQ — AI-assisted frequency detection that identifies problem frequencies and suggests dynamic band placement.</p>
+<p><strong>Multiband compression plugins:</strong> FabFilter Pro-MB ($179) — the most transparent and flexible multiband compressor available, with linear phase crossover option. OTT by Xfer Records (free) — the creative upward multiband standard for electronic music production. iZotope Ozone's Multiband Dynamics — professional mastering-grade multiband with mid-side mode. Waves C6 ($29–49 on sale) — six-band parallel/serial multiband, reliable workhorse for mixing and mastering applications.</p>
+
+<h2 id="decision">Decision Framework</h2>
+<div class="decision-framework">
+  <div class="decision-framework-title">Dynamic EQ vs Multiband — When to Reach for Each</div>
+  <div class="decision-item"><span class="decision-if">Intermittent frequency problem on a specific instrument</span><span class="decision-then"><strong>Dynamic EQ</strong> — surgical, transparent, only engages when needed</span></div>
+  <div class="decision-item"><span class="decision-if">De-essing a vocal</span><span class="decision-then"><strong>Dynamic EQ</strong> (or dedicated de-esser, which is a narrow-band dynamic EQ)</span></div>
+  <div class="decision-item"><span class="decision-if">Heavy bass control on a drum bus</span><span class="decision-then"><strong>Multiband compression</strong> — controlling the full low band, not a specific frequency</span></div>
+  <div class="decision-item"><span class="decision-if">Mastering with transparency priority</span><span class="decision-then"><strong>Dynamic EQ</strong> — less colouration, more surgical control</span></div>
+  <div class="decision-item"><span class="decision-if">Loudness maximisation for competitive streaming levels</span><span class="decision-then"><strong>Multiband compression</strong> — heavy dynamic shaping is the goal</span></div>
+  <div class="decision-item"><span class="decision-if">Creative density effect on synths or electronic drums</span><span class="decision-then"><strong>Multiband compression</strong> (OTT-style) — the character is the point</span></div>
+</div>
+
+<div class="go-deeper">
+  <div class="go-deeper-title">Go Deeper</div>
+  <div class="go-deeper-grid">
+    <div class="go-deeper-item"><div class="go-deeper-item-label">Reviews</div><a href="fabfilter-pro-q3-review.html">FabFilter Pro-Q3 Review</a><p>The best dynamic EQ</p></div>
+    <div class="go-deeper-item"><div class="go-deeper-item-label">Techniques</div><a href="what-is-compression-music-production.html">What Is Compression?</a><p>Compression fundamentals</p></div>
+    <div class="go-deeper-item"><div class="go-deeper-item-label">Techniques</div><a href="what-is-eq-music-production.html">What Is EQ?</a><p>EQ fundamentals</p></div>
+  </div>
+</div>
+</div>
+      <footer class="article-footer">
+        <div class="article-tags-footer"><p class="tags-label">Tags</p>
+        <div class="tags-list"><a href="../categories/techniques.html" class="tag-pill">Techniques</a></div></div>
+      </footer>
+      <section class="related-section" aria-labelledby="relatedHeading">
+        <h2 id="relatedHeading" style="font-size:1.35rem;margin-bottom:1.25rem;">Related Articles</h2>
+        <div class="related-grid"><a href="fabfilter-pro-q3-review.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">FabFilter Pro-Q3 Review</h3><span class="related-card-meta">Read article →</span></a>
+<a href="what-is-compression-music-production.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">What Is Compression?</h3><span class="related-card-meta">Read article →</span></a>
+<a href="what-is-eq-music-production.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">What Is EQ?</h3><span class="related-card-meta">Read article →</span></a>
+</div>
+      </section>
+    </article>
+    <aside aria-label="Article sidebar">
+      <div class="sidebar-widget toc-widget">
+        <div class="sidebar-widget-header"><h2 class="sidebar-widget-title">In This Article</h2></div>
+        <div class="sidebar-widget-body"><ul class="toc-list"><li><a href="#dynamic-eq-explained">How Dynamic EQ Works</a></li>
+<li><a href="#multiband-explained">How Multiband Compression Works</a></li>
+<li><a href="#key-differences">Key Technical Differences</a></li>
+<li><a href="#sonic-character">Sonic Character Differences</a></li>
+<li><a href="#mixing-applications">When to Use Each in Mixing</a></li>
+<li><a href="#mastering-applications">When to Use Each in Mastering</a></li>
+<li><a href="#mistakes">Common Mistakes</a></li>
+<li><a href="#plugins">Plugin Recommendations</a></li>
+<li><a href="#decision">Decision Framework</a></li></ul></div>
+      </div>
+    </aside>
+  </div>
+</main>
+<section class="newsletter-section" id="newsletter" aria-labelledby="newsletterHeading">
+  <div class="container">
+    <div class="newsletter-inner">
+      <div class="newsletter-content">
+        <p class="newsletter-label">Newsletter</p>
+        <h2 id="newsletterHeading" class="newsletter-title">The Producer's <em>Briefing</em></h2>
+        <p class="newsletter-desc">Weekly techniques, gear news, and music business insights. Free.</p>
+      </div>
+      <div class="newsletter-form-wrap">
+        <form class="newsletter-form-js" novalidate>
+          <input type="email" name="email" class="form-input" placeholder="Your email address" required />
+          <button type="submit" class="btn-newsletter">Subscribe Free</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<footer class="site-footer" role="contentinfo">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="../index.html" class="site-logo"><span class="logo-wordmark">Music<span>Production</span>Wiki</span><span class="logo-tagline">The Producer's Reference</span></a>
+    </div>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <div class="footer-col">
+        <h3 class="footer-col-title">Categories</h3>
+        <ul>
+          <li><a href="../categories/reviews.html">Reviews</a></li>
+          <li><a href="../categories/comparisons.html">Comparisons</a></li>
+          <li><a href="../categories/ai-music.html">AI Music</a></li>
+          <li><a href="../categories/daws.html">DAWs</a></li>
+          <li><a href="../categories/plugins.html">Plugins</a></li>
+          <li><a href="../categories/gear.html">Gear</a></li>
+          <li><a href="../categories/techniques.html">Techniques</a></li>
+          <li><a href="../categories/music-business.html">Music Business</a></li>
+          <li><a href="../categories/glossary.html">Glossary</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="footer-bottom"><div class="container"><p>© <span id="copyrightYear"></span> MusicProductionWiki.com. All rights reserved. Content by the Music Production Wiki Team.</p></div></div>
+</footer>
+<script src="../js/main.js"></script>
+<script>document.getElementById('copyrightYear').textContent = new Date().getFullYear();</script>
+</body></html>
