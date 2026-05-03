@@ -2009,3 +2009,130 @@ main.container#main-content .article-layout > aside {
     margin-top: 2rem;
   }
 }
+
+/* ================================================================
+   MOBILE NAV FIX — Old article HTML structure compatibility
+   Some articles use .main-nav / .mobile-nav-toggle instead of
+   .primary-nav / #menuToggle. This patch adds full mobile support
+   for the old structure without touching any existing rules.
+   ================================================================ */
+
+/* Hide old-style inline nav on mobile, show toggle button */
+@media (max-width: 768px) {
+
+  .main-nav {
+    display: none;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border-subtle);
+    z-index: 500;
+    padding: 0.75rem 1.5rem 1.5rem;
+    animation: slideDown 0.2s ease;
+  }
+
+  .main-nav.open {
+    display: block;
+  }
+
+  .main-nav ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .main-nav ul li a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.85rem 0.25rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border-subtle);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .main-nav ul li a::after { display: none !important; }
+  .main-nav ul li a:hover { color: var(--teal); }
+  .main-nav ul li:last-child a { border-bottom: none; }
+
+  .mobile-nav-toggle {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-default);
+    border-radius: var(--r-sm);
+    color: var(--text-secondary);
+    font-size: 1.3rem;
+    cursor: pointer;
+    padding: 0;
+    margin-left: auto;
+    flex-shrink: 0;
+    transition: background 0.2s, color 0.2s;
+    line-height: 1;
+  }
+  .mobile-nav-toggle:hover {
+    background: var(--bg-hover);
+    color: var(--teal);
+  }
+
+  a.logo {
+    font-size: 0.92rem !important;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+    flex-shrink: 1;
+    text-decoration: none;
+    color: var(--text-primary);
+  }
+  a.logo::after { display: none !important; }
+}
+
+@media (min-width: 769px) {
+  .main-nav {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    justify-content: center;
+  }
+  .main-nav ul {
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 0;
+    flex-wrap: wrap;
+  }
+  .main-nav ul li a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 0.7rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    border-radius: var(--r-sm);
+    transition: color 0.15s, background 0.15s;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .main-nav ul li a::after { display: none !important; }
+  .main-nav ul li a:hover { color: var(--text-primary); background: var(--bg-elevated); }
+  .main-nav ul li a.active { color: var(--teal); }
+  .mobile-nav-toggle { display: none !important; }
+}
