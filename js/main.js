@@ -504,3 +504,50 @@
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
 })();
+  /* ------------------------------------------------
+     OLD-STRUCTURE MOBILE NAV TOGGLE
+     Handles articles using .mobile-nav-toggle / #mainNav
+     instead of #menuToggle / #mobileNav
+     ------------------------------------------------ */
+  (function() {
+    var oldToggle = document.querySelector('.mobile-nav-toggle');
+    var oldNav    = document.getElementById('mainNav');
+    if (!oldToggle || !oldNav) return;
+
+    oldToggle.addEventListener('click', function() {
+      var isOpen = oldNav.classList.toggle('open');
+      oldToggle.setAttribute('aria-expanded', String(isOpen));
+      oldToggle.textContent = isOpen ? '✕' : '☰';
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && oldNav.classList.contains('open')) {
+        oldNav.classList.remove('open');
+        oldToggle.setAttribute('aria-expanded', 'false');
+        oldToggle.textContent = '☰';
+        document.body.style.overflow = '';
+      }
+    });
+
+    oldNav.querySelectorAll('a').forEach(function(link) {
+      link.addEventListener('click', function() {
+        oldNav.classList.remove('open');
+        oldToggle.setAttribute('aria-expanded', 'false');
+        oldToggle.textContent = '☰';
+        document.body.style.overflow = '';
+      });
+    });
+
+    document.addEventListener('click', function(e) {
+      if (oldNav.classList.contains('open') &&
+          !oldNav.contains(e.target) &&
+          e.target !== oldToggle) {
+        oldNav.classList.remove('open');
+        oldToggle.setAttribute('aria-expanded', 'false');
+        oldToggle.textContent = '☰';
+        document.body.style.overflow = '';
+      }
+    });
+  })();
+
