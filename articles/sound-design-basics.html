@@ -1,340 +1,278 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <meta name="description" content="Sound design basics: subtractive synthesis explained, oscillators, filters, envelopes, LFOs, wavetable vs FM synthesis, sampling, and how to start designing your own sounds from scratch."/>
-  <title>Sound Design Basics: A Complete Beginner's Guide — MusicProductionWiki.com</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"/>
-  <link rel="stylesheet" href="../css/style.css"/>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1F39B;</text></svg>"/>
-  <style>
-    #readingProgress{position:fixed;top:0;left:0;height:3px;background:var(--teal);width:0%;z-index:200;transition:width 0.1s linear;}
-    .quick-answer{background:linear-gradient(135deg,rgba(0,212,168,0.08),rgba(167,139,250,0.06));border:1px solid rgba(0,212,168,0.3);border-left:4px solid var(--teal);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
-    .quick-answer-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.6rem;}
-    .quick-answer p{font-size:1rem;line-height:1.65;color:var(--text-primary);margin:0;}
-    .skill-badge{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .6rem;border-radius:4px;margin-left:.6rem;vertical-align:middle;position:relative;top:-2px;}
-    .skill-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
-    .skill-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
-    .skill-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
-    .settings-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
-    .settings-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
-    .settings-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
-    .settings-table tr:last-child td{border-bottom:none;}
-    .settings-table tr:hover td{background:var(--bg-surface);}
-    .settings-table td:first-child{color:var(--text-primary);font-weight:500;}
-    .settings-table .mono{font-family:var(--font-mono);font-size:.82rem;color:var(--teal);}
-    .mistake-box{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-left:4px solid #ef4444;border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
-    .mistake-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ef4444;margin-bottom:.4rem;}
-    .mistake-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
-    .pro-reference{border-left:3px solid var(--purple);padding:.75rem 1.25rem;margin:1.25rem 0;background:rgba(167,139,250,0.05);border-radius:0 6px 6px 0;}
-    .pro-reference-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.35rem;}
-    .pro-reference p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
-    .pro-reference strong{color:var(--text-primary);}
-    .listening-prescription{background:var(--bg-void);border:1px solid var(--border-default);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;position:relative;}
-    .listening-prescription::before{content:'🎧';position:absolute;top:-14px;left:1.5rem;background:var(--bg-void);padding:0 .4rem;font-size:1.1rem;}
-    .listening-prescription-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:.75rem;}
-    .listening-prescription p{font-size:.9rem;line-height:1.7;color:var(--text-secondary);margin:0 0 .5rem;}
-    .listening-record{font-weight:600;color:var(--text-primary);}
-    .decision-framework{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
-    .decision-framework-title{font-family:var(--font-display);font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:1rem;}
-    .decision-item{display:flex;gap:1rem;padding:.65rem 0;border-bottom:1px solid var(--border-subtle);font-size:.88rem;line-height:1.55;}
-    .decision-item:last-child{border-bottom:none;}
-    .decision-if{color:var(--text-muted);font-style:italic;min-width:2rem;}
-    .decision-then{color:var(--text-primary);}
-    .decision-then strong{color:var(--teal);}
-    .exercise-block{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.25rem 0;}
-    .exercise-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;}
-    .exercise-badge{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .7rem;border-radius:4px;}
-    .exercise-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
-    .exercise-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
-    .exercise-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
-    .exercise-title{font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text-primary);}
-    .exercise-block ol{margin:0;padding-left:1.25rem;color:var(--text-secondary);font-size:.88rem;line-height:1.7;}
-    .exercise-block ol li{margin-bottom:.4rem;}
-    .version-line{font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:4px;padding:.4rem .75rem;margin:.75rem 0 1.5rem;display:inline-block;}
-    .go-deeper{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:10px;padding:1.75rem;margin:2.5rem 0;}
-    .go-deeper-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text-primary);margin-bottom:1.25rem;}
-    .go-deeper-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;}
-    .go-deeper-item{background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:7px;padding:1rem 1.1rem;}
-    .go-deeper-item-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.35rem;}
-    .go-deeper-item a{font-size:.88rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;}
-    .go-deeper-item p{font-size:.78rem;color:var(--text-muted);margin:.3rem 0 0;}
-    .citation{font-size:.78rem;color:var(--text-muted);font-style:italic;margin-top:.25rem;}
-    .diagram-wrap{margin:1.75rem 0;background:var(--bg-void);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem;overflow-x:auto;}
-    .diagram-caption{font-size:.78rem;color:var(--text-muted);text-align:center;margin-top:.75rem;font-style:italic;}
-    .highlight-box{background:rgba(0,212,168,0.06);border:1px solid rgba(0,212,168,0.2);border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
-    .highlight-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.4rem;}
-    .highlight-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
-    .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin:1.5rem 0;}
-    .stat-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem;text-align:center;}
-    .stat-number{font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--teal);display:block;}
-    .stat-label{font-size:.78rem;color:var(--text-secondary);margin-top:.25rem;}
-    .action-steps{counter-reset:steps;list-style:none;padding:0;margin:1.5rem 0;}
-    .action-steps li{counter-increment:steps;display:flex;gap:1rem;padding:.85rem 0;border-bottom:1px solid var(--border-subtle);font-size:.9rem;color:var(--text-secondary);line-height:1.6;}
-    .action-steps li:last-child{border-bottom:none;}
-    .action-steps li::before{content:counter(steps);background:var(--teal);color:#000;font-weight:800;font-size:.75rem;width:1.6rem;height:1.6rem;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem;}
-    .genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:1.5rem 0;}
-    .genre-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem 1.25rem;}
-    .genre-card-name{font-family:var(--font-display);font-size:.85rem;font-weight:700;color:var(--teal);margin-bottom:.4rem;}
-    .genre-card p{font-size:.82rem;color:var(--text-secondary);line-height:1.55;margin:0;}
-    .comparison-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
-    .comparison-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
-    .comparison-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
-    .comparison-table tr:last-child td{border-bottom:none;}
-    .comparison-table td:first-child{color:var(--text-primary);font-weight:500;}
-    .affiliate-cta{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,212,168,0.1);border:1px solid rgba(0,212,168,0.25);color:var(--teal);font-size:.82rem;font-weight:600;padding:.45rem .9rem;border-radius:6px;text-decoration:none;}
-</style>
-  <link rel="canonical" href="https://musicproductionwiki.com/articles/sound-design-basics.html"/>
-  <!-- Open Graph -->
-  <meta property="og:type" content="article"/>
-  <meta property="og:title" content="Sound Design Basics: A Complete Beginner's Guide"/>
-  <meta property="og:description" content="Sound design basics: subtractive synthesis explained, oscillators, filters, envelopes, LFOs, wavetable vs FM synthesis, sampling, and how to start designing your own sounds from scratch."/>
-  <meta property="og:url" content="https://musicproductionwiki.com/articles/sound-design-basics.html"/>
-  <meta property="og:site_name" content="Music Production Wiki"/>
-  <meta property="og:image" content="https://musicproductionwiki.com/images/og-default.jpg"/>
-  <meta property="og:image:width" content="1200"/>
-  <meta property="og:image:height" content="630"/>
-  <meta property="article:author" content="Music Production Wiki Team"/>
-  <meta property="article:section" content="Techniques"/>
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="Sound Design Basics: A Complete Beginner's Guide"/>
-  <meta name="twitter:description" content="Sound design basics: subtractive synthesis explained, oscillators, filters, envelopes, LFOs, wavetable vs FM synthesis, sampling, and how to start designing your own sounds from scratch."/>
-  <meta name="twitter:image" content="https://musicproductionwiki.com/images/og-default.jpg"/>
-  <!-- Article Schema -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": "Sound Design Basics: A Complete Beginner's Guide",
-    "description": "Sound design basics: subtractive synthesis explained, oscillators, filters, envelopes, LFOs, wavetable vs FM synthesis, sampling, and how to start designing your own sounds from scratch.",
-    "image": "https://musicproductionwiki.com/images/og-default.jpg",
-    "author": {
-      "@type": "Organization",
-      "name": "Music Production Wiki",
-      "url": "https://musicproductionwiki.com"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "Music Production Wiki",
-      "url": "https://musicproductionwiki.com"
-    },
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": "https://musicproductionwiki.com/articles/sound-design-basics.html"
-    },
-    "articleSection": "Techniques",
-    "inLanguage": "en-US"
-  }
-  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sound Design Basics (2026) — Complete Beginner's Guide to Synthesis | Music Production Wiki</title>
+  <meta name="description" content="Sound design basics for beginners in 2026. Subtractive synthesis, ADSR envelopes, oscillators, filters, LFOs, and how to design your own sounds from scratch in any synth.">
+  <link rel="canonical" href="https://musicproductionwiki.com/articles/sound-design-basics.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Sound Design Basics (2026) — Complete Beginner's Guide to Synthesis">
+  <meta property="og:description" content="Learn sound design from scratch. Oscillators, filters, ADSR envelopes, LFOs, and subtractive synthesis explained for beginners with practical techniques.">
+  <meta property="og:url" content="https://musicproductionwiki.com/articles/sound-design-basics.html">
+  <meta property="og:site_name" content="Music Production Wiki">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Sound Design Basics (2026) — Complete Beginner's Guide to Synthesis">
+  <meta name="twitter:description" content="Oscillators, filters, ADSR envelopes, LFOs — subtractive synthesis explained for beginners.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Sound Design Basics (2026) — Complete Beginner's Guide to Synthesis","description":"Oscillators, filters, ADSR envelopes, LFOs — the complete beginner's guide to sound design and subtractive synthesis.","author":{"@type":"Organization","name":"The Music Production Wiki Team"},"publisher":{"@type":"Organization","name":"Music Production Wiki","url":"https://musicproductionwiki.com"},"datePublished":"2026-05-03","dateModified":"2026-05-03"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is sound design in music production?","acceptedAnswer":{"@type":"Answer","text":"Sound design is the process of creating and shaping sounds using synthesisers, samplers, and audio processing. In music production, sound design means programming synthesisers to create custom sounds — leads, basses, pads, plucks, and textures — rather than using preset sounds created by someone else. Understanding sound design gives producers the ability to create signature sounds that define their sonic identity and to realise specific tonal ideas rather than searching through preset libraries hoping to find something close."}},{"@type":"Question","name":"What is subtractive synthesis?","acceptedAnswer":{"@type":"Answer","text":"Subtractive synthesis is the most common form of synthesis in music production. It starts with a harmonically rich waveform — a sawtooth, square, or noise waveform that contains many frequencies — and uses filters to subtract (remove) unwanted frequencies, shaping what remains into the desired sound. It is called subtractive because the process subtracts frequencies rather than adding them. The classic synthesisers — Moog, Roland TB-303, Roland Juno, Sequential Prophet — use subtractive synthesis as their primary sound generation method."}},{"@type":"Question","name":"What is an oscillator in a synthesiser?","acceptedAnswer":{"@type":"Answer","text":"An oscillator is the sound source in a synthesiser — it generates the raw waveform that will be processed by the rest of the synthesiser's signal chain. The most common oscillator waveforms are: sine wave (pure tone, only the fundamental frequency, no harmonics), sawtooth wave (bright and rich, contains all harmonics, most common for leads and basses), square wave (hollow, nasal quality, contains only odd harmonics), triangle wave (softer than sawtooth, contains only odd harmonics at lower amplitudes), and noise (white noise or pink noise, used for percussion and effects)."}},{"@type":"Question","name":"What is an ADSR envelope?","acceptedAnswer":{"@type":"Answer","text":"An ADSR envelope is a control signal that shapes how a parameter — most commonly the volume of a synthesiser — changes over time when a note is triggered and released. ADSR stands for Attack (the time it takes the parameter to reach its maximum level after a note is pressed), Decay (the time it takes to fall from the maximum level to the Sustain level), Sustain (the level held while a key is pressed), and Release (the time it takes the sound to fade to silence after the key is released). ADSR envelopes applied to amplitude create the fundamental shape of a sound."}},{"@type":"Question","name":"What does a filter do in a synthesiser?","acceptedAnswer":{"@type":"Answer","text":"A filter removes specific frequency ranges from the oscillator signal, shaping its tonal character. The most common filter type is the low-pass filter (LPF), which removes frequencies above a set cutoff frequency while allowing frequencies below to pass through. Raising the cutoff opens the filter and makes the sound brighter. Lowering the cutoff closes the filter and makes the sound darker. The resonance control boosts frequencies immediately around the cutoff, adding a characteristic emphasis that creates the classic synthesiser 'squelch' associated with TB-303 bass sounds and filter sweeps."}},{"@type":"Question","name":"What is an LFO in synthesis?","acceptedAnswer":{"@type":"Answer","text":"An LFO (Low Frequency Oscillator) is an oscillator that runs at a frequency too low to hear as a pitch — typically between 0.01 Hz and 20 Hz — and is used to modulate other parameters rhythmically. Connecting an LFO to a synthesiser's pitch creates vibrato. Connecting it to the filter cutoff creates a rhythmic filter sweep. Connecting it to the amplitude creates tremolo. LFOs are the primary tool for creating movement, animation, and rhythmic variation in synthesiser sounds that would otherwise be static."}},{"@type":"Question","name":"What synthesiser should a beginner start with?","acceptedAnswer":{"@type":"Answer","text":"The best synthesisers for learning sound design are those with clear, visual interfaces that make the signal path understandable. Vital (free) is the most commonly recommended starting point — a spectral wavetable synthesiser with an exceptional visual display of what each control does. Serum is the industry standard wavetable synthesiser for EDM and electronic music production. For subtractive synthesis specifically: Ableton's Analog (included with Ableton Suite) and Logic Pro's Retro Synth (free with Logic) are excellent educational tools. Avoid starting with FM or granular synthesis — learn subtractive first."}},{"@type":"Question","name":"What is the difference between monophonic and polyphonic synthesis?","acceptedAnswer":{"@type":"Answer","text":"A monophonic synthesiser plays only one note at a time — pressing a second key while the first is held causes the first note to stop and the second to start. Monophonic synthesis is associated with lead lines, bass sequences, and melodic phrases where notes play in succession. A polyphonic synthesiser plays multiple notes simultaneously, allowing chords to be played. Polyphony count (4-voice, 8-voice, 16-voice) determines how many simultaneous notes the synthesiser can produce before older notes cut off to make room for new ones."}}]}</script>
 </head>
 <body>
-<div id="readingProgress"></div>
-<header class="site-header" role="banner">
-  <div class="container header-inner">
-    <a href="../index.html" class="site-logo" aria-label="MusicProductionWiki Home">
-      <span class="logo-wordmark">Music<span>Production</span>Wiki</span>
-      <span class="logo-tagline">The Producer's Reference</span>
-    </a>
-    <nav class="primary-nav" aria-label="Primary navigation">
-      <ul class="nav-list">
-        <li><a href="../categories/reviews.html">Reviews</a></li>
-        <li><a href="../categories/comparisons.html">Comparisons</a></li>
-        <li><a href="../categories/ai-music.html">AI Music</a></li>
-        <li><a href="../categories/daws.html">DAWs</a></li>
-        <li><a href="../categories/plugins.html">Plugins</a></li>
-        <li><a href="../categories/gear.html">Gear</a></li>
-        <li><a href="../categories/techniques.html" class="active">Techniques</a></li>
-        <li><a href="../categories/music-business.html">Music Business</a></li>
-        <li><a href="../categories/glossary.html">Glossary</a></li>
-        <li><a href="../about.html">About</a></li>
-      </ul>
-    </nav>
-    <div class="header-actions">
-      <form class="search-form" role="search" action="#" method="get">
-        <label for="siteSearch" class="visually-hidden">Search articles</label>
-        <input type="search" id="siteSearch" class="search-input" placeholder="Search articles…" name="q" autocomplete="off" />
-        <button type="submit" class="search-btn" aria-label="Submit search">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        </button>
-      </form>
-      <a href="#newsletter" class="btn-subscribe">The Producer's Briefing →</a>
+  <div class="readingProgress" id="readingProgress"></div>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="../index.html" class="site-logo">Music Production <span>Wiki</span></a>
+      <nav class="primary-nav" id="primaryNav">
+        <a href="../categories/reviews.html">Reviews</a><a href="../categories/comparisons.html">Comparisons</a><a href="../categories/ai-music.html">AI Music</a><a href="../categories/daws.html">DAWs</a><a href="../categories/plugins.html">Plugins</a><a href="../categories/gear.html">Gear</a><a href="../categories/techniques.html">Techniques</a><a href="../categories/music-business.html">Music Business</a><a href="../categories/glossary.html">Glossary</a><a href="../about.html">About</a>
+      </nav>
+      <button class="mobile-menu-btn" id="menuToggle" aria-label="Open menu">&#9776;</button>
     </div>
-    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileNav">
-      <span></span><span></span><span></span>
-    </button>
+  </header>
+  <nav class="mobile-nav" id="mobileNav">
+    <a href="../categories/reviews.html">Reviews</a><a href="../categories/comparisons.html">Comparisons</a><a href="../categories/ai-music.html">AI Music</a><a href="../categories/daws.html">DAWs</a><a href="../categories/plugins.html">Plugins</a><a href="../categories/gear.html">Gear</a><a href="../categories/techniques.html">Techniques</a><a href="../categories/music-business.html">Music Business</a><a href="../categories/glossary.html">Glossary</a><a href="../about.html">About</a>
+    <a href="#newsletter" class="nav-newsletter-btn">Newsletter</a>
+  </nav>
+  <div class="breadcrumb">
+    <div class="breadcrumb-inner">
+      <a href="../index.html">Home</a> &rsaquo; <a href="../categories/techniques.html">Techniques</a> &rsaquo; Sound Design Basics
+    </div>
   </div>
-</header>
-<nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
-  <ul class="nav-list">
-    <li><a href="../categories/reviews.html">Reviews</a></li>
-    <li><a href="../categories/comparisons.html">Comparisons</a></li>
-    <li><a href="../categories/ai-music.html">AI Music</a></li>
-    <li><a href="../categories/daws.html">DAWs</a></li>
-    <li><a href="../categories/plugins.html">Plugins</a></li>
-    <li><a href="../categories/gear.html">Gear</a></li>
-    <li><a href="../categories/techniques.html" class="active">Techniques</a></li>
-    <li><a href="../categories/music-business.html">Music Business</a></li>
-    <li><a href="../categories/glossary.html">Glossary</a></li>
-  </ul>
-</nav>
-<div class="container">
-  <nav class="breadcrumb" aria-label="Breadcrumb"><ol>
-    <li><a href="../index.html">Home</a></li>
-    <li><a href="../categories/techniques.html">Techniques</a></li>
-    <li><span aria-current="page">Sound Design Basics: A Complete Beginner's Guide</span></li>
-  </ol></nav>
-</div>
-<main class="container" id="main-content">
-  <div class="article-layout">
-    <article aria-labelledby="articleTitle">
-      <header class="article-header">
-        <div class="article-tags"><span class="article-tag teal">Techniques</span></div>
-        <h1 id="articleTitle">Sound Design Basics: A Complete Beginner's Guide</h1>
-        <div class="article-header-meta">
-          <div class="article-author"><div class="author-avatar" aria-hidden="true">MP</div><span class="author-name">The Music Production Wiki Team</span></div>
-          <span class="meta-divider"></span><span class="meta-item">Updated May 2025</span>
-          <span class="meta-divider"></span><span class="meta-item">15 min read</span>
+
+  <main class="container" id="main-content">
+    <div class="article-layout">
+      <article>
+        <header class="article-header">
+          <div class="article-meta">
+            <span class="article-category">Techniques</span>
+            <span class="difficulty-badge">Beginner → Intermediate</span>
+            <span class="article-date">Updated May 2026</span>
+          </div>
+          <h1>Sound Design Basics (2026)</h1>
+          <p class="article-subtitle">Sound design is the skill that separates producers who build signature sounds from those who scroll through presets. This guide teaches subtractive synthesis from the ground up — oscillators, filters, envelopes, LFOs, and the signal chain that connects them.</p>
+        </header>
+
+        <div class="quick-answer-box">
+          <h3>The Subtractive Synthesis Signal Chain</h3>
+          <p><strong>Oscillator</strong> (generates the raw waveform) → <strong>Filter</strong> (removes unwanted frequencies, shapes tone) → <strong>Amplifier</strong> (controls volume over time) → <strong>Effects</strong> (reverb, chorus, delay). All three main stages are shaped by <strong>Envelopes</strong> (ADSR) and animated by <strong>LFOs</strong> (rhythmic modulation). This chain is the foundation of virtually every synthesiser ever made.</p>
         </div>
-      </header>
-      <div class="article-body">
-<p>Sound design is the practice of creating and shaping sounds using synthesizers, samplers, and audio processing tools. Every distinctive sound in modern music — the bass drop, the pad filling the chorus, the lead synth cutting through the mix — was designed by someone who understood how synthesis works. Learning the fundamentals of sound design opens up a world of sonic possibility and transforms you from a producer who uses presets into one who creates them.</p>
 
-<div class="info-box">
-  <strong>What we'll cover:</strong> How sound works and why it matters for synthesis, subtractive synthesis explained from first principles, oscillators, filters, envelopes, and LFOs in depth, wavetable synthesis, FM synthesis, sampling as a sound design tool, and practical exercises for developing your sound design ear.
-</div>
+        <!-- SVG: Subtractive synthesis signal chain -->
+        <figure class="diagram-figure">
+          <svg viewBox="0 0 700 215" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;background:#131920;border-radius:8px;">
+            <defs>
+              <marker id="arr-sd" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L8,3 Z" fill="#00d4a8"/>
+              </marker>
+            </defs>
+            <!-- Oscillator -->
+            <rect x="10" y="55" width="110" height="80" rx="6" fill="#1a2332" stroke="#00d4a8" stroke-width="2"/>
+            <text x="65" y="80" text-anchor="middle" fill="#e6edf3" font-family="Syne,sans-serif" font-size="12" font-weight="700">Oscillator</text>
+            <text x="65" y="96" text-anchor="middle" fill="#00d4a8" font-family="JetBrains Mono,monospace" font-size="9">Sawtooth</text>
+            <text x="65" y="109" text-anchor="middle" fill="#00d4a8" font-family="JetBrains Mono,monospace" font-size="9">Square</text>
+            <text x="65" y="122" text-anchor="middle" fill="#00d4a8" font-family="JetBrains Mono,monospace" font-size="9">Sine / Noise</text>
+            <!-- Waveform sketch -->
+            <path d="M20,145 L20,135 L30,135 L30,155 L40,155 L40,135 L50,135 L50,155 L60,155 L60,135 L70,135 L70,155" fill="none" stroke="#00d4a8" stroke-width="1.5" opacity="0.5"/>
+            <line x1="120" y1="95" x2="148" y2="95" stroke="#00d4a8" stroke-width="1.5" marker-end="url(#arr-sd)"/>
 
-<h2 id="how-sound-works">How Sound Works: The Foundation</h2>
-<p>Sound is vibration — pressure waves moving through air at different frequencies and amplitudes. The frequency of the vibration determines pitch: 440 Hz is concert A. The amplitude determines loudness. The shape of the waveform — how the pressure changes over time within each cycle — determines timbre, the quality that makes a violin sound different from a clarinet playing the same pitch at the same volume.</p>
-<p>Synthesizers generate and shape these waveforms electronically. Different synthesis methods generate waveforms in different ways: subtractive synthesis starts with harmonically rich waveforms and removes frequency content with filters; additive synthesis builds complex waveforms by adding together simple sine waves; FM synthesis generates complex timbres by using one oscillator to modulate the frequency of another; wavetable synthesis plays back pre-recorded single-cycle waveforms and scans through collections of them.</p>
-<p>Understanding the sonic character of basic waveforms is the starting point for all synthesis. A sine wave produces a pure tone with a single fundamental frequency and no harmonics — it sounds like a flute or a soft whistle. A sawtooth wave contains the fundamental and all harmonics in descending amplitude — it sounds bright and buzzy, the classic analogue synth sound. A square wave contains only odd harmonics — it sounds hollow and woody, like a clarinet. A triangle wave contains fewer harmonics than the sawtooth — warmer and softer, between a sine and a sawtooth.</p>
+            <!-- Filter -->
+            <rect x="150" y="55" width="110" height="80" rx="6" fill="#1a2332" stroke="#a78bfa" stroke-width="2"/>
+            <text x="205" y="78" text-anchor="middle" fill="#e6edf3" font-family="Syne,sans-serif" font-size="12" font-weight="700">Filter</text>
+            <text x="205" y="94" text-anchor="middle" fill="#a78bfa" font-family="JetBrains Mono,monospace" font-size="9">Low Pass</text>
+            <text x="205" y="107" text-anchor="middle" fill="#a78bfa" font-family="JetBrains Mono,monospace" font-size="9">Cutoff Freq</text>
+            <text x="205" y="120" text-anchor="middle" fill="#a78bfa" font-family="JetBrains Mono,monospace" font-size="9">Resonance</text>
+            <!-- Filter curve sketch -->
+            <path d="M160,148 L185,148 Q195,148 195,138 L195,148" fill="none" stroke="#a78bfa" stroke-width="1.5" opacity="0.5"/>
+            <line x1="260" y1="95" x2="288" y2="95" stroke="#00d4a8" stroke-width="1.5" marker-end="url(#arr-sd)"/>
 
-<h2 id="subtractive">Subtractive Synthesis: The Most Common Starting Point</h2>
-<p>Subtractive synthesis is the most widely used synthesis method and the starting point for most sound designers. The signal path: one or more oscillators generate a harmonically rich waveform, a filter removes frequency content to shape the timbre, an amplifier controls the output level, and envelopes and LFOs modulate these elements over time.</p>
-<p>The simplicity of subtractive synthesis is deceptive — its parameter space is large and the interaction between components is complex. But the architecture is learnable, and once understood, it applies to most hardware and software synths you'll encounter: Minimoog, Juno-106, Prophet-5, Moog Subsequent, Arturia MiniBrute, and their software emulations all share the same fundamental architecture.</p>
+            <!-- Amplifier / VCA -->
+            <rect x="290" y="55" width="110" height="80" rx="6" fill="#1a2332" stroke="#00d4a8" stroke-width="2"/>
+            <text x="345" y="78" text-anchor="middle" fill="#e6edf3" font-family="Syne,sans-serif" font-size="12" font-weight="700">Amplifier</text>
+            <text x="345" y="94" text-anchor="middle" fill="#00d4a8" font-family="JetBrains Mono,monospace" font-size="9">Volume</text>
+            <text x="345" y="107" text-anchor="middle" fill="#00d4a8" font-family="JetBrains Mono,monospace" font-size="9">Envelope</text>
+            <text x="345" y="120" text-anchor="middle" fill="#00d4a8" font-family="JetBrains Mono,monospace" font-size="9">ADSR shape</text>
+            <line x1="400" y1="95" x2="428" y2="95" stroke="#00d4a8" stroke-width="1.5" marker-end="url(#arr-sd)"/>
 
-<h2 id="oscillators">Oscillators: The Sound Source</h2>
-<p>Oscillators are the primary sound generators in a synthesizer. Each oscillator produces a periodic waveform at a controllable frequency. Most subtractive synths include two or three oscillators, allowing layering, detuning (setting oscillators to slightly different pitches for a chorus-like thickening), and mixing different waveforms together.</p>
-<p><strong>Waveform selection:</strong> The choice of waveform determines the harmonic content and basic character of the oscillator's output. Start with a sawtooth for most analogue sounds — it contains the richest harmonic content and gives the filter the most material to shape. Use a square wave for hollow, woodwind-like timbres. Use a sine wave when you want a pure, harmonic-free tone (kick drum sine sub, bass sub, flute).</p>
-<p><strong>Pitch and tuning:</strong> Oscillators are tuned in semitones (coarse tuning) and cents (fine tuning, 1/100th of a semitone). When using two oscillators, detune the second oscillator slightly (3–8 cents) for a chorus effect that thickens the sound without being obviously out of tune. Detuning both oscillators upward and downward from the fundamental spreads them symmetrically.</p>
-<p><strong>Oscillator sync:</strong> Hard sync resets oscillator 2's waveform to the beginning of its cycle each time oscillator 1 completes a cycle. When oscillator 2 is tuned higher than oscillator 1, this produces a distinctive, aggressive harmonic character — the "sync sweep" sound. Sweeping oscillator 2's pitch while in sync produces the classic sync sweep effect heard throughout 1980s pop and electronic music.</p>
-<p><strong>Pulse width modulation:</strong> Square waves have a variable duty cycle — the ratio of the wave's high portion to its total period. At 50% duty cycle it's a standard square wave. Varying the duty cycle (pulse width) changes the harmonic content and the sound's timbre. Modulating the pulse width with an LFO produces a subtle chorus-like movement with a richer character than static detuning.</p>
+            <!-- Effects -->
+            <rect x="430" y="55" width="110" height="80" rx="6" fill="#1a2332" stroke="#a78bfa" stroke-width="1.5"/>
+            <text x="485" y="78" text-anchor="middle" fill="#e6edf3" font-family="Syne,sans-serif" font-size="12" font-weight="700">Effects</text>
+            <text x="485" y="94" text-anchor="middle" fill="#a78bfa" font-family="JetBrains Mono,monospace" font-size="9">Reverb</text>
+            <text x="485" y="107" text-anchor="middle" fill="#a78bfa" font-family="JetBrains Mono,monospace" font-size="9">Chorus / Unison</text>
+            <text x="485" y="120" text-anchor="middle" fill="#a78bfa" font-family="JetBrains Mono,monospace" font-size="9">Delay</text>
+            <line x1="540" y1="95" x2="568" y2="95" stroke="#00d4a8" stroke-width="1.5" marker-end="url(#arr-sd)"/>
 
-<h2 id="filters">Filters: Shaping the Timbre</h2>
-<p>The filter is the most expressive element in subtractive synthesis. It removes frequency content from the oscillator's output, shaping the timbre from the starting waveform toward the target sound. Filter movement — controlled by envelopes and LFOs — creates the dynamic timbral evolution that makes synthesizer sounds feel alive rather than static.</p>
-<p><strong>Filter types:</strong> A low-pass filter (LPF) allows frequencies below the cutoff frequency to pass while attenuating frequencies above it. This is the standard subtractive synthesis filter — the bright sawtooth waveform becomes warmer and darker as the cutoff frequency is lowered. A high-pass filter (HPF) does the opposite — removes low frequencies and allows highs to pass. A band-pass filter allows a frequency band around the cutoff to pass while attenuating both below and above. A notch filter removes a narrow frequency band — the opposite of band-pass.</p>
-<p><strong>Cutoff frequency:</strong> The frequency at which the filter begins to attenuate. On a low-pass filter, raising the cutoff makes the sound brighter (more high-frequency content passes through). Lowering it makes the sound darker. The cutoff is typically the most used real-time performance control on a subtractive synthesizer.</p>
-<p><strong>Resonance:</strong> Amplifies the frequency content around the cutoff frequency, creating a peak in the frequency response at the cutoff point. Low resonance (0–30%) adds subtle character and emphasis to the cutoff region. Medium resonance (30–70%) produces the classic "filter sweep" sound as the cutoff moves — the resonant peak becomes audible and sweeps through the frequency spectrum. High resonance (70–100%) produces self-oscillation in many filters — the filter generates a sine wave at its cutoff frequency regardless of the input signal. This sine wave can be tuned to pitch and used as an additional oscillator.</p>
-<p><strong>Filter character:</strong> Different filter designs have distinct characters even when set to the same cutoff and resonance. The Moog ladder filter has a warm, smooth low-pass character with a musical resonance that never becomes harsh. The Roland SEM state variable filter has a more open, transparent quality. The Korg MS-20 filter is aggressive and distinctive. Software synthesizers model these classic filter designs — Moog's character in Minimoog emulations, Roland's character in Juno emulations. The filter is often the most sonically distinctive component of a synthesizer's sound.</p>
+            <!-- Output -->
+            <rect x="570" y="70" width="115" height="50" rx="6" fill="#1a2332" stroke="#00d4a8" stroke-width="1.5"/>
+            <text x="627" y="92" text-anchor="middle" fill="#e6edf3" font-family="Outfit,sans-serif" font-size="11">Output</text>
+            <text x="627" y="108" text-anchor="middle" fill="#00d4a8" font-family="JetBrains Mono,monospace" font-size="9">To DAW Track</text>
 
-<h2 id="envelopes">Envelopes: Shaping Sound Over Time</h2>
-<p>An envelope is a control signal that changes over time in a defined shape. In subtractive synthesis, the most important envelope is the amplitude envelope — it controls how the loudness of a note changes from the moment it's triggered to the moment it ends. A second envelope typically controls the filter cutoff, creating timbral evolution over the same period.</p>
-<p>The standard ADSR envelope has four stages: Attack, Decay, Sustain, and Release.</p>
-<p><strong>Attack:</strong> The time it takes for the envelope to rise from zero to its peak level after the note is triggered. Short attack (0–10 ms) produces an immediate, punchy onset — percussive sounds, plucked strings, aggressive leads. Long attack (100 ms–2 seconds) produces a gradual swell — pads, string section swells, ambient sounds that fade in.</p>
-<p><strong>Decay:</strong> After reaching its peak, the envelope falls to the sustain level over the decay time. Short decay combined with zero sustain produces a percussive shape — the sound reaches maximum and immediately begins falling. A longer decay allows the sound to hold briefly at maximum before settling into the sustain level.</p>
-<p><strong>Sustain:</strong> The level at which the envelope holds as long as the note is held down. Unlike attack and decay (which are time values), sustain is a level value (0–100%). Sustain at 100% means the sound holds at maximum level. Sustain at 0% means the sound decays completely — the note triggers a percussive shape regardless of how long you hold the key.</p>
-<p><strong>Release:</strong> The time it takes for the envelope to fall from the sustain level to zero after the note is released. Short release (0–20 ms) produces an abrupt cutoff — the note stops immediately when the key is released. Long release (500 ms–5 seconds) produces a smooth fade — the sound continues and gradually disappears after the key is lifted, like the reverb tail of an acoustic instrument.</p>
-<p><strong>Filter envelope:</strong> The filter envelope modulates the filter cutoff frequency over the same ADSR shape. With a positive envelope amount, the filter opens (cutoff rises) during the attack and decays back toward the initial cutoff — the classic "vowel-like" filter movement heard on bass sounds, synth leads, and plucked sounds. The amount of filter envelope modulation determines how much the filter opens — a large amount creates dramatic brightness changes; a small amount adds subtle movement.</p>
+            <!-- Modulators (below) -->
+            <rect x="150" y="170" width="130" height="38" rx="6" fill="#1a2332" stroke="#6b7280" stroke-width="1" stroke-dasharray="4,2"/>
+            <text x="215" y="188" text-anchor="middle" fill="#9ca3af" font-family="Outfit,sans-serif" font-size="11">ADSR Envelope</text>
+            <text x="215" y="202" text-anchor="middle" fill="#6b7280" font-family="JetBrains Mono,monospace" font-size="9">Attack / Decay / Sustain / Release</text>
+            <!-- Modulation arrows up -->
+            <line x1="215" y1="170" x2="215" y2="137" stroke="#6b7280" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#arr-sd)"/>
+            <line x1="215" y1="170" x2="345" y2="137" stroke="#6b7280" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#arr-sd)"/>
 
-<h2 id="lfos">LFOs: Cyclic Modulation</h2>
-<p>An LFO (Low-Frequency Oscillator) generates a periodic waveform at a frequency too low to be heard as pitch — typically 0.01 Hz to 20 Hz. Instead, it's used as a modulation source that varies other parameters cyclically over time.</p>
-<p><strong>LFO destinations:</strong> Pitch — produces vibrato, the pitch oscillation used by vocalists and string players. Filter cutoff — produces a rhythmic filter sweep ("wah" effect at slow rates, timbral pulsing at faster rates). Amplitude — produces tremolo, the amplitude oscillation heard in certain guitar amplifiers and vintage keyboard instruments. Pan — moves the sound across the stereo field cyclically. Pulse width — produces pulse width modulation, the classic chorus-like synth movement.</p>
-<p><strong>LFO rate:</strong> Slow rates (0.1–2 Hz) produce gradual, perceptible modulation. Medium rates (2–8 Hz) produce vibrato and tremolo speeds. Fast rates (8–20 Hz) produce more extreme timbral effects — rapidly pulsing filters and pitch for special effects rather than musical performance. Syncing the LFO rate to the project tempo (1/4, 1/8, 1/16 note) produces rhythmically locked modulation that feels intentional rather than random.</p>
-<p><strong>LFO shape:</strong> A sine wave LFO produces smooth, symmetrical modulation. A triangle is similar but with linear rather than curved transitions. A sawtooth produces a one-direction sweep that resets — useful for rhythmic filter sweeps that always move in one direction. A square wave alternates between two extreme values — useful for hard timbral switching effects. A sample-and-hold (random) shape jumps to random values at a controlled rate — useful for R2-D2-style random pitch effects and unpredictable filter movement.</p>
+            <rect x="350" y="170" width="110" height="38" rx="6" fill="#1a2332" stroke="#6b7280" stroke-width="1" stroke-dasharray="4,2"/>
+            <text x="405" y="188" text-anchor="middle" fill="#9ca3af" font-family="Outfit,sans-serif" font-size="11">LFO</text>
+            <text x="405" y="202" text-anchor="middle" fill="#6b7280" font-family="JetBrains Mono,monospace" font-size="9">Vibrato / Filter Sweep / Tremolo</text>
+            <line x1="405" y1="170" x2="280" y2="137" stroke="#6b7280" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#arr-sd)"/>
+            <line x1="405" y1="170" x2="345" y2="137" stroke="#6b7280" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#arr-sd)"/>
+          </svg>
+          <figcaption>The subtractive synthesis signal chain. The oscillator generates a rich waveform. The filter removes frequencies to shape the tone. The amplifier shapes the volume over time. Envelopes and LFOs modulate every stage dynamically.</figcaption>
+        </figure>
 
-<h2 id="wavetable">Wavetable Synthesis</h2>
-<p>Wavetable synthesis uses pre-recorded single-cycle waveforms (wavetables) as the oscillator source instead of mathematically generated waveforms. A wavetable is a collection of many different single-cycle waveforms organised into a sequence. Scanning through the wavetable — moving from one waveform to the next — produces continuous timbral evolution as the oscillator's character changes.</p>
-<p>Serum (Xfer Records), Vital (free), Surge XT (free), and Massive X (Native Instruments) are the most widely used wavetable synthesizers. These instruments allow importing custom wavetables, drawing waveforms by hand, and scanning through factory and user wavetables for distinctive timbral movement. The sound design range of wavetable synthesis significantly exceeds standard subtractive synthesis — wavetables can contain timbres that no mathematical oscillator waveform can produce.</p>
+        <h2>What Sound Design Is and Why It Matters</h2>
+        <p>Sound design is the craft of creating sounds intentionally rather than accepting what a preset delivers. A producer who understands sound design opens a synthesiser, hears a preset, and knows exactly which controls to adjust to transform it into the sound they hear in their head. A producer who does not understand sound design scrolls through thousands of presets looking for something close enough to use.</p>
 
-<h2 id="fm">FM Synthesis</h2>
-<p>FM (Frequency Modulation) synthesis generates complex timbres by using one oscillator (the modulator) to modulate the frequency of another (the carrier). The ratio between the carrier and modulator frequencies, and the modulation depth (how much the modulator affects the carrier's frequency), determine the resulting harmonic content. At low modulation depths, FM adds subtle harmonic richness. At high modulation depths, it produces inharmonic, metallic, or bell-like timbres unlike anything possible with subtractive synthesis.</p>
-<p>The Yamaha DX7 (1983) made FM synthesis famous — its electric piano, bass, and bell presets defined the sound of 1980s pop and remain influential. Modern FM synthesizers include Ableton Operator, Native Instruments FM8, and the free Dexed (DX7 emulation). FM synthesis is notoriously difficult to program intuitively but rewards study with a unique and distinctive sonic range.</p>
+        <p>The difference between these two producers is not intelligence or talent — it is knowledge. The synthesiser signal chain follows a small set of logical principles that, once understood, apply to every synthesiser ever made. A producer who understands subtractive synthesis can sit down with any synthesiser — hardware or software, classic or modern — and create sounds purposefully within minutes of learning the interface layout.</p>
 
-<h2 id="exercises">Practical Sound Design Exercises</h2>
-<p><strong>Exercise 1 — Build a bass sound from scratch:</strong> Start with a sawtooth oscillator. Set the amplitude envelope to short attack (2 ms), short decay (100 ms), sustain at 60%, and medium release (200 ms). Set a second envelope to control the filter cutoff with moderate attack (5 ms), short decay (80 ms), sustain at 30%, and same release as the amplitude envelope. Set the initial filter cutoff at 300 Hz, and set the filter envelope amount to moderate. Play notes in the bass register and adjust the filter cutoff and envelope amounts until you have a moving bass sound. This is the fundamental architecture of most analogue bass sounds.</p>
-<p><strong>Exercise 2 — Build a pad:</strong> Use two detuned sawtooth oscillators (oscillator 2 detuned +5 cents). Set amplitude envelope to long attack (800 ms), no decay, full sustain, long release (1.5 seconds). Open the filter cutoff to 70%. Add an LFO on the filter cutoff at a slow rate (0.3 Hz) with a sine wave and low depth. The long attack creates the swell, the LFO creates gentle movement. This is the architecture of the vast majority of analogue pad sounds.</p>
-<p><strong>Exercise 3 — Identify synthesis types by ear:</strong> Listen to three tracks and identify elements that sound like subtractive synthesis (bright sawtooth with filter sweeps), wavetable synthesis (complex evolving timbres with digital character), and FM synthesis (metallic, bell-like, or classic DX7 electric piano sounds). Ear training for synthesis types accelerates learning — once you can hear what architecture produced a sound, you know where to start recreating it.</p>
+        <h2>The Building Blocks: Waveforms</h2>
+        <p>Every synthesiser begins with a waveform — a repeating pattern of air pressure variation that the human ear perceives as a pitch. The frequency of repetition determines the pitch. The shape of the waveform determines the tonal character.</p>
 
-<div class="go-deeper">
-  <div class="go-deeper-title">Go Deeper</div>
-  <div class="go-deeper-grid">
-    <div class="go-deeper-item"><div class="go-deeper-item-label">Reviews</div><a href="serum-synthesizer-review.html">Serum Review</a><p>Top wavetable synth</p></div>
-    <div class="go-deeper-item"><div class="go-deeper-item-label">Plugins</div><a href="best-free-vst-plugins.html">Best Free VST Plugins</a><p>Free synths to start with</p></div>
-    <div class="go-deeper-item"><div class="go-deeper-item-label">Techniques</div><a href="what-is-eq-music-production.html">What Is EQ?</a><p>Shaping sound in the mix</p></div>
-  </div>
-</div>
-</div>
-      <footer class="article-footer">
-        <div class="article-tags-footer"><p class="tags-label">Tags</p>
-        <div class="tags-list"><a href="../categories/techniques.html" class="tag-pill">Techniques</a></div></div>
-      </footer>
-      <section class="related-section" aria-labelledby="relatedHeading">
-        <h2 id="relatedHeading" style="font-size:1.35rem;margin-bottom:1.25rem;">Related Articles</h2>
-        <div class="related-grid"><a href="serum-synthesizer-review.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">Serum Review</h3><span class="related-card-meta">Read article →</span></a>
-<a href="best-free-vst-plugins.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">Best Free VST Plugins</h3><span class="related-card-meta">Read article →</span></a>
-<a href="what-is-eq-music-production.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">What Is EQ?</h3><span class="related-card-meta">Read article →</span></a>
-</div>
-      </section>
-    </article>
-    <aside aria-label="Article sidebar">
-      <div class="sidebar-widget toc-widget">
-        <div class="sidebar-widget-header"><h2 class="sidebar-widget-title">In This Article</h2></div>
-        <div class="sidebar-widget-body"><ul class="toc-list"><li><a href="#how-sound-works">How Sound Works</a></li>
-<li><a href="#subtractive">Subtractive Synthesis</a></li>
-<li><a href="#oscillators">Oscillators: The Sound Source</a></li>
-<li><a href="#filters">Filters: Shaping the Timbre</a></li>
-<li><a href="#envelopes">Envelopes: Shaping Sound Over Time</a></li>
-<li><a href="#lfos">LFOs: Cyclic Modulation</a></li>
-<li><a href="#wavetable">Wavetable Synthesis</a></li>
-<li><a href="#fm">FM Synthesis</a></li>
-<li><a href="#exercises">Practical Sound Design Exercises</a></li></ul></div>
-      </div>
-    </aside>
-  </div>
-</main>
-<section class="newsletter-section" id="newsletter" aria-labelledby="newsletterHeading">
-  <div class="container">
+        <h3>Sawtooth Wave</h3>
+        <p>The sawtooth wave contains every harmonic — the fundamental frequency plus harmonics at every integer multiple above it — at decreasing amplitudes. It sounds bright, buzzy, and rich. Sawtooth waves are the starting point for most leads, brass stabs, strings, and basses. Almost everything that sounds "like a synth" starts with a sawtooth waveform that has been filtered and shaped.</p>
+
+        <h3>Square Wave</h3>
+        <p>The square wave contains only odd harmonics — the fundamental frequency plus harmonics at the third, fifth, seventh harmonic, etc. — producing a hollow, reedy quality associated with woodwind instruments, the classic Minimoog lead, and vintage video game sounds. Narrowing the square wave into a pulse wave (where the positive portion of the cycle is shorter than the negative portion) creates progressively thinner, more nasal timbres.</p>
+
+        <h3>Sine Wave</h3>
+        <p>The sine wave contains only the fundamental frequency — no harmonics. It is a pure tone, the simplest possible waveform. On its own, it sounds like a tuning fork. In synthesis, sine waves are used for sub-bass frequencies (where harmonics are unnecessary and potentially problematic on small speakers) and as modulation signals. The 808 kick drum's characteristic rumbling sustain is generated by a sine wave or near-sine oscillator with a pitch envelope that drops rapidly after the initial hit.</p>
+
+        <h3>Noise</h3>
+        <p>White noise contains all frequencies simultaneously at equal amplitude — it sounds like radio static. In synthesis, noise is used for percussion sounds (the hiss of a hi-hat, the crack component of a snare), breath textures, and atmospheric pads. Filtering white noise — running it through a resonant bandpass filter — creates pitched, swooshing effects. A heavily filtered noise burst with a sharp volume envelope creates a convincing snare transient.</p>
+
+        <h2>The Filter: Sculpting Tone</h2>
+        <p>The filter is the most expressive component of the subtractive synthesiser. It removes frequencies from the oscillator signal, sculpting what remains into a desired tonal shape. The interaction between the filter cutoff frequency, the resonance, and the filter envelope creates the characteristic expressiveness of synthesiser sounds.</p>
+
+        <h3>Low-Pass Filter (LPF)</h3>
+        <p>The low-pass filter allows frequencies below the cutoff frequency to pass through and removes frequencies above it. This is the most common filter type in synthesis. With the cutoff fully open (maximum frequency), the full harmonic content of the oscillator passes through — the sound is bright and buzzy. Closing the cutoff (lowering the frequency) progressively removes high-frequency harmonics, making the sound darker, warmer, and less bright. Fully closing the low-pass filter on a sawtooth wave produces a dark, muffled sine-like tone. Opening it progressively brightens the sound.</p>
+
+        <h3>Resonance (Q)</h3>
+        <p>The resonance control boosts frequencies immediately around the cutoff frequency, creating a peak or emphasis at the cutoff point. Moderate resonance creates the characteristic "squelch" of synthesiser filter sounds — the frequencies at the cutoff frequency are louder than surrounding frequencies, creating a peaky, focused tonal character. Maximum resonance causes the filter to self-oscillate — the resonance feedback loop becomes loud enough that the filter produces its own pitched tone independent of the oscillator input. This phenomenon is the basis of specific synthesis techniques and produces distinctive, harmonic-rich sounds.</p>
+
+        <h3>High-Pass Filter (HPF)</h3>
+        <p>The high-pass filter allows frequencies above the cutoff to pass and removes frequencies below it. The inverse of the low-pass filter, it is used in synthesis for creating thin, bright textures, for removing low-end from elements that should not carry bass, and for the characteristic sweeping sounds of progressive house and trance production where a high-pass filter sweep reveals the full frequency content of a track progressively.</p>
+
+        <h2>Envelopes: Shaping Sound Over Time</h2>
+        <p>A static filter cutoff produces a static tonal character — the sound's brightness does not change from the beginning of a note to its end. Envelopes allow parameters to change over time in response to note trigger and release events. The ADSR envelope is the universal standard for this time-varying control.</p>
+
+        <h3>Attack</h3>
+        <p>Attack controls the time it takes a parameter to rise from zero to its maximum value after a note is pressed. A short attack on the amplitude envelope produces a percussive sound that hits immediately — like a plucked string or struck drum. A long attack produces a slow swell that rises gradually — like a string section bowing gently into a chord. The same attack principle applies to the filter: a short filter envelope attack opens the filter immediately, a long attack sweeps it slowly from dark to bright over several seconds.</p>
+
+        <h3>Decay</h3>
+        <p>Decay controls the time it takes the parameter to fall from its maximum value to the sustain level after the attack peak. A short decay on the filter envelope produces the characteristic wah-like sweep of classic funk synth sounds — the filter opens fully on note attack and closes quickly to a darker sustain. A long decay creates a slower, more gradual filter closing.</p>
+
+        <h3>Sustain</h3>
+        <p>Sustain is not a time parameter — it is a level parameter. It sets the level at which the parameter holds while the note remains pressed, after the attack and decay phases have completed. An amplitude sustain of 100% means the sound stays at full volume while a key is held. An amplitude sustain of 0% means the sound fades to silence during the decay phase regardless of whether the key is held — creating a percussive sound that dies away even with a sustained key press. Setting the filter envelope's sustain to 0% produces a sound that sweeps from bright to dark immediately after being triggered, regardless of how long the note is held.</p>
+
+        <h3>Release</h3>
+        <p>Release controls the time the parameter takes to fall from its sustain level to zero after the key is released. A short release on the amplitude envelope produces a sound that cuts off immediately when the key is lifted — appropriate for punchy bass sounds and staccato leads. A long release produces a gradual fade after the key is released — appropriate for pads, strings, and reverberant textures where a smooth tail is desirable.</p>
+
+        <h2>The LFO: Creating Movement</h2>
+        <p>The Low Frequency Oscillator runs at frequencies below the audible range — typically 0.1 Hz to 20 Hz — producing a repeating control signal rather than an audible pitch. Routing an LFO to a synthesiser parameter creates rhythmic, cyclical variation in that parameter. This movement is what makes synthesiser sounds feel alive rather than static.</p>
+
+        <p>LFO to pitch: creates vibrato — the pitch wobbles rhythmically, mimicking the natural vibrato of a vocalist or string player. The rate of the LFO sets the speed of the vibrato. The depth sets the amount of pitch variation. LFO to filter cutoff: creates a filter sweep that repeats rhythmically — the classic "wah-wah" effect applied to synthesiser sounds, and the basis of auto-filter effects. LFO to amplitude: creates tremolo — the volume pulses rhythmically, like a tremolo guitar effect or vintage organ tremolo. LFO synced to tempo: creates rhythmic variations — a filter sweep that opens and closes in time with the song's BPM, gate effects where the volume cuts rhythmically at a set subdivision of the beat.</p>
+
+        <h2>Synthesis in Practice: Building Sounds</h2>
+
+        <h3>A Classic Pad Sound</h3>
+        <p>Oscillator: two sawtooth waves, detuned slightly against each other (3-5 cents) to create beating between the waveforms. Filter: low-pass at 60-70% open, resonance low, filter envelope with long attack (0.5-1s), long decay (1-2s), sustain at 70%, long release (2-4s). Amplitude envelope: long attack (0.5-1s) matching the filter, sustain at 100%, long release (2-4s). LFO: sine wave at 0.3-0.8 Hz routed to filter cutoff at moderate depth. Effects: light chorus, generous reverb, moderate delay. This produces the classic evolving pad sound of ambient and cinematic music.</p>
+
+        <h3>A Simple Bass Sound</h3>
+        <p>Oscillator: single sawtooth wave, or a sawtooth layer with a sub-octave sine. Filter: low-pass at 40-55% open, resonance at 20-30%, filter envelope with very short attack (0-5ms), medium decay (100-300ms), sustain at 30-40%, short release. Amplitude envelope: very short attack, medium release. This produces a warm, punchy bass with the classic subtractive synthesis character — bright attack that decays to a darker sustained tone.</p>
+
+        <h3>A Lead Sound</h3>
+        <p>Oscillator: sawtooth wave, optionally with unison doubling (two voices detuned) for width. Filter: high cutoff (fully open or near-open), resonance at 15-25%. Amplitude envelope: very short attack, medium-long sustain at 100%, medium release. Portamento (glide) at a fast setting for pitch slides between notes. LFO: slow sine wave (0.5-1 Hz) routed to pitch at low depth (a few cents) for subtle vibrato. This produces a classic analogue-style lead that sits naturally in a mix and responds expressively to playing dynamics.</p>
+
+        <h2>Recommended Synthesisers for Learning Sound Design</h2>
+        <p>Vital (free) — the best starting point for beginners in 2026. A wavetable synthesiser with exceptional visual feedback that shows exactly what each control does to the waveform in real time. Its interface makes synthesis principles immediately visible rather than abstract. The free version contains everything needed to learn synthesis fundamentals.</p>
+
+        <p>Serum — the industry standard wavetable synthesiser for electronic music production. Used on a significant proportion of commercially released EDM, pop, and hip-hop. Its wavetable editor, effects chain, and modulation matrix provide professional-grade sound design capability. Worth investing in once you understand the basics.</p>
+
+        <p>Every major DAW includes synthesisers that are fully capable for learning: Ableton's Analog (subtractive synthesis), Logic Pro's Retro Synth (multi-mode synthesis including subtractive, FM, and wavetable), FL Studio's 3xOsc (simple subtractive), GarageBand's built-in synths. Start with whatever is already in your DAW before purchasing additional synthesisers.</p>
+
+        <h2>Practical Exercises</h2>
+        <div class="exercise-block">
+          <h4>Exercise 1 — Beginner: The Init Patch Exploration</h4>
+          <p>Open any synthesiser and initialise it to a blank preset (usually called "Init" or "Default"). You should hear a simple sawtooth or sine wave at full volume. Now: move the filter cutoff from fully closed to fully open and listen to the change. Move the resonance up to maximum and listen to the self-oscillation. Set an ADSR envelope on the filter with a long attack and hear the sweep. Set the same ADSR on the amplitude and hear the slow fade in. This 15-minute exercise teaches the fundamental controls of every synthesiser through direct experience.</p>
+        </div>
+        <div class="exercise-block">
+          <h4>Exercise 2 — Intermediate: Recreate Three Presets from Scratch</h4>
+          <p>Choose three presets from your synthesiser — a pad, a bass, and a lead. Listen carefully to each. Initialise the synth, then attempt to recreate each preset using only the controls you have learned: oscillator waveform, filter cutoff and resonance, filter envelope, amplitude envelope, and LFO. You will not get an exact match — that is not the goal. The goal is understanding which controls produce which sonic characteristics. After each attempt, compare your version to the original and identify exactly which settings differ.</p>
+        </div>
+        <div class="exercise-block">
+          <h4>Exercise 3 — Advanced: Design Three Original Sounds for a Track</h4>
+          <p>Work on a production session where you have a specific sonic need — a bass that hits at a particular frequency, a pad with a specific emotional character, a lead that cuts through a specific arrangement. Design each sound from an initialised patch, using only synthesis controls rather than browsing presets. The sound you need for a specific musical context is the most powerful creative brief possible — it gives you a clear target and teaches you to translate musical intent into synthesis parameter decisions.</p>
+        </div>
+
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-section">
+          <div class="faq-item"><h3>What is sound design in music production?</h3><p>Sound design is the process of creating and shaping sounds using synthesisers, samplers, and audio processing. Understanding sound design gives producers the ability to create signature sounds and realise specific tonal ideas rather than searching through preset libraries.</p></div>
+          <div class="faq-item"><h3>What is subtractive synthesis?</h3><p>Subtractive synthesis starts with a harmonically rich waveform and uses filters to remove unwanted frequencies, shaping what remains into the desired sound. The classic synthesisers — Moog, Roland TB-303, Roland Juno, Sequential Prophet — use subtractive synthesis as their primary sound generation method.</p></div>
+          <div class="faq-item"><h3>What is an oscillator in a synthesiser?</h3><p>An oscillator is the sound source — it generates the raw waveform. Common waveforms: sine (pure tone, no harmonics), sawtooth (bright, rich, all harmonics — most common for leads and basses), square (hollow, nasal quality, odd harmonics only), triangle (softer than sawtooth), and noise (for percussion and effects).</p></div>
+          <div class="faq-item"><h3>What is an ADSR envelope?</h3><p>An ADSR envelope shapes how a parameter changes over time: Attack (time to reach maximum level after key press), Decay (time to fall from maximum to sustain level), Sustain (level held while key is pressed), Release (time to fade to silence after key release). Applied to amplitude, ADSR creates the fundamental shape of a sound's volume over time.</p></div>
+          <div class="faq-item"><h3>What does a filter do in a synthesiser?</h3><p>A filter removes specific frequency ranges from the oscillator signal. A low-pass filter removes frequencies above the cutoff, making the sound darker as the cutoff is lowered. Resonance boosts frequencies around the cutoff, creating the classic synthesiser squelch. The filter is the most expressive component of a subtractive synthesiser.</p></div>
+          <div class="faq-item"><h3>What is an LFO in synthesis?</h3><p>A Low Frequency Oscillator runs below audible frequency and modulates other parameters rhythmically. LFO to pitch creates vibrato. LFO to filter creates rhythmic filter sweeps. LFO to amplitude creates tremolo. LFOs make static sounds feel alive and animated.</p></div>
+          <div class="faq-item"><h3>What synthesiser should a beginner start with?</h3><p>Vital (free) is the most recommended starting point — a wavetable synthesiser with exceptional visual feedback showing what each control does in real time. Serum is the industry standard for electronic music once you understand fundamentals. Start with whatever synthesisers are already in your DAW before purchasing new ones.</p></div>
+          <div class="faq-item"><h3>What is the difference between monophonic and polyphonic synthesis?</h3><p>Monophonic synthesisers play only one note at a time — associated with leads, basses, and melodic phrases. Polyphonic synthesisers play multiple notes simultaneously, allowing chords. Polyphony count determines how many simultaneous notes the synthesiser can produce before older notes cut off.</p></div>
+        </div>
+
+        <section class="related-articles">
+          <h2>Related Articles</h2>
+          <div class="related-grid">
+            <a href="what-is-vst-plugin.html" class="related-card"><span class="related-cat">Wiki</span><h4>What is a VST Plugin</h4></a>
+            <a href="how-to-make-a-beat-beginners-guide.html" class="related-card"><span class="related-cat">Techniques</span><h4>How to Make a Beat: Beginner's Guide</h4></a>
+            <a href="how-to-mix-music-beginners-guide.html" class="related-card"><span class="related-cat">Techniques</span><h4>How to Mix Music: Beginner's Guide</h4></a>
+          </div>
+        </section>
+      </article>
+
+      <aside class="article-sidebar">
+        <div class="sidebar-widget toc-widget"><h3>In This Article</h3><nav id="toc"></nav></div>
+        <div class="sidebar-widget category-widget">
+          <h3>Techniques</h3>
+          <ul>
+            <li><a href="sound-design-basics.html">Sound Design Basics</a></li>
+            <li><a href="how-to-make-a-beat-beginners-guide.html">How to Make a Beat</a></li>
+            <li><a href="how-to-mix-music-beginners-guide.html">How to Mix Music</a></li>
+            <li><a href="parallel-compression-explained.html">Parallel Compression</a></li>
+            <li><a href="mixing-in-mono-guide.html">Mixing in Mono</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-widget newsletter-widget">
+          <h3>The Producer's Briefing</h3>
+          <p>Sound design tips, plugin deals, and technique guides every Friday.</p>
+          <a href="#newsletter" class="btn-newsletter">Subscribe Free</a>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <section id="newsletter" class="newsletter-section">
     <div class="newsletter-inner">
-      <div class="newsletter-content">
-        <p class="newsletter-label">Newsletter</p>
-        <h2 id="newsletterHeading" class="newsletter-title">The Producer's <em>Briefing</em></h2>
-        <p class="newsletter-desc">Weekly techniques, gear news, and music business insights. Free.</p>
-      </div>
-      <div class="newsletter-form-wrap">
-        <form class="newsletter-form-js" novalidate>
-          <input type="email" name="email" class="form-input" placeholder="Your email address" required />
-          <button type="submit" class="btn-newsletter">Subscribe Free</button>
-        </form>
-      </div>
+      <h2>The Producer's Briefing</h2>
+      <p>Sound design techniques, plugin deals, and music business insights — every Friday.</p>
+      <form class="newsletter-form" action="https://musicproductionwiki.beehiiv.com/subscribe" method="POST">
+        <input type="email" name="email" placeholder="your@email.com" required>
+        <button type="submit">Subscribe Free</button>
+      </form>
     </div>
-  </div>
-</section>
-<footer class="site-footer" role="contentinfo">
-  <div class="container footer-inner">
-    <div class="footer-brand">
-      <a href="../index.html" class="site-logo"><span class="logo-wordmark">Music<span>Production</span>Wiki</span><span class="logo-tagline">The Producer's Reference</span></a>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-col"><h4>Categories</h4><ul><li><a href="../categories/reviews.html">Reviews</a></li><li><a href="../categories/comparisons.html">Comparisons</a></li><li><a href="../categories/ai-music.html">AI Music</a></li><li><a href="../categories/techniques.html">Techniques</a></li><li><a href="../categories/gear.html">Gear</a></li></ul></div>
+      <div class="footer-col"><h4>Content</h4><ul><li><a href="../categories/daws.html">DAWs</a></li><li><a href="../categories/plugins.html">Plugins</a></li><li><a href="../categories/music-business.html">Music Business</a></li><li><a href="../categories/glossary.html">Glossary</a></li></ul></div>
+      <div class="footer-col"><h4>Site</h4><ul><li><a href="../about.html">About</a></li><li><a href="../index.html">Home</a></li></ul></div>
     </div>
-    <nav class="footer-nav" aria-label="Footer navigation">
-      <div class="footer-col">
-        <h3 class="footer-col-title">Categories</h3>
-        <ul>
-          <li><a href="../categories/reviews.html">Reviews</a></li>
-          <li><a href="../categories/comparisons.html">Comparisons</a></li>
-          <li><a href="../categories/ai-music.html">AI Music</a></li>
-          <li><a href="../categories/daws.html">DAWs</a></li>
-          <li><a href="../categories/plugins.html">Plugins</a></li>
-          <li><a href="../categories/gear.html">Gear</a></li>
-          <li><a href="../categories/techniques.html">Techniques</a></li>
-          <li><a href="../categories/music-business.html">Music Business</a></li>
-          <li><a href="../categories/glossary.html">Glossary</a></li>
-        </ul>
-      </div>
-    </nav>
-  </div>
-  <div class="footer-bottom"><div class="container"><p>© <span id="copyrightYear"></span> MusicProductionWiki.com. All rights reserved. Content by the Music Production Wiki Team.</p></div></div>
-</footer>
-<script src="../js/main.js"></script>
-<script>document.getElementById('copyrightYear').textContent = new Date().getFullYear();</script>
-</body></html>
+    <div class="footer-bottom"><p>&copy; <span id="copyrightYear"></span> MusicProductionWiki.com — Built for producers, by producers.</p></div>
+  </footer>
+  <script src="../js/main.js"></script>
+  <script>document.getElementById('copyrightYear').textContent = new Date().getFullYear();</script>
+</body>
+</html>
