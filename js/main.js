@@ -1,11 +1,11 @@
 /* ===================================================
-   MusicProductionWiki.com â main.js v3 + Search
+   MusicProductionWiki.com Ã¢ÂÂ main.js v3 + Search
    =================================================== */
 'use strict';
 (function () {
 
   /* ------------------------------------------------
-     SEARCH INDEX â all 118 articles
+     SEARCH INDEX Ã¢ÂÂ all 118 articles
      ------------------------------------------------ */
   const SEARCH_INDEX = [
     { title: "Ableton Live Beginner's Guide", url: "/articles/ableton-live-beginners-guide.html", tags: "daw ableton beginners guide" },
@@ -231,7 +231,7 @@
       currentFocus = -1;
 
       if (results.length === 0) {
-        dropdown.innerHTML = '<div class="search-no-results">No articles found â try different keywords</div>';
+        dropdown.innerHTML = '<div class="search-no-results">No articles found Ã¢ÂÂ try different keywords</div>';
         dropdown.classList.add('open');
         return;
       }
@@ -383,7 +383,7 @@
     backToTop = document.createElement('button');
     backToTop.id = 'backToTop';
     backToTop.setAttribute('aria-label', 'Back to top');
-    backToTop.innerHTML = 'â';
+    backToTop.innerHTML = 'Ã¢ÂÂ';
     document.body.appendChild(backToTop);
   }
   const toggleBackToTop = () => {
@@ -472,10 +472,10 @@
       const emailInput = form.querySelector('input[type="email"]');
       const btn = form.querySelector('.btn-newsletter');
       if (!emailInput || !emailInput.value.trim()) return;
-      btn.textContent = 'Subscribingâ¦';
+      btn.textContent = 'SubscribingÃ¢ÂÂ¦';
       btn.disabled = true;
       setTimeout(() => {
-        btn.textContent = 'â You\'re in!';
+        btn.textContent = 'Ã¢ÂÂ You\'re in!';
         btn.style.background = 'var(--teal-dim)';
         emailInput.value = '';
         setTimeout(() => {
@@ -517,7 +517,7 @@
     oldToggle.addEventListener('click', function() {
       var isOpen = oldNav.classList.toggle('open');
       oldToggle.setAttribute('aria-expanded', String(isOpen));
-      oldToggle.textContent = isOpen ? 'â' : 'â°';
+      oldToggle.textContent = isOpen ? 'Ã¢ÂÂ' : 'Ã¢ÂÂ°';
       document.body.style.overflow = isOpen ? 'hidden' : '';
     });
 
@@ -525,7 +525,7 @@
       if (e.key === 'Escape' && oldNav.classList.contains('open')) {
         oldNav.classList.remove('open');
         oldToggle.setAttribute('aria-expanded', 'false');
-        oldToggle.textContent = 'â°';
+        oldToggle.textContent = 'Ã¢ÂÂ°';
         document.body.style.overflow = '';
       }
     });
@@ -534,7 +534,7 @@
       link.addEventListener('click', function() {
         oldNav.classList.remove('open');
         oldToggle.setAttribute('aria-expanded', 'false');
-        oldToggle.textContent = 'â°';
+        oldToggle.textContent = 'Ã¢ÂÂ°';
         document.body.style.overflow = '';
       });
     });
@@ -545,7 +545,7 @@
           e.target !== oldToggle) {
         oldNav.classList.remove('open');
         oldToggle.setAttribute('aria-expanded', 'false');
-        oldToggle.textContent = 'â°';
+        oldToggle.textContent = 'Ã¢ÂÂ°';
         document.body.style.overflow = '';
       }
     });
@@ -555,7 +555,7 @@
 
 /* ============================================================
    AUTO-INJECT NEWSLETTER WIDGET INTO SIDEBAR
-   Runs on every article page — adds widget if not already present
+   Runs on every article page â adds widget if not already present
    ============================================================ */
 (function injectNewsletterWidget() {
   const sidebar = document.querySelector('.article-sidebar');
@@ -575,4 +575,58 @@
     </div>
   `;
   sidebar.appendChild(widget);
+})();
+
+
+/* ============================================================
+   NAV LINK ABSOLUTE PATH FIX
+   Rewrites relative nav/header links to root-relative absolute
+   paths so they work correctly from any URL depth.
+   ============================================================ */
+(function fixNavLinks() {
+  // Map of relative hrefs -> correct absolute paths
+  const fixMap = {
+    'index.html':                      '/',
+    '../index.html':                   '/',
+    'about.html':                      '/about.html',
+    '../about.html':                   '/about.html',
+    'categories/reviews.html':         '/categories/reviews.html',
+    '../categories/reviews.html':      '/categories/reviews.html',
+    'categories/comparisons.html':     '/categories/comparisons.html',
+    '../categories/comparisons.html':  '/categories/comparisons.html',
+    'categories/ai-music.html':        '/categories/ai-music.html',
+    '../categories/ai-music.html':     '/categories/ai-music.html',
+    'categories/daws.html':            '/categories/daws.html',
+    '../categories/daws.html':         '/categories/daws.html',
+    'categories/plugins.html':         '/categories/plugins.html',
+    '../categories/plugins.html':      '/categories/plugins.html',
+    'categories/gear.html':            '/categories/gear.html',
+    '../categories/gear.html':         '/categories/gear.html',
+    'categories/techniques.html':      '/categories/techniques.html',
+    '../categories/techniques.html':   '/categories/techniques.html',
+    'categories/music-business.html':  '/categories/music-business.html',
+    '../categories/music-business.html':'/categories/music-business.html',
+    'categories/glossary.html':        '/categories/glossary.html',
+    '../categories/glossary.html':     '/categories/glossary.html',
+    'css/style.css':                   '/css/style.css',
+    '../css/style.css':                '/css/style.css',
+    'js/main.js':                      '/js/main.js',
+    '../js/main.js':                   '/js/main.js'
+  };
+
+  // Fix all anchor tags in nav/header
+  document.querySelectorAll('nav a, header a, .site-nav a, .breadcrumb a').forEach(function(a) {
+    const href = a.getAttribute('href');
+    if (href && fixMap[href]) {
+      a.setAttribute('href', fixMap[href]);
+    }
+  });
+
+  // Fix stylesheet links that resolved wrong
+  document.querySelectorAll('link[rel="stylesheet"]').forEach(function(link) {
+    const href = link.getAttribute('href');
+    if (href && fixMap[href]) {
+      link.setAttribute('href', fixMap[href]);
+    }
+  });
 })();
