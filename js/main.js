@@ -1,11 +1,11 @@
 /* ===================================================
-   MusicProductionWiki.com — main.js v3 + Search
+   MusicProductionWiki.com â main.js v3 + Search
    =================================================== */
 'use strict';
 (function () {
 
   /* ------------------------------------------------
-     SEARCH INDEX — all 118 articles
+     SEARCH INDEX â all 118 articles
      ------------------------------------------------ */
   const SEARCH_INDEX = [
     { title: "Ableton Live Beginner's Guide", url: "/articles/ableton-live-beginners-guide.html", tags: "daw ableton beginners guide" },
@@ -231,7 +231,7 @@
       currentFocus = -1;
 
       if (results.length === 0) {
-        dropdown.innerHTML = '<div class="search-no-results">No articles found — try different keywords</div>';
+        dropdown.innerHTML = '<div class="search-no-results">No articles found â try different keywords</div>';
         dropdown.classList.add('open');
         return;
       }
@@ -383,7 +383,7 @@
     backToTop = document.createElement('button');
     backToTop.id = 'backToTop';
     backToTop.setAttribute('aria-label', 'Back to top');
-    backToTop.innerHTML = '↑';
+    backToTop.innerHTML = 'â';
     document.body.appendChild(backToTop);
   }
   const toggleBackToTop = () => {
@@ -472,10 +472,10 @@
       const emailInput = form.querySelector('input[type="email"]');
       const btn = form.querySelector('.btn-newsletter');
       if (!emailInput || !emailInput.value.trim()) return;
-      btn.textContent = 'Subscribing…';
+      btn.textContent = 'Subscribingâ¦';
       btn.disabled = true;
       setTimeout(() => {
-        btn.textContent = '✓ You\'re in!';
+        btn.textContent = 'â You\'re in!';
         btn.style.background = 'var(--teal-dim)';
         emailInput.value = '';
         setTimeout(() => {
@@ -517,7 +517,7 @@
     oldToggle.addEventListener('click', function() {
       var isOpen = oldNav.classList.toggle('open');
       oldToggle.setAttribute('aria-expanded', String(isOpen));
-      oldToggle.textContent = isOpen ? '✕' : '☰';
+      oldToggle.textContent = isOpen ? 'â' : 'â°';
       document.body.style.overflow = isOpen ? 'hidden' : '';
     });
 
@@ -525,7 +525,7 @@
       if (e.key === 'Escape' && oldNav.classList.contains('open')) {
         oldNav.classList.remove('open');
         oldToggle.setAttribute('aria-expanded', 'false');
-        oldToggle.textContent = '☰';
+        oldToggle.textContent = 'â°';
         document.body.style.overflow = '';
       }
     });
@@ -534,7 +534,7 @@
       link.addEventListener('click', function() {
         oldNav.classList.remove('open');
         oldToggle.setAttribute('aria-expanded', 'false');
-        oldToggle.textContent = '☰';
+        oldToggle.textContent = 'â°';
         document.body.style.overflow = '';
       });
     });
@@ -545,9 +545,34 @@
           e.target !== oldToggle) {
         oldNav.classList.remove('open');
         oldToggle.setAttribute('aria-expanded', 'false');
-        oldToggle.textContent = '☰';
+        oldToggle.textContent = 'â°';
         document.body.style.overflow = '';
       }
     });
   })();
 
+
+
+/* ============================================================
+   AUTO-INJECT NEWSLETTER WIDGET INTO SIDEBAR
+   Runs on every article page — adds widget if not already present
+   ============================================================ */
+(function injectNewsletterWidget() {
+  const sidebar = document.querySelector('.article-sidebar');
+  if (!sidebar) return; // Not an article page
+  if (sidebar.querySelector('.sidebar-newsletter')) return; // Already has newsletter
+
+  const widget = document.createElement('div');
+  widget.className = 'sidebar-widget sidebar-newsletter';
+  widget.innerHTML = `
+    <div class="sidebar-widget-inner" style="background:var(--surface-2,#1a1a2e);border:1px solid var(--border-default,#2a2a3e);border-radius:0.75rem;padding:1.25rem;margin-top:1.5rem;">
+      <h4 style="font-size:0.9rem;font-weight:700;color:var(--text-primary,#f0f0f0);margin:0 0 0.5rem;letter-spacing:0.02em;text-transform:uppercase;">FREE PRODUCER TIPS</h4>
+      <p style="font-size:0.8rem;color:var(--text-muted,#888);margin:0 0 1rem;line-height:1.5;">Join 10,000+ producers. Weekly techniques, gear picks &amp; plugin deals.</p>
+      <form onsubmit="return false;" style="display:flex;flex-direction:column;gap:0.5rem;">
+        <input type="email" placeholder="your@email.com" style="background:var(--surface-1,#111);border:1px solid var(--border-default,#2a2a3e);border-radius:0.4rem;color:var(--text-primary,#f0f0f0);font-size:0.8rem;padding:0.5rem 0.75rem;outline:none;width:100%;box-sizing:border-box;" />
+        <button type="submit" style="background:var(--teal,#00bfa5);border:none;border-radius:0.4rem;color:#fff;cursor:pointer;font-size:0.8rem;font-weight:700;padding:0.55rem;width:100%;letter-spacing:0.03em;">GET FREE TIPS</button>
+      </form>
+    </div>
+  `;
+  sidebar.appendChild(widget);
+})();
