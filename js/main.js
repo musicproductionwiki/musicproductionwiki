@@ -1,11 +1,11 @@
 /* ===================================================
-   MusicProductionWiki.com Ã¢ÂÂ main.js v3 + Search
+   MusicProductionWiki.com ÃÂ¢ÃÂÃÂ main.js v3 + Search
    =================================================== */
 'use strict';
 (function () {
 
   /* ------------------------------------------------
-     SEARCH INDEX Ã¢ÂÂ all 118 articles
+     SEARCH INDEX ÃÂ¢ÃÂÃÂ all 118 articles
      ------------------------------------------------ */
   const SEARCH_INDEX = [
     { title: "Ableton Live Beginner's Guide", url: "/articles/ableton-live-beginners-guide.html", tags: "daw ableton beginners guide" },
@@ -231,7 +231,7 @@
       currentFocus = -1;
 
       if (results.length === 0) {
-        dropdown.innerHTML = '<div class="search-no-results">No articles found Ã¢ÂÂ try different keywords</div>';
+        dropdown.innerHTML = '<div class="search-no-results">No articles found ÃÂ¢ÃÂÃÂ try different keywords</div>';
         dropdown.classList.add('open');
         return;
       }
@@ -383,7 +383,7 @@
     backToTop = document.createElement('button');
     backToTop.id = 'backToTop';
     backToTop.setAttribute('aria-label', 'Back to top');
-    backToTop.innerHTML = 'Ã¢ÂÂ';
+    backToTop.innerHTML = 'ÃÂ¢ÃÂÃÂ';
     document.body.appendChild(backToTop);
   }
   const toggleBackToTop = () => {
@@ -472,10 +472,10 @@
       const emailInput = form.querySelector('input[type="email"]');
       const btn = form.querySelector('.btn-newsletter');
       if (!emailInput || !emailInput.value.trim()) return;
-      btn.textContent = 'SubscribingÃ¢ÂÂ¦';
+      btn.textContent = 'SubscribingÃÂ¢ÃÂÃÂ¦';
       btn.disabled = true;
       setTimeout(() => {
-        btn.textContent = 'Ã¢ÂÂ You\'re in!';
+        btn.textContent = 'ÃÂ¢ÃÂÃÂ You\'re in!';
         btn.style.background = 'var(--teal-dim)';
         emailInput.value = '';
         setTimeout(() => {
@@ -517,7 +517,7 @@
     oldToggle.addEventListener('click', function() {
       var isOpen = oldNav.classList.toggle('open');
       oldToggle.setAttribute('aria-expanded', String(isOpen));
-      oldToggle.textContent = isOpen ? 'Ã¢ÂÂ' : 'Ã¢ÂÂ°';
+      oldToggle.textContent = isOpen ? 'ÃÂ¢ÃÂÃÂ' : 'ÃÂ¢ÃÂÃÂ°';
       document.body.style.overflow = isOpen ? 'hidden' : '';
     });
 
@@ -525,7 +525,7 @@
       if (e.key === 'Escape' && oldNav.classList.contains('open')) {
         oldNav.classList.remove('open');
         oldToggle.setAttribute('aria-expanded', 'false');
-        oldToggle.textContent = 'Ã¢ÂÂ°';
+        oldToggle.textContent = 'ÃÂ¢ÃÂÃÂ°';
         document.body.style.overflow = '';
       }
     });
@@ -534,7 +534,7 @@
       link.addEventListener('click', function() {
         oldNav.classList.remove('open');
         oldToggle.setAttribute('aria-expanded', 'false');
-        oldToggle.textContent = 'Ã¢ÂÂ°';
+        oldToggle.textContent = 'ÃÂ¢ÃÂÃÂ°';
         document.body.style.overflow = '';
       });
     });
@@ -545,7 +545,7 @@
           e.target !== oldToggle) {
         oldNav.classList.remove('open');
         oldToggle.setAttribute('aria-expanded', 'false');
-        oldToggle.textContent = 'Ã¢ÂÂ°';
+        oldToggle.textContent = 'ÃÂ¢ÃÂÃÂ°';
         document.body.style.overflow = '';
       }
     });
@@ -555,7 +555,7 @@
 
 /* ============================================================
    AUTO-INJECT NEWSLETTER WIDGET INTO SIDEBAR
-   Runs on every article page â adds widget if not already present
+   Runs on every article page Ã¢ÂÂ adds widget if not already present
    ============================================================ */
 (function injectNewsletterWidget() {
   const sidebar = document.querySelector('.article-sidebar');
@@ -629,4 +629,13 @@
       link.setAttribute('href', fixMap[href]);
     }
   });
+})();
+
+// Skimlinks affiliate monetisation — added May 5, 2026
+(function() {
+  var s = document.createElement('script');
+  s.type = 'text/javascript';
+  s.async = true;
+  s.src = 'https://s.skimresources.com/js/302596X1790597.skimlinks.js';
+  (document.head || document.body).appendChild(s);
 })();
