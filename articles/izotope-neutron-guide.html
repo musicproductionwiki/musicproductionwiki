@@ -1,335 +1,289 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="iZotope Neutron complete guide: how Mix Assistant works, every module explained, AI mixing features, workflow tips, and honest assessment of when AI mixing helps vs hurts." />
-  <title>iZotope Neutron Complete Guide: AI Mixing Assistant — MusicProductionWiki.com</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
-  <link rel="stylesheet" href="../css/style.css" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1F39B;</text></svg>" />
-  <style>
-    #readingProgress{position:fixed;top:0;left:0;height:3px;background:var(--teal);width:0%;z-index:200;transition:width 0.1s linear;}
-    .quick-answer{background:linear-gradient(135deg,rgba(0,212,168,0.08),rgba(167,139,250,0.06));border:1px solid rgba(0,212,168,0.3);border-left:4px solid var(--teal);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
-    .quick-answer-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.6rem;}
-    .quick-answer p{font-size:1rem;line-height:1.65;color:var(--text-primary);margin:0;}
-    .skill-badge{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .6rem;border-radius:4px;margin-left:.6rem;vertical-align:middle;position:relative;top:-2px;}
-    .skill-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
-    .skill-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
-    .skill-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
-    .settings-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
-    .settings-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
-    .settings-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
-    .settings-table tr:last-child td{border-bottom:none;}
-    .settings-table tr:hover td{background:var(--bg-surface);}
-    .settings-table td:first-child{color:var(--text-primary);font-weight:500;}
-    .settings-table .mono{font-family:var(--font-mono);font-size:.82rem;color:var(--teal);}
-    .mistake-box{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-left:4px solid #ef4444;border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
-    .mistake-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ef4444;margin-bottom:.4rem;}
-    .mistake-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
-    .pro-reference{border-left:3px solid var(--purple);padding:.75rem 1.25rem;margin:1.25rem 0;background:rgba(167,139,250,0.05);border-radius:0 6px 6px 0;}
-    .pro-reference-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.35rem;}
-    .pro-reference p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
-    .pro-reference strong{color:var(--text-primary);}
-    .listening-prescription{background:var(--bg-void);border:1px solid var(--border-default);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;position:relative;}
-    .listening-prescription::before{content:'🎧';position:absolute;top:-14px;left:1.5rem;background:var(--bg-void);padding:0 .4rem;font-size:1.1rem;}
-    .listening-prescription-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:.75rem;}
-    .listening-prescription p{font-size:.9rem;line-height:1.7;color:var(--text-secondary);margin:0 0 .5rem;}
-    .listening-record{font-weight:600;color:var(--text-primary);}
-    .decision-framework{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
-    .decision-framework-title{font-family:var(--font-display);font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:1rem;}
-    .decision-item{display:flex;gap:1rem;padding:.65rem 0;border-bottom:1px solid var(--border-subtle);font-size:.88rem;line-height:1.55;}
-    .decision-item:last-child{border-bottom:none;}
-    .decision-if{color:var(--text-muted);font-style:italic;min-width:2rem;}
-    .decision-then{color:var(--text-primary);}
-    .decision-then strong{color:var(--teal);}
-    .exercise-block{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.25rem 0;}
-    .exercise-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;}
-    .exercise-badge{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .7rem;border-radius:4px;}
-    .exercise-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
-    .exercise-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
-    .exercise-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
-    .exercise-title{font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text-primary);}
-    .exercise-block ol{margin:0;padding-left:1.25rem;color:var(--text-secondary);font-size:.88rem;line-height:1.7;}
-    .exercise-block ol li{margin-bottom:.4rem;}
-    .version-line{font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:4px;padding:.4rem .75rem;margin:.75rem 0 1.5rem;display:inline-block;}
-    .go-deeper{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:10px;padding:1.75rem;margin:2.5rem 0;}
-    .go-deeper-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text-primary);margin-bottom:1.25rem;}
-    .go-deeper-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;}
-    .go-deeper-item{background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:7px;padding:1rem 1.1rem;}
-    .go-deeper-item-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.35rem;}
-    .go-deeper-item a{font-size:.88rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;}
-    .go-deeper-item p{font-size:.78rem;color:var(--text-muted);margin:.3rem 0 0;}
-    .citation{font-size:.78rem;color:var(--text-muted);font-style:italic;margin-top:.25rem;}
-    .diagram-wrap{margin:1.75rem 0;background:var(--bg-void);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem;overflow-x:auto;}
-    .diagram-caption{font-size:.78rem;color:var(--text-muted);text-align:center;margin-top:.75rem;font-style:italic;}
-    .highlight-box{background:rgba(0,212,168,0.06);border:1px solid rgba(0,212,168,0.2);border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
-    .highlight-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.4rem;}
-    .highlight-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
-    .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin:1.5rem 0;}
-    .stat-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem;text-align:center;}
-    .stat-number{font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--teal);display:block;}
-    .stat-label{font-size:.78rem;color:var(--text-secondary);margin-top:.25rem;}
-    .action-steps{counter-reset:steps;list-style:none;padding:0;margin:1.5rem 0;}
-    .action-steps li{counter-increment:steps;display:flex;gap:1rem;padding:.85rem 0;border-bottom:1px solid var(--border-subtle);font-size:.9rem;color:var(--text-secondary);line-height:1.6;}
-    .action-steps li:last-child{border-bottom:none;}
-    .action-steps li::before{content:counter(steps);background:var(--teal);color:#000;font-weight:800;font-size:.75rem;width:1.6rem;height:1.6rem;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem;}
-    .genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:1.5rem 0;}
-    .genre-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem 1.25rem;}
-    .genre-card-name{font-family:var(--font-display);font-size:.85rem;font-weight:700;color:var(--teal);margin-bottom:.4rem;}
-    .genre-card p{font-size:.82rem;color:var(--text-secondary);line-height:1.55;margin:0;}
-    .comparison-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
-    .comparison-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
-    .comparison-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
-    .comparison-table tr:last-child td{border-bottom:none;}
-    .comparison-table td:first-child{color:var(--text-primary);font-weight:500;}
-    .affiliate-cta{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,212,168,0.1);border:1px solid rgba(0,212,168,0.25);color:var(--teal);font-size:.82rem;font-weight:600;padding:.45rem .9rem;border-radius:6px;text-decoration:none;}
-</style>
-  <link rel="canonical" href="https://musicproductionwiki.com/articles/izotope-neutron-guide.html"/>
-  <!-- Open Graph -->
-  <meta property="og:type" content="article"/>
-  <meta property="og:title" content="iZotope Neutron Complete Guide: AI Mixing Assistant"/>
-  <meta property="og:description" content="iZotope Neutron complete guide: how Mix Assistant works, every module explained, AI mixing features, workflow tips, and honest assessment of when AI mixing helps vs hurts."/>
-  <meta property="og:url" content="https://musicproductionwiki.com/articles/izotope-neutron-guide.html"/>
-  <meta property="og:site_name" content="Music Production Wiki"/>
-  <meta property="og:image" content="https://musicproductionwiki.com/images/og-default.jpg"/>
-  <meta property="og:image:width" content="1200"/>
-  <meta property="og:image:height" content="630"/>
-  <meta property="article:author" content="Music Production Wiki Team"/>
-  <meta property="article:section" content="Plugins"/>
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="iZotope Neutron Complete Guide: AI Mixing Assistant"/>
-  <meta name="twitter:description" content="iZotope Neutron complete guide: how Mix Assistant works, every module explained, AI mixing features, workflow tips, and honest assessment of when AI mixing helps vs hurts."/>
-  <meta name="twitter:image" content="https://musicproductionwiki.com/images/og-default.jpg"/>
-  <!-- Article Schema -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iZotope Neutron Guide (2026): AI Mixing Assistant Explained | MusicProductionWiki</title>
+  <meta name="description" content="Complete iZotope Neutron guide: how to use the AI Mix Assistant, Track Enhance, Unmask, and every module for professional mixing results in 2026.">
+  <link rel="canonical" href="https://musicproductionwiki.com/articles/izotope-neutron-guide.html">
+  <link rel="stylesheet" href="../css/style.css">
+  <meta property="og:title" content="iZotope Neutron Guide (2026): AI Mixing Assistant Explained">
+  <meta property="og:description" content="Complete iZotope Neutron guide: how to use the AI Mix Assistant, Track Enhance, Unmask, and every module for professional mixing results.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://musicproductionwiki.com/articles/izotope-neutron-guide.html">
+  <meta property="og:site_name" content="MusicProductionWiki">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="iZotope Neutron Guide (2026): AI Mixing Assistant Explained">
+  <meta name="twitter:description" content="Complete iZotope Neutron guide: AI Mix Assistant, Track Enhance, Unmask, and every module for professional mixing results.">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": "iZotope Neutron Complete Guide: AI Mixing Assistant",
-    "description": "iZotope Neutron complete guide: how Mix Assistant works, every module explained, AI mixing features, workflow tips, and honest assessment of when AI mixing helps vs hurts.",
-    "image": "https://musicproductionwiki.com/images/og-default.jpg",
-    "author": {
-      "@type": "Organization",
-      "name": "Music Production Wiki",
-      "url": "https://musicproductionwiki.com"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "Music Production Wiki",
-      "url": "https://musicproductionwiki.com"
-    },
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": "https://musicproductionwiki.com/articles/izotope-neutron-guide.html"
-    },
-    "articleSection": "Plugins",
-    "inLanguage": "en-US"
+    "headline": "iZotope Neutron Guide (2026): AI Mixing Assistant Explained",
+    "description": "Complete iZotope Neutron guide: how to use the AI Mix Assistant, Track Enhance, Unmask, and every module for professional mixing results.",
+    "author": { "@type": "Organization", "name": "MusicProductionWiki" },
+    "publisher": { "@type": "Organization", "name": "MusicProductionWiki", "url": "https://musicproductionwiki.com" },
+    "dateModified": "2026-05-01",
+    "mainEntityOfPage": "https://musicproductionwiki.com/articles/izotope-neutron-guide.html"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": "What does iZotope Neutron do?", "acceptedAnswer": { "@type": "Answer", "text": "iZotope Neutron is an AI-powered channel strip plugin for mixing. It analyzes your audio and suggests EQ, compression, transient shaping, and exciter settings. Its core features include the AI Mix Assistant (sets up the full mix balance), Track Enhance (single-channel intelligent processing), and the Unmask module (reduces frequency masking between tracks)." } },
+      { "@type": "Question", "name": "Is iZotope Neutron good for beginners?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. The AI Mix Assistant and Track Enhance features make Neutron accessible even without deep mixing knowledge. Beginners can run the assistant, listen to the suggested processing, and then modify it. The real learning happens when you study why Neutron made each suggestion." } },
+      { "@type": "Question", "name": "What is the iZotope Mix Assistant?", "acceptedAnswer": { "@type": "Answer", "text": "The Mix Assistant is Neutron's flagship AI feature. Load Neutron on every track in your session, run the Mix Assistant, and it balances the volume levels of all tracks, then applies AI-suggested EQ and dynamics processing to each channel to create an initial mix framework. You refine from this point." } },
+      { "@type": "Question", "name": "What is the Unmask feature in Neutron?", "acceptedAnswer": { "@type": "Answer", "text": "Unmask is a sidechain-based module that reduces frequency masking between two tracks. For example, if your guitar and keys share the same frequency range and fight each other in the mix, Unmask can dynamically cut the guitar in the frequencies where the keys are most active, reducing the clash without manual dynamic EQ work." } },
+      { "@type": "Question", "name": "How much does iZotope Neutron cost?", "acceptedAnswer": { "@type": "Answer", "text": "Neutron Standard is ~$199. Neutron Advanced is ~$299 and adds the Unmask module, Sculptor, and additional processing options. The Music Production Suite subscription (~$499/year) includes Neutron, Ozone, RX, and the full iZotope library." } },
+      { "@type": "Question", "name": "Is Neutron better than stock DAW plugins?", "acceptedAnswer": { "@type": "Answer", "text": "Neutron's AI assistance is genuinely better than anything built into DAWs. The individual EQ and compressor modules are competitive with dedicated third-party plugins. The real advantage is the inter-track communication (Unmask, Mix Assistant) which no stock DAW plugin can replicate." } },
+      { "@type": "Question", "name": "Can Neutron replace a mixing engineer?", "acceptedAnswer": { "@type": "Answer", "text": "No. Neutron can set up a mix framework quickly, but a skilled mixing engineer brings artistic judgment, genre expertise, and critical listening that AI cannot replicate. Think of Neutron as a powerful starting point and learning tool, not a replacement for developed mixing skills." } },
+      { "@type": "Question", "name": "What DAWs does Neutron work with?", "acceptedAnswer": { "@type": "Answer", "text": "Neutron works with all major DAWs as a VST3, AU, or AAX plugin. Logic Pro, Ableton, FL Studio, Pro Tools, Studio One, Reaper, and Cubase are all fully supported. The inter-track features (Mix Assistant, Unmask) require iZotope's inter-plugin communication system to be active." } },
+      { "@type": "Question", "name": "What is Track Enhance in Neutron?", "acceptedAnswer": { "@type": "Answer", "text": "Track Enhance is Neutron's single-track AI processing feature. Load Neutron on a channel, click Track Enhance, and Neutron analyzes that specific track (vocals, bass, drums, etc.) and configures EQ, compression, and saturation optimized for that instrument type." } },
+      { "@type": "Question", "name": "Does Neutron use a lot of CPU?", "acceptedAnswer": { "@type": "Answer", "text": "Neutron can be CPU-intensive when used on many tracks simultaneously, especially with the Unmask module and inter-plugin communication active. iZotope recommends committing heavy Neutron processing to audio (bouncing) once you've finalized settings to reduce CPU load during the final mix." } }
+    ]
   }
   </script>
 </head>
 <body>
-<div id="readingProgress"></div>
-<header class="site-header" role="banner">
-  <div class="container header-inner">
-    <a href="../index.html" class="site-logo" aria-label="MusicProductionWiki Home">
-      <span class="logo-wordmark">Music<span>Production</span>Wiki</span>
-      <span class="logo-tagline">The Producer's Reference</span>
-    </a>
-    <nav class="primary-nav" aria-label="Primary navigation">
-      <ul class="nav-list">
-        <li><a href="../categories/reviews.html">Reviews</a></li>
-        <li><a href="../categories/comparisons.html">Comparisons</a></li>
-        <li><a href="../categories/ai-music.html" class="active">AI Music</a></li>
-        <li><a href="../categories/daws.html">DAWs</a></li>
-        <li><a href="../categories/plugins.html">Plugins</a></li>
-        <li><a href="../categories/gear.html">Gear</a></li>
-        <li><a href="../categories/techniques.html">Techniques</a></li>
-        <li><a href="../categories/music-business.html">Music Business</a></li>
-        <li><a href="../categories/glossary.html">Glossary</a></li>
-        <li><a href="../about.html">About</a></li>
-      </ul>
-    </nav>
-    <div class="header-actions">
-      <form class="search-form" role="search" action="#" method="get">
-        <label for="siteSearch" class="visually-hidden">Search articles</label>
-        <input type="search" id="siteSearch" class="search-input" placeholder="Search articles…" name="q" autocomplete="off" />
-        <button type="submit" class="search-btn" aria-label="Submit search">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        </button>
-      </form>
-      <a href="#newsletter" class="btn-subscribe">The Producer's Briefing →</a>
-    </div>
-    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileNav">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-</header>
-<nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
-  <ul class="nav-list">
-    <li><a href="../categories/reviews.html">Reviews</a></li>
-    <li><a href="../categories/comparisons.html">Comparisons</a></li>
-    <li><a href="../categories/ai-music.html" class="active">AI Music</a></li>
-    <li><a href="../categories/daws.html">DAWs</a></li>
-    <li><a href="../categories/plugins.html">Plugins</a></li>
-    <li><a href="../categories/gear.html">Gear</a></li>
-    <li><a href="../categories/techniques.html">Techniques</a></li>
-    <li><a href="../categories/music-business.html">Music Business</a></li>
-    <li><a href="../categories/glossary.html">Glossary</a></li>
-  </ul>
-</nav>
-<div class="container">
-  <nav class="breadcrumb" aria-label="Breadcrumb">
-    <ol>
-      <li><a href="../index.html">Home</a></li>
-      <li><a href="../categories/ai-music.html">AI Music</a></li>
-      <li><span aria-current="page">iZotope Neutron Complete Guide: AI Mixing Assistant</span></li>
-    </ol>
+  <nav class="main-nav">
+    <a href="/" class="nav-logo">MusicProductionWiki</a>
+    <ul class="nav-links">
+      <li><a href="/categories/daws.html">DAWs</a></li>
+      <li><a href="/categories/gear.html">Gear</a></li>
+      <li><a href="/categories/techniques.html">Techniques</a></li>
+      <li><a href="/categories/plugins.html">Plugins</a></li>
+      <li><a href="/categories/music-business.html">Music Business</a></li>
+    </ul>
   </nav>
-</div>
-<main class="container" id="main-content">
-  <div class="article-layout">
-    <article aria-labelledby="articleTitle">
+
+  <main class="article-layout">
+    <article>
       <header class="article-header">
-        <div class="article-tags"><span class="article-tag teal">AI Music</span></div>
-        <h1 id="articleTitle">iZotope Neutron Complete Guide: AI Mixing Assistant</h1>
-        <div class="article-header-meta">
-          <div class="article-author"><div class="author-avatar" aria-hidden="true">MP</div><span class="author-name">The Music Production Wiki Team</span></div>
-          <span class="meta-divider"></span><span class="meta-item">Updated May 2025</span>
-          <span class="meta-divider"></span><span class="meta-item">12 min read</span>
+        <div class="article-meta">
+          <span class="category-tag">Plugins</span>
+          <span class="read-time">10 min read</span>
+          <span class="date-updated">Updated May 2026</span>
         </div>
+        <h1>iZotope Neutron Guide (2026): AI Mixing Assistant Explained</h1>
+        <p class="article-subtitle">A complete walkthrough of every Neutron module — from the AI Mix Assistant to Unmask and Sculptor — with real-world workflow applications.</p>
       </header>
-      <div class="article-body">
-        
-<p>iZotope Neutron is a plugin suite built around the premise that AI can analyze your audio and suggest a starting point for your mix. It includes a full set of mixing tools — EQ, compressor, transient shaper, exciter, gate, and limiter — wrapped in an interface where artificial intelligence provides a first-pass mix as a starting point you then refine. It's one of the most commercially successful AI-assisted mixing tools available, and understanding what it actually does well and where it falls short is essential for using it productively.</p>
 
-<div class="info-box">
-  <strong>What we'll cover:</strong> How Mix Assistant works and what it actually does, every module in Neutron explained, Track Enhance vs full Mix Assistant, integration with iZotope's Relay and Ozone, when AI mixing helps, when it hurts, and whether Neutron is worth the price.
-</div>
-
-<h2 id="mix-assistant">Mix Assistant: What It Actually Does</h2>
-<p>Mix Assistant is the AI-powered centerpiece of Neutron. The workflow: you insert Neutron (or the free Neutron Elements version) on every track you want to process. You trigger Mix Assistant from the standalone Neutron application. Mix Assistant listens to your session for several seconds, analyzes the spectral and dynamic content of each track, and produces a starting configuration for every Neutron instance — EQ curves, compression settings, and overall balance adjustments — based on what it heard.</p>
-<p>The important thing to understand about Mix Assistant is what it's doing and what it's not doing. It is identifying frequency conflicts between tracks and making EQ adjustments to reduce masking. It is identifying dynamic range characteristics and setting compressor parameters that should control those dynamics appropriately. It is making relative volume balance suggestions based on what it identifies as focal elements (lead vocals, kick drum) versus supporting elements.</p>
-<p>It is not making aesthetic decisions. It does not know what your track should feel like. It does not understand that you want the guitars to be unusually prominent because the song is a guitar showcase. It does not know you want the vocals drier than normal because the genre convention is intimate rather than spacious. Mix Assistant produces technically reasonable settings, not artistically informed ones.</p>
-<p>The practical implication: Mix Assistant is a very good starting point for a mix, especially for producers who find the blank slate of an unmixed session intimidating. The AI-generated starting point is typically better than nothing, often better than a beginner producer's initial attempts, and usually worse than what an experienced mixer would do by ear. Use it as a foundation, then immediately start listening critically and adjusting.</p>
-
-<h2 id="eq-module">The EQ Module</h2>
-<p>Neutron's EQ is excellent and would stand on its own as a competitive equalizer without the AI features. It offers up to 12 bands with linear phase or minimum phase processing, mid-side capability per band, spectrum grab (click on a peak in the spectrum analyzer and Neutron creates a notch to address it automatically), and Masking Meter — the feature that shows you where your current track is masking another track in your session.</p>
-<p>The Masking Meter is one of Neutron's most genuinely useful features. Insert Neutron on a lead vocal. Tell it to show masking from the acoustic guitar track. The display shows you exactly where the guitar is competing with the vocal in the frequency spectrum, making the corrective EQ cuts obvious rather than a matter of guesswork. This is a real-time education tool as much as a mixing tool — it makes the abstract concept of frequency masking visible.</p>
-
-<h2 id="compressor">The Compressor</h2>
-<p>Neutron includes two independent compressor bands, each switchable between four modes: Vintage (colored, warm), Modern (clean, transparent), Optical (smooth, program-dependent), and Transient (focuses compression on transient peaks specifically). The multi-band architecture allows different compression behavior on different frequency ranges within the same plugin — lighter ratio on lows, heavier on mids, for example — which is genuinely useful for controlling complex material without the full overhead of a separate multi-band compressor plugin.</p>
-<p>The compressors sound good across all modes. The Vintage mode has a musical, slightly colored quality that works well on drums and guitars. The Modern mode is appropriately transparent for vocals and mix bus applications. The Optical mode handles program material — full mix elements — with smooth, natural-sounding gain reduction.</p>
-
-<h2 id="transient-shaper">Transient Shaper</h2>
-<p>The Transient Shaper controls the attack and sustain balance of percussive and transient-rich material. Increase attack to make drums hit harder. Decrease sustain to tighten a room sound or shorten the ring of a snare. This is a tool that makes the most difference on drums, percussion, and plucked instruments — material with a clear attack transient.</p>
-<p>Neutron's transient shaper implementation is clean and predictable. The controls are simple (attack and sustain amounts), and the results are musical. It's not the most sophisticated transient shaper available — Slate Digital's Infinity EQ and Kilohearts' Transient Shaper offer more control — but it handles the standard use cases effectively and its integration within Neutron means you don't need a separate plugin for basic transient management.</p>
-
-<h2 id="exciter">Exciter</h2>
-<p>The Exciter adds harmonic saturation in up to four frequency bands independently. Each band offers five saturation modes (Warm, Retro, Tape, Tube, Shred) with independent intensity control. This allows precise harmonic enhancement — adding warmth to the low-mids while keeping highs clean, or adding presence to upper frequencies without affecting the low end body.</p>
-<p>Exciters are most useful on elements that sound thin or lifeless — adding harmonic content that makes them feel more present in the mix without simply raising their level. Neutron's implementation is versatile, though the available modes don't cover quite the range of saturation character as dedicated saturation plugins like Soundtoys Decapitator or Fabfilter Saturn.</p>
-
-<h2 id="track-enhance">Track Enhance vs Mix Assistant</h2>
-<p>Neutron 4 introduced Track Enhance — a per-track AI analysis tool that's faster and more focused than the full Mix Assistant workflow. Track Enhance analyzes just the current track and applies AI-generated settings specifically for that material, without needing to analyze your entire session simultaneously.</p>
-<p>Track Enhance is appropriate when you want quick AI-assisted starting points for individual tracks. Mix Assistant is appropriate when you want an AI-generated starting point for the full mix balance and inter-track relationship management. For most workflows, Track Enhance is faster and more practical; use Mix Assistant for complete-session analysis when you're starting from scratch.</p>
-
-<h2 id="integration">Integration with iZotope Suite</h2>
-<p>Neutron integrates deeply with other iZotope products. The most useful integrations: Ozone's Mastering Assistant can see Neutron instances throughout your session and make mastering decisions informed by the mix processing. RX's repair tools pipe directly to Neutron for cleaning up audio before mixing. The iZotope inter-plugin communication system allows Neutron instances to share information across tracks in real time, enabling the Masking Meter to display live masking information.</p>
-<p>If you're already invested in iZotope tools — or planning to be — Neutron's suite integration is a genuine advantage. For producers using primarily third-party mixing tools, the integration benefit is lower.</p>
-
-<h2 id="pricing">Pricing</h2>
-<p>Neutron 4 Standard costs $249 at full price. Neutron 4 Advanced costs $399. iZotope regularly offers significant sales — 40-50% discounts are common, and the annual Music Production Bundle deals can make Neutron much more economical. Neutron Elements, the limited free version, provides the EQ module and a simplified compressor as a way to try the interface before committing to the full purchase.</p>
-
-<h2 id="verdict">Verdict: When Neutron Helps and When It Doesn't</h2>
-<p>Neutron is genuinely useful for: producers who want AI-generated starting points that reduce the intimidation of an unmixed session, mixers who want visual frequency masking analysis in real time, producers who want a full-featured mixing suite in a single plugin, and iZotope ecosystem users who benefit from inter-plugin integration.</p>
-<p>Neutron is less useful for: producers who already have strong mixing skills and don't need AI starting points, producers who prefer dedicated best-in-class plugins for each mixing task (separate EQ, separate compressor), and producers on tight budgets who can achieve similar results with free alternatives.</p>
-<p>Score: 8.4/10</p>
-
-<div class="go-deeper">
-  <div class="go-deeper-title">Go Deeper</div>
-  <div class="go-deeper-grid">
-    <div class="go-deeper-item"><div class="go-deeper-item-label">AI Music</div><a href="landr-vs-izotope-ozone.html">LANDR vs iZotope Ozone</a><p>AI mastering compared</p></div>
-    <div class="go-deeper-item"><div class="go-deeper-item-label">AI Music</div><a href="izotope-rx-guide.html">iZotope RX Guide</a><p>Audio repair deep dive</p></div>
-    <div class="go-deeper-item"><div class="go-deeper-item-label">Techniques</div><a href="how-to-mix-music-beginners-guide.html">How to Mix Music</a><p>Mixing fundamentals</p></div>
-  </div>
-</div>
-
+      <div class="quick-answer">
+        <strong>Quick Answer:</strong> iZotope Neutron is an AI-powered channel strip that analyzes your tracks and suggests EQ, compression, and saturation settings. Its most powerful features are the Mix Assistant (balances and processes your entire session simultaneously), Unmask (reduces masking between tracks using dynamic sidechain EQ), and Track Enhance (single-track AI processing). It's a genuine workflow accelerator for engineers at every level.
       </div>
-      <footer class="article-footer">
-        <div class="article-tags-footer">
-          <p class="tags-label">Tags</p>
-          <div class="tags-list"><a href="../categories/ai-music.html" class="tag-pill">AI Music</a></div>
+
+      <p>The fundamental challenge of mixing is managing relationships — between elements, frequencies, dynamics, and the three-dimensional space of a stereo field. Traditional mixing tools let you adjust these relationships manually. iZotope Neutron does something different: it understands the relationships between your tracks and actively helps you manage them.</p>
+
+      <p>Neutron's inter-track communication — the ability for a plugin on one channel to "hear" and respond to what's happening on another — is unlike anything available in other mixing tools. The Unmask feature alone justifies the purchase for many engineers. This guide walks through every module and feature in Neutron, explains when to use each, and gives you a clear picture of where Neutron fits in a professional mixing workflow.</p>
+
+      <!-- SVG: Neutron inter-track communication diagram -->
+      <figure class="article-figure">
+        <svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="iZotope Neutron inter-track communication diagram">
+          <!-- Tracks -->
+          <rect x="20" y="30" width="110" height="50" rx="7" fill="#e8eaf6" stroke="#3949ab" stroke-width="1.5"/>
+          <text x="75" y="52" text-anchor="middle" font-size="11" font-weight="bold" fill="#1a237e">Kick</text>
+          <text x="75" y="67" text-anchor="middle" font-size="10" fill="#3949ab">Neutron</text>
+
+          <rect x="20" y="110" width="110" height="50" rx="7" fill="#e8f5e9" stroke="#388e3c" stroke-width="1.5"/>
+          <text x="75" y="132" text-anchor="middle" font-size="11" font-weight="bold" fill="#1b5e20">Bass</text>
+          <text x="75" y="147" text-anchor="middle" font-size="10" fill="#388e3c">Neutron</text>
+
+          <rect x="580" y="30" width="110" height="50" rx="7" fill="#fce4ec" stroke="#c62828" stroke-width="1.5"/>
+          <text x="635" y="52" text-anchor="middle" font-size="11" font-weight="bold" fill="#b71c1c">Vocals</text>
+          <text x="635" y="67" text-anchor="middle" font-size="10" fill="#c62828">Neutron</text>
+
+          <rect x="580" y="110" width="110" height="50" rx="7" fill="#fff8e1" stroke="#f57f17" stroke-width="1.5"/>
+          <text x="635" y="132" text-anchor="middle" font-size="11" font-weight="bold" fill="#e65100">Guitar</text>
+          <text x="635" y="147" text-anchor="middle" font-size="10" fill="#f57f17">Neutron</text>
+
+          <!-- Central Mix Assistant -->
+          <ellipse cx="350" cy="100" rx="100" ry="55" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="2"/>
+          <text x="350" y="90" text-anchor="middle" font-size="12" font-weight="bold" fill="#4a148c">iZotope</text>
+          <text x="350" y="106" text-anchor="middle" font-size="12" font-weight="bold" fill="#4a148c">Mix Assistant</text>
+          <text x="350" y="122" text-anchor="middle" font-size="10" fill="#7b1fa2">Sees all tracks simultaneously</text>
+
+          <!-- Connection lines -->
+          <line x1="130" y1="55" x2="248" y2="90" stroke="#7b1fa2" stroke-width="1.5" stroke-dasharray="5"/>
+          <line x1="130" y1="135" x2="248" y2="105" stroke="#7b1fa2" stroke-width="1.5" stroke-dasharray="5"/>
+          <line x1="452" y1="90" x2="580" y2="55" stroke="#7b1fa2" stroke-width="1.5" stroke-dasharray="5"/>
+          <line x1="452" y1="108" x2="580" y2="135" stroke="#7b1fa2" stroke-width="1.5" stroke-dasharray="5"/>
+
+          <text x="350" y="175" text-anchor="middle" font-size="10" fill="#888" font-style="italic">Neutron on each track reports to the central Mix Assistant for cross-track intelligence</text>
+        </svg>
+        <figcaption>Neutron's inter-plugin communication: each instance reports to the central Mix Assistant, enabling cross-track analysis and processing decisions like Unmask.</figcaption>
+      </figure>
+
+      <h2>Neutron's Core Modules</h2>
+
+      <h3>EQ</h3>
+      <p>Neutron's EQ is a fully-featured digital equalizer with up to 12 bands, linear phase mode, and a real-time spectrum analyzer. What sets it apart from a standard EQ is the AI-powered "Auto EQ" feature: Neutron analyzes the incoming audio and suggests corrective EQ moves based on detected problems (resonances, harshness, muddiness). You can accept all suggestions, accept individually, or use them as a reference while making your own adjustments.</p>
+      <p>The EQ's Masking Meter — a visual display showing where your current track overlaps with another track in the frequency domain — is one of the most useful diagnostic tools in mixing. It makes invisible frequency conflicts visible.</p>
+
+      <h3>Compressor</h3>
+      <p>Neutron's Compressor includes multiple feedback and feed-forward modes and two independent bands (when in multiband mode). The Transient mode is particularly useful for drums — it compresses transients and body independently, giving you control over punch and sustain separately. The vintage mode adds subtle even-harmonic saturation for warmth.</p>
+
+      <h3>Transient Shaper</h3>
+      <p>The Transient Shaper controls the attack and sustain of any source — independently of a compressor. This is ideal for drums: boost the attack to add snap to a snare, reduce the sustain to tighten a reverberant kick. On bass, the transient shaper can add or reduce finger/pick attack without touching overall level. Four bands of multiband operation let you shape different frequency ranges of transients independently.</p>
+
+      <h3>Exciter</h3>
+      <p>Neutron's Exciter adds harmonic saturation across four bands with independent control of saturation amount and character per band. Modes include Warm (tube-style even harmonics), Retro (transistor-style odd harmonics), Tape, and Triode. On vocals, a subtle amount of Warm saturation in the 2–5kHz range adds presence without harshness. On kick drums, Tape mode in the low-mids adds punch.</p>
+
+      <h3>Sculptor</h3>
+      <p>Sculptor (Advanced only) is Neutron's most unique module. It applies a "tonal shape" target to an instrument — essentially an intelligent tonal EQ that reshapes the overall frequency balance of an instrument toward a target profile. Select "Snare," and Sculptor analyzes your snare and applies EQ to make it sound more like a canonical snare. Select "Vocals," and it brightens, warms, or scoops the signal toward a reference vocal character.</p>
+      <p>Sculptor works best at subtle settings (20–40% intensity). At full intensity it can feel heavy-handed, but used lightly it saves significant time on tonal correction.</p>
+
+      <h2>Mix Assistant — The Flagship Feature</h2>
+      <p>The Mix Assistant is the feature that makes Neutron different from every other channel strip plugin. Load Neutron on every track in your session. Open the Mix Assistant window (accessible from any Neutron instance). Click "Run."</p>
+
+      <p>Neutron analyzes all tracks simultaneously. It identifies each instrument type automatically (kick, snare, bass, vocals, guitar, keys, etc.). It sets relative volume levels based on genre-appropriate starting balances. It applies AI-suggested EQ and dynamics processing to each channel. The result — in under a minute — is a rough but coherent initial mix framework.</p>
+
+      <p>This doesn't replace the mixing process, but it dramatically shortens the time from imported session to "roughly sounds like a mix." For engineers who spend significant time just getting to a usable starting balance, the Mix Assistant is a genuine time saver.</p>
+
+      <h2>Track Enhance — Single-Track AI</h2>
+      <p>For situations where you don't want to run the full Mix Assistant, Track Enhance processes a single track using AI optimized for that specific instrument type. Load Neutron on a vocal, click Track Enhance → Vocal, and Neutron configures EQ, compression, and exciter settings appropriate for vocal processing.</p>
+
+      <p>Track Enhance identifies the instrument automatically in most cases. You can override if it misidentifies — useful on unconventional sources. The suggestions are a starting point, not a finished result. But for producers who aren't confident in setting up a vocal chain from scratch, Track Enhance gives a solid foundation to adjust from.</p>
+
+      <h2>Unmask — Solving Frequency Conflicts</h2>
+      <p>Unmask is Neutron's most technically sophisticated feature. It uses sidechain analysis to dynamically reduce frequency masking between two competing tracks.</p>
+
+      <p>The classic use case: guitars and keys playing similar chord voicings occupy the same frequency space. They mask each other — when played together, neither sounds as present or defined as it does soloed. Traditionally, you'd address this with static EQ cuts on one or both tracks, or with manual dynamic EQ automation.</p>
+
+      <p>Unmask automates this process: you designate one track as the "masker" and another as the track to process. Unmask monitors the masker's real-time frequency content and dynamically dips the processing track in the frequencies where the masker is most active. The result is a more transparent, defined mix where instruments occupy their own space without constant manual adjustment.</p>
+
+      <p>For complex, dense mixes with many midrange instruments — modern pop, rock, country — Unmask is one of the most effective tools available for clarity.</p>
+
+      <h2>Neutron Standard vs. Neutron Advanced</h2>
+      <table class="comparison-table">
+        <thead>
+          <tr><th>Feature</th><th>Standard (~$199)</th><th>Advanced (~$299)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>EQ (12-band, AI Auto EQ)</td><td>✅</td><td>✅</td></tr>
+          <tr><td>Compressor (multiband, vintage)</td><td>✅</td><td>✅</td></tr>
+          <tr><td>Transient Shaper</td><td>✅</td><td>✅</td></tr>
+          <tr><td>Exciter</td><td>✅</td><td>✅</td></tr>
+          <tr><td>Track Enhance</td><td>✅</td><td>✅</td></tr>
+          <tr><td>Mix Assistant</td><td>✅</td><td>✅</td></tr>
+          <tr><td>Unmask module</td><td>❌</td><td>✅</td></tr>
+          <tr><td>Sculptor</td><td>❌</td><td>✅</td></tr>
+          <tr><td>Extended module customization</td><td>Limited</td><td>Full</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Real-World Workflow: Using Neutron in a Mix</h2>
+      <p>Here's a practical workflow for using Neutron effectively on a full session:</p>
+      <ol>
+        <li><strong>Load Neutron on every main channel</strong> — drums (individual tracks), bass, guitar, keys, vocals.</li>
+        <li><strong>Run the Mix Assistant</strong> — let it set initial levels and processing. Listen to the result without judgment.</li>
+        <li><strong>Identify the weak points</strong> — which tracks sound too processed? Which need more work? The Mix Assistant won't get everything right.</li>
+        <li><strong>Open Unmask on competing midrange tracks</strong> — guitars vs. keys, guitar vs. lead vocals, keys vs. backing vocals. Set the masker/processing track relationship and adjust the intensity to taste.</li>
+        <li><strong>Use Track Enhance for fine-tuning</strong> — on any track that still sounds off after the Mix Assistant, run Track Enhance with the correct instrument type selected and compare with your own manual adjustments.</li>
+        <li><strong>Bypass the AI and adjust manually</strong> — use Neutron's EQ and compressor as standard mixing tools, informed by the AI's starting point but not limited to it.</li>
+      </ol>
+
+      <h2>Practical Exercises</h2>
+      <div class="exercises-section">
+        <h3>Beginner Exercise — Track Enhance on Vocals</h3>
+        <p>Load Neutron on a vocal track. Click Track Enhance → select "Vocals." Listen to the AI's starting point. Now toggle each module on and off (EQ, Compressor, Exciter) while the vocal plays. This teaches you what each module is adding. Then adjust the EQ by 1–2dB in different places and hear how tonal changes affect the vocal's presence in a rough mix.</p>
+
+        <h3>Intermediate Exercise — Unmask Guitar and Keys</h3>
+        <p>Find a section of your mix where guitar and keys both play mid-range parts. Load Neutron on both. Open Neutron on the guitar track and enable Unmask. Set the guitar Neutron as the masker (the one that stays), and the keys Neutron as the one being processed. Set the Unmask amount to 50%. Solo both tracks together and listen before and after Unmask. Adjust the frequency range and intensity. This exercise demonstrates the real value of cross-track communication.</p>
+
+        <h3>Advanced Exercise — Full Mix Assistant Session</h3>
+        <p>Start a new mix from scratch with no fader automation and no plugins except Neutron on every channel. Run the Mix Assistant. Listen carefully to the resulting mix — where is it strong? Where does it fail? Systematically go through each track and make manual adjustments on top of the AI starting point. After finishing, compare the final mix to one done entirely manually. Note which process produced better results faster. This is the empirical test of whether the Mix Assistant saves you time in your specific workflow.</p>
+      </div>
+
+      <h2>Frequently Asked Questions</h2>
+      <div class="faq-section">
+        <div class="faq-item">
+          <h3>What does iZotope Neutron do?</h3>
+          <p>iZotope Neutron is an AI-powered channel strip plugin for mixing. It analyzes your audio and suggests EQ, compression, transient shaping, and exciter settings. Its core features include the AI Mix Assistant, Track Enhance, and the Unmask module.</p>
         </div>
-      </footer>
-      <section class="related-section" aria-labelledby="relatedHeading">
-        <h2 id="relatedHeading" style="font-size:1.35rem;margin-bottom:1.25rem;">Related Articles</h2>
-        <div class="related-grid"><a href="landr-vs-izotope-ozone.html" class="related-card"><div class="related-card-tag">AI Music</div><h3 class="related-card-title">LANDR vs iZotope Ozone</h3><span class="related-card-meta">Read article →</span></a>
-<a href="izotope-rx-guide.html" class="related-card"><div class="related-card-tag">AI Music</div><h3 class="related-card-title">iZotope RX Guide</h3><span class="related-card-meta">Read article →</span></a>
-<a href="ai-music-production-tools-complete-guide.html" class="related-card"><div class="related-card-tag">AI Music</div><h3 class="related-card-title">AI Music Production Tools</h3><span class="related-card-meta">Read article →</span></a>
-</div>
+        <div class="faq-item">
+          <h3>Is iZotope Neutron good for beginners?</h3>
+          <p>Yes. The AI Mix Assistant and Track Enhance features make Neutron accessible even without deep mixing knowledge. The real learning happens when you study why Neutron made each suggestion.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What is the iZotope Mix Assistant?</h3>
+          <p>The Mix Assistant is Neutron's flagship AI feature. Load Neutron on every track, run the Mix Assistant, and it balances all tracks and applies AI-suggested processing to each channel to create an initial mix framework.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What is the Unmask feature in Neutron?</h3>
+          <p>Unmask is a sidechain-based module that dynamically reduces frequency masking between two tracks. It monitors one track and automatically dips the processing track in the frequencies where conflict occurs.</p>
+        </div>
+        <div class="faq-item">
+          <h3>How much does iZotope Neutron cost?</h3>
+          <p>Neutron Standard is ~$199. Neutron Advanced is ~$299 and adds the Unmask module, Sculptor, and additional processing options.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Is Neutron better than stock DAW plugins?</h3>
+          <p>Neutron's AI assistance and inter-track communication are genuinely better than anything built into DAWs. The individual modules are competitive with dedicated third-party plugins.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Can Neutron replace a mixing engineer?</h3>
+          <p>No. Neutron can set up a mix framework quickly, but a skilled mixing engineer brings artistic judgment, genre expertise, and critical listening that AI cannot replicate.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What DAWs does Neutron work with?</h3>
+          <p>Neutron works with all major DAWs as VST3, AU, or AAX. Logic Pro, Ableton, FL Studio, Pro Tools, Studio One, Reaper, and Cubase are all fully supported.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What is Track Enhance in Neutron?</h3>
+          <p>Track Enhance is Neutron's single-track AI processing feature. It analyzes a specific track and configures EQ, compression, and saturation optimized for that instrument type.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Does Neutron use a lot of CPU?</h3>
+          <p>Neutron can be CPU-intensive when used on many tracks simultaneously. iZotope recommends committing heavy Neutron processing to audio once you've finalized settings to reduce CPU load.</p>
+        </div>
+      </div>
+
+      <section class="related-articles">
+        <h2>Related Articles</h2>
+        <div class="related-grid">
+          <a class="related-card" href="/articles/izotope-ozone-11-review.html">
+            <span class="related-tag">Reviews</span>
+            <span class="related-title">iZotope Ozone 11 Review: Best AI Mastering Plugin?</span>
+          </a>
+          <a class="related-card" href="/articles/how-to-mix-music-beginners-guide.html">
+            <span class="related-tag">Techniques</span>
+            <span class="related-title">How to Mix Music: Complete Beginner's Guide</span>
+          </a>
+          <a class="related-card" href="/articles/best-eq-plugins.html">
+            <span class="related-tag">Roundup</span>
+            <span class="related-title">Best EQ Plugins in 2026</span>
+          </a>
+        </div>
       </section>
     </article>
-    <aside aria-label="Article sidebar">
-      <div class="sidebar-widget toc-widget">
-        <div class="sidebar-widget-header"><h2 class="sidebar-widget-title">In This Article</h2></div>
-        <div class="sidebar-widget-body"><ul class="toc-list"><li><a href="#mix-assistant">Mix Assistant: What It Actually Does</a></li>
-<li><a href="#eq-module">The EQ Module</a></li>
-<li><a href="#compressor">The Compressor</a></li>
-<li><a href="#transient-shaper">Transient Shaper</a></li>
-<li><a href="#exciter">Exciter</a></li>
-<li><a href="#track-enhance">Track Enhance vs Mix Assistant</a></li>
-<li><a href="#integration">Integration with iZotope Suite</a></li>
-<li><a href="#pricing">Pricing</a></li>
-<li><a href="#verdict">Verdict</a></li></ul></div>
-      </div>
-    </aside>
-  </div>
-</main>
-<section class="newsletter-section" id="newsletter" aria-labelledby="newsletterHeading">
-  <div class="container">
-    <div class="newsletter-inner">
-      <div class="newsletter-content">
-        <p class="newsletter-label">Newsletter</p>
-        <h2 id="newsletterHeading" class="newsletter-title">The Producer's <em>Briefing</em></h2>
-        <p class="newsletter-desc">Weekly techniques, gear news, and music business insights. Free.</p>
-      </div>
-      <div class="newsletter-form-wrap">
-        <form class="newsletter-form-js" novalidate>
-          <input type="email" name="email" class="form-input" placeholder="Your email address" required />
-          <button type="submit" class="btn-newsletter">Subscribe Free</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</section>
-<footer class="site-footer" role="contentinfo">
-  <div class="container footer-inner">
-    <div class="footer-brand">
-      <a href="../index.html" class="site-logo"><span class="logo-wordmark">Music<span>Production</span>Wiki</span><span class="logo-tagline">The Producer's Reference</span></a>
-    </div>
-    <nav class="footer-nav" aria-label="Footer navigation">
-      <div class="footer-col">
-        <h3 class="footer-col-title">Categories</h3>
+
+    <aside class="article-sidebar">
+      <div class="sidebar-toc">
+        <h3>In This Guide</h3>
         <ul>
-          <li><a href="../categories/reviews.html">Reviews</a></li>
-          <li><a href="../categories/comparisons.html">Comparisons</a></li>
-          <li><a href="../categories/ai-music.html">AI Music</a></li>
-          <li><a href="../categories/daws.html">DAWs</a></li>
-          <li><a href="../categories/plugins.html">Plugins</a></li>
-          <li><a href="../categories/gear.html">Gear</a></li>
-          <li><a href="../categories/techniques.html">Techniques</a></li>
-          <li><a href="../categories/music-business.html">Music Business</a></li>
-          <li><a href="../categories/glossary.html">Glossary</a></li>
+          <li><a href="#neutrons-core-modules">Core Modules</a></li>
+          <li><a href="#mix-assistant">Mix Assistant</a></li>
+          <li><a href="#track-enhance">Track Enhance</a></li>
+          <li><a href="#unmask">Unmask</a></li>
+          <li><a href="#neutron-standard-vs-neutron-advanced">Standard vs Advanced</a></li>
+          <li><a href="#real-world-workflow">Workflow</a></li>
         </ul>
       </div>
-    </nav>
-  </div>
-  <div class="footer-bottom"><div class="container"><p>© <span id="copyrightYear"></span> MusicProductionWiki.com. All rights reserved. Content by the Music Production Wiki Team.</p></div></div>
-</footer>
-<script src="../js/main.js"></script>
-<script>document.getElementById('copyrightYear').textContent = new Date().getFullYear();</script>
+      <div class="sidebar-category">
+        <h3>Quick Facts</h3>
+        <ul>
+          <li><strong>Standard:</strong> ~$199</li>
+          <li><strong>Advanced:</strong> ~$299</li>
+          <li><strong>Key feature:</strong> Unmask + Mix Assistant</li>
+          <li><strong>DAWs:</strong> All major</li>
+        </ul>
+        <a href="#affiliate" class="sidebar-cta">Check current price →</a>
+      </div>
+    </aside>
+  </main>
+
+  <script src="../js/main.js"></script>
 </body>
 </html>
