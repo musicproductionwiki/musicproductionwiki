@@ -1,5 +1,5 @@
 /* ================================================================
-   MusicProductionWiki.com â Style v3
+   MusicProductionWiki.com — Style v3
    Dark theme, teal/purple accents, full mobile responsiveness
    ================================================================ */
 
@@ -105,7 +105,7 @@ a:hover { color: var(--teal-dim); }
 /* External links get a subtle indicator */
 a[href^="http"]::after,
 a[href^="https"]::after {
-  content: ' â';
+  content: ' ↗';
   font-size: 0.75em;
   opacity: 0.55;
   vertical-align: super;
@@ -220,7 +220,7 @@ code {
 }
 
 /* ================================================================
-   HEADER & NAVIGATION â not sticky, compact horizontal
+   HEADER & NAVIGATION
    ================================================================ */
 .site-header {
   position: relative;
@@ -233,7 +233,9 @@ code {
   display: flex;
   align-items: center;
   height: var(--header-h);
-  gap: 1rem;
+  gap: 0.75rem;
+  /* FIX: prevent overflow by not letting actions crush nav */
+  overflow: hidden;
 }
 
 /* Logo */
@@ -265,12 +267,14 @@ code {
   font-family: var(--font-body);
 }
 
-/* Primary nav â centered in header */
+/* Primary nav — centered, allows shrinking */
 .primary-nav {
   display: flex;
   align-items: center;
   flex: 1;
   justify-content: center;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .nav-list {
@@ -279,30 +283,32 @@ code {
   padding: 0;
   margin: 0;
   gap: 0;
+  flex-wrap: nowrap;
 }
 
 .nav-list a {
   display: flex;
   align-items: center;
   min-height: 44px;
-  padding: 0 0.7rem;
-  font-size: 0.75rem;
+  padding: 0 0.55rem;
+  font-size: 0.72rem;
   font-weight: 600;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--text-secondary);
   border-radius: var(--r-sm);
   transition: color 0.15s, background 0.15s;
+  white-space: nowrap;
 }
 .nav-list a::after { display: none !important; }
 .nav-list a:hover { color: var(--text-primary); background: var(--bg-elevated); }
 .nav-list a.active { color: var(--teal); }
 
-/* Header actions â right side */
+/* Header actions — right side, constrained width */
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
   flex-shrink: 0;
 }
 
@@ -314,7 +320,7 @@ code {
 }
 
 .search-input {
-  width: 160px;
+  width: 130px;
   padding: 0.5rem 2rem 0.5rem 0.85rem;
   background: var(--bg-input);
   border: 1px solid var(--border-default);
@@ -329,7 +335,7 @@ code {
 .search-input:focus {
   border-color: var(--teal);
   box-shadow: 0 0 0 3px var(--teal-subtle);
-  width: 200px;
+  width: 180px;
 }
 
 .search-btn {
@@ -346,16 +352,16 @@ code {
 }
 .search-btn:hover { color: var(--teal); }
 
-/* Subscribe button */
+/* Subscribe button — compact */
 .btn-subscribe {
   display: inline-flex;
   align-items: center;
-  min-height: 44px;
-  padding: 0 1rem;
+  min-height: 36px;
+  padding: 0 0.85rem;
   background: var(--teal);
   color: var(--text-inverse) !important;
   border-radius: var(--r-pill);
-  font-size: 0.76rem;
+  font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.02em;
   white-space: nowrap;
@@ -554,7 +560,7 @@ code {
 .tag-pill::after { display: none !important; }
 
 /* ================================================================
-   HOMEPAGE â HERO
+   HOMEPAGE — HERO
    ================================================================ */
 .hero {
   position: relative;
@@ -724,7 +730,7 @@ code {
 .section-link::after { display: none !important; }
 
 /* ================================================================
-   CATEGORY CARDS â HOMEPAGE
+   CATEGORY CARDS — HOMEPAGE
    ================================================================ */
 .categories-section {
   padding: 4rem 0;
@@ -805,7 +811,7 @@ code {
 }
 
 /* ================================================================
-   ARTICLE CARDS â FEATURED
+   ARTICLE CARDS — FEATURED
    ================================================================ */
 .featured-section {
   padding: 4rem 0;
@@ -1001,10 +1007,19 @@ code {
   margin-bottom: 1.25rem;
 }
 
-.sidebar-widget-header {
+/* FIX: Support BOTH .sidebar-widget-header AND .sidebar-widget-label */
+.sidebar-widget-header,
+.sidebar-widget-label {
   padding: 0.85rem 1.25rem;
   border-bottom: 1px solid var(--border-subtle);
   background: var(--bg-elevated);
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  display: block;
 }
 
 .sidebar-widget-title {
@@ -1018,9 +1033,15 @@ code {
 
 .sidebar-widget-body { padding: 0.5rem 0; }
 
-.sidebar-list { list-style: none; padding: 0; }
+/* FIX: Support .sidebar-list, .sidebar-nav-list, and .sidebar-quick-list */
+.sidebar-list,
+.sidebar-nav-list {
+  list-style: none;
+  padding: 0;
+}
 
-.sidebar-list a {
+.sidebar-list a,
+.sidebar-nav-list a {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1031,8 +1052,31 @@ code {
   text-decoration: none;
   transition: background 0.15s, color 0.15s;
 }
-.sidebar-list a::after { display: none !important; }
-.sidebar-list a:hover { background: var(--bg-elevated); color: var(--teal); }
+.sidebar-list a::after,
+.sidebar-nav-list a::after { display: none !important; }
+.sidebar-list a:hover,
+.sidebar-nav-list a:hover { background: var(--bg-elevated); color: var(--teal); }
+
+/* FIX: Quick settings list — styled properly */
+.sidebar-quick-list {
+  list-style: none;
+  padding: 0.5rem 0;
+  margin: 0;
+}
+
+.sidebar-quick-list li {
+  padding: 0.6rem 1.25rem;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+  line-height: 1.5;
+}
+.sidebar-quick-list li:last-child { border-bottom: none; }
+.sidebar-quick-list li strong {
+  color: var(--teal);
+  font-weight: 600;
+  display: inline;
+}
 
 .sidebar-count {
   font-size: 0.68rem;
@@ -1045,7 +1089,7 @@ code {
 }
 
 /* ================================================================
-   NEWSLETTER SECTION â most compelling CTA on page
+   NEWSLETTER SECTION
    ================================================================ */
 .newsletter-section {
   position: relative;
@@ -1055,7 +1099,6 @@ code {
   overflow: hidden;
 }
 
-/* Animated gradient accent bar at top */
 .newsletter-section::before {
   content: '';
   position: absolute;
@@ -1072,7 +1115,6 @@ code {
   100% { background-position: 0% 50%; }
 }
 
-/* Ambient glow */
 .newsletter-section::after {
   content: '';
   position: absolute;
@@ -1103,7 +1145,7 @@ code {
   color: var(--teal);
   margin-bottom: 1rem;
 }
-.newsletter-badge::before { content: 'â¦'; font-size: 0.6em; }
+.newsletter-badge::before { content: '◆'; font-size: 0.6em; }
 
 .newsletter-heading {
   font-size: clamp(1.6rem, 3.5vw, 2.4rem);
@@ -1142,7 +1184,7 @@ code {
 }
 
 .newsletter-perks li::before {
-  content: 'â';
+  content: '✓';
   color: var(--teal);
   font-weight: 800;
   font-size: 0.72rem;
@@ -1297,7 +1339,7 @@ code {
 .footer-links-bottom a::after { display: none !important; }
 
 /* ================================================================
-   CATEGORY PAGE â HEADER
+   CATEGORY PAGE — HEADER
    ================================================================ */
 .category-header {
   background: var(--bg-void);
@@ -1357,7 +1399,7 @@ code {
 .category-meta-bar span { font-size: 0.76rem; color: var(--text-muted); }
 
 /* ================================================================
-   CATEGORY PAGE â BODY
+   CATEGORY PAGE — BODY
    ================================================================ */
 .category-body { padding: 2.5rem 0; }
 
@@ -1514,10 +1556,13 @@ code {
   grid-template-columns: 1fr 260px;
   gap: 3.5rem;
   padding: 2.5rem 0 5rem;
-  align-items: stretch;
+  align-items: start;
 }
 
 .article-layout > article {
+  min-width: 0;
+  max-width: var(--content-w);
+  width: 100%;
   align-self: start;
 }
 
@@ -1563,7 +1608,7 @@ code {
 .author-name { font-size: 0.83rem; font-weight: 500; color: var(--text-secondary); }
 
 /* ================================================================
-   TABLE OF CONTENTS (inline, near top of article)
+   TABLE OF CONTENTS (inline)
    ================================================================ */
 .toc-inline {
   background: var(--bg-elevated);
@@ -1602,12 +1647,12 @@ code {
   min-height: 28px;
   transition: color 0.15s;
 }
-.toc-inline-list a::before { content: 'âº'; color: var(--teal); font-size: 1em; flex-shrink: 0; }
+.toc-inline-list a::before { content: '▸'; color: var(--teal); font-size: 1em; flex-shrink: 0; }
 .toc-inline-list a::after { display: none !important; }
 .toc-inline-list a:hover { color: var(--teal); }
 
 /* ================================================================
-   ARTICLE BODY â full reading experience
+   ARTICLE BODY
    ================================================================ */
 .article-body {
   font-size: 1.05rem;
@@ -1625,7 +1670,6 @@ code {
 
 .article-body strong { color: var(--text-primary); }
 
-/* H2 â teal left-border accent */
 .article-body h2 {
   font-size: clamp(1.25rem, 3vw, 1.55rem);
   margin-top: 2.75rem;
@@ -1636,7 +1680,6 @@ code {
   line-height: 1.25;
 }
 
-/* H3 â smaller, no border */
 .article-body h3 {
   font-size: clamp(1.05rem, 2vw, 1.2rem);
   margin-top: 2rem;
@@ -1696,7 +1739,6 @@ code {
 .article-body td { color: var(--text-secondary); }
 .article-body tr:hover td { background: var(--bg-elevated); }
 
-/* Callout boxes â visually distinct with teal accent */
 .info-box {
   background: var(--teal-subtle);
   border: 1px solid rgba(0,212,168,0.25);
@@ -1726,7 +1768,13 @@ code {
 /* ================================================================
    ARTICLE SIDEBAR (sticky TOC)
    ================================================================ */
-.article-sidebar { position: sticky; top: 1.5rem; align-self: start; max-height: calc(100vh - 3rem); overflow-y: auto; }
+.article-sidebar {
+  position: sticky;
+  top: 1.5rem;
+  align-self: start;
+  max-height: calc(100vh - 3rem);
+  overflow-y: auto;
+}
 
 .toc-list { list-style: none; padding: 0; }
 
@@ -1747,8 +1795,82 @@ code {
 .toc-list li.active a { color: var(--teal); }
 .toc-list a::after { display: none !important; }
 
+/* FIX: toc-sub — nested sub-items */
+.toc-sub {
+  list-style: none;
+  padding: 0;
+}
+.toc-sub li { border-left: none; }
+.toc-sub a {
+  font-size: 0.75rem;
+  padding-left: 1.5rem;
+  color: var(--text-muted);
+}
+
 .toc-list .toc-h3 { border-left: none; padding-left: 1.5rem; }
 .toc-list .toc-h3 a { font-size: 0.75rem; }
+
+/* ================================================================
+   SIDEBAR NEWSLETTER WIDGET (JS-injected)
+   ================================================================ */
+.sidebar-newsletter .sidebar-widget-inner {
+  background: var(--bg-elevated) !important;
+  border: 1px solid var(--border-strong) !important;
+  border-radius: var(--r-lg) !important;
+  padding: 1.25rem !important;
+  margin-top: 1.25rem !important;
+}
+
+.sidebar-newsletter h4 {
+  font-family: var(--font-display);
+  font-size: 0.68rem !important;
+  font-weight: 700 !important;
+  color: var(--text-secondary) !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase !important;
+  margin: 0 0 0.5rem !important;
+}
+
+.sidebar-newsletter p {
+  font-size: 0.8rem !important;
+  color: var(--text-muted) !important;
+  margin: 0 0 1rem !important;
+  line-height: 1.5 !important;
+}
+
+.sidebar-newsletter input[type="email"] {
+  background: var(--bg-input) !important;
+  border: 1px solid var(--border-default) !important;
+  border-radius: var(--r-md) !important;
+  color: var(--text-primary) !important;
+  font-size: 0.82rem !important;
+  padding: 0.55rem 0.85rem !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  outline: none !important;
+}
+.sidebar-newsletter input[type="email"]:focus {
+  border-color: var(--teal) !important;
+  box-shadow: 0 0 0 3px var(--teal-subtle) !important;
+}
+
+.sidebar-newsletter button[type="submit"] {
+  background: var(--teal) !important;
+  border: none !important;
+  border-radius: var(--r-md) !important;
+  color: var(--text-inverse) !important;
+  cursor: pointer !important;
+  font-family: var(--font-display) !important;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em !important;
+  padding: 0.6rem !important;
+  width: 100% !important;
+  transition: background 0.2s !important;
+}
+.sidebar-newsletter button[type="submit"]:hover {
+  background: var(--teal-dim) !important;
+}
 
 /* ================================================================
    ARTICLE FOOTER
@@ -1772,7 +1894,6 @@ code {
 
 .tags-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
 
-/* Author card */
 .author-card {
   background: var(--bg-elevated);
   border: 1px solid var(--border-subtle);
@@ -1802,7 +1923,6 @@ code {
 .author-card-info strong { display: block; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 0.2rem; }
 .author-card-info p { font-size: 0.8rem; color: var(--text-muted); margin: 0; line-height: 1.5; }
 
-/* Related articles */
 .related-section { margin-top: 3rem; }
 
 .related-section h2 {
@@ -1842,13 +1962,13 @@ code {
 .error-actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
 
 /* ================================================================
-   RESPONSIVE â 1080px
+   RESPONSIVE — 1080px
    ================================================================ */
 @media (max-width: 1080px) {
   .category-grid    { grid-template-columns: repeat(2, 1fr); }
   .article-grid     { grid-template-columns: repeat(2, 1fr); }
   .article-layout   { grid-template-columns: 1fr; gap: 2rem; }
-  .article-sidebar  { position: static; }
+  .article-sidebar  { position: static; max-height: none; }
   .toc-widget       { display: none; }
   .footer-main      { grid-template-columns: 1fr 1fr; gap: 2rem; }
   .newsletter-inner { grid-template-columns: 1fr; gap: 2.5rem; }
@@ -1858,7 +1978,7 @@ code {
 }
 
 /* ================================================================
-   RESPONSIVE â 768px
+   RESPONSIVE — 768px
    ================================================================ */
 @media (max-width: 768px) {
   :root { --header-h: 60px; }
@@ -1898,7 +2018,7 @@ code {
 }
 
 /* ================================================================
-   RESPONSIVE â 480px
+   RESPONSIVE — 480px
    ================================================================ */
 @media (max-width: 480px) {
   .container { padding: 0 1rem; }
@@ -1920,7 +2040,7 @@ code {
 }
 
 /* ================================================================
-   RESPONSIVE â 375px
+   RESPONSIVE — 375px
    ================================================================ */
 @media (max-width: 375px) {
   .logo-wordmark { font-size: 0.95rem; }
@@ -1934,7 +2054,7 @@ code {
 }
 
 /* ================================================================
-   RESPONSIVE â 320px
+   RESPONSIVE — 320px
    ================================================================ */
 @media (max-width: 320px) {
   .container { padding: 0 0.85rem; }
@@ -1945,18 +2065,11 @@ code {
   .error-code { font-size: 4.5rem; }
 }
 
-/* Fix: article as direct grid child needs width constraint */
-.article-layout > article {
-  min-width: 0;
-  max-width: var(--content-w);
-  width: 100%;
-}
-
 /* ================================================================
-   SIDEBAR FIX â handles both DOM structures
+   SIDEBAR FIX — handles both DOM structures
    ================================================================ */
 
-/* Case 1: aside is outside article-layout (broken HTML) */
+/* Case 1: aside is outside article-layout */
 main.container#main-content {
   display: grid;
   grid-template-columns: 1fr 280px;
@@ -1979,7 +2092,7 @@ main.container#main-content > aside {
   padding-top: 2.5rem;
 }
 
-/* Case 2: aside is correctly inside article-layout (sidechain article) */
+/* Case 2: aside is correctly inside article-layout */
 main.container#main-content .article-layout {
   display: grid;
   grid-template-columns: 1fr 260px;
@@ -2015,13 +2128,8 @@ main.container#main-content .article-layout > aside {
 }
 
 /* ================================================================
-   MOBILE NAV FIX â Old article HTML structure compatibility
-   Some articles use .main-nav / .mobile-nav-toggle instead of
-   .primary-nav / #menuToggle. This patch adds full mobile support
-   for the old structure without touching any existing rules.
+   MOBILE NAV FIX — Old article HTML structure compatibility
    ================================================================ */
-
-/* Hide old-style inline nav on mobile, show toggle button */
 @media (max-width: 768px) {
 
   .main-nav {
@@ -2124,10 +2232,10 @@ main.container#main-content .article-layout > aside {
     display: flex;
     align-items: center;
     min-height: 44px;
-    padding: 0 0.7rem;
-    font-size: 0.75rem;
+    padding: 0 0.55rem;
+    font-size: 0.72rem;
     font-weight: 600;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--text-secondary);
     border-radius: var(--r-sm);
