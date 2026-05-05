@@ -1,11 +1,11 @@
 /* ===================================================
-   MusicProductionWiki.com ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ main.js v3 + Search
+   MusicProductionWiki.com ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ main.js v3 + Search
    =================================================== */
 'use strict';
 (function () {
 
   /* ------------------------------------------------
-     SEARCH INDEX ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ all 118 articles
+     SEARCH INDEX ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ all 118 articles
      ------------------------------------------------ */
   const SEARCH_INDEX = [
     { title: "Ableton Live Beginner's Guide", url: "/articles/ableton-live-beginners-guide.html", tags: "daw ableton beginners guide" },
@@ -231,7 +231,7 @@
       currentFocus = -1;
 
       if (results.length === 0) {
-        dropdown.innerHTML = '<div class="search-no-results">No articles found ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ try different keywords</div>';
+        dropdown.innerHTML = '<div class="search-no-results">No articles found ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ try different keywords</div>';
         dropdown.classList.add('open');
         return;
       }
@@ -383,7 +383,7 @@
     backToTop = document.createElement('button');
     backToTop.id = 'backToTop';
     backToTop.setAttribute('aria-label', 'Back to top');
-    backToTop.innerHTML = 'ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ';
+    backToTop.innerHTML = 'ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ';
     document.body.appendChild(backToTop);
   }
   const toggleBackToTop = () => {
@@ -472,10 +472,10 @@
       const emailInput = form.querySelector('input[type="email"]');
       const btn = form.querySelector('.btn-newsletter');
       if (!emailInput || !emailInput.value.trim()) return;
-      btn.textContent = 'SubscribingÃÂÃÂ¢ÃÂÃÂÃÂÃÂ¦';
+      btn.textContent = 'SubscribingÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¦';
       btn.disabled = true;
       setTimeout(() => {
-        btn.textContent = 'ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ You\'re in!';
+        btn.textContent = 'ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ You\'re in!';
         btn.style.background = 'var(--teal-dim)';
         emailInput.value = '';
         setTimeout(() => {
@@ -517,7 +517,7 @@
     oldToggle.addEventListener('click', function() {
       var isOpen = oldNav.classList.toggle('open');
       oldToggle.setAttribute('aria-expanded', String(isOpen));
-      oldToggle.textContent = isOpen ? 'ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ' : 'ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ°';
+      oldToggle.textContent = isOpen ? 'ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ' : 'ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ°';
       document.body.style.overflow = isOpen ? 'hidden' : '';
     });
 
@@ -525,7 +525,7 @@
       if (e.key === 'Escape' && oldNav.classList.contains('open')) {
         oldNav.classList.remove('open');
         oldToggle.setAttribute('aria-expanded', 'false');
-        oldToggle.textContent = 'ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ°';
+        oldToggle.textContent = 'ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ°';
         document.body.style.overflow = '';
       }
     });
@@ -534,7 +534,7 @@
       link.addEventListener('click', function() {
         oldNav.classList.remove('open');
         oldToggle.setAttribute('aria-expanded', 'false');
-        oldToggle.textContent = 'ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ°';
+        oldToggle.textContent = 'ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ°';
         document.body.style.overflow = '';
       });
     });
@@ -545,7 +545,7 @@
           e.target !== oldToggle) {
         oldNav.classList.remove('open');
         oldToggle.setAttribute('aria-expanded', 'false');
-        oldToggle.textContent = 'ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ°';
+        oldToggle.textContent = 'ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ°';
         document.body.style.overflow = '';
       }
     });
@@ -555,7 +555,7 @@
 
 /* ============================================================
    AUTO-INJECT NEWSLETTER WIDGET INTO SIDEBAR
-   Runs on every article page ÃÂ¢ÃÂÃÂ adds widget if not already present
+   Runs on every article page ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ adds widget if not already present
    ============================================================ */
 (function injectNewsletterWidget() {
   const sidebar = document.querySelector('.article-sidebar');
@@ -631,7 +631,41 @@
   });
 })();
 
-// Skimlinks affiliate monetisation â added May 5, 2026
+
+// ── SIDEBAR RELATED ARTICLES WIDGET ──────────────────────────────────
+(function() {
+  const aside = document.querySelector('aside');
+  if (!aside) return;
+
+  // Find related articles section in the article body
+  const relatedH2 = Array.from(document.querySelectorAll('article h2')).find(h =>
+    h.textContent.toLowerCase().includes('related')
+  );
+  if (!relatedH2) return;
+
+  // Get the related article cards
+  const cards = relatedH2.parentElement
+    ? Array.from(relatedH2.parentElement.querySelectorAll('a[href]'))
+    : Array.from((relatedH2.nextElementSibling || document.createElement('div')).querySelectorAll('a[href]'));
+
+  if (!cards.length) return;
+
+  // Build widget HTML
+  const links = cards.slice(0, 4).map(a => {
+    const rawText = a.textContent.trim().replace(/Read article\s*→/gi, '').replace(/AI Music|Techniques|Reviews|Comparisons|Gear|Plugins/g, '').trim();
+    const title = rawText.substring(0, 55) + (rawText.length > 55 ? '…' : '');
+    return '<li><a href="' + a.getAttribute('href') + '">' + title + '</a></li>';
+  }).join('');
+
+  const widget = document.createElement('div');
+  widget.className = 'sidebar-widget';
+  widget.innerHTML = '<div class="sidebar-widget-header"><h2 class="sidebar-widget-title">Related Articles</h2></div>' +
+    '<div class="sidebar-widget-body"><ul class="sidebar-list" style="padding:0.25rem 0">' + links + '</ul></div>';
+
+  aside.appendChild(widget);
+})();
+
+// Skimlinks affiliate monetisation Ã¢ÂÂ added May 5, 2026
 (function() {
   var s = document.createElement('script');
   s.type = 'text/javascript';
