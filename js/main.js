@@ -558,7 +558,7 @@
    Runs on every article page ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ adds widget if not already present
    ============================================================ */
 (function injectNewsletterWidget() {
-  const sidebar = document.querySelector('.article-sidebar');
+  const sidebar = document.querySelector('.article-sidebar, .article-layout aside, aside');
   if (!sidebar) return; // Not an article page
   if (sidebar.querySelector('.sidebar-newsletter')) return; // Already has newsletter
 
