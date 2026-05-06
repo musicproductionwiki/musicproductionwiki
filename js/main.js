@@ -671,5 +671,42 @@
   s.type = 'text/javascript';
   s.async = true;
   s.src = 'https://s.skimresources.com/js/302596X1790597.skimlinks.js';
+
+/* ---- LAYOUT FIXES ---- */
+(function applyLayoutFixes() {
+  function fix() {
+    // 1. Add article-sidebar class to aside so old CSS sticky rule fires
+    const aside = document.querySelector('.article-layout aside');
+    if (aside && !aside.classList.contains('article-sidebar')) {
+      aside.classList.add('article-sidebar');
+    }
+
+    // 2. Fix search dropdown — right-align so it doesn't clip off screen
+    const dropdown = document.querySelector('.search-dropdown');
+    if (dropdown) {
+      dropdown.style.right = '0';
+      dropdown.style.left = 'auto';
+    }
+
+    // 3. Fix mobile — hide sidebar on small screens
+    if (window.innerWidth <= 900 && aside) {
+      aside.style.display = 'none';
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', fix);
+  } else {
+    fix();
+  }
+
+  // Re-run on resize to handle orientation changes
+  window.addEventListener('resize', function() {
+    const aside = document.querySelector('.article-layout aside');
+    if (aside) {
+      aside.style.display = window.innerWidth <= 900 ? 'none' : '';
+    }
+  });
+})();
   (document.head || document.body).appendChild(s);
 })();
