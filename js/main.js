@@ -673,30 +673,36 @@
   s.src = 'https://s.skimresources.com/js/302596X1790597.skimlinks.js';
 
 
+
 /* ---- LAYOUT FIXES ---- */
 (function applyLayoutFixes() {
   function fix() {
-    // 1. Add article-sidebar class to aside so CSS sticky rule fires
     const aside = document.querySelector('.article-layout aside');
+
+    // 1. Remove any old "FREE PRODUCER TIPS" widgets from HTML — keep only JS-injected ones
+    aside && aside.querySelectorAll('.sidebar-widget').forEach(function(w) {
+      const header = w.querySelector('.sidebar-widget-header');
+      if (header && header.textContent.toUpperCase().includes('FREE PRODUCER TIPS')) {
+        w.remove();
+      }
+    });
+
+    // 2. Add article-sidebar class so CSS sticky fires
     if (aside && !aside.classList.contains('article-sidebar')) {
       aside.classList.add('article-sidebar');
     }
 
-    // 2. Fix search dropdown overflow clipping
+    // 3. Fix search dropdown — right-align, fix overflow clipping
     const dropdown = document.querySelector('.search-dropdown');
     if (dropdown) {
       dropdown.style.right = '0';
       dropdown.style.left = 'auto';
       dropdown.style.overflow = 'visible';
     }
-
-    // 3. Fix header-inner overflow so dropdown shows below header
     const headerInner = document.querySelector('.header-inner');
-    if (headerInner) {
-      headerInner.style.overflow = 'visible';
-    }
+    if (headerInner) headerInner.style.overflow = 'visible';
 
-    // 4. Fix mobile sidebar hide
+    // 4. Hide sidebar on mobile
     if (window.innerWidth <= 900 && aside) {
       aside.style.display = 'none';
     }
@@ -710,9 +716,7 @@
 
   window.addEventListener('resize', function() {
     const aside = document.querySelector('.article-layout aside');
-    if (aside) {
-      aside.style.display = window.innerWidth <= 900 ? 'none' : '';
-    }
+    if (aside) aside.style.display = window.innerWidth <= 900 ? 'none' : '';
   });
 })();
   (document.head || document.body).appendChild(s);
