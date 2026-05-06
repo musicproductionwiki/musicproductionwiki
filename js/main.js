@@ -672,23 +672,31 @@
   s.async = true;
   s.src = 'https://s.skimresources.com/js/302596X1790597.skimlinks.js';
 
+
 /* ---- LAYOUT FIXES ---- */
 (function applyLayoutFixes() {
   function fix() {
-    // 1. Add article-sidebar class to aside so old CSS sticky rule fires
+    // 1. Add article-sidebar class to aside so CSS sticky rule fires
     const aside = document.querySelector('.article-layout aside');
     if (aside && !aside.classList.contains('article-sidebar')) {
       aside.classList.add('article-sidebar');
     }
 
-    // 2. Fix search dropdown — right-align so it doesn't clip off screen
+    // 2. Fix search dropdown overflow clipping
     const dropdown = document.querySelector('.search-dropdown');
     if (dropdown) {
       dropdown.style.right = '0';
       dropdown.style.left = 'auto';
+      dropdown.style.overflow = 'visible';
     }
 
-    // 3. Fix mobile — hide sidebar on small screens
+    // 3. Fix header-inner overflow so dropdown shows below header
+    const headerInner = document.querySelector('.header-inner');
+    if (headerInner) {
+      headerInner.style.overflow = 'visible';
+    }
+
+    // 4. Fix mobile sidebar hide
     if (window.innerWidth <= 900 && aside) {
       aside.style.display = 'none';
     }
@@ -700,7 +708,6 @@
     fix();
   }
 
-  // Re-run on resize to handle orientation changes
   window.addEventListener('resize', function() {
     const aside = document.querySelector('.article-layout aside');
     if (aside) {
