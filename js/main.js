@@ -552,32 +552,6 @@
   })();
 
 
-
-/* ============================================================
-   AUTO-INJECT NEWSLETTER WIDGET INTO SIDEBAR
-   Runs on every article page ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ adds widget if not already present
-   ============================================================ */
-(function injectNewsletterWidget() {
-  const sidebar = document.querySelector('.article-sidebar, .article-layout aside, aside');
-  if (!sidebar) return; // Not an article page
-  if (sidebar.querySelector('.sidebar-newsletter')) return; // Already has newsletter
-
-  const widget = document.createElement('div');
-  widget.className = 'sidebar-widget sidebar-newsletter';
-  widget.innerHTML = `
-    <div class="sidebar-widget-inner" style="background:var(--surface-2,#1a1a2e);border:1px solid var(--border-default,#2a2a3e);border-radius:0.75rem;padding:1.25rem;margin-top:1.5rem;">
-      <h4 style="font-size:0.9rem;font-weight:700;color:var(--text-primary,#f0f0f0);margin:0 0 0.5rem;letter-spacing:0.02em;text-transform:uppercase;">FREE PRODUCER TIPS</h4>
-      <p style="font-size:0.8rem;color:var(--text-muted,#888);margin:0 0 1rem;line-height:1.5;">Join producers worldwide. Weekly techniques, gear picks &amp; plugin deals.</p>
-      <form onsubmit="return false;" style="display:flex;flex-direction:column;gap:0.5rem;">
-        <input type="email" placeholder="your@email.com" style="background:var(--surface-1,#111);border:1px solid var(--border-default,#2a2a3e);border-radius:0.4rem;color:var(--text-primary,#f0f0f0);font-size:0.8rem;padding:0.5rem 0.75rem;outline:none;width:100%;box-sizing:border-box;" />
-        <button type="submit" style="background:var(--teal,#00bfa5);border:none;border-radius:0.4rem;color:#fff;cursor:pointer;font-size:0.8rem;font-weight:700;padding:0.55rem;width:100%;letter-spacing:0.03em;">GET FREE TIPS</button>
-      </form>
-    </div>
-  `;
-  sidebar.appendChild(widget);
-})();
-
-
 /* ============================================================
    NAV LINK ABSOLUTE PATH FIX
    Rewrites relative nav/header links to root-relative absolute
@@ -673,19 +647,10 @@
   s.src = 'https://s.skimresources.com/js/302596X1790597.skimlinks.js';
 
 
-
 /* ---- LAYOUT FIXES ---- */
 (function applyLayoutFixes() {
   function fix() {
     const aside = document.querySelector('.article-layout aside');
-
-    // 1. Remove any old "FREE PRODUCER TIPS" widgets from HTML — keep only JS-injected ones
-    aside && aside.querySelectorAll('.sidebar-widget').forEach(function(w) {
-      const header = w.querySelector('.sidebar-widget-header');
-      if (header && header.textContent.toUpperCase().includes('FREE PRODUCER TIPS')) {
-        w.remove();
-      }
-    });
 
     // 2. Add article-sidebar class so CSS sticky fires
     if (aside && !aside.classList.contains('article-sidebar')) {
