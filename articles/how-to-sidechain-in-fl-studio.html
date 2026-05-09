@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Learn how to sidechain in FL Studio step-by-step. Master kick-to-bass ducking, sidechain compression, and advanced routing techniques for pro-level mixes." />
+  <title>How To Sidechain In Fl Studio — MusicProductionWiki.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1F39B;</text></svg>" />
+  <style>
+    #readingProgress{position:fixed;top:0;left:0;height:3px;background:var(--teal);width:0%;z-index:200;transition:width 0.1s linear;}
+    .quick-answer{background:linear-gradient(135deg,rgba(0,212,168,0.08),rgba(167,139,250,0.06));border:1px solid rgba(0,212,168,0.3);border-left:4px solid var(--teal);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .quick-answer-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.6rem;}
+    .quick-answer p{font-size:1rem;line-height:1.65;color:var(--text-primary);margin:0;}
+    .skill-badge{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .6rem;border-radius:4px;margin-left:.6rem;vertical-align:middle;position:relative;top:-2px;}
+    .skill-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .skill-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .skill-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .settings-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .settings-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .settings-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .settings-table tr:last-child td{border-bottom:none;}
+    .settings-table tr:hover td{background:var(--bg-surface);}
+    .settings-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .settings-table .mono{font-family:var(--font-mono);font-size:.82rem;color:var(--teal);}
+    .mistake-box{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-left:4px solid #ef4444;border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .mistake-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ef4444;margin-bottom:.4rem;}
+    .mistake-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference{border-left:3px solid var(--purple);padding:.75rem 1.25rem;margin:1.25rem 0;background:rgba(167,139,250,0.05);border-radius:0 6px 6px 0;}
+    .pro-reference-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.35rem;}
+    .pro-reference p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference strong{color:var(--text-primary);}
+    .listening-prescription{background:var(--bg-void);border:1px solid var(--border-default);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;position:relative;}
+    .listening-prescription::before{content:'🎧';position:absolute;top:-14px;left:1.5rem;background:var(--bg-void);padding:0 .4rem;font-size:1.1rem;}
+    .listening-prescription-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:.75rem;}
+    .listening-prescription p{font-size:.9rem;line-height:1.7;color:var(--text-secondary);margin:0 0 .5rem;}
+    .listening-record{font-weight:600;color:var(--text-primary);}
+    .decision-framework{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .decision-framework-title{font-family:var(--font-display);font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:1rem;}
+    .decision-item{display:flex;gap:1rem;padding:.65rem 0;border-bottom:1px solid var(--border-subtle);font-size:.88rem;line-height:1.55;}
+    .decision-item:last-child{border-bottom:none;}
+    .decision-if{color:var(--text-muted);font-style:italic;min-width:2rem;}
+    .decision-then{color:var(--text-primary);}
+    .decision-then strong{color:var(--teal);}
+    .exercise-block{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.25rem 0;}
+    .exercise-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;}
+    .exercise-badge{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .7rem;border-radius:4px;}
+    .exercise-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .exercise-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .exercise-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .exercise-title{font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text-primary);}
+    .exercise-block ol{margin:0;padding-left:1.25rem;color:var(--text-secondary);font-size:.88rem;line-height:1.7;}
+    .exercise-block ol li{margin-bottom:.4rem;}
+    .version-line{font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:4px;padding:.4rem .75rem;margin:.75rem 0 1.5rem;display:inline-block;}
+    .go-deeper{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:10px;padding:1.75rem;margin:2.5rem 0;}
+    .go-deeper-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text-primary);margin-bottom:1.25rem;}
+    .go-deeper-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;}
+    .go-deeper-item{background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:7px;padding:1rem 1.1rem;}
+    .go-deeper-item-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.35rem;}
+    .go-deeper-item a{font-size:.88rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;}
+    .go-deeper-item p{font-size:.78rem;color:var(--text-muted);margin:.3rem 0 0;}
+    .citation{font-size:.78rem;color:var(--text-muted);font-style:italic;margin-top:.25rem;}
+    .diagram-wrap{margin:1.75rem 0;background:var(--bg-void);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem;overflow-x:auto;}
+    .diagram-caption{font-size:.78rem;color:var(--text-muted);text-align:center;margin-top:.75rem;font-style:italic;}
+    .highlight-box{background:rgba(0,212,168,0.06);border:1px solid rgba(0,212,168,0.2);border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .highlight-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.4rem;}
+    .highlight-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin:1.5rem 0;}
+    .stat-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem;text-align:center;}
+    .stat-number{font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--teal);display:block;}
+    .stat-label{font-size:.78rem;color:var(--text-secondary);margin-top:.25rem;}
+    .action-steps{counter-reset:steps;list-style:none;padding:0;margin:1.5rem 0;}
+    .action-steps li{counter-increment:steps;display:flex;gap:1rem;padding:.85rem 0;border-bottom:1px solid var(--border-subtle);font-size:.9rem;color:var(--text-secondary);line-height:1.6;}
+    .action-steps li:last-child{border-bottom:none;}
+    .action-steps li::before{content:counter(steps);background:var(--teal);color:#000;font-weight:800;font-size:.75rem;width:1.6rem;height:1.6rem;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem;}
+    .genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:1.5rem 0;}
+    .genre-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem 1.25rem;}
+    .genre-card-name{font-family:var(--font-display);font-size:.85rem;font-weight:700;color:var(--teal);margin-bottom:.4rem;}
+    .genre-card p{font-size:.82rem;color:var(--text-secondary);line-height:1.55;margin:0;}
+    .comparison-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .comparison-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .comparison-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .comparison-table tr:last-child td{border-bottom:none;}
+    .comparison-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .affiliate-cta{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,212,168,0.1);border:1px solid rgba(0,212,168,0.25);color:var(--teal);font-size:.82rem;font-weight:600;padding:.45rem .9rem;border-radius:6px;text-decoration:none;}
+
+    .faq-accordion{margin:1.75rem 0;}
+    .faq-accordion-item{background:var(--bg-surface);border:1px solid var(--border-subtle);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;margin-bottom:8px;overflow:hidden;}
+    .faq-accordion-q{display:flex;align-items:flex-start;padding:1rem 1.25rem;cursor:pointer;gap:.75rem;}
+    .faq-accordion-q:hover{background:var(--bg-elevated);}
+    .faq-accordion-icon{width:16px;height:16px;flex-shrink:0;margin-top:3px;color:var(--purple);transition:transform .2s ease;}
+    .faq-accordion-icon.open{transform:rotate(45deg);}
+    .faq-accordion-q-inner{display:flex;flex-direction:column;}
+    .faq-accordion-label{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin-bottom:.2rem;}
+    .faq-accordion-q-text{font-size:.92rem;font-weight:600;color:var(--text-primary);line-height:1.45;font-family:var(--font-display);}
+    .faq-accordion-a{display:none;padding:0 1.25rem 1rem 2.75rem;font-size:.88rem;color:var(--text-secondary);line-height:1.7;border-top:1px solid var(--border-subtle);padding-top:.85rem;}
+    .faq-accordion-a.open{display:block;}
+</style>
+  <link rel="canonical" href="https://musicproductionwiki.com/articles/how-to-sidechain-in-fl-studio.html"/>
+  <!-- Open Graph -->
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="How To Sidechain In Fl Studio"/>
+  <meta property="og:description" content="Learn how to sidechain in FL Studio step-by-step. Master kick-to-bass ducking, sidechain compression, and advanced routing techniques for pro-level mixes."/>
+  <meta property="og:url" content="https://musicproductionwiki.com/articles/how-to-sidechain-in-fl-studio.html"/>
+  <meta property="og:site_name" content="Music Production Wiki"/>
+  <meta property="og:image" content="https://musicproductionwiki.com/images/og-default.jpg"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="article:author" content="Music Production Wiki Team"/>
+  <meta property="article:section" content="Techniques"/>
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="How To Sidechain In Fl Studio"/>
+  <meta name="twitter:description" content="Learn how to sidechain in FL Studio step-by-step. Master kick-to-bass ducking, sidechain compression, and advanced routing techniques for pro-level mixes."/>
+  <meta name="twitter:image" content="https://musicproductionwiki.com/images/og-default.jpg"/>
+  <!-- Article Schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How To Sidechain In Fl Studio",
+  "description": "Learn how to sidechain in FL Studio step-by-step. Master kick-to-bass ducking, sidechain compression, and advanced routing techniques for pro-level mixes.",
+  "image": "https://musicproductionwiki.com/images/og-default.jpg",
+  "datePublished": "2026-05-01",
+  "dateModified": "2026-05-07",
+  "wordCount": 5950,
+  "timeRequired": "PT24M",
+  "keywords": ["sidechain FL Studio", "how to sidechain in FL Studio", "Fruity Peak Controller sidechain", "FL Studio sidechain compression", "kick bass ducking FL Studio", "VST3 sidechain FL Studio"],
+  "author": {"@type": "Organization", "name": "Music Production Wiki", "url": "https://musicproductionwiki.com"},
+  "publisher": {"@type": "Organization", "name": "Music Production Wiki", "url": "https://musicproductionwiki.com", "logo": {"@type": "ImageObject", "url": "https://musicproductionwiki.com/images/og-default.jpg"}},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://musicproductionwiki.com/articles/how-to-sidechain-in-fl-studio.html"},
+  "articleSection": "Techniques",
+  "inLanguage": "en-US"
+}
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "Does FL Studio have a built-in sidechain feature?", "acceptedAnswer": {"@type": "Answer", "text": "FL Studio doesn't have a one-click sidechain button like some DAWs, but it has the Fruity Peak Controller \u2014 a native tool that achieves sidechain ducking by linking the kick's amplitude envelope to any parameter (such as bass volume) in the mixer. It also supports VST3-based sidechain compression via its mixer send routing system."}},
+      {"@type": "Question", "name": "What is the difference between the Peak Controller method and compressor sidechain in FL Studio?", "acceptedAnswer": {"@type": "Answer", "text": "The Peak Controller directly controls a mixer knob (like volume) using the kick's amplitude data \u2014 no audio compression is applied to the signal. Compressor sidechain uses an actual compressor's gain reduction stage, which adds the compressor's specific character, knee, and color to the duck effect. Peak Controller is cleaner and more flexible; compressor sidechain is more traditional and can add pleasing analog-style behavior."}},
+      {"@type": "Question", "name": "Why do I need a VST3 plugin for sidechain compression in FL Studio?", "acceptedAnswer": {"@type": "Answer", "text": "FL Studio routes sidechain audio through additional internal stereo channels in its mixer. VST3 plugins can access these extra channels, allowing them to receive the sidechain trigger signal separately from the main audio input. VST2 plugins only see a single stereo input and therefore cannot receive the sidechain signal through FL Studio's routing system."}},
+      {"@type": "Question", "name": "How do I stop the kick drum from being heard in the bass track when setting up sidechain routing?", "acceptedAnswer": {"@type": "Answer", "text": "When sending the kick to the bass track's mixer channel for sidechain purposes, make sure the send is configured so the kick audio goes only to the plugin's sidechain input channel \u2014 not to the main stereo mix bus of the bass track. In FL Studio 21, right-click the send button between the two tracks and verify the routing mode prevents kick bleed into the bass output."}},
+      {"@type": "Question", "name": "What attack and release settings should I use for an EDM pumping sidechain effect?", "acceptedAnswer": {"@type": "Answer", "text": "For the classic EDM pump effect, use an attack of 15\u201330 ms (slightly slower than for tight hip-hop ducking) and a release of 300\u2013500 ms on your Peak Controller or sidechain compressor. The longer release creates the rising swell between kick hits that characterizes house and EDM pumping. Duck depth of 60\u201375% gives a clearly audible pump without completely silencing the bass or pad."}},
+      {"@type": "Question", "name": "Can I sidechain multiple instruments from one kick drum in FL Studio?", "acceptedAnswer": {"@type": "Answer", "text": "Yes \u2014 one of the Peak Controller's biggest advantages is that you can link a single controller to multiple parameters simultaneously. Right-click each target parameter (bass volume, pad reverb send, synth filter cutoff, etc.) and link them all to the same Peak Controller on the kick track. Each link has its own independent Min, Max, and Invert settings, giving you precise control over how much each element ducks."}},
+      {"@type": "Question", "name": "What is a ghost kick and why would I use one for sidechaining?", "acceptedAnswer": {"@type": "Answer", "text": "A ghost kick is an inaudible duplicate of the kick drum signal on a separate mixer track with its output muted or send to Master disabled. You use it as the sidechain source so that the trigger signal is completely clean and uncolored by any processing on the main kick track \u2014 useful when your main kick has heavy reverb, compression, or limiting that could distort the sidechain timing and envelope shape."}},
+      {"@type": "Question", "name": "Can I use sidechain techniques in FL Studio for vocals and not just kick and bass?", "acceptedAnswer": {"@type": "Answer", "text": "Absolutely. Vocal ducking \u2014 where background music gently ducks when the lead vocal is present \u2014 is a common technique using the same Peak Controller method. Load a Peak Controller on the vocal mixer track, link it to the instrument bus volume with a slow attack (30\u201360 ms) and long release (400\u2013800 ms), and set a shallow duck depth of just 2\u20135 dB for transparent, professional-sounding vocal presence."}}
+  ]
+}
+</script>
+
+  <!-- SEO meta v6.1 -->
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="article:published_time" content="2026-05-01T00:00:00+00:00" />
+  <meta property="article:modified_time" content="2026-05-07T00:00:00+00:00" />
+  <meta name="keywords" content="sidechain FL Studio, how to sidechain in FL Studio, FL Studio sidechain compression, kick bass sidechain, FL Studio mixer routing, sidechain tutorial, FL Studio 21 sidechain, sidechain pumping effect" />
+  <!-- Organization schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Music Production Wiki",
+    "url": "https://musicproductionwiki.com",
+    "logo": {"@type": "ImageObject", "url": "https://musicproductionwiki.com/images/og-default.jpg"},
+    "sameAs": []
+  }
+  </script>
+  <!-- WebSite schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Music Production Wiki",
+    "url": "https://musicproductionwiki.com",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {"@type": "EntryPoint", "urlTemplate": "https://musicproductionwiki.com/?s={search_term_string}"},
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://musicproductionwiki.com/"},
+    {"@type": "ListItem", "position": 2, "name": "Techniques", "item": "https://musicproductionwiki.com/categories/techniques.html"},
+    {"@type": "ListItem", "position": 3, "name": "How To Sidechain In Fl Studio", "item": "https://musicproductionwiki.com/articles/how-to-sidechain-in-fl-studio.html"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How To Sidechain In Fl Studio",
+  "step": [
+    {"@type": "HowToStep", "name": "Assign Instruments to Mixer Tracks", "text": "In the FL Studio Channel Rack, right-click your kick drum instrument and assign it to a dedicated mixer track (e.g., Track 1). Do the same for your bass or target instrument (e.g., Track 2). Every instrument involved in sidechaining must have its own mixer track before any routing can work."},
+    {"@type": "HowToStep", "name": "Load Fruity Peak Controller on the Kick Track", "text": "Select Mixer Track 1 (kick) and open its effects chain. Add Fruity Peak Controller as an effect slot. This plugin analyzes the kick's amplitude and outputs it as an internal control signal \u2014 it does not process the audio itself."},
+    {"@type": "HowToStep", "name": "Link the Peak Controller to the Bass Track Volume", "text": "Right-click the Volume knob on your Bass mixer track (Track 2) and select 'Link to controller.' In the MIDI Link dialog, change the source to the Fruity Peak Controller on the kick track. Set Min value to your desired duck depth (e.g., 50%), Max to 100%, and enable the Invert checkbox so the bass ducks when the kick hits."},
+    {"@type": "HowToStep", "name": "Adjust Attack and Release Settings", "text": "In the Fruity Peak Controller, set the Attack to control how quickly the duck responds (5\u201320 ms for tight response, 20\u201340 ms for a smoother pump). Set Release to control how long the duck lasts (100\u2013200 ms for hip-hop, 300\u2013500 ms for house/EDM pumping). Play back your session and fine-tune while listening."},
+    {"@type": "HowToStep", "name": "Set Up VST3 Compressor Sidechain (Optional Alternative Method)", "text": "If you prefer compressor-based sidechaining, create a send from the kick's mixer track to the bass track using FL Studio's send routing system. Load a VST3-format compressor (such as FabFilter Pro-C 2) on the bass track, enable its sidechain input, and configure threshold, ratio, attack, and release to taste. Verify no kick audio is bleeding into the bass track's main output."},
+    {"@type": "HowToStep", "name": "Test and Verify the Sidechain Is Working", "text": "Solo your bass track and play back the session. You should hear the bass volume dip each time the kick hits and return to full volume between hits. If you hear no ducking, check that the Invert checkbox is enabled, the instrument is correctly routed to its mixer track, and the Min/Max values in the link dialog have sufficient range for movement."},
+    {"@type": "HowToStep", "name": "Expand to Multiple Targets (Advanced)", "text": "Right-click additional parameters (reverb send levels, pad volumes, filter cutoffs) and link each one to the same Peak Controller on the kick track. Set individual Min/Max/Invert values for each link to create a multi-element sidechain response where your entire mix breathes in sync with the kick pattern."}
+  ]
+}
+</script>
+</head>
+<body>
+<div id="readingProgress" role="progressbar" aria-label="Reading progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+<header class="site-header" role="banner">
+  <div class="container header-inner">
+    <a href="../index.html" class="site-logo" aria-label="MusicProductionWiki Home">
+      <span class="logo-wordmark">Music<span>Production</span>Wiki</span>
+      <span class="logo-tagline">The Producer's Reference</span>
+    </a>
+    <nav class="primary-nav" aria-label="Primary navigation">
+      <ul class="nav-list">
+        <li><a href="../categories/reviews.html">Reviews</a></li>
+        <li><a href="../categories/comparisons.html">Comparisons</a></li>
+        <li><a href="../categories/ai-music.html">AI Music</a></li>
+        <li><a href="../categories/daws.html">DAWs</a></li>
+        <li><a href="../categories/plugins.html">Plugins</a></li>
+        <li><a href="../categories/gear.html">Gear</a></li>
+        <li><a href="../categories/techniques.html">Techniques</a></li>
+        <li><a href="../categories/music-business.html">Music Business</a></li>
+        <li><a href="../categories/glossary.html">Glossary</a></li>
+        <li><a href="../about.html">About</a></li>
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <form class="search-form" role="search" action="#" method="get">
+        <label for="siteSearch" class="visually-hidden">Search articles</label>
+        <input type="search" id="siteSearch" class="search-input" placeholder="Search articles…" name="q" autocomplete="off" />
+        <button type="submit" class="search-btn" aria-label="Submit search">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </button>
+      </form>
+      <a href="#newsletter" class="btn-subscribe">The Producer's Briefing →</a>
+    </div>
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileNav">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+<nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
+  <ul class="nav-list">
+    <li><a href="../categories/reviews.html">Reviews</a></li>
+    <li><a href="../categories/comparisons.html">Comparisons</a></li>
+    <li><a href="../categories/ai-music.html">AI Music</a></li>
+    <li><a href="../categories/daws.html">DAWs</a></li>
+    <li><a href="../categories/plugins.html">Plugins</a></li>
+    <li><a href="../categories/gear.html">Gear</a></li>
+    <li><a href="../categories/techniques.html">Techniques</a></li>
+    <li><a href="../categories/music-business.html">Music Business</a></li>
+    <li><a href="../categories/glossary.html">Glossary</a></li>
+  </ul>
+</nav>
+<div class="container">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><ol>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../categories/techniques.html>Techniques</a></li>
+    <li><span aria-current="page">How To Sidechain In Fl Studio</span></li>
+  </ol></nav>
+</div>
+<main class="container" id="main-content">
+  <div class="article-layout">
+    <article aria-labelledby="articleTitle">
+      <header class="article-header">
+        <div class="article-tags"><span class="article-tag purple"><a href="../categories/techniques.html" style="color:inherit;text-decoration:none;">Techniques</a></span>
+<span class="article-tag purple"><a href="../categories/techniques.html" style="color:inherit;text-decoration:none;">FL Studio</a></span>
+<span class="article-tag purple"><a href="../categories/glossary.html" style="color:inherit;text-decoration:none;">Compression</a></span></div>
+        <h1 id="articleTitle">How To Sidechain In Fl Studio</h1>
+        <div class="article-header-meta">
+          <div class="article-author"><div class="author-avatar" aria-hidden="true">MP</div><span class="author-name">The Music Production Wiki Team</span></div>
+          <span class="meta-divider"></span><span class="meta-item">Updated May 2026&nbsp;·&nbsp;26 min read&nbsp;·&nbsp;<span style="font-size:.78rem;color:var(--text-muted);">Verified May 7, 2026</span></span>
+        </div>
+      </header>
+      <div class="article-body">
+<div class="quick-answer">
+<div class="quick-answer-label">Quick Answer — Updated May 2026</div>
+<p>To sidechain in FL Studio, route your kick drum to a mixer track, send it to your bass or pad track using a sidechain send, and use a compressor or volume automation on the target track triggered by that signal. The most common method uses a peak controller or Fruity Peak Controller on the kick's mixer track, linked to the volume of the bass track, creating the classic pumping duck effect heard in house, EDM, and hip-hop productions.</p>
+</div>
+
+<div class="mpw-ad-slot mpw-ad-top" aria-hidden="true"></div>
+<p><em>Updated May 2026</em></p>
+
+<p>Sidechaining is one of the most powerful and widely used techniques in modern music production. From the deep pumping compression in house music to the tight, controlled low end in trap and hip-hop, sidechain processing is what gives professional mixes that sense of space, movement, and energy. And yet, FL Studio's approach to sidechaining is notably different from other DAWs — which trips up a lot of producers who are switching from Ableton or Logic, or even long-time FL users who have never dug into the mixer routing system.</p>
+
+<p>This guide covers every sidechain method available in FL Studio in 2026, from the classic Peak Controller trick to native sidechain-capable plugins to full mixer send routing. Whether you're making EDM, trap, lo-fi, or cinematic music, you'll walk away with multiple working techniques you can apply immediately in your sessions.</p>
+
+<h2 id="what-is-sidechaining">What Is Sidechaining and Why Does It Matter?</h2>
+
+<p>Before diving into FL Studio specifics, it's worth building a precise mental model of what sidechaining actually does. A sidechain is a secondary audio signal that controls the behavior of a processing unit applied to a different signal. In the most common use case, a kick drum's audio output is used as a "trigger" to compress or duck the volume of a bass or pad — creating space in the low-frequency range every time the kick hits.</p>
+
+<p>The term "sidechain" comes from the physical routing path in hardware compressors, where a side path (separate from the main audio path) could accept an external signal to drive the detection circuit. When the sidechain signal exceeded the compressor threshold, it would trigger gain reduction on the main signal — even though those two signals were completely different.</p>
+
+<p>In modern DAWs, sidechaining is used for:</p>
+<ul>
+  <li><strong>Kick-to-bass ducking</strong> — the most iconic use; the bass ducks every time the kick hits to prevent frequency masking</li>
+  <li><strong>Pumping/breathing effects</strong> — especially prominent in house and EDM where a pad or synth rhythmically ducks against a kick pattern</li>
+  <li><strong>Vocal clarity</strong> — background music or pads are gently ducked whenever the lead vocal is present</li>
+  <li><strong>Dynamic side-chain EQ</strong> — a signal's specific frequency range is attenuated based on the presence of a competing sound</li>
+  <li><strong>Rhythmic gating and tremolo</strong> — using a sidechain to create stutter or rhythmic volume effects on sustained sounds</li>
+</ul>
+
+<p>The challenge with FL Studio is that, unlike Ableton Live where you simply select a sidechain input in a compressor's dropdown menu, FL Studio requires you to route audio through its mixer manually. This gives you more flexibility but requires understanding the mixer's send/return architecture first.</p>
+
+<div class="highlight-box">
+  <strong>Pro Tip:</strong> FL Studio does not route instruments directly to each other for sidechaining. Everything goes through the Mixer. If your kick drum is sitting in the pattern step sequencer without a mixer track assigned, it cannot be used as a sidechain source. Always assign instruments to dedicated mixer tracks before setting up any sidechain routing.
+</div>
+
+<h2 id="method-1-peak-controller">Method 1: The Fruity Peak Controller (Native FL Studio Approach)</h2>
+
+<p>The Fruity Peak Controller is FL Studio's native, non-audio approach to sidechaining, and for many producers it's the fastest method for achieving kick-to-bass ducking without needing a third-party plugin. It works by analyzing the audio level of a mixer track and mapping that level to a parameter on another track — in this case, the volume knob of a bass channel.</p>
+
+<h3>Step 1: Set Up Your Mixer Tracks</h3>
+
+<p>Open your project and make sure your kick drum and bass are both assigned to separate mixer tracks. In the FL Studio Mixer (shortcut: <strong>F9</strong>), you assign instruments in the Channel Rack by clicking the channel's settings button (or right-clicking the channel name) and selecting "Track → [Mixer Track Number]." Give your kick track and bass track clearly labeled slots — for example, Mixer Track 1 for kick, Mixer Track 2 for bass.</p>
+
+<h3>Step 2: Load Fruity Peak Controller on the Kick Track</h3>
+
+<p>With the Kick mixer track selected, click on the Effects chain slot and add <strong>Fruity Peak Controller</strong>. This plugin does not process audio — it analyzes the incoming signal's amplitude envelope and outputs that as an internal control signal (a MIDI-like automation value) that can be linked to any knob or parameter in FL Studio.</p>
+
+<p>Key Fruity Peak Controller settings to understand:</p>
+<ul>
+  <li><strong>Base:</strong> Sets the resting value (default position) of the linked parameter when no signal is present. Usually set to 100% if you want the bass at full volume when the kick is silent.</li>
+  <li><strong>Volume:</strong> How much the controller reacts to the incoming signal amplitude.</li>
+  <li><strong>Attack:</strong> How quickly the controller responds to a rising signal. Short attack = tighter response.</li>
+  <li><strong>Release:</strong> How long the control signal takes to return to the base value after the kick transient passes. This controls the "pump" length.</li>
+  <li><strong>Tension:</strong> Shapes the curve of the response — positive tension creates a more convex (faster initial response) curve.</li>
+</ul>
+
+<h3>Step 3: Link the Peak Controller to the Bass Track Volume</h3>
+
+<p>This is the key step. Right-click the <strong>Volume knob</strong> on your Bass mixer track. In the context menu, select <strong>"Link to controller."</strong> The MIDI Link dialog will open. At the top of the dialog, change the input source from MIDI to <strong>"Peak ctrl — Fruity Peak Controller"</strong> (you'll see it listed as an internal controller). Select the Peak Controller you just loaded on the kick track.</p>
+
+<p>Now configure the link:</p>
+<ul>
+  <li>Set <strong>Min value</strong> to the maximum duck amount (e.g., 50% for a moderate duck, 0% for full silence)</li>
+  <li>Set <strong>Max value</strong> to 100% (full volume when kick is not playing)</li>
+  <li>Check <strong>"Invert"</strong> — this is critical. Without inverting, the bass volume will rise when the kick hits and drop when it doesn't, which is the opposite of what you want. With inversion enabled, a louder kick signal produces a lower bass volume.</li>
+</ul>
+
+<h3>Step 4: Fine-Tune the Envelope</h3>
+
+<p>Play back your session with both kick and bass running. Adjust the Peak Controller's Attack and Release settings while listening. For a tight, punchy duck (common in trap and hip-hop), use a fast attack (5–10 ms) and a short release (100–200 ms). For a longer, breathing pump effect (house music style), try a moderate attack (20–40 ms) and a longer release (300–600 ms). The Tension knob can add character — try small positive values (around 0.3–0.5) for a more natural-feeling curve.</p>
+
+<table class="settings-table">
+  <thead>
+    <tr>
+      <th>Genre</th>
+      <th>Attack</th>
+      <th>Release</th>
+      <th>Duck Depth</th>
+      <th>Tension</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>House / EDM (pumping)</td>
+      <td>20–40 ms</td>
+      <td>300–600 ms</td>
+      <td>60–80%</td>
+      <td>0.3–0.5</td>
+    </tr>
+    <tr>
+      <td>Trap / Hip-Hop (tight)</td>
+      <td>5–10 ms</td>
+      <td>80–180 ms</td>
+      <td>30–50%</td>
+      <td>0.0–0.2</td>
+    </tr>
+    <tr>
+      <td>Lo-Fi / Chill (subtle)</td>
+      <td>15–30 ms</td>
+      <td>200–350 ms</td>
+      <td>15–25%</td>
+      <td>-0.1 to 0.1</td>
+    </tr>
+    <tr>
+      <td>Cinematic / Pad Ducking</td>
+      <td>30–60 ms</td>
+      <td>500–900 ms</td>
+      <td>20–40%</td>
+      <td>0.0–0.3</td>
+    </tr>
+    <tr>
+      <td>Drum and Bass (aggressive)</td>
+      <td>1–5 ms</td>
+      <td>50–120 ms</td>
+      <td>70–90%</td>
+      <td>0.5–0.8</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>One major advantage of the Peak Controller method is that it controls the mixer channel's volume fader directly, which means there's no audio quality degradation from a compressor's internal processing — the duck is purely a volume automation curve driven by the kick's envelope. It also means you can link the Peak Controller to multiple parameters simultaneously — for example, ducking both the bass volume and a pad's reverb send simultaneously with a single kick trigger.</p>
+
+<h2 id="method-2-third-party-sidechain-plugins">Method 2: Sidechain Compression With Third-Party Plugins</h2>
+
+<p>While the Peak Controller method is elegant and CPU-efficient, many producers prefer working with an actual compressor in sidechain mode — both for the audio character a compressor adds and because this workflow more closely mirrors what you'd do in other DAWs. FL Studio supports sidechain-capable VST compressors, but the routing setup is different from Ableton or Pro Tools.</p>
+
+<h3>Understanding FL Studio's Sidechain Send Routing</h3>
+
+<p>FL Studio's mixer uses a send/receive routing system. Every mixer track can send its audio to any other mixer track. To use a third-party compressor's sidechain input (such as FabFilter Pro-C 2, Waves SSL G-Bus, or Xfer OTT), you need to:</p>
+<ol>
+  <li>Route the kick drum's mixer track to the bass/target track as a "sidechain send" (without it contributing to the main mix on that channel)</li>
+  <li>Load the sidechain-capable compressor on the target track</li>
+  <li>Configure the compressor to listen to a specific sidechain input channel</li>
+</ol>
+
+<p>Here's how FL Studio handles this differently: when a mixer track sends audio to another track, that audio arrives on a specific internal stereo channel within FL Studio's mixer. VST3 plugins that support sidechain inputs can access these additional channels. VST2 plugins generally cannot — they only see the main stereo input. This is why you'll sometimes hear producers say "use VST3 for sidechaining in FL Studio" — it's because VST3 allows plugins to receive the additional audio channels that FL Studio routes as sidechain signals.</p>
+
+<h3>Step-by-Step: FabFilter Pro-C 2 Sidechain Setup</h3>
+
+<p>FabFilter Pro-C 2 is one of the most popular sidechain compressors used in professional production. Here's the complete setup in FL Studio 21:</p>
+
+<p><strong>Step 1:</strong> Make sure your kick is on Mixer Track 1 and your bass is on Mixer Track 2. Both should have their master send to the Master track enabled (the green send button at the top of each track's routing panel).</p>
+
+<p><strong>Step 2:</strong> On Mixer Track 1 (kick), locate the routing panel (click the arrow icon on the track to expand sends). Enable a send from Track 1 to Track 2. Then, critically, <strong>right-click that send knob and set it to 0 dB but disable the direct contribution</strong> — or use the dedicated "sidechain" send mode. In FL Studio 21, when you hover over a send button and hold Ctrl, you can assign it specifically as a sidechain input rather than a mix contribution.</p>
+
+<p><strong>Step 3:</strong> On Mixer Track 2 (bass), load <strong>FabFilter Pro-C 2 as a VST3 plugin</strong> (not VST2). In Pro-C 2's interface, click the "Sidechain" button at the bottom of the plugin. You'll see a dropdown or input selector — choose "Sidechain Input" or "External." Pro-C 2 will now listen to whatever audio is being sent to Track 2's sidechain input (in this case, the kick).</p>
+
+<p><strong>Step 4:</strong> Set Pro-C 2's threshold low enough to catch the kick transients (typically -20 to -30 dBFS for a kick signal), use a fast attack (1–5 ms), a ratio of 4:1 to 10:1, and a release time that matches the musical tempo (try syncing to 1/4 or 1/8 note lengths). The gain reduction meter will show you exactly how much ducking is happening on each kick hit.</p>
+
+<p>For a more detailed breakdown of compressor parameters and how ratio, attack, and release interact, check out our guide on <a href="how-to-use-compression-on-drums.html">how to use compression on drums</a> — many of those principles apply directly to sidechain compression on bass and pad tracks.</p>
+
+<h3>Other Recommended Sidechain Compressors for FL Studio</h3>
+
+<ul>
+  <li><strong>Xfer OTT</strong> — free, VST2/VST3, great for aggressive multiband sidechain ducking on synths</li>
+  <li><strong>Waves SSL G-Comp</strong> — classic bus compressor character with sidechain input (VST3 recommended)</li>
+  <li><strong>Native Instruments Supercharger GT</strong> — warm analog-modeled compression with sidechain capability</li>
+  <li><strong>Tokyo Dawn Kotelnikov</strong> — free, transparent compressor with sidechain support and a GE version with additional features</li>
+  <li><strong>Cableguys VolumeShaper</strong> — not a traditional compressor but uses sidechain signals to drive custom LFO-style volume shaping, great for rhythmic ducking effects</li>
+</ul>
+
+<div class="diagram-wrap">
+  <svg width="700" height="320" viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif" font-size="13">
+    <!-- Background -->
+    <rect width="700" height="320" fill="#1a1a2e" rx="12"/>
+    <text x="350" y="30" text-anchor="middle" fill="#e0e0ff" font-size="16" font-weight="bold">FL Studio Sidechain Signal Flow</text>
+    <!-- Kick Instrument Box -->
+    <rect x="30" y="60" width="140" height="60" rx="8" fill="#2d2d5e" stroke="#6060ff" stroke-width="2"/>
+    <text x="100" y="85" text-anchor="middle" fill="#ffffff" font-weight="bold">Kick Drum</text>
+    <text x="100" y="105" text-anchor="middle" fill="#aaaacc" font-size="11">(Channel Rack)</text>
+    <!-- Kick Mixer Track -->
+    <rect x="220" y="60" width="140" height="60" rx="8" fill="#2d2d5e" stroke="#6060ff" stroke-width="2"/>
+    <text x="290" y="85" text-anchor="middle" fill="#ffffff" font-weight="bold">Mixer Track 1</text>
+    <text x="290" y="105" text-anchor="middle" fill="#aaaacc" font-size="11">(Kick — Peak Ctrl here)</text>
+    <!-- Arrow: Kick to Mixer -->
+    <line x1="170" y1="90" x2="218" y2="90" stroke="#6060ff" stroke-width="2" marker-end="url(#arrow)"/>
+    <!-- Bass Instrument Box -->
+    <rect x="30" y="180" width="140" height="60" rx="8" fill="#1e4d2b" stroke="#40c060" stroke-width="2"/>
+    <text x="100" y="205" text-anchor="middle" fill="#ffffff" font-weight="bold">Bass / Synth</text>
+    <text x="100" y="225" text-anchor="middle" fill="#aaccaa" font-size="11">(Channel Rack)</text>
+    <!-- Bass Mixer Track -->
+    <rect x="220" y="180" width="140" height="60" rx="8" fill="#1e4d2b" stroke="#40c060" stroke-width="2"/>
+    <text x="290" y="205" text-anchor="middle" fill="#ffffff" font-weight="bold">Mixer Track 2</text>
+    <text x="290" y="225" text-anchor="middle" fill="#aaccaa" font-size="11">(Bass — Compressor here)</text>
+    <!-- Arrow: Bass to Mixer -->
+    <line x1="170" y1="210" x2="218" y2="210" stroke="#40c060" stroke-width="2" marker-end="url(#arrow2)"/>
+    <!-- Sidechain Send Arrow (Kick Mixer → Bass Mixer, dashed) -->
+    <line x1="290" y1="120" x2="290" y2="178" stroke="#ffaa00" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrow3)"/>
+    <text x="310" y="155" fill="#ffaa00" font-size="11">Sidechain Send</text>
+    <!-- Master Track -->
+    <rect x="500" y="120" width="140" height="60" rx="8" fill="#3d1a1a" stroke="#ff6060" stroke-width="2"/>
+    <text x="570" y="145" text-anchor="middle" fill="#ffffff" font-weight="bold">Master Track</text>
+    <text x="570" y="165" text-anchor="middle" fill="#ffaaaa" font-size="11">(Limiter / Output)</text>
+    <!-- Arrow: Kick Mixer → Master -->
+    <line x1="360" y1="80" x2="498" y2="140" stroke="#6060ff" stroke-width="1.5" marker-end="url(#arrow4)"/>
+    <!-- Arrow: Bass Mixer → Master -->
+    <line x1="360" y1="200" x2="498" y2="165" stroke="#40c060" stroke-width="1.5" marker-end="url(#arrow5)"/>
+    <!-- Labels -->
+    <text x="400" y="112" fill="#aaaaff" font-size="10" transform="rotate(-22, 400, 112)">Main Send</text>
+    <text x="400" y="190" fill="#aaffaa" font-size="10" transform="rotate(22, 400, 190)">Main Send</text>
+    <!-- Legend -->
+    <line x1="30" y1="295" x2="70" y2="295" stroke="#ffaa00" stroke-width="2" stroke-dasharray="6,3"/>
+    <text x="78" y="299" fill="#ffaa00" font-size="11">Sidechain (trigger) signal</text>
+    <line x1="250" y1="295" x2="290" y2="295" stroke="#6060ff" stroke-width="2"/>
+    <text x="298" y="299" fill="#aaaaff" font-size="11">Audio signal</text>
+    <!-- Arrow markers -->
+    <defs>
+      <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#6060ff"/>
+      </marker>
+      <marker id="arrow2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#40c060"/>
+      </marker>
+      <marker id="arrow3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#ffaa00"/>
+      </marker>
+      <marker id="arrow4" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#6060ff"/>
+      </marker>
+      <marker id="arrow5" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+        <path d="M0,0 L0,6 L8,3 z" fill="#40c060"/>
+      </marker>
+    </defs>
+  </svg>
+  <p style="text-align:center; font-size:12px; color:#888; margin-top:8px;">Signal flow diagram showing FL Studio sidechain routing from kick to bass mixer track</p>
+</div>
+
+<h2 id="method-3-volume-automation">Method 3: Volume Automation for Sidechain Ducking</h2>
+
+<p>This is the manual but highly precise method: drawing volume automation curves on the bass or pad track that mirror the rhythmic pattern of the kick drum. While this doesn't react dynamically to the kick's actual audio (it's not truly "sidechain" in the traditional sense), it gives you frame-perfect control over the duck shape, depth, and recovery — and it introduces zero latency or plugin-induced phase shift.</p>
+
+<h3>When to Use Automation Sidechaining</h3>
+
+<p>Volume automation is ideal when:</p>
+<ul>
+  <li>Your kick pattern is static and doesn't change significantly across the arrangement</li>
+  <li>You want a very specific, custom duck shape that doesn't fit a standard compressor curve</li>
+  <li>You're working on a section without a real kick but still want rhythmic ducking (e.g., a breakdown where the kick is muted)</li>
+  <li>You want to avoid any phase or transient coloring from compression</li>
+  <li>You're creating a bouncing, rhythmic volume effect that isn't tied to an actual audio trigger</li>
+</ul>
+
+<h3>Drawing Automation Curves in FL Studio</h3>
+
+<p>In FL Studio, automation is handled through Automation Clips in the playlist. To create a volume automation clip for your bass mixer track:</p>
+<ol>
+  <li>Right-click the <strong>Volume knob</strong> on your Bass mixer track</li>
+  <li>Select <strong>"Create automation clip"</strong></li>
+  <li>FL Studio will create an Automation Clip in your playlist linked to that volume knob</li>
+  <li>Open the automation clip by double-clicking it in the playlist</li>
+  <li>Use the draw tool to create control points at the beginning of each beat (where the kick hits), dropping the value down sharply</li>
+  <li>Right-click each control point to change its interpolation type — use <strong>"Single curve"</strong> or <strong>"Hold then interpolate"</strong> to shape the recovery</li>
+</ol>
+
+<p>The key to making automation sidechaining sound natural is the shape of the volume recovery curve. A linear return sounds robotic; a logarithmic curve (faster recovery at first, slowing near the top) sounds much more like a real compressor's release stage. In FL Studio's automation editor, you can achieve this by dragging the curve handle between two control points to bend it into a convex shape — curving outward from the bottom point back up to full volume.</p>
+
+<p>A common approach for 128 BPM house music: drop the volume to 40% at the kick hit point, then use a curved recovery back to 100% over exactly one beat (468 ms at 128 BPM). Copy this pattern across every kick hit in the bar, then copy the automation clip across your entire arrangement.</p>
+
+<h3>Using Ghost Channels for Automation-Only Sidechain Sources</h3>
+
+<p>A powerful trick: create a "ghost kick" — an inaudible copy of your kick drum on a separate mixer track with its volume set to zero (or its send to Master disabled), used purely as an automation source. You can then use the Peak Controller or a compressor's sidechain input to read this ghost channel, keeping your actual kick's processing completely independent. This is useful when you have heavy processing on your main kick (reverb, limiting, heavy EQ) that you don't want affecting the sidechain trigger signal's timing or shape.</p>
+
+<h2 id="method-4-multiband-and-dynamic-eq-sidechaining">Method 4: Multiband Sidechain and Dynamic EQ Techniques</h2>
+
+<p>Beyond simple volume ducking, advanced sidechaining involves frequency-specific processing — only ducking the low frequencies of the bass when the kick hits, rather than the entire signal. This preserves the bass's midrange presence and character while still creating frequency separation in the sub region.</p>
+
+<h3>Multiband Sidechain Compression</h3>
+
+<p>To implement multiband sidechain compression in FL Studio:</p>
+<ol>
+  <li>Load a multiband compressor (such as <strong>iZotope Neutron</strong>'s multiband compressor, <strong>Waves C4</strong>, or FL Studio's native <strong>Fruity Multiband Compressor</strong>) on your bass mixer track</li>
+  <li>Set up the sidechain routing exactly as described in Method 2 — send the kick to the bass track's sidechain input</li>
+  <li>In the multiband compressor, apply sidechain triggering only to the lowest band (typically below 100–120 Hz)</li>
+  <li>The upper bands (mids, presence frequencies) are unaffected by the kick trigger</li>
+</ol>
+
+<p>The result: your bass's fundamental and sub-bass duck on every kick hit, but the upper harmonic content of the bass stays present in the mix. This is especially effective with complex bass sounds that have strong midrange overtones (common in neuro bass, future bass, and progressive house).</p>
+
+<h3>Dynamic EQ Sidechain</h3>
+
+<p>Dynamic EQ sidechaining goes even further — instead of compressing the bass's volume, you're cutting a specific EQ frequency band only when the kick's energy is present. This is sometimes called "frequency ducking" or "dynamic masking reduction."</p>
+
+<p>Using a plugin like <strong>FabFilter Pro-Q 4</strong> (VST3), you can:</p>
+<ol>
+  <li>Load Pro-Q 4 on the bass track</li>
+  <li>Create a dynamic band centered around 60–80 Hz (where kick fundamental energy typically lives)</li>
+  <li>In Pro-Q 4's dynamic band settings, enable <strong>"Sidechain"</strong> mode and select the external sidechain input</li>
+  <li>Route the kick to the bass track's sidechain input using the FL Studio mixer send system</li>
+  <li>Adjust the threshold and range so the EQ band only cuts 3–8 dB when the kick hits, rather than applying a constant cut</li>
+</ol>
+
+<p>This is arguably the most transparent, professional-sounding approach to low-end management in modern mixing. Rather than pumping the volume of an entire bass track, you're surgically reducing only the exact frequency range that conflicts with the kick — and only for as long as needed. For producers serious about mixing technique, our guide on <a href="how-to-mix-bass.html">how to mix bass</a> covers this concept in depth alongside other low-end management strategies.</p>
+
+<h3>The "Kickstart" Approach in FL Studio</h3>
+
+<p>Nicky Romero's <strong>Kickstart plugin</strong> (<!-- [PRICE CHECK: $49] -->$49) is a dedicated sidechain utility that operates as a VST effect on the target track. You load it directly on the bass or pad track, select a kick pattern shape (it includes over 100 preset curves), and it independently generates the duck pattern without needing an actual audio sidechain connection. This makes it extremely simple and reliable in FL Studio since it bypasses the mixer routing complexity entirely.</p>
+
+<p>The tradeoff: Kickstart operates from a fixed internal clock (synced to your DAW's tempo), so if your kick pattern is irregular or changes mid-arrangement, the duck won't follow those changes automatically. For four-on-the-floor patterns it's perfect; for complex polyrhythmic patterns it's less suitable.</p>
+
+<h2 id="advanced-sidechain-applications">Advanced Sidechain Applications in FL Studio</h2>
+
+<p>Once you've mastered the foundational techniques above, the creative possibilities for sidechaining expand dramatically. Here are several advanced applications that professional FL Studio producers use in commercial-grade productions.</p>
+
+<h3>Sidechain Reverb Ducking</h3>
+
+<p>One of the most useful — and frequently overlooked — sidechain applications is ducking reverb on a kick or snare tail. The problem: reverb on a kick drum can smear the transient and create a muddy low end, especially in electronic music where kicks need punch and clarity. The solution: sidechain the reverb's send level so it's reduced right at the moment the kick hits, then rises to full reverb level as the kick decays.</p>
+
+<p>In FL Studio's implementation:</p>
+<ol>
+  <li>Route your kick to a reverb send track (using FL Studio's send system)</li>
+  <li>Link the reverb send knob to a Peak Controller reading the kick's direct signal</li>
+  <li>Set the Peak Controller with a fast attack (2–5 ms) and a medium release (200–400 ms)</li>
+  <li>Invert the controller so the send level drops when the kick hits and rises afterward</li>
+</ol>
+
+<p>The result is that the kick's transient cuts through clean, and the reverb bloom follows behind it rather than competing with it. This technique is essential in drum and bass, techno, and cinematic production — similar principles discussed in our <a href="how-to-use-reverb-on-drums.html">how to use reverb on drums</a> article.</p>
+
+<h3>Vocal Ducking With Sidechain</h3>
+
+<p>Vocal ducking — where background music gently ducks whenever the lead vocal is active — is a staple technique in pop, R&B, and podcast production. In FL Studio, set this up by:</p>
+<ol>
+  <li>Assigning your lead vocal to its own mixer track</li>
+  <li>Setting up a Peak Controller on the vocal track</li>
+  <li>Linking the Peak Controller to the volume of your music/pad/instrument bus track</li>
+  <li>Set a moderate attack (30–60 ms) so the duck doesn't react to every plosive or breath</li>
+  <li>Set a longer release (400–800 ms) so the music returns gradually after the phrase ends</li>
+  <li>Set the duck depth to just 3–6 dB — subtle ducking is much more transparent than heavy compression-style ducking on vocals</li>
+</ol>
+
+<h3>Sidechain to Multiple Parameters Simultaneously</h3>
+
+<p>One of the Peak Controller's major advantages over third-party compressors is the ability to link a single controller to multiple parameters at once. For example, from a single kick drum Peak Controller, you can simultaneously:</p>
+<ul>
+  <li>Duck the bass track volume by 40%</li>
+  <li>Reduce the pad reverb send by 30%</li>
+  <li>Open a filter cutoff on a sidechain-modulated synth layer</li>
+  <li>Trigger a subtle pitch envelope on a sub-bass pad</li>
+</ul>
+
+<p>This "multi-target sidechain" creates a cohesive, organic response across your entire mix to the kick pattern — everything breathes and opens in sync, giving the production a professional, polished feel. To access this, simply right-click each target parameter and add the same Peak Controller as the source for each link.</p>
+
+<h3>Sidechain LFO Modulation</h3>
+
+<p>FL Studio's <strong>Fruity Formula Controller</strong> and <strong>Fruity LFO</strong> tools can be used in tandem with the Peak Controller to create hybrid sidechain effects. For example: use the Peak Controller output as a trigger to reset an LFO that then shapes the recovery of the volume duck, rather than using the compressor envelope directly. This produces rhythmic, synced volume shapes that have a musical pattern rather than a purely exponential decay.</p>
+
+<p>Advanced producers in the experimental and hyperpop space use this technique to create stuttering, glitchy sidechain effects that feel more like a performance gesture than a mix tool. Pair this with automation that changes the LFO rate mid-arrangement and you can create builds that organically increase sidechain intensity toward a drop.</p>
+
+<h3>Sidechain for Parallel Processing</h3>
+
+<p>Parallel compression (also called New York compression) can be enhanced with sidechain routing. The idea: keep a dry, uncompressed signal mixed alongside a heavily compressed version. In FL Studio, implement parallel sidechain compression by:</p>
+<ol>
+  <li>Sending the bass to two separate mixer tracks (via sends)</li>
+  <li>Applying heavy sidechain compression on Track A (the "wet" version)</li>
+  <li>Keeping Track B entirely dry</li>
+  <li>Blending the two tracks at the mix bus — roughly 60% dry, 40% compressed as a starting point</li>
+</ol>
+
+<p>This preserves the bass's natural attack and body while adding sidechain-driven movement that sits under the dry signal. If you want to develop a deeper understanding of mixing techniques like this, our <a href="how-to-mix-music-beginners-guide.html">how to mix music beginners guide</a> covers the foundational approaches to parallel processing and bus routing in detail.</p>
+
+<h2 id="fl-studio-sidechain-troubleshooting">Common Sidechain Problems and How to Fix Them in FL Studio</h2>
+
+<p>Even experienced producers run into sidechain routing issues in FL Studio. Here are the most common problems and precise solutions.</p>
+
+<h3>Problem: No Ducking Is Happening</h3>
+
+<p><strong>Possible causes:</strong></p>
+<ul>
+  <li><em>The Peak Controller is not on the correct mixer track.</em> Verify that the Peak Controller is on the kick's mixer track, not the bass track. A common mistake is loading it on the target track rather than the source track.</li>
+  <li><em>The link is not inverted.</em> Without the "Invert" checkbox in the MIDI Link dialog, the volume rises when the kick hits instead of ducking. Double-check this setting.</li>
+  <li><em>Instrument is not routed to the mixer.</em> If the kick instrument in the Channel Rack shows "Master" as its mixer destination (the small mixer icon at the top of the Channel Rack instrument), it's not going through the Mixer track you think it is. Click the instrument name, open its settings, and verify the mixer track number.</li>
+  <li><em>Min and Max values are the same.</em> In the MIDI Link dialog, if Min and Max are both set to 100%, there's no range for the volume to move. Set Min to 50% (or lower) and Max to 100%.</li>
+</ul>
+
+<h3>Problem: The Duck Is Too Slow or Sounds Smeared</h3>
+
+<p>This is almost always an Attack setting issue on the Peak Controller. If the attack is too slow, the controller doesn't respond to the kick transient quickly enough, and the duck starts several milliseconds after the kick hits — making it sound late and disconnected. For tight duck effects, attack values should rarely exceed 10 ms. Try 1–3 ms for maximum responsiveness.</p>
+
+<h3>Problem: The Duck Is Too Aggressive and Sounds Artificial</h3>
+
+<p>If the duck depth is too high or the Release is too long, the bass completely disappears and takes too long to return. Solutions: reduce the Min value in the link dialog (so the bass only ducks 20–30% instead of 70–80%), and shorten the Release on the Peak Controller. Also check if multiple Peak Controllers are stacked on the same parameter — this can cause additive ducking that's more extreme than intended.</p>
+
+<h3>Problem: Sidechain Compressor Not Receiving the Trigger Signal (VST2 Issue)</h3>
+
+<p>If you're using a VST2 compressor plugin (not VST3), it cannot receive additional audio channels from FL Studio's sidechain routing. The solution is either: use the VST3 version of the same plugin if available, use the Peak Controller method instead, or switch to a plugin that explicitly supports sidechain in VST2 mode (some plugins implement their own workaround for this). As of FL Studio 21, the recommended approach for compressor-based sidechaining is always VST3.</p>
+
+<h3>Problem: Sidechain Is Creating Phase or Timing Issues</h3>
+
+<p>When using compressor-based sidechaining with lookahead enabled, the compressor introduces latency to allow it to "see" the transient before it hits. FL Studio's PDC (Plugin Delay Compensation) should handle this automatically, but in complex routing scenarios with multiple sidechain paths, PDC can sometimes fail to compensate correctly. If you notice the kick and bass feeling slightly off-grid after adding sidechain compression, check Settings → Audio → Enable PDC to ensure it's active. Also, disable lookahead in the sidechain compressor if phase alignment is critical.</p>
+
+<h3>Problem: Sidechain Sound Is Present in the Wrong Mix Bus</h3>
+
+<p>When sending the kick to a target track for sidechain purposes, make sure the send is configured as a "sidechain only" send — meaning it does NOT add the kick's audio to the target track's mix. In FL Studio, when you create a send from one track to another, the send contributes to the receiving track's output by default. To prevent the kick drum audio from audibly bleeding into the bass track's output, right-click the send button and select the routing mode, or manually set the send level so it only feeds the plugin's sidechain input channel (not the main stereo input of the track).</p>
+
+<p>This is one of the most common beginner mistakes when setting up compressor-based sidechaining in FL Studio — suddenly hearing a doubled kick in your bass channel. Always verify your routing by temporarily soloing the bass track and checking that you only hear bass, not kick bleed.</p>
+
+<h3>CPU and Performance Considerations</h3>
+
+<p>Sidechain processing in FL Studio is generally very CPU-efficient when using the Peak Controller — since it processes only envelope detection data rather than full audio DSP. Compressor-based sidechaining adds the standard CPU overhead of the compressor plugin itself. Where producers sometimes hit performance issues is when they set up many simultaneous sidechain relationships (e.g., 8 instruments all sidechaining from the kick) with heavy compressors on each. In these cases, consider using the Peak Controller for most targets and reserving compressor-based sidechaining for the one or two tracks where the compressor's character (knee, coloration, saturation) is specifically needed.</p>
+
+<p>If you're serious about understanding the underlying compression concepts that make sidechaining work, our guide on <a href="compression-ratio-explained.html">compression ratio explained</a> breaks down the mathematics and listening implications of ratio, threshold, knee, and other parameters that directly affect how sidechain compression sounds.</p>
+
+<h2 id="sidechain-in-different-genres">Sidechaining Across Different Genres: Practical Production Notes</h2>
+
+<p>The technical methods are the foundation, but the artistic application of sidechaining varies significantly by genre. Here's how working producers apply these techniques in specific contexts.</p>
+
+<h3>House and EDM: The Pumping Effect</h3>
+
+<p>House music's characteristic "pump" is arguably the most iconic sidechain effect in popular music. Every element — bass, pads, synths, even hi-hats in some styles — is ducked against a four-on-the-floor kick pattern. The result is a breathing, rhythmic surge that gives electronic dance music its energy and momentum.</p>
+
+<p>In FL Studio for house production: use the Peak Controller on the kick, with a moderate attack (15–25 ms — slightly slower than you might expect, which softens the initial onset of the duck) and a long release (300–500 ms) that creates the "pump" sensation as the volume rises toward the next kick hit. Set the duck depth to 60–75% on the main pad track. Crucially, also sidechain any reverb sends from the pad so the reverb tail also pumps — this is what gives that full, swimming sensation in the mix.</p>
+
+<p>For building a full EDM production context around your sidechain work, our guide on <a href="how-to-make-edm.html">how to make EDM</a> covers the broader production structure including drop design, build-ups, and tension techniques.</p>
+
+<h3>Trap and Hip-Hop: Tight Low-End Control</h3>
+
+<p>In trap and hip-hop, the sidechain approach is less about dramatic pumping and more about precise low-end separation between the kick's punch and the 808 or bass. The 808 sub bass in trap inherently sustains and pitches, and without sidechain management, it will completely mask the kick's sub frequency impact.</p>
+
+<p>Recommended approach for trap: Peak Controller with a very fast attack (2–5 ms), short release (80–150 ms), and a shallow duck depth (25–40%). This creates a subtle but audible "dip" in the 808 each time the kick hits, allowing both elements to be heard clearly at high volumes. Alternatively, use a dynamic EQ approach cutting 60–80 Hz on the 808 when the kick hits — this is extremely transparent and preserves the 808's character while managing the masking conflict. For more detail on trap-specific bass techniques, see our guide on <a href="how-to-make-trap-808s-from-scratch.html">how to make trap 808s from scratch</a>.</p>
+
+<h3>Lo-Fi and Chill Beats: Subtle Movement</h3>
+
+<p>Lo-fi production rarely uses obvious pumping sidechain effects — that would clash with the genre's organic, relaxed aesthetic. However, subtle sidechain ducking (5–15 dB, slow attack and release) on the bass or a low-frequency pad can give lo-fi mixes a gentle rhythmic breathe that feels natural rather than processed. Think of it as adding micro-movement rather than a pronounced effect. Some lo-fi producers use automation curves instead of dynamic sidechaining for even more control over the subtle volume gesture.</p>
+
+<h3>Drum and Bass: Aggressive Transient-Led Ducking</h3>
+
+<p>Drum and bass requires lightning-fast sidechain response because the Amen break and neurofunk drum patterns are at 170–175 BPM with complex, syncopated rhythms. Here, the sidechain trigger is often the entire drum bus rather than just the kick — the bass needs to duck whenever any transient hits to maintain clarity in the dense rhythmic texture. Attack times of 1–3 ms and release times of 50–100 ms are common, with heavy duck depths (60–80%) on sustained bass elements.</p>
+
+<h3>Cinematic and Orchestral: Dialogue Ducking</h3>
+
+<p>In cinematic production, sidechain is used for dialogue and narration clarity — ensuring that orchestral elements, pads, and ambient textures duck whenever the dialogue track is present. This is a softer, slower sidechain (attack 50–100 ms, release 500–1000 ms) with a shallow duck depth (3–8 dB). The goal is transparency: the audience should never consciously notice the ducking, only feel that the dialogue is consistently clear and present. This is widely used in trailers, game audio, and film score production workflows.</p>
+
+<p>If you're developing your skills in this area, understanding how to mix and layer sounds across frequency ranges is essential — the principles in our <a href="how-to-use-compression-beginners.html">how to use compression beginners</a> guide lay out the foundational concepts that underpin all sidechain compression work, regardless of genre.</p>
+
+<h3>R&B and Soul: Vocal-Reactive Mixes</h3>
+
+<p>In contemporary R&B production, sidechain is used not just for kick-to-bass but for creating a "vocal-first" mix where the instrumentation subtly breathes around the lead performance. Route the lead vocal to a Peak Controller, then link it to the volume of the instrument bus with a slow attack and release. A duck depth of just 2–4 dB is often enough to create perceived clarity without obviously pulling the music down. This is a production technique used extensively in Drake, SZA, and Frank Ocean-influenced production styles.</p>
+
+<p><em>Updated May 2026: FL Studio 21's improved PDC handling and VST3 sidechain routing have significantly streamlined the process described above. If you're using an older version of FL Studio (20 or earlier), some of the VST3 sidechain steps may behave differently — refer to Image-Line's official documentation for version-specific routing instructions.</em></p>
+<div class="mpw-ad-slot mpw-ad-mid" aria-hidden="true"></div>
+<h2 id="exercises">Practical Exercises</h2>
+<div class="exercise-block exercise-beginner"><div class="exercise-label">Beginner Exercise</div><h3>Basic Kick-to-Bass Sidechain With Peak Controller</h3><p>Assign your kick and bass to separate FL Studio mixer tracks, load a Fruity Peak Controller on the kick track, then link it to the bass volume knob with the Invert checkbox enabled. Set the attack to 10 ms and release to 200 ms, then play back your beat and listen for the bass to duck on each kick hit — adjust the Min value in the MIDI Link dialog until the duck feels natural and musical.</p></div>
+<div class="exercise-block exercise-intermediate"><div class="exercise-label">Intermediate Exercise</div><h3>VST3 Compressor Sidechain Setup</h3><p>Install FabFilter Pro-C 2 or Tokyo Dawn Kotelnikov as a VST3 plugin, route your kick's mixer track as a sidechain send to your bass track, and enable the external sidechain input inside the compressor. Dial in a ratio of 6:1, a fast attack (3 ms), and a release timed to the song's tempo (use a calculator: 60000/BPM ms = one quarter note), then compare how the compressor-based duck sounds versus the Peak Controller method you used in the beginner exercise.</p></div>
+<div class="exercise-block exercise-advanced"><div class="exercise-label">Advanced Exercise</div><h3>Multi-Target Sidechain With Dynamic EQ and Reverb Ducking</h3><p>Using a single kick drum Peak Controller, simultaneously link it to three different targets: the bass track's volume (40% duck depth), the reverb send level on your pad track (30% duck depth), and a dynamic EQ band at 70 Hz on the bass channel (using FabFilter Pro-Q 4 VST3 with external sidechain). A/B the full mix with and without all three sidechain connections active and analyze how each layer contributes to low-end clarity, mix depth, and rhythmic energy — then document the exact settings that achieved the most transparent yet effective result.</p></div>
+<div class="mpw-ad-slot mpw-ad-prefaq" aria-hidden="true"></div>
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<div class="faq-accordion">
+  <div class="faq-accordion-item">
+    <div class="faq-accordion-q" onclick="mpwFaqToggle(this)">
+      <svg class="faq-accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <div class="faq-accordion-q-inner">
+        <span class="faq-accordion-label">FAQ</span>
+        <span class="faq-accordion-q-text">Does FL Studio have a built-in sidechain feature?</span>
+      </div>
+    </div>
+    <div class="faq-accordion-a">FL Studio doesn't have a one-click sidechain button like some DAWs, but it has the Fruity Peak Controller — a native tool that achieves sidechain ducking by linking the kick's amplitude envelope to any parameter (such as bass volume) in the mixer. It also supports VST3-based sidechain compression via its mixer send routing system.</div>
+  </div>
+  <div class="faq-accordion-item">
+    <div class="faq-accordion-q" onclick="mpwFaqToggle(this)">
+      <svg class="faq-accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <div class="faq-accordion-q-inner">
+        <span class="faq-accordion-label">FAQ</span>
+        <span class="faq-accordion-q-text">What is the difference between the Peak Controller method and compressor sidechain in FL Studio?</span>
+      </div>
+    </div>
+    <div class="faq-accordion-a">The Peak Controller directly controls a mixer knob (like volume) using the kick's amplitude data — no audio compression is applied to the signal. Compressor sidechain uses an actual compressor's gain reduction stage, which adds the compressor's specific character, knee, and color to the duck effect. Peak Controller is cleaner and more flexible; compressor sidechain is more traditional and can add pleasing analog-style behavior.</div>
+  </div>
+  <div class="faq-accordion-item">
+    <div class="faq-accordion-q" onclick="mpwFaqToggle(this)">
+      <svg class="faq-accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <div class="faq-accordion-q-inner">
+        <span class="faq-accordion-label">FAQ</span>
+        <span class="faq-accordion-q-text">Why do I need a VST3 plugin for sidechain compression in FL Studio?</span>
+      </div>
+    </div>
+    <div class="faq-accordion-a">FL Studio routes sidechain audio through additional internal stereo channels in its mixer. VST3 plugins can access these extra channels, allowing them to receive the sidechain trigger signal separately from the main audio input. VST2 plugins only see a single stereo input and therefore cannot receive the sidechain signal through FL Studio's routing system.</div>
+  </div>
+  <div class="faq-accordion-item">
+    <div class="faq-accordion-q" onclick="mpwFaqToggle(this)">
+      <svg class="faq-accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <div class="faq-accordion-q-inner">
+        <span class="faq-accordion-label">FAQ</span>
+        <span class="faq-accordion-q-text">How do I stop the kick drum from being heard in the bass track when setting up sidechain routing?</span>
+      </div>
+    </div>
+    <div class="faq-accordion-a">When sending the kick to the bass track's mixer channel for sidechain purposes, make sure the send is configured so the kick audio goes only to the plugin's sidechain input channel — not to the main stereo mix bus of the bass track. In FL Studio 21, right-click the send button between the two tracks and verify the routing mode prevents kick bleed into the bass output.</div>
+  </div>
+  <div class="faq-accordion-item">
+    <div class="faq-accordion-q" onclick="mpwFaqToggle(this)">
+      <svg class="faq-accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <div class="faq-accordion-q-inner">
+        <span class="faq-accordion-label">FAQ</span>
+        <span class="faq-accordion-q-text">What attack and release settings should I use for an EDM pumping sidechain effect?</span>
+      </div>
+    </div>
+    <div class="faq-accordion-a">For the classic EDM pump effect, use an attack of 15–30 ms (slightly slower than for tight hip-hop ducking) and a release of 300–500 ms on your Peak Controller or sidechain compressor. The longer release creates the rising "swell" between kick hits that characterizes house and EDM pumping. Duck depth of 60–75% gives a clearly audible pump without completely silencing the bass or pad.</div>
+  </div>
+  <div class="faq-accordion-item">
+    <div class="faq-accordion-q" onclick="mpwFaqToggle(this)">
+      <svg class="faq-accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <div class="faq-accordion-q-inner">
+        <span class="faq-accordion-label">FAQ</span>
+        <span class="faq-accordion-q-text">Can I sidechain multiple instruments from one kick drum in FL Studio?</span>
+      </div>
+    </div>
+    <div class="faq-accordion-a">Yes — one of the Peak Controller's biggest advantages is that you can link a single controller to multiple parameters simultaneously. Right-click each target parameter (bass volume, pad reverb send, synth filter cutoff, etc.) and link them all to the same Peak Controller on the kick track. Each link has its own independent Min, Max, and Invert settings, giving you precise control over how much each element ducks.</div>
+  </div>
+  <div class="faq-accordion-item">
+    <div class="faq-accordion-q" onclick="mpwFaqToggle(this)">
+      <svg class="faq-accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <div class="faq-accordion-q-inner">
+        <span class="faq-accordion-label">FAQ</span>
+        <span class="faq-accordion-q-text">What is a ghost kick and why would I use one for sidechaining?</span>
+      </div>
+    </div>
+    <div class="faq-accordion-a">A ghost kick is an inaudible duplicate of the kick drum signal on a separate mixer track with its output muted or send to Master disabled. You use it as the sidechain source so that the trigger signal is completely clean and uncolored by any processing on the main kick track — useful when your main kick has heavy reverb, compression, or limiting that could distort the sidechain timing and envelope shape.</div>
+  </div>
+  <div class="faq-accordion-item">
+    <div class="faq-accordion-q" onclick="mpwFaqToggle(this)">
+      <svg class="faq-accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <div class="faq-accordion-q-inner">
+        <span class="faq-accordion-label">FAQ</span>
+        <span class="faq-accordion-q-text">Can I use sidechain techniques in FL Studio for vocals and not just kick and bass?</span>
+      </div>
+    </div>
+    <div class="faq-accordion-a">Absolutely. Vocal ducking — where background music gently ducks when the lead vocal is present — is a common technique using the same Peak Controller method. Load a Peak Controller on the vocal mixer track, link it to the instrument bus volume with a slow attack (30–60 ms) and long release (400–800 ms), and set a shallow duck depth of just 2–5 dB for transparent, professional-sounding vocal presence.</div>
+  </div>
+
+<script>
+function mpwFaqToggle(el) {
+  var icon = el.querySelector('.faq-accordion-icon');
+  var answer = el.nextElementSibling;
+  var isOpen = answer.classList.contains('open');
+  document.querySelectorAll('.faq-accordion-a.open').forEach(function(a) {
+    a.classList.remove('open');
+    a.previousElementSibling.querySelector('.faq-accordion-icon').classList.remove('open');
+  });
+  if (!isOpen) { answer.classList.add('open'); icon.classList.add('open'); }
+}
+</script>
+
+      <footer class="article-footer"><div class="article-tags-footer"><p class="tags-label">Tags</p><div class="tags-list"><a href="../categories/techniques.html" class="tag-pill">Techniques</a>
+<a href="../categories/techniques.html" class="tag-pill">FL Studio</a>
+<a href="../categories/glossary.html" class="tag-pill">Compression</a></div></div></div></footer>
+      
+      <div class="social-share" style="margin:1.5rem 0;display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;">
+        <span style="font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);">Share</span>
+        <button onclick="window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(document.title)+'&url='+encodeURIComponent(window.location.href),'_blank')" style="display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;font-weight:600;color:var(--text-secondary);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:6px;padding:.4rem .8rem;cursor:pointer;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          Share on X
+        </button>
+        <button onclick="window.open('https://reddit.com/submit?url='+encodeURIComponent(window.location.href)+'&title='+encodeURIComponent(document.title),'_blank')" style="display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;font-weight:600;color:var(--text-secondary);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:6px;padding:.4rem .8rem;cursor:pointer;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
+          Share on Reddit
+        </button>
+        <button onclick="navigator.clipboard.writeText(window.location.href).then(()=>{this.textContent='Copied!';setTimeout(()=>{this.textContent='Copy Link'},2000)})" style="display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;font-weight:600;color:var(--text-secondary);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:6px;padding:.4rem .8rem;cursor:pointer;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Copy Link
+        </button>
+      </div>
+      <section class="related-section" aria-labelledby="relatedHeading">
+        <h2 id="relatedHeading" style="font-size:1.35rem;margin-bottom:1.25rem;">Related Articles</h2>
+        <div class="related-grid">
+<a href="how-to-use-compression-beginners.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">How To Use Compression: Beginners Guide</h3><span class="related-card-meta">Read article →</span></a>
+<a href="how-to-mix-bass.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">How To Mix Bass</h3><span class="related-card-meta">Read article →</span></a>
+<a href="how-to-make-trap-808s-from-scratch.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">How To Make Trap 808s From Scratch</h3><span class="related-card-meta">Read article →</span></a>
+</div>
+</section>
+    </article>
+    <aside aria-label="Article sidebar">
+      <div class="sidebar-widget toc-widget" aria-labelledby="tocHeading">
+        <div class="sidebar-widget-header"><h2 class="sidebar-widget-title" id="tocHeading">In This Article</h2></div>
+        <div class="sidebar-widget-body"><ul class="toc-list">
+<li><a href="#what-is-sidechaining">What Is Sidechaining and Why Does It Matter?</a></li>
+<li><a href="#method-1-peak-controller">Method 1: The Fruity Peak Controller</a></li>
+<li><a href="#method-2-third-party-sidechain-plugins">Method 2: Sidechain Compression With Third-Party Plugins</a></li>
+<li><a href="#method-3-volume-automation">Method 3: Volume Automation for Sidechain Ducking</a></li>
+<li><a href="#method-4-multiband-and-dynamic-eq-sidechaining">Method 4: Multiband Sidechain and Dynamic EQ</a></li>
+<li><a href="#advanced-sidechain-applications">Advanced Sidechain Applications in FL Studio</a></li>
+<li><a href="#fl-studio-sidechain-troubleshooting">Common Sidechain Problems and How to Fix Them</a></li>
+<li><a href="#sidechain-in-different-genres">Sidechaining Across Different Genres</a></li>
+</ul></div>
+      </div>
+      <div class="sidebar-widget" style="background:var(--bg-void);border-color:var(--border-default);">
+        <div class="sidebar-widget-body" style="padding:1.5rem;">
+          <p style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.5rem;">Newsletter</p>
+          <h3 style="font-family:var(--font-display);color:var(--text-primary);font-size:1.1rem;margin-bottom:.5rem;">The Producer's Briefing</h3>
+          <p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:1rem;line-height:1.55;">Weekly tips, gear news, and technique guides. Free.</p>
+          <form class="newsletter-form-js" style="display:flex;flex-direction:column;gap:.5rem;" novalidate>
+            <input type="email" name="email" class="form-input" placeholder="Your email" required />
+            <button type="submit" class="btn-newsletter" style="font-size:.82rem;padding:.65rem 1rem;">Subscribe Free</button>
+          </form>
+        </div>
+      <div class="sidebar-widget" style="margin-top:1.5rem;">
+        <div class="sidebar-widget-header" style="text-align:center;">
+          <h2 class="sidebar-widget-title">Related Articles</h2>
+        </div>
+        <div class="sidebar-widget-body" style="padding:1rem;">
+<ul style="list-style:none;padding:0;margin:0;text-align:center;"><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="how-to-use-compression-beginners.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">How To Use Compression: Beginners Guide</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Techniques</span></li>
+<li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="how-to-mix-bass.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">How To Mix Bass</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Techniques</span></li>
+<li style="padding:.6rem 0;"><a href="how-to-make-trap-808s-from-scratch.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">How To Make Trap 808s From Scratch</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Techniques</span></li></ul>
+        </div>
+      </div>
+      </div>
+    </aside>
+  </div>
+</main>
+<section class="newsletter-section" id="newsletter" aria-labelledby="newsletterHeading">
+  <div class="container">
+    <div class="newsletter-inner">
+      <div class="newsletter-content">
+        <p class="newsletter-label">Newsletter</p>
+        <h2 id="newsletterHeading" class="newsletter-title">The Producer's <em>Briefing</em></h2>
+        <p class="newsletter-desc">Weekly techniques, gear news, and music business insights. Free.</p>
+      </div>
+      <div class="newsletter-form-wrap">
+        <form class="newsletter-form-js" novalidate>
+          <input type="email" name="email" class="form-input" placeholder="Your email address" required />
+          <button type="submit" class="btn-newsletter">Subscribe Free</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<footer class="site-footer" role="contentinfo">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="../index.html" class="site-logo"><span class="logo-wordmark">Music<span>Production</span>Wiki</span><span class="logo-tagline">The Producer's Reference</span></a>
+    </div>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <div class="footer-col">
+        <h3 class="footer-col-title">Categories</h3>
+        <ul>
+          <li><a href="../categories/reviews.html">Reviews</a></li>
+          <li><a href="../categories/comparisons.html">Comparisons</a></li>
+          <li><a href="../categories/ai-music.html">AI Music</a></li>
+          <li><a href="../categories/daws.html">DAWs</a></li>
+          <li><a href="../categories/plugins.html">Plugins</a></li>
+          <li><a href="../categories/gear.html">Gear</a></li>
+          <li><a href="../categories/techniques.html">Techniques</a></li>
+          <li><a href="../categories/music-business.html">Music Business</a></li>
+          <li><a href="../categories/glossary.html">Glossary</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">Popular</h3>
+        <ul>
+          <li><a href="../articles/suno-vs-udio.html">Suno vs Udio</a></li>
+          <li><a href="../articles/best-daw-for-beginners.html">Best DAW for Beginners</a></li>
+          <li><a href="../articles/focusrite-scarlett-2i2-gen-4-review.html">Scarlett 2i2 Review</a></li>
+          <li><a href="../articles/sidechain-compression-guide.html">Sidechain Compression</a></li>
+          <li><a href="../articles/best-compressor-plugins.html">Best Compressor Plugins</a></li>
+          <li><a href="../articles/what-is-gain-staging.html">What Is Gain Staging</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">About</h3>
+        <ul>
+          <li><a href="../about.html">About MPW</a></li>
+          <li><a href="../about.html#team">Our Team</a></li>
+          <li><a href="../about.html#methodology">Review Methodology</a></li>
+          <li><a href="../about.html#affiliate">Affiliate Disclosure</a></li>
+          <li><a href="../about.html#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="footer-bottom"><div class="container"><p>© <span id="copyrightYear"></span> MusicProductionWiki.com. All rights reserved. Content by the Music Production Wiki Team.</p></div></div>
+</footer>
+<script src="../js/main.js"></script>
+<script>document.getElementById('copyrightYear').textContent = new Date().getFullYear();</script>
+
+<button id="mpwBackTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  aria-label="Back to top"
+  style="position:fixed;bottom:1.5rem;right:1.5rem;width:2.5rem;height:2.5rem;border-radius:50%;
+         background:var(--teal);color:#000;border:none;cursor:pointer;display:none;
+         align-items:center;justify-content:center;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3);">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <polyline points="18 15 12 9 6 15"/>
+  </svg>
+</button>
+<script>
+(function(){
+  var btn=document.getElementById('mpwBackTop');
+  var bar=document.getElementById('readingProgress');
+  var art=document.querySelector('.article-body');
+  window.addEventListener('scroll',function(){
+    var st=window.scrollY||document.documentElement.scrollTop;
+    btn.style.display=st>400?'flex':'none';
+    if(bar&&art){
+      var h=art.getBoundingClientRect().height;
+      var top=art.getBoundingClientRect().top+st;
+      var pct=Math.min(100,Math.max(0,(st-top+window.innerHeight)*100/h));
+      bar.style.width=pct+'%';
+      bar.setAttribute('aria-valuenow',Math.round(pct));
+    }
+  });
+})();
+</script>
+</body>
+</html>

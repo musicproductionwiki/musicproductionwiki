@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Learn how to use a noise gate like a pro — threshold, attack, release, hold, range explained with practical settings for drums, vocals, and guitars." />
+  <title>How To Use A Gate — MusicProductionWiki.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1F39B;</text></svg>" />
+  <style>
+    #readingProgress{position:fixed;top:0;left:0;height:3px;background:var(--teal);width:0%;z-index:200;transition:width 0.1s linear;}
+    .quick-answer{background:linear-gradient(135deg,rgba(0,212,168,0.08),rgba(167,139,250,0.06));border:1px solid rgba(0,212,168,0.3);border-left:4px solid var(--teal);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .quick-answer-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.6rem;}
+    .quick-answer p{font-size:1rem;line-height:1.65;color:var(--text-primary);margin:0;}
+    .skill-badge{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .6rem;border-radius:4px;margin-left:.6rem;vertical-align:middle;position:relative;top:-2px;}
+    .skill-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .skill-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .skill-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .settings-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .settings-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .settings-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .settings-table tr:last-child td{border-bottom:none;}
+    .settings-table tr:hover td{background:var(--bg-surface);}
+    .settings-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .settings-table .mono{font-family:var(--font-mono);font-size:.82rem;color:var(--teal);}
+    .mistake-box{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-left:4px solid #ef4444;border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .mistake-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ef4444;margin-bottom:.4rem;}
+    .mistake-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference{border-left:3px solid var(--purple);padding:.75rem 1.25rem;margin:1.25rem 0;background:rgba(167,139,250,0.05);border-radius:0 6px 6px 0;}
+    .pro-reference-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.35rem;}
+    .pro-reference p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference strong{color:var(--text-primary);}
+    .listening-prescription{background:var(--bg-void);border:1px solid var(--border-default);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;position:relative;}
+    .listening-prescription::before{content:'🎧';position:absolute;top:-14px;left:1.5rem;background:var(--bg-void);padding:0 .4rem;font-size:1.1rem;}
+    .listening-prescription-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:.75rem;}
+    .listening-prescription p{font-size:.9rem;line-height:1.7;color:var(--text-secondary);margin:0 0 .5rem;}
+    .listening-record{font-weight:600;color:var(--text-primary);}
+    .decision-framework{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .decision-framework-title{font-family:var(--font-display);font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:1rem;}
+    .decision-item{display:flex;gap:1rem;padding:.65rem 0;border-bottom:1px solid var(--border-subtle);font-size:.88rem;line-height:1.55;}
+    .decision-item:last-child{border-bottom:none;}
+    .decision-if{color:var(--text-muted);font-style:italic;min-width:2rem;}
+    .decision-then{color:var(--text-primary);}
+    .decision-then strong{color:var(--teal);}
+    .exercise-block{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.25rem 0;}
+    .exercise-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;}
+    .exercise-badge{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .7rem;border-radius:4px;}
+    .exercise-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .exercise-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .exercise-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .exercise-title{font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text-primary);}
+    .exercise-block ol{margin:0;padding-left:1.25rem;color:var(--text-secondary);font-size:.88rem;line-height:1.7;}
+    .exercise-block ol li{margin-bottom:.4rem;}
+    .version-line{font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:4px;padding:.4rem .75rem;margin:.75rem 0 1.5rem;display:inline-block;}
+    .go-deeper{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:10px;padding:1.75rem;margin:2.5rem 0;}
+    .go-deeper-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text-primary);margin-bottom:1.25rem;}
+    .go-deeper-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;}
+    .go-deeper-item{background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:7px;padding:1rem 1.1rem;}
+    .go-deeper-item-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.35rem;}
+    .go-deeper-item a{font-size:.88rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;}
+    .go-deeper-item p{font-size:.78rem;color:var(--text-muted);margin:.3rem 0 0;}
+    .citation{font-size:.78rem;color:var(--text-muted);font-style:italic;margin-top:.25rem;}
+    .diagram-wrap{margin:1.75rem 0;background:var(--bg-void);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem;overflow-x:auto;}
+    .diagram-caption{font-size:.78rem;color:var(--text-muted);text-align:center;margin-top:.75rem;font-style:italic;}
+    .highlight-box{background:rgba(0,212,168,0.06);border:1px solid rgba(0,212,168,0.2);border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .highlight-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.4rem;}
+    .highlight-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin:1.5rem 0;}
+    .stat-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem;text-align:center;}
+    .stat-number{font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--teal);display:block;}
+    .stat-label{font-size:.78rem;color:var(--text-secondary);margin-top:.25rem;}
+    .action-steps{counter-reset:steps;list-style:none;padding:0;margin:1.5rem 0;}
+    .action-steps li{counter-increment:steps;display:flex;gap:1rem;padding:.85rem 0;border-bottom:1px solid var(--border-subtle);font-size:.9rem;color:var(--text-secondary);line-height:1.6;}
+    .action-steps li:last-child{border-bottom:none;}
+    .action-steps li::before{content:counter(steps);background:var(--teal);color:#000;font-weight:800;font-size:.75rem;width:1.6rem;height:1.6rem;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem;}
+    .genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:1.5rem 0;}
+    .genre-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem 1.25rem;}
+    .genre-card-name{font-family:var(--font-display);font-size:.85rem;font-weight:700;color:var(--teal);margin-bottom:.4rem;}
+    .genre-card p{font-size:.82rem;color:var(--text-secondary);line-height:1.55;margin:0;}
+    .comparison-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .comparison-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .comparison-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .comparison-table tr:last-child td{border-bottom:none;}
+    .comparison-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .affiliate-cta{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,212,168,0.1);border:1px solid rgba(0,212,168,0.25);color:var(--teal);font-size:.82rem;font-weight:600;padding:.45rem .9rem;border-radius:6px;text-decoration:none;}
+
+    .faq-accordion{margin:1.75rem 0;}
+    .faq-accordion-item{background:var(--bg-surface);border:1px solid var(--border-subtle);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;margin-bottom:8px;overflow:hidden;}
+    .faq-accordion-q{display:flex;align-items:flex-start;padding:1rem 1.25rem;cursor:pointer;gap:.75rem;}
+    .faq-accordion-q:hover{background:var(--bg-elevated);}
+    .faq-accordion-icon{width:16px;height:16px;flex-shrink:0;margin-top:3px;color:var(--purple);transition:transform .2s ease;}
+    .faq-accordion-icon.open{transform:rotate(45deg);}
+    .faq-accordion-q-inner{display:flex;flex-direction:column;}
+    .faq-accordion-label{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin-bottom:.2rem;}
+    .faq-accordion-q-text{font-size:.92rem;font-weight:600;color:var(--text-primary);line-height:1.45;font-family:var(--font-display);}
+    .faq-accordion-a{display:none;padding:0 1.25rem 1rem 2.75rem;font-size:.88rem;color:var(--text-secondary);line-height:1.7;border-top:1px solid var(--border-subtle);padding-top:.85rem;}
+    .faq-accordion-a.open{display:block;}
+</style>
+  <link rel="canonical" href="https://musicproductionwiki.com/articles/how-to-use-a-gate.html"/>
+  <!-- Open Graph -->
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="How To Use A Gate"/>
+  <meta property="og:description" content="Learn how to use a noise gate like a pro — threshold, attack, release, hold, range explained with practical settings for drums, vocals, and guitars."/>
+  <meta property="og:url" content="https://musicproductionwiki.com/articles/how-to-use-a-gate.html"/>
+  <meta property="og:site_name" content="Music Production Wiki"/>
+  <meta property="og:image" content="https://musicproductionwiki.com/images/og-default.jpg"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="article:author" content="Music Production Wiki Team"/>
+  <meta property="article:section" content="Techniques"/>
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="How To Use A Gate"/>
+  <meta name="twitter:description" content="Learn how to use a noise gate like a pro — threshold, attack, release, hold, range explained with practical settings for drums, vocals, and guitars."/>
+  <meta name="twitter:image" content="https://musicproductionwiki.com/images/og-default.jpg"/>
+  <!-- Article Schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How To Use A Gate",
+  "description": "Learn how to use a noise gate like a pro — threshold, attack, release, hold, range explained with practical settings for drums, vocals, and guitars.",
+  "image": "https://musicproductionwiki.com/images/og-default.jpg",
+  "datePublished": "2026-05-01",
+  "dateModified": "2026-05-07",
+  "wordCount": 5950,
+  "timeRequired": "PT24M",
+  "keywords": ["noise gate", "how to use a gate", "gate plugin", "drum gating", "sidechain gate", "threshold attack release hold", "gated reverb", "vocal noise gate"],
+  "author": {"@type": "Organization", "name": "Music Production Wiki", "url": "https://musicproductionwiki.com"},
+  "publisher": {"@type": "Organization", "name": "Music Production Wiki", "url": "https://musicproductionwiki.com", "logo": {"@type": "ImageObject", "url": "https://musicproductionwiki.com/images/og-default.jpg"}},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://musicproductionwiki.com/articles/how-to-use-a-gate.html"},
+  "articleSection": "Techniques",
+  "inLanguage": "en-US"
+}
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "What is the difference between a gate and a noise gate?", "acceptedAnswer": {"@type": "Answer", "text": "The terms are used interchangeably in modern production. A noise gate is simply a gate processor specifically used for eliminating unwanted noise \u2014 both refer to the same device that silences or attenuates audio falling below a set threshold level."}},
+      {"@type": "Question", "name": "Should I use a gate or an expander for vocal tracks?", "acceptedAnswer": {"@type": "Answer", "text": "An expander is usually the better choice for vocals because it reduces levels below the threshold gradually using a ratio, rather than abruptly silencing them. A gate's hard closure can sound unnatural on vocals, while an expander with a ratio of 1:2 or 1:3 and a moderate range cleans up noise more transparently."}},
+      {"@type": "Question", "name": "Where should a gate go in the plugin chain?", "acceptedAnswer": {"@type": "Answer", "text": "Place the gate first in your plugin chain, before compression, EQ, reverb, or saturation. This ensures bleed and noise are removed before other processors amplify or color them \u2014 with the exception of cases where a preceding compressor is used to normalize signal levels for more consistent gate triggering."}},
+      {"@type": "Question", "name": "What does the hold parameter do on a gate?", "acceptedAnswer": {"@type": "Answer", "text": "Hold keeps the gate pinned open for a fixed period after the signal drops below the threshold, before the release phase begins. It prevents the gate from closing too early on sustained sounds and stops chatter when signals hover near the threshold. For drums, hold is critical to capturing the full body and decay of each hit."}},
+      {"@type": "Question", "name": "What is sidechain gating and when should I use it?", "acceptedAnswer": {"@type": "Answer", "text": "Sidechain gating uses a separate audio signal to trigger the gate rather than the signal being processed. Use it for creative rhythmic textures such as gating a pad with a kick drum pattern, for more accurate drum gating using a direct piezo trigger as the detector, or for frequency-selective triggering using a filtered sidechain signal."}},
+      {"@type": "Question", "name": "How do I prevent a gate from chattering on sustained sounds?", "acceptedAnswer": {"@type": "Answer", "text": "Increase the hold time to keep the gate open once triggered, and use the hysteresis setting if your plugin offers it \u2014 this sets a separate, lower threshold for closing that prevents the gate from toggling when a signal hovers near the open threshold. A sidechain filter focused on the instrument's fundamental frequencies also reduces false triggers."}},
+      {"@type": "Question", "name": "Can I use a gate to create creative effects beyond noise removal?", "acceptedAnswer": {"@type": "Answer", "text": "Absolutely. Gated reverb sends a drum to a long reverb then gates the reverb return to create the classic 80s drum sound. Sidechain gating a pad with a rhythmic trigger creates pulsing textures central to house and techno. A step-sequenced or LFO-controlled gate creates trance gate stutter effects used extensively in electronic music production."}},
+      {"@type": "Question", "name": "Why is a gate not removing all the bleed from my drum tracks?", "acceptedAnswer": {"@type": "Answer", "text": "If the bleed is nearly as loud as the target signal, no threshold setting can discriminate between them because a gate cannot separate two sounds that are close in level. Use a sidechain high-cut or band-pass filter to help the detector focus on the target instrument's frequency range, or use spectral repair tools like iZotope RX for severe bleed situations that a traditional gate cannot resolve."}}
+  ]
+}
+</script>
+
+  <!-- SEO meta v6.1 -->
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="article:published_time" content="2026-05-01T00:00:00+00:00" />
+  <meta property="article:modified_time" content="2026-05-07T00:00:00+00:00" />
+  <meta name="keywords" content="how to use a gate, noise gate, gate plugin, gate settings, threshold, attack release hold, drum gating, vocal gate, audio gate, noise reduction, gate compression, mix techniques" />
+  <!-- Organization schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Music Production Wiki",
+    "url": "https://musicproductionwiki.com",
+    "logo": {"@type": "ImageObject", "url": "https://musicproductionwiki.com/images/og-default.jpg"},
+    "sameAs": []
+  }
+  </script>
+  <!-- WebSite schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Music Production Wiki",
+    "url": "https://musicproductionwiki.com",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {"@type": "EntryPoint", "urlTemplate": "https://musicproductionwiki.com/?s={search_term_string}"},
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://musicproductionwiki.com/"},
+    {"@type": "ListItem", "position": 2, "name": "Techniques", "item": "https://musicproductionwiki.com/categories/techniques.html"},
+    {"@type": "ListItem", "position": 3, "name": "How To Use A Gate", "item": "https://musicproductionwiki.com/articles/how-to-use-a-gate.html"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How To Use A Gate",
+  "step": [
+    {"@type": "HowToStep", "name": "Place the gate first in your plugin chain", "text": "Insert your gate plugin as the first processor on the channel, before any compression, EQ, or reverb. This ensures noise and bleed are removed before other processors can amplify or color them."},
+    {"@type": "HowToStep", "name": "Set the threshold just above the noise floor", "text": "Play back the track and watch the gate's gain reduction meter. Slowly raise the threshold from its minimum until the gate closes cleanly during the silent sections between musical phrases. Stop raising before the gate begins closing on the signal you want to keep."},
+    {"@type": "HowToStep", "name": "Dial in a fast attack to preserve transients", "text": "For percussive sources like drums and guitar, set attack to 0.1\u20131 ms so the gate snaps open before the transient arrives. For softer sources like vocals and pads, use a slightly slower attack of 5\u201315 ms. Enable lookahead (1\u20135 ms) if your plugin offers it to completely eliminate transient clipping."},
+    {"@type": "HowToStep", "name": "Adjust hold to capture the full decay of the sound", "text": "Increase the hold time until the gate stays open long enough to capture the complete body and natural decay of each hit or phrase \u2014 typically 50\u2013200 ms for drums, 200\u2013500 ms for instruments, and 100\u2013400 ms for vocals. If you hear the gate closing mid-sustain, increase hold in 50 ms increments."},
+    {"@type": "HowToStep", "name": "Set release for a natural closure", "text": "After the hold expires, the release controls how smoothly the gate closes. Start with 150\u2013300 ms for most sources and increase if the closure sounds abrupt. A release that's too fast creates an audible chop; too slow allows noise to creep back in."},
+    {"@type": "HowToStep", "name": "Configure the range (depth) setting", "text": "For complete noise elimination (drum bleed, amp hiss), set range to -60 dB or maximum. For gentle background noise reduction on vocals or acoustic instruments, use -15 to -30 dB to leave a hint of natural ambience and avoid dead-silence artifacts between phrases."},
+    {"@type": "HowToStep", "name": "Use the sidechain filter to improve accuracy", "text": "If available, engage the gate's sidechain filter and apply a high-cut or band-pass filter to focus the detection circuit on your target instrument's fundamental frequency range. Use the Key Listen function to hear exactly what the detector is responding to, then fine-tune the filter frequency before disengaging Key Listen."},
+    {"@type": "HowToStep", "name": "A/B the gated and ungated signal to verify results", "text": "Bypass the gate and compare the gated versus ungated signal at multiple points in the track \u2014 on busy sections, sparse sections, and transitions. Ensure the gate is catching every intended hit, not missing quiet phrases, and not introducing artifacts on sustained sections or phrase endings."}
+  ]
+}
+</script>
+</head>
+<body>
+<div id="readingProgress" role="progressbar" aria-label="Reading progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+<header class="site-header" role="banner">
+  <div class="container header-inner">
+    <a href="../index.html" class="site-logo" aria-label="MusicProductionWiki Home">
+      <span class="logo-wordmark">Music<span>Production</span>Wiki</span>
+      <span class="logo-tagline">The Producer's Reference</span>
+    </a>
+    <nav class="primary-nav" aria-label="Primary navigation">
+      <ul class="nav-list">
+        <li><a href="../categories/reviews.html">Reviews</a></li>
+        <li><a href="../categories/comparisons.html">Comparisons</a></li>
+        <li><a href="../categories/ai-music.html">AI Music</a></li>
+        <li><a href="../categories/daws.html">DAWs</a></li>
+        <li><a href="../categories/plugins.html">Plugins</a></li>
+        <li><a href="../categories/gear.html">Gear</a></li>
+        <li><a href="../categories/techniques.html">Techniques</a></li>
+        <li><a href="../categories/music-business.html">Music Business</a></li>
+        <li><a href="../categories/glossary.html">Glossary</a></li>
+        <li><a href="../about.html">About</a></li>
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <form class="search-form" role="search" action="#" method="get">
+        <label for="siteSearch" class="visually-hidden">Search articles</label>
+        <input type="search" id="siteSearch" class="search-input" placeholder="Search articles…" name="q" autocomplete="off" />
+        <button type="submit" class="search-btn" aria-label="Submit search">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </button>
+      </form>
+      <a href="#newsletter" class="btn-subscribe">The Producer's Briefing →</a>
+    </div>
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileNav">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+<nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
+  <ul class="nav-list">
+    <li><a href="../categories/reviews.html">Reviews</a></li>
+    <li><a href="../categories/comparisons.html">Comparisons</a></li>
+    <li><a href="../categories/ai-music.html">AI Music</a></li>
+    <li><a href="../categories/daws.html">DAWs</a></li>
+    <li><a href="../categories/plugins.html">Plugins</a></li>
+    <li><a href="../categories/gear.html">Gear</a></li>
+    <li><a href="../categories/techniques.html">Techniques</a></li>
+    <li><a href="../categories/music-business.html">Music Business</a></li>
+    <li><a href="../categories/glossary.html">Glossary</a></li>
+  </ul>
+</nav>
+<div class="container">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><ol>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../categories/techniques.html>Techniques</a></li>
+    <li><span aria-current="page">How To Use A Gate</span></li>
+  </ol></nav>
+</div>
+<main class="container" id="main-content">
+  <div class="article-layout">
+    <article aria-labelledby="articleTitle">
+      <header class="article-header">
+        <div class="article-tags"><span class="article-tag purple"><a href="../categories/techniques.html" style="color:inherit;text-decoration:none;">Techniques</a></span>
+<span class="article-tag purple"><a href="../categories/techniques.html" style="color:inherit;text-decoration:none;">Mixing</a></span>
+<span class="article-tag purple"><a href="../categories/glossary.html" style="color:inherit;text-decoration:none;">Dynamics</a></span></div>
+        <h1 id="articleTitle">How To Use A Gate</h1>
+        <div class="article-header-meta">
+          <div class="article-author"><div class="author-avatar" aria-hidden="true">MP</div><span class="author-name">The Music Production Wiki Team</span></div>
+          <span class="meta-divider"></span><span class="meta-item">Updated May 2026&nbsp;·&nbsp;30 min read&nbsp;·&nbsp;<span style="font-size:.78rem;color:var(--text-muted);">Verified May 7, 2026</span></span>
+        </div>
+      </header>
+      <div class="article-body">
+<div class="quick-answer">
+<div class="quick-answer-label">Quick Answer — Updated May 2026</div>
+<p>A noise gate silences audio below a set threshold, removing unwanted noise, bleed, and room tone between musical phrases. Set the threshold just above the noise floor, dial in a fast attack to catch transients cleanly, and adjust release and hold so the gate closes naturally without clipping the tail of the sound. Used correctly on drums, vocals, and guitars, a gate dramatically tightens a mix.</p>
+</div>
+
+<div class="mpw-ad-slot mpw-ad-top" aria-hidden="true"></div>
+<p>The noise gate is one of the most misunderstood tools in a mixing engineer's arsenal. Many producers know it exists, but few use it with the precision required to get truly professional results. Used carelessly, a gate chops transients, creates unnatural silence, and introduces pumping artifacts that are immediately audible to a trained ear. Used well, a gate is nearly invisible — it simply eliminates the rubbish between the notes and lets the music breathe with confidence.</p>
+
+<p>This guide covers everything you need to know about noise gates in 2026: the signal-flow principles behind them, every parameter explained in practical terms, genre-specific use cases, creative applications, and a full troubleshooting section for the most common gating problems. Whether you're cleaning up a snare track recorded in a live room full of cymbal bleed or sculpting the attack of a pumping synth in an EDM drop, this article will give you the knowledge to use a gate decisively. Updated May 2026.</p>
+
+<h2 id="how-a-gate-works">How a Noise Gate Actually Works</h2>
+
+<p>A noise gate is a type of dynamic processor — like a compressor, it responds to the level of an audio signal. But where a compressor turns down loud signals, a gate turns down quiet ones. Specifically, when the incoming signal falls below a user-defined <strong>threshold</strong>, the gate closes, reducing the signal's output level by a controlled amount. When the signal rises back above the threshold, the gate opens and the signal passes through at full level (or near full level, depending on your settings).</p>
+
+<p>Think of it like a bouncer at a door. Below threshold = door closed, signal blocked or attenuated. Above threshold = door open, signal passes freely. The elegance — and the danger — is in how smoothly or abruptly that door opens and closes. A bad bouncer slams the door in the singer's face mid-phrase. A great one is so smooth you barely notice the mechanism.</p>
+
+<h3>The Gate vs. the Expander</h3>
+
+<p>It's worth distinguishing between a <em>gate</em> and an <em>expander</em>. A gate is essentially a binary processor: below threshold, gain is reduced by a fixed amount (often to silence or near-silence). An expander is more graduated: below threshold, gain reduction is applied progressively according to a ratio, similar to how a compressor's ratio works — but in reverse. An expander with a very high ratio (say 1:100) behaves like a gate. An expander with a gentler ratio (1:2 or 1:3) is useful when you want to reduce background noise without completely eliminating the signal. Many modern gate plugins offer an expander mode or a <strong>Range</strong> parameter that effectively turns your gate into a variable-ratio downward expander. You'll see this in plugins like the FabFilter Pro-G, the Waves C1 Gate, Sonnox Oxford Gate, and virtually every DAW's stock gate processor.</p>
+
+<h3>Signal Detection: Peak vs. RMS</h3>
+
+<p>Most gate plugins detect signal level using either peak detection or RMS (root mean square) averaging. Peak detection responds to instantaneous signal peaks and is ideal for fast transient sources like drums. RMS detection averages the signal over a short time window and is better for vocals and sustained instruments where momentary peaks shouldn't trigger the gate. Some professional gates (like the Drawmer DS201 hardware unit or its plugin emulations) let you switch between detection modes. When in doubt, start with peak detection — it's faster and more responsive, and you can always soften the behavior with your attack and hold settings.</p>
+
+<div class="diagram-wrap">
+  <svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Noise gate signal flow and gain reduction diagram">
+    <rect width="700" height="260" fill="#1a1a2e" rx="10"/>
+    <!-- Title -->
+    <text x="350" y="28" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#e0e0e0">Noise Gate: Signal &amp; Gain Reduction Over Time</text>
+    <!-- Axes -->
+    <line x1="60" y1="200" x2="660" y2="200" stroke="#555" stroke-width="1.5"/>
+    <line x1="60" y1="50" x2="60" y2="210" stroke="#555" stroke-width="1.5"/>
+    <!-- Threshold line -->
+    <line x1="60" y1="130" x2="660" y2="130" stroke="#f5a623" stroke-width="1.2" stroke-dasharray="6,4"/>
+    <text x="665" y="134" font-family="Arial, sans-serif" font-size="11" fill="#f5a623">Threshold</text>
+    <!-- Input signal waveform -->
+    <polyline points="60,200 100,200 110,80 140,80 150,200 200,200 210,60 250,60 260,200 310,200 315,170 330,170 340,200 380,200 390,70 430,70 440,200 500,200 505,150 520,150 530,200 660,200" fill="none" stroke="#4fc3f7" stroke-width="2"/>
+    <!-- Gate output signal (gated portions removed) -->
+    <polyline points="60,200 100,200 110,80 140,80 150,200 200,200 210,200 260,200 310,200 315,200 340,200 380,200 390,70 430,70 440,200 500,200 505,200 530,200 660,200" fill="none" stroke="#81c784" stroke-width="2" stroke-dasharray="none"/>
+    <!-- Labels -->
+    <text x="65" y="245" font-family="Arial, sans-serif" font-size="11" fill="#4fc3f7">&#9644; Input Signal</text>
+    <text x="220" y="245" font-family="Arial, sans-serif" font-size="11" fill="#81c784">&#9644; Gated Output</text>
+    <text x="400" y="245" font-family="Arial, sans-serif" font-size="11" fill="#f5a623">&#9644; Threshold</text>
+    <!-- Y axis labels -->
+    <text x="12" y="54" font-family="Arial, sans-serif" font-size="10" fill="#aaa">0 dBFS</text>
+    <text x="12" y="134" font-family="Arial, sans-serif" font-size="10" fill="#aaa">Thresh</text>
+    <text x="12" y="204" font-family="Arial, sans-serif" font-size="10" fill="#aaa">Silence</text>
+    <!-- Annotations -->
+    <text x="108" y="68" font-family="Arial, sans-serif" font-size="10" fill="#fff">OPEN</text>
+    <text x="175" y="195" font-family="Arial, sans-serif" font-size="10" fill="#ff8a80">CLOSED</text>
+    <text x="386" y="58" font-family="Arial, sans-serif" font-size="10" fill="#fff">OPEN</text>
+    <text x="455" y="195" font-family="Arial, sans-serif" font-size="10" fill="#ff8a80">CLOSED</text>
+  </svg>
+  <p class="diagram-caption" style="text-align:center; font-size:0.85em; color:#888; margin-top:6px;">The gated output (green) only passes audio when the input signal (blue) exceeds the threshold (orange dashed line). Signals below threshold are silenced.</p>
+</div>
+
+<h2 id="gate-parameters-explained">Every Gate Parameter Explained</h2>
+
+<p>Every gate — whether it's a hardware unit like the SSL G-Comp's gate section, a DAW stock plugin, or a third-party software processor — shares the same core parameters. Understanding each one in depth gives you total control over gating behavior.</p>
+
+<h3>Threshold</h3>
+
+<p>The threshold is the level, measured in dBFS or dBu (on hardware), at which the gate opens. Signals above threshold pass through; signals below are attenuated. Setting the threshold is the most critical part of gating correctly.</p>
+
+<p>The right threshold is just above the level of the noise you want to eliminate and just below the level of the signal you want to keep. On a snare track with kick drum bleed at around -30 dBFS and snare hits peaking at -8 dBFS, you'd set the threshold somewhere between -25 and -18 dBFS to reliably open on the snare without letting the kick bleed through. On a vocal track with room noise sitting at -45 dBFS and the singer's soft phrases at -20 dBFS, you might set the threshold at -35 dBFS to clean up the gaps without cutting off quiet lyrical moments.</p>
+
+<p>One practical approach: play your track, watch the gate's gain reduction meter, and gradually raise the threshold from its lowest point until you see the gate closing during the "dead" sections between musical events. Stop raising before the gate starts closing during the signal you want to keep.</p>
+
+<h3>Attack</h3>
+
+<p>Attack controls how quickly the gate opens once the signal exceeds the threshold. It's measured in milliseconds (ms). A very fast attack (0.1–1 ms) means the gate snaps open almost instantly, which preserves the full transient of a drum hit or picked guitar note. A slower attack (10–50 ms) means the gate opens gradually, which can soften transients or create a swell effect if used intentionally.</p>
+
+<p>For drum processing, you almost always want the fastest possible attack — 0.1 to 0.5 ms — to avoid rounding off the initial snap of a snare or click of a kick. For sustained instruments like pads or vocals, a slightly slower attack of 2–10 ms can sound more natural because those instruments don't have hard transient fronts that need protection.</p>
+
+<h3>Hold</h3>
+
+<p>Hold is a parameter that many beginners overlook, but it's often the difference between a natural-sounding gate and a choppy one. After the signal drops below the threshold, the hold parameter keeps the gate open for a fixed period of time before the release phase begins. It prevents the gate from chattering (rapidly opening and closing) when a signal hovers near the threshold.</p>
+
+<p>On a snare drum, a hold of 50–150 ms ensures the gate stays open long enough to capture the full body and decay of the hit before beginning to close. On a bass guitar, you might use a longer hold of 200–400 ms to prevent the gate from cutting off sustained notes mid-decay. If you're hearing the gate "chopping" on a held note or sustained signal, increase the hold time.</p>
+
+<h3>Release</h3>
+
+<p>Release determines how quickly the gate closes after the hold period expires. A fast release (10–50 ms) creates an abrupt closure — fine for very staccato sources where you want a sharp, tight sound. A slower release (100–500 ms) allows a gradual fade down, which sounds more natural for most instruments because it mimics how sound actually decays in a room.</p>
+
+<p>The release time interacts closely with hold. Think of them as a two-stage closure: hold keeps the gate pinned open, then release controls the fade speed as the gate swings shut. Setting release too fast creates an artificial chop; too slow and background noise creeps back in during the tail. On most sources, start with a release of 100–200 ms and adjust to taste.</p>
+
+<h3>Range</h3>
+
+<p>Range (sometimes called Floor or Depth) defines how much gain reduction is applied when the gate is fully closed. A range of -80 dB is essentially complete silence — the signal is muted entirely. A range of -20 dB means the gate only reduces the signal by 20 dB when closed, leaving some of the original signal audible. This is the expander territory: instead of hard gating to silence, you're just reducing the level of the noise floor by a controlled amount.</p>
+
+<p>For most noise-elimination applications (removing bleed from a drum kit, cleaning up amp hiss between guitar phrases), you want a range of -40 to -80 dB — effectively silencing the unwanted content. But for gentle background noise reduction on a vocal or acoustic guitar, a range of -15 to -25 dB can remove audible noise while preserving a hint of room ambience that keeps the track sounding natural rather than dead.</p>
+
+<h3>Lookahead</h3>
+
+<p>Some software gate plugins offer a lookahead feature, which allows the processor to "see" the incoming audio slightly ahead of time (typically 1–10 ms) and begin opening the gate before the transient actually arrives. This virtually eliminates the problem of clipping the front edge of a transient, which is otherwise a risk with very fast attack settings. FabFilter Pro-G, for example, offers lookahead up to 20 ms. If you're gating a source with sharp transients and still finding the attack clips the leading edge, enable lookahead and set it to 1–5 ms.</p>
+
+<h3>Hysteresis</h3>
+
+<p>Hysteresis (also called threshold hysteresis or close threshold) is a less common but extremely useful parameter. It sets a second, lower threshold that the signal must fall below before the gate will close. The gate opens when the signal rises above the main threshold, but only closes when the signal drops below the hysteresis threshold — which is typically set several dB lower than the main threshold. This prevents the gate from chattering when a signal is hovering right around the threshold level. On sources with inconsistent levels (live vocals, acoustic guitar) this can be a lifesaver. The Drawmer DS201 hardware gate is famous for its hysteresis ("hold" level), and many plugin emulations of it preserve this feature.</p>
+
+<table class="settings-table">
+  <caption>Recommended Gate Starting Settings by Source</caption>
+  <thead>
+    <tr>
+      <th>Source</th>
+      <th>Threshold</th>
+      <th>Attack</th>
+      <th>Hold</th>
+      <th>Release</th>
+      <th>Range</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Kick Drum</td>
+      <td>-25 to -18 dBFS</td>
+      <td>0.1–0.5 ms</td>
+      <td>50–100 ms</td>
+      <td>80–150 ms</td>
+      <td>-60 dB</td>
+    </tr>
+    <tr>
+      <td>Snare Drum</td>
+      <td>-22 to -15 dBFS</td>
+      <td>0.1–1 ms</td>
+      <td>80–200 ms</td>
+      <td>100–250 ms</td>
+      <td>-60 dB</td>
+    </tr>
+    <tr>
+      <td>Drum Room Mic</td>
+      <td>-30 to -20 dBFS</td>
+      <td>5–20 ms</td>
+      <td>200–500 ms</td>
+      <td>300–600 ms</td>
+      <td>-20 to -40 dB</td>
+    </tr>
+    <tr>
+      <td>Electric Guitar DI/Amp</td>
+      <td>-40 to -25 dBFS</td>
+      <td>2–10 ms</td>
+      <td>150–400 ms</td>
+      <td>200–400 ms</td>
+      <td>-60 dB</td>
+    </tr>
+    <tr>
+      <td>Lead Vocal</td>
+      <td>-40 to -30 dBFS</td>
+      <td>5–15 ms</td>
+      <td>100–300 ms</td>
+      <td>200–500 ms</td>
+      <td>-20 to -40 dB</td>
+    </tr>
+    <tr>
+      <td>Bass Guitar (DI)</td>
+      <td>-35 to -25 dBFS</td>
+      <td>1–5 ms</td>
+      <td>200–500 ms</td>
+      <td>200–400 ms</td>
+      <td>-40 to -60 dB</td>
+    </tr>
+    <tr>
+      <td>Live Room / Overhead</td>
+      <td>-35 to -25 dBFS</td>
+      <td>5–15 ms</td>
+      <td>300–800 ms</td>
+      <td>400–800 ms</td>
+      <td>-15 to -30 dB</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="sidechain-gating">Sidechain Gating: The Most Powerful Gate Technique</h2>
+
+<p>The sidechain input is where noise gating transforms from a cleanup tool into a creative powerhouse. Instead of using the signal being processed to trigger the gate, a sidechain allows an entirely separate signal to control when the gate opens and closes. The gated signal passes through (or is silenced) based on the dynamics of the sidechain signal — not its own level.</p>
+
+<h3>How to Set Up Sidechain Gating in Your DAW</h3>
+
+<p>The routing varies slightly by DAW, but the principle is universal. You have two signals: the <em>source</em> (the signal you want to gate) and the <em>trigger</em> (the sidechain signal that controls the gate). In most DAWs:</p>
+
+<ol>
+  <li>Place a gate plugin on the source track.</li>
+  <li>Enable the sidechain/key input on the gate plugin.</li>
+  <li>Route the trigger signal to the gate's sidechain input. In Ableton Live, this is done via the Audio From routing on the gate's track. In Logic Pro, use the Side Chain dropdown in the plugin header. In FL Studio, route via the mixer's sidechain send. In Pro Tools, assign a key input bus in the plugin's settings.</li>
+  <li>Set the threshold so the gate opens when the trigger signal hits, and closes during the trigger's silence.</li>
+</ol>
+
+<p>The most classic sidechain gate application is gating a sustained synth pad or string pad with a kick drum signal. Route the kick to the gate's sidechain input on the pad track, set the threshold appropriately, and suddenly the pad only sounds when the kick hits — creating that iconic pulsing, pumping texture heard throughout deep house, progressive house, and film scores. This is distinct from sidechain compression (where the compressor ducks on kick hits) — sidechain gating creates a complete on/off effect rather than a volume dip.</p>
+
+<h3>Gating Drums with a MIDI Trigger or Clean Reference</h3>
+
+<p>When recording live drums, one advanced sidechain technique is to use a clean, direct piezo trigger signal (or a MIDI-triggered sample) as the sidechain source for gating a bleed-heavy microphone. For example: the hi-hat mic often picks up a lot of snare and tom bleed. You can place a gate on the hi-hat mic track and use a direct snare trigger as the sidechain — but in this case, you'd use it inversely (or just set the threshold carefully on the hi-hat's own signal) to ensure the gate only stays open when the hi-hat itself is actually being hit. Some engineers use a duplicate of the overhead or room track as a high-pass-filtered sidechain source to get a more accurate representation of when specific drums are being played.</p>
+
+<h3>Frequency-Selective Sidechaining with a Filter</h3>
+
+<p>Many professional gates include a built-in sidechain filter or equalizer — sometimes called a key filter or detector EQ. This lets you filter the sidechain signal before it hits the detection circuit, making the gate respond only to a specific frequency range. This is enormously useful when gating drums:</p>
+
+<ul>
+  <li><strong>Kick gate:</strong> Apply a high-cut filter at 200 Hz on the sidechain so the gate only responds to low-frequency content — the kick itself — not high-frequency bleed from snares or cymbals.</li>
+  <li><strong>Snare gate:</strong> Apply a band-pass filter centered around 200–500 Hz on the sidechain so the gate opens primarily on the snare's body and fundamental, reducing false triggers from cymbal bleed (which lives above 5 kHz).</li>
+  <li><strong>Tom gate:</strong> High-cut around 400–600 Hz to isolate the tom fundamental from the wash of cymbals and hi-hats.</li>
+</ul>
+
+<p>This technique requires a gate with a proper sidechain filter section. The Drawmer DS201, Aphex 622 Expander/Gate, and software equivalents like FabFilter Pro-G and Waves C1 Gate all offer this. Even Logic Pro's built-in Noise Gate plugin has a key listening and filtering section that's more capable than most producers realize.</p>
+
+<div class="highlight-box">
+  <strong>Pro Tip: Use the Key Listen Feature</strong><br/>
+  Most gate plugins with a sidechain filter include a "Key Listen" or "Monitor Sidechain" button. Activating this lets you hear exactly what the gate's detection circuit is responding to — the filtered sidechain signal — without affecting the output. This is invaluable for dialing in the sidechain filter accurately. Engage Key Listen, sweep the filter frequencies while playing back your session, find the frequency that cleanly isolates your target instrument, lock it in, then disengage Key Listen. This workflow takes 60 seconds and saves hours of guesswork.
+</div>
+
+<h2 id="gating-drums">Gating Drums: The Industry Standard Workflow</h2>
+
+<p>Drum gating is arguably the most common and most important gate application in professional mixing. A well-recorded live drum kit is a marvel — but it's also a bleeding, room-reverberant mess when you're looking at individual tracks. Every microphone picks up every other drum to some degree. The kick mic catches the snare; the snare mic catches the hi-hat; the rack tom mic catches the floor tom and cymbals. Gating individual drum tracks is the primary tool for tightening this up and allowing you to process each drum independently without contaminating everything else.</p>
+
+<h3>Kick Drum Gate</h3>
+
+<p>Kick drums are generally the easiest to gate because they're the loudest, lowest-frequency element of the kit, and they're very distinct from other instruments spectrally. Set your threshold so the gate opens cleanly on every kick hit — watch the gain reduction meter light up and verify no hits are being missed. Use a fast attack (0.1–0.5 ms) to catch the full transient, a hold of 50–150 ms depending on the tempo (faster tempos need shorter hold to avoid gate staying open into the next beat), and a release of 80–200 ms to let the kick's natural decay ring out. Apply a sidechain high-cut at 150–200 Hz if you're getting false triggers from other elements.</p>
+
+<h3>Snare Drum Gate</h3>
+
+<p>Snare gating is trickier because snares are loud but not frequency-isolated — there's a lot happening in the 200 Hz–5 kHz range on a drum kit. Ghost notes (very soft snare hits used in grooves and fills) are the biggest challenge: if you set the threshold too high, the gate misses ghost notes entirely. If you set it too low, you get hi-hat bleed flooding in. The sidechain filter is your friend here — band-pass the sidechain to the snare's fundamental body (roughly 180–350 Hz) to help the gate discriminate between snare hits and cymbal bleed. Set hold to 100–200 ms to capture the snare's characteristic crack and short decay. If ghost notes are critical to the performance, consider using a longer hold and lower threshold, and be prepared to draw in some automation to manually open the gate on passages where ghost notes are present.</p>
+
+<p>To learn more about getting drum sounds right at every stage, see our complete guide to <a href="how-to-mix-drums.html">how to mix drums</a> — it covers compression, EQ, parallel processing, and arrangement considerations alongside gating technique.</p>
+
+<h3>Tom Gates</h3>
+
+<p>Tom gates are famously the most annoying gate application because toms are played infrequently but need to sound massive when they do hit. The space between tom hits is often filled with cymbal and hi-hat bleed — high-frequency content that sits well above the tom's fundamental. A sidechain high-cut at 400–700 Hz (depending on the tom's size — floor toms are lower) helps the gate focus on the tom itself. Set hold long enough to capture the full tom decay, which can be 300–700 ms on a well-tuned tom with resonance. Nothing kills the vibe of a dramatic fill like a gate that chops the decay off a floor tom mid-ring. For toms, be particularly careful about release — set it to 300–500 ms minimum, and if the tom has a long decay in the room, go even longer.</p>
+
+<h3>Room and Overhead Gating</h3>
+
+<p>Room and overhead mics are typically not hard-gated (to silence) because part of their function is to provide natural ambience and stereo imaging of the full kit. However, applying a gentle expander-style gate (range of -15 to -25 dB) to room mics can tighten up the low-end wash and prevent the kick's room sound from blurring into the next bar. Many engineers gate drum rooms with slow attacks (10–30 ms) and very slow releases (500 ms to 2 seconds) to preserve the natural bloom of the room while still tightening the overall impression of the kit. This is particularly effective in dense mixes where a full, wide-open room mic would muddy the low-mids.</p>
+
+<h3>Drum Gating in Your DAW</h3>
+
+<p>In modern DAWs, gating individual drum tracks is straightforward. If you're using <a href="how-to-mix-drums-in-a-daw.html">mixing drums in a DAW</a> with a full session of printed live drums, place a gate on each individual drum channel before any other processing. The gate should be first in the chain so that bleed doesn't get processed (compressed, saturated, EQ'd) before it's removed. The signal chain for a snare track would look like: Gate → EQ → Compressor → Saturation/Character → Send to Reverb Bus.</p>
+
+<h2 id="gating-vocals-and-instruments">Gating Vocals, Guitars, and Other Instruments</h2>
+
+<p>While drums dominate gate discussion, vocal and instrument gating is just as important — and in some ways more nuanced, because listeners are far more sensitive to unnatural artifacts in vocal processing than in drum processing.</p>
+
+<h3>Vocal Gating</h3>
+
+<p>Vocal gating is primarily used to remove room noise, microphone self-noise, and breath noise from the spaces between phrases. Done correctly, it gives a vocal track a clean, professional silence between lines without sounding robotic. Done wrong, it chops consonants, swallows the ends of words, and creates abrupt silences that draw attention to themselves.</p>
+
+<p>The key to natural vocal gating is using a gentle range setting. Rather than gating to silence (-60 dB or more), set the range to -20 to -30 dB, which reduces background noise significantly but doesn't create dead silence — leaving a hint of room ambience between phrases that sounds organic. Use a slower attack (5–15 ms) because vocals don't have hard transients the same way drums do — the gate can afford to open slightly after the vocal begins without the listener hearing it. Set hold and release generously: hold of 200–400 ms and release of 300–600 ms ensure the gate doesn't close before a word or breath has fully decayed.</p>
+
+<p>Many engineers prefer to use a gate for the heavy lifting of noise elimination and then manually edit (clip-gain) or automate the vocal volume to handle the finer nuances that the gate misses. This hybrid approach — gate + automation — is the professional standard in major-label productions. For a complete picture of how gating fits into the overall vocal chain, our guide on <a href="how-to-mix-vocals.html">how to mix vocals</a> covers every stage of the process.</p>
+
+<h3>Electric Guitar Gating</h3>
+
+<p>Electric guitar amplifiers are notorious noise generators. Even a mid-gain setting on a good amp introduces a hiss that, when multiplied across multiple guitar tracks, creates a significant noise floor. High-gain metal tones can be particularly egregious. A gate on a guitar amp track or a direct guitar signal (before amp simulation) is standard practice, especially in rock and metal production.</p>
+
+<p>For guitar gating, the primary challenge is sustain. A hard gate set aggressively will clip the natural sustain of held notes and chords — the guitar seems to stop sounding the moment the pick attack ends. To avoid this, use a longer hold (300–600 ms) to let the initial decay breathe, then set a slow release (400–700 ms) to capture as much sustain as possible. The threshold should be set low enough to open on the very beginning of the pick attack — because at the start of a note, the signal is already rising strongly above the noise floor. The problem zone is the end of sustained notes as they decay back toward the noise floor. The hold and release settings handle this phase, so it's worth spending time fine-tuning them on the most delicate moments in the performance.</p>
+
+<p>For high-gain metal tracks, many engineers actually use a dedicated noise suppressor (like the ISP Decimator, which is available in plugin form) rather than a traditional gate. Noise suppressors use a more sophisticated algorithm that tracks signal dynamics more intelligently and can suppress noise even during sustained notes — they don't rely purely on level detection. The ISP Decimator's "tracking" mode follows the signal envelope and applies attenuation only to the noise component, not the signal itself. This is overkill for most applications but invaluable for extreme high-gain guitar.</p>
+
+<h3>Acoustic Guitar and Live Instruments</h3>
+
+<p>Acoustic guitar recorded in a home studio often picks up significant room noise, air conditioning hum, and computer fan noise. A gentle gate (range of -20 to -30 dB) on an acoustic guitar track cleans these up without affecting the performance. Use a threshold set to just above the noise level, a moderate attack of 5–15 ms, hold of 200–400 ms, and a slow release of 400–800 ms. Because acoustic guitar has a natural, complex decay, a slower release is always safer — it's better to let a little room noise creep in at the end of a note than to hear the gate close audibly mid-sustain.</p>
+
+<h3>Bass Guitar</h3>
+
+<p>Bass guitar gating is useful in two situations: cleaning up a DI bass signal with noise between phrases, and tightening a bass track that has fingernoise or fret buzz that muddies up the low end. For DI bass, use a moderate threshold (-30 to -25 dBFS), fast attack (1–5 ms), hold of 200–500 ms, and release of 200–400 ms. Be cautious with range — gating to complete silence on bass can make the bottom end feel hollow and lifeless during rests. A range of -30 to -40 dB is usually enough to clean up without killing the naturalness of the track.</p>
+
+<p>Bass gating pairs well with compression — in the signal chain, gate first, then compress. This way the compressor isn't pumping on noise between phrases. See our full article on <a href="how-to-mix-bass.html">how to mix bass</a> for the complete bass processing workflow.</p>
+
+<h2 id="creative-gate-applications">Creative and Sound Design Applications</h2>
+
+<p>Beyond noise elimination, the gate is a legitimate creative instrument. Some of the most recognizable sounds in modern music production are built around deliberate, creative gate manipulation. Understanding these techniques opens up a completely different dimension of what the gate can do.</p>
+
+<h3>Gated Reverb: The Classic 80s Drum Sound</h3>
+
+<p>Perhaps the most famous creative gate technique of all time is gated reverb — the massive, explosive drum sound that defined 1980s pop and rock production. Originally developed accidentally at AIR Studios in 1979 by engineer Hugh Padgham during a session with Peter Gabriel (and subsequently popularized on Phil Collins' "In the Air Tonight" and countless other records), gated reverb is created by sending a drum signal (especially snare) to a large, long reverb, then placing a gate on the reverb return that closes very quickly after the initial reverb burst.</p>
+
+<p>The result is a massive reverb explosion that cuts off abruptly rather than fading naturally — an unnatural, artificial sound that became a defining characteristic of its era. To recreate it in modern production:</p>
+
+<ol>
+  <li>Send your snare to a reverb bus with a large hall or plate reverb — room size around 30–60 meters, decay time 3–5 seconds.</li>
+  <li>Place a gate on the reverb return channel, not the dry snare channel.</li>
+  <li>Set the gate threshold so it opens on the initial reverb burst (which will be loud) and closes quickly after — hold of 200–600 ms, fast release of 50–150 ms.</li>
+  <li>Set range to -60 dB (complete closure) for the authentic abrupt cut.</li>
+  <li>Blend the gated reverb return with the dry snare to taste.</li>
+</ol>
+
+<p>This technique works on any percussive element — kicks, toms, claps, hand drums. Vary the reverb size and gate hold time to create different character. Shorter holds create a punchy, staccato reverb blast; longer holds give a more majestic, arena-filling sound.</p>
+
+<h3>Sidechain Gating for Rhythmic Texture</h3>
+
+<p>As mentioned in the sidechain section, gating a pad or sustained instrument with a rhythmic trigger creates pulsing, textural motion that would be impossible to achieve with automation alone. This technique is central to house, techno, and EDM production. Common applications include:</p>
+
+<ul>
+  <li><strong>Pad gating with kick:</strong> The pad sounds only on kick hits, creating a tight, rhythmic texture that reinforces the groove without cluttering the arrangement.</li>
+  <li><strong>String or brass stab gating:</strong> Gate a long string note with a rhythmic percussion pattern to create staccato, syncopated stabs without manually chopping the audio.</li>
+  <li><strong>White noise sidechain gate:</strong> Run a noise generator through a gate triggered by a hi-hat or percussion pattern to create rhythmic noise textures — extremely popular in industrial, techno, and glitch productions.</li>
+  <li><strong>Vocal chop gating:</strong> Run a held vocal note or pad through a gate triggered by a complex percussion pattern to create a rhythmic vocal chop effect without destructive editing.</li>
+</ul>
+
+<h3>Trance Gate / Stutter Effect</h3>
+
+<p>The trance gate effect — a rapidly pulsing, rhythmically synchronized gate that chops a pad or synth into rhythmic fragments — was a staple of trance and progressive house production in the late 1990s and 2000s, and has enjoyed regular revivals in EDM and electronic pop ever since. Rather than using a dynamic sidechain trigger, a trance gate uses an LFO or step sequencer to control gate gain directly in a rhythmic pattern.</p>
+
+<p>Many gate plugins offer a built-in step sequencer for this purpose — Xfer Records' LFOTool is widely used for this in modern production, as is the gate/tremolo section in iZotope's stutter effect tools. You can also approximate a trance gate by automating a gate's bypass parameter or using a volume LFO synced to your project tempo. The Cableguys VolumeShaper and ShaperBox are purpose-built tools that do this with extraordinary precision.</p>
+
+<h3>Drum Machine Texture and Groove Shaping</h3>
+
+<p>Even on programmed drums (not recorded live drums with bleed), a gate can be used creatively. Running a programmed kick or snare through a gate with specific hold and release settings subtly shapes the envelope of the sound in a way that's slightly different from a standard volume envelope in your sampler. This can make programmed drums feel slightly more organic and variable. It's a subtle technique but one that professional drum programmers use to add character to otherwise static sequences.</p>
+
+<p>This pairs naturally with parallel compression on drums — send the gated dry signal to the master, and blend in a parallel compressed version for weight. For a complete guide to that approach, see our tutorial on <a href="how-to-use-compression-on-drums.html">how to use compression on drums</a>.</p>
+
+<h3>Gate as a Noise Floor Reducer on Instrument Busses</h3>
+
+<p>On a bus containing multiple guitar or synth tracks, a gentle expander-mode gate (range of -10 to -20 dB) placed on the bus output can reduce the cumulative noise floor of multiple noisy channels without individually gating each one. This is less precise than per-track gating but can be a time-saving compromise on dense sessions. Set the threshold very low (just above the combined noise floor of all the tracks on that bus) and use gentle range settings to avoid obvious gating artifacts on the combined signal.</p>
+
+<h2 id="gate-plugins-and-hardware">Recommended Gate Plugins and Hardware Units</h2>
+
+<p>The market for gate tools in 2026 ranges from free DAW stock plugins that perform surprisingly well to professional hardware units that cost thousands of dollars. Here's a curated, honest assessment of the most relevant options across the spectrum.</p>
+
+<h3>DAW Stock Gates</h3>
+
+<p>Every major DAW ships with a usable gate plugin, and for the vast majority of tracking and mixing tasks, the stock gate is completely adequate. Logic Pro's Noise Gate is genuinely excellent — it includes sidechain filtering, a clear gain reduction meter, all standard parameters, and a comfortable interface. Ableton Live's Gate device (in the Audio Effects section) is clean and functional, offering all the essential parameters with Live's characteristic minimal interface. Pro Tools' Dynamics III processor (which includes the gate section) is a workhorse that's been in professional studio use for decades. FL Studio's Fruity Peak Controller combined with a volume tool can approximate gating, but FL Studio's native mixer gating is less flexible than dedicated plugins — most FL Studio users opt for third-party plugins.</p>
+
+<h3>Third-Party Software Gates</h3>
+
+<p><strong>FabFilter Pro-G</strong> (<!-- [PRICE CHECK: $179] -->$179) is widely considered the most capable and transparent software gate available. It offers both gate and expander modes, a sophisticated sidechain with a built-in spectrum analyzer showing what the detector is responding to, lookahead up to 20 ms, stereo and mid-side processing, and an impeccable interface. The visual feedback makes it particularly educational — you can watch exactly how the gate is responding in real time with precise gain reduction visualization. It's an investment but one that pays dividends across every session you use it in.</p>
+
+<p><strong>Waves C1 Gate</strong> (<!-- [PRICE CHECK: $29] -->$29 on sale) is a reliable, simple gate that's been an industry standard in digital studios since the late 1990s. It lacks the visual sophistication of FabFilter Pro-G but is lightweight on CPU and sounds transparent. The C1 Stereo and C1 Sc (sidechain) versions cover most use cases effectively.</p>
+
+<p><strong>Sonnox Oxford Dynamics</strong> (<!-- [PRICE CHECK: $299] -->$299) includes a gate/expander section within a full dynamics suite modeled on the legendary Oxford console dynamics. The gate is smooth and musical with excellent sidechain filter control — genuinely analog-like in its behavior on complex program material.</p>
+
+<p><strong>Drawmer 1973 Multi-Band Compressor (UAD)</strong> and the <strong>Drawmer DS201 Gate (Universal Audio/Softube emulation)</strong> (<!-- [PRICE CHECK: $149] -->$149 each for UAD versions) bring the Drawmer DS201's legendary frequency-selective gating into the plugin world with impressive accuracy. The DS201 in particular is considered the standard reference gate in professional hardware — engineers have used the physical unit on every major recording for four decades. If you're doing serious drum work and have a UAD system, this emulation is worth the investment.</p>
+
+<p><strong>iZotope RX 11's Dialogue Isolation and Music Rebalance</strong> modules go beyond traditional gating by using AI-powered source separation to remove noise — but for situations where a traditional gate excels (drum bleed, amp hiss, room noise on instruments), iZotope RX's spectral repair tools are a complementary tool rather than a replacement. The <a href="izotope-rx-guide.html">iZotope RX guide</a> covers when each approach is appropriate.</p>
+
+<h3>Hardware Gates</h3>
+
+<p>Hardware gating is still relevant in professional recording environments where analog gear is used in the signal chain during tracking or mixing. The classics:</p>
+
+<ul>
+  <li><strong>Drawmer DS201:</strong> The definitive hardware gate. Two channels, frequency-selective sidechain, hysteresis control, professional build quality. Second-hand units regularly sell for <!-- [PRICE CHECK: $300] -->$300–600 and are worth every penny for drum tracking sessions.</li>
+  <li><strong>dbx 904 Gate Module (500 Series):</strong> An affordable 500-series gate (<!-- [PRICE CHECK: $200] -->$200 new) that performs competently on drums and vocals with straightforward controls.</li>
+  <li><strong>SSL G-Series Bus Compressor (with gate section):</strong> The SSL G-Bus Compressor's gate section is a byproduct of the console's channel strip design — simple but fast and musical. Available in 500-series and rackmount formats.</li>
+</ul>
+
+<h2 id="troubleshooting-gate-problems">Troubleshooting Common Gate Problems</h2>
+
+<p>Even experienced engineers run into gating problems. Here are the most common issues and their solutions, drawn from real-world studio experience.</p>
+
+<h3>Problem: Gate Is Chopping Transients</h3>
+
+<p>Symptom: The very beginning of drum hits, guitar notes, or vocal syllables sounds clipped or rounded — like the front edge is missing. This happens when the attack time is set too slow, so the gate hasn't fully opened by the time the transient arrives.</p>
+
+<p>Solution: Decrease the attack time significantly. For drums, try 0.1–0.2 ms. If your plugin has lookahead, enable 1–5 ms of lookahead. Also verify that your threshold isn't set so high that the gate is opening on the rising edge of the transient rather than before it — this manifests as a chipped, stutter-y front end on hits.</p>
+
+<h3>Problem: Gate Is Chattering (Rapid Open/Close)</h3>
+
+<p>Symptom: The gate opens and closes multiple times on a single sound — you hear a stuttering, machine-gun effect on sustained sources, or the gate seems unable to decide whether to open or close. This happens when a signal is hovering near the threshold level.</p>
+
+<p>Solution: Increase the hold time to keep the gate pinned open once it opens. If your plugin has hysteresis, engage it and set the close threshold 5–10 dB below the open threshold. You can also use the sidechain filter to make the detector respond to a cleaner, more consistent version of the signal, reducing ambiguity at the threshold point.</p>
+
+<h3>Problem: Gate Is Closing Too Early and Cutting Off Decay</h3>
+
+<p>Symptom: Drum hits, guitar notes, or vocal phrases fade out unnaturally early — the natural decay of the sound is being cut off mid-ring. This is a hold and release problem.</p>
+
+<p>Solution: Increase hold time and release time. For this specific issue, hold is usually the primary culprit — the gate is starting its release phase before the signal has finished its natural decay. Increase hold until the full body of the sound is captured, then set release to control how smoothly the gate closes after hold expires. For drums, listen specifically to the tail of the snare or tom — if you hear an abrupt silence where there should be a short ring, increase hold by 50–100 ms increments until it sounds natural.</p>
+
+<h3>Problem: Bleed Is Still Audible Despite Gating</h3>
+
+<p>Symptom: Even with the gate engaged, you can still hear kick drum bleed on the snare track, or cymbal bleed on the tom track. This happens when the bleed signal is above your threshold — meaning the bleed is too loud relative to the main signal to be gated out without also gating the signal you want.</p>
+
+<p>Solution: Unfortunately, this is a recording problem more than a mixing problem. If the bleed is nearly as loud as the signal itself, a gate cannot discriminate between them — they're both above any threshold you could set. Options: (1) Apply a sidechain filter to help the gate focus on the frequency range of the target instrument. (2) Use a multiband gate or dynamic EQ (<a href="dynamic-eq-vs-multiband-compression.html">dynamic EQ vs multiband compression</a> covers the distinctions) to target the specific frequency where the target signal dominates. (3) Use iZotope RX's spectral tools to remove the bleed spectrally rather than dynamically. (4) Re-record with better microphone placement and isolation to reduce bleed at source.</p>
+
+<h3>Problem: Vocal Gate Sounds Robotic or Unnatural</h3>
+
+<p>Symptom: The vocal track has audible, abrupt silences between phrases that sound artificially quiet — making it obvious the track is gated. This breaks the illusion of a natural vocal performance.</p>
+
+<p>Solution: Reduce the range setting (floor) to -15 to -25 dB instead of -60 dB. This leaves some ambience between phrases rather than dead silence. Increase release time to allow a natural fade-down between phrases. Consider supplementing or replacing the gate with manual clip-gain editing or volume automation on the vocal track — for final mixes, many engineers find automation gives more natural results than gating on vocals, particularly for intricate performances with varied dynamics.</p>
+
+<h3>Problem: Gate Passes the Signal but Doesn't Trigger Consistently</h3>
+
+<p>Symptom: The gate misses occasional hits or phrases — it opens most of the time but not always, creating inconsistency in the mix. This is usually a threshold problem on a source with inconsistent dynamics.</p>
+
+<p>Solution: Lower the threshold slightly to ensure all intended signals, including softer ones, are above the open point. If lowering the threshold causes bleed to pass through, try the sidechain filter approach to make the detector more selective. Alternatively, use a compressor before the gate to even out the dynamics of the source signal — once the source is more consistent in level, a single threshold setting will catch every hit reliably. The signal chain would be: Compressor (to normalize dynamics) → Gate (to eliminate noise). This is a common approach for inconsistently dynamic vocals.</p>
+
+<h3>Gating, Compression, and the Plugin Chain</h3>
+
+<p>Understanding where the gate sits in your plugin chain is fundamental. As a general rule: gate before compression, EQ, reverb, and saturation. You want to remove the noise and bleed before those processors get a chance to amplify, color, or smear it further. A compressor placed before a gate will turn up the noise between phrases (because compression raises low-level signals), making the gate's job harder. A reverb placed before a gate will process the bleed and noise, potentially making it harder to distinguish from the signal. Gate first. For a deeper dive into building effective plugin chains for different scenarios, our guide on <a href="how-to-build-a-plugin-chain.html">how to build a plugin chain</a> walks through the full signal flow logic.</p>
+
+<p>The one notable exception: some engineers place a gate after a compressor on a vocal track intentionally, to use the compressor's gain reduction to bring soft phrases above the gate threshold more consistently. In this case, the compressor is being used as a dynamic normalizer to help the gate trigger reliably — the order is inverted on purpose. Know the rules before you break them.</p>
+
+<p>Gates also interact with your approach to overall mix compression. If you're using heavy <a href="bus-compression-guide.html">bus compression</a> downstream, aggressive gating upstream can create pumping artifacts when the bus compressor reacts to the sudden silences introduced by the gate. In this scenario, use a gentler range setting on your gates so there's still some signal (even if low-level) for the bus compressor to work with, preventing dramatic changes in the total loudness that trigger exaggerated bus compressor pumping.</p>
+<div class="mpw-ad-slot mpw-ad-mid" aria-hidden="true"></div>
+<h2 id="exercises">Practical Exercises</h2>
+<div class="exercise-block exercise-beginner"><div class="exercise-label">Beginner Exercise</div><h3>Gate a Snare Track from Scratch</h3><p>Take a multitrack drum session (or download a free drum stem pack) and place a stock gate plugin on the snare track only. Starting with all parameters at default, slowly raise the threshold from its lowest value until you see the gain reduction meter opening only on snare hits — not during the gaps. Then adjust the hold to 150 ms and release to 200 ms, and A/B the gated versus ungated track to hear the difference in tightness and clarity.</p></div>
+<div class="exercise-block exercise-intermediate"><div class="exercise-label">Intermediate Exercise</div><h3>Build a Sidechain Gate Texture</h3><p>In your DAW, create a sustained pad or string track (play a single chord and let it ring for 8 bars). Separately, program a kick drum pattern on a drum track. Place a gate on the pad track, enable the sidechain input, and route the kick drum to it. Set the threshold so the pad only sounds when the kick hits, creating a rhythmic pulsing texture. Experiment with different attack and release times on the gate to change whether the pad sounds percussive and staccato or softer and more open.</p></div>
+<div class="exercise-block exercise-advanced"><div class="exercise-label">Advanced Exercise</div><h3>Recreate Gated Reverb on a Drum Bus</h3><p>Set up a reverb send from your snare track to an auxiliary bus with a large hall reverb (3–5 second decay, high diffusion). Place a gate on the reverb return bus — not the snare itself — and configure it with a threshold that opens on the initial reverb burst, a hold of 300–500 ms, and a fast release of 100 ms with full range closure (-60 dB). Enable the sidechain key input and route the dry snare signal as the trigger. Compare the result against an unprocessed long reverb on the snare, and automate the gated reverb blend level throughout different sections of your arrangement to use it as a dynamic mix element.</p></div>
+<div class="mpw-ad-slot mpw-ad-prefaq" aria-hidden="true"></div>
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<div class="faq-accordion">
+  <div class="faq-accordion-item">
+    <div class="faq-accordion-q" onclick="mpwFaqToggle(this)">
+      <svg class="faq-accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <div class="faq-accordion-q-inner">
+        <span class="faq-accordion-label">FAQ</span>
+        <span class="faq-accordion-q-text">What is the difference between a gate and a noise gate?</span>
+      </div>
+    </div>
+    <div class="faq-accordion-a">The terms are used interchangeably in modern production. A noise gate is simply a gate processor specifically used for eliminating unwanted noise — both refer to the same device that silences or attenuates audio falling below a set threshold level.</div>
+  </div>
+  <div class="faq-accordion-item">
+    <div class="faq-accordion-q" onclick="mpwFaqToggle(this)">
+      <svg class="faq-accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <div class="faq-accordion-q-inner">
+        <span class="faq-accordion-label">FAQ</span>
+        <span class="faq-accordion-q-text">Should I use a gate or an expander for vocal tracks?</span>
+      </div>
+    </div>
+    <div class="faq-accordion-a">An expander is usually the better choice for vocals because it reduces levels below the threshold gradually using a ratio, rather than abruptly silencing them. A gate's hard closure can sound unnatural on vocals, while an expander with a ratio of 1:2 or 1:3 and a moderate range cleans up noise more transparently.</div>
+  </div>
+  <div class="faq-accordion-item">
+    <div class="faq-accordion-q" onclick="mpwFaqToggle(this)">
+      <svg class="faq-accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <div class="faq-accordion-q-inner">
+        <span class="faq-accordion-label">FAQ</span>
+        <span class="faq-accordion-q-text">Where should a gate go in the plugin chain?</span>
+      </div>
+    </div>
+    <div class="faq-accordion-a">Place the gate first in your plugin chain, before compression, EQ, reverb, or saturation. This ensures bleed and noise are removed before other processors amplify or color them — with the exception of cases where a preceding compressor is used to normalize signal levels for more consistent gate triggering.</div>
+  </div>
+  <div class="faq-accordion-item">
+    <div class="faq-accordion-q" onclick="mpwFaqToggle(this)">
+      <svg class="faq-accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <div class="faq-accordion-q-inner">
+        <span class="faq-accordion-label">FAQ</span>
+        <span class="faq-accordion-q-text">What does the hold parameter do on a gate?</span>
+      </div>
+    </div>
+    <div class="faq-accordion-a">Hold keeps the gate pinned open for a fixed period after the signal drops below the threshold, before the release phase begins. It prevents the gate from closing too early on sustained sounds and stops chatter when signals hover near the threshold. For drums, hold is critical to capturing the full body and decay of each hit.</div>
+  </div>
+  <div class="faq-accordion-item">
+    <div class="faq-accordion-q" onclick="mpwFaqToggle(this)">
+      <svg class="faq-accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <div class="faq-accordion-q-inner">
+        <span class="faq-accordion-label">FAQ</span>
+        <span class="faq-accordion-q-text">What is sidechain gating and when should I use it?</span>
+      </div>
+    </div>
+    <div class="faq-accordion-a">Sidechain gating uses a separate audio signal to trigger the gate rather than the signal being processed. Use it for creative rhythmic textures (gating a pad with a kick drum pattern), for more accurate drum gating (using a direct piezo trigger as the detector), or for frequency-selective triggering using a filtered sidechain signal.</div>
+  </div>
+  <div class="faq-accordion-item">
+    <div class="faq-accordion-q" onclick="mpwFaqToggle(this)">
+      <svg class="faq-accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <div class="faq-accordion-q-inner">
+        <span class="faq-accordion-label">FAQ</span>
+        <span class="faq-accordion-q-text">How do I prevent a gate from chattering on sustained sounds?</span>
+      </div>
+    </div>
+    <div class="faq-accordion-a">Increase the hold time to keep the gate open once triggered, and use the hysteresis setting if your plugin offers it — this sets a separate, lower threshold for closing that prevents the gate from toggling when a signal hovers near the open threshold. A sidechain filter focused on the instrument's fundamental frequencies also reduces false triggers.</div>
+  </div>
+  <div class="faq-accordion-item">
+    <div class="faq-accordion-q" onclick="mpwFaqToggle(this)">
+      <svg class="faq-accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <div class="faq-accordion-q-inner">
+        <span class="faq-accordion-label">FAQ</span>
+        <span class="faq-accordion-q-text">Can I use a gate to create creative effects beyond noise removal?</span>
+      </div>
+    </div>
+    <div class="faq-accordion-a">Absolutely. Gated reverb (sending a drum to a long reverb then gating the reverb return) creates the classic 80s drum sound. Sidechain gating a pad with a rhythmic trigger creates pulsing textures central to house and techno. A step-sequenced or LFO-controlled gate creates trance gate stutter effects used extensively in electronic music production.</div>
+  </div>
+  <div class="faq-accordion-item">
+    <div class="faq-accordion-q" onclick="mpwFaqToggle(this)">
+      <svg class="faq-accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <div class="faq-accordion-q-inner">
+        <span class="faq-accordion-label">FAQ</span>
+        <span class="faq-accordion-q-text">Why is a gate not removing all the bleed from my drum tracks?</span>
+      </div>
+    </div>
+    <div class="faq-accordion-a">If the bleed is nearly as loud as the target signal, no threshold setting can discriminate between them — a gate cannot separate two sounds that are close in level. Use a sidechain high-cut or band-pass filter to help the detector focus on the target instrument's frequency range, or use spectral repair tools like iZotope RX for severe bleed situations that a traditional gate cannot resolve.</div>
+  </div>
+
+<script>
+function mpwFaqToggle(el) {
+  var icon = el.querySelector('.faq-accordion-icon');
+  var answer = el.nextElementSibling;
+  var isOpen = answer.classList.contains('open');
+  document.querySelectorAll('.faq-accordion-a.open').forEach(function(a) {
+    a.classList.remove('open');
+    a.previousElementSibling.querySelector('.faq-accordion-icon').classList.remove('open');
+  });
+  if (!isOpen) { answer.classList.add('open'); icon.classList.add('open'); }
+}
+</script>
+
+      <footer class="article-footer"><div class="article-tags-footer"><p class="tags-label">Tags</p><div class="tags-list"><a href="../categories/techniques.html" class="tag-pill">Techniques</a>
+<a href="../categories/techniques.html" class="tag-pill">Mixing</a>
+<a href="../categories/glossary.html" class="tag-pill">Dynamics</a></div></div></div></footer>
+      
+      <div class="social-share" style="margin:1.5rem 0;display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;">
+        <span style="font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);">Share</span>
+        <button onclick="window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(document.title)+'&url='+encodeURIComponent(window.location.href),'_blank')" style="display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;font-weight:600;color:var(--text-secondary);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:6px;padding:.4rem .8rem;cursor:pointer;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          Share on X
+        </button>
+        <button onclick="window.open('https://reddit.com/submit?url='+encodeURIComponent(window.location.href)+'&title='+encodeURIComponent(document.title),'_blank')" style="display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;font-weight:600;color:var(--text-secondary);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:6px;padding:.4rem .8rem;cursor:pointer;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
+          Share on Reddit
+        </button>
+        <button onclick="navigator.clipboard.writeText(window.location.href).then(()=>{this.textContent='Copied!';setTimeout(()=>{this.textContent='Copy Link'},2000)})" style="display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;font-weight:600;color:var(--text-secondary);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:6px;padding:.4rem .8rem;cursor:pointer;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Copy Link
+        </button>
+      </div>
+      <section class="related-section" aria-labelledby="relatedHeading">
+        <h2 id="relatedHeading" style="font-size:1.35rem;margin-bottom:1.25rem;">Related Articles</h2>
+        <div class="related-grid">
+<a href="how-to-mix-drums.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">How To Mix Drums</h3><span class="related-card-meta">Read article →</span></a>
+<a href="how-to-use-compression-on-drums.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">How To Use Compression On Drums</h3><span class="related-card-meta">Read article →</span></a>
+<a href="how-to-mix-vocals.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">How To Mix Vocals</h3><span class="related-card-meta">Read article →</span></a>
+</div>
+</section>
+    </article>
+    <aside aria-label="Article sidebar">
+      <div class="sidebar-widget toc-widget" aria-labelledby="tocHeading">
+        <div class="sidebar-widget-header"><h2 class="sidebar-widget-title" id="tocHeading">In This Article</h2></div>
+        <div class="sidebar-widget-body"><ul class="toc-list">
+<li><a href="#how-a-gate-works">How a Noise Gate Actually Works</a></li>
+<li><a href="#gate-parameters-explained">Every Gate Parameter Explained</a></li>
+<li><a href="#sidechain-gating">Sidechain Gating: The Most Powerful Gate Technique</a></li>
+<li><a href="#gating-drums">Gating Drums: The Industry Standard Workflow</a></li>
+<li><a href="#gating-vocals-and-instruments">Gating Vocals, Guitars, and Other Instruments</a></li>
+<li><a href="#creative-gate-applications">Creative and Sound Design Applications</a></li>
+<li><a href="#gate-plugins-and-hardware">Recommended Gate Plugins and Hardware Units</a></li>
+<li><a href="#troubleshooting-gate-problems">Troubleshooting Common Gate Problems</a></li>
+</ul></div>
+      </div>
+      <div class="sidebar-widget" style="background:var(--bg-void);border-color:var(--border-default);">
+        <div class="sidebar-widget-body" style="padding:1.5rem;">
+          <p style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.5rem;">Newsletter</p>
+          <h3 style="font-family:var(--font-display);color:var(--text-primary);font-size:1.1rem;margin-bottom:.5rem;">The Producer's Briefing</h3>
+          <p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:1rem;line-height:1.55;">Weekly tips, gear news, and technique guides. Free.</p>
+          <form class="newsletter-form-js" style="display:flex;flex-direction:column;gap:.5rem;" novalidate>
+            <input type="email" name="email" class="form-input" placeholder="Your email" required />
+            <button type="submit" class="btn-newsletter" style="font-size:.82rem;padding:.65rem 1rem;">Subscribe Free</button>
+          </form>
+        </div>
+      <div class="sidebar-widget" style="margin-top:1.5rem;">
+        <div class="sidebar-widget-header" style="text-align:center;">
+          <h2 class="sidebar-widget-title">Related Articles</h2>
+        </div>
+        <div class="sidebar-widget-body" style="padding:1rem;">
+<ul style="list-style:none;padding:0;margin:0;text-align:center;"><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="how-to-mix-drums.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">How To Mix Drums</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Techniques</span></li>
+<li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="how-to-use-compression-on-drums.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">How To Use Compression On Drums</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Techniques</span></li>
+<li style="padding:.6rem 0;"><a href="how-to-mix-vocals.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">How To Mix Vocals</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Techniques</span></li></ul>
+        </div>
+      </div>
+      </div>
+    </aside>
+  </div>
+</main>
+<section class="newsletter-section" id="newsletter" aria-labelledby="newsletterHeading">
+  <div class="container">
+    <div class="newsletter-inner">
+      <div class="newsletter-content">
+        <p class="newsletter-label">Newsletter</p>
+        <h2 id="newsletterHeading" class="newsletter-title">The Producer's <em>Briefing</em></h2>
+        <p class="newsletter-desc">Weekly techniques, gear news, and music business insights. Free.</p>
+      </div>
+      <div class="newsletter-form-wrap">
+        <form class="newsletter-form-js" novalidate>
+          <input type="email" name="email" class="form-input" placeholder="Your email address" required />
+          <button type="submit" class="btn-newsletter">Subscribe Free</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<footer class="site-footer" role="contentinfo">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="../index.html" class="site-logo"><span class="logo-wordmark">Music<span>Production</span>Wiki</span><span class="logo-tagline">The Producer's Reference</span></a>
+    </div>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <div class="footer-col">
+        <h3 class="footer-col-title">Categories</h3>
+        <ul>
+          <li><a href="../categories/reviews.html">Reviews</a></li>
+          <li><a href="../categories/comparisons.html">Comparisons</a></li>
+          <li><a href="../categories/ai-music.html">AI Music</a></li>
+          <li><a href="../categories/daws.html">DAWs</a></li>
+          <li><a href="../categories/plugins.html">Plugins</a></li>
+          <li><a href="../categories/gear.html">Gear</a></li>
+          <li><a href="../categories/techniques.html">Techniques</a></li>
+          <li><a href="../categories/music-business.html">Music Business</a></li>
+          <li><a href="../categories/glossary.html">Glossary</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">Popular</h3>
+        <ul>
+          <li><a href="../articles/suno-vs-udio.html">Suno vs Udio</a></li>
+          <li><a href="../articles/best-daw-for-beginners.html">Best DAW for Beginners</a></li>
+          <li><a href="../articles/focusrite-scarlett-2i2-gen-4-review.html">Scarlett 2i2 Review</a></li>
+          <li><a href="../articles/sidechain-compression-guide.html">Sidechain Compression</a></li>
+          <li><a href="../articles/best-compressor-plugins.html">Best Compressor Plugins</a></li>
+          <li><a href="../articles/what-is-gain-staging.html">What Is Gain Staging</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">About</h3>
+        <ul>
+          <li><a href="../about.html">About MPW</a></li>
+          <li><a href="../about.html#team">Our Team</a></li>
+          <li><a href="../about.html#methodology">Review Methodology</a></li>
+          <li><a href="../about.html#affiliate">Affiliate Disclosure</a></li>
+          <li><a href="../about.html#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="footer-bottom"><div class="container"><p>© <span id="copyrightYear"></span> MusicProductionWiki.com. All rights reserved. Content by the Music Production Wiki Team.</p></div></div>
+</footer>
+<script src="../js/main.js"></script>
+<script>document.getElementById('copyrightYear').textContent = new Date().getFullYear();</script>
+
+<button id="mpwBackTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  aria-label="Back to top"
+  style="position:fixed;bottom:1.5rem;right:1.5rem;width:2.5rem;height:2.5rem;border-radius:50%;
+         background:var(--teal);color:#000;border:none;cursor:pointer;display:none;
+         align-items:center;justify-content:center;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3);">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <polyline points="18 15 12 9 6 15"/>
+  </svg>
+</button>
+<script>
+(function(){
+  var btn=document.getElementById('mpwBackTop');
+  var bar=document.getElementById('readingProgress');
+  var art=document.querySelector('.article-body');
+  window.addEventListener('scroll',function(){
+    var st=window.scrollY||document.documentElement.scrollTop;
+    btn.style.display=st>400?'flex':'none';
+    if(bar&&art){
+      var h=art.getBoundingClientRect().height;
+      var top=art.getBoundingClientRect().top+st;
+      var pct=Math.min(100,Math.max(0,(st-top+window.innerHeight)*100/h));
+      bar.style.width=pct+'%';
+      bar.setAttribute('aria-valuenow',Math.round(pct));
+    }
+  });
+})();
+</script>
+</body>
+</html>
