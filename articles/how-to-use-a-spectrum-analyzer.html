@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Learn how to use a spectrum analyzer to make better mixing decisions, identify problem frequencies, and achieve professional-sounding mixes every time." />
+  <title>How To Use A Spectrum Analyzer — MusicProductionWiki.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1F39B;</text></svg>" />
+  <style>
+    #readingProgress{position:fixed;top:0;left:0;height:3px;background:var(--teal);width:0%;z-index:200;transition:width 0.1s linear;}
+    .quick-answer{background:linear-gradient(135deg,rgba(0,212,168,0.08),rgba(167,139,250,0.06));border:1px solid rgba(0,212,168,0.3);border-left:4px solid var(--teal);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .quick-answer-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.6rem;}
+    .quick-answer p{font-size:1rem;line-height:1.65;color:var(--text-primary);margin:0;}
+    .skill-badge{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .6rem;border-radius:4px;margin-left:.6rem;vertical-align:middle;position:relative;top:-2px;}
+    .skill-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .skill-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .skill-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .settings-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .settings-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .settings-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .settings-table tr:last-child td{border-bottom:none;}
+    .settings-table tr:hover td{background:var(--bg-surface);}
+    .settings-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .settings-table .mono{font-family:var(--font-mono);font-size:.82rem;color:var(--teal);}
+    .mistake-box{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-left:4px solid #ef4444;border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .mistake-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ef4444;margin-bottom:.4rem;}
+    .mistake-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference{border-left:3px solid var(--purple);padding:.75rem 1.25rem;margin:1.25rem 0;background:rgba(167,139,250,0.05);border-radius:0 6px 6px 0;}
+    .pro-reference-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.35rem;}
+    .pro-reference p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference strong{color:var(--text-primary);}
+    .listening-prescription{background:var(--bg-void);border:1px solid var(--border-default);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;position:relative;}
+    .listening-prescription::before{content:'🎧';position:absolute;top:-14px;left:1.5rem;background:var(--bg-void);padding:0 .4rem;font-size:1.1rem;}
+    .listening-prescription-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:.75rem;}
+    .listening-prescription p{font-size:.9rem;line-height:1.7;color:var(--text-secondary);margin:0 0 .5rem;}
+    .listening-record{font-weight:600;color:var(--text-primary);}
+    .decision-framework{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .decision-framework-title{font-family:var(--font-display);font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:1rem;}
+    .decision-item{display:flex;gap:1rem;padding:.65rem 0;border-bottom:1px solid var(--border-subtle);font-size:.88rem;line-height:1.55;}
+    .decision-item:last-child{border-bottom:none;}
+    .decision-if{color:var(--text-muted);font-style:italic;min-width:2rem;}
+    .decision-then{color:var(--text-primary);}
+    .decision-then strong{color:var(--teal);}
+    .exercise-block{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.25rem 0;}
+    .exercise-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;}
+    .exercise-badge{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .7rem;border-radius:4px;}
+    .exercise-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .exercise-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .exercise-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .exercise-title{font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text-primary);}
+    .exercise-block ol{margin:0;padding-left:1.25rem;color:var(--text-secondary);font-size:.88rem;line-height:1.7;}
+    .exercise-block ol li{margin-bottom:.4rem;}
+    .version-line{font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:4px;padding:.4rem .75rem;margin:.75rem 0 1.5rem;display:inline-block;}
+    .go-deeper{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:10px;padding:1.75rem;margin:2.5rem 0;}
+    .go-deeper-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text-primary);margin-bottom:1.25rem;}
+    .go-deeper-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;}
+    .go-deeper-item{background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:7px;padding:1rem 1.1rem;}
+    .go-deeper-item-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.35rem;}
+    .go-deeper-item a{font-size:.88rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;}
+    .go-deeper-item p{font-size:.78rem;color:var(--text-muted);margin:.3rem 0 0;}
+    .citation{font-size:.78rem;color:var(--text-muted);font-style:italic;margin-top:.25rem;}
+    .diagram-wrap{margin:1.75rem 0;background:var(--bg-void);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem;overflow-x:auto;}
+    .diagram-caption{font-size:.78rem;color:var(--text-muted);text-align:center;margin-top:.75rem;font-style:italic;}
+    .highlight-box{background:rgba(0,212,168,0.06);border:1px solid rgba(0,212,168,0.2);border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .highlight-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.4rem;}
+    .highlight-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin:1.5rem 0;}
+    .stat-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem;text-align:center;}
+    .stat-number{font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--teal);display:block;}
+    .stat-label{font-size:.78rem;color:var(--text-secondary);margin-top:.25rem;}
+    .action-steps{counter-reset:steps;list-style:none;padding:0;margin:1.5rem 0;}
+    .action-steps li{counter-increment:steps;display:flex;gap:1rem;padding:.85rem 0;border-bottom:1px solid var(--border-subtle);font-size:.9rem;color:var(--text-secondary);line-height:1.6;}
+    .action-steps li:last-child{border-bottom:none;}
+    .action-steps li::before{content:counter(steps);background:var(--teal);color:#000;font-weight:800;font-size:.75rem;width:1.6rem;height:1.6rem;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem;}
+    .genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:1.5rem 0;}
+    .genre-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem 1.25rem;}
+    .genre-card-name{font-family:var(--font-display);font-size:.85rem;font-weight:700;color:var(--teal);margin-bottom:.4rem;}
+    .genre-card p{font-size:.82rem;color:var(--text-secondary);line-height:1.55;margin:0;}
+    .comparison-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .comparison-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .comparison-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .comparison-table tr:last-child td{border-bottom:none;}
+    .comparison-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .affiliate-cta{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,212,168,0.1);border:1px solid rgba(0,212,168,0.25);color:var(--teal);font-size:.82rem;font-weight:600;padding:.45rem .9rem;border-radius:6px;text-decoration:none;}
+
+    .faq-accordion{margin:1.75rem 0;}
+    .faq-accordion-item{background:var(--bg-surface);border:1px solid var(--border-subtle);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;margin-bottom:8px;overflow:hidden;}
+    .faq-accordion-q{display:flex;align-items:flex-start;padding:1rem 1.25rem;cursor:pointer;gap:.75rem;}
+    .faq-accordion-q:hover{background:var(--bg-elevated);}
+    .faq-accordion-icon{width:16px;height:16px;flex-shrink:0;margin-top:3px;color:var(--purple);transition:transform .2s ease;}
+    .faq-accordion-icon.open{transform:rotate(45deg);}
+    .faq-accordion-q-inner{display:flex;flex-direction:column;}
+    .faq-accordion-label{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin-bottom:.2rem;}
+    .faq-accordion-q-text{font-size:.92rem;font-weight:600;color:var(--text-primary);line-height:1.45;font-family:var(--font-display);}
+    .faq-accordion-a{display:none;padding:0 1.25rem 1rem 2.75rem;font-size:.88rem;color:var(--text-secondary);line-height:1.7;border-top:1px solid var(--border-subtle);padding-top:.85rem;}
+    .faq-accordion-a.open{display:block;}
+</style>
+  <link rel="canonical" href="https://musicproductionwiki.com/articles/how-to-use-a-spectrum-analyzer.html"/>
+  <!-- Open Graph -->
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="How To Use A Spectrum Analyzer"/>
+  <meta property="og:description" content="Learn how to use a spectrum analyzer to make better mixing decisions, identify problem frequencies, and achieve professional-sounding mixes every time."/>
+  <meta property="og:url" content="https://musicproductionwiki.com/articles/how-to-use-a-spectrum-analyzer.html"/>
+  <meta property="og:site_name" content="Music Production Wiki"/>
+  <meta property="og:image" content="https://musicproductionwiki.com/images/og-default.jpg"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="article:author" content="Music Production Wiki Team"/>
+  <meta property="article:section" content="Techniques"/>
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="How To Use A Spectrum Analyzer"/>
+  <meta name="twitter:description" content="Learn how to use a spectrum analyzer to make better mixing decisions, identify problem frequencies, and achieve professional-sounding mixes every time."/>
+  <meta name="twitter:image" content="https://musicproductionwiki.com/images/og-default.jpg"/>
+  <!-- Article Schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How To Use A Spectrum Analyzer",
+  "description": "Learn how to use a spectrum analyzer to make better mixing decisions, identify problem frequencies, and achieve professional-sounding mixes every time.",
+  "image": "https://musicproductionwiki.com/images/og-default.jpg",
+  "datePublished": "2026-05-01",
+  "dateModified": "2026-05-07",
+  "wordCount": 6050,
+  "timeRequired": "PT25M",
+  "keywords": ["spectrum analyzer", "frequency analysis", "FFT analyzer", "audio mixing", "EQ technique", "mastering tools", "mid side analysis", "pink noise slope"],
+  "author": {"@type": "Organization", "name": "Music Production Wiki", "url": "https://musicproductionwiki.com"},
+  "publisher": {"@type": "Organization", "name": "Music Production Wiki", "url": "https://musicproductionwiki.com", "logo": {"@type": "ImageObject", "url": "https://musicproductionwiki.com/images/og-default.jpg"}},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://musicproductionwiki.com/articles/how-to-use-a-spectrum-analyzer.html"},
+  "articleSection": "Techniques",
+  "inLanguage": "en-US"
+}
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "What is the difference between a spectrum analyzer and an EQ?", "acceptedAnswer": {"@type": "Answer", "text": "A spectrum analyzer is a passive measurement tool that shows you the frequency content of a signal without changing it. An EQ is a processing tool that actively alters the amplitude of specific frequency ranges. Many modern EQ plugins (like FabFilter Pro-Q 4) combine both in one interface, but the analyzer component is purely informational while the EQ component makes changes to the audio."}},
+      {"@type": "Question", "name": "Should I always trust what the spectrum analyzer shows me?", "acceptedAnswer": {"@type": "Answer", "text": "The analyzer shows you objective data about frequency amplitude, but it does not tell you what sounds good, only what is there. Always use it as a diagnostic aid that supports your ears, not as a replacement for them. A technically flat spectrum can still sound poor, and an imperfect curve can sound fantastic in context."}},
+      {"@type": "Question", "name": "What is FFT size and which one should I use?", "acceptedAnswer": {"@type": "Answer", "text": "FFT size determines the trade-off between time resolution and frequency resolution. Smaller sizes (512-1024) respond faster but have lower frequency resolution; larger sizes (4096-16384) resolve individual frequencies more precisely but respond more slowly to changes. For general mixing, 2048-4096 is ideal; for hunting narrow resonances, use 8192 or higher."}},
+      {"@type": "Question", "name": "What does the pink noise slope setting do in a spectrum analyzer?", "acceptedAnswer": {"@type": "Answer", "text": "Pink noise slope compensation tilts the display by approximately 3dB per octave so that a spectrally balanced pink noise signal appears as a flat horizontal line rather than a downward slope. This makes it much easier to visually identify spectral imbalances in your mix, since you are comparing against a flat reference line rather than a naturally sloping curve."}},
+      {"@type": "Question", "name": "What is a good free spectrum analyzer plugin?", "acceptedAnswer": {"@type": "Answer", "text": "Voxengo SPAN is the most widely recommended free spectrum analyzer for music production. It offers professional-grade analysis, FFT size and slope control, mid/side analysis, and multi-channel display. Melda Production MAnalyzer is another strong free option with additional features including spectrogram display and A/B comparison."}},
+      {"@type": "Question", "name": "How do I check if my mix is mono compatible using a spectrum analyzer?", "acceptedAnswer": {"@type": "Answer", "text": "Switch your spectrum analyzer to mid/side mode and examine the side channel spectrum below 80-100Hz. A mono-compatible mix will show minimal or no significant energy in the side channel below this threshold. Any sustained level in the sub-100Hz side channel indicates stereo low-end content that may cause phase cancellation issues on mono playback systems."}},
+      {"@type": "Question", "name": "Why does my mix spectrum look different from professional references even when it sounds similar?", "acceptedAnswer": {"@type": "Answer", "text": "Spectral differences of 3-5dB across many frequency regions are normal and expected between different mixes. Genre, arrangement density, tempo, and artistic intent all affect spectral shape. Small differences do not necessarily mean your mix is wrong. Focus on correcting divergences of 6dB or more and in regions where you can hear a problem, not just see one visually."}},
+      {"@type": "Question", "name": "Can I use a spectrum analyzer to identify the key or tuning of a kick drum?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. With a large FFT size of 8192 or 16384 samples, the fundamental frequency of a tuned kick drum or 808 appears as a distinct peak in the sub-bass or bass region. Identify the peak frequency in Hz and use a frequency-to-note conversion chart or a piano reference to determine the musical pitch. For example, a peak at 65Hz corresponds approximately to C2, and 82Hz corresponds approximately to E2."}}
+  ]
+}
+</script>
+
+  <!-- SEO meta v6.1 -->
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="article:published_time" content="2026-05-01T00:00:00+00:00" />
+  <meta property="article:modified_time" content="2026-05-07T00:00:00+00:00" />
+  <meta name="keywords" content="spectrum analyzer, frequency analysis, mixing techniques, EQ, audio spectrum, FFT analyzer, mixing plugins, frequency spectrum, audio engineering, music production, spectral analysis, mastering" />
+  <!-- Organization schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Music Production Wiki",
+    "url": "https://musicproductionwiki.com",
+    "logo": {"@type": "ImageObject", "url": "https://musicproductionwiki.com/images/og-default.jpg"},
+    "sameAs": []
+  }
+  </script>
+  <!-- WebSite schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Music Production Wiki",
+    "url": "https://musicproductionwiki.com",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {"@type": "EntryPoint", "urlTemplate": "https://musicproductionwiki.com/?s={search_term_string}"},
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://musicproductionwiki.com/"},
+    {"@type": "ListItem", "position": 2, "name": "Techniques", "item": "https://musicproductionwiki.com/categories/techniques.html"},
+    {"@type": "ListItem", "position": 3, "name": "How To Use A Spectrum Analyzer", "item": "https://musicproductionwiki.com/articles/how-to-use-a-spectrum-analyzer.html"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How To Use A Spectrum Analyzer",
+  "step": [
+    {"@type": "HowToStep", "name": "Choose and Insert a Spectrum Analyzer Plugin", "text": "Select a spectrum analyzer plugin such as Voxengo SPAN (free), FabFilter Pro-Q 4 (spectrum mode), or iZotope Insight 2. Insert it as a send or direct insert on the track or bus you want to analyze \u2014 typically your master bus for overall mix checks or individual tracks for surgical diagnostic work."},
+    {"@type": "HowToStep", "name": "Set Your FFT Size and Averaging", "text": "For general mixing, set the FFT size to 2048\u20134096 samples. For identifying narrow resonances or specific tonal problems, increase the FFT size to 8192 or 16384 for higher frequency resolution. Set averaging to a medium value so the display is readable without being too sluggish to respond to changes in the audio."},
+    {"@type": "HowToStep", "name": "Enable Pink Noise Slope Compensation", "text": "Activate the pink noise slope or tilt setting in your analyzer (often labeled +3dB/oct or similar). This adjusts the display so that a spectrally balanced signal appears as a flat horizontal line, making imbalances in your mix immediately visible rather than obscured by the natural low-to-high frequency rolloff of most audio content."},
+    {"@type": "HowToStep", "name": "Set a Frequency Axis to Logarithmic Scale", "text": "Ensure the frequency axis is displayed on a logarithmic scale rather than a linear scale. This spaces octaves evenly across the display \u2014 matching human pitch perception \u2014 so that the low-end, mid-range, and high-frequency regions each get appropriate visual real estate for analysis."},
+    {"@type": "HowToStep", "name": "Play Audio and Enable Peak Hold", "text": "Play the audio you want to analyze \u2014 for a full mix, play the entire track from start to finish. Enable the peak hold function to capture the maximum spectral shape of the complete program material as a frozen trace. This allows you to assess the overall spectral balance of the mix without having to watch in real time."},
+    {"@type": "HowToStep", "name": "Compare Against a Reference Track", "text": "Import a professionally mastered reference track in the same genre, level-match it to your mix using integrated LUFS metering, and analyze its spectrum using the same settings. Compare the two peak-hold traces to identify regions where your mix has significantly more or less energy than the reference \u2014 typically divergences of 4dB or more in a specific band indicate a correctable imbalance."},
+    {"@type": "HowToStep", "name": "Diagnose and Address Specific Problems", "text": "Identify the specific nature of any spectral imbalances you find \u2014 broad humps suggest mud or excess warmth, narrow spikes indicate resonances, high-frequency rolloff suggests darkness. Address each problem at its source (individual tracks or buses) rather than applying broad corrections on the master bus, to preserve the balance between elements that don't have the same issue."},
+    {"@type": "HowToStep", "name": "Run a Mid/Side Low-End Check", "text": "Switch your analyzer to mid/side mode and examine the side channel spectrum below 100Hz. For a mono-compatible mix, this region should be essentially silent. If you find significant energy, locate the source (stereo bass patches, wide-processing plugins, stereo room mics) and apply a side-channel low-pass filter below 80\u2013100Hz on the master bus or at the source track level."},
+    {"@type": "HowToStep", "name": "Verify Corrections with Your Ears", "text": "After making any EQ or processing changes informed by the spectrum analyzer, always verify the result by listening \u2014 not just by looking at the display. A visually improved spectrum that sounds worse to your ears means the correction has gone wrong somewhere. The analyzer guides decisions; your ears validate them."}
+  ]
+}
+</script>
+</head>
+<body>
+<div id="readingProgress" role="progressbar" aria-label="Reading progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+<header class="site-header" role="banner">
+  <div class="container header-inner">
+    <a href="../index.html" class="site-logo" aria-label="MusicProductionWiki Home">
+      <span class="logo-wordmark">Music<span>Production</span>Wiki</span>
+      <span class="logo-tagline">The Producer's Reference</span>
+    </a>
+    <nav class="primary-nav" aria-label="Primary navigation">
+      <ul class="nav-list">
+        <li><a href="../categories/reviews.html">Reviews</a></li>
+        <li><a href="../categories/comparisons.html">Comparisons</a></li>
+        <li><a href="../categories/ai-music.html">AI Music</a></li>
+        <li><a href="../categories/daws.html">DAWs</a></li>
+        <li><a href="../categories/plugins.html">Plugins</a></li>
+        <li><a href="../categories/gear.html">Gear</a></li>
+        <li><a href="../categories/techniques.html">Techniques</a></li>
+        <li><a href="../categories/music-business.html">Music Business</a></li>
+        <li><a href="../categories/glossary.html">Glossary</a></li>
+        <li><a href="../about.html">About</a></li>
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <form class="search-form" role="search" action="#" method="get">
+        <label for="siteSearch" class="visually-hidden">Search articles</label>
+        <input type="search" id="siteSearch" class="search-input" placeholder="Search articles…" name="q" autocomplete="off" />
+        <button type="submit" class="search-btn" aria-label="Submit search">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </button>
+      </form>
+      <a href="#newsletter" class="btn-subscribe">The Producer's Briefing →</a>
+    </div>
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileNav">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+<nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
+  <ul class="nav-list">
+    <li><a href="../categories/reviews.html">Reviews</a></li>
+    <li><a href="../categories/comparisons.html">Comparisons</a></li>
+    <li><a href="../categories/ai-music.html">AI Music</a></li>
+    <li><a href="../categories/daws.html">DAWs</a></li>
+    <li><a href="../categories/plugins.html">Plugins</a></li>
+    <li><a href="../categories/gear.html">Gear</a></li>
+    <li><a href="../categories/techniques.html">Techniques</a></li>
+    <li><a href="../categories/music-business.html">Music Business</a></li>
+    <li><a href="../categories/glossary.html">Glossary</a></li>
+  </ul>
+</nav>
+<div class="container">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><ol>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../categories/techniques.html>Techniques</a></li>
+    <li><span aria-current="page">How To Use A Spectrum Analyzer</span></li>
+  </ol></nav>
+</div>
+<main class="container" id="main-content">
+  <div class="article-layout">
+    <article aria-labelledby="articleTitle">
+      <header class="article-header">
+        <div class="article-tags"><span class="article-tag purple"><a href="../categories/techniques.html" style="color:inherit;text-decoration:none;">Techniques</a></span>
+<span class="article-tag purple"><a href="../categories/techniques.html" style="color:inherit;text-decoration:none;">Mixing</a></span>
+<span class="article-tag purple"><a href="../categories/glossary.html" style="color:inherit;text-decoration:none;">EQ & Metering</a></span></div>
+        <h1 id="articleTitle">How To Use A Spectrum Analyzer</h1>
+        <div class="article-header-meta">
+          <div class="article-author"><div class="author-avatar" aria-hidden="true">MP</div><span class="author-name">The Music Production Wiki Team</span></div>
+          <span class="meta-divider"></span><span class="meta-item">Updated May 2026&nbsp;·&nbsp;25 min read&nbsp;·&nbsp;<span style="font-size:.78rem;color:var(--text-muted);">Verified May 7, 2026</span></span>
+        </div>
+      </header>
+      <div class="article-body">
+<div class="quick-answer">
+<div class="quick-answer-label">Quick Answer — Updated May 2026</div>
+<p>A spectrum analyzer displays the frequency content of an audio signal in real time, showing you which frequencies are present and at what amplitude. To use one effectively, insert it on individual tracks or your master bus, observe the frequency balance across the 20Hz–20kHz range, identify problem resonances or imbalances, and use that visual feedback to guide your EQ decisions. Spectrum analyzers are diagnostic tools — they don't replace your ears, but they reveal what your listening environment might be hiding.</p>
+</div>
+
+<div class="mpw-ad-slot mpw-ad-top" aria-hidden="true"></div>
+<p><em>Updated May 2026</em></p>
+
+<p>Every experienced mixing engineer will tell you the same thing: you should always trust your ears first. But there's a reason every professional studio on the planet has at least one spectrum analyzer open during a session. These tools reveal things about your audio that ears alone — especially in imperfect listening environments — will miss. A rogue resonance at 400Hz, a build-up in the low-mid mud zone, a high-frequency shelf that's sucking the air out of a vocal: a spectrum analyzer catches all of this and makes it visible.</p>
+
+<p>If you've been treating spectrum analyzers as decorative plugins that flash colorfully in the background, this guide is going to change the way you work. We'll cover the fundamental theory, the most important display settings, real-world workflows for mixing and mastering, and how to interpret what you're seeing to make smarter decisions at every stage of production.</p>
+
+<h2 id="what-is-a-spectrum-analyzer">What Is a Spectrum Analyzer and How Does It Work?</h2>
+
+<p>A spectrum analyzer is a metering plugin or hardware unit that displays the amplitude (level) of an audio signal across the frequency spectrum, typically from 20Hz to 20kHz — the range of human hearing. The horizontal axis represents frequency (usually on a logarithmic scale so that octaves appear equally spaced), and the vertical axis represents amplitude, typically in decibels (dBFS or dBr).</p>
+
+<p>The underlying math is the Fast Fourier Transform, or FFT. When audio passes through a spectrum analyzer, the FFT algorithm decomposes the signal into its constituent frequencies and calculates the amplitude of each. The result is displayed as either a real-time curve that moves with the signal or as a static "frozen" snapshot you can examine at leisure.</p>
+
+<h3>FFT Size and Resolution</h3>
+
+<p>The FFT size — also called the block size or window size — is one of the most important settings you'll encounter. Common options range from 256 to 16,384 samples (and sometimes higher). Here's the trade-off:</p>
+
+<ul>
+  <li><strong>Small FFT size (256–1024):</strong> Fast temporal response — you see changes in the spectrum quickly. Low frequency resolution — frequency bins are wide, so close frequencies blend together. Useful for watching transient-heavy material like drums.</li>
+  <li><strong>Large FFT size (4096–16384):</strong> Slow temporal response — the display lags behind the audio slightly. High frequency resolution — individual frequencies are clearly separated. Ideal for identifying narrow resonances and harmonic content.</li>
+</ul>
+
+<p>For most mixing work, an FFT size of 2048 to 4096 is a good default. When hunting for specific problem resonances — a ringing in a vocal, a tuned room mode in a kick — bump up to 8192 or 16384 for the extra resolution.</p>
+
+<h3>Window Functions</h3>
+
+<p>The FFT window function determines how the analyzer handles the edges of each analysis block. Options you'll typically see include Hann (also spelled Hanning), Blackman-Harris, Flat Top, and rectangular. For general audio analysis, Hann is the standard choice: it offers a good balance between frequency resolution and spectral leakage. Flat Top windows give the most accurate amplitude readings, which is why they're preferred for calibration work. Blackman-Harris offers even better leakage suppression at the cost of slightly wider main lobes. For 99% of music production tasks, leave the window function on Hann and focus your attention elsewhere.</p>
+
+<h3>Averaging Modes</h3>
+
+<p>Raw FFT data is extremely jittery — the spectrum bounces constantly, making it hard to read. Averaging smooths this out by blending multiple analysis frames together. You'll typically see two types:</p>
+
+<ul>
+  <li><strong>Temporal averaging:</strong> Averages over time, producing a more stable curve. Higher averaging values give a smoother display but respond more slowly to changes.</li>
+  <li><strong>Spectral averaging (RMS mode):</strong> Averages the energy across neighboring frequency bins, producing a smoother curve across the frequency axis.</li>
+</ul>
+
+<p>Many analyzers also have a "peak hold" function that freezes the highest level each frequency bin has reached. This is extremely useful during mastering — run your entire mix through and the peak hold curve shows you the overall spectral shape of the song without you having to watch it in real time.</p>
+
+<div class="diagram-wrap">
+  <svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:700px;display:block;margin:0 auto;">
+    <rect width="700" height="300" fill="#1a1a2e" rx="8"/>
+    <!-- Frequency axis -->
+    <line x1="60" y1="240" x2="660" y2="240" stroke="#555" stroke-width="1.5"/>
+    <!-- Amplitude axis -->
+    <line x1="60" y1="30" x2="60" y2="240" stroke="#555" stroke-width="1.5"/>
+    <!-- Grid lines horizontal -->
+    <line x1="60" y1="80" x2="660" y2="80" stroke="#333" stroke-width="1" stroke-dasharray="4,4"/>
+    <line x1="60" y1="130" x2="660" y2="130" stroke="#333" stroke-width="1" stroke-dasharray="4,4"/>
+    <line x1="60" y1="180" x2="660" y2="180" stroke="#333" stroke-width="1" stroke-dasharray="4,4"/>
+    <!-- Grid lines vertical (octave markers) -->
+    <line x1="130" y1="30" x2="130" y2="240" stroke="#333" stroke-width="1" stroke-dasharray="4,4"/>
+    <line x1="200" y1="30" x2="200" y2="240" stroke="#333" stroke-width="1" stroke-dasharray="4,4"/>
+    <line x1="290" y1="30" x2="290" y2="240" stroke="#333" stroke-width="1" stroke-dasharray="4,4"/>
+    <line x1="390" y1="30" x2="390" y2="240" stroke="#333" stroke-width="1" stroke-dasharray="4,4"/>
+    <line x1="490" y1="30" x2="490" y2="240" stroke="#333" stroke-width="1" stroke-dasharray="4,4"/>
+    <line x1="580" y1="30" x2="580" y2="240" stroke="#333" stroke-width="1" stroke-dasharray="4,4"/>
+    <!-- Spectrum curve -->
+    <polyline points="60,220 130,160 200,120 290,100 390,110 490,125 580,145 660,175" fill="none" stroke="#4fc3f7" stroke-width="2.5"/>
+    <!-- Peak hold curve -->
+    <polyline points="60,215 130,150 200,110 290,90 390,100 490,115 580,135 660,165" fill="none" stroke="#ff6b6b" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <!-- Fill under curve -->
+    <polygon points="60,220 130,160 200,120 290,100 390,110 490,125 580,145 660,175 660,240 60,240" fill="#4fc3f7" fill-opacity="0.1"/>
+    <!-- Labels -->
+    <text x="130" y="258" fill="#aaa" font-size="11" text-anchor="middle" font-family="monospace">100</text>
+    <text x="200" y="258" fill="#aaa" font-size="11" text-anchor="middle" font-family="monospace">250</text>
+    <text x="290" y="258" fill="#aaa" font-size="11" text-anchor="middle" font-family="monospace">1k</text>
+    <text x="390" y="258" fill="#aaa" font-size="11" text-anchor="middle" font-family="monospace">4k</text>
+    <text x="490" y="258" fill="#aaa" font-size="11" text-anchor="middle" font-family="monospace">8k</text>
+    <text x="580" y="258" fill="#aaa" font-size="11" text-anchor="middle" font-family="monospace">16k</text>
+    <text x="660" y="258" fill="#aaa" font-size="11" text-anchor="middle" font-family="monospace">20k</text>
+    <text x="35" y="84" fill="#aaa" font-size="11" text-anchor="end" font-family="monospace">-12</text>
+    <text x="35" y="134" fill="#aaa" font-size="11" text-anchor="end" font-family="monospace">-24</text>
+    <text x="35" y="184" fill="#aaa" font-size="11" text-anchor="end" font-family="monospace">-36</text>
+    <text x="35" y="234" fill="#aaa" font-size="11" text-anchor="end" font-family="monospace">-48</text>
+    <!-- Legend -->
+    <line x1="400" y1="20" x2="425" y2="20" stroke="#4fc3f7" stroke-width="2.5"/>
+    <text x="430" y="24" fill="#4fc3f7" font-size="11" font-family="monospace">Real-time</text>
+    <line x1="500" y1="20" x2="525" y2="20" stroke="#ff6b6b" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <text x="530" y="24" fill="#ff6b6b" font-size="11" font-family="monospace">Peak Hold</text>
+    <!-- Title -->
+    <text x="350" y="16" fill="#eee" font-size="12" text-anchor="middle" font-family="monospace" font-weight="bold">Spectrum Analyzer Display — Frequency vs. Amplitude</text>
+  </svg>
+  <p style="text-align:center;font-size:0.85em;color:#888;">Figure 1: A typical spectrum analyzer display showing real-time frequency content (blue) and peak hold (red dashed). The horizontal axis is logarithmic — each grid line represents roughly one octave.</p>
+</div>
+
+<h2 id="key-display-settings">Key Display Settings Every Producer Should Understand</h2>
+
+<p>Modern spectrum analyzer plugins — tools like <a href="fabfilter-pro-q3-review.html">FabFilter Pro-Q 3</a>, iZotope Insight 2, Voxengo SPAN, and Waves PAZ Analyzer — offer a wide range of display configurations. Knowing what each setting does prevents you from misreading the data you're looking at.</p>
+
+<h3>Display Scale: Linear vs. Logarithmic Frequency Axis</h3>
+
+<p>The frequency axis of a spectrum analyzer should almost always be displayed on a logarithmic scale for music production work. Here's why: human pitch perception is logarithmic. The octave from 100Hz to 200Hz is perceptually the same "width" as the octave from 4kHz to 8kHz — but if you displayed this on a linear scale, the bass octave would be crammed into a tiny sliver while the high frequencies would stretch across most of the screen. On a log scale, each octave gets roughly equal horizontal real estate, which matches how we hear.</p>
+
+<p>Some analyzers allow you to switch to a linear frequency scale. This is occasionally useful for specific calibration or scientific measurement tasks, but for mixing decisions, always use logarithmic.</p>
+
+<h3>Amplitude Scale and Range</h3>
+
+<p>The vertical axis shows amplitude in dBFS (decibels relative to full scale). The range you display matters. A narrow range (say, -40dBFS to 0dBFS) gives you more visual detail in the loud parts of the spectrum but clips off low-level content. A wider range (-120dBFS to 0dBFS) shows everything but compresses the visual resolution.</p>
+
+<p>For mixing: a range of -90dBFS to 0dBFS is practical — wide enough to catch noise floor issues, tight enough to be readable. For mastering and loudness analysis, you might narrow this to -60 to 0dBFS to better see the shape of the program material.</p>
+
+<h3>Slope Compensation (Pink Noise Reference)</h3>
+
+<p>This is one of the most misunderstood settings in spectrum analysis. A well-balanced mix, when analyzed against a flat frequency axis, naturally slopes downward from low to high frequencies. This is because pink noise — the acoustical model for balanced audio content — has 3dB more energy per octave as you go lower in frequency.</p>
+
+<p>Many analyzers include a "pink noise slope" or "tilt" setting (often labeled as +3dB/octave or -3dB/octave depending on the direction) that compensates for this. When this compensation is applied, a perfectly balanced pink noise signal appears as a flat horizontal line instead of a downward-sloping one. This makes it much easier to see whether your mix has too much or too little energy in a given band relative to a spectrally balanced reference.</p>
+
+<p>Plugins like Voxengo SPAN display this as a default slope. The FabFilter Pro-Q 4 spectrum display also allows you to adjust the tilt of the reference line. Understanding this prevents you from looking at a naturally sloping mix curve and incorrectly diagnosing a low-end problem.</p>
+
+<h3>Channel Configuration: Stereo, Mid, Side</h3>
+
+<p>Advanced analyzers can display the spectrum of the mid channel (sum of left and right, representing the mono content) separately from the side channel (the difference between left and right, representing stereo width). This is invaluable for checking that your low frequencies are mono — energy below roughly 80–100Hz in the side channel is problematic for vinyl cutting and can cause phasing issues on mono playback systems. It's also useful for identifying whether reverb tails and ambience (which should live primarily in the side channel) are at appropriate levels relative to your direct, centered content.</p>
+
+<div class="highlight-box">
+  <strong>Pro Tip: The Pink Noise Reference Test</strong><br/>
+  Generate a 30-second pink noise signal in your DAW and run it through your spectrum analyzer with the pink noise slope compensation active. You should see a flat line. Now play your mix through the same analyzer and compare the shape of the mix curve to that flat reference. Regions where your mix rises above the flat reference have excess energy; regions that fall below it are relatively thin. This gives you an objective starting point for <a href="eq-cheat-sheet.html">EQ decisions</a> that goes beyond guessing.
+</div>
+
+<h2 id="how-to-place-spectrum-analyzers-in-your-session">How to Place Spectrum Analyzers in Your Session</h2>
+
+<p>Knowing where to insert a spectrum analyzer is as important as knowing how to read it. Different placements reveal different types of information.</p>
+
+<h3>On Individual Tracks</h3>
+
+<p>Placing a spectrum analyzer on an individual track — say, a bass guitar, kick drum, or lead vocal — shows you the raw frequency content of that instrument in isolation. This is useful for:</p>
+
+<ul>
+  <li><strong>Identifying resonances:</strong> A narrow spike in the 300–500Hz range often indicates a boxiness resonance in a vocal booth or a body resonance in a guitar. You'll see it as a sharp peak standing above the surrounding spectrum.</li>
+  <li><strong>Finding the fundamental frequency:</strong> The fundamental note of a bass guitar or kick drum appears as the first (and usually largest) peak in the low end. Knowing exactly where it sits — 50Hz vs 80Hz, for instance — tells you precisely where to focus your <a href="how-to-eq-bass.html">bass EQ</a>.</li>
+  <li><strong>Checking harmonic relationships:</strong> Harmonics appear at integer multiples of the fundamental. A kick with a fundamental at 60Hz will have harmonics at 120Hz, 180Hz, 240Hz, and so on. This helps you understand why certain frequencies feel connected or conflicting across instruments.</li>
+</ul>
+
+<h3>On Subgroups and Buses</h3>
+
+<p>Insert an analyzer on your drum bus, instrument bus, or vocal bus to see how a group of related elements combines. This helps you catch issues that only appear in the summed signal — like a frequency buildup at 200Hz when the kick, bass, and low-mid heavy guitars are all contributing energy in the same band.</p>
+
+<h3>On the Master Bus</h3>
+
+<p>This is the most common placement for spectrum analyzers. With an analyzer on the master bus, you can see the overall spectral balance of your entire mix in real time. Compare the shape of your mix curve to reference tracks (professional releases in the same genre) to identify where your mix diverges from what's expected. This is especially helpful if you're working in a room with significant acoustic problems — the analyzer gives you objective data that your room's coloration might be masking.</p>
+
+<h3>Using Two Analyzers for A/B Comparison</h3>
+
+<p>One of the most powerful workflows is to run two spectrum analyzers simultaneously — one on your mix and one on a reference track — and switch between them (or use an analyzer that allows you to load a reference trace). FabFilter Pro-Q 4 lets you freeze a spectrum snapshot and display it alongside the live signal, while iZotope Insight 2 allows multi-source metering. This tells you at a glance whether your kick drum has as much sub energy as the reference, whether your vocal sits at a comparable level in the 2–5kHz presence region, and whether your master has a similar high-shelf rolloff.</p>
+
+<h3>Pre vs. Post EQ Placement</h3>
+
+<p>If you're using an EQ with a built-in spectrum display — like the FabFilter Pro-Q 3 or Pro-Q 4 — you have the option to view the spectrum pre- or post-EQ processing. Viewing the pre-EQ spectrum tells you what the signal looks like before your processing, which is what you're responding to. The post-EQ view shows you what you're sending downstream. Many engineers keep the pre-EQ spectrum visible while drawing EQ curves so they can see exactly what they're cutting or boosting relative to the original signal.</p>
+
+<table class="settings-table">
+  <thead>
+    <tr>
+      <th>Analyzer Placement</th>
+      <th>What It Reveals</th>
+      <th>Best Use Case</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Individual Track</td>
+      <td>Fundamental frequency, resonances, harmonic series</td>
+      <td>Surgical EQ decisions, resonance removal</td>
+    </tr>
+    <tr>
+      <td>Drum Bus</td>
+      <td>Combined punch, mud, air in the drum group</td>
+      <td>Bus EQ shaping, checking snare/kick balance</td>
+    </tr>
+    <tr>
+      <td>Vocal Bus</td>
+      <td>Presence, sibilance, muddiness in vocals</td>
+      <td>Vocal chain optimization, de-essing decisions</td>
+    </tr>
+    <tr>
+      <td>Master Bus (Pre-Limiter)</td>
+      <td>Overall spectral balance, genre compliance</td>
+      <td>Reference track comparison, mix balance checks</td>
+    </tr>
+    <tr>
+      <td>Master Bus (Post-Limiter)</td>
+      <td>Final spectral shape after limiting/mastering chain</td>
+      <td>Mastering QC, loudness and spectral delivery checks</td>
+    </tr>
+    <tr>
+      <td>Mid Channel</td>
+      <td>Mono content, centered elements</td>
+      <td>Checking kick/bass/lead vocal center focus</td>
+    </tr>
+    <tr>
+      <td>Side Channel</td>
+      <td>Stereo content, width elements</td>
+      <td>Low-end mono compliance, reverb/width checking</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="reading-the-spectrum-in-context">Reading the Spectrum in Context: What You're Actually Looking At</h2>
+
+<p>The most common mistake beginners make is treating the spectrum analyzer as something to "fix" — trying to make the curve look like a straight line or match some imagined ideal shape. That's not how it works. The spectrum display is a diagnostic tool, and reading it correctly means understanding what's normal, what's problematic, and what's a stylistic choice.</p>
+
+<h3>Understanding Frequency Zones</h3>
+
+<p>Before you can read a spectrum, you need to internalize the frequency zones and what they contain musically:</p>
+
+<ul>
+  <li><strong>Sub-bass (20–60Hz):</strong> The deep rumble and fundamental energy of kick drums and bass instruments. Felt more than heard on most systems. Too much here causes a muddy, unfocused low end; too little leaves the mix sounding thin on subwoofers and club systems.</li>
+  <li><strong>Bass (60–250Hz):</strong> Body of bass guitar, lower harmonics of kick, warmth of piano and acoustic guitar. This region determines whether a mix feels fat and full or lean and tight. A build-up at 100–200Hz is the classic source of "mud."</li>
+  <li><strong>Low-mids (250Hz–500Hz):</strong> The boxy, honky zone. Most problematic resonances live here. Male vocal chest resonance, guitar body boom, room reflections — if your mix sounds congested or claustrophobic, this is usually why.</li>
+  <li><strong>Mids (500Hz–2kHz):</strong> Presence and intelligibility of vocals, attack of guitar, definition in piano. This is where the human ear is most sensitive. Too much adds nasal harshness; too little makes the mix sound distant and hollow.</li>
+  <li><strong>Upper-mids (2kHz–5kHz):</strong> The "presence" zone. This is where vocals cut through a mix, where guitars gain bite, and where harshness or fatigue accumulates with prolonged exposure. Boosting here adds aggressiveness; cutting adds smoothness.</li>
+  <li><strong>Presence/brilliance (5kHz–10kHz):</strong> Sibilance lives at 6–8kHz. Cymbals, string attack, vocal brightness. Critical for perceived clarity and definition on consumer playback systems.</li>
+  <li><strong>Air (10kHz–20kHz):</strong> Shimmer, sparkle, the sense of space. Subtle presence here adds professional sheen; too much creates harshness; too little makes a mix sound dull and old.</li>
+</ul>
+
+<h3>Normal Spectral Shapes for Common Genres</h3>
+
+<p>Different genres have characteristic spectral shapes. When you compare your mix against a professional reference, you're checking alignment with these norms — not trying to copy them exactly, but understanding where intentional differences lie versus accidental imbalances.</p>
+
+<p>Hip-hop and trap mixes typically show a significant sub-bass presence (40–80Hz), a relatively flat mid-range, and a moderate-to-bright top end. EDM and electronic dance music often exhibits heavy sub content, a pronounced mid-range dip in the 300–500Hz range (to keep the mix clean and punchy), and extended, boosted highs. Rock mixes typically show a mid-forward character with a pronounced 2–5kHz range for guitar aggression and vocal cut. Orchestral and classical recordings tend to have a gradual rolloff above 8kHz and more balanced energy across the low-mids. Understanding these tendencies helps you read your analyzer in context rather than in the abstract.</p>
+
+<h3>Identifying Common Problems Visually</h3>
+
+<p>Here are the most common spectral problems and what they look like on an analyzer:</p>
+
+<ul>
+  <li><strong>Low-end mud:</strong> A broad hump of excess energy centered around 150–300Hz. The curve rises well above your reference in this zone and doesn't fall away quickly. Fix: broad EQ cut in this area, or high-pass filtering individual tracks contributing to the buildup.</li>
+  <li><strong>Boxiness:</strong> A narrower peak, often sharper than mud, typically in the 300–600Hz range. Common on recorded acoustic instruments, room-heavy vocal performances, and budget condenser microphones. Fix: identify the exact frequency with a narrow resonant boost as a "search" move, then apply a narrow cut once you find it.</li>
+  <li><strong>Harshness:</strong> A broad rise in the 2–5kHz range that doesn't come down. The curve stays elevated through the presence zone. Fix: gentle broad EQ cut, or dynamic EQ/multiband compression in this range.</li>
+  <li><strong>Sibilance spike:</strong> A narrow peak at 6–8kHz on a vocal or high-hat track. Extremely common on condenser microphone recordings. Fix: de-esser or narrow dynamic EQ cut triggered at that frequency.</li>
+  <li><strong>Thin low end:</strong> The curve drops off sharply below 100Hz, significantly below your reference. The mix will sound brittle on full-range systems. Fix: check high-pass filter settings across your individual tracks — many producers high-pass too aggressively.</li>
+  <li><strong>Dull/dark mix:</strong> The spectrum rolls off significantly above 8–10kHz compared to your reference. The mix will lack air and definition. Fix: gentle high-shelf boost on the master or individual tracks, or check whether overuse of analog-modeled saturation is causing top-end rolloff.</li>
+</ul>
+
+<h3>Using the Analyzer During EQ Work</h3>
+
+<p>When applying EQ, use the spectrum analyzer as follows: start your EQ search by ear — identify something that sounds problematic, then look at the analyzer to confirm which frequency region is involved. Apply your EQ cut or boost while watching the analyzer to confirm that the change is affecting the correct region and that you're not introducing new problems in adjacent bands. This ear-then-eyes workflow prevents you from chasing visual "perfection" at the expense of what actually sounds good.</p>
+
+<p>This approach is central to good <a href="how-to-mix-vocals.html">vocal mixing technique</a> — you identify the harshness by ear first, then use the analyzer to pinpoint whether it's at 3kHz, 4kHz, or 5kHz before committing to a cut.</p>
+
+<h2 id="spectrum-analyzers-for-mastering">Using Spectrum Analyzers for Mastering and Delivery</h2>
+
+<p>Spectrum analyzers become even more critical at the mastering stage, where small spectral imbalances that survive mixing can be caught and corrected before a track is delivered to streaming platforms, distributors, or vinyl pressing plants.</p>
+
+<h3>Reference Track Comparison</h3>
+
+<p>The reference track workflow is one of the most valuable uses of a spectrum analyzer in mastering. Bring in a professionally mastered track in the same genre, match the loudness between it and your master (using an integrated loudness meter — LUFS, not peak level), and then compare the spectral shapes side by side. Look for:</p>
+
+<ul>
+  <li>How does the low-end slope compare? Is your master heavier or lighter below 80Hz?</li>
+  <li>Is there a dip in the 3–5kHz range in the reference (often intentional in certain pop and R&amp;B masters) that your mix doesn't have?</li>
+  <li>Does the reference extend more brightly above 12kHz? This is common in well-mastered pop and electronic music.</li>
+</ul>
+
+<p>The goal is not to make your master identical to the reference, but to understand the intentional differences versus unintentional imbalances.</p>
+
+<h3>Streaming Platform Loudness Compliance</h3>
+
+<p>When mastering for streaming platforms like Spotify, Apple Music, and Tidal, loudness normalization (typically to -14 LUFS integrated on Spotify, -16 LUFS for podcasts on Apple) means that excessively loud masters will be turned down. A spectrum analyzer used in conjunction with a loudness meter helps you check that the spectral balance doesn't shift dramatically as you push the limiter harder. Aggressive limiting tends to compress the dynamic range unevenly, often dulling transients in the 3–8kHz range and adding low-mid buildup. Watch the spectrum before and after your limiter to catch these artifacts.</p>
+
+<h3>Mid/Side Analysis for Stereo Integrity</h3>
+
+<p>Switch your analyzer to mid/side mode and examine the side channel spectrum carefully below 100Hz. Any significant energy in the side channel below this frequency indicates a stereo low end — bass content that exists differently in the left and right channels. This causes phase cancellation on mono playback and is a problem for streaming, broadcast, and vinyl. Look for the side channel spectrum to be effectively silent below 80–100Hz on a well-mastered record. If it isn't, apply a mid/side EQ or low-pass filter on the side channel to mono the low end.</p>
+
+<h3>High-Frequency Air Shelf and the Nyquist Limit</h3>
+
+<p>On the high end, watch for a sharp rolloff at or near 20kHz. This can indicate that a track was processed or recorded at a sample rate that's limiting the high-frequency ceiling, or that a previous generation of bounce had a low-pass filter applied. Some mastering engineers apply a subtle high-shelf boost above 16kHz — the "air band" — to restore a sense of openness. The spectrum analyzer confirms whether this shelf is actually adding energy (the curve rises) or whether you've hit a hard bandwidth limit where boosting has no effect.</p>
+
+<h3>Using Spectrum Analysis in Atmos and Spatial Mixes</h3>
+
+<p>For producers working on Dolby Atmos and spatial audio deliveries, spectrum analysis becomes a multi-channel task. Individual bed channels and object tracks need to be analyzed both in isolation and in the rendered binaural output. Pay particular attention to the binaural render's spectral consistency across the soundstage — HRTF processing can create unpredictable frequency colorations, particularly in the 2–8kHz range where pinnae-related cues operate. Checking the spectrum of the binaural bounce against your stereo master is an important QC step in any <a href="how-to-mix-in-dolby-atmos.html">Dolby Atmos mixing</a> workflow.</p>
+
+<h2 id="best-spectrum-analyzer-plugins">The Best Spectrum Analyzer Plugins and What Makes Them Different</h2>
+
+<p>The market for spectrum analyzers ranges from free, lightweight utilities to comprehensive metering suites with loudness, phase, and correlation analysis built in. Here are the most important options as of May 2026:</p>
+
+<h3>FabFilter Pro-Q 4</h3>
+
+<p>The <a href="fabfilter-pro-q-4-review.html">FabFilter Pro-Q 4</a> is primarily an EQ, but its built-in spectrum analyzer is among the most useful in the industry. It features a high-resolution real-time spectrum display, a spectrum grab function for comparing pre- and post-EQ, a collision detection system that highlights frequency masking between tracks when you have multiple Pro-Q instances open, and the ability to display the spectrum of other tracks for mid/side analysis. The Pro-Q 4's spectrum is tightly integrated with the EQ workflow — hovering over a peak in the spectrum display automatically suggests a matching EQ band — which makes it an indispensable tool for mixing engineers who are used to working visually as well as aurally. <!-- [PRICE CHECK: $179] -->$179</p>
+
+<h3>Voxengo SPAN (Free)</h3>
+
+<p>Voxengo SPAN is the industry-standard free spectrum analyzer, available in both 32-bit and 64-bit formats for Mac and PC. It offers highly configurable FFT size, averaging, and slope settings, supports stereo and mid/side analysis, and displays up to eight channels simultaneously with user-defined colors. For producers on a budget, SPAN provides professional-grade analysis at no cost. Its display style is more utilitarian than FabFilter's polished interface, but the underlying analysis engine is extremely accurate and trusted in professional contexts.</p>
+
+<h3>iZotope Insight 2</h3>
+
+<p>iZotope Insight 2 is a comprehensive metering suite that includes a spectrum analyzer, loudness meter (LUFS, RMS, peak), spectrogram, stereo field visualizer, and phase correlation meter in a single plugin. The spectrum analyzer component supports up to six sources simultaneously, making it ideal for detailed reference track comparison. Insight 2 is particularly popular in post-production and broadcast contexts where multiple loudness standards (EBU R128, ATSC A/85, ITU-R BS.1770) need to be monitored alongside spectral balance. <!-- [PRICE CHECK: $99] -->$99 (often available in iZotope bundles)</p>
+
+<h3>Waves PAZ Analyzer</h3>
+
+<p>The Waves PAZ Analyzer combines a spectrum display with a stereo position meter and peak/RMS loudness readouts in a single window. It's not as visually sophisticated as Pro-Q or Insight 2, but it remains widely used because of its simplicity and the fact that it's included in nearly every Waves bundle. If you already have Waves plugins, PAZ is a capable, zero-cost addition to your metering setup. <!-- [PRICE CHECK: $29] -->$29 (often included in bundles)</p>
+
+<h3>Melda Production MAnalyzer (Free)</h3>
+
+<p>Melda's MAnalyzer is a highly capable free option with an unusually deep feature set for a free plugin. It supports A/B spectrum comparison, a spectrogram display, sonogram mode, and extensive customization of display parameters. The interface is complex but rewards the investment of time spent learning it. For producers who need more analytical depth than SPAN offers but don't want to spend money on iZotope Insight, MAnalyzer is a strong choice.</p>
+
+<h3>The Spectrogram vs. the Spectrum Display</h3>
+
+<p>A distinction worth making: the spectrum analyzer displays amplitude vs. frequency at a given moment in time. A <em>spectrogram</em> displays frequency on the vertical axis and time on the horizontal axis, with amplitude encoded as color intensity. Spectrograms are excellent for viewing the evolution of spectral content over the course of a recording — identifying where a rumble enters, how long a room resonance sustains, whether a vocal has consistent brightness throughout a performance, or where noise artifacts occur. Many of the plugins above include both display types. Learn to read both — they provide complementary perspectives on the same information.</p>
+
+<h2 id="practical-workflow-examples">Practical Workflow Examples: Spectrum Analyzers in Action</h2>
+
+<p>Theory only gets you so far. Here's how professional-level spectrum analyzer usage looks in actual production workflows.</p>
+
+<h3>Workflow 1: Fixing a Muddy Mix</h3>
+
+<p>You've built up a full arrangement — drums, bass, guitars, synths, vocals — and the mix sounds congested and heavy. Step one: insert a spectrum analyzer (Voxengo SPAN or Pro-Q 4 spectrum view) on the master bus and look at the 150–400Hz region. If there's a broad hump here rising 6–10dB above your pink-noise-compensated reference line, you have a classic low-mid buildup problem.</p>
+
+<p>Now go track by track. Solo each instrument and look at what it contributes to this region. Bass guitar, kick drum, electric guitar, piano, and synth pads can all simultaneously contribute energy at 200Hz without any single one of them being "wrong" in isolation. The problem only appears in the sum. Apply subtle high-pass filtering on each non-bass element to roll off their low-mid contributions. A high-pass at 80–120Hz on guitars, at 150–200Hz on synth pads, at 100Hz on piano usually clears significant mud without audibly thinning any individual instrument. After making these cuts, re-examine the master bus spectrum — the hump should shrink toward the reference line.</p>
+
+<h3>Workflow 2: Matching a Reference Track</h3>
+
+<p>You're finishing a track and want to verify that it translates to professional playback standards. Bring a reference track into your DAW on a separate audio track, level-match it to your mix using an integrated LUFS meter, and insert SPAN (or your analyzer of choice) set to receive input from both tracks via two separate instances or a multi-source analyzer. Enable peak hold and play the reference track for its full duration, then do the same with your mix.</p>
+
+<p>Compare the resulting curves. Common findings: your mix has 4–6dB more energy at 100–200Hz (too much warmth/mud), the reference has 3–5dB more energy at 8–12kHz (your mix is too dark), or the reference has a distinctive dip at 3kHz that your mix doesn't (your mix is more aggressive/harsh). Each of these findings translates directly into EQ decisions on your master bus.</p>
+
+<h3>Workflow 3: Identifying Resonances in a Recorded Vocal</h3>
+
+<p>You've recorded a lead vocal that sounds great in isolation but unpleasant and honky in the mix. Insert a high-resolution analyzer on the vocal track with a large FFT size (8192 or 16384) and enable a long averaging time. Play a sustained vowel section of the vocal and look for narrow peaks standing up above the surrounding spectrum. Resonances typically appear as sharp, narrow spikes rather than broad humps. Common locations: 200–300Hz (chest resonance, microphone proximity effect), 400–600Hz (boxy room reflections), 800Hz–1.2kHz (nasal resonance), 3–4kHz (harshness resonance from condenser microphone response curves).</p>
+
+<p>Once you've identified the resonance visually, use a narrow EQ band (Q of 4–8) to apply a 4–8dB cut at that exact frequency. Listen carefully — you should hear the problematic character reduce without the vocal losing body or presence. For moving vocal resonances that shift in pitch over the course of a performance, consider a <a href="dynamic-eq-vs-multiband-compression.html">dynamic EQ</a> that only engages the cut when the resonance exceeds a certain threshold.</p>
+
+<h3>Workflow 4: Checking Low-End Mono Compatibility</h3>
+
+<p>Switch your spectrum analyzer to mid/side mode and look at the side channel spectrum below 100Hz. Any sustained energy in this region represents stereo content in your low end. On a professional dance music master, the side channel should be essentially empty below 80Hz. If it isn't, identify the source: stereo synthesizer bass patches, wide stereo enhancement plugins processing the whole mix, or stereo room microphones blending into the drum overheads are the most common culprits. Solve the problem by either applying a narrow low-pass filter to the side channel on your master bus (cutting everything below 80–100Hz in side only), or by addressing stereo imaging at the source tracks.</p>
+
+<h3>Workflow 5: Tracking Down a High-Frequency Harshness</h3>
+
+<p>A client's mix sounds harsh and fatiguing at a certain point in the arrangement when the full band is playing. Insert the analyzer on the master bus and play the problematic section. Note the frequency range that rises during that section — often you'll find a 2–5kHz rise that correlates with a particular instrument entering the arrangement (a distorted guitar, a synth lead, a bright snare top microphone). Solo or mute elements one by one while watching the spectrum to identify which track is contributing the harshness. Once identified, apply a targeted cut on that track's EQ rather than cutting the entire master — this preserves detail in all the other elements that don't have the same issue.</p>
+
+<p>This kind of precise diagnostic workflow is exactly what separates producers who <a href="how-to-mix-music-beginners-guide.html">mix with intention</a> from those who apply broad, imprecise corrections that fix one problem while creating others. Developing this skill — using the analyzer as a precision diagnostic tool rather than a visual guide to chase — is the foundation of a professional metering practice.</p>
+
+<h3>Workflow 6: Checking Beat Frequency Content Before Sending to Vocalists</h3>
+
+<p>Before sending an instrumental beat for a vocalist to record over, run the spectrum analyzer on the mix and check the 2–5kHz range. If the beat has significant energy in this zone — distorted hi-hats, aggressive synth leads, overdriven 808s with lots of upper harmonics — the vocalist will have to fight for space in the presence zone. This creates headaches in mixing later. Identify these competing elements early, apply a gentle roll-off in the upper-mids on the beat, and leave space for the vocal to occupy the 2–5kHz range by design rather than by post-mix surgery. This principle applies across all genres and is especially important in <a href="how-to-make-trap-beats.html">trap and hip-hop production</a> where 808s can carry significant harmonic energy through the presence zone.</p>
+<div class="mpw-ad-slot mpw-ad-mid" aria-hidden="true"></div>
+<h2 id="exercises">Practical Exercises</h2>
+<div class="exercise-block exercise-beginner"><div class="exercise-label">Beginner Exercise</div><h3>Map Your Frequency Zones</h3><p>Open Voxengo SPAN (free) on your master bus and play a song you know well from a streaming platform imported into your DAW. Watch the spectrum and try to identify by ear which visual region lights up when the kick hits, when the vocals enter, and when the cymbals come in. Write down the approximate frequency range for each — this trains your brain to connect what you hear with what you see, which is the foundation of all useful spectrum analysis work.</p></div>
+<div class="exercise-block exercise-intermediate"><div class="exercise-label">Intermediate Exercise</div><h3>Reference Track Spectral Comparison</h3><p>Take one of your own finished mixes and a professionally mastered reference track in the same genre. Level-match both to -14 LUFS using a loudness meter, then use two instances of a spectrum analyzer with peak hold enabled to capture the spectral shape of each track over its full duration. Identify three specific frequency regions where your mix diverges from the reference by more than 3dB, and apply targeted EQ corrections on your master bus to bring your mix closer to the reference balance. Re-analyze after each correction to verify the change is working as intended.</p></div>
+<div class="exercise-block exercise-advanced"><div class="exercise-label">Advanced Exercise</div><h3>Mid/Side Low-End Audit and Correction</h3><p>Take five of your most recent productions and run each one through a mid/side spectrum analyzer, focusing on the side channel below 100Hz. Document the maximum side-channel energy level you find in this sub-100Hz range for each track, and for any track where you find more than -40dBFS of side channel energy below 80Hz, identify the source by muting or soloing groups and apply a corrective side-channel low-pass filter on the master bus. Compare the mono-summed playback before and after correction on a mono speaker or phone to verify that low-end focus and impact has improved.</p></div>
+<div class="mpw-ad-slot mpw-ad-prefaq" aria-hidden="true"></div>
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<div class="faq-accordion">
+  <div class="faq-accordion-item">
+    <div class="faq-accordion-q" onclick="mpwFaqToggle(this)">
+      <svg class="faq-accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <div class="faq-accordion-q-inner">
+        <span class="faq-accordion-label">FAQ</span>
+        <span class="faq-accordion-q-text">What is the difference between a spectrum analyzer and an EQ?</span>
+      </div>
+    </div>
+    <div class="faq-accordion-a">A spectrum analyzer is a passive measurement tool — it shows you the frequency content of a signal without changing it. An EQ is a processing tool that actively alters the amplitude of specific frequency ranges. Many modern EQ plugins (like FabFilter Pro-Q 4) combine both in one interface, but the analyzer component is purely informational while the EQ component makes changes to the audio.</div>
+  </div>
+  <div class="faq-accordion-item">
+    <div class="faq-accordion-q" onclick="mpwFaqToggle(this)">
+      <svg class="faq-accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <div class="faq-accordion-q-inner">
+        <span class="faq-accordion-label">FAQ</span>
+        <span class="faq-accordion-q-text">Should I always trust what the spectrum analyzer shows me?</span>
+      </div>
+    </div>
+    <div class="faq-accordion-a">The analyzer shows you objective data about frequency amplitude, but it doesn't tell you what sounds good — only what's there. Always use it as a diagnostic aid that supports your ears, not as a replacement for them. A technically flat spectrum can still sound poor, and a "imperfect" curve can sound fantastic in context.</div>
+  </div>
+  <div class="faq-accordion-item">
+    <div class="faq-accordion-q" onclick="mpwFaqToggle(this)">
+      <svg class="faq-accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <div class="faq-accordion-q-inner">
+        <span class="faq-accordion-label">FAQ</span>
+        <span class="faq-accordion-q-text">What is FFT size and which one should I use?</span>
+      </div>
+    </div>
+    <div class="faq-accordion-a">FFT size determines the trade-off between time resolution and frequency resolution. Smaller sizes (512–1024) respond faster but have lower frequency resolution; larger sizes (4096–16384) resolve individual frequencies more precisely but respond more slowly to changes. For general mixing, 2048–4096 is ideal; for hunting narrow resonances, use 8192 or higher.</div>
+  </div>
+  <div class="faq-accordion-item">
+    <div class="faq-accordion-q" onclick="mpwFaqToggle(this)">
+      <svg class="faq-accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <div class="faq-accordion-q-inner">
+        <span class="faq-accordion-label">FAQ</span>
+        <span class="faq-accordion-q-text">What does the pink noise slope setting do in a spectrum analyzer?</span>
+      </div>
+    </div>
+    <div class="faq-accordion-a">Pink noise slope compensation tilts the display by approximately 3dB per octave so that a spectrally balanced (pink noise) signal appears as a flat horizontal line rather than a downward slope. This makes it much easier to visually identify spectral imbalances in your mix, since you're comparing against a flat reference line rather than a naturally sloping curve.</div>
+  </div>
+  <div class="faq-accordion-item">
+    <div class="faq-accordion-q" onclick="mpwFaqToggle(this)">
+      <svg class="faq-accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <div class="faq-accordion-q-inner">
+        <span class="faq-accordion-label">FAQ</span>
+        <span class="faq-accordion-q-text">What is a good free spectrum analyzer plugin?</span>
+      </div>
+    </div>
+    <div class="faq-accordion-a">Voxengo SPAN is the most widely recommended free spectrum analyzer for music production. It offers professional-grade analysis, FFT size and slope control, mid/side analysis, and multi-channel display. Melda Production's MAnalyzer is another strong free option with additional features including spectrogram display and A/B comparison.</div>
+  </div>
+  <div class="faq-accordion-item">
+    <div class="faq-accordion-q" onclick="mpwFaqToggle(this)">
+      <svg class="faq-accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <div class="faq-accordion-q-inner">
+        <span class="faq-accordion-label">FAQ</span>
+        <span class="faq-accordion-q-text">How do I check if my mix is mono compatible using a spectrum analyzer?</span>
+      </div>
+    </div>
+    <div class="faq-accordion-a">Switch your spectrum analyzer to mid/side mode and examine the side channel spectrum below 80–100Hz. A mono-compatible mix will show minimal or no significant energy in the side channel below this threshold. Any sustained level in the sub-100Hz side channel indicates stereo low-end content that may cause phase cancellation issues on mono playback systems.</div>
+  </div>
+  <div class="faq-accordion-item">
+    <div class="faq-accordion-q" onclick="mpwFaqToggle(this)">
+      <svg class="faq-accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <div class="faq-accordion-q-inner">
+        <span class="faq-accordion-label">FAQ</span>
+        <span class="faq-accordion-q-text">Why does my mix spectrum look different from professional references even when it sounds similar?</span>
+      </div>
+    </div>
+    <div class="faq-accordion-a">Spectral differences of 3–5dB across many frequency regions are normal and expected between different mixes — genre, arrangement density, tempo, and artistic intent all affect spectral shape. Small differences don't necessarily mean your mix is wrong; they mean it's different. Focus on correcting divergences of 6dB or more and in regions where you can hear a problem, not just see one visually.</div>
+  </div>
+  <div class="faq-accordion-item">
+    <div class="faq-accordion-q" onclick="mpwFaqToggle(this)">
+      <svg class="faq-accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <div class="faq-accordion-q-inner">
+        <span class="faq-accordion-label">FAQ</span>
+        <span class="faq-accordion-q-text">Can I use a spectrum analyzer to identify the key or tuning of a kick drum?</span>
+      </div>
+    </div>
+    <div class="faq-accordion-a">Yes. With a large FFT size (8192 or 16384 samples), the fundamental frequency of a tuned kick drum or 808 appears as a distinct peak in the sub-bass or bass region. Identify the peak frequency in Hz and use a frequency-to-note conversion chart or a piano reference to determine the musical pitch — for example, a peak at 65Hz corresponds approximately to C2, and 82Hz corresponds approximately to E2.</div>
+  </div>
+
+<script>
+function mpwFaqToggle(el) {
+  var icon = el.querySelector('.faq-accordion-icon');
+  var answer = el.nextElementSibling;
+  var isOpen = answer.classList.contains('open');
+  document.querySelectorAll('.faq-accordion-a.open').forEach(function(a) {
+    a.classList.remove('open');
+    a.previousElementSibling.querySelector('.faq-accordion-icon').classList.remove('open');
+  });
+  if (!isOpen) { answer.classList.add('open'); icon.classList.add('open'); }
+}
+</script>
+
+      <footer class="article-footer"><div class="article-tags-footer"><p class="tags-label">Tags</p><div class="tags-list"><a href="../categories/techniques.html" class="tag-pill">Techniques</a>
+<a href="../categories/techniques.html" class="tag-pill">Mixing</a>
+<a href="../categories/glossary.html" class="tag-pill">EQ & Metering</a></div></div></div></footer>
+      
+      <div class="social-share" style="margin:1.5rem 0;display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;">
+        <span style="font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);">Share</span>
+        <button onclick="window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(document.title)+'&url='+encodeURIComponent(window.location.href),'_blank')" style="display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;font-weight:600;color:var(--text-secondary);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:6px;padding:.4rem .8rem;cursor:pointer;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          Share on X
+        </button>
+        <button onclick="window.open('https://reddit.com/submit?url='+encodeURIComponent(window.location.href)+'&title='+encodeURIComponent(document.title),'_blank')" style="display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;font-weight:600;color:var(--text-secondary);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:6px;padding:.4rem .8rem;cursor:pointer;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
+          Share on Reddit
+        </button>
+        <button onclick="navigator.clipboard.writeText(window.location.href).then(()=>{this.textContent='Copied!';setTimeout(()=>{this.textContent='Copy Link'},2000)})" style="display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;font-weight:600;color:var(--text-secondary);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:6px;padding:.4rem .8rem;cursor:pointer;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Copy Link
+        </button>
+      </div>
+      <section class="related-section" aria-labelledby="relatedHeading">
+        <h2 id="relatedHeading" style="font-size:1.35rem;margin-bottom:1.25rem;">Related Articles</h2>
+        <div class="related-grid">
+<a href="eq-cheat-sheet.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">EQ Cheat Sheet: Frequency Ranges and What They Sound Like</h3><span class="related-card-meta">Read article →</span></a>
+<a href="dynamic-eq-vs-multiband-compression.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">Dynamic EQ vs Multiband Compression: Which Should You Use?</h3><span class="related-card-meta">Read article →</span></a>
+<a href="how-to-mix-music-beginners-guide.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">How To Mix Music: A Complete Beginners Guide</h3><span class="related-card-meta">Read article →</span></a>
+</div>
+</section>
+    </article>
+    <aside aria-label="Article sidebar">
+      <div class="sidebar-widget toc-widget" aria-labelledby="tocHeading">
+        <div class="sidebar-widget-header"><h2 class="sidebar-widget-title" id="tocHeading">In This Article</h2></div>
+        <div class="sidebar-widget-body"><ul class="toc-list">
+<li><a href="#what-is-a-spectrum-analyzer">What Is a Spectrum Analyzer and How Does It Work?</a></li>
+<li><a href="#key-display-settings">Key Display Settings Every Producer Should Understand</a></li>
+<li><a href="#how-to-place-spectrum-analyzers-in-your-session">How to Place Spectrum Analyzers in Your Session</a></li>
+<li><a href="#reading-the-spectrum-in-context">Reading the Spectrum in Context: What You're Actually Looking At</a></li>
+<li><a href="#spectrum-analyzers-for-mastering">Using Spectrum Analyzers for Mastering and Delivery</a></li>
+<li><a href="#best-spectrum-analyzer-plugins">The Best Spectrum Analyzer Plugins and What Makes Them Different</a></li>
+<li><a href="#practical-workflow-examples">Practical Workflow Examples: Spectrum Analyzers in Action</a></li>
+</ul></div>
+      </div>
+      <div class="sidebar-widget" style="background:var(--bg-void);border-color:var(--border-default);">
+        <div class="sidebar-widget-body" style="padding:1.5rem;">
+          <p style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.5rem;">Newsletter</p>
+          <h3 style="font-family:var(--font-display);color:var(--text-primary);font-size:1.1rem;margin-bottom:.5rem;">The Producer's Briefing</h3>
+          <p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:1rem;line-height:1.55;">Weekly tips, gear news, and technique guides. Free.</p>
+          <form class="newsletter-form-js" style="display:flex;flex-direction:column;gap:.5rem;" novalidate>
+            <input type="email" name="email" class="form-input" placeholder="Your email" required />
+            <button type="submit" class="btn-newsletter" style="font-size:.82rem;padding:.65rem 1rem;">Subscribe Free</button>
+          </form>
+        </div>
+      <div class="sidebar-widget" style="margin-top:1.5rem;">
+        <div class="sidebar-widget-header" style="text-align:center;">
+          <h2 class="sidebar-widget-title">Related Articles</h2>
+        </div>
+        <div class="sidebar-widget-body" style="padding:1rem;">
+<ul style="list-style:none;padding:0;margin:0;text-align:center;"><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="eq-cheat-sheet.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">EQ Cheat Sheet: Frequency Ranges and What They Sound Like</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Techniques</span></li>
+<li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="dynamic-eq-vs-multiband-compression.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">Dynamic EQ vs Multiband Compression: Which Should You Use?</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Techniques</span></li>
+<li style="padding:.6rem 0;"><a href="how-to-mix-music-beginners-guide.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">How To Mix Music: A Complete Beginners Guide</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Techniques</span></li></ul>
+        </div>
+      </div>
+      </div>
+    </aside>
+  </div>
+</main>
+<section class="newsletter-section" id="newsletter" aria-labelledby="newsletterHeading">
+  <div class="container">
+    <div class="newsletter-inner">
+      <div class="newsletter-content">
+        <p class="newsletter-label">Newsletter</p>
+        <h2 id="newsletterHeading" class="newsletter-title">The Producer's <em>Briefing</em></h2>
+        <p class="newsletter-desc">Weekly techniques, gear news, and music business insights. Free.</p>
+      </div>
+      <div class="newsletter-form-wrap">
+        <form class="newsletter-form-js" novalidate>
+          <input type="email" name="email" class="form-input" placeholder="Your email address" required />
+          <button type="submit" class="btn-newsletter">Subscribe Free</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<footer class="site-footer" role="contentinfo">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="../index.html" class="site-logo"><span class="logo-wordmark">Music<span>Production</span>Wiki</span><span class="logo-tagline">The Producer's Reference</span></a>
+    </div>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <div class="footer-col">
+        <h3 class="footer-col-title">Categories</h3>
+        <ul>
+          <li><a href="../categories/reviews.html">Reviews</a></li>
+          <li><a href="../categories/comparisons.html">Comparisons</a></li>
+          <li><a href="../categories/ai-music.html">AI Music</a></li>
+          <li><a href="../categories/daws.html">DAWs</a></li>
+          <li><a href="../categories/plugins.html">Plugins</a></li>
+          <li><a href="../categories/gear.html">Gear</a></li>
+          <li><a href="../categories/techniques.html">Techniques</a></li>
+          <li><a href="../categories/music-business.html">Music Business</a></li>
+          <li><a href="../categories/glossary.html">Glossary</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">Popular</h3>
+        <ul>
+          <li><a href="../articles/suno-vs-udio.html">Suno vs Udio</a></li>
+          <li><a href="../articles/best-daw-for-beginners.html">Best DAW for Beginners</a></li>
+          <li><a href="../articles/focusrite-scarlett-2i2-gen-4-review.html">Scarlett 2i2 Review</a></li>
+          <li><a href="../articles/sidechain-compression-guide.html">Sidechain Compression</a></li>
+          <li><a href="../articles/best-compressor-plugins.html">Best Compressor Plugins</a></li>
+          <li><a href="../articles/what-is-gain-staging.html">What Is Gain Staging</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">About</h3>
+        <ul>
+          <li><a href="../about.html">About MPW</a></li>
+          <li><a href="../about.html#team">Our Team</a></li>
+          <li><a href="../about.html#methodology">Review Methodology</a></li>
+          <li><a href="../about.html#affiliate">Affiliate Disclosure</a></li>
+          <li><a href="../about.html#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="footer-bottom"><div class="container"><p>© <span id="copyrightYear"></span> MusicProductionWiki.com. All rights reserved. Content by the Music Production Wiki Team.</p></div></div>
+</footer>
+<script src="../js/main.js"></script>
+<script>document.getElementById('copyrightYear').textContent = new Date().getFullYear();</script>
+
+<button id="mpwBackTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  aria-label="Back to top"
+  style="position:fixed;bottom:1.5rem;right:1.5rem;width:2.5rem;height:2.5rem;border-radius:50%;
+         background:var(--teal);color:#000;border:none;cursor:pointer;display:none;
+         align-items:center;justify-content:center;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3);">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <polyline points="18 15 12 9 6 15"/>
+  </svg>
+</button>
+<script>
+(function(){
+  var btn=document.getElementById('mpwBackTop');
+  var bar=document.getElementById('readingProgress');
+  var art=document.querySelector('.article-body');
+  window.addEventListener('scroll',function(){
+    var st=window.scrollY||document.documentElement.scrollTop;
+    btn.style.display=st>400?'flex':'none';
+    if(bar&&art){
+      var h=art.getBoundingClientRect().height;
+      var top=art.getBoundingClientRect().top+st;
+      var pct=Math.min(100,Math.max(0,(st-top+window.innerHeight)*100/h));
+      bar.style.width=pct+'%';
+      bar.setAttribute('aria-valuenow',Math.round(pct));
+    }
+  });
+})();
+</script>
+</body>
+</html>
