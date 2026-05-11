@@ -8,388 +8,533 @@
   <link rel="canonical" href="https://www.musicproductionwiki.com/categories/techniques/sound-design.html">
   <meta property="og:title" content="Sound Design — Techniques | MusicProductionWiki">
   <meta property="og:description" content="Synthesis, sampling, and building sounds from scratch.">
-  <meta property="og:type" content="website">
   <meta property="og:url" content="https://www.musicproductionwiki.com/categories/techniques/sound-design.html">
-  <meta property="og:site_name" content="MusicProductionWiki">
+  <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Sound Design — Techniques | MusicProductionWiki">
-  <meta name="twitter:description" content="Synthesis, sampling, and building sounds from scratch.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../../css/style.css">
+  <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0a0b; --surface: #111113; --border: rgba(255,255,255,0.07);
+    --text: #e8e8ea; --muted: #888891; --teal: #00e8a2; --amber: #f5a623;
+    --font: 'DM Sans', sans-serif; --mono: 'DM Mono', monospace;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 16px; line-height: 1.6; min-height: 100vh; }
+
+  /* Bible Bar */
+  .bible-bar {
+    position: sticky; top: 0; z-index: 300;
+    background: #131000; border-bottom: 1px solid rgba(245,166,35,0.28);
+    height: 40px; display: flex; align-items: center; justify-content: center;
+    padding: 0 24px; gap: 14px; overflow: hidden;
+  }
+  .bible-pill {
+    font-size: 9px; font-family: 'DM Mono', monospace; background: #f5a623;
+    color: #131000; padding: 2px 7px; border-radius: 3px; letter-spacing: .12em;
+    font-weight: 700; white-space: nowrap;
+  }
+  .bible-title { font-size: 13px; font-weight: 600; color: #f5a623; white-space: nowrap; }
+  .bible-cta {
+    font-size: 11px; color: #f5a623; border: 1px solid rgba(245,166,35,0.35);
+    padding: 4px 12px; border-radius: 4px; text-decoration: none;
+    white-space: nowrap; background: rgba(245,166,35,0.07);
+  }
+  .bible-cta:hover { background: rgba(245,166,35,0.15); }
+
+  /* Nav */
+  .site-nav {
+    position: sticky; top: 40px; z-index: 200;
+    background: rgba(10,10,11,0.95); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border); height: 56px;
+    display: flex; align-items: center; padding: 0 24px;
+  }
+  .nav-inner { max-width: 1200px; width: 100%; margin: 0 auto; display: flex; align-items: center; }
+  .nav-logo { font-size: 15px; font-weight: 700; color: var(--text); text-decoration: none; white-space: nowrap; margin-right: 36px; display: flex; align-items: center; gap: 10px; }
+  .nav-logo-text { display: flex; flex-direction: column; }
+  .nav-logo-name { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.1; }
+  .nav-logo-sub { font-size: 10px; color: var(--muted); font-family: var(--mono); }
+  .logo-mark svg { display: block; }
+  .nav-links { display: flex; align-items: center; gap: 4px; flex: 1; list-style: none; }
+  .nav-links > li { position: relative; }
+  .nav-links > li > a, .nav-links > li > button {
+    font-size: 14px; color: var(--muted); text-decoration: none;
+    padding: 6px 12px; border-radius: 6px; background: none; border: none;
+    cursor: pointer; font-family: var(--font); white-space: nowrap;
+    display: flex; align-items: center; gap: 4px; transition: color .15s;
+  }
+  .nav-links > li > a:hover, .nav-links > li > button:hover { color: var(--text); }
+  .dropdown-menu {
+    display: none; position: absolute; top: calc(100% + 8px); left: 0;
+    background: #18181b; border: 1px solid var(--border); border-radius: 8px;
+    padding: 6px; min-width: 200px; z-index: 400; box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+  .nav-links > li:hover .dropdown-menu { display: block; }
+  .dropdown-menu a { display: block; padding: 8px 12px; font-size: 13px; color: var(--muted); text-decoration: none; border-radius: 5px; transition: all .12s; }
+  .dropdown-menu a:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+  .nav-cta { margin-left: auto; background: var(--teal); color: #000; font-size: 13px; font-weight: 600; padding: 7px 16px; border-radius: 6px; text-decoration: none; white-space: nowrap; }
+  .hamburger { display: none; background: none; border: none; cursor: pointer; color: var(--text); font-size: 22px; margin-left: auto; padding: 4px 8px; }
+  .mobile-drawer { display: none; position: fixed; inset: 0; z-index: 500; background: var(--bg); padding: 24px; flex-direction: column; gap: 0; overflow-y: auto; }
+  .mobile-drawer.open { display: flex; }
+  .drawer-close { position: absolute; top: 20px; right: 20px; background: none; border: none; color: var(--muted); font-size: 24px; cursor: pointer; }
+  .drawer-link { display: block; padding: 10px 0; font-size: 15px; color: var(--text); text-decoration: none; border-bottom: 1px solid var(--border); }
+  .drawer-section-label { font-size: 11px; font-family: var(--mono); color: var(--muted); letter-spacing: .1em; text-transform: uppercase; padding: 8px 0 4px; }
+  .drawer-cta { display: block; margin-top: 20px; background: var(--teal); color: #000; font-weight: 600; font-size: 15px; padding: 12px; border-radius: 8px; text-decoration: none; text-align: center; }
+  @media (max-width: 1024px) { .nav-links { display: none; } .nav-cta { display: none; } .hamburger { display: block; } }
+
+  /* Layout */
+  .page-wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  .breadcrumb { display: flex; align-items: center; gap: 6px; padding: 20px 0 0; font-size: 13px; color: var(--muted); }
+  .breadcrumb a { color: var(--muted); text-decoration: none; }
+  .breadcrumb a:hover { color: var(--teal); }
+
+  /* Hero */
+  .cat-hero { padding: 40px 0 32px; border-bottom: 1px solid var(--border); }
+  .cat-eyebrow { font-size: 11px; font-family: var(--mono); color: var(--teal); letter-spacing: .12em; text-transform: uppercase; margin-bottom: 10px; }
+  .cat-hero h1 { font-size: clamp(28px, 4vw, 42px); font-weight: 700; line-height: 1.15; margin-bottom: 12px; }
+  .cat-hero p { font-size: 16px; color: var(--muted); max-width: 600px; line-height: 1.6; }
+  .cat-meta { margin-top: 14px; font-size: 13px; font-family: var(--mono); color: var(--muted); }
+
+  /* Subcategory grid (category index pages) */
+  .subcat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; padding: 36px 0 60px; }
+  @media (max-width: 700px) { .subcat-grid { grid-template-columns: 1fr; } }
+  .subcat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 24px 28px; display: flex; flex-direction: column; gap: 8px; text-decoration: none; transition: border-color .15s, transform .12s; }
+  .subcat-card:hover { border-color: rgba(0,232,162,0.3); transform: translateY(-2px); }
+  .subcat-card-title { font-size: 17px; font-weight: 600; color: var(--text); }
+  .subcat-card-count { font-size: 12px; font-family: var(--mono); color: var(--teal); }
+  .subcat-card-desc { font-size: 14px; color: var(--muted); line-height: 1.5; }
+  .subcat-card-arrow { font-size: 13px; color: var(--teal); margin-top: auto; padding-top: 8px; }
+
+  /* Article list (subcategory pages) */
+  .article-list { padding: 36px 0 60px; display: flex; flex-direction: column; gap: 0; }
+  .article-row { display: flex; align-items: flex-start; justify-content: space-between; padding: 16px 0; border-bottom: 1px solid var(--border); text-decoration: none; gap: 16px; transition: background .1s; }
+  .article-row:hover .article-row-title { color: var(--teal); }
+  .article-row-body { flex: 1; }
+  .article-row-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; line-height: 1.4; }
+  .article-row-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .article-row-arrow { color: var(--teal); font-size: 16px; flex-shrink: 0; padding-top: 2px; }
+
+  /* Footer */
+  .site-footer { border-top: 1px solid var(--border); padding: 28px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; max-width: 1200px; margin: 0 auto; font-size: 13px; }
+  .footer-brand { color: var(--muted); }
+  .footer-links { display: flex; gap: 20px; }
+  .footer-links a { color: var(--muted); text-decoration: none; }
+  .footer-links a:hover { color: var(--teal); }
+</style>
 </head>
 <body>
-  <div class="bible-bar">
-    <div class="bible-bar-inner">
-      <span class="bible-pill">NOW LIVE</span>
-      <span class="bible-title">THE PRODUCER'S BIBLE</span>
-      <a href="/bible/" class="bible-cta">Explore Free →</a>
+<div class="bible-bar">
+  <span class="bible-pill">NOW LIVE</span>
+  <span class="bible-title">THE PRODUCER'S BIBLE</span>
+  <a href="/bible/" class="bible-cta">Explore Free →</a>
+</div>
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-logo">
+      <div class="logo-mark"><svg width="28" height="22" viewBox="0 0 28 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="8" width="4" height="14" rx="1" fill="#00e8a2"/><rect x="6" y="4" width="4" height="18" rx="1" fill="#00e8a2"/><rect x="12" y="0" width="4" height="22" rx="1" fill="#00e8a2"/><rect x="18" y="5" width="4" height="17" rx="1" fill="#00e8a2"/><rect x="24" y="10" width="4" height="12" rx="1" fill="#00e8a2"/></svg></div>
+      <div class="nav-logo-text">
+        <span class="nav-logo-name">MusicProductionWiki</span>
+        <span class="nav-logo-sub">The Producer's Reference</span>
+      </div>
+    </a>
+    <ul class="nav-links">
+      <li>
+        <button class="nav-dropdown-btn">Articles ▾</button>
+        <div class="dropdown-menu">
+          <a href="../../categories/techniques.html">Techniques</a>
+          <a href="../../categories/comparisons.html">Comparisons</a>
+          <a href="../../categories/reviews.html">Reviews</a>
+          <a href="../../categories/ai-music.html">AI Music</a>
+          <a href="../../categories/music-business.html">Music Business</a>
+        </div>
+      </li>
+      <li>
+        <button class="nav-dropdown-btn">Gear ▾</button>
+        <div class="dropdown-menu">
+          <a href="../../categories/daws.html">DAWs</a>
+          <a href="../../categories/plugins.html">Plugins</a>
+          <a href="../../categories/hardware.html">Hardware</a>
+        </div>
+      </li>
+      <li><a href="../../about.html">About</a></li>
+    </ul>
+    <a href="../../categories/techniques.html" class="nav-cta">Sound Better →</a>
+    <button class="hamburger" onclick="document.getElementById('drawer').classList.add('open')">&#9776;</button>
+  </div>
+</nav>
+<div class="mobile-drawer" id="drawer">
+  <button class="drawer-close" onclick="document.getElementById('drawer').classList.remove('open')">&#10005;</button>
+  <div class="drawer-section-label">Articles</div>
+  <a href="../../categories/techniques.html" class="drawer-link">Techniques</a>
+  <a href="../../categories/comparisons.html" class="drawer-link">Comparisons</a>
+  <a href="../../categories/reviews.html" class="drawer-link">Reviews</a>
+  <a href="../../categories/ai-music.html" class="drawer-link">AI Music</a>
+  <a href="../../categories/music-business.html" class="drawer-link">Music Business</a>
+  <div class="drawer-section-label">Gear</div>
+  <a href="../../categories/daws.html" class="drawer-link">DAWs</a>
+  <a href="../../categories/plugins.html" class="drawer-link">Plugins</a>
+  <a href="../../categories/hardware.html" class="drawer-link">Hardware</a>
+  <a href="../../categories/techniques.html" class="drawer-cta">Sound Better →</a>
+</div>
+<div class="page-wrap">
+  <nav class="breadcrumb">
+    <a href="../../index.html">Home</a> › <a href="../../categories/techniques.html">Techniques</a> › <span>Sound Design</span>
+  </nav>
+  <section class="cat-hero">
+    <div class="cat-eyebrow">Techniques › Sound Design</div>
+    <h1>Sound Design</h1>
+    <p>Synthesis, sampling, and building sounds from scratch.</p>
+    <div class="cat-meta">46 articles</div>
+  </section>
+  <div class="article-list">
+    <a href="../../articles/sound-design-basics.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">Sound design fundamentals</div>
+        <div class="article-row-desc">oscillators, filters, envelopes, and LFOs.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/what-is-a-synthesizer.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">What a synthesizer is, how it works, and the main types explained.</div>
+        
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/what-is-midi.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">MIDI explained</div>
+        <div class="article-row-desc">what it is, how it works, and how to use it.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/what-is-sampling-in-music.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">Sampling in music</div>
+        <div class="article-row-desc">how it works, clearance, and creative use.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/what-is-a-sample-pack.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">What sample packs are and how to use them in your productions.</div>
+        
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/what-is-vst-plugin.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">VST plugins explained</div>
+        <div class="article-row-desc">what they are and how they work in a DAW.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/what-is-a-vst3-plugin.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">VST3 plugins</div>
+        <div class="article-row-desc">what changed from VST2 and why it matters.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/how-to-layer-synths.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">Layering synths</div>
+        <div class="article-row-desc">stacking sounds for width, depth, and power.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/how-to-make-a-chord-progression.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">Chord progressions</div>
+        <div class="article-row-desc">theory, movement, and production techniques.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/how-to-make-melody.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">Melody writing</div>
+        <div class="article-row-desc">hooks, phrases, and production workflow.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/how-to-make-trap-808s-from-scratch.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">Building 808s from scratch</div>
+        <div class="article-row-desc">synthesis, tuning, and processing.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/how-to-chop-samples.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">Sample chopping</div>
+        <div class="article-row-desc">slicing, rearranging, and flipping loops.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/how-to-make-your-first-sample-pack.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">Making your first sample pack</div>
+        <div class="article-row-desc">recording, processing, and exporting.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/how-to-make-a-lo-fi-sample-pack.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">Lo-fi sample pack creation</div>
+        <div class="article-row-desc">texture, degradation, and character.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/how-to-use-midi-in-your-daw.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">MIDI in your DAW</div>
+        <div class="article-row-desc">recording, editing, quantizing, and routing.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/how-to-use-audio-routing-in-your-daw.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">Audio routing</div>
+        <div class="article-row-desc">sends, buses, sidechains, and signal flow.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/how-to-use-automation-in-your-daw.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">Automation</div>
+        <div class="article-row-desc">volume, effects, and movement across a full track.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/how-to-build-a-plugin-chain.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">Building a plugin chain</div>
+        <div class="article-row-desc">order of operations and signal flow.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/midi-vs-audio-explained.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">MIDI vs audio</div>
+        <div class="article-row-desc">the difference and when to use each.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/what-is-frequency-spectrum.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">The frequency spectrum</div>
+        <div class="article-row-desc">bass, mids, highs, and what lives where.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/what-is-gain-staging.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">Gain staging</div>
+        <div class="article-row-desc">why level management is the foundation of a clean mix.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/what-is-white-noise-music-production.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">White noise in music production</div>
+        <div class="article-row-desc">texture, transitions, and synthesis.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/what-is-music-arrangement.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">Music arrangement</div>
+        <div class="article-row-desc">structure, tension, release, and arrangement tools.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/what-is-eq-music-production.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">What EQ is and how it works in music production.</div>
+        
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/what-is-compression-music-production.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">What compression is and how it works in music production.</div>
+        
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/what-is-a-compressor-used-for.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">What a compressor is used for in music production.</div>
+        
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/serum-2-review.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">Serum 2 review</div>
+        <div class="article-row-desc">the updated wavetable synth tested in full.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/serum-synthesizer-review.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">Serum review</div>
+        <div class="article-row-desc">the benchmark wavetable synthesizer assessed.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/serum-2-vs-vital.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">Serum 2 vs Vital</div>
+        <div class="article-row-desc">wavetable synthesis compared.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/serum-vs-vital.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">Serum vs Vital</div>
+        <div class="article-row-desc">which wavetable synth is right for you.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/vital-synth-review.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">Vital synth review</div>
+        <div class="article-row-desc">the free wavetable synthesizer tested.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/arturia-pigments-review.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">Arturia Pigments review</div>
+        <div class="article-row-desc">the visual wavetable synth tested.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/omnisphere-3-review.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">Omnisphere 3 review</div>
+        <div class="article-row-desc">the flagship software synth updated.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/kontakt-8-review.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">Kontakt 8 review</div>
+        <div class="article-row-desc">Native Instruments' sampler platform tested.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/kontakt-7-vs-kontakt-8.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">Kontakt 7 vs Kontakt 8</div>
+        <div class="article-row-desc">what changed and is it worth upgrading.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/best-synth-plugins.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">The best synth plugins for any genre or style.</div>
+        
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/best-drum-machine-plugins.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">The best drum machine plugins for beat making.</div>
+        
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/best-plugins-for-sound-design.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">The best plugins for sound design and synthesis.</div>
+        
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/best-sample-packs.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">The best sample packs for any genre or production style.</div>
+        
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/best-sample-libraries.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">The best sample libraries for producers and composers.</div>
+        
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/best-free-vst-plugins.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">The best free VST plugins</div>
+        <div class="article-row-desc">quality tools that cost nothing.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/best-guitar-amp-sims.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">The best guitar amp simulator plugins tested.</div>
+        
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/best-vocal-presets-and-chains.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">The best vocal presets and chains for fast results.</div>
+        
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/best-plugins-for-vocals.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">The best plugins for vocal production and mixing.</div>
+        
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/best-plugins-for-vocals-2026.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">The best vocal plugins in 2026</div>
+        <div class="article-row-desc">updated picks.</div>
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+    <a href="../../articles/best-plugins-for-strings.html" class="article-row">
+      <div class="article-row-body">
+        <div class="article-row-title">The best plugins for realistic and expressive strings.</div>
+        
+      </div>
+      <div class="article-row-arrow">→</div>
+    </a>
+  </div>
+</div>
+<footer>
+  <div class="site-footer">
+    <span class="footer-brand">© 2026 MusicProductionWiki</span>
+    <div class="footer-links">
+      <a href="/about.html">About</a>
+      <a href="/bible/">The Bible</a>
     </div>
   </div>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a href="../../index.html" class="site-logo">
-              <div class="logo-mark">
-                <svg width="28" height="22" viewBox="0 0 28 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="0" y="8" width="4" height="14" rx="1" fill="#00e8a2"/>
-                  <rect x="6" y="4" width="4" height="18" rx="1" fill="#00e8a2"/>
-                  <rect x="12" y="0" width="4" height="22" rx="1" fill="#00e8a2"/>
-                  <rect x="18" y="5" width="4" height="17" rx="1" fill="#00e8a2"/>
-                  <rect x="24" y="10" width="4" height="12" rx="1" fill="#00e8a2"/>
-                </svg>
-              </div>
-        <div class="logo-text-group">
-          <span class="logo-text">MusicProductionWiki</span>
-          <span class="logo-sub">The Producer's Reference</span>
-        </div>
-      </a>
-      <nav class="primary-nav">
-        <ul class="nav-list">
-          <li class="nav-item has-dropdown">
-            <button class="nav-link dropdown-toggle" aria-expanded="false">Articles ▾</button>
-            <ul class="dropdown-menu">
-              <li><a href="../../categories/techniques.html">Techniques</a></li>
-              <li><a href="../../categories/comparisons.html">Comparisons</a></li>
-              <li><a href="../../categories/reviews.html">Reviews</a></li>
-              <li><a href="../../categories/daws.html">DAWs</a></li>
-              <li><a href="../../categories/plugins.html">Plugins</a></li>
-              <li><a href="../../categories/ai-music.html">AI Music</a></li>
-              <li><a href="../../categories/music-business.html">Music Business</a></li>
-            </ul>
-          </li>
-          <li class="nav-item has-dropdown">
-            <button class="nav-link dropdown-toggle" aria-expanded="false">Gear ▾</button>
-            <ul class="dropdown-menu">
-              <li><a href="../../categories/hardware.html">Hardware</a></li>
-              <li><a href="../../categories/hardware/audio-interfaces.html">Audio Interfaces</a></li>
-              <li><a href="../../categories/hardware/microphones.html">Microphones</a></li>
-              <li><a href="../../categories/hardware/studio-monitors.html">Studio Monitors</a></li>
-              <li><a href="../../categories/hardware/headphones.html">Headphones</a></li>
-            </ul>
-          </li>
-          <li class="nav-item"><a href="../../about.html" class="nav-link">About</a></li>
-        </ul>
-      </nav>
-      <a href="../../categories/techniques.html" class="nav-cta">Sound Better →</a>
-      <button class="mobile-menu-toggle" aria-label="Toggle menu">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </header>
-  <main class="category-main">
-    <div class="container">
-      <div class="category-hero">
-        <div class="category-breadcrumb">
-          <a href="../../index.html">Home</a>
-          <span>›</span>
-          <a href="../../categories/techniques.html">Techniques</a>
-          <span>›</span>
-          <span>Sound Design</span>
-        </div>
-        <h1 class="category-title">Sound Design</h1>
-        <p class="category-subtitle">Synthesis, sampling, and building sounds from scratch.</p>
-        <span class="article-total">46 articles</span>
-      </div>
-      <div class="article-grid">
-
-        <article class="article-card">
-          <a href="../../articles/sound-design-basics.html" class="article-card-link">
-            <h2 class="article-card-title">Sound design fundamentals</h2>
-            <p class="article-card-desc">oscillators, filters, envelopes, and LFOs.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/what-is-a-synthesizer.html" class="article-card-link">
-            <h2 class="article-card-title">What a synthesizer is, how it works, and the main types explained.</h2>
-            
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/what-is-midi.html" class="article-card-link">
-            <h2 class="article-card-title">MIDI explained</h2>
-            <p class="article-card-desc">what it is, how it works, and how to use it.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/what-is-sampling-in-music.html" class="article-card-link">
-            <h2 class="article-card-title">Sampling in music</h2>
-            <p class="article-card-desc">how it works, clearance, and creative use.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/what-is-a-sample-pack.html" class="article-card-link">
-            <h2 class="article-card-title">What sample packs are and how to use them in your productions.</h2>
-            
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/what-is-vst-plugin.html" class="article-card-link">
-            <h2 class="article-card-title">VST plugins explained</h2>
-            <p class="article-card-desc">what they are and how they work in a DAW.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/what-is-a-vst3-plugin.html" class="article-card-link">
-            <h2 class="article-card-title">VST3 plugins</h2>
-            <p class="article-card-desc">what changed from VST2 and why it matters.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/how-to-layer-synths.html" class="article-card-link">
-            <h2 class="article-card-title">Layering synths</h2>
-            <p class="article-card-desc">stacking sounds for width, depth, and power.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/how-to-make-a-chord-progression.html" class="article-card-link">
-            <h2 class="article-card-title">Chord progressions</h2>
-            <p class="article-card-desc">theory, movement, and production techniques.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/how-to-make-melody.html" class="article-card-link">
-            <h2 class="article-card-title">Melody writing</h2>
-            <p class="article-card-desc">hooks, phrases, and production workflow.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/how-to-make-trap-808s-from-scratch.html" class="article-card-link">
-            <h2 class="article-card-title">Building 808s from scratch</h2>
-            <p class="article-card-desc">synthesis, tuning, and processing.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/how-to-chop-samples.html" class="article-card-link">
-            <h2 class="article-card-title">Sample chopping</h2>
-            <p class="article-card-desc">slicing, rearranging, and flipping loops.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/how-to-make-your-first-sample-pack.html" class="article-card-link">
-            <h2 class="article-card-title">Making your first sample pack</h2>
-            <p class="article-card-desc">recording, processing, and exporting.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/how-to-make-a-lo-fi-sample-pack.html" class="article-card-link">
-            <h2 class="article-card-title">Lo-fi sample pack creation</h2>
-            <p class="article-card-desc">texture, degradation, and character.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/how-to-use-midi-in-your-daw.html" class="article-card-link">
-            <h2 class="article-card-title">MIDI in your DAW</h2>
-            <p class="article-card-desc">recording, editing, quantizing, and routing.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/how-to-use-audio-routing-in-your-daw.html" class="article-card-link">
-            <h2 class="article-card-title">Audio routing</h2>
-            <p class="article-card-desc">sends, buses, sidechains, and signal flow.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/how-to-use-automation-in-your-daw.html" class="article-card-link">
-            <h2 class="article-card-title">Automation</h2>
-            <p class="article-card-desc">volume, effects, and movement across a full track.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/how-to-build-a-plugin-chain.html" class="article-card-link">
-            <h2 class="article-card-title">Building a plugin chain</h2>
-            <p class="article-card-desc">order of operations and signal flow.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/midi-vs-audio-explained.html" class="article-card-link">
-            <h2 class="article-card-title">MIDI vs audio</h2>
-            <p class="article-card-desc">the difference and when to use each.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/what-is-frequency-spectrum.html" class="article-card-link">
-            <h2 class="article-card-title">The frequency spectrum</h2>
-            <p class="article-card-desc">bass, mids, highs, and what lives where.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/what-is-gain-staging.html" class="article-card-link">
-            <h2 class="article-card-title">Gain staging</h2>
-            <p class="article-card-desc">why level management is the foundation of a clean mix.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/what-is-white-noise-music-production.html" class="article-card-link">
-            <h2 class="article-card-title">White noise in music production</h2>
-            <p class="article-card-desc">texture, transitions, and synthesis.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/what-is-music-arrangement.html" class="article-card-link">
-            <h2 class="article-card-title">Music arrangement</h2>
-            <p class="article-card-desc">structure, tension, release, and arrangement tools.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/what-is-eq-music-production.html" class="article-card-link">
-            <h2 class="article-card-title">What EQ is and how it works in music production.</h2>
-            
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/what-is-compression-music-production.html" class="article-card-link">
-            <h2 class="article-card-title">What compression is and how it works in music production.</h2>
-            
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/what-is-a-compressor-used-for.html" class="article-card-link">
-            <h2 class="article-card-title">What a compressor is used for in music production.</h2>
-            
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/serum-2-review.html" class="article-card-link">
-            <h2 class="article-card-title">Serum 2 review</h2>
-            <p class="article-card-desc">the updated wavetable synth tested in full.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/serum-synthesizer-review.html" class="article-card-link">
-            <h2 class="article-card-title">Serum review</h2>
-            <p class="article-card-desc">the benchmark wavetable synthesizer assessed.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/serum-2-vs-vital.html" class="article-card-link">
-            <h2 class="article-card-title">Serum 2 vs Vital</h2>
-            <p class="article-card-desc">wavetable synthesis compared.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/serum-vs-vital.html" class="article-card-link">
-            <h2 class="article-card-title">Serum vs Vital</h2>
-            <p class="article-card-desc">which wavetable synth is right for you.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/vital-synth-review.html" class="article-card-link">
-            <h2 class="article-card-title">Vital synth review</h2>
-            <p class="article-card-desc">the free wavetable synthesizer tested.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/arturia-pigments-review.html" class="article-card-link">
-            <h2 class="article-card-title">Arturia Pigments review</h2>
-            <p class="article-card-desc">the visual wavetable synth tested.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/omnisphere-3-review.html" class="article-card-link">
-            <h2 class="article-card-title">Omnisphere 3 review</h2>
-            <p class="article-card-desc">the flagship software synth updated.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/kontakt-8-review.html" class="article-card-link">
-            <h2 class="article-card-title">Kontakt 8 review</h2>
-            <p class="article-card-desc">Native Instruments' sampler platform tested.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/kontakt-7-vs-kontakt-8.html" class="article-card-link">
-            <h2 class="article-card-title">Kontakt 7 vs Kontakt 8</h2>
-            <p class="article-card-desc">what changed and is it worth upgrading.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/best-synth-plugins.html" class="article-card-link">
-            <h2 class="article-card-title">The best synth plugins for any genre or style.</h2>
-            
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/best-drum-machine-plugins.html" class="article-card-link">
-            <h2 class="article-card-title">The best drum machine plugins for beat making.</h2>
-            
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/best-plugins-for-sound-design.html" class="article-card-link">
-            <h2 class="article-card-title">The best plugins for sound design and synthesis.</h2>
-            
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/best-sample-packs.html" class="article-card-link">
-            <h2 class="article-card-title">The best sample packs for any genre or production style.</h2>
-            
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/best-sample-libraries.html" class="article-card-link">
-            <h2 class="article-card-title">The best sample libraries for producers and composers.</h2>
-            
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/best-free-vst-plugins.html" class="article-card-link">
-            <h2 class="article-card-title">The best free VST plugins</h2>
-            <p class="article-card-desc">quality tools that cost nothing.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/best-guitar-amp-sims.html" class="article-card-link">
-            <h2 class="article-card-title">The best guitar amp simulator plugins tested.</h2>
-            
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/best-vocal-presets-and-chains.html" class="article-card-link">
-            <h2 class="article-card-title">The best vocal presets and chains for fast results.</h2>
-            
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/best-plugins-for-vocals.html" class="article-card-link">
-            <h2 class="article-card-title">The best plugins for vocal production and mixing.</h2>
-            
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/best-plugins-for-vocals-2026.html" class="article-card-link">
-            <h2 class="article-card-title">The best vocal plugins in 2026</h2>
-            <p class="article-card-desc">updated picks.</p>
-          </a>
-        </article>
-        <article class="article-card">
-          <a href="../../articles/best-plugins-for-strings.html" class="article-card-link">
-            <h2 class="article-card-title">The best plugins for realistic and expressive strings.</h2>
-            
-          </a>
-        </article>
-      </div>
-    </div>
-  </main>
-  <footer class="site-footer">
-    <div class="container">
-      <div class="footer-inner">
-        <a href="../../index.html" class="footer-logo">
-          <span class="logo-text">MusicProductionWiki</span>
-        </a>
-        <p class="footer-tagline">The Producer's Reference</p>
-        <nav class="footer-nav">
-          <a href="../../about.html">About</a>
-          <a href="../../categories/techniques.html">Techniques</a>
-          <a href="../../categories/reviews.html">Reviews</a>
-          <a href="../../categories/comparisons.html">Comparisons</a>
-          <a href="../../bible/">The Producer's Bible</a>
-        </nav>
-        <p class="footer-legal">© 2026 MusicProductionWiki. All rights reserved.</p>
-      </div>
-    </div>
-  </footer>
-  <script src="../../js/main.js"></script>
+</footer>
+<script>
+document.querySelectorAll('.nav-dropdown-btn').forEach(function(btn){
+  btn.addEventListener('click',function(e){
+    e.stopPropagation();
+    var li=btn.closest('li');
+    var open=li.classList.contains('open');
+    document.querySelectorAll('.nav-links>li').forEach(function(l){l.classList.remove('open');});
+    if(!open)li.classList.add('open');
+  });
+});
+document.addEventListener('click',function(){
+  document.querySelectorAll('.nav-links>li').forEach(function(l){l.classList.remove('open');});
+});
+</script>
 </body>
 </html>
