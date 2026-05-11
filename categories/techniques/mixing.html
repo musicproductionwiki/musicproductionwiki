@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Mixing | Techniques | Music Production Wiki</title>
+  <meta name="description" content="Sidechain compression, bus routing, low end control, vocal mixing, headphone mixing, and translating your mix to every system.">
+  <link rel="canonical" href="https://musicproductionwiki.com/categories/techniques/mixing.html">
+  <meta property="og:title" content="Mixing — Techniques | Music Production Wiki">
+  <meta property="og:description" content="Sidechain compression, bus routing, low end control, vocal mixing, headphone mixing, and translating your mix to every system.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --amber:#f5a623;--amber-bar:#131000;--amber-border:rgba(245,166,35,0.22);
+    --amber-dim:rgba(245,166,35,0.07);--teal:#00e8a2;
+    --bg:#0a0a0b;--bg2:#111113;--bg3:#1a1a1d;--bg4:#222226;--bg5:#2a2a2e;
+    --text:#f0f0f0;--text2:#a0a0b4;--text3:#6a6a7a;
+    --border:rgba(255,255,255,0.09);--border2:rgba(255,255,255,0.14);
+  }
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;min-height:100vh}
+
+  /* Bible bar */
+  .bible-bar{position:sticky;top:0;z-index:300;background:var(--amber-bar);border-bottom:1px solid rgba(245,166,35,0.28);height:40px;display:flex;align-items:center;padding:0 24px;gap:14px;overflow:hidden}
+  .bible-pill{font-size:9px;font-family:'DM Mono',monospace;background:var(--amber);color:var(--amber-bar);padding:2px 7px;border-radius:3px;letter-spacing:.12em;font-weight:700;white-space:nowrap}
+  .bible-title{font-size:13px;font-weight:600;color:var(--amber);white-space:nowrap}
+  .bible-divider{width:1px;height:14px;background:rgba(245,166,35,0.3);flex-shrink:0}
+  .bible-tag{font-size:11px;color:rgba(245,166,35,0.5);font-family:'DM Mono',monospace;white-space:nowrap}
+  .bible-cta{margin-left:auto;font-size:11px;color:var(--amber);border:1px solid rgba(245,166,35,0.35);padding:4px 12px;border-radius:4px;text-decoration:none;white-space:nowrap;background:var(--amber-dim)}
+
+  /* Main nav */
+  .main-nav{position:sticky;top:40px;z-index:200;background:rgba(10,10,11,0.97);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+  .nav-inner{max-width:1200px;margin:0 auto;height:56px;display:flex;align-items:center;padding:0 24px;gap:0}
+  .site-logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:36px;flex-shrink:0}
+  .logo-icon{width:32px;height:32px;border-radius:8px;background:var(--teal);display:flex;align-items:center;justify-content:center}
+  .logo-text{display:flex;flex-direction:column}
+  .logo-name{font-size:13px;font-weight:600;color:var(--text);letter-spacing:-.01em}
+  .logo-sub{font-size:9px;color:var(--text3);font-family:'DM Mono',monospace;letter-spacing:.07em;text-transform:uppercase}
+  .nav-primary{display:flex;gap:2px;align-items:center;flex:1}
+  .nav-dropdown{position:relative}
+  .nav-btn{background:none;border:none;cursor:pointer;font-size:13px;color:var(--text2);padding:6px 12px;border-radius:6px;font-family:'DM Sans',system-ui,sans-serif;transition:color .15s}
+  .nav-btn:hover{color:var(--text)}
+  .nav-link{font-size:13px;color:var(--text2);text-decoration:none;padding:6px 12px;border-radius:6px;transition:color .15s}
+  .nav-link:hover{color:var(--text)}
+  .drop-menu{display:none;position:absolute;top:calc(100% + 8px);left:0;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:6px;min-width:180px;z-index:400;box-shadow:0 8px 32px rgba(0,0,0,0.4)}
+  .drop-menu.open{display:block}
+  .drop-menu a{display:block;padding:8px 14px;font-size:13px;color:var(--text2);text-decoration:none;border-radius:6px;transition:background .1s,color .1s}
+  .drop-menu a:hover{background:var(--bg4);color:var(--text)}
+  .nav-cta{margin-left:auto;background:var(--teal);color:var(--bg);font-size:13px;font-weight:600;padding:8px 16px;border-radius:8px;text-decoration:none;white-space:nowrap}
+
+  /* Hamburger */
+  .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px;margin-left:12px}
+  .hamburger span{width:22px;height:2px;background:var(--text2);border-radius:2px;display:block;transition:.2s}
+  .mobile-drawer{display:none;flex-direction:column;background:var(--bg2);border-bottom:1px solid var(--border);padding:8px 16px 16px}
+  .mobile-drawer.open{display:flex}
+  .mobile-drawer a{padding:12px 8px;font-size:14px;color:var(--text2);text-decoration:none;border-bottom:1px solid var(--border)}
+  .mobile-drawer a:last-child{border-bottom:none}
+
+  /* Breadcrumb */
+  .breadcrumb{max-width:1200px;margin:0 auto;padding:16px 24px 0;font-size:11px;font-family:'DM Mono',monospace;color:var(--text3);display:flex;gap:8px;align-items:center}
+  .breadcrumb a{color:var(--text3);text-decoration:none}
+  .breadcrumb a:hover{color:var(--text2)}
+
+  /* Hero */
+  .hero{max-width:1200px;margin:0 auto;padding:40px 24px 44px;border-bottom:1px solid var(--border)}
+  .hero-eyebrow{font-size:10px;font-family:'DM Mono',monospace;color:var(--teal);text-transform:uppercase;letter-spacing:.12em;margin-bottom:14px;opacity:.85}
+  .hero h1{font-size:clamp(36px,5vw,52px);font-weight:600;letter-spacing:-.04em;line-height:1.05;margin-bottom:14px}
+  .hero p{font-size:15px;color:var(--text2);max-width:580px;line-height:1.65;font-weight:300}
+
+  /* Category page: subcategory card grid */
+  .subcat-section{max-width:1200px;margin:0 auto;padding:40px 24px 60px}
+  .subcat-meta{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:24px}
+  .subcat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .subcat-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:24px 26px;text-decoration:none;display:flex;flex-direction:column;gap:10px;transition:background .15s,border-color .15s}
+  .subcat-card:hover{background:var(--bg3);border-color:var(--border2)}
+  .subcat-card-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .subcat-card-title{font-size:16px;font-weight:600;color:var(--text);letter-spacing:-.02em}
+  .subcat-card-count{font-size:11px;font-family:'DM Mono',monospace;color:var(--text3);white-space:nowrap}
+  .subcat-card-desc{font-size:13px;color:var(--text2);line-height:1.55}
+  .subcat-card-link{font-size:12px;color:var(--text3);margin-top:2px;transition:color .15s}
+  .subcat-card:hover .subcat-card-link{color:var(--teal)}
+
+  /* Subcategory page: article list */
+  .article-section{max-width:1200px;margin:0 auto;padding:40px 24px 60px}
+  .article-meta{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:24px}
+  .article-list{display:flex;flex-direction:column;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+  .article-row{background:var(--bg2);padding:22px 26px;text-decoration:none;display:flex;align-items:flex-start;gap:20px;border-bottom:1px solid var(--border);transition:background .12s}
+  .article-row:last-child{border-bottom:none}
+  .article-row:hover{background:var(--bg3)}
+  .article-row-body{flex:1;min-width:0}
+  .article-row-title{font-size:15px;font-weight:500;color:var(--text);letter-spacing:-.01em;margin-bottom:5px}
+  .article-row-desc{font-size:13px;color:var(--text2);line-height:1.5}
+  .article-row-arrow{font-size:13px;color:var(--text3);flex-shrink:0;padding-top:2px;transition:color .12s}
+  .article-row:hover .article-row-arrow{color:var(--teal)}
+
+  /* Footer */
+  footer{border-top:1px solid var(--border);padding:40px 24px;text-align:center}
+  footer p{font-size:12px;color:var(--text3)}
+
+  @media(max-width:1024px){
+    .hamburger{display:flex}
+    .nav-primary,.nav-cta{display:none}
+    .subcat-grid{grid-template-columns:1fr}
+  }
+  @media(max-width:600px){
+    .hero h1{font-size:32px}
+  }
+</style>
+</head>
+<body>
+  <!-- Bible bar -->
+  <div class="bible-bar">
+    <span class="bible-pill">NOW LIVE</span>
+    <span class="bible-title">The Producer's Bible</span>
+    <span class="bible-divider"></span>
+    <span class="bible-tag">Every term. Every technique. One place.</span>
+    <a href="../../bible/index.html" class="bible-cta">Explore Free →</a>
+  </div>
+  <!-- Main nav -->
+  <nav class="main-nav" id="mainNav">
+    <div class="nav-inner">
+      <a href="../../index.html" class="site-logo">
+        <div class="logo-icon"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1.5" y="7" width="2.5" height="9" rx="1" fill="#0a0a0b"/><rect x="6" y="4" width="2.5" height="12" rx="1" fill="#0a0a0b"/><rect x="10.5" y="1" width="2.5" height="16" rx="1" fill="#0a0a0b"/><rect x="15" y="5" width="2.5" height="9" rx="1" fill="#0a0a0b"/></svg></div>
+        <div class="logo-text">
+          <span class="logo-name">MusicProductionWiki</span>
+          <span class="logo-sub">The Producer's Reference</span>
+        </div>
+      </a>
+      <div class="nav-primary">
+        <div class="nav-dropdown">
+          <button class="nav-btn" onclick="toggleDrop(this)">Articles ▾</button>
+          <div class="drop-menu">
+            <a href="../../categories/techniques.html">Techniques</a>
+            <a href="../../categories/comparisons.html">Comparisons</a>
+            <a href="../../categories/reviews.html">Reviews</a>
+            <a href="../../categories/ai-music.html">AI Music</a>
+            <a href="../../categories/music-business.html">Music Business</a>
+          </div>
+        </div>
+        <div class="nav-dropdown">
+          <button class="nav-btn" onclick="toggleDrop(this)">Gear ▾</button>
+          <div class="drop-menu">
+            <a href="../../categories/daws.html">DAWs</a>
+            <a href="../../categories/plugins.html">Plugins</a>
+            <a href="../../categories/hardware.html">Hardware</a>
+          </div>
+        </div>
+        <a href="../../about.html" class="nav-link">About</a>
+      </div>
+      <a href="../../categories/techniques.html" class="nav-cta">Sound Better →</a>
+      <button class="hamburger" id="hamburger" onclick="toggleMobile()" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <!-- Mobile drawer -->
+  <div class="mobile-drawer" id="mobileDrawer">
+    <a href="../../categories/techniques.html">Techniques</a>
+    <a href="../../categories/comparisons.html">Comparisons</a>
+    <a href="../../categories/reviews.html">Reviews</a>
+    <a href="../../categories/ai-music.html">AI Music</a>
+    <a href="../../categories/music-business.html">Music Business</a>
+    <a href="../../categories/daws.html">DAWs</a>
+    <a href="../../categories/plugins.html">Plugins</a>
+    <a href="../../categories/hardware.html">Hardware</a>
+    <a href="../../about.html">About</a>
+  </div>
+  <div class="breadcrumb">
+    <a href="../../index.html">Home</a>
+    <span>›</span>
+    <a href="../techniques.html">Techniques</a>
+    <span>›</span>
+    <span style="color:var(--text2)">Mixing</span>
+  </div>
+  <div class="hero">
+    <div class="hero-eyebrow">Techniques › Mixing</div>
+    <h1>Mixing</h1>
+    <p>Sidechain compression, bus routing, low end control, vocal mixing, headphone mixing, and translating your mix to every system.</p>
+  </div>
+  <div class="article-section">
+    <div class="article-meta">28 articles</div>
+    <div class="article-list">
+      <a href="../../articles/sidechain-compression-guide.html" class="article-row">
+        <div class="article-row-body">
+          <div class="article-row-title">Sidechain Compression Guide</div>
+          <div class="article-row-desc">The complete guide to sidechain compression — kick and bass ducking, pumping effects, parallel sidechain, and every DAW setup.</div>
+        </div>
+        <span class="article-row-arrow">→</span>
+      </a>
+      <a href="../../articles/bus-compression-guide.html" class="article-row">
+        <div class="article-row-body">
+          <div class="article-row-title">Bus Compression Guide</div>
+          <div class="article-row-desc">How to use bus compression to glue your mix — drum bus, mix bus, and parallel compression settings for punch and cohesion.</div>
+        </div>
+        <span class="article-row-arrow">→</span>
+      </a>
+      <a href="../../articles/mixing-for-beginners.html" class="article-row">
+        <div class="article-row-body">
+          <div class="article-row-title">Mixing for Beginners</div>
+          <div class="article-row-desc">A complete beginner's guide to mixing — gain staging, EQ, compression, reverb, and the workflow from rough session to polished mix.</div>
+        </div>
+        <span class="article-row-arrow">→</span>
+      </a>
+      <a href="../../articles/mixing-in-mono-guide.html" class="article-row">
+        <div class="article-row-body">
+          <div class="article-row-title">Mixing in Mono Guide</div>
+          <div class="article-row-desc">Why every professional checks their mix in mono, what it reveals that stereo hides, and how to set it up in every major DAW.</div>
+        </div>
+        <span class="article-row-arrow">→</span>
+      </a>
+      <a href="../../articles/mixing-bus-guide.html" class="article-row">
+        <div class="article-row-body">
+          <div class="article-row-title">Mixing Bus Guide</div>
+          <div class="article-row-desc">How to set up and use mix buses effectively — routing, compression, EQ, and the bus structure pros use on every session.</div>
+        </div>
+        <span class="article-row-arrow">→</span>
+      </a>
+      <a href="../../articles/mixing-with-headphones-guide.html" class="article-row">
+        <div class="article-row-body">
+          <div class="article-row-title">Mixing with Headphones Guide</div>
+          <div class="article-row-desc">How to get accurate mixes on headphones — crossfeed plugins, reference tools, and compensating for headphone frequency response.</div>
+        </div>
+        <span class="article-row-arrow">→</span>
+      </a>
+      <a href="../../articles/hip-hop-mixing-guide.html" class="article-row">
+        <div class="article-row-body">
+          <div class="article-row-title">Hip-Hop Mixing Guide</div>
+          <div class="article-row-desc">808 balance, vocal chain, drum punch, and the low end relationships that define a hard-hitting hip-hop mix.</div>
+        </div>
+        <span class="article-row-arrow">→</span>
+      </a>
+      <a href="../../articles/rap-vocal-mixing-guide.html" class="article-row">
+        <div class="article-row-body">
+          <div class="article-row-title">Rap Vocal Mixing Guide</div>
+          <div class="article-row-desc">The complete rap vocal chain — EQ, compression, de-essing, reverb, delay, and how to cut through a beat without fighting it.</div>
+        </div>
+        <span class="article-row-arrow">→</span>
+      </a>
+      <a href="../../articles/vocal-mixing-guide.html" class="article-row">
+        <div class="article-row-body">
+          <div class="article-row-title">Vocal Mixing Guide</div>
+          <div class="article-row-desc">The complete vocal mixing chain — EQ, compression, saturation, reverb, delay, and sitting vocals perfectly in any mix.</div>
+        </div>
+        <span class="article-row-arrow">→</span>
+      </a>
+      <a href="../../articles/drum-mixing-guide.html" class="article-row">
+        <div class="article-row-body">
+          <div class="article-row-title">Drum Mixing Guide</div>
+          <div class="article-row-desc">How to mix drums — individual processing, bus compression, parallel smash, transient shaping, and making drums hit in context.</div>
+        </div>
+        <span class="article-row-arrow">→</span>
+      </a>
+      <a href="../../articles/kick-drum-mixing-guide.html" class="article-row">
+        <div class="article-row-body">
+          <div class="article-row-title">Kick Drum Mixing Guide</div>
+          <div class="article-row-desc">Kick drum EQ, compression, transient shaping, and sidechain techniques for a kick that hits hard on every system.</div>
+        </div>
+        <span class="article-row-arrow">→</span>
+      </a>
+      <a href="../../articles/bass-mixing-guide.html" class="article-row">
+        <div class="article-row-body">
+          <div class="article-row-title">Bass Mixing Guide</div>
+          <div class="article-row-desc">How to mix bass — frequency balance, sidechaining, saturation for translation, and the kick-bass relationship explained.</div>
+        </div>
+        <span class="article-row-arrow">→</span>
+      </a>
+      <a href="../../articles/how-to-mix-and-master.html" class="article-row">
+        <div class="article-row-body">
+          <div class="article-row-title">How to Mix and Master</div>
+          <div class="article-row-desc">A complete walkthrough of the full mix and master process — from setting levels to delivering a streaming-ready master.</div>
+        </div>
+        <span class="article-row-arrow">→</span>
+      </a>
+      <a href="../../articles/how-to-mix-low-end.html" class="article-row">
+        <div class="article-row-body">
+          <div class="article-row-title">How to Mix Low End</div>
+          <div class="article-row-desc">The relationship between kick and bass, sidechaining, mono low end, and techniques that make a mix hit on any system.</div>
+        </div>
+        <span class="article-row-arrow">→</span>
+      </a>
+      <a href="../../articles/how-to-mix-rap-vocals.html" class="article-row">
+        <div class="article-row-body">
+          <div class="article-row-title">How to Mix Rap Vocals</div>
+          <div class="article-row-desc">Step-by-step rap vocal mixing — tuning, timing, doubles, chain settings, and getting the right energy for every style.</div>
+        </div>
+        <span class="article-row-arrow">→</span>
+      </a>
+      <a href="../../articles/how-to-mix-electronic-music.html" class="article-row">
+        <div class="article-row-body">
+          <div class="article-row-title">How to Mix Electronic Music</div>
+          <div class="article-row-desc">Mixing techniques specific to electronic music — sidechain pumping, wide stereo, sub management, and club-ready loudness.</div>
+        </div>
+        <span class="article-row-arrow">→</span>
+      </a>
+      <a href="../../articles/mix-translation-guide.html" class="article-row">
+        <div class="article-row-body">
+          <div class="article-row-title">Mix Translation Guide</div>
+          <div class="article-row-desc">How to make your mix sound good on every system — phones, cars, clubs, and earbuds. Reference tracks and translation workflow.</div>
+        </div>
+        <span class="article-row-arrow">→</span>
+      </a>
+      <a href="../../articles/mixing-for-streaming.html" class="article-row">
+        <div class="article-row-body">
+          <div class="article-row-title">Mixing for Streaming</div>
+          <div class="article-row-desc">LUFS targets, true peak limits, and the delivery settings for every major streaming platform.</div>
+        </div>
+        <span class="article-row-arrow">→</span>
+      </a>
+      <a href="../../articles/mixing-genres-guide.html" class="article-row">
+        <div class="article-row-body">
+          <div class="article-row-title">Mixing Genres Guide</div>
+          <div class="article-row-desc">How different genres demand different mix approaches — and the specific techniques that define each sound.</div>
+        </div>
+        <span class="article-row-arrow">→</span>
+      </a>
+      <a href="../../articles/headphone-mixing-techniques.html" class="article-row">
+        <div class="article-row-body">
+          <div class="article-row-title">Headphone Mixing Techniques</div>
+          <div class="article-row-desc">Practical techniques for accurate headphone mixing — reference plugins, crossfeed, and compensating for headphone response curves.</div>
+        </div>
+        <span class="article-row-arrow">→</span>
+      </a>
+      <a href="../../articles/reference-track-guide.html" class="article-row">
+        <div class="article-row-body">
+          <div class="article-row-title">Reference Track Guide</div>
+          <div class="article-row-desc">How to use reference tracks professionally — choosing references, A/B comparison workflow, and what to actually listen for.</div>
+        </div>
+        <span class="article-row-arrow">→</span>
+      </a>
+      <a href="../../articles/frequency-masking-guide.html" class="article-row">
+        <div class="article-row-body">
+          <div class="article-row-title">Frequency Masking Guide</div>
+          <div class="article-row-desc">What frequency masking is, why it makes mixes sound muddy, and the EQ and arrangement techniques to fix it.</div>
+        </div>
+        <span class="article-row-arrow">→</span>
+      </a>
+      <a href="../../articles/loudness-war-guide.html" class="article-row">
+        <div class="article-row-body">
+          <div class="article-row-title">Loudness War Guide</div>
+          <div class="article-row-desc">The history of the loudness war, how streaming normalization changed everything, and where to target your masters.</div>
+        </div>
+        <span class="article-row-arrow">→</span>
+      </a>
+      <a href="../../articles/lufs-guide.html" class="article-row">
+        <div class="article-row-body">
+          <div class="article-row-title">LUFS Guide</div>
+          <div class="article-row-desc">What LUFS means, integrated vs short-term vs momentary, and the exact targets for every streaming platform and broadcast standard.</div>
+        </div>
+        <span class="article-row-arrow">→</span>
+      </a>
+      <a href="../../articles/punchy-mix-guide.html" class="article-row">
+        <div class="article-row-body">
+          <div class="article-row-title">Punchy Mix Guide</div>
+          <div class="article-row-desc">How to make your mix sound punchy and energetic — transient shaping, parallel compression, and arrangement techniques for impact.</div>
+        </div>
+        <span class="article-row-arrow">→</span>
+      </a>
+      <a href="../../articles/dolby-atmos-mixing-guide.html" class="article-row">
+        <div class="article-row-body">
+          <div class="article-row-title">Dolby Atmos Mixing Guide</div>
+          <div class="article-row-desc">How to mix in Dolby Atmos — spatial audio concepts, DAW setup, object-based mixing, and delivering for Apple Music.</div>
+        </div>
+        <span class="article-row-arrow">→</span>
+      </a>
+      <a href="../../articles/dj-mixing-guide.html" class="article-row">
+        <div class="article-row-body">
+          <div class="article-row-title">DJ Mixing Guide</div>
+          <div class="article-row-desc">DJ mixing fundamentals — beatmatching, phrase mixing, EQ mixing, effects, and building sets that work on a dancefloor.</div>
+        </div>
+        <span class="article-row-arrow">→</span>
+      </a>
+      <a href="../../articles/harmonic-mixing-guide.html" class="article-row">
+        <div class="article-row-body">
+          <div class="article-row-title">Harmonic Mixing Guide</div>
+          <div class="article-row-desc">Mixing in key using the Camelot Wheel — how harmonic mixing creates smooth transitions and energy flow in DJ sets.</div>
+        </div>
+        <span class="article-row-arrow">→</span>
+      </a>
+    </div>
+  </div>
+  <footer><p>© 2025 Music Production Wiki · <a href="../../about.html" style="color:var(--text3)">About</a></p></footer>
+  <script>
+  function toggleDrop(btn){
+    const menu=btn.nextElementSibling;
+    const isOpen=menu.classList.contains('open');
+    document.querySelectorAll('.drop-menu.open').forEach(m=>m.classList.remove('open'));
+    if(!isOpen)menu.classList.add('open');
+  }
+  document.addEventListener('click',e=>{
+    if(!e.target.closest('.nav-dropdown'))
+      document.querySelectorAll('.drop-menu.open').forEach(m=>m.classList.remove('open'));
+  });
+  function toggleMobile(){
+    document.getElementById('mobileDrawer').classList.toggle('open');
+  }
+</script>
+</body>
+</html>
