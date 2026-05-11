@@ -71,10 +71,11 @@
   .dropdown-menu {
     display: none; position: absolute; top: calc(100% + 8px); left: 0;
     background: #18181b; border: 1px solid var(--border); border-radius: 8px;
-    padding: 6px; min-width: 200px; z-index: 400; box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    padding: 6px; min-width: 200px; z-index: 9999; box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    pointer-events: auto;
   }
-  .nav-links > li:hover .dropdown-menu { display: block; }
-  .dropdown-menu a { display: block; padding: 8px 12px; font-size: 13px; color: var(--muted); text-decoration: none; border-radius: 5px; transition: all .12s; }
+  .nav-links > li.open .dropdown-menu { display: block; }
+  .dropdown-menu a { display: block; padding: 8px 12px; font-size: 13px; color: var(--muted); text-decoration: none; border-radius: 5px; transition: all .12s; pointer-events: auto; }
   .dropdown-menu a:hover { background: rgba(255,255,255,0.05); color: var(--text); }
   .nav-cta { margin-left: auto; background: var(--teal); color: #000; font-size: 13px; font-weight: 600; padding: 7px 16px; border-radius: 6px; text-decoration: none; white-space: nowrap; }
   .hamburger { display: none; background: none; border: none; cursor: pointer; color: var(--text); font-size: 22px; margin-left: auto; padding: 4px 8px; }
@@ -360,16 +361,16 @@
 </footer>
 <script>
 document.querySelectorAll('.nav-dropdown-btn').forEach(function(btn){
-  btn.addEventListener('click',function(e){
+  btn.addEventListener('click', function(e){
     e.stopPropagation();
-    var li=btn.closest('li');
-    var open=li.classList.contains('open');
-    document.querySelectorAll('.nav-links>li').forEach(function(l){l.classList.remove('open');});
-    if(!open)li.classList.add('open');
+    var li = btn.closest('li');
+    var isOpen = li.classList.contains('open');
+    document.querySelectorAll('.nav-list > li').forEach(function(l){ l.classList.remove('open'); });
+    if(!isOpen){ li.classList.add('open'); }
   });
 });
-document.addEventListener('click',function(){
-  document.querySelectorAll('.nav-links>li').forEach(function(l){l.classList.remove('open');});
+document.addEventListener('click', function(){
+  document.querySelectorAll('.nav-list > li').forEach(function(l){ l.classList.remove('open'); });
 });
 </script>
 </body>
