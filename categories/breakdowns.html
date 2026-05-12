@@ -118,7 +118,7 @@ footer{border-top:1px solid var(--bd);padding:36px 2.5rem}
 </style>
 </head>
 <body>
-<div class="bible-bar"><div class="bible-bar-inner"><div class="bible-bar-left"><span class="bible-bar-badge">Now Live</span><span class="bible-bar-title">The Producer's Bible</span><div class="bible-bar-divider"></div><span class="bible-bar-tagline">Every term. Every technique. One place.</span></div><a href="../bible/" class="bible-bar-cta"><span class="bible-bar-dot"></span>Explore Free &#8594;</a></div></div>
+
 <nav class="site-nav"><div class="nav-inner">
 <a href="../" class="nav-logo"><div class="logo-mark"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1.5" y="7" width="2.5" height="9" rx="1.2" fill="#0a0a0b"/><rect x="6" y="4" width="2.5" height="12" rx="1.2" fill="#0a0a0b"/><rect x="10.5" y="1" width="2.5" height="16" rx="1.2" fill="#0a0a0b"/><rect x="15" y="5" width="2.5" height="9" rx="1.2" fill="#0a0a0b"/></svg></div><div><div class="logo-text">MusicProductionWiki</div><span class="logo-sub">The Producer's Reference</span></div></a>
 <ul class="nav-primary">
@@ -135,6 +135,67 @@ footer{border-top:1px solid var(--bd);padding:36px 2.5rem}
   <a href="../">Home</a>
   <span style="opacity:.4">&#8250;</span>
   <span style="color:var(--t2)">Breakdowns</span>
+
+<!-- mpw-cat-fix-s17-v1 -->
+<!-- mpw-homepage-search-v1 -->
+<button class="nav-search-btn" id="searchToggle" aria-label="Search">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+  </svg>
+</button>
+<div class="search-overlay" id="searchOverlay" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="search-modal">
+    <div class="search-input-wrap">
+      <svg class="search-icon-inner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input type="text" id="searchInput" placeholder="Search 500+ articles..." autocomplete="off" autofocus />
+      <button class="search-close-btn" id="searchClose" aria-label="Close search">&times;</button>
+    </div>
+    <div id="searchResults" class="search-results"></div>
+  </div>
+</div>
+<script>
+(function(){
+  var IDX = '../search-index.json';
+  var data = null;
+  var tog = document.getElementById('searchToggle');
+  var ov  = document.getElementById('searchOverlay');
+  var inp = document.getElementById('searchInput');
+  var res = document.getElementById('searchResults');
+  var cls = document.getElementById('searchClose');
+  if (!tog||!ov) return;
+  function open(){
+    ov.style.display='flex';
+    setTimeout(function(){ov.classList.add('active');if(inp)inp.focus();},10);
+    if(!data)fetch(IDX).then(function(r){return r.json();}).then(function(d){data=d;}).catch(function(){});
+  }
+  function close(){
+    ov.classList.remove('active');
+    setTimeout(function(){ov.style.display='none';if(res)res.innerHTML='';if(inp)inp.value='';},300);
+  }
+  tog.addEventListener('click',open);
+  if(cls)cls.addEventListener('click',close);
+  ov.addEventListener('click',function(e){if(e.target===ov)close();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+  if(inp){
+    inp.addEventListener('input',function(){
+      var q=inp.value.trim().toLowerCase();
+      if(!q||!data){res.innerHTML='';return;}
+      var hits=data.filter(function(a){
+        return (a.title&&a.title.toLowerCase().indexOf(q)!==-1)||(a.description&&a.description.toLowerCase().indexOf(q)!==-1);
+      }).slice(0,8);
+      if(!hits.length){res.innerHTML='<p class="no-results">No results found.</p>';return;}
+      res.innerHTML=hits.map(function(a){
+        return '<a class="search-result-item" href="'+(a.url||'#')+'">'
+          +'<span class="result-title">'+(a.title||'')+'</span>'
+          +(a.description?'<span class="result-desc">'+a.description.slice(0,100)+'...</span>':'')
+          +'</a>';
+      }).join('');
+    });
+  }
+})();
+</script>
 </nav>
 <div class="page-hero">
   <div class="page-eyebrow">Category</div>

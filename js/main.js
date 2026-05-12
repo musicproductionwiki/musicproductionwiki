@@ -636,6 +636,7 @@
   });
 })();
 
+/* mpw-sidebar-ra-disabled-s17 — disabled S17
 /* ── SIDEBAR RELATED ARTICLES WIDGET ────────────────────────────────── */
 (function() {
   const aside = document.querySelector('aside');
@@ -659,6 +660,7 @@
     + '<div class="sidebar-widget-body"><ul class="sidebar-list" style="padding:0.25rem 0">' + links + '</ul></div>';
   aside.appendChild(widget);
 })();
+*/
 
 /* ---- LAYOUT FIXES ---- */
 (function applyLayoutFixes() {
