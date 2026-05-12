@@ -944,5 +944,36 @@ function mpwFaqToggle(el) {
   else{init();}
 })();
 </script>
+<script id="mpw-close-fix-v1">
+(function(){
+  function applyFix(){
+    var overlay=document.getElementById('searchOverlay');
+    if(!overlay)return;
+    if(!document.getElementById('mpwCloseBtn')){
+      var wrap=overlay.querySelector('.search-input-wrap');
+      if(wrap){
+        var x=document.createElement('button');
+        x.id='mpwCloseBtn';
+        x.setAttribute('aria-label','Close search');
+        x.innerHTML='&times;';
+        x.style.cssText='background:none;border:none;cursor:pointer;color:#888;font-size:24px;line-height:1;padding:0 4px;flex-shrink:0;';
+        x.addEventListener('click',closeSearch);
+        wrap.appendChild(x);
+      }
+    }
+    overlay.addEventListener('click',function(e){
+      var box=overlay.querySelector('.search-box');
+      if(box&&!box.contains(e.target))closeSearch();
+    });
+    function closeSearch(){
+      overlay.classList.remove('open');
+      var inp=document.getElementById('searchInput');
+      if(inp){inp.value='';inp.dispatchEvent(new Event('input'));}
+    }
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',applyFix);}
+  else{applyFix();}
+})();
+</script>
 </body>
 </html>
