@@ -24,31 +24,11 @@
   html { scroll-behavior: smooth; }
   body { background: var(--bg); color: var(--text); font-family: var(--font); font-size: 16px; line-height: 1.6; min-height: 100vh; }
 
-  /* Bible Bar */
-  .bible-bar {
-    position: sticky; top: 0; z-index: 300;
-    background: #131000; border-bottom: 1px solid rgba(245,166,35,0.28);
-    height: 40px; display: flex; align-items: center; justify-content: center;
-    padding: 0 24px; gap: 14px; overflow: hidden;
-  }
-  .bible-pill {
-    font-size: 9px; font-family: 'DM Mono', monospace; background: #f5a623;
-    color: #131000; padding: 2px 7px; border-radius: 3px; letter-spacing: .12em;
-    font-weight: 700; white-space: nowrap;
-  }
-  .bible-title { font-size: 13px; font-weight: 600; color: #f5a623; white-space: nowrap; }
-  .bible-divider { width: 1px; height: 14px; background: rgba(245,166,35,0.3); flex-shrink: 0; }
-  .bible-tag { font-size: 11px; color: rgba(245,166,35,0.5); font-family: 'DM Mono', monospace; white-space: nowrap; }
-  .bible-cta {
-    font-size: 11px; color: #f5a623; border: 1px solid rgba(245,166,35,0.35);
-    padding: 4px 12px; border-radius: 4px; text-decoration: none;
-    white-space: nowrap; background: rgba(245,166,35,0.07);
-  }
-  .bible-cta:hover { background: rgba(245,166,35,0.15); }
+  
 
   /* Nav */
   .site-nav {
-    position: sticky; top: 40px; z-index: 200;
+    position: sticky; top: 0; z-index: 200;
     background: rgba(10,10,11,0.95); backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border); height: 56px;
     display: flex; align-items: center; padding: 0 24px;
@@ -126,6 +106,7 @@
   .footer-links a { color: var(--muted); text-decoration: none; }
   .footer-links a:hover { color: var(--teal); }
 </style>
+<!-- mpw-cat-fix-s17-v2 -->
 </head>
 <body>
 
@@ -159,8 +140,9 @@
       </li>
       <li><a href="../about.html">About</a></li>
     </ul>
+    <li><a href="../bible/" style="color:#f5a623;font-weight:600;">The Producer's Bible &rarr;</a></li>
     <a href="../categories/techniques.html" class="nav-cta">Sound Better →</a>
-    <button class="hamburger" onclick="document.getElementById('drawer').classList.add('open')">&#9776;</button>
+    <button id="catSearchBtn" aria-label="Search" style="background:none;border:none;cursor:pointer;color:#888;padding:6px;display:flex;align-items:center;justify-content:center;border-radius:6px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button><button class="hamburger" onclick="document.getElementById('drawer').classList.add('open')">&#9776;</button>
   </div>
 </nav>
 <div class="mobile-drawer" id="drawer">
@@ -181,66 +163,7 @@
   <nav class="breadcrumb">
     <a href="../index.html">Home</a> › <span>Comparisons</span>
   
-<!-- mpw-cat-fix-s17-v1 -->
-<!-- mpw-homepage-search-v1 -->
-<button class="nav-search-btn" id="searchToggle" aria-label="Search">
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-  </svg>
-</button>
-<div class="search-overlay" id="searchOverlay" role="dialog" aria-modal="true" aria-label="Search">
-  <div class="search-modal">
-    <div class="search-input-wrap">
-      <svg class="search-icon-inner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-      </svg>
-      <input type="text" id="searchInput" placeholder="Search 500+ articles..." autocomplete="off" autofocus />
-      <button class="search-close-btn" id="searchClose" aria-label="Close search">&times;</button>
-    </div>
-    <div id="searchResults" class="search-results"></div>
-  </div>
-</div>
-<script>
-(function(){
-  var IDX = '../search-index.json';
-  var data = null;
-  var tog = document.getElementById('searchToggle');
-  var ov  = document.getElementById('searchOverlay');
-  var inp = document.getElementById('searchInput');
-  var res = document.getElementById('searchResults');
-  var cls = document.getElementById('searchClose');
-  if (!tog||!ov) return;
-  function open(){
-    ov.style.display='flex';
-    setTimeout(function(){ov.classList.add('active');if(inp)inp.focus();},10);
-    if(!data)fetch(IDX).then(function(r){return r.json();}).then(function(d){data=d;}).catch(function(){});
-  }
-  function close(){
-    ov.classList.remove('active');
-    setTimeout(function(){ov.style.display='none';if(res)res.innerHTML='';if(inp)inp.value='';},300);
-  }
-  tog.addEventListener('click',open);
-  if(cls)cls.addEventListener('click',close);
-  ov.addEventListener('click',function(e){if(e.target===ov)close();});
-  document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
-  if(inp){
-    inp.addEventListener('input',function(){
-      var q=inp.value.trim().toLowerCase();
-      if(!q||!data){res.innerHTML='';return;}
-      var hits=data.filter(function(a){
-        return (a.title&&a.title.toLowerCase().indexOf(q)!==-1)||(a.description&&a.description.toLowerCase().indexOf(q)!==-1);
-      }).slice(0,8);
-      if(!hits.length){res.innerHTML='<p class="no-results">No results found.</p>';return;}
-      res.innerHTML=hits.map(function(a){
-        return '<a class="search-result-item" href="'+(a.url||'#')+'">'
-          +'<span class="result-title">'+(a.title||'')+'</span>'
-          +(a.description?'<span class="result-desc">'+a.description.slice(0,100)+'...</span>':'')
-          +'</a>';
-      }).join('');
-    });
-  }
-})();
-</script>
+
 </nav>
   <section class="cat-hero">
     <div class="cat-eyebrow">Browse by Category</div>
@@ -321,6 +244,47 @@ document.querySelectorAll('.nav-dropdown-btn').forEach(function(btn){
 document.addEventListener('click', function(){
   document.querySelectorAll('.nav-list > li').forEach(function(l){ l.classList.remove('open'); });
 });
+</script>
+
+<!-- mpw-cat-fix-s17-v2-search -->
+<div class="search-overlay" id="catSearchOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;align-items:flex-start;justify-content:center;padding-top:80px;">
+  <div style="background:#18181c;border:1px solid rgba(255,255,255,.15);border-radius:14px;width:100%;max-width:600px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.7);margin:0 16px;">
+    <div style="display:flex;align-items:center;padding:16px 20px;gap:12px;border-bottom:1px solid rgba(255,255,255,.07);">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="#666" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="#666" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input id="catSearchInput" type="text" placeholder="Search 500+ articles..." autocomplete="off"
+        style="flex:1;background:none;border:none;outline:none;font-size:16px;color:#fff;font-family:inherit;" />
+      <button id="catSearchClose" aria-label="Close search"
+        style="background:none;border:none;cursor:pointer;color:#888;font-size:24px;line-height:1;padding:0 4px;">&times;</button>
+    </div>
+    <div id="catSearchResults" style="max-height:400px;overflow-y:auto;padding:8px;"></div>
+  </div>
+</div>
+<script>
+(function(){
+  var IDX='../search-index.json';
+  var data=null;
+  var ov=document.getElementById('catSearchOverlay');
+  var inp=document.getElementById('catSearchInput');
+  var res=document.getElementById('catSearchResults');
+  var cls=document.getElementById('catSearchClose');
+  var btn=document.getElementById('catSearchBtn');
+  if(!ov||!btn)return;
+  function open(){ov.style.display='flex';setTimeout(function(){if(inp)inp.focus();},10);if(!data)fetch(IDX).then(function(r){return r.json();}).then(function(d){data=d;}).catch(function(){});}
+  function close(){ov.style.display='none';if(inp)inp.value='';if(res)res.innerHTML='';}
+  btn.addEventListener('click',open);
+  if(cls)cls.addEventListener('click',close);
+  ov.addEventListener('click',function(e){if(e.target===ov)close();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+  if(inp){
+    inp.addEventListener('input',function(){
+      var q=inp.value.trim().toLowerCase();
+      if(!q||!data){res.innerHTML='';return;}
+      var hits=data.filter(function(a){return(a.title&&a.title.toLowerCase().indexOf(q)!==-1)||(a.description&&a.description.toLowerCase().indexOf(q)!==-1);}).slice(0,8);
+      if(!hits.length){res.innerHTML='<div style="padding:16px;color:#666;font-size:13px;text-align:center">No results found</div>';return;}
+      res.innerHTML=hits.map(function(a){return'<a href="'+(a.url||'#')+'" style="display:flex;flex-direction:column;padding:10px 14px;border-radius:8px;text-decoration:none;color:#c8c8d8;cursor:pointer;" onmouseover="this.style.background='rgba(255,255,255,.06)'" onmouseout="this.style.background=''"><span style="font-size:11px;color:#00e8a2;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">'+(a.category||'')+'</span><span style="font-size:14px;font-weight:500;color:#fff;">'+(a.title||'')+'</span></a>';}).join('');
+    });
+  }
+})();
 </script>
 </body>
 </html>
