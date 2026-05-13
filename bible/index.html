@@ -468,8 +468,6 @@ footer{border-top:1px solid var(--bd);padding:32px 2.5rem}
 
 <script id="mpw-bible-search">
 (function(){
-  /* ── Seed data: drives ticker, A–Z, and both search bars
-     until bible-index.json exists with real entries ── */
   var SEEDS=[
     {slug:'compression',term:'Compression',category:'Signal Processing',excerpt:'Reduces dynamic range — controls peaks, evens out level.'},
     {slug:'threshold',term:'Threshold',category:'Signal Processing',excerpt:'The level at which a compressor begins to act on the signal.'},
@@ -477,61 +475,61 @@ footer{border-top:1px solid var(--bd);padding:32px 2.5rem}
     {slug:'release',term:'Release',category:'Signal Processing',excerpt:'How quickly a compressor disengages after the signal falls below threshold.'},
     {slug:'ratio',term:'Ratio',category:'Signal Processing',excerpt:'The degree of gain reduction applied above the threshold.'},
     {slug:'makeup-gain',term:'Makeup Gain',category:'Signal Processing',excerpt:'Compensates for volume lost during compression.'},
-    {slug:'knee',term:'Knee',category:'Signal Processing',excerpt:'How gradually a compressor transitions into gain reduction around the threshold.'},
+    {slug:'knee',term:'Knee',category:'Signal Processing',excerpt:'How gradually a compressor transitions into gain reduction.'},
     {slug:'gain-reduction',term:'Gain Reduction',category:'Signal Processing',excerpt:'The amount of volume reduction applied by a compressor, in dB.'},
     {slug:'limiting',term:'Limiting',category:'Signal Processing',excerpt:'Extreme compression — ratio of 10:1 or higher.'},
     {slug:'parallel-compression',term:'Parallel Compression',category:'Signal Processing',excerpt:'Blending a heavily compressed signal with the dry original.'},
     {slug:'bus-compression',term:'Bus Compression',category:'Signal Processing',excerpt:'Gentle compression on a group or mix bus to glue elements together.'},
-    {slug:'sidechain',term:'Sidechain',category:'Signal Processing',excerpt:'Compression triggered by a secondary signal — the pumping house kick technique.'},
+    {slug:'sidechain',term:'Sidechain',category:'Signal Processing',excerpt:'Compression triggered by a secondary signal.'},
     {slug:'reverb',term:'Reverb',category:'Time & Space',excerpt:'Simulates acoustic reflections of a physical space.'},
     {slug:'delay',term:'Delay',category:'Time & Space',excerpt:'Repeats the input signal after a set time interval.'},
-    {slug:'pre-delay',term:'Pre-delay',category:'Time & Space',excerpt:'Gap between dry signal and onset of reverb — separates source from space.'},
-    {slug:'decay',term:'Decay',category:'Time & Space',excerpt:'How long reverb or a sound fades to silence after the source stops.'},
-    {slug:'wet-dry',term:'Wet/Dry',category:'Time & Space',excerpt:'Ratio of processed signal to unprocessed signal in any effect.'},
+    {slug:'pre-delay',term:'Pre-delay',category:'Time & Space',excerpt:'Gap between dry signal and onset of reverb.'},
+    {slug:'decay',term:'Decay',category:'Time & Space',excerpt:'How long reverb fades to silence after the source stops.'},
+    {slug:'wet-dry',term:'Wet/Dry',category:'Time & Space',excerpt:'Ratio of processed to unprocessed signal in any effect.'},
     {slug:'chorus',term:'Chorus',category:'Time & Space',excerpt:'Modulated delay that thickens a signal by simulating multiple voices.'},
     {slug:'eq',term:'EQ',category:'Frequency',excerpt:'Equalisation — boosting or cutting specific frequency ranges.'},
-    {slug:'frequency',term:'Frequency',category:'Frequency',excerpt:'Cycles per second of a sound wave, in Hz. Determines pitch and tone.'},
+    {slug:'frequency',term:'Frequency',category:'Frequency',excerpt:'Cycles per second of a sound wave, in Hz.'},
     {slug:'low-pass-filter',term:'Low-Pass Filter',category:'Frequency',excerpt:'Passes frequencies below the cutoff — rolls off highs above it.'},
-    {slug:'high-pass-filter',term:'High-Pass Filter',category:'Frequency',excerpt:'Passes frequencies above the cutoff — removes low-end rumble below it.'},
-    {slug:'resonance',term:'Resonance',category:'Frequency',excerpt:'Emphasis of frequencies around the filter cutoff — adds character and edge.'},
-    {slug:'notch-filter',term:'Notch Filter',category:'Frequency',excerpt:'Cuts a very narrow frequency band — removes a specific problem frequency.'},
-    {slug:'shelf',term:'Shelf',category:'Frequency',excerpt:'Boosts or cuts all frequencies above or below a set point by a fixed amount.'},
+    {slug:'high-pass-filter',term:'High-Pass Filter',category:'Frequency',excerpt:'Passes frequencies above the cutoff — removes low-end rumble.'},
+    {slug:'resonance',term:'Resonance',category:'Frequency',excerpt:'Emphasis of frequencies around the filter cutoff.'},
+    {slug:'notch-filter',term:'Notch Filter',category:'Frequency',excerpt:'Cuts a very narrow frequency band.'},
+    {slug:'shelf',term:'Shelf',category:'Frequency',excerpt:'Boosts or cuts all frequencies above or below a set point.'},
     {slug:'gain-staging',term:'Gain Staging',category:'Levels & Headroom',excerpt:'Setting appropriate signal levels at every point in the chain.'},
-    {slug:'headroom',term:'Headroom',category:'Levels & Headroom',excerpt:'Buffer between nominal level and maximum before clipping occurs.'},
+    {slug:'headroom',term:'Headroom',category:'Levels & Headroom',excerpt:'Buffer between nominal level and maximum before clipping.'},
     {slug:'clipping',term:'Clipping',category:'Levels & Headroom',excerpt:'Distortion when a signal exceeds the maximum level a system can handle.'},
-    {slug:'lufs',term:'LUFS',category:'Levels & Headroom',excerpt:'Loudness Units relative to Full Scale — standard measurement for perceived loudness.'},
+    {slug:'lufs',term:'LUFS',category:'Levels & Headroom',excerpt:'Loudness Units relative to Full Scale.'},
     {slug:'true-peak',term:'True Peak',category:'Levels & Headroom',excerpt:'The actual maximum peak level including inter-sample peaks.'},
     {slug:'noise-floor',term:'Noise Floor',category:'Levels & Headroom',excerpt:'The level of background noise inherent in any recording system.'},
     {slug:'oscillator',term:'Oscillator',category:'Synthesis',excerpt:'The signal generator at the heart of a synthesizer.'},
     {slug:'envelope',term:'Envelope',category:'Synthesis',excerpt:'ADSR — how a sound evolves over time.'},
-    {slug:'lfo',term:'LFO',category:'Synthesis',excerpt:'Low Frequency Oscillator — used to modulate other parameters over time.'},
-    {slug:'filter',term:'Filter',category:'Synthesis',excerpt:'Shapes frequency content by attenuating certain frequency ranges.'},
+    {slug:'lfo',term:'LFO',category:'Synthesis',excerpt:'Low Frequency Oscillator — modulates other parameters over time.'},
+    {slug:'filter',term:'Filter',category:'Synthesis',excerpt:'Shapes frequency content by attenuating certain ranges.'},
     {slug:'adsr',term:'ADSR',category:'Synthesis',excerpt:'Attack, Decay, Sustain, Release — the four stages of an amplitude envelope.'},
-    {slug:'wavetable',term:'Wavetable',category:'Synthesis',excerpt:'Stored waveform data that can be scanned to create complex timbres.'},
+    {slug:'wavetable',term:'Wavetable',category:'Synthesis',excerpt:'Stored waveform data scanned to create complex timbres.'},
     {slug:'fm-synthesis',term:'FM Synthesis',category:'Synthesis',excerpt:'Frequency Modulation — one oscillator modulates the frequency of another.'},
-    {slug:'subtractive-synthesis',term:'Subtractive Synthesis',category:'Synthesis',excerpt:'Starting from a harmonically rich waveform and filtering out unwanted frequencies.'},
+    {slug:'subtractive-synthesis',term:'Subtractive Synthesis',category:'Synthesis',excerpt:'Starting from a rich waveform and filtering out unwanted frequencies.'},
     {slug:'sample-rate',term:'Sample Rate',category:'Recording',excerpt:'Number of audio samples captured per second. 44.1kHz is CD standard.'},
     {slug:'bit-depth',term:'Bit Depth',category:'Recording',excerpt:'Bits per sample — determines dynamic range and noise floor.'},
     {slug:'latency',term:'Latency',category:'Recording',excerpt:'Delay between input and output in a digital audio system.'},
-    {slug:'buffer-size',term:'Buffer Size',category:'Recording',excerpt:'Amount of audio data processed at once — lower = lower latency, more CPU.'},
-    {slug:'dithering',term:'Dithering',category:'Recording',excerpt:'Adding low-level noise when reducing bit depth to preserve perceived audio quality.'},
+    {slug:'buffer-size',term:'Buffer Size',category:'Recording',excerpt:'Amount of audio data processed at once — lower = lower latency.'},
+    {slug:'dithering',term:'Dithering',category:'Recording',excerpt:'Adding low-level noise when reducing bit depth to preserve quality.'},
     {slug:'transient',term:'Transient',category:'Dynamics',excerpt:'The initial sharp peak at the start of a sound.'},
-    {slug:'saturation',term:'Saturation',category:'Dynamics',excerpt:'Soft harmonic distortion — adds warmth, presence, and perceived loudness.'},
+    {slug:'saturation',term:'Saturation',category:'Dynamics',excerpt:'Soft harmonic distortion — adds warmth and perceived loudness.'},
     {slug:'transient-shaper',term:'Transient Shaper',category:'Dynamics',excerpt:'Controls the attack and sustain of a signal independently of level.'},
     {slug:'bpm',term:'BPM',category:'Rhythm',excerpt:'Beats Per Minute — the tempo of a piece of music.'},
     {slug:'quantization',term:'Quantization',category:'Rhythm',excerpt:'Snapping MIDI notes or audio to a rhythmic grid.'},
-    {slug:'swing',term:'Swing',category:'Rhythm',excerpt:'Shifting off-beat notes slightly late to give grooves a human push.'},
+    {slug:'swing',term:'Swing',category:'Rhythm',excerpt:'Shifting off-beat notes slightly late — gives grooves a human push.'},
     {slug:'velocity',term:'Velocity',category:'Rhythm',excerpt:'The force with which a MIDI note is triggered.'},
-    {slug:'groove',term:'Groove',category:'Rhythm',excerpt:'The rhythmic feel created by the interplay of timing variations between instruments.'},
+    {slug:'groove',term:'Groove',category:'Rhythm',excerpt:'Rhythmic feel created by timing variations between instruments.'},
     {slug:'stereo-width',term:'Stereo Width',category:'Mixing',excerpt:'The perceived spread of audio across the stereo field.'},
-    {slug:'panning',term:'Panning',category:'Mixing',excerpt:'Positioning audio within the stereo field — left, right, or anywhere between.'},
+    {slug:'panning',term:'Panning',category:'Mixing',excerpt:'Positioning audio within the stereo field.'},
     {slug:'aux-send',term:'Aux Send',category:'Mixing',excerpt:'Routes a copy of a channel signal to an auxiliary bus.'},
-    {slug:'mix-bus',term:'Mix Bus',category:'Mixing',excerpt:'The master stereo bus where all channels sum together before output.'},
-    {slug:'stem',term:'Stem',category:'Mixing',excerpt:'A grouped sub-mix of related tracks exported as a single audio file.'},
-    {slug:'mono-compatibility',term:'Mono Compatibility',category:'Mixing',excerpt:'How a stereo mix sounds when collapsed to mono — critical for club and broadcast.'},
+    {slug:'mix-bus',term:'Mix Bus',category:'Mixing',excerpt:'The master stereo bus where all channels sum before output.'},
+    {slug:'stem',term:'Stem',category:'Mixing',excerpt:'A grouped sub-mix of related tracks as a single audio file.'},
+    {slug:'mono-compatibility',term:'Mono Compatibility',category:'Mixing',excerpt:'How a stereo mix sounds collapsed to mono — critical for club and broadcast.'}
   ];
 
-  var idx=null, fuse=null, fuseReady=false;
+  var idx=null,fuse=null,fuseReady=false;
 
   function loadFuse(cb){
     if(fuseReady){cb();return;}
@@ -547,76 +545,153 @@ footer{border-top:1px solid var(--bd);padding:32px 2.5rem}
       .then(function(r){if(!r.ok)throw 0;return r.json();})
       .then(function(d){
         idx=d.length?d:SEEDS;
-        loadFuse(function(){fuse=new Fuse(idx,{keys:['term','category','excerpt'],threshold:.38,includeScore:true,minMatchCharLength:2});cb(idx);});
+        loadFuse(function(){
+          fuse=new Fuse(idx,{keys:['term','category','excerpt'],threshold:0.38,includeScore:true,minMatchCharLength:2});
+          cb(idx);
+        });
       })
       .catch(function(){
         idx=SEEDS;
-        loadFuse(function(){fuse=new Fuse(idx,{keys:['term','category','excerpt'],threshold:.38,includeScore:true,minMatchCharLength:2});cb(idx);});
+        loadFuse(function(){
+          fuse=new Fuse(idx,{keys:['term','category','excerpt'],threshold:0.38,includeScore:true,minMatchCharLength:2});
+          cb(idx);
+        });
       });
   }
 
-  /* render */
-  function rOverlay(e){return '<a class="search-result" href="/bible/'+e.slug+'"><span class="sr-cat">'+(e.category||'Bible')+'</span><span class="sr-title">'+e.term+'</span></a>';}
-  function rDrop(e){return '<a class="hd-item" href="/bible/'+e.slug+'"><span class="hd-cat">'+(e.category||'Bible')+'</span><span class="hd-term">'+e.term+'</span>'+(e.excerpt?'<span class="hd-excerpt">'+e.excerpt+'</span>':'')+'</a>';}
-
-  /* ── TICKER ── */
-  function buildTicker(){
-    var t=document.getElementById('tickerTrack');if(!t)return;
-    var shuffled=SEEDS.slice().sort(function(){return Math.random()-.5;});
-    var h=shuffled.map(function(e){var cls=e.slug==='compression'?'ticker-term hi':'ticker-term';return'<a href="/bible/'+e.slug+'" class="'+cls+'">'+e.term+'</a>';}).join('');
-    t.innerHTML=h+h;
+  function rOverlay(e){
+    return '<a class="search-result" href="/bible/'+e.slug+'">'
+      +'<span class="sr-cat">'+(e.category||'Bible')+'</span>'
+      +'<span class="sr-title">'+e.term+'</span></a>';
   }
 
-  /* ── A–Z ── */
+  function rDrop(e){
+    return '<a class="hd-item" href="/bible/'+e.slug+'">'
+      +'<span class="hd-cat">'+(e.category||'Bible')+'</span>'
+      +'<span class="hd-term">'+e.term+'</span>'
+      +(e.excerpt?'<span class="hd-excerpt">'+e.excerpt+'</span>':'')
+      +'</a>';
+  }
+
+  /* TICKER */
+  function buildTicker(){
+    var t=document.getElementById('tickerTrack');
+    if(!t)return;
+    var items=SEEDS.slice().sort(function(){return Math.random()-0.5;});
+    var html=items.map(function(e){
+      var cls=e.slug==='compression'?'ticker-term hi':'ticker-term';
+      return '<a href="/bible/'+e.slug+'" class="'+cls+'">'+e.term+'</a>';
+    }).join('');
+    t.innerHTML=html+html;
+  }
+
+  /* A-Z */
   function buildAZ(data){
     var lEl=document.getElementById('azLetters');
     var eEl=document.getElementById('azEntries');
     if(!lEl||!eEl)return;
     var alpha='ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
     var byL={};
-    data.forEach(function(e){var l=(e.term||'').charAt(0).toUpperCase();if(!byL[l])byL[l]=[];byL[l].push(e);});
-    Object.keys(byL).forEach(function(l){byL[l].sort(function(a,b){return a.term.localeCompare(b.term);});});
-
+    data.forEach(function(e){
+      var l=(e.term||'').charAt(0).toUpperCase();
+      if(!byL[l])byL[l]=[];
+      byL[l].push(e);
+    });
+    Object.keys(byL).forEach(function(l){
+      byL[l].sort(function(a,b){return a.term.localeCompare(b.term);});
+    });
     lEl.innerHTML=alpha.map(function(l){
       var has=!!byL[l];
-      return'<span class="az-letter'+(has?' has':' empty')+'" data-l="'+l+'">'+l+'</span>';
+      return '<span class="az-letter'+(has?' has':' empty')+'" data-l="'+l+'">'+l+'</span>';
     }).join('');
-
     function show(l){
-      lEl.querySelectorAll('.az-letter').forEach(function(el){el.classList.toggle('active',el.dataset.l===l);});
+      lEl.querySelectorAll('.az-letter').forEach(function(el){
+        el.classList.toggle('active',el.dataset.l===l);
+      });
       var entries=byL[l];
-      if(!entries||!entries.length){eEl.innerHTML='<div class="az-empty">No entries yet for '+l+' — the Bible is growing.</div>';return;}
-      eEl.innerHTML='<div class="az-grid">'+entries.map(function(e){return'<a class="az-entry" href="/bible/'+e.slug+'"><span class="az-entry-term">'+e.term+'</span><span class="az-entry-cat">'+(e.category||'')+'</span></a>';}).join('')+'</div>';
+      if(!entries||!entries.length){
+        eEl.innerHTML='<div class="az-empty">No entries yet for '+l+' — the Bible is growing.</div>';
+        return;
+      }
+      eEl.innerHTML='<div class="az-grid">'
+        +entries.map(function(e){
+          return '<a class="az-entry" href="/bible/'+e.slug+'">'
+            +'<span class="az-entry-term">'+e.term+'</span>'
+            +'<span class="az-entry-cat">'+(e.category||'')+'</span>'
+            +'</a>';
+        }).join('')
+        +'</div>';
     }
-
-    lEl.querySelectorAll('.az-letter.has').forEach(function(el){el.style.cursor='pointer';el.addEventListener('click',function(){show(el.dataset.l);eEl.scrollIntoView({behavior:'smooth',block:'nearest'});});});
-    var first=alpha.find(function(l){return!!byL[l];});if(first)show(first);
+    lEl.querySelectorAll('.az-letter.has').forEach(function(el){
+      el.style.cursor='pointer';
+      el.addEventListener('click',function(){
+        show(el.dataset.l);
+        eEl.scrollIntoView({behavior:'smooth',block:'nearest'});
+      });
+    });
+    var first=alpha.find(function(l){return!!byL[l];});
+    if(first)show(first);
   }
 
-  /* ── NAV OVERLAY ── */
+  /* NAV OVERLAY */
   function initOverlay(){
     var ov=document.getElementById('searchOverlay');
     var inp=document.getElementById('searchInput');
     var res=document.getElementById('searchResults');
     var btn=document.getElementById('navSearchBtn');
-
-    function open(){if(!ov)return;ov.classList.add('open');if(inp)inp.focus();loadIdx(function(d){var h='<div style="padding:8px 14px 4px;font-size:10px;color:#555;text-transform:uppercase;letter-spacing:.1em;font-family:monospace">Start here</div>';d.slice(0,7).forEach(function(e){h+=rOverlay(e);});if(res)res.innerHTML=h;});}
-    function close(){if(!ov)return;ov.classList.remove('open');if(inp)inp.value='';if(res)res.innerHTML='';}
-
-    document.addEventListener('keydown',function(e){if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();open();}if(e.key==='Escape'&&ov&&ov.classList.contains('open'))close();});
+    function open(){
+      if(!ov)return;
+      ov.classList.add('open');
+      if(inp)inp.focus();
+      loadIdx(function(d){
+        var h='<div style="padding:8px 14px 4px;font-size:10px;color:#555;text-transform:uppercase;letter-spacing:.1em;font-family:monospace">Start here</div>';
+        d.slice(0,7).forEach(function(e){h+=rOverlay(e);});
+        if(res)res.innerHTML=h;
+      });
+    }
+    function close(){
+      if(!ov)return;
+      ov.classList.remove('open');
+      if(inp)inp.value='';
+      if(res)res.innerHTML='';
+    }
+    document.addEventListener('keydown',function(e){
+      if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();open();}
+      if(e.key==='Escape'&&ov&&ov.classList.contains('open'))close();
+    });
     if(btn)btn.addEventListener('click',open);
     if(ov)ov.addEventListener('click',function(e){if(e.target===ov)close();});
     if(inp){
       inp.addEventListener('input',function(){
         var q=inp.value.trim();
-        if(!q){loadIdx(function(d){var h='<div style="padding:8px 14px 4px;font-size:10px;color:#555;text-transform:uppercase;letter-spacing:.1em;font-family:monospace">Start here</div>';d.slice(0,7).forEach(function(e){h+=rOverlay(e);});if(res)res.innerHTML=h;});return;}
-        if(!fuse){loadIdx(function(){if(fuse&&res){var r=fuse.search(q);res.innerHTML=r.length?r.slice(0,8).map(function(x){return rOverlay(x.item);}).join(''):'<div style="padding:20px;color:#666;font-size:13px;text-align:center">No entries found</div>';}});}
-        else{var r=fuse.search(q);if(res)res.innerHTML=r.length?r.slice(0,8).map(function(x){return rOverlay(x.item);}).join(''):'<div style="padding:20px;color:#666;font-size:13px;text-align:center">No entries found</div>';}
+        if(!q){
+          loadIdx(function(d){
+            var h='<div style="padding:8px 14px 4px;font-size:10px;color:#555;text-transform:uppercase;letter-spacing:.1em;font-family:monospace">Start here</div>';
+            d.slice(0,7).forEach(function(e){h+=rOverlay(e);});
+            if(res)res.innerHTML=h;
+          });
+          return;
+        }
+        if(!fuse){
+          loadIdx(function(){
+            if(fuse&&res){
+              var r=fuse.search(q);
+              res.innerHTML=r.length
+                ?r.slice(0,8).map(function(x){return rOverlay(x.item);}).join('')
+                :'<div style="padding:20px;color:#666;font-size:13px;text-align:center">No entries found</div>';
+            }
+          });
+        } else {
+          var r=fuse.search(q);
+          if(res)res.innerHTML=r.length
+            ?r.slice(0,8).map(function(x){return rOverlay(x.item);}).join('')
+            :'<div style="padding:20px;color:#666;font-size:13px;text-align:center">No entries found</div>';
+        }
       });
     }
   }
 
-  /* ── HERO SEARCH ── */
+  /* HERO SEARCH */
   function initHero(){
     var hi=document.getElementById('bibleSearchInput');
     var hd=document.getElementById('heroDrop');
@@ -629,11 +704,21 @@ footer{border-top:1px solid var(--bd);padding:32px 2.5rem}
       hd.style.width=r.width+'px';
     }
     function showDrop(entries,lbl){
-      if(!entries||!entries.length){hd.innerHTML='<div style="padding:16px 18px;font-size:13px;color:var(--t3);text-align:center">No entries found</div>';posDrop();hd.style.display='block';return;}
-      var h='<div class="hd-label">'+(lbl||'Bible entries')+'</div>'+entries.slice(0,6).map(rDrop).join('')+'<div class="hd-footer"><span>Enter ↵ — top result</span><span>'+entries.length+' match'+(entries.length===1?'':\'es')+'</span></div>';
-      hd.innerHTML=h;posDrop();hd.style.display='block';
+      if(!entries||!entries.length){
+        hd.innerHTML='<div style="padding:16px 18px;font-size:13px;color:#6a6a7a;text-align:center">No entries found</div>';
+        posDrop();hd.style.display='block';
+        return;
+      }
+      var matchWord=entries.length===1?'match':'matches';
+      var h='<div class="hd-label">'+(lbl||'Bible entries')+'</div>'
+        +entries.slice(0,6).map(rDrop).join('')
+        +'<div class="hd-footer"><span>Enter to go to top result</span><span>'+entries.length+' '+matchWord+'</span></div>';
+      hd.innerHTML=h;
+      posDrop();
+      hd.style.display='block';
     }
     function hideDrop(){hd.style.display='none';}
+
     window.addEventListener('resize',function(){if(hd.style.display==='block')posDrop();});
     window.addEventListener('scroll',function(){if(hd.style.display==='block')posDrop();},{passive:true});
 
@@ -644,41 +729,76 @@ footer{border-top:1px solid var(--bd);padding:32px 2.5rem}
     hi.addEventListener('input',function(){
       var q=hi.value.trim();
       if(!q){loadIdx(function(d){showDrop(d.slice(0,6),'Start here');});return;}
-      if(!fuse){loadIdx(function(){if(fuse){var r=fuse.search(q);showDrop(r.map(function(x){return x.item;}));}});}
-      else{var r=fuse.search(q);showDrop(r.map(function(x){return x.item;}));}
+      if(!fuse){
+        loadIdx(function(){
+          if(fuse){var r=fuse.search(q);showDrop(r.map(function(x){return x.item;}));}
+        });
+      } else {
+        var r=fuse.search(q);
+        showDrop(r.map(function(x){return x.item;}));
+      }
     });
     hi.addEventListener('keydown',function(e){
       if(e.key==='Escape'){hideDrop();hi.blur();}
       if(e.key==='Enter'){
         var q=hi.value.trim();if(!q)return;
-        if(fuse){var r=fuse.search(q);if(r.length){window.location.href='/bible/'+r[0].item.slug;return;}}
+        if(fuse){
+          var r=fuse.search(q);
+          if(r.length){window.location.href='/bible/'+r[0].item.slug;return;}
+        }
         var sl=q.toLowerCase().replace(/[^a-z0-9\s-]/g,'').replace(/\s+/g,'-').replace(/-+/g,'-');
         if(sl)window.location.href='/bible/'+sl;
       }
     });
-    document.addEventListener('click',function(e){if(!hi.contains(e.target)&&!hd.contains(e.target))hideDrop();});
+    document.addEventListener('click',function(e){
+      if(!hi.contains(e.target)&&!hd.contains(e.target))hideDrop();
+    });
   }
 
-  /* ── NAV JS ── */
+  /* NAV DROPDOWNS + MOBILE */
   function initNav(){
     document.querySelectorAll('nav.mpw-site-nav .nav-item').forEach(function(item){
-      var btn=item.querySelector('button');if(!btn)return;
+      var btn=item.querySelector('button');
+      if(!btn)return;
       btn.addEventListener('click',function(e){
         e.stopPropagation();
         var open=item.classList.contains('open');
-        document.querySelectorAll('nav.mpw-site-nav .nav-item').forEach(function(i){i.classList.remove('open');i.querySelectorAll('button').forEach(function(b){b.setAttribute('aria-expanded','false');});});
+        document.querySelectorAll('nav.mpw-site-nav .nav-item').forEach(function(i){
+          i.classList.remove('open');
+          i.querySelectorAll('button').forEach(function(b){b.setAttribute('aria-expanded','false');});
+        });
         if(!open){item.classList.add('open');btn.setAttribute('aria-expanded','true');}
       });
     });
     document.addEventListener('click',function(){
-      document.querySelectorAll('nav.mpw-site-nav .nav-item').forEach(function(i){i.classList.remove('open');i.querySelectorAll('button').forEach(function(b){b.setAttribute('aria-expanded','false');});});
+      document.querySelectorAll('nav.mpw-site-nav .nav-item').forEach(function(i){
+        i.classList.remove('open');
+        i.querySelectorAll('button').forEach(function(b){b.setAttribute('aria-expanded','false');});
+      });
     });
-    var mob=document.getElementById('navMob'),drawer=document.getElementById('mobileDrawer');
-    if(mob&&drawer){mob.addEventListener('click',function(){drawer.classList.toggle('open');});drawer.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){drawer.classList.remove('open');});});}
+    var mob=document.getElementById('navMob');
+    var drawer=document.getElementById('mobileDrawer');
+    if(mob&&drawer){
+      mob.addEventListener('click',function(){drawer.classList.toggle('open');});
+      drawer.querySelectorAll('a').forEach(function(a){
+        a.addEventListener('click',function(){drawer.classList.remove('open');});
+      });
+    }
   }
 
-  function boot(){buildTicker();initNav();initOverlay();initHero();loadIdx(function(d){buildAZ(d);});}
-  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',boot);}else{boot();}
+  function boot(){
+    buildTicker();
+    initNav();
+    initOverlay();
+    initHero();
+    loadIdx(function(d){buildAZ(d);});
+  }
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',boot);
+  } else {
+    boot();
+  }
 })();
 </script>
 </body>
