@@ -692,6 +692,47 @@ pre,code{overflow-x:auto;max-width:100%}
   border-radius:10px;text-decoration:none;text-align:center;margin-top:8px;
 }
 </style>
+<style id="mpw-bible-mobile-v3">
+/* ── Bible mobile fix v3 — appended last, overrides all prior rules ── */
+@media(max-width:768px){
+  /* Section nav: drop below MPW nav(60px) + Bible bar(36px) = 96px */
+  .entry-nav{
+    top:96px!important;
+    background:rgba(8,8,9,0.98)!important;
+    border-top:1px solid rgba(255,255,255,0.06)!important;
+    border-bottom:1px solid rgba(245,166,35,0.18)!important;
+  }
+  /* Inactive tabs */
+  .entry-nav-link{
+    color:rgba(160,160,180,0.5)!important;
+    border-bottom:3px solid transparent!important;
+  }
+  /* Active tab — amber underline on dark nav, cannot bleed into amber bar above */
+  .entry-nav-link.active{
+    color:#f5a623!important;
+    border-bottom:3px solid #f5a623!important;
+    font-weight:600!important;
+  }
+  /* Bible amber bar */
+  .bible-masthead{
+    position:sticky!important;
+    top:60px!important;
+    z-index:150!important;
+    padding:8px 1rem!important;
+  }
+  .bible-masthead-inner .bm-site{display:none!important}
+  .bible-masthead-inner .bm-divider{display:none!important}
+  /* Layout */
+  .bible-masthead-entry-inner{padding:16px 1rem 20px!important}
+  .entry-layout{padding:0 1rem 60px!important}
+  .entry-nav-inner{padding:0 1rem!important}
+  /* No horizontal scroll */
+  html,body{overflow-x:clip!important}
+  /* Newsletter card */
+  .bible-nl-card-form{flex-direction:column}
+  .bible-nl-card-inp{min-width:0;width:100%}
+}
+</style>
 </head>
 <body>
 
@@ -1412,7 +1453,15 @@ pre,code{overflow-x:auto;max-width:100%}
         });
       }
     });
-  }, {rootMargin:'-20% 0px -70% 0px',threshold:0}).observe && sections.forEach(function(s){new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){var id=e.target.id;navLinks.forEach(function(l){l.classList.toggle('active',l.getAttribute('data-section')===id);if(l.getAttribute('data-section')===id)l.scrollIntoView({inline:'nearest',behavior:'smooth',block:'nearest'});});}});},{rootMargin:'-20% 0px -70% 0px',threshold:0}).observe(s);});
+  }, {rootMargin:'-20% 0px -70% 0px',threshold:0}).observe && sections.forEach(function(s){new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){var id=e.target.id;navLinks.forEach(function(l){l.classList.toggle('active',l.getAttribute('data-section')===id);if(l.getAttribute('data-section')===id)l.scrollIntoView({inline:'nearest',behavior:'smooth',block:'nearest'});
+          // center active tab in nav (mpw-bible-mobile-v3)
+          (function(){
+            var nav=document.querySelector('.entry-nav');
+            var a=nav&&nav.querySelector('.entry-nav-link.active');
+            if(!nav||!a)return;
+            var nr=nav.getBoundingClientRect(),lr=a.getBoundingClientRect();
+            nav.scrollTo({left:nav.scrollLeft+(lr.left-nr.left)-(nr.width/2)+(lr.width/2),behavior:'smooth'});
+          })();});}});},{rootMargin:'-20% 0px -70% 0px',threshold:0}).observe(s);});
 
   // FAQ accordion
   document.querySelectorAll('.faq-question').forEach(function(btn) {
