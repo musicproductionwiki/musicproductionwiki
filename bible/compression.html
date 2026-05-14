@@ -1440,6 +1440,48 @@ pre,code{overflow-x:auto;max-width:100%}
   .bible-masthead-inner .bm-divider{display:none!important}
   .bible-masthead-entry-inner{padding:16px 1rem 20px!important}
 /* ── end masthead CSS ── */
+
+/* ── bible-nav-nl-v1 ── entry nav separation + newsletter ── */
+
+/* Entry nav — distinct background so it reads separate from amber Bible bar */
+.entry-nav{
+  background:rgba(8,8,9,0.98)!important;
+  border-bottom:1px solid rgba(245,166,35,0.18)!important;
+  border-top:1px solid rgba(255,255,255,0.04)!important;
+}
+
+/* Active tab — thicker underline, full amber, no ambiguity */
+.entry-nav-link.active{
+  color:var(--amber,#f5a623)!important;
+  border-bottom:3px solid var(--amber,#f5a623)!important;
+  font-weight:600!important;
+}
+
+/* Inactive tabs slightly dimmer so active pops */
+.entry-nav-link{
+  color:rgba(160,160,180,0.55)!important;
+  font-size:10px!important;
+  padding:13px 14px!important;
+}
+.entry-nav-link:hover{
+  color:rgba(245,166,35,0.7)!important;
+}
+
+/* Newsletter strip — matches bible/index.html exactly */
+.nl-strip{background:var(--bg2,#111113);border-top:1px solid rgba(255,255,255,0.08);padding:64px 2.5rem}
+.nl-inner{max-width:500px;margin:0 auto;text-align:center}
+.nl-eye{font-size:11px;font-family:'DM Mono',monospace;color:var(--teal,#00e8a2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;display:block}
+.nl-h{font-size:clamp(24px,3vw,34px);font-weight:600;letter-spacing:-0.04em;line-height:1.1;margin-bottom:10px;color:var(--t1,#f0f0f0)}
+.nl-h em{font-style:normal;color:var(--teal,#00e8a2)}
+.nl-sub{color:var(--t2,#a0a0b4);font-size:14px;line-height:1.7;margin-bottom:24px}
+.nl-form{display:flex;gap:8px;max-width:380px;margin:0 auto 10px;flex-wrap:wrap}
+.nl-inp{flex:1;min-width:200px;background:var(--bg3,#1a1a1d);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:12px 14px;font-size:14px;color:var(--t1,#f0f0f0);font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s}
+.nl-inp::placeholder{color:var(--t3,#6a6a7a)}
+.nl-inp:focus{border-color:rgba(0,232,162,.38)}
+.nl-btn{background:var(--teal,#00e8a2);color:#0a0a0b;border:none;border-radius:10px;padding:12px 20px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;white-space:nowrap}
+.nl-btn:hover{background:#00fdb5}
+.nl-note{font-size:12px;color:var(--t3,#6a6a7a);font-family:'DM Mono',monospace}
+@media(max-width:768px){.nl-strip{padding:48px 1.5rem}.nl-form{flex-direction:column}}
 </style>
 
 <nav class="mpw-site-nav" role="navigation" aria-label="Main navigation">
@@ -2479,6 +2521,32 @@ Source: musicproductionwiki.com/bible/compression`;
   }
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',addCloseBtn);}
   else{addCloseBtn();}
+})();
+</script>
+
+
+<script id="mpw-bible-nav-scroll-v1">
+/* bible-nav-nl-v1 — auto-scroll active tab into center view */
+(function(){
+  function centerActiveTab(){
+    var nav=document.querySelector('.entry-nav');
+    var active=nav&&nav.querySelector('.entry-nav-link.active');
+    if(!nav||!active)return;
+    var navRect=nav.getBoundingClientRect();
+    var linkRect=active.getBoundingClientRect();
+    var scrollLeft=nav.scrollLeft+(linkRect.left-navRect.left)-(navRect.width/2)+(linkRect.width/2);
+    nav.scrollTo({left:scrollLeft,behavior:'smooth'});
+  }
+  // Watch for active class changes on nav links
+  var nav=document.querySelector('.entry-nav');
+  if(nav){
+    var observer=new MutationObserver(function(){centerActiveTab();});
+    nav.querySelectorAll('.entry-nav-link').forEach(function(link){
+      observer.observe(link,{attributes:true,attributeFilter:['class']});
+    });
+  }
+  // Also run on scroll
+  window.addEventListener('scroll',function(){setTimeout(centerActiveTab,50);},{passive:true});
 })();
 </script>
 
