@@ -1387,6 +1387,26 @@ nav.mpw-site-nav .nav-mob span{display:block;width:22px;height:2px;background:#a
   .bible-publisher-line .pub-site{display:none!important}
   .bible-publisher-line .pub-divider{display:none!important}
 }
+
+/* ── Bible Mobile Fixes v2 ── bible-mobile-v2 ── */
+
+/* 1. Kill horizontal scroll sitewide on Bible pages */
+html,body{overflow-x:clip!important;max-width:100vw!important}
+*{max-width:100%}
+.entry-nav{overflow-x:auto;max-width:100vw}
+.ref-table-wrap{overflow-x:auto;max-width:100%}
+.diagram-wrap{overflow-x:hidden}
+.ticker-outer{overflow:hidden;max-width:100vw}
+.spotify-grid{overflow-x:hidden}
+svg{max-width:100%;height:auto}
+pre,code{overflow-x:auto;max-width:100%}
+
+/* 2. Bible masthead sticky — sits below nav (top:60px) */
+.bible-masthead{position:sticky!important;top:60px!important;z-index:150!important}
+
+/* 3. Search box — ensure it fits on mobile */
+.search-box{margin:0 1rem;width:calc(100% - 2rem)!important;max-width:620px}
+.search-overlay{padding-top:60px}
 </style>
 
 <nav class="mpw-site-nav" role="navigation" aria-label="Main navigation">
@@ -2396,6 +2416,31 @@ Source: musicproductionwiki.com/bible/compression`;
 
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}
   else{init();}
+})();
+</script>
+
+
+<script id="mpw-search-close-v2">
+/* bible-mobile-v2 close button */
+(function(){
+  function addCloseBtn(){
+    var overlay=document.getElementById('searchOverlay');
+    var wrap=overlay&&overlay.querySelector('.search-input-wrap');
+    if(!wrap||document.getElementById('mpwBibleCloseBtn'))return;
+    var btn=document.createElement('button');
+    btn.id='mpwBibleCloseBtn';
+    btn.innerHTML='&times;';
+    btn.setAttribute('aria-label','Close search');
+    btn.style.cssText='background:none;border:none;cursor:pointer;color:#888;font-size:26px;line-height:1;padding:0 2px;flex-shrink:0;font-family:sans-serif;';
+    btn.addEventListener('click',function(){
+      overlay.classList.remove('open');
+      var inp=document.getElementById('searchInput');
+      if(inp){inp.value='';inp.dispatchEvent(new Event('input'));}
+    });
+    wrap.appendChild(btn);
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',addCloseBtn);}
+  else{addCloseBtn();}
 })();
 </script>
 
