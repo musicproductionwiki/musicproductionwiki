@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Limiting — The Producer's Bible | MusicProductionWiki.com</title>
+  <meta name="description" content="Limiting is the final line of defense in signal processing — learn how limiters work, key parameters, types, and how to use them without killing your mix.">
+  <meta name="keywords" content="limiting, limiter, mastering limiter, brick-wall limiter, LUFS, dynamic control, peak limiting, loudness">
+  <meta name="robots" content="max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <link rel="canonical" href="https://musicproductionwiki.com/bible/limiting">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Limiting — The Producer's Bible | MusicProductionWiki.com">
+  <meta property="og:description" content="Limiting is the final line of defense in signal processing — learn how limiters work, key parameters, types, and how to use them without killing your mix.">
+  <meta property="og:url" content="https://musicproductionwiki.com/bible/limiting">
+  <meta property="og:image" content="https://musicproductionwiki.com/images/og-producers-bible.jpg">
+  <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="MusicProductionWiki.com">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Limiting — The Producer's Bible">
+  <meta name="twitter:description" content="Limiting is the final line of defense in signal processing — learn how limiters work, key parameters, types, and how to use them without killing your mix.">
+  <meta name="twitter:image" content="https://musicproductionwiki.com/images/og-producers-bible.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@graph":[
+      {"@type":"DefinedTerm","name":"Limiting","description":"Limiting is a form of extreme compression that prevents audio signals from exceeding a defined ceiling, used to control peaks and maximize perceived loudness. Ratios typically run from 10:1 up to infinity:1, making the threshold act as a hard ceiling.",
+        "inDefinedTermSet":{"@type":"DefinedTermSet","name":"The Producer's Bible","url":"https://musicproductionwiki.com/bible/",
+          "publisher":{"@type":"Organization","name":"MusicProductionWiki.com","url":"https://musicproductionwiki.com"}},
+        "url":"https://musicproductionwiki.com/bible/limiting"},
+      {"@type":"Article","headline":"Limiting — The Producer's Bible",
+        "description":"Limiting is the final line of defense in signal processing — learn how limiters work, key parameters, types, and how to use them without killing your mix.","url":"https://musicproductionwiki.com/bible/limiting",
+        "datePublished":"2026-05-14","dateModified":"2026-05-14",
+        "wordCount":3200,"timeRequired":"PT16M",
+        "author":{"@type":"Organization","name":"The Music Production Wiki Team"},
+        "publisher":{"@type":"Organization","name":"MusicProductionWiki.com","url":"https://musicproductionwiki.com",
+          "logo":{"@type":"ImageObject","url":"https://musicproductionwiki.com/images/logo.png"}},
+        "image":{"@type":"ImageObject","url":"https://musicproductionwiki.com/images/og-producers-bible.jpg","width":1200,"height":630},
+        "about":{"@type":"Thing","name":"Limiting","sameAs": "https://en.wikipedia.org/wiki/Limiter","description":"Limiting is a form of extreme compression that prevents audio signals from exceeding a defined ceiling, used to control peaks and maximize perceived loudness. Ratios typically run from 10:1 up to infi"},
+        "isPartOf":{"@type":"DefinedTermSet","name":"The Producer's Bible","url":"https://musicproductionwiki.com/bible/"}},
+      {"@type":"BreadcrumbList","itemListElement":[
+        {"@type":"ListItem","position":1,"name":"Home","item":"https://musicproductionwiki.com"},
+        {"@type":"ListItem","position":2,"name":"The Producer's Bible","item":"https://musicproductionwiki.com/bible/"},
+        {"@type":"ListItem","position":3,"name":"Limiting","item":"https://musicproductionwiki.com/bible/limiting"}]},
+      {"@type":"FAQPage","mainEntity":[          {"@type":"Question","name":"What is the difference between a limiter and a compressor?","acceptedAnswer":{"@type":"Answer","text":"A compressor reduces gain above a threshold by a defined ratio — for example, 4:1 means for every 4 dB over the threshold, 1 dB passes through. A limiter uses ratios of 10:1 or higher, often infinity:1, meaning the output essentially cannot exceed the threshold regardless of input level. In practice, limiting is an extreme form of compression used for peak control and loudness maximization, while compression is used for musical shaping of dynamics."}},
+          {"@type":"Question","name":"What LUFS should I target when mastering for Spotify?","acceptedAnswer":{"@type":"Answer","text":"Spotify normalizes playback to approximately −14 LUFS integrated. Mastering above this level (e.g., −9 LUFS) means Spotify will turn your track down during playback, making heavier limiting pointless and potentially damaging dynamic quality. Targeting −14 LUFS integrated with a True Peak ceiling of −1.0 dBTP is the standard recommendation for Spotify. Apple Music normalizes to −16 LUFS, and YouTube to −14 LUFS — it is common to produce a single −14 LUFS master that meets most platform requirements."}},
+          {"@type":"Question","name":"What does True Peak limiting mean and why does it matter?","acceptedAnswer":{"@type":"Answer","text":"True Peak limiting detects and controls inter-sample peaks — peaks that exist between digital samples and only become apparent after digital-to-analog conversion. A signal can measure −1.0 dBFS at the sample level but produce peaks of +0.5 dBFS or higher after D/A conversion due to reconstruction filtering. These hidden peaks cause distortion on playback hardware and are flagged by streaming platform quality control systems. True Peak limiting requires oversampling (typically 4x or higher) to reveal and control these peaks. Always enable True Peak mode for final delivery limiting."}},
+          {"@type":"Question","name":"How much gain reduction is too much when mastering?","acceptedAnswer":{"@type":"Answer","text":"A common guideline is to treat 3–4 dB of peak gain reduction as a soft ceiling for transparent mastering limiting. Exceeding this consistently — meaning the gain reduction meter is showing 4+ dB during most of the track — typically indicates that either the mix needs attention (too many competing loud elements) or the loudness target is unrealistically aggressive. Gain reduction above 6 dB on a wideband mastering limiter almost always produces audible artifacts: flattened transients, pumping, and loss of stereo width."}},
+          {"@type":"Question","name":"Should I use a limiter on individual tracks or only on the master bus?","acceptedAnswer":{"@type":"Answer","text":"Both are valid depending on context. On individual tracks, limiting is appropriate for catching rogue transients from drums, bass, and vocals — peaks that would otherwise push the mix bus into unwanted gain reduction. Use a limiter on a snare or kick channel to prevent the loudest hits from dominating the mix. On the master bus, limiting is used for final loudness and peak control before delivery. Some engineers also use limiting on subgroup buses (drum bus, vocal bus) to control dynamic range before those groups hit the master bus."}},
+          {"@type":"Question","name":"What is lookahead in a limiter and should I always use it?","acceptedAnswer":{"@type":"Answer","text":"Lookahead is a buffer that allows the limiter to read ahead in the audio signal and anticipate peaks before they arrive, beginning gain reduction before the peak hits the output. Without lookahead, the peak arrives before the limiter can respond, causing brief overshoots above the ceiling. In offline mastering, always use lookahead — the additional latency is irrelevant. In live or real-time applications where latency is critical, lookahead introduces monitoring delay, so it may need to be reduced or disabled depending on the context."}},
+          {"@type":"Question","name":"What is the difference between a hard clipper and a limiter, and when should I use each?","acceptedAnswer":{"@type":"Answer","text":"A hard clipper truncates waveforms that exceed the ceiling instantaneously — effectively infinite speed, zero latency. This produces harmonic distortion (primarily odd-order) that can sound harsh on sustained material but is often inaudible on sharp transients. A limiter applies gain reduction, which is slower and introduces the possibility of inter-modulation distortion, pumping, and transient rounding. In modern mastering workflows, a soft clipper placed before a True Peak limiter is a common pairing: the clipper removes the sharpest inter-sample peaks harmonically, and the limiter handles sustained loudness maximization more transparently because it has less peak energy to manage."}},
+          {"@type":"Question","name":"How do I prevent pumping artifacts when mastering with a limiter?","acceptedAnswer":{"@type":"Answer","text":"Pumping in a mastering limiter is typically caused by one of three factors: release time too short, too much input gain driving the limiter into continuous heavy gain reduction, or a dominant low-frequency element (kick or bass) repeatedly triggering broadband gain reduction. Solutions include increasing the release time or switching to program-dependent release, reducing input gain until peak gain reduction averages 2–3 dB rather than 5–6 dB, and applying multiband limiting or sidechain high-pass filtering to prevent low-frequency content from disproportionately triggering the limiter's detection circuit. Many advanced mastering limiters (FabFilter Pro-L 2, Ozone Maximizer) offer per-band limiting modes specifically to address this problem."}}]},
+      {"@type":"WebSite","name":"MusicProductionWiki.com","url":"https://musicproductionwiki.com",
+        "potentialAction":{"@type":"SearchAction","target":"https://musicproductionwiki.com/search?q={search_term_string}","query-input":"required name=search_term_string"}},
+      {"@type":"SpeakableSpecification","@id":"https://musicproductionwiki.com/bible/limiting#speakable",
+        "cssSelector":[".quick-answer","h1",".entry-section:first-of-type p:first-child"]}
+    ]
+  }
+  </script>
+  <style id="mpw-bible-v3">
+
+    /* ============================================
+       MPW Producer's Bible v3.0
+       Consolidated: base + mobile + readability + newsletter + further-reading
+       Dark #0a0a0b · Teal #00e8a2 · Amber #f5a623
+    ============================================ */
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#0a0a0b;--bg2:#111113;--bg3:#1a1a1d;--bg4:#222226;
+      --bd:rgba(255,255,255,0.08);--bdh:rgba(255,255,255,0.15);
+      --teal:#00e8a2;--amber:#f5a623;
+      --amber-dim:rgba(245,166,35,0.07);--amber-border:rgba(245,166,35,0.22);
+      --t1:#f0f0f0;--t2:#a0a0b4;--t3:#6a6a7a;
+      --font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
+      --max:1200px;--prose:820px;
+      --teal-dim:rgba(0,232,162,0.12);--teal-border:rgba(0,232,162,0.25);
+      --radius:8px;
+    }
+    html,body{margin:0;padding:0;width:100%;max-width:100%;overflow-x:clip}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--t1);font-family:var(--font);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+    /* NAV */
+    nav.mpw-site-nav{position:sticky;top:0;left:0;right:0;z-index:200;width:100%;background:rgba(10,10,11,0.97);backdrop-filter:blur(24px);border-bottom:1px solid var(--bd)}
+    nav.mpw-site-nav .nav-inner{max-width:var(--max)!important;margin:0 auto;padding:0 24px!important;height:60px;display:flex;align-items:center}
+    nav.mpw-site-nav .nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none;flex-shrink:0;margin-right:36px}
+    nav.mpw-site-nav .logo-mark{width:32px;height:32px;border-radius:8px;background:var(--teal);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    nav.mpw-site-nav .logo-text{font-size:15px;font-weight:600;color:var(--t1);letter-spacing:-0.02em}
+    nav.mpw-site-nav .logo-sub{font-size:10px;color:var(--t3);font-family:var(--mono);letter-spacing:.07em;text-transform:uppercase;display:block}
+    nav.mpw-site-nav .nav-primary{display:flex;align-items:center;gap:2px;list-style:none;flex:1}
+    nav.mpw-site-nav .nav-item{position:relative}
+    nav.mpw-site-nav .nav-item>a,nav.mpw-site-nav .nav-item>button{display:flex;align-items:center;gap:5px;color:var(--t2);text-decoration:none;font-size:13.5px;padding:6px 12px;border-radius:7px;transition:color .15s,background .15s;white-space:nowrap;background:none;border:none;cursor:pointer;font-family:var(--font);line-height:1}
+    nav.mpw-site-nav .nav-item>a:hover,nav.mpw-site-nav .nav-item>button:hover,nav.mpw-site-nav .nav-item.open>button{color:var(--t1);background:rgba(255,255,255,0.06)}
+    nav.mpw-site-nav .nav-bible-link{color:var(--amber)!important;font-weight:600!important}
+    nav.mpw-site-nav .nav-chevron{width:10px;height:10px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s;flex-shrink:0}
+    nav.mpw-site-nav .nav-item.open .nav-chevron{transform:rotate(180deg)}
+    nav.mpw-site-nav .nav-dropdown{position:absolute;top:calc(100% + 10px);left:0;background:var(--bg2);border:1px solid var(--bdh);border-radius:14px;padding:8px;min-width:240px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .18s,transform .18s,visibility .18s;box-shadow:0 24px 48px rgba(0,0,0,.55);pointer-events:none}
+    nav.mpw-site-nav .nav-item.open>.nav-dropdown{opacity:1!important;visibility:visible!important;transform:translateY(0)!important;pointer-events:auto!important}
+    nav.mpw-site-nav .nav-dropdown.wide{min-width:500px;display:grid;grid-template-columns:1fr 1fr;gap:2px}
+    nav.mpw-site-nav .drop-col-label{font-size:10px;font-family:var(--mono);color:var(--t3);text-transform:uppercase;letter-spacing:.1em;padding:8px 12px 4px}
+    nav.mpw-site-nav .drop-item{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border-radius:9px;text-decoration:none;transition:background .15s}
+    nav.mpw-site-nav .drop-item:hover{background:var(--bg3)}
+    nav.mpw-site-nav .drop-icon{width:30px;height:30px;border-radius:7px;background:var(--bg3);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:background .15s,border-color .15s}
+    nav.mpw-site-nav .drop-icon svg{width:13px;height:13px;stroke:var(--t3);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:stroke .15s}
+    nav.mpw-site-nav .drop-item:hover .drop-icon{background:rgba(0,232,162,.06);border-color:rgba(0,232,162,.2)}
+    nav.mpw-site-nav .drop-item:hover .drop-icon svg{stroke:var(--teal)}
+    nav.mpw-site-nav .drop-name{font-size:13.5px;font-weight:500;color:var(--t1);line-height:1.2;margin-bottom:2px}
+    nav.mpw-site-nav .drop-desc{font-size:11.5px;color:var(--t3);line-height:1.4}
+    nav.mpw-site-nav .nav-right{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
+    nav.mpw-site-nav .nav-cta{background:var(--teal);color:#0a0a0b;font-size:13px;font-weight:600;padding:7px 16px;border-radius:8px;text-decoration:none;white-space:nowrap;transition:background .15s}
+    nav.mpw-site-nav .nav-cta:hover{background:#00fdb5}
+    nav.mpw-site-nav .nav-search-btn{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:6px;background:none;border:none;cursor:pointer;color:#888;padding:0}
+    nav.mpw-site-nav .nav-search-btn:hover{color:#fff;background:rgba(255,255,255,.07)}
+    nav.mpw-site-nav .nav-search-btn svg{width:16px;height:16px;display:block}
+    nav.mpw-site-nav .nav-mob{display:none;background:none;border:none;cursor:pointer;padding:8px;flex-direction:column;gap:5px;flex-shrink:0}
+    nav.mpw-site-nav .nav-mob span{display:block;width:22px;height:2px;background:var(--t2);border-radius:2px}
+    .mobile-drawer{display:none;position:fixed;top:60px;left:0;right:0;bottom:0;background:rgba(10,10,11,.99);z-index:199;overflow-y:auto;padding:16px;border-top:1px solid var(--bd);flex-direction:column;gap:4px}
+    .mobile-drawer.open{display:flex}
+    .mob-section-label{font-size:10px;font-family:var(--mono);color:var(--t3);text-transform:uppercase;letter-spacing:.12em;padding:12px 12px 6px}
+    .mob-link{display:block;padding:11px 12px;border-radius:9px;text-decoration:none;font-size:14px;color:var(--t2);transition:color .15s,background .15s}
+    .mob-link:hover{color:var(--t1);background:var(--bg2)}
+    .mob-bible{display:flex;align-items:center;gap:8px;padding:12px 16px;border-radius:9px;background:var(--amber-dim);border:1px solid var(--amber-border);color:var(--amber);font-size:14px;font-weight:600;text-decoration:none;margin:4px 0 8px}
+    .mob-cta,.mob-cta-bible{display:block;background:var(--teal);color:#0a0a0b;font-weight:600;font-size:14px;padding:13px 16px;border-radius:10px;text-decoration:none;text-align:center;margin-top:8px}
+
+    /* SEARCH OVERLAY */
+    .search-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:99998;align-items:flex-start;justify-content:center;padding-top:60px}
+    .search-overlay.open{display:flex}
+    .search-box{background:#16161a;border:1px solid var(--amber-border);border-radius:14px;width:100%;max-width:620px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.7);margin:0 1rem}
+    .search-input-wrap{display:flex;align-items:center;padding:16px 20px;gap:12px;border-bottom:1px solid rgba(255,255,255,.07)}
+    .search-input{flex:1;background:none;border:none;outline:none;font-size:16px;color:#fff;font-family:inherit}
+    .search-results{max-height:420px;overflow-y:auto;padding:8px}
+    .search-result{display:flex;flex-direction:column;padding:10px 14px;border-radius:8px;text-decoration:none;color:#c8c8d8;transition:background .12s}
+    .search-result:hover{background:rgba(245,166,35,.05)}
+    .sr-title{font-size:14px;font-weight:500;color:#fff;line-height:1.3}
+    .sr-cat{font-size:11px;color:var(--amber);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+
+    /* BIBLE MASTHEAD — sticky at top:60px (below nav) */
+    .bible-masthead{background:var(--bg2);border-bottom:1px solid var(--amber-border);padding:8px 2.5rem;width:100%;position:sticky;top:60px;z-index:150}
+    .bible-masthead-inner{max-width:var(--prose);margin:0 auto;display:flex;align-items:center;gap:12px}
+    .bm-publisher{font-size:9px;font-family:var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--amber);font-weight:500;text-decoration:none}
+    .bm-divider{width:1px;height:10px;background:var(--amber-border);flex-shrink:0}
+    .bm-site{font-size:9px;font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--t3)}
+    .bm-edition{font-size:9px;font-family:var(--mono);color:rgba(245,166,35,.4);letter-spacing:.1em;text-transform:uppercase;background:rgba(245,166,35,.06);border:1px solid var(--amber-border);padding:2px 8px;border-radius:3px;margin-left:auto}
+    .bm-dot{width:4px;height:4px;border-radius:50%;background:var(--amber);flex-shrink:0;animation:amberpulse 2.4s ease-in-out infinite}
+    @keyframes amberpulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.2;transform:scale(.5)}}
+
+    /* PARAM CARDS */
+    .param-grid{display:grid;gap:12px;margin:20px 0}
+    .param-card{background:var(--bg2);border:1px solid var(--bd);border-radius:12px;padding:18px 20px;transition:border-color .2s}
+    .param-card:hover{border-color:var(--bdh)}
+    .param-name{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:6px}
+    .param-title{font-size:1rem;font-weight:600;color:var(--t1);margin-bottom:8px}
+    .param-desc{font-size:14.5px;color:#c8c8d8;line-height:1.65;margin:0}
+
+    /* SVG DIAGRAM */
+    .diagram-wrap{background:var(--bg2);border:1px solid var(--bd);border-radius:12px;padding:28px 24px;margin:24px 0;overflow:hidden}
+    .diagram-label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--t3);text-align:center;margin-top:14px}
+
+    /* QUICK REFERENCE TABLE */
+    .ref-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:10px}
+    .ref-card-header p{margin:0;font-size:15.5px;color:var(--t1)}
+    .ref-table-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--bd);margin:20px 0}
+    .ref-table{width:100%;border-collapse:collapse;font-size:13.5px}
+    .ref-table thead{background:var(--bg3)}
+    .ref-table th{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--t2);padding:12px 16px;text-align:left;border-bottom:1px solid var(--bd);white-space:nowrap}
+    .ref-table th:first-child{color:var(--amber)}
+    .ref-table td{padding:11px 16px;border-bottom:1px solid var(--bd);color:var(--t1);vertical-align:top;font-family:var(--mono);font-size:13px}
+    .ref-table td:first-child{color:var(--t2);font-weight:500;white-space:nowrap}
+    .ref-table tbody tr:last-child td{border-bottom:none}
+    .ref-table tbody tr:hover{background:var(--bg3)}
+    .copy-table-btn{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);background:var(--bg2);border:1px solid var(--bd);padding:6px 14px;border-radius:8px;cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
+    .copy-table-btn:hover,.copy-table-btn.copied{color:var(--teal);border-color:rgba(0,232,162,.25);background:rgba(0,232,162,.06)}
+
+    /* TRACK EXAMPLES */
+    .track-example{background:var(--bg2);border:1px solid var(--bd);border-left:3px solid var(--amber);border-radius:0 12px 12px 0;padding:20px 22px;margin:16px 0;transition:border-color .2s}
+    .track-example:hover{border-color:var(--amber-border);border-left-color:var(--amber)}
+    .track-title{font-size:14.5px;font-weight:700;color:var(--t1);margin-bottom:4px}
+    .track-timestamp{font-family:var(--mono);font-size:11px;color:var(--amber);margin-bottom:10px;letter-spacing:.04em}
+    .track-note{font-size:14px;color:#c8c8d8;line-height:1.65;margin:0}
+
+    /* TYPE CARDS */
+    .type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}
+    @media(max-width:700px){.type-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:480px){.type-grid{grid-template-columns:1fr}}
+    .type-card{background:var(--bg2);border:1px solid var(--bd);border-radius:12px;padding:18px}
+    .type-card-name{font-weight:700;font-size:14px;color:var(--t1);margin-bottom:4px}
+    .type-card-hardware{font-family:var(--mono);font-size:10px;color:var(--teal);margin-bottom:8px;letter-spacing:.04em}
+    .type-card-desc{font-size:13px;color:#c8c8d8;line-height:1.6}
+
+    /* MISTAKE LIST */
+    .mistake-list{list-style:none;padding:0;margin:16px 0}
+    .mistake-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--bd)}
+    .mistake-item:last-child{border-bottom:none}
+    .mistake-icon{width:22px;height:22px;flex-shrink:0;margin-top:2px;color:#ff4d6d;font-size:14px;display:flex;align-items:center;justify-content:center}
+    .mistake-content{flex:1}
+    .mistake-title{font-weight:600;font-size:14.5px;color:var(--t1);margin-bottom:4px}
+    .mistake-desc{font-size:14px;color:#c8c8d8;line-height:1.6}
+
+    /* DAW NOTES — readability override baked in */
+    .daw-grid{display:grid;gap:10px;margin:16px 0}
+    .daw-row{display:flex;align-items:flex-start;gap:14px;background:#1a1a1d;border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:14px 16px}
+    .daw-name{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--teal);letter-spacing:.06em;min-width:80px;padding-top:1px}
+    .daw-note{font-size:14px;color:#c8c8d8;line-height:1.6}
+
+    /* RELATED TERMS */
+    .related-grid{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0}
+    .related-term{display:inline-flex;flex-direction:column;gap:3px;background:#1a1a1d;border:1px solid var(--bd);border-radius:8px;padding:10px 14px;text-decoration:none;transition:all .15s;min-width:140px}
+    .related-term:hover{border-color:var(--amber-border);background:var(--amber-dim)}
+    .related-term-name{font-size:13px;font-weight:600;color:var(--amber)}
+    .related-term-preview{font-size:11.5px;color:#b0b0c4;line-height:1.4}
+
+    /* FURTHER READING */
+    .further-grid{display:grid;gap:10px;margin:16px 0}
+    .further-link{display:flex;align-items:center;gap:12px;background:var(--bg2);border:1px solid var(--bd);border-radius:var(--radius);padding:14px 16px;text-decoration:none;transition:all .15s}
+    .further-link:hover{border-color:var(--teal-border);background:var(--teal-dim)}
+    .further-link-arrow{color:var(--teal);font-size:16px;flex-shrink:0}
+    .further-link-text{font-size:14px;color:#c8c8d8;transition:color .15s}
+    .further-link:hover .further-link-text{color:#f0f0f0}
+
+    /* NEWSLETTER CARD */
+    .bible-nl-card{background:#111113;border:1px solid rgba(0,232,162,0.22);border-radius:12px;padding:20px;margin:40px 0}
+    .bible-nl-card-eye{font-size:9px;font-family:var(--mono);font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#00e8a2;display:block;margin-bottom:6px}
+    .bible-nl-card-h{font-size:18px;font-weight:600;color:#f0f0f0;letter-spacing:-0.03em;line-height:1.2;margin-bottom:6px}
+    .bible-nl-card-h em{font-style:normal;color:#00e8a2}
+    .bible-nl-card-sub{font-size:13px;color:#a0a0b4;line-height:1.6;margin-bottom:14px}
+    .bible-nl-card-form{display:flex;gap:8px;flex-wrap:wrap}
+    .bible-nl-card-inp{flex:1;min-width:160px;background:#1a1a1d;border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:10px 12px;font-size:13px;color:#f0f0f0;font-family:var(--font);outline:none;transition:border-color .2s}
+    .bible-nl-card-inp::placeholder{color:#6a6a7a}
+    .bible-nl-card-inp:focus{border-color:rgba(0,232,162,.35)}
+    .bible-nl-card-btn{background:#00e8a2;color:#0a0a0b;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);white-space:nowrap;transition:background .15s}
+    .bible-nl-card-btn:hover{background:#00fdb5}
+    .bible-nl-card-note{font-size:11px;color:#6a6a7a;font-family:var(--mono);margin-top:10px;display:block}
+
+    /* ENTRY TYPOGRAPHY — readability overrides baked in */
+    .entry-section p{margin-bottom:16px;color:#e8e8ec;line-height:1.8;font-size:15.5px}
+    .entry-section p:last-child{margin-bottom:0}
+    .entry-section h3{font-size:1.05rem;font-weight:600;color:var(--t1);margin:24px 0 10px}
+    .entry-section ul,.entry-section ol{padding-left:20px;margin-bottom:16px}
+    .entry-section li{margin-bottom:8px;font-size:15.5px;line-height:1.7;color:#e8e8ec}
+    .entry-section strong{color:var(--t1);font-weight:600}
+    .entry-section em{color:var(--t2);font-style:italic}
+    .entry-section code{font-family:var(--mono);font-size:13px;background:var(--bg3);border:1px solid var(--bd);padding:2px 6px;border-radius:4px;color:var(--teal)}
+    a{color:var(--teal);text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    .breadcrumb{display:flex;align-items:center;gap:6px;list-style:none;margin-bottom:20px;flex-wrap:wrap}
+    .breadcrumb li{display:flex;align-items:center;gap:6px}
+    .breadcrumb a{font-size:12px;color:var(--t3);text-decoration:none;transition:color .15s}
+    .breadcrumb a:hover{color:var(--teal)}
+    .breadcrumb .sep{font-size:11px;color:var(--t3)}
+    .breadcrumb .current{font-size:12px;color:var(--t2)}
+
+    .entry-header{padding-bottom:28px;border-bottom:1px solid var(--bd)}
+    .bible-masthead-entry-inner{max-width:900px;margin:0 auto;padding:20px 2.5rem 28px;width:100%;box-sizing:border-box}
+    .entry-meta-row{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+    .entry-category-badge{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);background:var(--amber-dim);border:1px solid var(--amber-border);padding:3px 10px;border-radius:100px}
+    .entry-pos{font-family:var(--mono);font-size:10px;color:var(--t3);letter-spacing:.06em}
+    .entry-edition{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);background:var(--amber-dim);border:1px solid var(--amber-border);padding:3px 10px;border-radius:100px}
+    .entry-title{font-size:clamp(1.8rem,4vw,3rem);font-weight:700;line-height:1.05;letter-spacing:-0.025em;color:var(--t1);margin-bottom:8px}
+    .entry-pronunciation{font-family:var(--mono);font-size:13px;color:var(--t3)}
+    .entry-layout{width:100%;max-width:900px;margin:0 auto;padding:0 2.5rem 80px;box-sizing:border-box;display:block}
+
+    .quick-answer{background:rgba(0,232,162,0.12);border:1px solid rgba(0,232,162,0.25);border-radius:12px;padding:22px 26px;margin:32px 0;position:relative}
+    .quick-answer::before{content:'Quick Answer';display:block;font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);margin-bottom:10px}
+    .quick-answer p{font-size:17px;font-weight:500;line-height:1.6;color:var(--t1);margin:0}
+
+    .entry-section{margin:48px 0;padding-top:0}
+    .entry-section h2{font-size:1.35rem;font-weight:700;letter-spacing:-0.015em;color:var(--t1);margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px}
+    .entry-section h2 .section-num{font-family:var(--mono);font-size:11px;color:var(--amber);letter-spacing:.1em;font-weight:500}
+
+    .faq-item{border-bottom:1px solid var(--bd)}
+    .faq-question{width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;background:none;border:none;cursor:pointer;padding:18px 0;font-size:15px;font-weight:600;color:var(--t1);text-align:left;font-family:var(--font)}
+    .faq-icon{font-size:20px;color:var(--t3);flex-shrink:0;transition:transform .2s}
+    .faq-item.open .faq-icon{transform:rotate(45deg)}
+    .faq-answer{display:none;padding:0 0 18px;font-size:15px;color:var(--t2);line-height:1.75}
+    .faq-item.open .faq-answer{display:block}
+
+    .entry-footer-section{border-top:1px solid var(--bd);padding-top:32px;margin-top:48px}
+    .entry-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+    .entry-tag{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);background:var(--bg2);border:1px solid var(--bd);padding:4px 10px;border-radius:100px}
+    .entry-meta{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px}
+    .entry-verified{font-family:var(--mono);font-size:10px;color:var(--t3);letter-spacing:.06em}
+    .entry-share{display:flex;gap:8px;flex-wrap:wrap}
+    .share-btn{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);background:var(--bg2);border:1px solid var(--bd);padding:6px 12px;border-radius:8px;text-decoration:none;cursor:pointer;transition:all .15s}
+    .share-btn:hover{color:var(--amber);border-color:var(--amber-border);background:var(--amber-dim)}
+    .bible-colophon{padding:20px 24px;background:var(--amber-dim);border:1px solid var(--amber-border);border-radius:12px}
+    .bible-colophon-text{font-size:14px;color:var(--t2);line-height:1.7;text-align:center}
+    .bible-colophon-text a{color:var(--amber)}
+
+    footer{border-top:1px solid var(--bd);padding:32px 2.5rem}
+    .fi{max-width:var(--max);margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+    .fl{font-size:12px;color:var(--t3);font-family:var(--mono)}
+    .flinks{display:flex;gap:20px;list-style:none;flex-wrap:wrap}
+    .flinks a{font-size:12px;color:var(--t3);text-decoration:none;transition:color .15s}
+    .flinks a:hover{color:var(--t2)}
+
+    /* STICKY IN-PAGE NAV — top:96px (60px nav + 36px bible bar) */
+    .entry-nav{position:sticky;top:96px;left:0;right:0;z-index:90;width:100%;background:rgba(8,8,9,0.98);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid rgba(255,255,255,0.04);border-bottom:1px solid rgba(245,166,35,0.18);overflow-x:auto;scrollbar-width:none}
+    .entry-nav::-webkit-scrollbar{display:none}
+    .entry-nav-inner{display:flex;align-items:center;gap:0;width:max-content;min-width:100%;margin:0 auto;padding:0 2.5rem;box-sizing:border-box;justify-content:center}
+    .entry-nav-link{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:rgba(160,160,180,0.5);text-decoration:none;padding:13px 10px;white-space:nowrap;border-bottom:3px solid transparent;transition:color .15s,border-color .15s}
+    .entry-nav-link:hover{color:rgba(245,166,35,0.7)}
+    .entry-nav-link.active{color:#f5a623;border-bottom-color:#f5a623;font-weight:600}
+
+    .reading-progress{position:fixed;top:0;left:0;right:auto;width:0;max-width:100vw;height:3px;background:var(--amber);z-index:99999;transition:width .1s linear;transform:none;margin:0;padding:0}
+    .back-to-top{position:fixed;bottom:28px;right:16px;width:40px;height:40px;background:var(--bg3);border:1px solid var(--bdh);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transform:translateY(8px);transition:all .2s;z-index:90;color:var(--t2);font-size:16px;text-decoration:none}
+    .back-to-top.visible{opacity:1;transform:translateY(0)}
+    .back-to-top:hover{background:var(--bg4);color:var(--t1);border-color:var(--amber-border)}
+
+    /* YOUTUBE */
+    .yt-section{margin:48px 0}
+    .yt-section h2{font-size:1.35rem;font-weight:700;letter-spacing:-.015em;color:var(--t1);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px}
+    .yt-eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--t3);margin-bottom:10px;display:block}
+    .yt-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;border:1px solid var(--bd);background:var(--bg2)}
+    .yt-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0;border-radius:12px}
+    .yt-caption{font-size:13px;color:var(--t3);margin-top:10px;font-family:var(--mono);letter-spacing:.02em}
+
+    /* SPOTIFY */
+    .spotify-section{margin:0 0 32px}
+    .spotify-eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--t3);margin-bottom:12px;display:block}
+    .spotify-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+    .spotify-label{font-family:var(--mono);font-size:10px;color:var(--amber);letter-spacing:.06em;margin-bottom:6px;display:block}
+    .spotify-frame{border-radius:10px;overflow:hidden}
+
+    /* AUDIO TOGGLE */
+    .audio-toggle-section{background:var(--bg2);border:1px solid var(--bd);border-radius:12px;padding:24px;margin:24px 0}
+    .audio-toggle-label{font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--t3);margin-bottom:14px;display:block}
+    .audio-toggle-title{font-size:15px;font-weight:600;color:var(--t1);margin-bottom:16px}
+    .audio-toggle-btn{display:flex;align-items:center;gap:10px;background:var(--bg3);border:1px solid var(--bd);border-radius:8px;padding:12px 18px;cursor:pointer;font-family:var(--font);font-size:14px;color:var(--t2);transition:all .15s;width:100%}
+    .audio-toggle-btn:hover{border-color:rgba(0,232,162,0.25);color:var(--t1)}
+    .audio-toggle-btn.playing{border-color:rgba(0,232,162,0.25);background:rgba(0,232,162,.06);color:var(--teal)}
+    .audio-play-icon{width:32px;height:32px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s}
+    .audio-play-icon svg{width:12px;height:12px;fill:#0a0a0b}
+    .audio-toggle-btn.playing .audio-play-icon{background:var(--amber)}
+    .audio-labels{display:flex;gap:8px;margin-top:10px}
+    .audio-tag{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:100px;border:1px solid var(--bd);color:var(--t3)}
+    .audio-tag.active{border-color:rgba(0,232,162,0.25);color:var(--teal);background:rgba(0,232,162,.06)}
+    .audio-coming-soon{font-size:13px;color:var(--t3);font-family:var(--mono);padding:8px 0}
+
+    /* CALCULATOR */
+    .calc-section{background:var(--bg2);border:1px solid var(--amber-border);border-radius:12px;padding:28px;margin:48px 0}
+    .calc-eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);margin-bottom:10px;display:block}
+    .calc-title{font-size:1.15rem;font-weight:700;color:var(--t1);margin-bottom:6px;letter-spacing:-.01em}
+    .calc-subtitle{font-size:13.5px;color:#c8c8d8;margin-bottom:24px;line-height:1.6}
+    .calc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:20px}
+    .calc-field{display:flex;flex-direction:column;gap:6px}
+    .calc-field label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#b0b0c4}
+    .calc-input{background:var(--bg3);border:1px solid var(--bdh);border-radius:8px;padding:10px 14px;font-size:15px;color:var(--t1);font-family:var(--mono);outline:none;transition:border-color .2s;width:100%}
+    .calc-input:focus{border-color:var(--amber-border)}
+    .calc-input[type=range]{padding:6px 0;background:none;border:none;accent-color:var(--amber)}
+    .calc-btn{background:var(--amber);color:#0a0a0b;border:none;border-radius:8px;padding:11px 24px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font);transition:background .15s}
+    .calc-btn:hover{background:#f9b84a}
+    .calc-results{background:var(--bg3);border:1px solid var(--bd);border-radius:8px;padding:20px;margin-top:4px}
+    .calc-results-label{font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--t3);margin-bottom:14px;display:block}
+    .calc-result-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+    .calc-result-item{display:flex;flex-direction:column;gap:4px}
+    .calc-result-name{font-family:var(--mono);font-size:10px;color:#b0b0c4;letter-spacing:.06em;text-transform:uppercase}
+    .calc-result-value{font-size:1.4rem;font-weight:700;color:var(--amber);font-family:var(--mono);letter-spacing:-.02em}
+    .calc-result-unit{font-size:11px;color:#b0b0c4;font-family:var(--mono)}
+    .calc-note{font-size:12px;color:#b0b0c4;margin-top:14px;line-height:1.6;font-family:var(--mono)}
+    .freq-chart-wrap{margin-top:16px;border-radius:8px;overflow:hidden;border:1px solid var(--bd)}
+    .freq-chart-canvas{width:100%;height:180px;display:block;background:var(--bg3)}
+    .freq-chart-labels{display:flex;justify-content:space-between;padding:4px 8px;background:var(--bg3);border-top:1px solid var(--bd)}
+    .freq-chart-label{font-family:var(--mono);font-size:9px;color:#b0b0c4;letter-spacing:.04em}
+    .tap-btn{background:var(--bg3);border:2px solid var(--amber-border);border-radius:8px;padding:14px 24px;font-size:15px;font-weight:600;color:var(--amber);cursor:pointer;font-family:var(--mono);transition:all .15s}
+    .tap-btn:active{background:var(--amber-dim);transform:scale(.97)}
+
+    /* RESPONSIVE */
+    @media(max-width:1024px){
+      nav.mpw-site-nav .nav-primary{display:none}
+      nav.mpw-site-nav .nav-mob{display:flex}
+      nav.mpw-site-nav .nav-cta{display:none!important}
+      nav.mpw-site-nav .nav-inner{padding:0 1rem!important}
+    }
+    @media(max-width:768px){
+      .bible-masthead{padding:8px 1rem!important}
+      .bible-masthead-inner .bm-site,.bible-masthead-inner .bm-divider{display:none!important}
+      .bible-masthead-entry-inner{padding:16px 1rem 20px!important}
+      .entry-layout{padding:0 1rem 60px!important}
+      .entry-nav-inner{padding:0 1rem!important}
+      .fi{flex-direction:column;text-align:center}
+      .flinks{justify-content:center}
+      footer{padding:24px 1.5rem}
+      .calc-grid{grid-template-columns:1fr}
+      .bible-nl-card-form{flex-direction:column}
+      .bible-nl-card-inp{min-width:0;width:100%}
+    }
+    @media(max-width:600px){
+      .entry-title{font-size:2.2rem}
+      .entry-meta{flex-direction:column;align-items:flex-start}
+      .spotify-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+<div class="reading-progress" id="readingProgress"></div>
+
+<nav class="mpw-site-nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="https://musicproductionwiki.com" class="nav-logo" aria-label="MusicProductionWiki home">
+      <div class="logo-mark">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <rect x="1.5" y="7" width="2.5" height="9" rx="1.2" fill="#0a0a0b"/>
+          <rect x="6" y="4" width="2.5" height="12" rx="1.2" fill="#0a0a0b"/>
+          <rect x="10.5" y="1" width="2.5" height="16" rx="1.2" fill="#0a0a0b"/>
+          <rect x="15" y="5" width="2.5" height="9" rx="1.2" fill="#0a0a0b"/>
+        </svg>
+      </div>
+      <div>
+        <div class="logo-text">MusicProductionWiki</div>
+        <span class="logo-sub">The Producer's Reference</span>
+      </div>
+    </a>
+    <ul class="nav-primary">
+      <li class="nav-item" id="ddArticles">
+        <button aria-haspopup="true" aria-expanded="false">Articles <svg class="nav-chevron" viewBox="0 0 12 12"><polyline points="2 4 6 8 10 4"/></svg></button>
+        <div class="nav-dropdown wide" role="menu">
+          <div class="drop-col-label">Techniques &amp; Analysis</div>
+          <div class="drop-col-label">Reference &amp; Business</div>
+          <a class="drop-item" href="/categories/techniques.html"><div class="drop-icon"><svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div><div class="drop-name">Techniques</div><div class="drop-desc">Mixing, mastering, sound design</div></div></a>
+          <a class="drop-item" href="/categories/reviews.html"><div class="drop-icon"><svg viewBox="0 0 24 24"><path d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5z"/></svg></div><div><div class="drop-name">Reviews</div><div class="drop-desc">Honest. No paid placements.</div></div></a>
+          <a class="drop-item" href="/categories/comparisons.html"><div class="drop-icon"><svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></div><div><div class="drop-name">Comparisons</div><div class="drop-desc">Head-to-head, clear winners</div></div></a>
+          <a class="drop-item" href="/categories/ai-music.html"><div class="drop-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><div><div class="drop-name">AI Music</div><div class="drop-desc">Suno, Udio, AI production tools</div></div></a>
+          <a class="drop-item" href="/categories/breakdowns.html"><div class="drop-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div><div><div class="drop-name">Breakdowns</div><div class="drop-desc">Track-by-track production analysis</div></div></a>
+          <a class="drop-item" href="/categories/music-business.html"><div class="drop-icon"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div><div><div class="drop-name">Music Business</div><div class="drop-desc">Royalties, licensing, contracts</div></div></a>
+          <a class="drop-item" href="/categories/recreations.html"><div class="drop-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><div><div class="drop-name">Recreations</div><div class="drop-desc">Recreate iconic sounds from scratch</div></div></a>
+          <a class="drop-item" href="/genres.html"><div class="drop-icon"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div><div><div class="drop-name">Genres</div><div class="drop-desc">Every genre and production style</div></div></a>
+        </div>
+      </li>
+      <li class="nav-item" id="ddGear">
+        <button aria-haspopup="true" aria-expanded="false">Gear <svg class="nav-chevron" viewBox="0 0 12 12"><polyline points="2 4 6 8 10 4"/></svg></button>
+        <div class="nav-dropdown" role="menu">
+          <a class="drop-item" href="/categories/daws.html"><div class="drop-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><div><div class="drop-name">DAWs</div><div class="drop-desc">Every major DAW covered</div></div></a>
+          <a class="drop-item" href="/categories/plugins.html"><div class="drop-icon"><svg viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg></div><div><div class="drop-name">Plugins</div><div class="drop-desc">EQ, compressors, reverbs, synths</div></div></a>
+          <a class="drop-item" href="/categories/gear.html"><div class="drop-icon"><svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 1 3 3v7a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg></div><div><div class="drop-name">Hardware</div><div class="drop-desc">Interfaces, mics, monitors, synths</div></div></a>
+        </div>
+      </li>
+      <li class="nav-item"><a href="/about.html">About</a></li>
+      <li class="nav-item"><a href="/bible/" class="nav-bible-link">The Producer's Bible →</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="nav-search-btn" id="navSearchBtn" aria-label="Search (Ctrl+K)">
+        <svg viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+      <a href="https://theproducersbriefing.beehiiv.com" class="nav-cta">Sound Better →</a>
+      <button class="nav-mob" id="navMob" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-drawer" id="mobileDrawer">
+  <a href="/bible/" class="mob-bible"><span style="width:5px;height:5px;border-radius:50%;background:var(--amber);display:inline-block"></span> The Producer's Bible</a>
+  <div class="mob-section-label">Articles</div>
+  <a class="mob-link" href="/categories/techniques.html">Techniques</a>
+  <a class="mob-link" href="/categories/reviews.html">Reviews</a>
+  <a class="mob-link" href="/categories/comparisons.html">Comparisons</a>
+  <a class="mob-link" href="/categories/breakdowns.html">Breakdowns</a>
+  <a class="mob-link" href="/categories/recreations.html">Recreations</a>
+  <a class="mob-link" href="/genres.html">Genres</a>
+  <a class="mob-link" href="/categories/ai-music.html">AI Music</a>
+  <a class="mob-link" href="/categories/music-business.html">Music Business</a>
+  <div class="mob-section-label">Gear</div>
+  <a class="mob-link" href="/categories/daws.html">DAWs</a>
+  <a class="mob-link" href="/categories/plugins.html">Plugins</a>
+  <a class="mob-link" href="/categories/gear.html">Hardware</a>
+  <div class="mob-section-label">Site</div>
+  <a class="mob-link" href="/about.html">About</a>
+  <a href="https://theproducersbriefing.beehiiv.com" class="mob-cta mob-cta-bible" target="_blank" rel="noopener">Sound Better → Join the newsletter</a>
+</div>
+
+<div class="search-overlay" id="searchOverlay" role="dialog" aria-modal="true">
+  <div class="search-box">
+    <div class="search-input-wrap">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="var(--amber)" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="var(--amber)" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input class="search-input" id="searchInput" placeholder="Look up any production term..." autocomplete="off" spellcheck="false"/>
+      <button id="searchCloseBtn" aria-label="Close search" style="background:none;border:none;cursor:pointer;color:#888;font-size:26px;line-height:1;padding:0 2px;flex-shrink:0;">&times;</button>
+    </div>
+    <div class="search-results" id="searchResults" role="listbox"></div>
+  </div>
+</div>
+
+<div class="bible-masthead" id="main-content">
+  <div class="bible-masthead-inner">
+    <div class="bm-dot"></div>
+    <a href="/bible/" class="bm-publisher">The Producer's Bible</a>
+    <span class="bm-divider"></span>
+    <span class="bm-site">Published by MusicProductionWiki.com</span>
+    <span class="bm-edition">2026 Edition</span>
+  </div>
+</div>
+
+<div style="background:var(--bg2);border-bottom:1px solid var(--bd);padding:0;width:100%">
+  <div class="bible-masthead-entry-inner">
+    <nav aria-label="Breadcrumb">
+      <ol class="breadcrumb">
+        <li><a href="https://musicproductionwiki.com">Home</a></li><li><span class="sep">›</span></li>
+        <li><a href="https://musicproductionwiki.com/bible/">The Producer's Bible</a></li><li><span class="sep">›</span></li>
+        <li><span class="current">Limiting</span></li>
+      </ol>
+    </nav>
+    <div class="entry-header">
+      <div class="entry-meta-row">
+        <span class="entry-category-badge">Signal Processing</span>
+        <span class="entry-pos">noun · dynamic control</span>
+        <span class="entry-edition">2026 Edition</span>
+      </div>
+      <h1 class="entry-title">Limiting</h1>
+      <p class="entry-pronunciation">/ˈlɪmɪtɪŋ/</p>
+    </div>
+  </div>
+</div>
+
+<nav class="entry-nav" aria-label="Entry sections">
+  <div class="entry-nav-inner">
+    <a href="#quick-answer" class="entry-nav-link" data-section="quick-answer">Quick Answer</a>
+    <a href="#definition" class="entry-nav-link" data-section="definition">Definition</a>
+    <a href="#how-it-works" class="entry-nav-link" data-section="how-it-works">How It Works</a>
+    <a href="#parameters" class="entry-nav-link" data-section="parameters">Parameters</a>
+    <a href="#quick-reference" class="entry-nav-link" data-section="quick-reference">Quick Reference</a>
+    <a href="#history" class="entry-nav-link" data-section="history">History</a>
+    <a href="#how-producers-use-it" class="entry-nav-link" data-section="how-producers-use-it">How To Use It</a>
+    <a href="#in-the-wild" class="entry-nav-link" data-section="in-the-wild">In The Wild</a>
+    <a href="#types" class="entry-nav-link" data-section="types">Types</a>
+    <a href="#common-mistakes" class="entry-nav-link" data-section="common-mistakes">Mistakes</a>
+    <a href="#calculator" class="entry-nav-link" data-section="calculator">Calculator</a>
+    <a href="#related-terms" class="entry-nav-link" data-section="related-terms">Related</a>
+    <a href="#further-reading" class="entry-nav-link" data-section="further-reading">Further Reading</a>
+    <a href="#faq" class="entry-nav-link" data-section="faq">FAQ</a>
+  </div>
+</nav>
+
+<main class="entry-layout">
+
+  <div class="quick-answer" id="quick-answer"><p>Limiting is a form of extreme compression that prevents audio signals from exceeding a defined ceiling, used to control peaks and maximize perceived loudness. Ratios typically run from 10:1 up to infinity:1, making the threshold act as a hard ceiling.</p></div>
+
+    <div class="audio-toggle-section">
+      <span class="audio-toggle-label">Hear The Difference</span>
+      <div class="audio-toggle-title">Dry vs Processed — Limiting</div>
+      <div id="audioToggle-limiting">
+        <span class="audio-coming-soon">🎵 Audio examples coming soon — check back shortly.</span>
+      </div>
+      <div class="audio-labels">
+        <span class="audio-tag" id="tagDry-limiting">Dry</span>
+        <span class="audio-tag" id="tagWet-limiting">Processed</span>
+      </div>
+    </div>
+    <script>
+    (function(){
+      var dU='/bible/audio/limiting-dry.mp3',wU='/bible/audio/limiting-wet.mp3';
+      var cont=document.getElementById('audioToggle-limiting');
+      var tD=document.getElementById('tagDry-limiting'),tW=document.getElementById('tagWet-limiting');
+      var audio=null,playing=false,isDry=true;
+      function render(){
+        cont.innerHTML='<button class="audio-toggle-btn" id="aBtn-limiting"><span class="audio-play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></span><span id="aBtnL-limiting">Play Dry</span></button>';
+        var btn=document.getElementById('aBtn-limiting'),lbl=document.getElementById('aBtnL-limiting');
+        audio=new Audio(dU);
+        audio.addEventListener('ended',function(){btn.classList.remove('playing');playing=false;lbl.textContent='Play Dry';tD.classList.remove('active');tW.classList.remove('active');});
+        btn.addEventListener('click',function(){
+          if(!audio)return;
+          if(playing){isDry=!isDry;var t=audio.currentTime;audio.src=isDry?dU:wU;audio.currentTime=t;audio.play();
+            lbl.textContent=isDry?'Playing Dry':'Playing Processed';tD.classList.toggle('active',isDry);tW.classList.toggle('active',!isDry);
+          }else{isDry=true;audio.src=dU;audio.play();playing=true;btn.classList.add('playing');lbl.textContent='Playing Dry';tD.classList.add('active');}
+        });
+      }
+      fetch(dU,{method:'HEAD'}).then(function(r){if(r.ok)render();}).catch(function(){});
+    })();
+    </script>
+
+  <section class="entry-section" id="definition">
+    <h2><span class="section-num">01</span> Definition</h2>
+    <p style="font-size:16.5px;font-weight:500;color:var(--t2);font-style:italic;border-left:3px solid var(--amber);padding-left:16px;margin-bottom:24px;line-height:1.65;">Every record you love has a limiter's fingerprints on it — the question is whether those prints are invisible or smeared all over the glass.</p><p>Limiting is a form of dynamic processing in which an audio signal is prevented from exceeding a defined amplitude threshold — in practice, a hard ceiling. Where a compressor attenuates gain gradually according to a ratio (2:1, 4:1, 8:1), a limiter applies ratios of 10:1 or higher, often described as infinity:1, meaning no signal above the threshold can pass through unattenuated. The result is a defined maximum output level regardless of how loud the input becomes. In modern production, limiting sits at the intersection of two essential functions: peak control, which protects downstream hardware, streaming encoders, and D/A converters from clipping; and loudness maximization, which closes the gap between a mix's average level and its peak level, increasing perceived energy and presence.</p><p>The distinction between compression and limiting is largely one of degree and intent. Compression manages dynamics musically — shaping sustain, controlling transient punch, gluing elements together. Limiting, particularly in its brick-wall form, is corrective or competitive: it asserts an absolute ceiling and increases average loudness up toward that ceiling. A threshold set at −1 dBFS with a ratio of infinity:1 and a very fast attack time means the output waveform will never exceed −1 dBFS, no matter how aggressive the input. This is the fundamental operating principle of every mastering limiter from hardware units like the Neve 33609 to software tools like FabFilter Pro-L 2 and iZotope Ozone's Maximizer.</p><p>Limiting is applied at virtually every stage of modern music production, though its function changes significantly by context. On individual tracks, a limiter might be used with a fast attack and moderate release to catch rogue transients from a snare or a DI'd bass — preventing inter-sample peaks that could cause distortion downstream. On a mix bus or stereo master, limiting is the final stage before delivery, responsible for achieving integrated loudness targets set by streaming platforms (typically −14 LUFS for Spotify, −16 LUFS for YouTube, −16 LUFS for Apple Music) while maintaining True Peak levels at or below −1 dBTP. Understanding that context — the difference between limiting for control and limiting for loudness — is what separates producers who use limiters from producers who wield them.</p><p>The behavior of a limiter is defined by its detection circuit and its gain reduction method. Lookahead limiting, standard in modern software, allows the processor to read a buffer of audio milliseconds ahead of the playback position and anticipate peaks before they arrive. This allows the gain reduction to begin before the transient hits, eliminating the overshoot that earlier hardware designs struggled to avoid. True Peak limiting adds an additional layer by oversampling the signal, detecting inter-sample peaks — peaks that only emerge after digital-to-analog conversion — and preventing them from causing distortion on playback hardware. These are not cosmetic features; they are the technical foundations that make modern masters sound simultaneously loud and clean.</p><p>Musically, limiting is a tool of restraint as much as amplification. Pushed too hard, it causes pumping, distortion, transient smearing, and a loss of stereo width as the processor works to contain an impossible dynamic range. Used with precision, it is the processor that transforms a polished mix into a commercially competitive master — adding the last few crucial dB of loudness while preserving the dynamics, punch, and clarity that the mix engineer spent hours achieving. The craft of limiting, therefore, lies not in setting a ceiling and cranking the input gain, but in understanding how much gain reduction is acceptable before the music starts to suffer, and choosing the tools and settings that reach that target with the fewest artifacts.</p>
+  </section>
+
+  <section class="entry-section" id="how-it-works">
+    <h2><span class="section-num">02</span> How It Works</h2>
+    <p>A limiter's core mechanism is a voltage-controlled amplifier (VCA) or its digital equivalent, governed by a detection circuit that monitors the incoming signal level. When the signal exceeds the threshold, the detection circuit calculates the necessary gain reduction and applies it through the VCA instantly — or as close to instantly as the attack time allows. In analog hardware, this process introduces some inherent latency and overshoot; in digital software, lookahead buffers allow the processor to apply gain reduction before the peak arrives, creating the characteristic flat-top waveform associated with hard brick-wall limiting. The gain reduction is measured in dB: if a 0 dBFS peak arrives at a limiter set to −1 dBFS, the limiter applies 1 dB of gain reduction to that peak to keep the output at −1 dBFS.</p><p>The relationship between threshold and input gain is the engine of loudness maximization. If a limiter's output ceiling is set to −1 dBFS and the input gain is raised by 6 dB, all peaks that previously sat at −7 dBFS and below now approach or hit the ceiling. The limiter catches them, holds them at −1 dBFS, and the average (RMS or integrated LUFS) loudness of the track increases substantially — because the headroom between the loudest peaks and the average signal has been compressed. This is why loudness maximizers, such as those in iZotope Ozone or Waves L-series, are essentially limiters with an input gain control and an output ceiling: the entire workflow is increase input gain → limiter catches peaks → average level rises.</p><p>Lookahead detection is one of the most significant advances in digital limiting. By buffering the input signal — typically 1ms to 20ms ahead of real-time — the limiter's detection circuit can see an approaching peak and begin reducing gain before it arrives. This eliminates the transient overshoot that plagues zero-lookahead designs, where the signal briefly exceeds the threshold before the gain reduction circuit can respond. True Peak detection extends this principle by oversampling the signal by a factor of 4x or higher before measurement, revealing inter-sample peaks that standard sample-by-sample detection misses. A signal that peaks at −1.0 dBFS at the sample level can produce peaks of +0.5 dBFS or higher after D/A conversion when adjacent samples interact — True Peak limiting catches and controls these before delivery.</p><p>Release time governs how quickly the limiter returns to unity gain after reducing gain for a peak. Short release times (1–50ms) allow the limiter to recover quickly between transients, preserving punch on drums and percussive material, but can cause audible pumping if the gain reduction cycle becomes rhythmically perceptible. Long release times (100ms–500ms) create smoother, more transparent gain reduction on sustained material like pads or vocals, but can cause the limiter to hang in a state of continuous gain reduction on dense, loud mixes, effectively behaving like a compressor. In most mastering limiters, the release time is either program-dependent (automatically adjusted based on signal content) or multi-band, meaning different release behaviors apply to different frequency ranges simultaneously.</p><p>At the electronic and algorithmic level, a limiter is distinguished from a compressor primarily by the slope of its gain reduction curve above the threshold. In a compressor, the gain reduction increases proportionally with the ratio setting — a 4:1 ratio means for every 4 dB over the threshold, 1 dB passes through. In a limiter at infinity:1, the gain reduction slope is effectively vertical: no amount of input above the threshold produces additional output above the ceiling. This is the mathematical definition of a brick-wall limiter, and it is achieved in modern digital designs through combination of lookahead, oversampling, and gain reduction algorithms (some using clipping-based, clipper-limiter hybrid approaches) that together enforce an absolute maximum output level with minimal audible artifacts.</p>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 760 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="limiting-diagram-title" style="width:100%;height:auto;display:block;">
+        <title id="limiting-diagram-title">Diagram showing input waveform peaks being clamped at the limiter threshold, flat-top waveform output, and gain reduction meter — illustrating brick-wall limiting behavior.</title>
+        <defs><linearGradient id="waveGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#00e8a2" stop-opacity="0.18"/><stop offset="100%" stop-color="#00e8a2" stop-opacity="0.02"/></linearGradient></defs><rect width="760" height="260" fill="#111113" rx="10"/><text x="380" y="22" font-family="DM Mono,monospace" font-size="11" fill="#888" text-anchor="middle" letter-spacing="1">BRICK-WALL LIMITER — SIGNAL BEHAVIOR</text><text x="30" y="50" font-family="DM Mono,monospace" font-size="9" fill="#aaa">INPUT</text><line x1="24" y1="130" x2="360" y2="130" stroke="#333" stroke-width="1" stroke-dasharray="4,3"/><line x1="24" y1="75" x2="360" y2="75" stroke="#f5a623" stroke-width="1" stroke-dasharray="5,3"/><text x="26" y="71" font-family="DM Mono,monospace" font-size="8" fill="#f5a623">THRESHOLD / CEILING</text><polyline points="30,130 55,130 65,60 75,60 85,130 100,130 115,52 125,52 135,130 155,130 170,68 180,68 190,130 210,130 225,55 235,55 245,130 265,130 280,63 290,63 300,130 320,130 335,58 345,58 355,130" fill="url(#waveGrad)" stroke="#00e8a2" stroke-width="1.8" fill-opacity="1"/><text x="390" y="50" font-family="DM Mono,monospace" font-size="9" fill="#aaa">OUTPUT (LIMITED)</text><line x1="384" y1="130" x2="730" y2="130" stroke="#333" stroke-width="1" stroke-dasharray="4,3"/><line x1="384" y1="75" x2="730" y2="75" stroke="#f5a623" stroke-width="1" stroke-dasharray="5,3"/><text x="386" y="71" font-family="DM Mono,monospace" font-size="8" fill="#f5a623">−1 dBFS CEILING</text><polyline points="390,130 415,130 425,75 475,75 485,130 500,130 515,75 565,75 575,130 595,130 610,75 660,75 670,130 685,130 700,75 720,75 730,130" fill="url(#waveGrad)" stroke="#00e8a2" stroke-width="1.8" fill-opacity="1"/><rect x="425" y="75" width="50" height="15" fill="#f5a623" opacity="0.18" rx="2"/><rect x="515" y="75" width="50" height="15" fill="#f5a623" opacity="0.18" rx="2"/><rect x="610" y="75" width="50" height="15" fill="#f5a623" opacity="0.18" rx="2"/><rect x="700" y="75" width="20" height="15" fill="#f5a623" opacity="0.18" rx="2"/><text x="448" y="86" font-family="DM Mono,monospace" font-size="7" fill="#f5a623" text-anchor="middle">CLAMPED</text><text x="538" y="86" font-family="DM Mono,monospace" font-size="7" fill="#f5a623" text-anchor="middle">CLAMPED</text><text x="633" y="86" font-family="DM Mono,monospace" font-size="7" fill="#f5a623" text-anchor="middle">CLAMPED</text><line x1="380" y1="38" x2="380" y2="220" stroke="#444" stroke-width="1"/><text x="383" y="218" font-family="DM Mono,monospace" font-size="8" fill="#555">LIMITER</text><rect x="24" y="185" width="336" height="40" fill="#1a1a1c" rx="4" stroke="#333" stroke-width="1"/><text x="32" y="198" font-family="DM Mono,monospace" font-size="8" fill="#888">GR METER (INPUT)</text><rect x="32" y="203" width="310" height="10" fill="#222" rx="2"/><rect x="32" y="203" width="0" height="10" fill="#00e8a2" rx="2" opacity="0.4"/><text x="345" y="213" font-family="DM Mono,monospace" font-size="7" fill="#555">0 dB</text><rect x="384" y="185" width="336" height="40" fill="#1a1a1c" rx="4" stroke="#333" stroke-width="1"/><text x="392" y="198" font-family="DM Mono,monospace" font-size="8" fill="#888">GR METER (LIMITING ACTIVE)</text><rect x="392" y="203" width="310" height="10" fill="#222" rx="2"/><rect x="574" y="203" width="128" height="10" fill="#f5a623" rx="2" opacity="0.7"/><text x="705" y="213" font-family="DM Mono,monospace" font-size="7" fill="#f5a623">−4 dB GR</text><text x="380" y="248" font-family="DM Mono,monospace" font-size="8" fill="#555" text-anchor="middle">musicproductionwiki.com/bible/limiting</text>
+      </svg>
+      <p class="diagram-label">Diagram — Limiting: Diagram showing input waveform peaks being clamped at the limiter threshold, flat-top waveform output, and gain reduction meter — illustrating brick-wall limiting behavior.</p>
+    </div>
+  </section>
+
+  <section class="entry-section" id="parameters">
+    <h2><span class="section-num">03</span> The Parameters</h2>
+    <p>Every limiting — hardware or plugin — operates on the same core parameters. Know these and you can work with any implementation.</p>
+<div class="param-grid">
+      <div class="param-card"><div class="param-name">THRESHOLD</div><div class="param-title">The level above which gain reduction begins</div><p class="param-desc">Set in dBFS, the threshold defines where the limiter starts working. In mastering contexts, this is typically set to −1.0 or −0.3 dBFS to serve as the True Peak ceiling. On individual tracks, higher thresholds (−6 to −3 dBFS) catch only the sharpest transients. Lowering the threshold increases the amount of gain reduction applied and therefore raises the average loudness of the output.</p></div>
+      <div class="param-card"><div class="param-name">INPUT GAIN / DRIVE</div><div class="param-title">How much signal is pushed into the limiter</div><p class="param-desc">Raising input gain increases the loudness of the output without changing the ceiling — the limiter catches whatever exceeds the threshold. This is the primary loudness control in most mastering workflows. Adding 3 dB of input gain typically raises integrated LUFS by 2–3 LU. Pushing input gain too far (more than 6–8 dB) collapses transients and produces audible distortion or pumping.</p></div>
+      <div class="param-card"><div class="param-name">OUTPUT CEILING</div><div class="param-title">Maximum output level — the absolute loudness floor</div><p class="param-desc">Distinct from the threshold, the output ceiling defines the true maximum output level of the limiter. For streaming delivery, −1.0 dBTP is the standard minimum; many engineers use −0.5 or −1.5 dBTP for additional headroom. For Spotify Canvas or AV sync, −2.0 dBTP is often recommended. Setting the ceiling is independent of how much limiting is being applied.</p></div>
+      <div class="param-card"><div class="param-name">ATTACK</div><div class="param-title">Response speed to peaks above the threshold</div><p class="param-desc">In most mastering limiters, attack is managed automatically via lookahead, but some units expose it for creative control. Faster attacks (0–1ms) catch transients completely, resulting in a more controlled but potentially duller sound. Slightly slower attacks (2–10ms) allow transient energy to pass through before limiting engages, preserving punch and impact at the cost of allowing brief overshoots above the ceiling — this is why True Peak detection matters.</p></div>
+      <div class="param-card"><div class="param-name">RELEASE</div><div class="param-title">Time for gain reduction to return to zero after a peak</div><p class="param-desc">Release shapes the feel of the limiter as much as any other parameter. Short releases (10–50ms) produce snappier, more percussive behavior and are suited to drum-heavy material; very short releases can cause inter-modulation distortion on low-frequency transients. Long releases (100–500ms) create smoother, more transparent behavior on dense material. Program-dependent or adaptive release modes — available in FabFilter Pro-L 2, Ozone, and Weiss DS1-MK3 — automatically adjust release time based on signal content.</p></div>
+      <div class="param-card"><div class="param-name">LOOKAHEAD</div><div class="param-title">Pre-read buffer that anticipates peaks before they arrive</div><p class="param-desc">Lookahead buffers (typically 0.5ms–20ms) allow the limiter to begin gain reduction before the peak reaches the output, eliminating overshoot and distortion. Longer lookahead produces cleaner limiting but introduces latency that must be compensated in real-time monitoring. In offline mastering, lookahead length has no practical downside. Most high-quality mastering limiters default to 1–4ms lookahead.</p></div>
+      <div class="param-card"><div class="param-name">LINK / STEREO MODE</div><div class="param-title">How left and right channels are coupled during gain reduction</div><p class="param-desc">Linked stereo mode applies the same gain reduction to both channels based on the louder of the two, preserving stereo balance but potentially limiting both channels when only one exceeds the threshold. Unlinked (dual mono) mode allows independent gain reduction per channel, which can widen perceived stereo image but may cause the mix to shift left or right during heavy limiting. Most mastering engineers use linked mode for final limiting.</p></div>
+    </div>
+  </section>
+
+  <section class="entry-section" id="quick-reference">
+    <h2><span class="section-num">04</span> Quick Reference Card</h2>
+    <div class="ref-card-header"><p>Session-ready starting points. These are starting points — always use your ears and a loudness meter (LUFS) alongside these values; streaming normalization targets are the true delivery spec.</p>
+      <button class="copy-table-btn" id="copyTableBtn" onclick="copyRefTable()">Copy Table</button></div>
+    <div class="ref-table-wrap"><table class="ref-table">
+      <thead><tr><th>Parameter</th><th>General</th><th>Drums</th><th>Vocals</th><th>Bass / Keys</th><th>Bus / Master</th></tr></thead><tbody><tr><td>Threshold / Ceiling</td><td>−1.0 dBFS</td><td>−3 to −1 dBFS</td><td>−2 to −1 dBFS</td><td>−2 to −1 dBFS</td><td>−1.0 dBTP</td></tr>
+<tr><td>Input Gain</td><td>2–4 dB</td><td>1–3 dB</td><td>1–3 dB</td><td>2–4 dB</td><td>3–8 dB</td></tr>
+<tr><td>Attack (Lookahead)</td><td>1–3 ms</td><td>0.5–2 ms</td><td>1–4 ms</td><td>1–3 ms</td><td>1–4 ms (auto)</td></tr>
+<tr><td>Release</td><td>Auto / 80–150 ms</td><td>20–60 ms</td><td>80–200 ms</td><td>60–150 ms</td><td>Auto / program-dep.</td></tr>
+<tr><td>GR at Peak</td><td>1–3 dB</td><td>2–5 dB</td><td>1–3 dB</td><td>2–4 dB</td><td>2–6 dB</td></tr>
+<tr><td>Integrated LUFS target</td><td>−14 LUFS</td><td>N/A (track)</td><td>N/A (track)</td><td>N/A (track)</td><td>−14 to −8 LUFS</td></tr>
+<tr><td>True Peak Mode</td><td>Recommended</td><td>Optional</td><td>Recommended</td><td>Recommended</td><td>Always ON</td></tr>
+</tbody>
+    </table></div>
+    <p style="font-size:13px;color:var(--t3);margin-top:12px;">These are starting points — always use your ears and a loudness meter (LUFS) alongside these values; streaming normalization targets are the true delivery spec.</p>
+  </section>
+
+  <section class="entry-section" id="history">
+    <h2><span class="section-num">05</span> History &amp; Origin</h2>
+    <p>The concept of limiting predates digital audio by decades. In the 1930s and 1940s, broadcast engineers working at NBC and CBS needed to prevent audio signals from exceeding the modulation limits of AM radio transmitters — an overmodulated signal would cause adjacent-channel interference and FCC violations. Early analog limiters, built around vacuum tube gain-control circuits, were installed as protective devices at transmitter inputs. These units did not have the transparency of modern designs; they were functional barriers with audible artifacts that engineers worked around rather than exploited creatively.</p><p>The 1950s and 1960s brought hardware that became central to the sound of recorded music. The Fairchild 670, designed by Rein Narma and introduced around 1959, used six time-constant settings and a sophisticated variable-mu tube circuit to achieve a form of compression/limiting that became foundational to the sound of countless recordings — its character was warm, musical, and distinctly colored. The Universal Audio 1176 Peak Limiter, introduced in 1967 and designed by Bill Putnam Jr., moved to solid-state FET circuitry and offered fast attack times as quick as 20 microseconds, making it one of the first limiters genuinely capable of controlling fast transients. Engineers like Geoff Emerick used early limiters on Beatles sessions at Abbey Road to achieve the punchy, controlled drum sounds heard on records like Revolver (1966), often deliberately pushing the hardware into audible limiting for effect.</p><p>The transition to digital audio in the 1980s and the adoption of 16-bit CD format (with its hard 0 dBFS ceiling and no analog headroom above clipping) made peak limiting an engineering necessity rather than a creative option. Any sample that exceeded 0 dBFS on a CD caused harsh digital clipping. This drove the development of the first dedicated digital brickwall limiters — most notably the Waves L1 Ultramaximizer, developed by Yair Shalit and introduced in 1994. The L1 was the first widely adopted software limiter with a true brick-wall ceiling, a simple input gain control, and a release time knob. It became the defining tool of the 1990s loudness wars, used by mastering engineers like Bob Ludwig, Bernie Grundman, and Ted Jensen to push CD masters to competitive levels. The technique was straightforward and often brutal: drive the input gain up, set the output ceiling at −0.1 dBFS, and let the L1 catch everything — a workflow that produced some of the most compressed commercial releases in history.</p><p>By the 2000s, the loudness wars were in full effect, with mastering engineers under commercial pressure to deliver the loudest possible CD masters. Albums like the Red Hot Chili Peppers' Californication (1999, mastered by Bob Ludwig) achieved average levels of −7 to −8 LUFS — technically impressive but dynamically catastrophic, with waveforms visually resembling bricks. The 2008 release of Metallica's Death Magnetic (mastered by Ted Jensen at Sterling Sound) became an audiophile reference point for over-limiting, generating fan petitions requesting a remaster. These extremes prompted the development of more sophisticated limiting algorithms. FabFilter Pro-L (2012) introduced multiple selectable limiting algorithms optimized for transparency at different loudness targets. iZotope Ozone's Maximizer added IRC (Intelligent Release Control) modes that analyzed signal content in real time. Simultaneously, streaming platform normalization — Spotify's normalization to −14 LUFS, introduced around 2013, and later Apple Music's −16 LUFS — effectively ended the loudness wars for streaming delivery by normalizing all tracks to the same playback level, making extreme limiting counter-productive for the first time.</p>
+  </section>
+
+  <section class="entry-section" id="how-producers-use-it">
+    <h2><span class="section-num">06</span> How Producers Use It</h2>
+    <p>On drums and percussion, limiting is typically applied at two points: on individual channels to catch rogue transients, and on the drum bus to control the combined level before it hits the mix bus. A limiter on a snare channel — set with a threshold of −3 dBFS, a fast lookahead of 0.5–1ms, and a quick release of 20–40ms — catches the snap of the transient without coloring the body of the sound. This prevents a single hard hit from pushing the mix bus into unwanted gain reduction. On the drum bus, a softer limiter setting with 2–4 dB of gain reduction at peaks can add cohesion and controlled density to the kit without removing the punch that defines a great-sounding drum sound.</p><p>Vocals present a different limiting challenge: the dynamic range of a human performance is enormous — breaths can sit 20–30 dB below sung notes, and consonants can produce sharp peaks 6–10 dB above sustained vowels. A limiter after vocal compression catches the peaks that slipped through, typically set with a threshold of −2 to −1 dBFS and a release of 80–150ms. The goal is transparent peak control, not loudness maximization — if the limiter is working hard on a vocal, the upstream compression settings likely need attention. Some engineers place a clipper (such as Decapitator or Clip to Tape) before the limiter on vocals to round off sharp peaks without the pumping artifacts that a fast-release limiter can introduce.</p><p>Bass instruments — particularly synth bass and DI'd electric bass — generate low-frequency transients that consume large amounts of headroom and are particularly problematic for limiters. A bass note picked hard can contain peak energy 10–15 dB above its sustained RMS level. Limiting on individual bass channels helps contain these peaks and translates to a more consistent bass level on speakers of all sizes. Some engineers combine a multiband compressor on the low end with a wideband limiter on the overall bus to manage bass-frequency peak energy without triggering broadband limiting on the rest of the frequency content.</p><p>At the mastering stage, limiting is the final and most consequential processing step. After EQ, compression, stereo width adjustment, and any saturation processing, the mastering limiter sets the true ceiling and target loudness for the delivery file. Best practice is to reference the amount of gain reduction being applied — more than 3–4 dB of GR on most musical material suggests the mix itself needs attention before more limiting is applied. Many mastering engineers use a clipper (such as the Weiss Clipper or Sonnox Oxford Inflator) before the final limiter to remove the sharpest inter-sample peaks harmlessly, allowing the limiter to operate with less gain reduction and therefore fewer artifacts. The mastering chain typically ends with a True Peak limiter set to −1.0 dBTP or lower, with a loudness meter (LUFS) confirming the integrated loudness target has been met.</p><div class="daw-grid"><div class="daw-row"><span class="daw-name">Ableton</span><span class="daw-note">Use the stock Limiter device — set Ceiling to −1.0 dB, enable True Peak mode (the "TP" button), and use the Lookahead slider (1–3ms is a solid default for mastering). For track-level peak catching, the Limiter in Max mode with a fast release is reliable. For mastering, consider routing to an external plugin — Live's built-in Limiter lacks the algorithm transparency of dedicated mastering tools.</span></div><div class="daw-row"><span class="daw-name">FL Studio</span><span class="daw-note">Fruity Peak Controller + Parametric EQ can approximate limiting, but the dedicated tool is Maximus — a multiband compressor/limiter with a master output limiter section. Set the Master ceiling in the top panel and adjust the High, Mid, and Low band thresholds to shape limiting behavior by frequency. Fruity Limiter is simpler: set Gain to drive the input and Ceiling for brick-wall control. Enable Soft Clipping for gentler saturation-style peak management.</span></div><div class="daw-row"><span class="daw-name">Logic Pro</span><span class="daw-note">Logic's Adaptive Limiter is genuinely capable for mastering — its "Optimize" function analyzes the signal and suggests appropriate input gain for a target loudness level. Set Output Ceiling to −1.0 dB and enable True Peak for streaming delivery. The Lookahead default of 2.5ms is appropriate for most material. For more transparent limiting at high input gain, the stock Limiter in the Dynamics section (separate from Adaptive Limiter) handles track-level peak control well with faster attack settings.</span></div><div class="daw-row"><span class="daw-name">Pro Tools</span><span class="daw-note">Pro Tools' stock BF-76 and Dyn3 Compressor/Limiter serve well for track limiting. For mastering, most Pro Tools engineers use third-party plugins (Waves L2, FabFilter Pro-L 2, iZotope Ozone) inserted on the Master Fader — the Master Fader is the correct insertion point for mastering-stage limiting in Pro Tools, as it processes after all aux returns and before clip gain. Clip gain on individual regions is not limiting but can reduce peak levels before they enter the processing chain.</span></div><div class="daw-row"><span class="daw-name">Reaper</span><span class="daw-note">ReaLimit is Reaper's native brick-wall limiter — lightweight and low-latency, it supports True Peak detection and is suitable for both track-level and master bus limiting. Set the Brickwall Ceiling to −1.0 dBFS and adjust the lookahead (default 10ms is conservative but transparent). For loudness metering alongside limiting, pair ReaLimit with the JS: LUFS meter from the stock JS plugin library to monitor integrated LUFS in real time during export.</span></div></div>
+  </section>
+
+
+<div class="bible-nl-card">
+  <span class="bible-nl-card-eye">The Producer's Briefing</span>
+  <h3 class="bible-nl-card-h">Sound better by <em>Friday.</em></h3>
+  <p class="bible-nl-card-sub">One email a week. The techniques behind the terms — curated by working producers, not algorithms.</p>
+  <div class="bible-nl-card-form">
+    <input class="bible-nl-card-inp" type="email" placeholder="your@email.com" aria-label="Email address">
+    <button class="bible-nl-card-btn" onclick="window.open('https://theproducersbriefing.beehiiv.com','_blank')">Join Free</button>
+  </div>
+  <span class="bible-nl-card-note">No spam · Unsubscribe anytime</span>
+</div>
+
+
+  <section class="entry-section" id="in-the-wild">
+    <h2><span class="section-num">07</span> In the Wild</h2>
+    <p>Abstract knowledge becomes practical when you can hear it in music you know. These tracks demonstrate limiting used intentionally, at specific moments, for specific purposes.</p>
+    <div class="track-example"><div class="track-title">Daft Punk — "Get Lucky" (2013)</div><div class="track-timestamp">0:00–0:30 · Produced by Daft Punk, co-produced by Pharrell Williams</div><p class="track-note">Random Access Animals was mastered to a relatively dynamic standard for its era — approximately −12 LUFS integrated — notable because Daft Punk explicitly pushed back against the loudness wars during this album's production. The limiting on Get Lucky is transparent enough that you can hear the natural dynamics of Nile Rodgers' guitar playing, with peaks catching only on the loudest strums. Listen on headphones for the clearly preserved transient snap of the snare in the verse — a direct result of restrained limiting. This was a deliberate artistic and technical choice that the duo made during mastering sessions at Studio de la Grande Armée in Paris.</p></div>
+    <div class="track-example"><div class="track-title">Billie Eilish — "bad guy" (2019)</div><div class="track-timestamp">0:15–0:45 · Produced by Finneas O'Connell</div><p class="track-note">bad guy is a masterclass in limiting used for density rather than raw loudness. Produced and mixed by Finneas in his bedroom studio, the track achieves approximately −14 LUFS — matching Spotify's normalization target exactly — with limiting applied to create a tight, compressed sense of space rather than to win a loudness war. Notice how the kick drum never dominates despite sitting prominently in the mix; limiting on the mix bus controls its peak energy relative to the bass and vocal. The whispered vocal at the intro demonstrates the dynamic range the limiter is working to contain — drop into the full chorus and hear how the limiter holds everything in check.</p></div>
+    <div class="track-example"><div class="track-title">Kendrick Lamar — "HUMBLE." (2017)</div><div class="track-timestamp">0:00–0:10 intro, 0:42–1:05 verse · Produced by Mike WiLL Made-It</div><p class="track-note">HUMBLE. hits at approximately −9 LUFS integrated on streaming platforms — significantly louder than normalization targets, meaning Spotify turns it down during playback. Mastered by Derek "MixedByAli" Ali, the limiting on this track is intentionally aggressive, with the kick and snare transients noticeably flattened to create a dense, punchy, in-your-face quality. On a system capable of high playback levels, listen to the snare transient in the second verse — it has a characteristic rounded snap that indicates the limiter is consistently catching 4–6 dB of gain reduction on snare hits. The distortion on the 808 sub in the chorus is partly enhanced by the limiting behavior on the low end.</p></div>
+    <div class="track-example"><div class="track-title">Taylor Swift — "Anti-Hero" (2022)</div><div class="track-timestamp">0:30–1:00 chorus · Produced by Jack Antonoff</div><p class="track-note">Anti-Hero was mastered to approximately −8 to −9 LUFS on CD and download, with a streaming-specific master closer to −14 LUFS — an increasingly common dual-master approach. The streaming version demonstrates how limiting at a restrained level preserves the openness of the reverb tails on Swift's vocal and the spaciousness of the programmed drums. Compare the CD master on high-quality playback equipment against the streaming version: the CD master's more aggressive limiting produces a noticeably thicker, denser low-midrange, while the streaming master allows more air between elements. This production-level decision illustrates how streaming normalization has changed the practical economics of limiting in pop mastering.</p></div>
+
+    <div class="spotify-section" id="spotifySection">
+      <span class="spotify-eyebrow">Listen On Spotify</span>
+      <div class="spotify-grid">
+      <div class="spotify-item" id="sp-69kOkLUCkxIZYexIgSG8rq">
+        <span class="spotify-label">Daft Punk — Get Lucky</span>
+        <div class="spotify-frame">
+          <iframe src="https://open.spotify.com/embed/track/69kOkLUCkxIZYexIgSG8rq?utm_source=generator&theme=0"
+            width="100%" height="80" frameborder="0"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"
+            onerror="document.getElementById('sp-69kOkLUCkxIZYexIgSG8rq').style.display='none'"></iframe>
+        </div>
+      </div>
+      <div class="spotify-item" id="sp-2Fxmhks0bxGSBdJ92vM42m">
+        <span class="spotify-label">Billie Eilish — bad guy</span>
+        <div class="spotify-frame">
+          <iframe src="https://open.spotify.com/embed/track/2Fxmhks0bxGSBdJ92vM42m?utm_source=generator&theme=0"
+            width="100%" height="80" frameborder="0"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"
+            onerror="document.getElementById('sp-2Fxmhks0bxGSBdJ92vM42m').style.display='none'"></iframe>
+        </div>
+      </div>
+      <div class="spotify-item" id="sp-7KXjTSCq5nL1LoYtL7XAwS">
+        <span class="spotify-label">Kendrick Lamar — HUMBLE.</span>
+        <div class="spotify-frame">
+          <iframe src="https://open.spotify.com/embed/track/7KXjTSCq5nL1LoYtL7XAwS?utm_source=generator&theme=0"
+            width="100%" height="80" frameborder="0"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"
+            onerror="document.getElementById('sp-7KXjTSCq5nL1LoYtL7XAwS').style.display='none'"></iframe>
+        </div>
+      </div>
+      </div>
+    </div>
+    <script>
+    (function(){setTimeout(function(){var frames=document.querySelectorAll('#spotifySection iframe');
+    var ok=false;frames.forEach(function(f){if(f.offsetParent!==null)ok=true;});
+    if(!ok){var s=document.getElementById('spotifySection');if(s)s.style.display='none';}},4000);})();
+    </script>
+  </section>
+
+
+
+  <section class="entry-section" id="types">
+    <h2><span class="section-num">08</span> Types &amp; Variants</h2>
+<div class="type-grid">
+      <div class="type-card"><div class="type-card-name">Brick-Wall / Mastering Limiter</div><div class="type-card-hardware">Waves L2 Ultramaximizer · FabFilter Pro-L 2 · iZotope Ozone Maximizer · Weiss DS1-MK3</div><p class="type-card-desc">The defining form of modern limiting — operates at infinity:1 ratio with a fixed output ceiling, typically with True Peak detection and lookahead. Designed for final mastering stage to bring integrated loudness to streaming targets while maintaining a hard True Peak ceiling at −1.0 dBTP or below. Multiple internal algorithms (ISP, Transparent, Aggressive, Bus) tailor limiting character to source material.</p></div>
+      <div class="type-card"><div class="type-card-name">FET Limiting Amplifier</div><div class="type-card-hardware">Universal Audio 1176LN · UA 1176AE · Purple Audio MC77</div><p class="type-card-desc">The 1176-style FET limiter operates with very fast attack times (20 µs–800 µs) and a fixed 4:1, 8:1, 12:1, or 20:1 ratio, using a Field Effect Transistor for gain control. Its 'All Buttons In' mode (all four ratio buttons pressed simultaneously) produces a distinctive aggressive coloration used on drums, vocals, and mix buses. Character-forward rather than transparent — used to add energy and color alongside dynamic control.</p></div>
+      <div class="type-card"><div class="type-card-name">Variable-Mu (Vari-Mu) Limiter</div><div class="type-card-hardware">Fairchild 670 · Manley Variable Mu · Chandler TG1</div><p class="type-card-desc">Variable-mu limiters use triode tubes whose amplification factor varies with the control voltage — producing a soft-knee, program-dependent compression and limiting character considered among the most musical in existence. Attack and release are inherently program-dependent, making these units exceptionally natural-sounding on mix buses and final mastering chains. Extremely expensive in hardware form; widely emulated in software.</p></div>
+      <div class="type-card"><div class="type-card-name">Optical Limiter</div><div class="type-card-hardware">Teletronix LA-2A · UA LA-3A · Tube-Tech CL 1B</div><p class="type-card-desc">Optical limiters use a light-dependent resistor paired with an electroluminescent cell — as signal level increases, the cell glows brighter, decreasing the LDR's resistance and reducing gain. The physics of the optical element create an inherently program-dependent, slow-responding character particularly well-suited to vocal and bass limiting. The LA-2A's two-knob simplicity (Peak Reduction and Output) makes it one of the most intuitive limiters in production history.</p></div>
+      <div class="type-card"><div class="type-card-name">Clipper / Clipper-Limiter Hybrid</div><div class="type-card-hardware">Sonnox Oxford Inflator · Crave DSP Clarity M · Hornet Clip (software)</div><p class="type-card-desc">Clippers apply hard or soft waveform truncation at the ceiling rather than gain reduction — mathematically the fastest possible response time, with zero lookahead latency. Soft clippers round off peaks harmonically, introducing subtle even-order distortion that many engineers find more musical than the inter-modulation artifacts of a gain-reduction limiter at high drive levels. Frequently used before a standard limiter in mastering chains to handle the sharpest inter-sample peaks.</p></div>
+    </div>
+  </section>
+
+  <section class="entry-section" id="common-mistakes">
+    <h2><span class="section-num">09</span> Common Mistakes</h2>
+<ul class="mistake-list">
+      <li class="mistake-item"><span class="mistake-icon">✕</span><div class="mistake-content"><div class="mistake-title">Over-limiting — pushing for loudness at the cost of dynamics</div><div class="mistake-desc">The most common and damaging mistake: driving input gain until the limiter is applying 6–10 dB or more of continuous gain reduction. The result is a dense, fatiguing master where transients are flattened, stereo width collapses, and the music loses its sense of energy and space. The fix is to set a loudness target (e.g., −14 LUFS for Spotify) and limit only enough to reach it — not to push further simply because the limiter will allow it. Trust streaming normalization; going louder than the target simply results in the platform turning the track down.</div></div></li>
+      <li class="mistake-item"><span class="mistake-icon">✕</span><div class="mistake-content"><div class="mistake-title">Ignoring True Peak — setting ceiling at 0 dBFS without True Peak detection</div><div class="mistake-desc">Setting an output ceiling at 0 dBFS or −0.1 dBFS with True Peak mode disabled allows inter-sample peaks to exceed 0 dBFS after D/A conversion, causing distortion on playback hardware and rejection from some streaming quality control systems. Spotify and Apple Music both flag uploads with True Peak levels above −1 dBTP. Always use True Peak mode for final delivery limiting, and set the ceiling at −1.0 dBTP minimum. Some engineers use −0.5 dBTP for additional safety margin.</div></div></li>
+      <li class="mistake-item"><span class="mistake-icon">✕</span><div class="mistake-content"><div class="mistake-title">Using limiting to fix a bad mix</div><div class="mistake-desc">A limiter cannot solve problems introduced upstream — an unbalanced mix with a dominant low end, harsh sibilance, or narrow stereo image will only sound worse when pushed through aggressive limiting. The limiter's gain reduction will be triggered disproportionately by the offending element (typically low-frequency transients), causing pumping and loss of clarity across the entire spectrum. The fix is to address mix balance before limiting — high-pass filter appropriately, control dynamic elements with compression and EQ, then limit a mix that is already in good shape.</div></div></li>
+      <li class="mistake-item"><span class="mistake-icon">✕</span><div class="mistake-content"><div class="mistake-title">Incorrect release time causing audible pumping</div><div class="mistake-desc">Setting a very short release time (under 20ms) on a mastering limiter applied to a dense, music-dense mix causes the gain reduction to cycle in and out rhythmically, producing a pumping or breathing artifact that is particularly audible during sustained sections like pads and held chords. On the other hand, a very long release (over 500ms) can keep the limiter in a state of constant gain reduction, effectively raising the noise floor and dulling quiet passages. Use program-dependent or adaptive release modes when available, or set release to approximately 150–250ms for most mastering applications and adjust by ear.</div></div></li>
+      <li class="mistake-item"><span class="mistake-icon">✕</span><div class="mistake-content"><div class="mistake-title">Placing the limiter before EQ or compression in the mastering chain</div><div class="mistake-desc">Inserting the limiter early in the signal chain — before EQ, compression, or stereo processing — means any gain added by downstream processors can push the signal above the intended ceiling, defeating the limiter's purpose. The mastering limiter should always be the last processor in the chain, after all EQ, compression, saturation, and stereo width processing. The only exception is a pre-limiter clipper, which can legitimately precede the final limiter to remove the sharpest transients before they reach the gain-reduction circuit.</div></div></li>
+      <li class="mistake-item"><span class="mistake-icon">✕</span><div class="mistake-content"><div class="mistake-title">Monitoring at excessive playback levels during limiting</div><div class="mistake-desc">Limiting decisions made at loud monitoring levels almost always result in under-limited masters that sound thin and quiet at normal listening volumes, while limiting decisions made at quiet levels tend to produce over-limited masters. The ear's equal-loudness contour means bass and treble perception changes with playback level. Set your monitoring level to approximately 79–83 dB SPL C-weighted for critical mastering decisions, and cross-reference at lower levels (50–60 dB SPL) to check that the limiting behavior translates across playback volumes.</div></div></li>
+    </ul>
+  </section>
+
+  <section class="calc-section" id="calculator">
+    <span class="calc-eyebrow">Interactive Tool</span>
+    <div class="calc-title">Limiting Calculator</div>
+    <div class="calc-subtitle">Calculate gain reduction, makeup gain, and output level for any limiting setting.</div>
+    <div class="calc-grid">
+      <div class="calc-field"><label>Input Level (dBFS)</label><input class="calc-input" type="number" id="gcIn-limiting" value="-10" min="-60" max="0" step="0.5"></div>
+      <div class="calc-field"><label>Threshold (dBFS)</label><input class="calc-input" type="number" id="gcTh-limiting" value="-18" min="-60" max="0" step="0.5"></div>
+      <div class="calc-field"><label>Ratio (X:1)</label><input class="calc-input" type="number" id="gcRa-limiting" value="4" min="1" max="100" step="0.5"></div>
+      <div class="calc-field"><label>Makeup Gain (dB)</label><input class="calc-input" type="number" id="gcMu-limiting" value="0" min="0" max="30" step="0.5"></div>
+    </div>
+    <button class="calc-btn" onclick="runGC('limiting')">Calculate</button>
+    <div class="calc-results" id="gcR-limiting" style="display:none">
+      <span class="calc-results-label">Result</span>
+      <div class="calc-result-grid" id="gcG-limiting"></div>
+      <p class="calc-note" id="gcN-limiting"></p>
+    </div>
+    <script>
+    function runGC(id){var il=parseFloat(document.getElementById('gcIn-'+id).value)||-10;
+      var th=parseFloat(document.getElementById('gcTh-'+id).value)||-18;
+      var ra=parseFloat(document.getElementById('gcRa-'+id).value)||4;
+      var mu=parseFloat(document.getElementById('gcMu-'+id).value)||0;
+      var ot=Math.max(0,il-th),gr=ot*(1-1/ra),ob=il-gr,oa=ob+mu,sg=Math.round(gr*10)/10;
+      var res=[{n:'Over Threshold',v:Math.round(ot*10)/10,u:'dB'},{n:'Gain Reduction',v:'-'+sg,u:'dB'},
+        {n:'Output (pre)',v:Math.round(ob*10)/10,u:'dBFS'},{n:'Output (post)',v:Math.round(oa*10)/10,u:'dBFS'},
+        {n:'Suggested Makeup',v:'+'+sg,u:'dB'}];
+      document.getElementById('gcG-'+id).innerHTML=res.map(function(r){return '<div class="calc-result-item"><span class="calc-result-name">'+r.n+'</span><span class="calc-result-value">'+r.v+'</span><span class="calc-result-unit">'+r.u+'</span></div>';}).join('');
+      document.getElementById('gcN-'+id).textContent=gr>10?'High gain reduction ('+Math.round(gr)+'dB) — consider two compressors in series.':gr<1?'Minimal reduction — lower threshold or increase input.':'Add '+sg+'dB makeup to restore loudness.';
+      document.getElementById('gcR-'+id).style.display='block';}
+    </script>
+  </section>
+
+  <section class="entry-section" id="related-terms">
+    <h2><span class="section-num">10</span> Producers Also Look Up</h2>
+    <div class="related-grid">
+      <a href="https://musicproductionwiki.com/bible/compression" class="related-term"><span class="related-term-name">Compression</span><span class="related-term-preview">The broader dynamic control family that limiting belongs to — compression uses lower ratios (2:1–8:1) to manage dynamics musically rather than enforce an absolute ceiling.</span></a>
+      <a href="https://musicproductionwiki.com/bible/lufs" class="related-term"><span class="related-term-name">LUFS</span><span class="related-term-preview">The integrated loudness measurement standard used to set streaming delivery targets — the metric that drives how much limiting is applied in mastering.</span></a>
+      <a href="https://musicproductionwiki.com/bible/headroom" class="related-term"><span class="related-term-name">Headroom</span><span class="related-term-preview">The distance between the peak signal level and the clipping point — limiting systematically reduces headroom to increase average loudness.</span></a>
+      <a href="https://musicproductionwiki.com/bible/gain-staging" class="related-term"><span class="related-term-name">Gain Staging</span><span class="related-term-preview">The practice of managing signal levels throughout the signal chain — poor gain staging forces limiters to work harder and produces more artifacts.</span></a>
+      <a href="https://musicproductionwiki.com/bible/threshold" class="related-term"><span class="related-term-name">Threshold</span><span class="related-term-preview">The amplitude level at which a limiter begins applying gain reduction — the fundamental control point of all dynamic processors.</span></a>
+      <a href="https://musicproductionwiki.com/bible/transient" class="related-term"><span class="related-term-name">Transient</span><span class="related-term-preview">The sharp initial energy spike of a percussive sound — transients are what limiters are primarily designed to catch and control.</span></a>
+    </div>
+  </section>
+
+  <section class="entry-section" id="further-reading">
+    <h2><span class="section-num">11</span> Further Reading</h2>
+    <p>These MPW articles put limiting into practice — specific techniques, real tools, and applied workflows.</p>
+    <div class="further-grid">
+      <a href="https://musicproductionwiki.com/articles/how-to-use-a-limiter.html" class="further-link">
+        <span class="further-link-arrow">→</span>
+        <span class="further-link-text">How To Use A Limiter</span>
+      </a>
+      <a href="https://musicproductionwiki.com/articles/mastering-limiter-guide.html" class="further-link">
+        <span class="further-link-arrow">→</span>
+        <span class="further-link-text">Mastering Limiter Guide</span>
+      </a>
+      <a href="https://musicproductionwiki.com/articles/what-is-lufs.html" class="further-link">
+        <span class="further-link-arrow">→</span>
+        <span class="further-link-text">What Is Lufs</span>
+      </a>
+      <a href="https://musicproductionwiki.com/articles/best-mastering-limiter-plugins.html" class="further-link">
+        <span class="further-link-arrow">→</span>
+        <span class="further-link-text">Best Mastering Limiter Plugins</span>
+      </a>
+      <a href="https://musicproductionwiki.com/articles/how-to-master-a-song.html" class="further-link">
+        <span class="further-link-arrow">→</span>
+        <span class="further-link-text">How To Master A Song</span>
+      </a>
+      <a href="https://musicproductionwiki.com/articles/gain-staging-guide.html" class="further-link">
+        <span class="further-link-arrow">→</span>
+        <span class="further-link-text">Gain Staging Guide</span>
+      </a>
+      <a href="https://musicproductionwiki.com/articles/loudness-wars-explained.html" class="further-link">
+        <span class="further-link-arrow">→</span>
+        <span class="further-link-text">Loudness Wars Explained</span>
+      </a>
+      <a href="https://musicproductionwiki.com/articles/true-peak-vs-sample-peak.html" class="further-link">
+        <span class="further-link-arrow">→</span>
+        <span class="further-link-text">True Peak Vs Sample Peak</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="entry-section" id="faq">
+    <h2><span class="section-num">12</span> Frequently Asked Questions</h2>
+    <div class="faq-accordion">
+      <div class="faq-item"><button class="faq-question" aria-expanded="false">What is the difference between a limiter and a compressor?<span class="faq-icon">+</span></button><div class="faq-answer">A compressor reduces gain above a threshold by a defined ratio — for example, 4:1 means for every 4 dB over the threshold, 1 dB passes through. A limiter uses ratios of 10:1 or higher, often infinity:1, meaning the output essentially cannot exceed the threshold regardless of input level. In practice, limiting is an extreme form of compression used for peak control and loudness maximization, while compression is used for musical shaping of dynamics.</div></div>
+      <div class="faq-item"><button class="faq-question" aria-expanded="false">What LUFS should I target when mastering for Spotify?<span class="faq-icon">+</span></button><div class="faq-answer">Spotify normalizes playback to approximately −14 LUFS integrated. Mastering above this level (e.g., −9 LUFS) means Spotify will turn your track down during playback, making heavier limiting pointless and potentially damaging dynamic quality. Targeting −14 LUFS integrated with a True Peak ceiling of −1.0 dBTP is the standard recommendation for Spotify. Apple Music normalizes to −16 LUFS, and YouTube to −14 LUFS — it is common to produce a single −14 LUFS master that meets most platform requirements.</div></div>
+      <div class="faq-item"><button class="faq-question" aria-expanded="false">What does True Peak limiting mean and why does it matter?<span class="faq-icon">+</span></button><div class="faq-answer">True Peak limiting detects and controls inter-sample peaks — peaks that exist between digital samples and only become apparent after digital-to-analog conversion. A signal can measure −1.0 dBFS at the sample level but produce peaks of +0.5 dBFS or higher after D/A conversion due to reconstruction filtering. These hidden peaks cause distortion on playback hardware and are flagged by streaming platform quality control systems. True Peak limiting requires oversampling (typically 4x or higher) to reveal and control these peaks. Always enable True Peak mode for final delivery limiting.</div></div>
+      <div class="faq-item"><button class="faq-question" aria-expanded="false">How much gain reduction is too much when mastering?<span class="faq-icon">+</span></button><div class="faq-answer">A common guideline is to treat 3–4 dB of peak gain reduction as a soft ceiling for transparent mastering limiting. Exceeding this consistently — meaning the gain reduction meter is showing 4+ dB during most of the track — typically indicates that either the mix needs attention (too many competing loud elements) or the loudness target is unrealistically aggressive. Gain reduction above 6 dB on a wideband mastering limiter almost always produces audible artifacts: flattened transients, pumping, and loss of stereo width.</div></div>
+      <div class="faq-item"><button class="faq-question" aria-expanded="false">Should I use a limiter on individual tracks or only on the master bus?<span class="faq-icon">+</span></button><div class="faq-answer">Both are valid depending on context. On individual tracks, limiting is appropriate for catching rogue transients from drums, bass, and vocals — peaks that would otherwise push the mix bus into unwanted gain reduction. Use a limiter on a snare or kick channel to prevent the loudest hits from dominating the mix. On the master bus, limiting is used for final loudness and peak control before delivery. Some engineers also use limiting on subgroup buses (drum bus, vocal bus) to control dynamic range before those groups hit the master bus.</div></div>
+      <div class="faq-item"><button class="faq-question" aria-expanded="false">What is lookahead in a limiter and should I always use it?<span class="faq-icon">+</span></button><div class="faq-answer">Lookahead is a buffer that allows the limiter to read ahead in the audio signal and anticipate peaks before they arrive, beginning gain reduction before the peak hits the output. Without lookahead, the peak arrives before the limiter can respond, causing brief overshoots above the ceiling. In offline mastering, always use lookahead — the additional latency is irrelevant. In live or real-time applications where latency is critical, lookahead introduces monitoring delay, so it may need to be reduced or disabled depending on the context.</div></div>
+      <div class="faq-item"><button class="faq-question" aria-expanded="false">What is the difference between a hard clipper and a limiter, and when should I use each?<span class="faq-icon">+</span></button><div class="faq-answer">A hard clipper truncates waveforms that exceed the ceiling instantaneously — effectively infinite speed, zero latency. This produces harmonic distortion (primarily odd-order) that can sound harsh on sustained material but is often inaudible on sharp transients. A limiter applies gain reduction, which is slower and introduces the possibility of inter-modulation distortion, pumping, and transient rounding. In modern mastering workflows, a soft clipper placed before a True Peak limiter is a common pairing: the clipper removes the sharpest inter-sample peaks harmonically, and the limiter handles sustained loudness maximization more transparently because it has less peak energy to manage.</div></div>
+      <div class="faq-item"><button class="faq-question" aria-expanded="false">How do I prevent pumping artifacts when mastering with a limiter?<span class="faq-icon">+</span></button><div class="faq-answer">Pumping in a mastering limiter is typically caused by one of three factors: release time too short, too much input gain driving the limiter into continuous heavy gain reduction, or a dominant low-frequency element (kick or bass) repeatedly triggering broadband gain reduction. Solutions include increasing the release time or switching to program-dependent release, reducing input gain until peak gain reduction averages 2–3 dB rather than 5–6 dB, and applying multiband limiting or sidechain high-pass filtering to prevent low-frequency content from disproportionately triggering the limiter's detection circuit. Many advanced mastering limiters (FabFilter Pro-L 2, Ozone Maximizer) offer per-band limiting modes specifically to address this problem.</div></div>
+    </div>
+  </section>
+
+  <div class="entry-footer-section">
+    <div class="entry-tags"><span class="entry-tag">Signal Processing</span><span class="entry-tag">Mastering</span><span class="entry-tag">Dynamic Control</span><span class="entry-tag">Loudness</span><span class="entry-tag">Peak Limiting</span></div>
+    <div class="entry-meta">
+      <span class="entry-verified">Last Verified: May 14, 2026 · 2026 Edition · Part of The Producer's Bible</span>
+      <div class="entry-share">
+        <a href="https://twitter.com/intent/tweet?url=https://musicproductionwiki.com/bible/limiting&text=The+definitive+Limiting+guide+for+producers" class="share-btn" target="_blank" rel="noopener">Share on X</a>
+        <a href="https://www.reddit.com/submit?url=https://musicproductionwiki.com/bible/limiting" class="share-btn" target="_blank" rel="noopener">Share on Reddit</a>
+        <button class="share-btn" onclick="navigator.clipboard.writeText(window.location.href);this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Link',2000)">Copy Link</button>
+      </div>
+    </div>
+    <div class="bible-colophon">
+      <p class="bible-colophon-text">
+        Part of <a href="https://musicproductionwiki.com/bible/">The Producer's Bible</a> — Every term. Every technique. One place.<br>
+        Published by <a href="https://musicproductionwiki.com">MusicProductionWiki.com</a> · The Reference Standard for Music Production
+      </p>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="fi">
+    <div class="fl">The Producer's Bible · MusicProductionWiki.com · 2026 Edition</div>
+    <ul class="flinks">
+      <li><a href="https://musicproductionwiki.com">Home</a></li>
+      <li><a href="/about.html">About</a></li>
+      <li><a href="/privacy.html">Privacy</a></li>
+      <li><a href="mailto:mpwikiofficial@gmail.com">Contact</a></li>
+    </ul>
+  </div>
+</footer>
+
+<a href="#main-content" class="back-to-top" id="backToTop" aria-label="Back to top">↑</a>
+
+<!-- NO main.js — Bible pages are fully self-contained -->
+<script>
+(function() {
+  /* Reading progress */
+  var progress = document.getElementById('readingProgress');
+  var btt = document.getElementById('backToTop');
+  window.addEventListener('scroll', function() {
+    var st = window.scrollY, dh = document.documentElement.scrollHeight - window.innerHeight;
+    if (progress) progress.style.width = (dh > 0 ? Math.round((st/dh)*window.innerWidth) : 0) + 'px';
+    if (btt) btt.classList.toggle('visible', st > 400);
+  });
+
+  /* Scroll spy + center active tab in entry nav */
+  var navLinks = document.querySelectorAll('.entry-nav-link');
+  var entryNav = document.querySelector('.entry-nav');
+  function centerActive() {
+    var active = entryNav && entryNav.querySelector('.entry-nav-link.active');
+    if (!entryNav || !active) return;
+    var nr = entryNav.getBoundingClientRect(), lr = active.getBoundingClientRect();
+    entryNav.scrollTo({left: entryNav.scrollLeft + (lr.left - nr.left) - (nr.width/2) + (lr.width/2), behavior:'smooth'});
+  }
+  document.querySelectorAll('.entry-section[id], .quick-answer[id]').forEach(function(s) {
+    new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          var id = e.target.id;
+          navLinks.forEach(function(l) { l.classList.toggle('active', l.getAttribute('data-section') === id); });
+          centerActive();
+        }
+      });
+    }, {rootMargin:'-20% 0px -70% 0px', threshold:0}).observe(s);
+  });
+  if (entryNav) new MutationObserver(centerActive).observe(entryNav, {subtree:true, attributes:true, attributeFilter:['class']});
+
+  /* FAQ accordion */
+  document.querySelectorAll('.faq-question').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var item = btn.closest('.faq-item'), open = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(function(el) {
+        el.classList.remove('open'); el.querySelector('.faq-question').setAttribute('aria-expanded','false');
+      });
+      if (!open) { item.classList.add('open'); btn.setAttribute('aria-expanded','true'); }
+    });
+  });
+
+  /* Nav dropdowns */
+  document.querySelectorAll('nav.mpw-site-nav .nav-item').forEach(function(item) {
+    var btn = item.querySelector('button');
+    if (!btn) return;
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var open = item.classList.contains('open');
+      document.querySelectorAll('nav.mpw-site-nav .nav-item').forEach(function(i) {
+        i.classList.remove('open'); i.querySelectorAll('button').forEach(function(b) { b.setAttribute('aria-expanded','false'); });
+      });
+      if (!open) { item.classList.add('open'); btn.setAttribute('aria-expanded','true'); }
+    });
+  });
+  document.addEventListener('click', function() {
+    document.querySelectorAll('nav.mpw-site-nav .nav-item').forEach(function(i) {
+      i.classList.remove('open'); i.querySelectorAll('button').forEach(function(b) { b.setAttribute('aria-expanded','false'); });
+    });
+  });
+
+  /* Mobile drawer */
+  var mob = document.getElementById('navMob'), drawer = document.getElementById('mobileDrawer');
+  if (mob && drawer) {
+    mob.addEventListener('click', function() { drawer.classList.toggle('open'); });
+    drawer.querySelectorAll('a').forEach(function(a) { a.addEventListener('click', function() { drawer.classList.remove('open'); }); });
+  }
+
+  /* Search overlay */
+  var overlay = document.getElementById('searchOverlay');
+  var inp = document.getElementById('searchInput');
+  var res = document.getElementById('searchResults');
+  var searchBtn = document.getElementById('navSearchBtn');
+  var closeBtn = document.getElementById('searchCloseBtn');
+  var bibleIdx = null, fuseInst = null;
+
+  var SEEDS = [
+    {slug:'compression',term:'Compression',category:'Signal Processing',excerpt:'Reduces dynamic range.'},
+    {slug:'eq',term:'EQ',category:'Frequency',excerpt:'Boosts or cuts specific frequency ranges.'},
+    {slug:'reverb',term:'Reverb',category:'Time & Space',excerpt:'Simulates acoustic reflections.'},
+    {slug:'delay',term:'Delay',category:'Time & Space',excerpt:'Repeats the signal after a set time.'},
+    {slug:'sidechain',term:'Sidechain',category:'Signal Processing',excerpt:'Compression triggered by a secondary signal.'},
+    {slug:'gain-staging',term:'Gain Staging',category:'Levels & Headroom',excerpt:'Setting appropriate signal levels throughout the chain.'},
+    {slug:'limiting',term:'Limiting',category:'Signal Processing',excerpt:'Extreme compression — ratio 10:1 or higher.'},
+    {slug:'saturation',term:'Saturation',category:'Dynamics',excerpt:'Soft harmonic distortion — warmth and perceived loudness.'},
+    {slug:'lufs',term:'LUFS',category:'Levels & Headroom',excerpt:'Loudness Units relative to Full Scale.'},
+    {slug:'parallel-compression',term:'Parallel Compression',category:'Signal Processing',excerpt:'Blending compressed and dry signal.'},
+  ];
+
+  function rItem(e) {
+    return '<a class="search-result" href="/bible/'+e.slug+'">'
+      +'<span class="sr-cat">'+(e.category||'Bible')+'</span>'
+      +'<span class="sr-title">'+e.term+'</span></a>';
+  }
+  function showSeeds(q) {
+    if (!res) return;
+    var list = q ? SEEDS.filter(function(s) { return s.term.toLowerCase().indexOf(q.toLowerCase())!==-1; }) : SEEDS.slice(0,7);
+    res.innerHTML='<div style="padding:8px 14px 4px;font-size:10px;color:#555;text-transform:uppercase;letter-spacing:.1em;font-family:monospace">Bible entries</div>'
+      +list.slice(0,8).map(rItem).join('');
+  }
+  function loadFuse(cb) {
+    if (typeof Fuse !== 'undefined') { cb(); return; }
+    var s = document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.6.2/fuse.min.js';
+    s.onload=cb; document.head.appendChild(s);
+  }
+  function loadIdx(cb) {
+    if (bibleIdx) { cb(); return; }
+    fetch('/bible-index.json').then(function(r){return r.json();}).then(function(d){
+      bibleIdx=d;
+      loadFuse(function(){
+        fuseInst=new Fuse(bibleIdx,{keys:['term','category','excerpt'],threshold:0.38,includeScore:true});
+        cb();
+      });
+    }).catch(function(){bibleIdx=[];cb();});
+  }
+  function openSearch() {
+    if (!overlay) return;
+    overlay.classList.add('open');
+    if (inp) inp.focus();
+    showSeeds('');
+    loadIdx(function() {
+      if (!bibleIdx||!res) return;
+      res.innerHTML='<div style="padding:8px 14px 4px;font-size:10px;color:#555;text-transform:uppercase;letter-spacing:.1em;font-family:monospace">Bible entries</div>'
+        +bibleIdx.slice(0,7).map(rItem).join('');
+    });
+  }
+  function closeSearch() {
+    if (!overlay) return;
+    overlay.classList.remove('open');
+    if (inp) inp.value='';
+    if (res) res.innerHTML='';
+  }
+  document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey||e.metaKey)&&e.key==='k') { e.preventDefault(); openSearch(); }
+    if (e.key==='Escape'&&overlay&&overlay.classList.contains('open')) closeSearch();
+  });
+  if (searchBtn) searchBtn.addEventListener('click', openSearch);
+  if (closeBtn) closeBtn.addEventListener('click', closeSearch);
+  if (overlay) overlay.addEventListener('click', function(e) { if(e.target===overlay) closeSearch(); });
+  if (inp) {
+    inp.addEventListener('input', function() {
+      var q = inp.value.trim();
+      if (!q) { showSeeds(''); return; }
+      loadIdx(function() {
+        if (!res) return;
+        if (fuseInst) {
+          var r=fuseInst.search(q);
+          if (r.length) { res.innerHTML=r.slice(0,8).map(function(x){return rItem(x.item);}).join(''); }
+          else { showSeeds(q); }
+        } else { showSeeds(q); }
+      });
+    });
+  }
+
+  /* Copy reference table */
+  window.copyRefTable = function() {
+    var btn = document.getElementById('copyTableBtn');
+    if (!btn) return;
+    var text = `Parameter	General	Drums	Vocals	Bass / Keys	Bus / Master
+Threshold / Ceiling	−1.0 dBFS	−3 to −1 dBFS	−2 to −1 dBFS	−2 to −1 dBFS	−1.0 dBTP
+Input Gain	2–4 dB	1–3 dB	1–3 dB	2–4 dB	3–8 dB
+Attack (Lookahead)	1–3 ms	0.5–2 ms	1–4 ms	1–3 ms	1–4 ms (auto)
+Release	Auto / 80–150 ms	20–60 ms	80–200 ms	60–150 ms	Auto / program-dep.
+GR at Peak	1–3 dB	2–5 dB	1–3 dB	2–4 dB	2–6 dB
+Integrated LUFS target	−14 LUFS	N/A (track)	N/A (track)	N/A (track)	−14 to −8 LUFS
+True Peak Mode	Recommended	Optional	Recommended	Recommended	Always ON
+Source: musicproductionwiki.com/bible/limiting`;
+    navigator.clipboard.writeText(text).then(function() {
+      btn.textContent='Copied ✓'; btn.classList.add('copied');
+      setTimeout(function(){btn.textContent='Copy Table';btn.classList.remove('copied');},2500);
+    }).catch(function(){btn.textContent='Copy failed';setTimeout(function(){btn.textContent='Copy Table';},2000);});
+  };
+
+})();
+</script>
+
+</body>
+</html>
