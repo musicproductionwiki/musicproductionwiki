@@ -797,54 +797,20 @@ pre,code{overflow-x:auto;max-width:100%}
 .further-link:hover .further-link-text { color: #f0f0f0; }
 </style>
 
-<style id="mpw-bible-fixes-v1">
-/* FIX 1: Progress bar — full viewport width, always from left:0 */
-.reading-progress {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: auto !important;
-  width: 0 !important;
-  max-width: none !important;
-  height: 3px !important;
-  background: #f5a623 !important;
-  z-index: 99999 !important;
-  transition: width 0.1s linear !important;
-  transform: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
 
-/* FIX 3: Type grid — max 3 columns so no orphaned single card */
-.type-grid {
-  grid-template-columns: repeat(3, 1fr) !important;
-}
-@media(max-width: 700px) {
-  .type-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-}
-@media(max-width: 480px) {
-  .type-grid {
-    grid-template-columns: 1fr !important;
-  }
-}
+
+<style id="mpw-progress-force-v2">
+.reading-progress{position:fixed!important;top:0!important;left:0!important;
+right:auto!important;width:0!important;max-width:none!important;
+height:3px!important;background:#f5a623!important;
+z-index:99999!important;transition:width .1s linear!important;
+transform:none!important;margin:0!important;padding:0!important}
 </style>
-<script id="mpw-bible-fixes-js-v1">
-/* FIX 1: Progress bar width in px from window.innerWidth */
-(function() {
-  var bar = document.getElementById('readingProgress');
-  if (!bar) return;
-  function updateBar() {
-    var st = window.scrollY || window.pageYOffset || 0;
-    var dh = document.documentElement.scrollHeight - window.innerHeight;
-    bar.style.width = (dh > 0 ? Math.round((st / dh) * window.innerWidth) : 0) + 'px';
-  }
-  window.addEventListener('scroll', updateBar, {passive: true});
-  window.addEventListener('resize', updateBar, {passive: true});
-  updateBar();
-})();
-</script>
+<style id="mpw-type-grid-fix-v1">
+.type-grid{grid-template-columns:repeat(3,1fr)!important}
+@media(max-width:700px){.type-grid{grid-template-columns:repeat(2,1fr)!important}}
+@media(max-width:480px){.type-grid{grid-template-columns:1fr!important}}
+</style>
 </head>
 <body>
 
@@ -1607,7 +1573,7 @@ pre,code{overflow-x:auto;max-width:100%}
   window.addEventListener('scroll', function() {
     var st = window.scrollY;
     var dh = document.documentElement.scrollHeight - window.innerHeight;
-    if (progress) progress.style.width = (dh > 0 ? (st/dh)*100 : 0) + '%';
+    if (progress) progress.style.width = (dh > 0 ? Math.round((st/dh)*window.innerWidth) : 0) + 'px';
     if (backToTop) backToTop.classList.toggle('visible', st > 400);
   });
 
