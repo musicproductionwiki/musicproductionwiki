@@ -239,6 +239,20 @@ footer{border-top:1px solid var(--bd);padding:32px 2.5rem}
   .ticker-outer::before,.ticker-outer::after{width:60px}
 }
 @media(max-width:480px){.az-grid{grid-template-columns:1fr}.az-letter{width:32px;height:32px;font-size:12px}}
+
+/* ── Bible Mobile Fixes ── bible-mobile-v1 ── */
+@media(max-width:1024px){
+  nav.mpw-site-nav .nav-cta{display:none!important}
+  nav.mpw-site-nav .nav-inner{padding:0 1rem!important}
+}
+@media(max-width:768px){
+  .bible-masthead-inner .bm-site{display:none!important}
+  .bible-masthead-inner .bm-divider{display:none!important}
+  .bible-masthead{padding:8px 1rem}
+  .bible-masthead-inner{gap:8px}
+  .bible-publisher-line .pub-site{display:none!important}
+  .bible-publisher-line .pub-divider{display:none!important}
+}
 </style>
 </head>
 <body>
@@ -801,5 +815,99 @@ footer{border-top:1px solid var(--bd);padding:32px 2.5rem}
   }
 })();
 </script>
+
+<script id="mpw-bible-search-seeds">
+/* bible-search-seeds-v1 */
+(function(){
+  var SEEDS=[
+    {slug:'compression',term:'Compression',category:'Signal Processing',excerpt:'Reduces dynamic range — controls peaks, evens out level.'},
+    {slug:'eq',term:'EQ',category:'Frequency',excerpt:'Equalisation — boosting or cutting specific frequency ranges.'},
+    {slug:'threshold',term:'Threshold',category:'Signal Processing',excerpt:'The level at which a compressor begins to act on the signal.'},
+    {slug:'attack',term:'Attack',category:'Signal Processing',excerpt:'How quickly a compressor engages after the signal crosses the threshold.'},
+    {slug:'release',term:'Release',category:'Signal Processing',excerpt:'How quickly a compressor disengages after the signal falls below threshold.'},
+    {slug:'ratio',term:'Ratio',category:'Signal Processing',excerpt:'The degree of gain reduction applied above the threshold.'},
+    {slug:'reverb',term:'Reverb',category:'Time & Space',excerpt:'Simulates acoustic reflections of a physical space.'},
+    {slug:'delay',term:'Delay',category:'Time & Space',excerpt:'Repeats the input signal after a set time interval.'},
+    {slug:'sidechain',term:'Sidechain',category:'Signal Processing',excerpt:'Compression triggered by a secondary signal.'},
+    {slug:'parallel-compression',term:'Parallel Compression',category:'Signal Processing',excerpt:'Blending a heavily compressed signal with the dry original.'},
+    {slug:'gain-staging',term:'Gain Staging',category:'Levels & Headroom',excerpt:'Setting appropriate signal levels at every point in the chain.'},
+    {slug:'headroom',term:'Headroom',category:'Levels & Headroom',excerpt:'Buffer between nominal level and maximum before clipping.'},
+    {slug:'lufs',term:'LUFS',category:'Levels & Headroom',excerpt:'Loudness Units relative to Full Scale.'},
+    {slug:'saturation',term:'Saturation',category:'Dynamics',excerpt:'Soft harmonic distortion — adds warmth and perceived loudness.'},
+    {slug:'limiting',term:'Limiting',category:'Signal Processing',excerpt:'Extreme compression — ratio of 10:1 or higher.'},
+    {slug:'high-pass-filter',term:'High-Pass Filter',category:'Frequency',excerpt:'Passes frequencies above the cutoff — removes low-end rumble.'},
+    {slug:'low-pass-filter',term:'Low-Pass Filter',category:'Frequency',excerpt:'Passes frequencies below the cutoff — rolls off highs above it.'},
+    {slug:'frequency',term:'Frequency',category:'Frequency',excerpt:'Cycles per second of a sound wave, in Hz.'},
+    {slug:'stereo-width',term:'Stereo Width',category:'Mixing',excerpt:'The perceived spread of audio across the stereo field.'},
+    {slug:'bus-compression',term:'Bus Compression',category:'Signal Processing',excerpt:'Gentle compression on a group or mix bus to glue elements together.'},
+    {slug:'noise-gate',term:'Noise Gate',category:'Signal Processing',excerpt:'Silences signal below a threshold — removes noise between sounds.'},
+    {slug:'transient',term:'Transient',category:'Dynamics',excerpt:'The initial sharp peak at the start of a sound.'},
+    {slug:'sample-rate',term:'Sample Rate',category:'Recording',excerpt:'Number of audio samples captured per second.'},
+    {slug:'bit-depth',term:'Bit Depth',category:'Recording',excerpt:'Bits per sample — determines dynamic range and noise floor.'},
+    {slug:'mastering',term:'Mastering',category:'Mastering',excerpt:'The final stage of audio post-production before distribution.'},
+    {slug:'stem',term:'Stem',category:'Mixing',excerpt:'A grouped sub-mix of related tracks as a single audio file.'},
+    {slug:'bpm',term:'BPM',category:'Rhythm',excerpt:'Beats Per Minute — the tempo of a piece of music.'},
+    {slug:'midi',term:'MIDI',category:'DAW & MIDI',excerpt:'A protocol for communicating musical data between devices.'},
+    {slug:'oscillator',term:'Oscillator',category:'Synthesis',excerpt:'The signal generator at the heart of a synthesizer.'},
+    {slug:'mastering',term:'Mastering',category:'Mastering',excerpt:'Final stage before distribution — loudness, EQ, limiting.'},
+  ];
+
+  // Wait for DOM, then intercept the search overlay input
+  function init(){
+    var inp=document.getElementById('searchInput');
+    var res=document.getElementById('searchResults');
+    if(!inp||!res)return;
+
+    function rItem(e){
+      return '<a class="search-result" href="/bible/'+e.slug+'">'
+        +'<span class="sr-cat">'+(e.category||'Bible')+'</span>'
+        +'<span class="sr-title">'+e.term+'</span></a>';
+    }
+
+    // Patch: on input, if the main search returns empty, search SEEDS
+    var origHandler=inp.oninput;
+    inp.addEventListener('input',function(){
+      // Give the main handler time to run first (it may populate res)
+      setTimeout(function(){
+        var q=inp.value.trim().toLowerCase();
+        if(!q)return;
+        // If results div is empty or shows "No entries found", search seeds
+        var html=res.innerHTML||'';
+        if(html.indexOf('No entries found')!==-1||html.trim()===''){
+          // Search seeds
+          var matches=SEEDS.filter(function(s){
+            return s.term.toLowerCase().indexOf(q)!==-1
+              ||s.category.toLowerCase().indexOf(q)!==-1
+              ||(s.excerpt&&s.excerpt.toLowerCase().indexOf(q)!==-1);
+          });
+          if(matches.length){
+            res.innerHTML='<div style="padding:8px 14px 4px;font-size:10px;color:#555;text-transform:uppercase;letter-spacing:.1em;font-family:monospace">Bible entries</div>'
+              +matches.slice(0,8).map(rItem).join('');
+          }
+        }
+      },60);
+    },true);
+
+    // Also populate default view with seeds if overlay opens empty
+    var searchBtn=document.getElementById('navSearchBtn');
+    var overlay=document.getElementById('searchOverlay');
+    if(searchBtn&&overlay){
+      searchBtn.addEventListener('click',function(){
+        setTimeout(function(){
+          if(res&&res.innerHTML.trim()===''){
+            var h='<div style="padding:8px 14px 4px;font-size:10px;color:#555;text-transform:uppercase;letter-spacing:.1em;font-family:monospace">Bible entries</div>';
+            SEEDS.slice(0,7).forEach(function(e){h+=rItem(e);});
+            res.innerHTML=h;
+          }
+        },150);
+      });
+    }
+  }
+
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}
+  else{init();}
+})();
+</script>
+
 </body>
 </html>
