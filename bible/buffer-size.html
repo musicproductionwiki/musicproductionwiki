@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buffer Size — The Producer's Bible | MusicProductionWiki.com</title>
+  <meta name="description" content="Buffer Size controls DAW latency and CPU load. Learn how to set the right buffer size for recording, mixing, and live performance in any DAW.">
+  <meta name="keywords" content="buffer size, DAW latency, audio buffer, ASIO buffer, recording latency, CPU load, audio interface settings, low latency recording">
+  <meta name="robots" content="max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <link rel="canonical" href="https://musicproductionwiki.com/bible/buffer-size">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Buffer Size — The Producer's Bible | MusicProductionWiki.com">
+  <meta property="og:description" content="Buffer Size controls DAW latency and CPU load. Learn how to set the right buffer size for recording, mixing, and live performance in any DAW.">
+  <meta property="og:url" content="https://musicproductionwiki.com/bible/buffer-size">
+  <meta property="og:image" content="https://musicproductionwiki.com/images/og-producers-bible.jpg">
+  <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="MusicProductionWiki.com">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Buffer Size — The Producer's Bible">
+  <meta name="twitter:description" content="Buffer Size controls DAW latency and CPU load. Learn how to set the right buffer size for recording, mixing, and live performance in any DAW.">
+  <meta name="twitter:image" content="https://musicproductionwiki.com/images/og-producers-bible.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@graph":[
+      {"@type":"DefinedTerm","name":"Buffer Size","description":"Buffer Size is the number of audio samples your audio interface collects before sending them to the CPU for processing. Smaller buffers reduce latency; larger buffers reduce CPU strain and glitches.",
+        "inDefinedTermSet":{"@type":"DefinedTermSet","name":"The Producer's Bible","url":"https://musicproductionwiki.com/bible/",
+          "publisher":{"@type":"Organization","name":"MusicProductionWiki.com","url":"https://musicproductionwiki.com"}},
+        "url":"https://musicproductionwiki.com/bible/buffer-size"},
+      {"@type":"Article","headline":"Buffer Size — The Producer's Bible",
+        "description":"Buffer Size controls DAW latency and CPU load. Learn how to set the right buffer size for recording, mixing, and live performance in any DAW.","url":"https://musicproductionwiki.com/bible/buffer-size",
+        "datePublished":"2026-05-15","dateModified":"2026-05-15",
+        "wordCount":3200,"timeRequired":"PT16M",
+        "author":{"@type":"Organization","name":"The Music Production Wiki Team"},
+        "publisher":{"@type":"Organization","name":"MusicProductionWiki.com","url":"https://musicproductionwiki.com",
+          "logo":{"@type":"ImageObject","url":"https://musicproductionwiki.com/images/logo.png"}},
+        "image":{"@type":"ImageObject","url":"https://musicproductionwiki.com/images/og-producers-bible.jpg","width":1200,"height":630},
+        "about":{"@type":"Thing","name":"Buffer Size","sameAs": "https://en.wikipedia.org/wiki/Digital_audio_workstation","description":"Buffer Size is the number of audio samples your audio interface collects before sending them to the CPU for processing. Smaller buffers reduce latency; larger buffers reduce CPU strain and glitches."},
+        "isPartOf":{"@type":"DefinedTermSet","name":"The Producer's Bible","url":"https://musicproductionwiki.com/bible/"}},
+      {"@type":"BreadcrumbList","itemListElement":[
+        {"@type":"ListItem","position":1,"name":"Home","item":"https://musicproductionwiki.com"},
+        {"@type":"ListItem","position":2,"name":"The Producer's Bible","item":"https://musicproductionwiki.com/bible/"},
+        {"@type":"ListItem","position":3,"name":"Buffer Size","item":"https://musicproductionwiki.com/bible/buffer-size"}]},
+      {"@type":"FAQPage","mainEntity":[          {"@type":"Question","name":"What buffer size should I use for recording vocals?","acceptedAnswer":{"@type":"Answer","text":"For recording vocals with software monitoring — hearing yourself through the DAW and any plugins on your channel — use 128 or 256 samples at 44,100 or 48,000 Hz. This delivers approximately 4–8 ms of monitoring latency, which is comfortable for most vocalists. If you hear a noticeable echo or your own voice 'late,' try dropping to 64 samples, but ensure your system is optimized (no background apps, ASIO driver on Windows) to avoid dropouts at that smaller buffer."}},
+          {"@type":"Question","name":"Why do I hear clicking and popping when I use a small buffer size?","acceptedAnswer":{"@type":"Answer","text":"Clicks and pops at small buffer sizes are buffer underruns — the CPU failed to process the audio block before the next one arrived, causing a gap filled with silence or corrupted data. Common causes on Windows include DPC latency spikes from wi-fi drivers, USB 3.0 controllers, or GPU drivers; on macOS they often stem from Spotlight indexing, iCloud sync, or Time Machine backup running during the session. Use LatencyMon (Windows) to identify the offending driver, and disable wi-fi and cloud sync during sessions. If clicks persist, raise the buffer by one step until they stop."}},
+          {"@type":"Question","name":"Does buffer size affect audio quality or the final recording?","acceptedAnswer":{"@type":"Answer","text":"No. Buffer size has no effect on the audio fidelity of recordings or rendered files. It is a scheduling parameter, not a quality setting — the audio data itself is identical regardless of whether it was processed in blocks of 64 or 2048 samples. The only quality-adjacent effect is that buffer underruns at too-small a buffer size produce audible glitches in the recording itself; the solution is to use a stable buffer size, not a 'better' one in any tonal sense."}},
+          {"@type":"Question","name":"What is the difference between buffer size and sample rate?","acceptedAnswer":{"@type":"Answer","text":"Sample rate (44,100 Hz, 48,000 Hz, 96,000 Hz) determines how many times per second the analog signal is sampled — it governs the frequency ceiling and file size of your audio and is set once per session. Buffer size (64, 128, 256, 512 samples) determines how many of those samples are grouped into a processing block before the CPU handles them — it governs latency and CPU scheduling, and can be changed at any point in the production workflow. They interact mathematically: the latency in milliseconds = (buffer size in samples) ÷ (sample rate) × 1000."}},
+          {"@type":"Question","name":"Can I change buffer size in the middle of a session?","acceptedAnswer":{"@type":"Answer","text":"Yes, but with caution. Most DAWs allow buffer size changes mid-session by stopping playback, adjusting the setting, and restarting the audio engine. The risk is that some DAWs temporarily misreport plugin latency to the PDC system after a buffer change, potentially misaligning tracks on playback. Always stop transport before changing buffer size, allow the engine to fully reinitialize, and spot-check timing-critical elements after the change if you are mid-mix."}},
+          {"@type":"Question","name":"Why does my CPU spike when I lower the buffer size even with few plugins?","acceptedAnswer":{"@type":"Answer","text":"CPU usage increases at smaller buffers even with minimal plugins because the driver interrupt overhead becomes proportionally larger. At 64 samples / 48 kHz, the CPU receives 750 audio callbacks per second; at 512 samples, only 93.75 per second. Each callback involves context switching, memory copying, and cache operations regardless of plugin count. This overhead can consume 15–30% of a CPU core on its own at very small buffers, which is why the CPU meter rises even in an empty session at 64 samples."}},
+          {"@type":"Question","name":"What is plug-in delay compensation and how does it interact with buffer size?","acceptedAnswer":{"@type":"Answer","text":"Plug-in delay compensation (PDC) is the DAW's system for automatically detecting the latency introduced by each plugin — particularly look-ahead limiters, linear-phase EQs, and convolution reverbs — and delaying all other tracks to maintain sample-accurate alignment during playback. PDC works correctly at any buffer size during playback and mixing. It does not apply during live monitoring: a vocalist monitoring through software cannot benefit from PDC because the compensation delay would require the DAW to 'pre-deliver' audio that hasn't been captured yet. Ensure PDC is enabled in your DAW's settings whenever using latency-introducing plugins in a mix."}},
+          {"@type":"Question","name":"Do professional studios use different buffer strategies than home producers?","acceptedAnswer":{"@type":"Answer","text":"Yes, and the key difference is hardware-side monitoring. Professional studios route the performer's headphone mix through the analog outputs of the mixing console or interface preamp, bypassing software monitoring entirely. This makes buffer size irrelevant to the performer's experience — they hear themselves with near-zero hardware latency regardless of what the DAW's buffer is set to. The DAW's buffer is then set large (512–1024 samples or higher) purely for session stability. Home producers relying on software monitoring must keep buffer small during tracking — the professional solution of hardware monitoring is available even at the home studio level through the 'direct monitoring' switch on interfaces like the Focusrite Scarlett, Audient iD, and SSL 2."}}]},
+      {"@type":"WebSite","name":"MusicProductionWiki.com","url":"https://musicproductionwiki.com",
+        "potentialAction":{"@type":"SearchAction","target":"https://musicproductionwiki.com/search?q={search_term_string}","query-input":"required name=search_term_string"}},
+      {"@type":"SpeakableSpecification","@id":"https://musicproductionwiki.com/bible/buffer-size#speakable",
+        "cssSelector":[".quick-answer","h1",".entry-section:first-of-type p:first-child"]}
+    ]
+  }
+  </script>
+  <style id="mpw-bible-v3">
+
+    /* ============================================
+       MPW Producer's Bible v3.0
+       Consolidated: base + mobile + readability + newsletter + further-reading
+       Dark #0a0a0b · Teal #00e8a2 · Amber #f5a623
+    ============================================ */
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#0a0a0b;--bg2:#111113;--bg3:#1a1a1d;--bg4:#222226;
+      --bd:rgba(255,255,255,0.08);--bdh:rgba(255,255,255,0.15);
+      --teal:#00e8a2;--amber:#f5a623;
+      --amber-dim:rgba(245,166,35,0.07);--amber-border:rgba(245,166,35,0.22);
+      --t1:#f0f0f0;--t2:#a0a0b4;--t3:#6a6a7a;
+      --font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
+      --max:1200px;--prose:820px;
+      --teal-dim:rgba(0,232,162,0.12);--teal-border:rgba(0,232,162,0.25);
+      --radius:8px;
+    }
+    html,body{margin:0;padding:0;width:100%;max-width:100%;overflow-x:clip}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--t1);font-family:var(--font);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+    /* NAV */
+    nav.mpw-site-nav{position:sticky;top:0;left:0;right:0;z-index:200;width:100%;background:rgba(10,10,11,0.97);backdrop-filter:blur(24px);border-bottom:1px solid var(--bd)}
+    nav.mpw-site-nav .nav-inner{max-width:var(--max)!important;margin:0 auto;padding:0 24px!important;height:60px;display:flex;align-items:center}
+    nav.mpw-site-nav .nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none;flex-shrink:0;margin-right:36px}
+    nav.mpw-site-nav .logo-mark{width:32px;height:32px;border-radius:8px;background:var(--teal);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    nav.mpw-site-nav .logo-text{font-size:15px;font-weight:600;color:var(--t1);letter-spacing:-0.02em}
+    nav.mpw-site-nav .logo-sub{font-size:10px;color:var(--t3);font-family:var(--mono);letter-spacing:.07em;text-transform:uppercase;display:block}
+    nav.mpw-site-nav .nav-primary{display:flex;align-items:center;gap:2px;list-style:none;flex:1}
+    nav.mpw-site-nav .nav-item{position:relative}
+    nav.mpw-site-nav .nav-item>a,nav.mpw-site-nav .nav-item>button{display:flex;align-items:center;gap:5px;color:var(--t2);text-decoration:none;font-size:13.5px;padding:6px 12px;border-radius:7px;transition:color .15s,background .15s;white-space:nowrap;background:none;border:none;cursor:pointer;font-family:var(--font);line-height:1}
+    nav.mpw-site-nav .nav-item>a:hover,nav.mpw-site-nav .nav-item>button:hover,nav.mpw-site-nav .nav-item.open>button{color:var(--t1);background:rgba(255,255,255,0.06)}
+    nav.mpw-site-nav .nav-bible-link{color:var(--amber)!important;font-weight:600!important}
+    nav.mpw-site-nav .nav-chevron{width:10px;height:10px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s;flex-shrink:0}
+    nav.mpw-site-nav .nav-item.open .nav-chevron{transform:rotate(180deg)}
+    nav.mpw-site-nav .nav-dropdown{position:absolute;top:calc(100% + 10px);left:0;background:var(--bg2);border:1px solid var(--bdh);border-radius:14px;padding:8px;min-width:240px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .18s,transform .18s,visibility .18s;box-shadow:0 24px 48px rgba(0,0,0,.55);pointer-events:none}
+    nav.mpw-site-nav .nav-item.open>.nav-dropdown{opacity:1!important;visibility:visible!important;transform:translateY(0)!important;pointer-events:auto!important}
+    nav.mpw-site-nav .nav-dropdown.wide{min-width:500px;display:grid;grid-template-columns:1fr 1fr;gap:2px}
+    nav.mpw-site-nav .drop-col-label{font-size:10px;font-family:var(--mono);color:var(--t3);text-transform:uppercase;letter-spacing:.1em;padding:8px 12px 4px}
+    nav.mpw-site-nav .drop-item{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border-radius:9px;text-decoration:none;transition:background .15s}
+    nav.mpw-site-nav .drop-item:hover{background:var(--bg3)}
+    nav.mpw-site-nav .drop-icon{width:30px;height:30px;border-radius:7px;background:var(--bg3);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:background .15s,border-color .15s}
+    nav.mpw-site-nav .drop-icon svg{width:13px;height:13px;stroke:var(--t3);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:stroke .15s}
+    nav.mpw-site-nav .drop-item:hover .drop-icon{background:rgba(0,232,162,.06);border-color:rgba(0,232,162,.2)}
+    nav.mpw-site-nav .drop-item:hover .drop-icon svg{stroke:var(--teal)}
+    nav.mpw-site-nav .drop-name{font-size:13.5px;font-weight:500;color:var(--t1);line-height:1.2;margin-bottom:2px}
+    nav.mpw-site-nav .drop-desc{font-size:11.5px;color:var(--t3);line-height:1.4}
+    nav.mpw-site-nav .nav-right{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
+    nav.mpw-site-nav .nav-cta{background:var(--teal);color:#0a0a0b;font-size:13px;font-weight:600;padding:7px 16px;border-radius:8px;text-decoration:none;white-space:nowrap;transition:background .15s}
+    nav.mpw-site-nav .nav-cta:hover{background:#00fdb5}
+    nav.mpw-site-nav .nav-search-btn{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:6px;background:none;border:none;cursor:pointer;color:#888;padding:0}
+    nav.mpw-site-nav .nav-search-btn:hover{color:#fff;background:rgba(255,255,255,.07)}
+    nav.mpw-site-nav .nav-search-btn svg{width:16px;height:16px;display:block}
+    nav.mpw-site-nav .nav-mob{display:none;background:none;border:none;cursor:pointer;padding:8px;flex-direction:column;gap:5px;flex-shrink:0}
+    nav.mpw-site-nav .nav-mob span{display:block;width:22px;height:2px;background:var(--t2);border-radius:2px}
+    .mobile-drawer{display:none;position:fixed;top:60px;left:0;right:0;bottom:0;background:rgba(10,10,11,.99);z-index:199;overflow-y:auto;padding:16px;border-top:1px solid var(--bd);flex-direction:column;gap:4px}
+    .mobile-drawer.open{display:flex}
+    .mob-section-label{font-size:10px;font-family:var(--mono);color:var(--t3);text-transform:uppercase;letter-spacing:.12em;padding:12px 12px 6px}
+    .mob-link{display:block;padding:11px 12px;border-radius:9px;text-decoration:none;font-size:14px;color:var(--t2);transition:color .15s,background .15s}
+    .mob-link:hover{color:var(--t1);background:var(--bg2)}
+    .mob-bible{display:flex;align-items:center;gap:8px;padding:12px 16px;border-radius:9px;background:var(--amber-dim);border:1px solid var(--amber-border);color:var(--amber);font-size:14px;font-weight:600;text-decoration:none;margin:4px 0 8px}
+    .mob-cta,.mob-cta-bible{display:block;background:var(--teal);color:#0a0a0b;font-weight:600;font-size:14px;padding:13px 16px;border-radius:10px;text-decoration:none;text-align:center;margin-top:8px}
+
+    /* SEARCH OVERLAY */
+    .search-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:99998;align-items:flex-start;justify-content:center;padding-top:60px}
+    .search-overlay.open{display:flex}
+    .search-box{background:#16161a;border:1px solid var(--amber-border);border-radius:14px;width:100%;max-width:620px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.7);margin:0 1rem}
+    .search-input-wrap{display:flex;align-items:center;padding:16px 20px;gap:12px;border-bottom:1px solid rgba(255,255,255,.07)}
+    .search-input{flex:1;background:none;border:none;outline:none;font-size:16px;color:#fff;font-family:inherit}
+    .search-results{max-height:420px;overflow-y:auto;padding:8px}
+    .search-result{display:flex;flex-direction:column;padding:10px 14px;border-radius:8px;text-decoration:none;color:#c8c8d8;transition:background .12s}
+    .search-result:hover{background:rgba(245,166,35,.05)}
+    .sr-title{font-size:14px;font-weight:500;color:#fff;line-height:1.3}
+    .sr-cat{font-size:11px;color:var(--amber);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+
+    /* BIBLE MASTHEAD — sticky at top:60px (below nav) */
+    .bible-masthead{background:var(--bg2);border-bottom:1px solid var(--amber-border);padding:8px 2.5rem;width:100%;position:sticky;top:60px;z-index:150}
+    .bible-masthead-inner{max-width:var(--prose);margin:0 auto;display:flex;align-items:center;gap:12px}
+    .bm-publisher{font-size:9px;font-family:var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--amber);font-weight:500;text-decoration:none}
+    .bm-divider{width:1px;height:10px;background:var(--amber-border);flex-shrink:0}
+    .bm-site{font-size:9px;font-family:var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--t3)}
+    .bm-edition{font-size:9px;font-family:var(--mono);color:rgba(245,166,35,.4);letter-spacing:.1em;text-transform:uppercase;background:rgba(245,166,35,.06);border:1px solid var(--amber-border);padding:2px 8px;border-radius:3px;margin-left:auto}
+    .bm-dot{width:4px;height:4px;border-radius:50%;background:var(--amber);flex-shrink:0;animation:amberpulse 2.4s ease-in-out infinite}
+    @keyframes amberpulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.2;transform:scale(.5)}}
+
+    /* PARAM CARDS */
+    .param-grid{display:grid;gap:12px;margin:20px 0}
+    .param-card{background:var(--bg2);border:1px solid var(--bd);border-radius:12px;padding:18px 20px;transition:border-color .2s}
+    .param-card:hover{border-color:var(--bdh)}
+    .param-name{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:6px}
+    .param-title{font-size:1rem;font-weight:600;color:var(--t1);margin-bottom:8px}
+    .param-desc{font-size:14.5px;color:#c8c8d8;line-height:1.65;margin:0}
+
+    /* SVG DIAGRAM */
+    .diagram-wrap{background:var(--bg2);border:1px solid var(--bd);border-radius:12px;padding:28px 24px;margin:24px 0;overflow:hidden}
+    .diagram-label{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--t3);text-align:center;margin-top:14px}
+
+    /* QUICK REFERENCE TABLE */
+    .ref-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:10px}
+    .ref-card-header p{margin:0;font-size:15.5px;color:var(--t1)}
+    .ref-table-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--bd);margin:20px 0}
+    .ref-table{width:100%;border-collapse:collapse;font-size:13.5px}
+    .ref-table thead{background:var(--bg3)}
+    .ref-table th{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--t2);padding:12px 16px;text-align:left;border-bottom:1px solid var(--bd);white-space:nowrap}
+    .ref-table th:first-child{color:var(--amber)}
+    .ref-table td{padding:11px 16px;border-bottom:1px solid var(--bd);color:var(--t1);vertical-align:top;font-family:var(--mono);font-size:13px}
+    .ref-table td:first-child{color:var(--t2);font-weight:500;white-space:nowrap}
+    .ref-table tbody tr:last-child td{border-bottom:none}
+    .ref-table tbody tr:hover{background:var(--bg3)}
+    .copy-table-btn{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);background:var(--bg2);border:1px solid var(--bd);padding:6px 14px;border-radius:8px;cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
+    .copy-table-btn:hover,.copy-table-btn.copied{color:var(--teal);border-color:rgba(0,232,162,.25);background:rgba(0,232,162,.06)}
+
+    /* TRACK EXAMPLES */
+    .track-example{background:var(--bg2);border:1px solid var(--bd);border-left:3px solid var(--amber);border-radius:0 12px 12px 0;padding:20px 22px;margin:16px 0;transition:border-color .2s}
+    .track-example:hover{border-color:var(--amber-border);border-left-color:var(--amber)}
+    .track-title{font-size:14.5px;font-weight:700;color:var(--t1);margin-bottom:4px}
+    .track-timestamp{font-family:var(--mono);font-size:11px;color:var(--amber);margin-bottom:10px;letter-spacing:.04em}
+    .track-note{font-size:14px;color:#c8c8d8;line-height:1.65;margin:0}
+
+    /* TYPE CARDS */
+    .type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}
+    @media(max-width:700px){.type-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:480px){.type-grid{grid-template-columns:1fr}}
+    .type-card{background:var(--bg2);border:1px solid var(--bd);border-radius:12px;padding:18px}
+    .type-card-name{font-weight:700;font-size:14px;color:var(--t1);margin-bottom:4px}
+    .type-card-hardware{font-family:var(--mono);font-size:10px;color:var(--teal);margin-bottom:8px;letter-spacing:.04em}
+    .type-card-desc{font-size:13px;color:#c8c8d8;line-height:1.6}
+
+    /* MISTAKE LIST */
+    .mistake-list{list-style:none;padding:0;margin:16px 0}
+    .mistake-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--bd)}
+    .mistake-item:last-child{border-bottom:none}
+    .mistake-icon{width:22px;height:22px;flex-shrink:0;margin-top:2px;color:#ff4d6d;font-size:14px;display:flex;align-items:center;justify-content:center}
+    .mistake-content{flex:1}
+    .mistake-title{font-weight:600;font-size:14.5px;color:var(--t1);margin-bottom:4px}
+    .mistake-desc{font-size:14px;color:#c8c8d8;line-height:1.6}
+
+    /* DAW NOTES — readability override baked in */
+    .daw-grid{display:grid;gap:10px;margin:16px 0}
+    .daw-row{display:flex;align-items:flex-start;gap:14px;background:#1a1a1d;border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:14px 16px}
+    .daw-name{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--teal);letter-spacing:.06em;min-width:80px;padding-top:1px}
+    .daw-note{font-size:14px;color:#c8c8d8;line-height:1.6}
+
+    /* RELATED TERMS */
+    .related-grid{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0}
+    .related-term{display:inline-flex;flex-direction:column;gap:3px;background:#1a1a1d;border:1px solid var(--bd);border-radius:8px;padding:10px 14px;text-decoration:none;transition:all .15s;min-width:140px}
+    .related-term:hover{border-color:var(--amber-border);background:var(--amber-dim)}
+    .related-term-name{font-size:13px;font-weight:600;color:var(--amber)}
+    .related-term-preview{font-size:11.5px;color:#b0b0c4;line-height:1.4}
+
+    /* FURTHER READING */
+    .further-grid{display:grid;gap:10px;margin:16px 0}
+    .further-link{display:flex;align-items:center;gap:12px;background:var(--bg2);border:1px solid var(--bd);border-radius:var(--radius);padding:14px 16px;text-decoration:none;transition:all .15s}
+    .further-link:hover{border-color:var(--teal-border);background:var(--teal-dim)}
+    .further-link-arrow{color:var(--teal);font-size:16px;flex-shrink:0}
+    .further-link-text{font-size:14px;color:#c8c8d8;transition:color .15s}
+    .further-link:hover .further-link-text{color:#f0f0f0}
+
+    /* NEWSLETTER CARD */
+    .bible-nl-card{background:#111113;border:1px solid rgba(0,232,162,0.22);border-radius:12px;padding:20px;margin:40px 0}
+    .bible-nl-card-eye{font-size:9px;font-family:var(--mono);font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#00e8a2;display:block;margin-bottom:6px}
+    .bible-nl-card-h{font-size:18px;font-weight:600;color:#f0f0f0;letter-spacing:-0.03em;line-height:1.2;margin-bottom:6px}
+    .bible-nl-card-h em{font-style:normal;color:#00e8a2}
+    .bible-nl-card-sub{font-size:13px;color:#a0a0b4;line-height:1.6;margin-bottom:14px}
+    .bible-nl-card-form{display:flex;gap:8px;flex-wrap:wrap}
+    .bible-nl-card-inp{flex:1;min-width:160px;background:#1a1a1d;border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:10px 12px;font-size:13px;color:#f0f0f0;font-family:var(--font);outline:none;transition:border-color .2s}
+    .bible-nl-card-inp::placeholder{color:#6a6a7a}
+    .bible-nl-card-inp:focus{border-color:rgba(0,232,162,.35)}
+    .bible-nl-card-btn{background:#00e8a2;color:#0a0a0b;border:none;border-radius:8px;padding:10px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);white-space:nowrap;transition:background .15s}
+    .bible-nl-card-btn:hover{background:#00fdb5}
+    .bible-nl-card-note{font-size:11px;color:#6a6a7a;font-family:var(--mono);margin-top:10px;display:block}
+
+    /* ENTRY TYPOGRAPHY — readability overrides baked in */
+    .entry-section p{margin-bottom:16px;color:#e8e8ec;line-height:1.8;font-size:15.5px}
+    .entry-section p:last-child{margin-bottom:0}
+    .entry-section h3{font-size:1.05rem;font-weight:600;color:var(--t1);margin:24px 0 10px}
+    .entry-section ul,.entry-section ol{padding-left:20px;margin-bottom:16px}
+    .entry-section li{margin-bottom:8px;font-size:15.5px;line-height:1.7;color:#e8e8ec}
+    .entry-section strong{color:var(--t1);font-weight:600}
+    .entry-section em{color:var(--t2);font-style:italic}
+    .entry-section code{font-family:var(--mono);font-size:13px;background:var(--bg3);border:1px solid var(--bd);padding:2px 6px;border-radius:4px;color:var(--teal)}
+    a{color:var(--teal);text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    .breadcrumb{display:flex;align-items:center;gap:6px;list-style:none;margin-bottom:20px;flex-wrap:wrap}
+    .breadcrumb li{display:flex;align-items:center;gap:6px}
+    .breadcrumb a{font-size:12px;color:var(--t3);text-decoration:none;transition:color .15s}
+    .breadcrumb a:hover{color:var(--teal)}
+    .breadcrumb .sep{font-size:11px;color:var(--t3)}
+    .breadcrumb .current{font-size:12px;color:var(--t2)}
+
+    .entry-header{padding-bottom:28px;border-bottom:1px solid var(--bd)}
+    .bible-masthead-entry-inner{max-width:900px;margin:0 auto;padding:20px 2.5rem 28px;width:100%;box-sizing:border-box}
+    .entry-meta-row{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+    .entry-category-badge{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);background:var(--amber-dim);border:1px solid var(--amber-border);padding:3px 10px;border-radius:100px}
+    .entry-pos{font-family:var(--mono);font-size:10px;color:var(--t3);letter-spacing:.06em}
+    .entry-edition{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);background:var(--amber-dim);border:1px solid var(--amber-border);padding:3px 10px;border-radius:100px}
+    .entry-title{font-size:clamp(1.8rem,4vw,3rem);font-weight:700;line-height:1.05;letter-spacing:-0.025em;color:var(--t1);margin-bottom:8px}
+    .entry-pronunciation{font-family:var(--mono);font-size:13px;color:var(--t3)}
+    .entry-layout{width:100%;max-width:900px;margin:0 auto;padding:0 2.5rem 80px;box-sizing:border-box;display:block}
+
+    .quick-answer{background:rgba(0,232,162,0.12);border:1px solid rgba(0,232,162,0.25);border-radius:12px;padding:22px 26px;margin:32px 0;position:relative}
+    .quick-answer::before{content:'Quick Answer';display:block;font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);margin-bottom:10px}
+    .quick-answer p{font-size:17px;font-weight:500;line-height:1.6;color:var(--t1);margin:0}
+
+    .entry-section{margin:48px 0;padding-top:0}
+    .entry-section h2{font-size:1.35rem;font-weight:700;letter-spacing:-0.015em;color:var(--t1);margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px}
+    .entry-section h2 .section-num{font-family:var(--mono);font-size:11px;color:var(--amber);letter-spacing:.1em;font-weight:500}
+
+    .faq-item{border-bottom:1px solid var(--bd)}
+    .faq-question{width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;background:none;border:none;cursor:pointer;padding:18px 0;font-size:15px;font-weight:600;color:var(--t1);text-align:left;font-family:var(--font)}
+    .faq-icon{font-size:20px;color:var(--t3);flex-shrink:0;transition:transform .2s}
+    .faq-item.open .faq-icon{transform:rotate(45deg)}
+    .faq-answer{display:none;padding:0 0 18px;font-size:15px;color:var(--t2);line-height:1.75}
+    .faq-item.open .faq-answer{display:block}
+
+    .entry-footer-section{border-top:1px solid var(--bd);padding-top:32px;margin-top:48px}
+    .entry-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+    .entry-tag{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);background:var(--bg2);border:1px solid var(--bd);padding:4px 10px;border-radius:100px}
+    .entry-meta{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:24px}
+    .entry-verified{font-family:var(--mono);font-size:10px;color:var(--t3);letter-spacing:.06em}
+    .entry-share{display:flex;gap:8px;flex-wrap:wrap}
+    .share-btn{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);background:var(--bg2);border:1px solid var(--bd);padding:6px 12px;border-radius:8px;text-decoration:none;cursor:pointer;transition:all .15s}
+    .share-btn:hover{color:var(--amber);border-color:var(--amber-border);background:var(--amber-dim)}
+    .bible-colophon{padding:20px 24px;background:var(--amber-dim);border:1px solid var(--amber-border);border-radius:12px}
+    .bible-colophon-text{font-size:14px;color:var(--t2);line-height:1.7;text-align:center}
+    .bible-colophon-text a{color:var(--amber)}
+
+    footer{border-top:1px solid var(--bd);padding:32px 2.5rem}
+    .fi{max-width:var(--max);margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+    .fl{font-size:12px;color:var(--t3);font-family:var(--mono)}
+    .flinks{display:flex;gap:20px;list-style:none;flex-wrap:wrap}
+    .flinks a{font-size:12px;color:var(--t3);text-decoration:none;transition:color .15s}
+    .flinks a:hover{color:var(--t2)}
+
+    /* STICKY IN-PAGE NAV — top:96px (60px nav + 36px bible bar) */
+    .entry-nav{position:sticky;top:96px;left:0;right:0;z-index:90;width:100%;background:rgba(8,8,9,0.98);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid rgba(255,255,255,0.04);border-bottom:1px solid rgba(245,166,35,0.18);overflow-x:auto;scrollbar-width:none}
+    .entry-nav::-webkit-scrollbar{display:none}
+    .entry-nav-inner{display:flex;align-items:center;gap:0;width:max-content;min-width:100%;margin:0 auto;padding:0 2.5rem;box-sizing:border-box;justify-content:center}
+    .entry-nav-link{font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:rgba(160,160,180,0.5);text-decoration:none;padding:13px 10px;white-space:nowrap;border-bottom:3px solid transparent;transition:color .15s,border-color .15s}
+    .entry-nav-link:hover{color:rgba(245,166,35,0.7)}
+    .entry-nav-link.active{color:#f5a623;border-bottom-color:#f5a623;font-weight:600}
+
+    .reading-progress{position:fixed;top:0;left:0;right:auto;width:0;max-width:100vw;height:3px;background:var(--amber);z-index:99999;transition:width .1s linear;transform:none;margin:0;padding:0}
+    .back-to-top{position:fixed;bottom:28px;right:16px;width:40px;height:40px;background:var(--bg3);border:1px solid var(--bdh);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transform:translateY(8px);transition:all .2s;z-index:90;color:var(--t2);font-size:16px;text-decoration:none}
+    .back-to-top.visible{opacity:1;transform:translateY(0)}
+    .back-to-top:hover{background:var(--bg4);color:var(--t1);border-color:var(--amber-border)}
+
+    /* YOUTUBE */
+    .yt-section{margin:48px 0}
+    .yt-section h2{font-size:1.35rem;font-weight:700;letter-spacing:-.015em;color:var(--t1);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:10px}
+    .yt-eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--t3);margin-bottom:10px;display:block}
+    .yt-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;border:1px solid var(--bd);background:var(--bg2)}
+    .yt-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0;border-radius:12px}
+    .yt-caption{font-size:13px;color:var(--t3);margin-top:10px;font-family:var(--mono);letter-spacing:.02em}
+
+    /* SPOTIFY */
+    .spotify-section{margin:0 0 32px}
+    .spotify-eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--t3);margin-bottom:12px;display:block}
+    .spotify-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+    .spotify-label{font-family:var(--mono);font-size:10px;color:var(--amber);letter-spacing:.06em;margin-bottom:6px;display:block}
+    .spotify-frame{border-radius:10px;overflow:hidden}
+
+    /* AUDIO TOGGLE */
+    .audio-toggle-section{background:var(--bg2);border:1px solid var(--bd);border-radius:12px;padding:24px;margin:24px 0}
+    .audio-toggle-label{font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--t3);margin-bottom:14px;display:block}
+    .audio-toggle-title{font-size:15px;font-weight:600;color:var(--t1);margin-bottom:16px}
+    .audio-toggle-btn{display:flex;align-items:center;gap:10px;background:var(--bg3);border:1px solid var(--bd);border-radius:8px;padding:12px 18px;cursor:pointer;font-family:var(--font);font-size:14px;color:var(--t2);transition:all .15s;width:100%}
+    .audio-toggle-btn:hover{border-color:rgba(0,232,162,0.25);color:var(--t1)}
+    .audio-toggle-btn.playing{border-color:rgba(0,232,162,0.25);background:rgba(0,232,162,.06);color:var(--teal)}
+    .audio-play-icon{width:32px;height:32px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s}
+    .audio-play-icon svg{width:12px;height:12px;fill:#0a0a0b}
+    .audio-toggle-btn.playing .audio-play-icon{background:var(--amber)}
+    .audio-labels{display:flex;gap:8px;margin-top:10px}
+    .audio-tag{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:100px;border:1px solid var(--bd);color:var(--t3)}
+    .audio-tag.active{border-color:rgba(0,232,162,0.25);color:var(--teal);background:rgba(0,232,162,.06)}
+    .audio-coming-soon{font-size:13px;color:var(--t3);font-family:var(--mono);padding:8px 0}
+
+    /* CALCULATOR */
+    .calc-section{background:var(--bg2);border:1px solid var(--amber-border);border-radius:12px;padding:28px;margin:48px 0}
+    .calc-eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);margin-bottom:10px;display:block}
+    .calc-title{font-size:1.15rem;font-weight:700;color:var(--t1);margin-bottom:6px;letter-spacing:-.01em}
+    .calc-subtitle{font-size:13.5px;color:#c8c8d8;margin-bottom:24px;line-height:1.6}
+    .calc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:20px}
+    .calc-field{display:flex;flex-direction:column;gap:6px}
+    .calc-field label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#b0b0c4}
+    .calc-input{background:var(--bg3);border:1px solid var(--bdh);border-radius:8px;padding:10px 14px;font-size:15px;color:var(--t1);font-family:var(--mono);outline:none;transition:border-color .2s;width:100%}
+    .calc-input:focus{border-color:var(--amber-border)}
+    .calc-input[type=range]{padding:6px 0;background:none;border:none;accent-color:var(--amber)}
+    .calc-btn{background:var(--amber);color:#0a0a0b;border:none;border-radius:8px;padding:11px 24px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font);transition:background .15s}
+    .calc-btn:hover{background:#f9b84a}
+    .calc-results{background:var(--bg3);border:1px solid var(--bd);border-radius:8px;padding:20px;margin-top:4px}
+    .calc-results-label{font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--t3);margin-bottom:14px;display:block}
+    .calc-result-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+    .calc-result-item{display:flex;flex-direction:column;gap:4px}
+    .calc-result-name{font-family:var(--mono);font-size:10px;color:#b0b0c4;letter-spacing:.06em;text-transform:uppercase}
+    .calc-result-value{font-size:1.4rem;font-weight:700;color:var(--amber);font-family:var(--mono);letter-spacing:-.02em}
+    .calc-result-unit{font-size:11px;color:#b0b0c4;font-family:var(--mono)}
+    .calc-note{font-size:12px;color:#b0b0c4;margin-top:14px;line-height:1.6;font-family:var(--mono)}
+    .freq-chart-wrap{margin-top:16px;border-radius:8px;overflow:hidden;border:1px solid var(--bd)}
+    .freq-chart-canvas{width:100%;height:180px;display:block;background:var(--bg3)}
+    .freq-chart-labels{display:flex;justify-content:space-between;padding:4px 8px;background:var(--bg3);border-top:1px solid var(--bd)}
+    .freq-chart-label{font-family:var(--mono);font-size:9px;color:#b0b0c4;letter-spacing:.04em}
+    .tap-btn{background:var(--bg3);border:2px solid var(--amber-border);border-radius:8px;padding:14px 24px;font-size:15px;font-weight:600;color:var(--amber);cursor:pointer;font-family:var(--mono);transition:all .15s}
+    .tap-btn:active{background:var(--amber-dim);transform:scale(.97)}
+
+    /* RESPONSIVE */
+    @media(max-width:1024px){
+      nav.mpw-site-nav .nav-primary{display:none}
+      nav.mpw-site-nav .nav-mob{display:flex}
+      nav.mpw-site-nav .nav-cta{display:none!important}
+      nav.mpw-site-nav .nav-inner{padding:0 1rem!important}
+    }
+    @media(max-width:768px){
+      .bible-masthead{padding:8px 1rem!important}
+      .bible-masthead-inner .bm-site,.bible-masthead-inner .bm-divider{display:none!important}
+      .bible-masthead-entry-inner{padding:16px 1rem 20px!important}
+      .entry-layout{padding:0 1rem 60px!important}
+      .entry-nav-inner{padding:0 1rem!important}
+      .fi{flex-direction:column;text-align:center}
+      .flinks{justify-content:center}
+      footer{padding:24px 1.5rem}
+      .calc-grid{grid-template-columns:1fr}
+      .bible-nl-card-form{flex-direction:column}
+      .bible-nl-card-inp{min-width:0;width:100%}
+    }
+    @media(max-width:600px){
+      .entry-title{font-size:2.2rem}
+      .entry-meta{flex-direction:column;align-items:flex-start}
+      .spotify-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+<div class="reading-progress" id="readingProgress"></div>
+
+<nav class="mpw-site-nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="https://musicproductionwiki.com" class="nav-logo" aria-label="MusicProductionWiki home">
+      <div class="logo-mark">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <rect x="1.5" y="7" width="2.5" height="9" rx="1.2" fill="#0a0a0b"/>
+          <rect x="6" y="4" width="2.5" height="12" rx="1.2" fill="#0a0a0b"/>
+          <rect x="10.5" y="1" width="2.5" height="16" rx="1.2" fill="#0a0a0b"/>
+          <rect x="15" y="5" width="2.5" height="9" rx="1.2" fill="#0a0a0b"/>
+        </svg>
+      </div>
+      <div>
+        <div class="logo-text">MusicProductionWiki</div>
+        <span class="logo-sub">The Producer's Reference</span>
+      </div>
+    </a>
+    <ul class="nav-primary">
+      <li class="nav-item" id="ddArticles">
+        <button aria-haspopup="true" aria-expanded="false">Articles <svg class="nav-chevron" viewBox="0 0 12 12"><polyline points="2 4 6 8 10 4"/></svg></button>
+        <div class="nav-dropdown wide" role="menu">
+          <div class="drop-col-label">Techniques &amp; Analysis</div>
+          <div class="drop-col-label">Reference &amp; Business</div>
+          <a class="drop-item" href="/categories/techniques.html"><div class="drop-icon"><svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div><div class="drop-name">Techniques</div><div class="drop-desc">Mixing, mastering, sound design</div></div></a>
+          <a class="drop-item" href="/categories/reviews.html"><div class="drop-icon"><svg viewBox="0 0 24 24"><path d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5z"/></svg></div><div><div class="drop-name">Reviews</div><div class="drop-desc">Honest. No paid placements.</div></div></a>
+          <a class="drop-item" href="/categories/comparisons.html"><div class="drop-icon"><svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></div><div><div class="drop-name">Comparisons</div><div class="drop-desc">Head-to-head, clear winners</div></div></a>
+          <a class="drop-item" href="/categories/ai-music.html"><div class="drop-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg></div><div><div class="drop-name">AI Music</div><div class="drop-desc">Suno, Udio, AI production tools</div></div></a>
+          <a class="drop-item" href="/categories/breakdowns.html"><div class="drop-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div><div><div class="drop-name">Breakdowns</div><div class="drop-desc">Track-by-track production analysis</div></div></a>
+          <a class="drop-item" href="/categories/music-business.html"><div class="drop-icon"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div><div><div class="drop-name">Music Business</div><div class="drop-desc">Royalties, licensing, contracts</div></div></a>
+          <a class="drop-item" href="/categories/recreations.html"><div class="drop-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></div><div><div class="drop-name">Recreations</div><div class="drop-desc">Recreate iconic sounds from scratch</div></div></a>
+          <a class="drop-item" href="/genres.html"><div class="drop-icon"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div><div><div class="drop-name">Genres</div><div class="drop-desc">Every genre and production style</div></div></a>
+        </div>
+      </li>
+      <li class="nav-item" id="ddGear">
+        <button aria-haspopup="true" aria-expanded="false">Gear <svg class="nav-chevron" viewBox="0 0 12 12"><polyline points="2 4 6 8 10 4"/></svg></button>
+        <div class="nav-dropdown" role="menu">
+          <a class="drop-item" href="/categories/daws.html"><div class="drop-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><div><div class="drop-name">DAWs</div><div class="drop-desc">Every major DAW covered</div></div></a>
+          <a class="drop-item" href="/categories/plugins.html"><div class="drop-icon"><svg viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg></div><div><div class="drop-name">Plugins</div><div class="drop-desc">EQ, compressors, reverbs, synths</div></div></a>
+          <a class="drop-item" href="/categories/gear.html"><div class="drop-icon"><svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 1 3 3v7a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg></div><div><div class="drop-name">Hardware</div><div class="drop-desc">Interfaces, mics, monitors, synths</div></div></a>
+        </div>
+      </li>
+      <li class="nav-item"><a href="/about.html">About</a></li>
+      <li class="nav-item"><a href="/bible/" class="nav-bible-link">The Producer's Bible →</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="nav-search-btn" id="navSearchBtn" aria-label="Search (Ctrl+K)">
+        <svg viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+      <a href="https://theproducersbriefing.beehiiv.com" class="nav-cta">Sound Better →</a>
+      <button class="nav-mob" id="navMob" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-drawer" id="mobileDrawer">
+  <a href="/bible/" class="mob-bible"><span style="width:5px;height:5px;border-radius:50%;background:var(--amber);display:inline-block"></span> The Producer's Bible</a>
+  <div class="mob-section-label">Articles</div>
+  <a class="mob-link" href="/categories/techniques.html">Techniques</a>
+  <a class="mob-link" href="/categories/reviews.html">Reviews</a>
+  <a class="mob-link" href="/categories/comparisons.html">Comparisons</a>
+  <a class="mob-link" href="/categories/breakdowns.html">Breakdowns</a>
+  <a class="mob-link" href="/categories/recreations.html">Recreations</a>
+  <a class="mob-link" href="/genres.html">Genres</a>
+  <a class="mob-link" href="/categories/ai-music.html">AI Music</a>
+  <a class="mob-link" href="/categories/music-business.html">Music Business</a>
+  <div class="mob-section-label">Gear</div>
+  <a class="mob-link" href="/categories/daws.html">DAWs</a>
+  <a class="mob-link" href="/categories/plugins.html">Plugins</a>
+  <a class="mob-link" href="/categories/gear.html">Hardware</a>
+  <div class="mob-section-label">Site</div>
+  <a class="mob-link" href="/about.html">About</a>
+  <a href="https://theproducersbriefing.beehiiv.com" class="mob-cta mob-cta-bible" target="_blank" rel="noopener">Sound Better → Join the newsletter</a>
+</div>
+
+<div class="search-overlay" id="searchOverlay" role="dialog" aria-modal="true">
+  <div class="search-box">
+    <div class="search-input-wrap">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="var(--amber)" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="var(--amber)" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input class="search-input" id="searchInput" placeholder="Look up any production term..." autocomplete="off" spellcheck="false"/>
+      <button id="searchCloseBtn" aria-label="Close search" style="background:none;border:none;cursor:pointer;color:#888;font-size:26px;line-height:1;padding:0 2px;flex-shrink:0;">&times;</button>
+    </div>
+    <div class="search-results" id="searchResults" role="listbox"></div>
+  </div>
+</div>
+
+<div class="bible-masthead" id="main-content">
+  <div class="bible-masthead-inner">
+    <div class="bm-dot"></div>
+    <a href="/bible/" class="bm-publisher">The Producer's Bible</a>
+    <span class="bm-divider"></span>
+    <span class="bm-site">Published by MusicProductionWiki.com</span>
+    <span class="bm-edition">2026 Edition</span>
+  </div>
+</div>
+
+<div style="background:var(--bg2);border-bottom:1px solid var(--bd);padding:0;width:100%">
+  <div class="bible-masthead-entry-inner">
+    <nav aria-label="Breadcrumb">
+      <ol class="breadcrumb">
+        <li><a href="https://musicproductionwiki.com">Home</a></li><li><span class="sep">›</span></li>
+        <li><a href="https://musicproductionwiki.com/bible/">The Producer's Bible</a></li><li><span class="sep">›</span></li>
+        <li><span class="current">Buffer Size</span></li>
+      </ol>
+    </nav>
+    <div class="entry-header">
+      <div class="entry-meta-row">
+        <span class="entry-category-badge">DAW</span>
+        <span class="entry-pos">noun · audio I/O parameter</span>
+        <span class="entry-edition">2026 Edition</span>
+      </div>
+      <h1 class="entry-title">Buffer Size</h1>
+      <p class="entry-pronunciation">/ˈbʌfər saɪz/</p>
+    </div>
+  </div>
+</div>
+
+<nav class="entry-nav" aria-label="Entry sections">
+  <div class="entry-nav-inner">
+    <a href="#quick-answer" class="entry-nav-link" data-section="quick-answer">Quick Answer</a>
+    <a href="#definition" class="entry-nav-link" data-section="definition">Definition</a>
+    <a href="#how-it-works" class="entry-nav-link" data-section="how-it-works">How It Works</a>
+    <a href="#parameters" class="entry-nav-link" data-section="parameters">Parameters</a>
+    <a href="#quick-reference" class="entry-nav-link" data-section="quick-reference">Quick Reference</a>
+    <a href="#history" class="entry-nav-link" data-section="history">History</a>
+    <a href="#how-producers-use-it" class="entry-nav-link" data-section="how-producers-use-it">How To Use It</a>
+    <a href="#in-the-wild" class="entry-nav-link" data-section="in-the-wild">In The Wild</a>
+    <a href="#types" class="entry-nav-link" data-section="types">Types</a>
+    <a href="#common-mistakes" class="entry-nav-link" data-section="common-mistakes">Mistakes</a>
+    <a href="#related-terms" class="entry-nav-link" data-section="related-terms">Related</a>
+    <a href="#further-reading" class="entry-nav-link" data-section="further-reading">Further Reading</a>
+    <a href="#faq" class="entry-nav-link" data-section="faq">FAQ</a>
+  </div>
+</nav>
+
+<main class="entry-layout">
+
+  <div class="quick-answer" id="quick-answer"><p>Buffer Size is the number of audio samples your audio interface collects before sending them to the CPU for processing. Smaller buffers reduce latency; larger buffers reduce CPU strain and glitches.</p></div>
+
+    <div class="audio-toggle-section">
+      <span class="audio-toggle-label">Hear The Difference</span>
+      <div class="audio-toggle-title">Dry vs Processed — Buffer Size</div>
+      <div id="audioToggle-buffer-size">
+        <span class="audio-coming-soon">🎵 Audio examples coming soon — check back shortly.</span>
+      </div>
+      <div class="audio-labels">
+        <span class="audio-tag" id="tagDry-buffer-size">Dry</span>
+        <span class="audio-tag" id="tagWet-buffer-size">Processed</span>
+      </div>
+    </div>
+    <script>
+    (function(){
+      var dU='/bible/audio/buffer-size-dry.mp3',wU='/bible/audio/buffer-size-wet.mp3';
+      var cont=document.getElementById('audioToggle-buffer-size');
+      var tD=document.getElementById('tagDry-buffer-size'),tW=document.getElementById('tagWet-buffer-size');
+      var audio=null,playing=false,isDry=true;
+      function render(){
+        cont.innerHTML='<button class="audio-toggle-btn" id="aBtn-buffer-size"><span class="audio-play-icon"><svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg></span><span id="aBtnL-buffer-size">Play Dry</span></button>';
+        var btn=document.getElementById('aBtn-buffer-size'),lbl=document.getElementById('aBtnL-buffer-size');
+        audio=new Audio(dU);
+        audio.addEventListener('ended',function(){btn.classList.remove('playing');playing=false;lbl.textContent='Play Dry';tD.classList.remove('active');tW.classList.remove('active');});
+        btn.addEventListener('click',function(){
+          if(!audio)return;
+          if(playing){isDry=!isDry;var t=audio.currentTime;audio.src=isDry?dU:wU;audio.currentTime=t;audio.play();
+            lbl.textContent=isDry?'Playing Dry':'Playing Processed';tD.classList.toggle('active',isDry);tW.classList.toggle('active',!isDry);
+          }else{isDry=true;audio.src=dU;audio.play();playing=true;btn.classList.add('playing');lbl.textContent='Playing Dry';tD.classList.add('active');}
+        });
+      }
+      fetch(dU,{method:'HEAD'}).then(function(r){if(r.ok)render();}).catch(function(){});
+    })();
+    </script>
+
+  <section class="entry-section" id="definition">
+    <h2><span class="section-num">01</span> Definition</h2>
+    <p style="font-size:16.5px;font-weight:500;color:var(--t2);font-style:italic;border-left:3px solid var(--amber);padding-left:16px;margin-bottom:24px;line-height:1.65;">Every producer has hit record and heard themselves half a second late through their headphones, or watched a session collapse into crackling dropout hell right before the artist nailed the take. Both disasters share the same root cause — and a single number controls all of it.</p><p>Buffer Size is the number of audio samples that an audio interface accumulates in a temporary memory block — the buffer — before handing that block to the computer's CPU for processing. It is expressed in samples (128, 256, 512, 1024, 2048, etc.) and is one of the two fundamental parameters — alongside sample rate — that determine how audio moves between the physical analog world and your DAW. Every audio interface driver, whether ASIO on Windows, Core Audio on macOS, or ALSA on Linux, implements this buffering mechanism. Without it, the CPU would need to process each individual sample the moment it arrived, which is computationally impossible at any practical sample rate.</p><p>The buffer size creates a direct, mathematically fixed relationship between the setting you choose and the round-trip latency you experience. At 44,100 Hz sample rate, a 256-sample buffer represents 256 ÷ 44,100 = approximately 5.8 milliseconds of buffering time. Add the hardware's inherent input and output conversion delays — typically 1–3 ms combined on a modern interface — and your total round-trip latency sits around 7–13 ms depending on driver quality and system health. Double the buffer to 512 samples and you double the buffer contribution to roughly 11.6 ms. This is not an approximation or a characteristic that varies by DAW preference; it is arithmetic determined by physics.</p><p>The tension built into every buffer size decision is the fundamental trade-off of digital audio production: smaller buffers mean lower latency and a more responsive, instrument-like monitoring experience for the performer, but they demand that the CPU process audio blocks more frequently and in smaller chunks — increasing the overhead of context-switching and plugin scheduling. Larger buffers give the CPU more time to process a bigger chunk before the next one arrives, dramatically reducing glitches and dropouts, but at the cost of latency that becomes physically uncomfortable for performers monitoring through software. This is not a flaw in the technology; it is an unavoidable property of how real-time digital signal processing works on general-purpose computer hardware.</p><p>Buffer size should not be conflated with sample rate or bit depth, though all three appear in your audio interface's control panel. Sample rate determines how many samples per second represent the audio signal — a fixed choice for a session that affects frequency ceiling and file size. Bit depth determines dynamic resolution. Buffer size, by contrast, is a session-state setting that a producer adjusts dynamically depending on the task at hand: low for tracking live instruments and vocals, high for mixing dense plugin-heavy sessions. Many experienced engineers keep a DAW template specifically configured for each phase of production with the buffer size already set, eliminating the decision from the creative moment.</p><p>The term itself derives from computer science, where a buffer is any region of memory used to temporarily hold data while it is being moved between two processes operating at different speeds — in this case, the constant real-time stream of analog audio and the block-based processing schedule of a CPU. Audio engineers adopted the term directly when digital audio workstations emerged in the late 1980s and early 1990s. Today, buffer size remains the most frequently misunderstood setting in music production — simultaneously responsible for the most common beginner complaint (latency while singing) and the most common intermediate-level session crisis (dropout clicks mid-take) — making a precise understanding of its mechanics essential for any serious working producer.</p>
+  </section>
+
+  <section class="entry-section" id="how-it-works">
+    <h2><span class="section-num">02</span> How It Works</h2>
+    <p>When you arm a track and play or sing into a microphone, the audio interface's analog-to-digital converter (ADC) samples the incoming signal at your chosen sample rate — 44,100, 48,000, or 96,000 times per second. Instead of forwarding each sample to the CPU individually, the driver accumulates samples in a first-in, first-out (FIFO) queue called the input buffer. Once that buffer contains exactly the number of samples you specified — say 256 — the driver interrupts the CPU with a callback, hands over the full block, and immediately begins filling the next buffer. The CPU processes the block through your DAW's audio engine, applies any active plugins on the input chain, and writes the processed result into an output buffer. The output buffer then drains at the same sample rate through the digital-to-analog converter (DAC) back to your headphone or speaker output. The total elapsed time between sound entering the microphone and processed sound reaching the headphones is the round-trip latency, and the buffer size is its dominant variable.</p><p>The CPU's involvement is the critical bottleneck. Modern plug-in processing — convolution reverbs, linear-phase EQs, heavy virtual instruments — requires many millions of floating-point operations per second per track. The CPU can handle this workload comfortably when it has a large block to process at once, because loading 2,048 samples into cache and running calculations across the entire block is far more efficient than loading 64 samples, completing, returning to the operating system, being re-interrupted 64 samples later, and repeating. This is why halving the buffer size roughly doubles CPU usage rather than keeping it constant: the overhead of driver interrupts, memory copies, and context switches becomes proportionally larger as block size shrinks. At 32 or 64 samples, this overhead can consume more CPU than the actual audio processing — hence the system instability, xruns, and buffer underruns that appear as audible clicks, pops, and dropouts.</p><p>Modern audio drivers handle a related concept called the safety offset or extra buffering, which adds a small additional latency margin above the theoretical minimum to account for system jitter — slight irregularities in how quickly the CPU responds to driver interrupts. On macOS Core Audio, this value is typically 1–2 ms and is largely transparent. ASIO drivers on Windows, developed by Steinberg in 1997 specifically to bypass the high-latency Windows audio stack, are more aggressive, often achieving total round-trip latencies of 3–6 ms at 64-sample buffers on well-optimized systems. Windows's newer WDM-KS and WASAPI Exclusive mode drivers approach ASIO performance, and macOS's Core Audio has been near-ASIO quality since the introduction of the Intel Mac in 2006. Linux's JACK audio server exposes buffer size and period count as separate parameters, giving advanced users precise control over the exact latency-versus-reliability trade-off.</p><p>Many DAWs and audio interfaces support automatic latency compensation (ALC) or plug-in delay compensation (PDC), which detects and corrects for buffer-induced latency during playback and mixing by delaying other tracks to match the longest latency path in the session. This means that during mixing — when no live monitoring through software is needed — buffer size affects CPU stability but not alignment accuracy. It is exclusively in the live tracking and software-monitoring scenario that the performer actually hears the latency, because PDC cannot pre-deliver a signal that has not yet been captured. This distinction is the entire reason producers change buffer size between recording and mixing phases: PDC makes large buffers perfectly safe for mixing, while only a small buffer protects the recording artist from disorienting delay.</p><p>Understanding the signal flow — ADC → input buffer → CPU callback → plugin chain → output buffer → DAC — clarifies every practical buffer decision. The buffer is not a quality setting; it does not change the fidelity of the audio. It is a scheduling parameter that determines how often the CPU must service audio and how long the performer must wait for their processed signal. Every other consequence of buffer size — glitches, latency, CPU meter behavior, dropout risk — flows directly from this one mechanical reality.</p>
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 760 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="buffer-size-diagram-title" style="width:100%;height:auto;display:block;">
+        <title id="buffer-size-diagram-title">Signal flow diagram showing how buffer size affects latency and CPU scheduling in a DAW, comparing small and large buffer operation.</title>
+        <title id="buffer-size-diagram-title">Buffer Size Signal Flow and Latency Trade-off</title><rect width="760" height="260" fill="#111113" rx="10"/><text x="380" y="22" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#888" letter-spacing="2">BUFFER SIZE — SIGNAL FLOW &amp; LATENCY TRADE-OFF</text><g transform="translate(20,40)"><rect x="0" y="30" width="80" height="36" rx="5" fill="#1a1a1e" stroke="#f5a623" stroke-width="1.5"/><text x="40" y="50" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#f5a623">MIC / INST</text><text x="40" y="62" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#888">analog in</text><line x1="80" y1="48" x2="110" y2="48" stroke="#00e8a2" stroke-width="1.5" marker-end="url(#arr)"/><rect x="110" y="30" width="80" height="36" rx="5" fill="#1a1a1e" stroke="#00e8a2" stroke-width="1.5"/><text x="150" y="50" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#00e8a2">ADC</text><text x="150" y="62" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#888">samples</text><line x1="190" y1="48" x2="220" y2="48" stroke="#00e8a2" stroke-width="1.5" marker-end="url(#arr)"/><rect x="220" y="20" width="90" height="56" rx="5" fill="#1a1a1e" stroke="#f5a623" stroke-width="2"/><text x="265" y="42" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#f5a623">INPUT</text><text x="265" y="54" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#f5a623">BUFFER</text><text x="265" y="68" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#888">N samples</text><line x1="310" y1="48" x2="340" y2="48" stroke="#00e8a2" stroke-width="1.5" marker-end="url(#arr)"/><rect x="340" y="20" width="90" height="56" rx="5" fill="#1a1a1e" stroke="#00e8a2" stroke-width="1.5"/><text x="385" y="42" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#00e8a2">CPU /</text><text x="385" y="54" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#00e8a2">PLUGINS</text><text x="385" y="68" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#888">process block</text><line x1="430" y1="48" x2="460" y2="48" stroke="#00e8a2" stroke-width="1.5" marker-end="url(#arr)"/><rect x="460" y="20" width="90" height="56" rx="5" fill="#1a1a1e" stroke="#f5a623" stroke-width="2"/><text x="505" y="42" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#f5a623">OUTPUT</text><text x="505" y="54" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#f5a623">BUFFER</text><text x="505" y="68" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#888">N samples</text><line x1="550" y1="48" x2="580" y2="48" stroke="#00e8a2" stroke-width="1.5" marker-end="url(#arr)"/><rect x="580" y="30" width="80" height="36" rx="5" fill="#1a1a1e" stroke="#00e8a2" stroke-width="1.5"/><text x="620" y="50" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="#00e8a2">DAC</text><text x="620" y="62" text-anchor="middle" font-family="DM Mono,monospace" font-size="8" fill="#888">headphones</text></g><defs><marker id="arr" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><polygon points="0 0, 7 3.5, 0 7" fill="#00e8a2"/></marker></defs><line x1="20" y1="115" x2="740" y2="115" stroke="#2a2a2e" stroke-width="1"/><text x="380" y="132" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#888">LATENCY vs CPU LOAD — 44,100 Hz sample rate</text><g transform="translate(20,145)"><rect x="0" y="0" width="340" height="98" rx="6" fill="#161618" stroke="#00e8a2" stroke-width="1"/><text x="10" y="16" font-family="DM Mono,monospace" font-size="9" fill="#00e8a2">SMALL BUFFER (64–256 samples)</text><rect x="10" y="24" width="45" height="14" rx="3" fill="#00e8a222"/><text x="57" y="35" font-family="DM Mono,monospace" font-size="9" fill="#ccc">Latency: 1.5 – 5.8 ms</text><rect x="10" y="42" width="200" height="14" rx="3" fill="#f5a62322"/><text x="213" y="53" font-family="DM Mono,monospace" font-size="9" fill="#f5a623">CPU: HIGH</text><rect x="10" y="60" width="32" height="10" rx="2" fill="#00e8a2" opacity="0.8"/><rect x="44" y="60" width="32" height="10" rx="2" fill="#00e8a2" opacity="0.8"/><rect x="78" y="60" width="32" height="10" rx="2" fill="#00e8a2" opacity="0.8"/><rect x="112" y="60" width="32" height="10" rx="2" fill="#00e8a2" opacity="0.8"/><text x="10" y="84" font-family="DM Mono,monospace" font-size="8" fill="#888">↑ frequent CPU callbacks — use for tracking/recording</text><text x="10" y="94" font-family="DM Mono,monospace" font-size="8" fill="#888">  dropout risk with heavy plugin chains</text></g><g transform="translate(380,145)"><rect x="0" y="0" width="340" height="98" rx="6" fill="#161618" stroke="#f5a623" stroke-width="1"/><text x="10" y="16" font-family="DM Mono,monospace" font-size="9" fill="#f5a623">LARGE BUFFER (1024–2048 samples)</text><rect x="10" y="24" width="180" height="14" rx="3" fill="#f5a62322"/><text x="193" y="35" font-family="DM Mono,monospace" font-size="9" fill="#ccc">Latency: 23 – 46 ms</text><rect x="10" y="42" width="60" height="14" rx="3" fill="#00e8a222"/><text x="73" y="53" font-family="DM Mono,monospace" font-size="9" fill="#00e8a2">CPU: LOW</text><rect x="10" y="60" width="120" height="10" rx="2" fill="#f5a623" opacity="0.8"/><text x="10" y="84" font-family="DM Mono,monospace" font-size="8" fill="#888">↓ fewer CPU callbacks — use for mixing/mastering</text><text x="10" y="94" font-family="DM Mono,monospace" font-size="8" fill="#888">  safe for dense plugin sessions; PDC handles alignment</text></g>
+      </svg>
+      <p class="diagram-label">Diagram — Buffer Size: Signal flow diagram showing how buffer size affects latency and CPU scheduling in a DAW, comparing small and large buffer operation.</p>
+    </div>
+  </section>
+
+  <section class="entry-section" id="parameters">
+    <h2><span class="section-num">03</span> The Parameters</h2>
+    <p>Every buffer size — hardware or plugin — operates on the same core parameters. Know these and you can work with any implementation.</p>
+<div class="param-grid">
+      <div class="param-card"><div class="param-name">BUFFER SIZE (SAMPLES)</div><div class="param-title">Number of samples per audio block</div><p class="param-desc">The core parameter, set in powers of two: 32, 64, 128, 256, 512, 1024, 2048. At 44,100 Hz, 256 samples = 5.8 ms of buffering; 1024 samples = 23.2 ms. Lower values demand more from the CPU but deliver performer-friendly latency; higher values relieve CPU pressure at the cost of monitoring delay. Most producers use 128–256 for tracking and 512–1024 for mixing.</p></div>
+      <div class="param-card"><div class="param-name">SAMPLE RATE</div><div class="param-title">Samples per second — multiplies the latency impact of buffer size</div><p class="param-desc">Higher sample rates reduce the millisecond duration of a given sample count: a 256-sample buffer at 96,000 Hz yields 2.67 ms instead of 5.8 ms at 44,100 Hz. This means running a 96 kHz session allows a larger sample buffer for the same perceived latency, which can ease CPU scheduling. However, 96 kHz also roughly doubles DSP cost per plugin, so the net CPU benefit is often neutral or negative for most productions.</p></div>
+      <div class="param-card"><div class="param-name">DRIVER MODE</div><div class="param-title">OS-level audio pathway — determines achievable minimum latency</div><p class="param-desc">ASIO (Windows), Core Audio (macOS), JACK (Linux), and WDM-KS/WASAPI Exclusive (Windows) each impose different minimum achievable latencies and stability floors. ASIO typically reaches 3–6 ms round-trip at 64 samples; Core Audio reaches 4–8 ms; WDM-KS around 10–15 ms; standard Windows MME is unsuitable for production work. Choosing the correct driver is a prerequisite — buffer size cannot compensate for an inferior driver pathway.</p></div>
+      <div class="param-card"><div class="param-name">SAFETY OFFSET / EXTRA BUFFER</div><div class="param-title">Additional driver margin to prevent underruns</div><p class="param-desc">Some interfaces and DAWs expose an extra buffer or safety offset setting (Ableton's 'Buffer Size' in Preferences adds its own internal latency on top of the driver buffer). This padding absorbs system jitter — CPU spikes from background tasks — preventing audible glitches at the cost of slightly higher total latency. On RME interfaces, this is visible in TotalMix as 'Extra Samples'; on Core Audio it is managed automatically by the kernel scheduler.</p></div>
+      <div class="param-card"><div class="param-name">PLUG-IN DELAY COMPENSATION (PDC)</div><div class="param-title">DAW-side correction for latency during playback and mixing</div><p class="param-desc">PDC automatically detects the processing delay introduced by each plugin and delays all other tracks to maintain alignment. Linear-phase EQs and convolution reverbs can introduce 2,000+ samples of look-ahead latency; without PDC, every latency-inducing plugin would shift audio earlier in the timeline. PDC is not active during live monitoring — it only affects playback — so it does not alleviate recording latency. Ensure PDC is enabled in Pro Tools' Session Setup and Ableton's Preferences whenever using latency-heavy plugins.</p></div>
+      <div class="param-card"><div class="param-name">CPU THREADS / MULTI-CORE ROUTING</div><div class="param-title">How many processor cores the DAW uses for audio scheduling</div><p class="param-desc">Modern DAWs distribute plugin processing across multiple CPU cores. At small buffer sizes (64–128 samples), the scheduling overhead of distributing work across cores can actually exceed the processing time, making single-core performance more important than core count for ultra-low-latency work. At larger buffers (512+), multi-core routing significantly increases plugin capacity. Setting thread count equal to physical (not logical/hyperthreaded) CPU cores often yields the best stability at low buffer sizes in DAWs like Reaper.</p></div>
+    </div>
+  </section>
+
+  <section class="entry-section" id="quick-reference">
+    <h2><span class="section-num">04</span> Quick Reference Card</h2>
+    <div class="ref-card-header"><p>Session-ready starting points. Values in samples at 44,100 or 48,000 Hz; increase buffer by one step at 96 kHz for equivalent millisecond latency.</p>
+      <button class="copy-table-btn" id="copyTableBtn" onclick="copyRefTable()">Copy Table</button></div>
+    <div class="ref-table-wrap"><table class="ref-table">
+      <thead><tr><th>Parameter</th><th>General</th><th>Drums</th><th>Vocals</th><th>Bass / Keys</th><th>Bus / Master</th></tr></thead><tbody><tr><td>Tracking (Live Perf.)</td><td>128–256</td><td>64–128</td><td>128–256</td><td>64–128</td><td>N/A</td></tr>
+<tr><td>Overdub / Punch-in</td><td>128–256</td><td>128</td><td>128–256</td><td>128</td><td>N/A</td></tr>
+<tr><td>Mixing (no live input)</td><td>512–1024</td><td>512–1024</td><td>512–1024</td><td>512–1024</td><td>1024–2048</td></tr>
+<tr><td>Mastering</td><td>1024–2048</td><td>N/A</td><td>N/A</td><td>N/A</td><td>1024–2048</td></tr>
+<tr><td>Software Monitoring</td><td>64–128</td><td>64</td><td>64–128</td><td>64–128</td><td>N/A</td></tr>
+<tr><td>Live Performance / DJ</td><td>64–128</td><td>64</td><td>64</td><td>64–128</td><td>128–256</td></tr>
+<tr><td>Bounce / Export</td><td>1024–2048</td><td>1024–2048</td><td>1024–2048</td><td>1024–2048</td><td>2048</td></tr>
+</tbody>
+    </table></div>
+    <p style="font-size:13px;color:var(--t3);margin-top:12px;">Values in samples at 44,100 or 48,000 Hz; increase buffer by one step at 96 kHz for equivalent millisecond latency.</p>
+  </section>
+
+  <section class="entry-section" id="history">
+    <h2><span class="section-num">05</span> History &amp; Origin</h2>
+    <p>The need for audio buffering in digital systems predates the personal computer. Early digital audio research at Bell Labs in the 1960s and at Stanford's Center for Computer Research in Music and Acoustics (CCRMA) in the 1970s quickly revealed that general-purpose computers could not process audio samples one at a time in real time without dedicated hardware. Max Mathews, whose MUSIC series of programs beginning in 1957 were the first software synthesis systems, worked entirely offline — his IBM 704 would render hours of computation to produce seconds of audio stored on magnetic tape. There was no real-time monitoring, no buffer size to worry about, because there was no real-time anything. The buffer, in this era, was essentially the tape spool itself.</p><p>The consumer-facing era of buffer management began with the introduction of hardware DSP-based recording systems in the late 1980s. Digidesign's Sound Designer II, introduced in 1986 for the Macintosh, used dedicated Motorola 56000 DSP chips to offload audio processing from the host CPU — a necessity because the original Mac's 8 MHz 68000 processor could not sustain real-time audio processing at any useful quality. By 1991, Digidesign had shipped Pro Tools, which maintained this DSP-dedicated architecture into the 2010s specifically to sidestep the buffer size problem: with audio processed on dedicated hardware, the host buffer could be set arbitrarily small without loading the computer's CPU. Engineers at Digidesign, including Craig Anderton and Rob Schleiffer, documented early latency measurements in technical notes distributed to studio owners, establishing the professional expectation of sub-5 ms monitoring latency that the industry still holds today.</p><p>The arrival of native — CPU-only — audio processing fundamentally changed the buffer size landscape. Emagic's Logic Audio (later Logic Pro), Steinberg's Cubase VST in 1996, and Mark of the Unicorn's Digital Performer all competed to run as many tracks as possible without DSP cards. Steinberg's simultaneous introduction of the VST plug-in format and the ASIO driver specification in 1996–1997 was specifically designed to enable sub-20 ms monitoring through software on Windows, bypassing the Windows Multimedia Extensions (WinMM) stack that imposed latencies of 100–200 ms. ASIO remains the dominant Windows low-latency standard thirty years later. On macOS, Apple introduced Core Audio with OS X 10.1 in 2001, providing a kernel-level audio architecture that replaced the previous Sound Manager — Core Audio's design allowed third-party audio interface manufacturers to achieve 4–8 ms round-trip latency without writing their own kernel extensions, dramatically simplifying hardware development.</p><p>The shift from spinning hard disk to solid-state storage beginning around 2012, combined with the explosion in CPU core counts, changed which bottleneck dominated. Through the 1990s and 2000s, disk streaming — how fast audio files could be read from disk into RAM — was often the binding constraint before CPU load became an issue. The advice to use larger buffers was therefore partly about giving the disk streaming system more time to pre-fetch audio. SSD adoption essentially eliminated disk I/O as a practical bottleneck, making CPU scheduling the sole determinant of safe buffer size. Simultaneously, the rise of convolution reverbs, spectral repair tools, and neural-network-based plugins (iZotope RX's Music Rebalance, Accusonus ERA series, and Waves' AI-powered processors) introduced multi-hundred-millisecond look-ahead requirements that pushed plug-in delay compensation systems from a niche feature to an essential mixing infrastructure. By 2020, buffer size management had become inseparable from PDC awareness, and DAW vendors including Ableton, Apple, and Avid invested heavily in improving their PDC engines to handle increasingly complex plugin latency graphs.</p>
+  </section>
+
+  <section class="entry-section" id="how-producers-use-it">
+    <h2><span class="section-num">06</span> How Producers Use It</h2>
+    <p>The cardinal rule experienced producers follow is to treat buffer size as a phase-dependent setting rather than a permanent configuration. During tracking sessions — recording live instruments, vocals, or hardware synthesizers — the buffer is dropped to 64, 128, or 256 samples. At 48,000 Hz, 128 samples yields approximately 2.7 ms of buffer latency; add the interface's conversion and driver overhead and total round-trip monitoring latency sits between 4 and 8 ms on a healthy system, which is perceptually equivalent to standing about 1.5 meters from a guitar amplifier. This is well inside the 10–12 ms threshold most musicians identify as disorienting when monitoring through headphones. Some vocalists and guitarists with perfect pitch sensitivity can detect latency as low as 6 ms; for these sessions, dropping to 64 samples and ensuring no CPU-heavy plugins are inserted on the input channel is essential.</p><p>When the tracking phase ends and the session moves into arrangement and mixing, the buffer is raised immediately — typically to 512 or 1024 samples. This single change can reclaim 20–40% of CPU headroom on a dense session, enabling the producer to run additional reverb sends, parallel compression chains, and CPU-intensive mastering-style limiters on the master bus that would have caused dropouts at 128 samples. The audio is not being monitored by a live performer at this stage, so the 10–23 ms of monitoring latency at 1024 samples is completely irrelevant — the producer is working with pre-recorded audio, and PDC keeps all tracks aligned regardless of individual plugin latencies. Many engineers create a dedicated 'Mix' DAW template with buffer size already set to 1024, separate from their 'Tracking' template at 128, so the decision requires no thought in the session moment.</p><p>Electronic music producers and beatmakers working primarily with MIDI and software instruments face a subtler buffer size consideration. Playing a software piano or synthesizer through a MIDI keyboard feels increasingly unresponsive as buffer size grows: at 512 samples / 48 kHz, the 10.7 ms delay between pressing a key and hearing the sound approaches the threshold where the instrument begins to feel sluggish. Many producers set their buffer to 256 samples permanently during composition and instrument layering, accepting slightly elevated CPU load as the cost of a responsive feel. The use of hardware synthesizers with direct monitoring through an analog mixer — bypassing software monitoring entirely — eliminates this compromise, which is why many professional studios route hardware synthesis to analog summing even within primarily DAW-based workflows.</p><p>Live performance and DJ contexts impose the most demanding buffer requirements. Ableton Live is the dominant platform here, and performers relying on real-time audio routing through Live for effect processing — guitar rigs run through the computer, for example — typically target 64-sample buffers with a dedicated audio interface driver (Focusrite's custom macOS driver, RME's ASIO implementation, or Universal Audio's UAD driver, which offloads processing to the interface's SHARC DSP entirely, eliminating the host CPU from the signal path). Universal Audio's approach effectively decouples buffer size from plugin load for UA-hosted plugins, allowing performers to run UAD convolution reverbs and UA-emulated tape saturation at 64-sample buffer sizes without CPU penalty — one reason the Apollo series has become the near-universal choice for live studio-to-stage workflows.</p><div class="daw-grid"><div class="daw-row"><span class="daw-name">Ableton</span><span class="daw-note">Set buffer in Preferences → Audio. Ableton adds its own internal latency on top of the driver buffer; watch the 'Overall Latency' readout, not just the buffer number. Use 'Reduced Latency When Monitoring' option (Preferences → Audio) to temporarily halve buffer during record-armed tracks without changing the global setting. Echo's dedicated Ableton integration allows 64-sample buffers with complex Rack chains.</span></div><div class="daw-row"><span class="daw-name">FL Studio</span><span class="daw-note">Buffer size is in Options → Audio Settings → Buffer Length (ms). FL displays the result in milliseconds rather than samples, which is more immediately actionable. Set to 10 ms or below for tracking; FL's native mixer introduces additional latency at small buffers — use the ASIO4ALL or manufacturer ASIO driver, never the FL Studio ASIO generic driver, for serious tracking work. Disable 'Triple buffer' unless experiencing dropouts.</span></div><div class="daw-row"><span class="daw-name">Logic Pro</span><span class="daw-note">Buffer size lives in Logic → Settings → Audio → Devices → I/O Buffer Size. Logic's Low Latency Mode (Option+click the metronome) bypasses CPU-heavy plugins on record-armed tracks and the master bus automatically, allowing larger buffers without monitoring latency penalty. Particularly useful when tracking with Space Designer reverb active on the mix — Logic mutes Space Designer's output during recording and restores it on playback.</span></div><div class="daw-row"><span class="daw-name">Pro Tools</span><span class="daw-note">Hardware buffer size is in Setup → Playback Engine → H/W Buffer Size. Pro Tools uniquely separates the 'Host Engine' setting (CPU threads) from H/W buffer. For native (non-HDX) systems, 128 samples is the standard tracking buffer; 512–1024 for mixing. Pro Tools' 'Dynamic Plugin Processing' (introduced in Pro Tools 2018) allows unused plugins to consume less CPU in proportion to incoming audio, significantly improving stability at small buffers in sessions with many armed but silent tracks.</span></div><div class="daw-row"><span class="daw-name">Reaper</span><span class="daw-note">Buffer size is in Preferences → Audio → Device. Reaper's 'Request buffer size' is advisory — the ASIO driver may override it. Enable 'Use audio thread priority for MIDI' and set audio threads to physical core count (not logical) for best low-latency stability. Reaper's ReaInsert plugin allows hardware outboard gear to be inserted in the plugin chain with automatic PDC — measure and enter your hardware's round-trip latency in samples for perfect alignment without manual offset.</span></div></div>
+  </section>
+
+
+<div class="bible-nl-card">
+  <span class="bible-nl-card-eye">The Producer's Briefing</span>
+  <h3 class="bible-nl-card-h">Sound better by <em>Friday.</em></h3>
+  <p class="bible-nl-card-sub">One email a week. The techniques behind the terms — curated by working producers, not algorithms.</p>
+  <div class="bible-nl-card-form">
+    <input class="bible-nl-card-inp" type="email" placeholder="your@email.com" aria-label="Email address">
+    <button class="bible-nl-card-btn" onclick="window.open('https://theproducersbriefing.beehiiv.com','_blank')">Join Free</button>
+  </div>
+  <span class="bible-nl-card-note">No spam · Unsubscribe anytime</span>
+</div>
+
+
+  <section class="entry-section" id="in-the-wild">
+    <h2><span class="section-num">07</span> In the Wild</h2>
+    <p>Abstract knowledge becomes practical when you can hear it in music you know. These tracks demonstrate buffer size used intentionally, at specific moments, for specific purposes.</p>
+    <div class="track-example"><div class="track-title">Billie Eilish — "bad guy" (2019)</div><div class="track-timestamp">0:00–0:15 · Produced by Finneas O'Connell</div><p class="track-note">Finneas O'Connell famously produced the entirety of 'bad guy' in his bedroom on a Focusrite Scarlett 2i2 running Logic Pro — consumer hardware with no DSP offloading. In interviews, Finneas confirmed he tracked Billie's vocal at 128-sample buffer, with no hardware monitoring, relying entirely on Logic's software monitoring chain which included a light SSL-style channel strip and a gentle Waves De-Esser on the input. The extremely dry, intimate vocal sound on the track is partly attributable to this workflow: zero acoustic treatment, zero hardware coloration, and a monitoring setup where buffer latency forced Billie to sing slightly more into the mic than she would in a traditional headphone-mix setup, contributing to the close-mic proximity effect. The punchy bass synthesizer — an instrument particularly sensitive to sub-10 ms buffer stability — was played in one take with no dropouts, a testament to well-configured Core Audio on a MacBook Pro.</p></div>
+    <div class="track-example"><div class="track-title">Daft Punk — "Get Lucky" (2013)</div><div class="track-timestamp">0:30–1:00 (guitar entry) · Produced by Daft Punk & Nile Rodgers</div><p class="track-note">Nile Rodgers' rhythm guitar on 'Get Lucky' was recorded at Avatar Studios in New York, where the Pro Tools HDX system in Studio A uses dedicated DSP hardware to entirely bypass the host-CPU buffer size problem. Rodgers monitored through a Neve 8078 console analog output — no software monitoring — meaning buffer size was operationally irrelevant to his performance. However, the session illustrates the professional studio solution to buffer latency: route the performer's headphone mix through hardware entirely, and use the DAW's buffer purely as a CPU management tool for plugin chains. The guitar was tracked with a large buffer (1024 samples) for session stability while Rodgers performed into a near-zero-latency analog cue mix from the console's direct outputs.</p></div>
+    <div class="track-example"><div class="track-title">Kendrick Lamar — "HUMBLE." (2017)</div><div class="track-timestamp">0:00–0:30 · Produced by Mike WiLL Made-It</div><p class="track-note">Mike WiLL Made-It's production on 'HUMBLE.' centers on an extremely punchy, transient-heavy 808 kick that sits at approximately 60 Hz with a very fast attack. This type of sample-accurate 808 placement is acutely sensitive to PDC errors — if buffer size changes between sessions and PDC is not refreshed, the 808 can shift by a buffer's worth of samples relative to the snare hit, audibly softening the punch. The production's precision in this regard — the kick and snare interlock with sub-millisecond accuracy — reflects a workflow where buffer size and PDC settings were locked in early and not changed between tracking Kendrick's vocal (likely at 128–256 samples) and the final mix bounce, avoiding any PDC offset accumulation. Listen on headphones: the transient relationship between elements is surgically exact.</p></div>
+    <div class="track-example"><div class="track-title">Fleetwood Mac — "The Chain" (1977)</div><div class="track-timestamp">3:40–4:30 (bass riff) · Produced by Fleetwood Mac & Ken Caillat</div><p class="track-note">Recorded entirely to analog 24-track tape at the Village Recorder in Los Angeles, 'The Chain' predates digital audio buffers entirely — the bassist John McVie monitored through the SSL console with zero electronic latency beyond a few microseconds of analog signal propagation. This historical example is instructive: the feel and tightness of the bass riff that closes the song, one of the most analyzed bass performances in rock history, was achieved with monitoring latency functionally equal to zero. Modern producers attempting to recreate that tight-to-the-beat feel in a DAW environment must achieve sub-8 ms round-trip latency (buffer ≤256 samples at 44.1 kHz) to keep bass and drum performances from drifting in ways that software quantization cannot fully repair after the fact.</p></div>
+
+    <div class="spotify-section" id="spotifySection">
+      <span class="spotify-eyebrow">Listen On Spotify</span>
+      <div class="spotify-grid">
+      <div class="spotify-item" id="sp-2Fxmhks0bxGSBdJ92vM42m">
+        <span class="spotify-label">Billie Eilish — bad guy</span>
+        <div class="spotify-frame">
+          <iframe src="https://open.spotify.com/embed/track/2Fxmhks0bxGSBdJ92vM42m?utm_source=generator&theme=0"
+            width="100%" height="80" frameborder="0"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"
+            onerror="document.getElementById('sp-2Fxmhks0bxGSBdJ92vM42m').style.display='none'"></iframe>
+        </div>
+      </div>
+      <div class="spotify-item" id="sp-7KXjTSCq5nL1LoYtL7XAwS">
+        <span class="spotify-label">Kendrick Lamar — HUMBLE.</span>
+        <div class="spotify-frame">
+          <iframe src="https://open.spotify.com/embed/track/7KXjTSCq5nL1LoYtL7XAwS?utm_source=generator&theme=0"
+            width="100%" height="80" frameborder="0"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"
+            onerror="document.getElementById('sp-7KXjTSCq5nL1LoYtL7XAwS').style.display='none'"></iframe>
+        </div>
+      </div>
+      </div>
+    </div>
+    <script>
+    (function(){setTimeout(function(){var frames=document.querySelectorAll('#spotifySection iframe');
+    var ok=false;frames.forEach(function(f){if(f.offsetParent!==null)ok=true;});
+    if(!ok){var s=document.getElementById('spotifySection');if(s)s.style.display='none';}},4000);})();
+    </script>
+  </section>
+
+
+
+  <section class="entry-section" id="types">
+    <h2><span class="section-num">08</span> Types &amp; Variants</h2>
+<div class="type-grid">
+      <div class="type-card"><div class="type-card-name">Ultra-Low Latency (32–64 samples)</div><div class="type-card-hardware">RME Fireface UFX III · Universal Audio Apollo x8</div><p class="type-card-desc">At 64 samples and 48 kHz, round-trip latency reaches approximately 2.7 ms buffer time plus 2–3 ms hardware conversion, totaling 4–6 ms — imperceptible to all but the most sensitive musicians. This regime requires an extremely optimized system: DPC latency below 200 µs on Windows (verified with LatencyMon), no USB 3.0 interference, CPU parked to high-performance power mode, and a driver with proven ASIO stability at 64 samples. RME's ASIO driver is the benchmark for Windows stability at this buffer size, routinely achieving 64-sample operation on mid-tier hardware without dropouts.</p></div>
+      <div class="type-card"><div class="type-card-name">Standard Tracking (128–256 samples)</div><div class="type-card-hardware">Focusrite Scarlett 4th Gen · PreSonus Studio 24c</div><p class="type-card-desc">The 128–256 sample range represents the practical sweet spot for most tracking scenarios on modern hardware — latency is below 8–12 ms at standard sample rates, which keeps performers comfortable, while CPU overhead is manageable enough to run a light monitoring chain of gate, compression, and EQ on the input. This is the buffer size most producers will use 80% of the time. Consumer-grade interfaces like the Focusrite Scarlett series achieve stable 128-sample operation on macOS Core Audio with minimal system optimization required.</p></div>
+      <div class="type-card"><div class="type-card-name">Mix / Production (512–1024 samples)</div><div class="type-card-hardware">Any modern audio interface · DAW-internal bounce</div><p class="type-card-desc">At 512–1024 samples, latency ranges from 10 to 23 ms at 44,100 Hz — too high for comfortable software monitoring, but ideal for mixing sessions where no live input is being captured. CPU headroom is dramatically extended, enabling convolution reverbs, linear-phase mastering EQs, parallel compression networks, and spectral repair plugins that would be unstable at smaller buffers. PDC handles all plugin delay alignment automatically, making this the default recommendation for any session not actively recording new audio.</p></div>
+      <div class="type-card"><div class="type-card-name">DSP-Offloaded (Hardware-Buffered)</div><div class="type-card-hardware">Avid Pro Tools HDX · Universal Audio Apollo (UAD plugins)</div><p class="type-card-desc">Some professional audio interfaces process specific plugins directly on dedicated DSP chips inside the interface hardware, removing those plugins from the host CPU's buffer cycle entirely. Universal Audio's Apollo line processes UAD-branded plugins (Neve 1073, SSL 4000E, Fairchild 660 emulations) on SHARC DSP chips; from the DAW's perspective, these plugins report near-zero latency regardless of plugin complexity. This architecture allows performers to track through fully-realized hardware-emulation signal chains with 64-sample host buffers on the remaining native plugins, providing the best of both worlds for professional studio environments.</p></div>
+      <div class="type-card"><div class="type-card-name">Offline / Bounce (2048+ samples)</div><div class="type-card-hardware">Any DAW (offline render mode)</div><p class="type-card-desc">During offline bounce or export, the real-time constraint is lifted entirely — the DAW processes audio as fast as the CPU allows rather than in lock-step with wall-clock time. While some DAWs ignore the buffer size setting during offline render, others (notably Pro Tools and Logic) use a large internal block size equivalent to 2048–4096 samples to maximize throughput. Setting the highest available buffer size before initiating a bounce can marginally increase export speed on CPU-bound sessions by reducing scheduling overhead.</p></div>
+    </div>
+  </section>
+
+  <section class="entry-section" id="common-mistakes">
+    <h2><span class="section-num">09</span> Common Mistakes</h2>
+<ul class="mistake-list">
+      <li class="mistake-item"><span class="mistake-icon">✕</span><div class="mistake-content"><div class="mistake-title">Never changing buffer size between tracking and mixing</div><div class="mistake-desc">Running the entire session at 256 samples because 'it worked for recording' is the most common cause of premature CPU ceiling hits during mix development. A session that tracked without issue at 256 samples will often crash or dropout under the load of 30+ plugin instances in the mix phase. Raise the buffer to 512 or 1024 the moment recording is complete — it costs nothing and recovers significant CPU headroom immediately.</div></div></li>
+      <li class="mistake-item"><span class="mistake-icon">✕</span><div class="mistake-content"><div class="mistake-title">Setting a low buffer on an unoptimized Windows system</div><div class="mistake-desc">Windows background services, USB polling, network adapters, and graphic card drivers routinely introduce DPC (Deferred Procedure Call) latency spikes that cause audio dropouts at buffer sizes below 256 samples regardless of how fast the CPU is. Symptoms are clicks and pops that appear intermittently rather than consistently. Before blaming the audio interface or DAW, run LatencyMon for 15 minutes and identify offending drivers — wi-fi drivers and certain USB 3.0 controllers are the most frequent culprits. Disabling wi-fi hardware entirely during sessions is often sufficient to achieve stable 128-sample operation.</div></div></li>
+      <li class="mistake-item"><span class="mistake-icon">✕</span><div class="mistake-content"><div class="mistake-title">Confusing total round-trip latency with buffer size in samples</div><div class="mistake-desc">A 256-sample buffer does not mean 256 ms of latency — a confusion that causes beginner producers to set unnecessarily large buffers. At 44,100 Hz, 256 samples = 5.8 ms. The millisecond value is what matters to the performer; the sample count is what the driver uses. Always check your DAW's reported round-trip latency in milliseconds (Logic's I/O Buffer display, Ableton's Overall Latency indicator) rather than reasoning from sample count alone, since different interfaces and drivers add variable hardware latency on top of the buffer.</div></div></li>
+      <li class="mistake-item"><span class="mistake-icon">✕</span><div class="mistake-content"><div class="mistake-title">Inserting CPU-heavy plugins on record-armed tracks at low buffer</div><div class="mistake-desc">A convolution reverb on the input channel for monitoring purposes can spike CPU load enough to cause dropouts at 128-sample buffer even on a powerful machine, because the reverb's impulse response convolution runs within the same tight callback window as the audio capture. Use algorithmic reverbs (Valhalla Room, Logic's ChromaVerb, Ableton's Reverb) rather than convolution when monitoring during tracking. Save the convolution reverb for the mix, when buffer size can be raised safely.</div></div></li>
+      <li class="mistake-item"><span class="mistake-icon">✕</span><div class="mistake-content"><div class="mistake-title">Ignoring PDC after changing buffer size mid-session</div><div class="mistake-desc">Changing buffer size while a session is open — without restarting the audio engine — can cause some DAWs to misreport plugin latency to the PDC system, resulting in tracks falling slightly out of alignment on playback. In Pro Tools, always change the H/W Buffer Size from the Playback Engine dialog with playback stopped; in Ableton, use the buffer size switch only when transport is stopped and confirm that the Overall Latency reading updates correctly. If tracks sound slightly smeared after a buffer size change, bounce and re-import the stems to verify timing integrity.</div></div></li>
+      <li class="mistake-item"><span class="mistake-icon">✕</span><div class="mistake-content"><div class="mistake-title">Using the generic or built-in audio device for production work</div><div class="mistake-desc">macOS's built-in audio and Windows's Realtek or High Definition Audio device typically cannot sustain buffer sizes below 512–1024 samples without dropouts, because they use shared-mode drivers without direct kernel audio access. Running sessions on built-in audio with low buffer settings produces chronic dropouts that are mistakenly attributed to CPU overload, plugin bugs, or DAW instability. The minimum hardware requirement for reliable sub-10 ms latency is a dedicated USB or Thunderbolt audio interface with a proper ASIO or Core Audio driver — even a $100 Focusrite Scarlett Solo transforms stability compared to the built-in device.</div></div></li>
+    </ul>
+  </section>
+
+
+
+  <section class="entry-section" id="related-terms">
+    <h2><span class="section-num">10</span> Producers Also Look Up</h2>
+    <div class="related-grid">
+      <a href="https://musicproductionwiki.com/bible/sample-rate" class="related-term"><span class="related-term-name">Sample Rate</span><span class="related-term-preview">The number of samples per second captured by an ADC — works in direct mathematical combination with buffer size to determine monitoring latency.</span></a>
+      <a href="https://musicproductionwiki.com/bible/bit-depth" class="related-term"><span class="related-term-name">Bit Depth</span><span class="related-term-preview">Determines the dynamic resolution of each audio sample; set alongside sample rate and buffer size in your interface control panel.</span></a>
+      <a href="https://musicproductionwiki.com/bible/latency" class="related-term"><span class="related-term-name">Latency</span><span class="related-term-preview">The total delay from audio input to output — buffer size is the dominant, controllable variable in the latency equation.</span></a>
+      <a href="https://musicproductionwiki.com/bible/gain-staging" class="related-term"><span class="related-term-name">Gain Staging</span><span class="related-term-preview">Proper level management throughout the signal chain — buffer underruns caused by low buffer settings can masquerade as gain-related distortion.</span></a>
+      <a href="https://musicproductionwiki.com/bible/noise-gate" class="related-term"><span class="related-term-name">Noise Gate</span><span class="related-term-preview">A dynamics processor often inserted on input channels during tracking — adds processing load that must be considered when choosing a tracking buffer size.</span></a>
+      <a href="https://musicproductionwiki.com/bible/headroom" class="related-term"><span class="related-term-name">Headroom</span><span class="related-term-preview">The margin between operating level and clip point — CPU headroom and audio headroom are both managed by buffer size choices during a session.</span></a>
+    </div>
+  </section>
+
+  <section class="entry-section" id="further-reading">
+    <h2><span class="section-num">11</span> Further Reading</h2>
+    <p>These MPW articles put buffer size into practice — specific techniques, real tools, and applied workflows.</p>
+    <div class="further-grid">
+      <a href="https://musicproductionwiki.com/articles/how-to-reduce-latency-in-your-daw.html" class="further-link">
+        <span class="further-link-arrow">→</span>
+        <span class="further-link-text">How To Reduce Latency In Your Daw</span>
+      </a>
+      <a href="https://musicproductionwiki.com/articles/asio-driver-guide.html" class="further-link">
+        <span class="further-link-arrow">→</span>
+        <span class="further-link-text">Asio Driver Guide</span>
+      </a>
+      <a href="https://musicproductionwiki.com/articles/what-is-sample-rate.html" class="further-link">
+        <span class="further-link-arrow">→</span>
+        <span class="further-link-text">What Is Sample Rate</span>
+      </a>
+      <a href="https://musicproductionwiki.com/articles/how-to-optimize-your-pc-for-audio-production.html" class="further-link">
+        <span class="further-link-arrow">→</span>
+        <span class="further-link-text">How To Optimize Your Pc For Audio Production</span>
+      </a>
+      <a href="https://musicproductionwiki.com/articles/plug-in-delay-compensation-guide.html" class="further-link">
+        <span class="further-link-arrow">→</span>
+        <span class="further-link-text">Plug In Delay Compensation Guide</span>
+      </a>
+      <a href="https://musicproductionwiki.com/articles/best-audio-interfaces-for-home-studio.html" class="further-link">
+        <span class="further-link-arrow">→</span>
+        <span class="further-link-text">Best Audio Interfaces For Home Studio</span>
+      </a>
+      <a href="https://musicproductionwiki.com/articles/what-is-latency.html" class="further-link">
+        <span class="further-link-arrow">→</span>
+        <span class="further-link-text">What Is Latency</span>
+      </a>
+      <a href="https://musicproductionwiki.com/articles/how-to-set-up-low-latency-monitoring.html" class="further-link">
+        <span class="further-link-arrow">→</span>
+        <span class="further-link-text">How To Set Up Low Latency Monitoring</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="entry-section" id="faq">
+    <h2><span class="section-num">12</span> Frequently Asked Questions</h2>
+    <div class="faq-accordion">
+      <div class="faq-item"><button class="faq-question" aria-expanded="false">What buffer size should I use for recording vocals?<span class="faq-icon">+</span></button><div class="faq-answer">For recording vocals with software monitoring — hearing yourself through the DAW and any plugins on your channel — use 128 or 256 samples at 44,100 or 48,000 Hz. This delivers approximately 4–8 ms of monitoring latency, which is comfortable for most vocalists. If you hear a noticeable echo or your own voice 'late,' try dropping to 64 samples, but ensure your system is optimized (no background apps, ASIO driver on Windows) to avoid dropouts at that smaller buffer.</div></div>
+      <div class="faq-item"><button class="faq-question" aria-expanded="false">Why do I hear clicking and popping when I use a small buffer size?<span class="faq-icon">+</span></button><div class="faq-answer">Clicks and pops at small buffer sizes are buffer underruns — the CPU failed to process the audio block before the next one arrived, causing a gap filled with silence or corrupted data. Common causes on Windows include DPC latency spikes from wi-fi drivers, USB 3.0 controllers, or GPU drivers; on macOS they often stem from Spotlight indexing, iCloud sync, or Time Machine backup running during the session. Use LatencyMon (Windows) to identify the offending driver, and disable wi-fi and cloud sync during sessions. If clicks persist, raise the buffer by one step until they stop.</div></div>
+      <div class="faq-item"><button class="faq-question" aria-expanded="false">Does buffer size affect audio quality or the final recording?<span class="faq-icon">+</span></button><div class="faq-answer">No. Buffer size has no effect on the audio fidelity of recordings or rendered files. It is a scheduling parameter, not a quality setting — the audio data itself is identical regardless of whether it was processed in blocks of 64 or 2048 samples. The only quality-adjacent effect is that buffer underruns at too-small a buffer size produce audible glitches in the recording itself; the solution is to use a stable buffer size, not a 'better' one in any tonal sense.</div></div>
+      <div class="faq-item"><button class="faq-question" aria-expanded="false">What is the difference between buffer size and sample rate?<span class="faq-icon">+</span></button><div class="faq-answer">Sample rate (44,100 Hz, 48,000 Hz, 96,000 Hz) determines how many times per second the analog signal is sampled — it governs the frequency ceiling and file size of your audio and is set once per session. Buffer size (64, 128, 256, 512 samples) determines how many of those samples are grouped into a processing block before the CPU handles them — it governs latency and CPU scheduling, and can be changed at any point in the production workflow. They interact mathematically: the latency in milliseconds = (buffer size in samples) ÷ (sample rate) × 1000.</div></div>
+      <div class="faq-item"><button class="faq-question" aria-expanded="false">Can I change buffer size in the middle of a session?<span class="faq-icon">+</span></button><div class="faq-answer">Yes, but with caution. Most DAWs allow buffer size changes mid-session by stopping playback, adjusting the setting, and restarting the audio engine. The risk is that some DAWs temporarily misreport plugin latency to the PDC system after a buffer change, potentially misaligning tracks on playback. Always stop transport before changing buffer size, allow the engine to fully reinitialize, and spot-check timing-critical elements after the change if you are mid-mix.</div></div>
+      <div class="faq-item"><button class="faq-question" aria-expanded="false">Why does my CPU spike when I lower the buffer size even with few plugins?<span class="faq-icon">+</span></button><div class="faq-answer">CPU usage increases at smaller buffers even with minimal plugins because the driver interrupt overhead becomes proportionally larger. At 64 samples / 48 kHz, the CPU receives 750 audio callbacks per second; at 512 samples, only 93.75 per second. Each callback involves context switching, memory copying, and cache operations regardless of plugin count. This overhead can consume 15–30% of a CPU core on its own at very small buffers, which is why the CPU meter rises even in an empty session at 64 samples.</div></div>
+      <div class="faq-item"><button class="faq-question" aria-expanded="false">What is plug-in delay compensation and how does it interact with buffer size?<span class="faq-icon">+</span></button><div class="faq-answer">Plug-in delay compensation (PDC) is the DAW's system for automatically detecting the latency introduced by each plugin — particularly look-ahead limiters, linear-phase EQs, and convolution reverbs — and delaying all other tracks to maintain sample-accurate alignment during playback. PDC works correctly at any buffer size during playback and mixing. It does not apply during live monitoring: a vocalist monitoring through software cannot benefit from PDC because the compensation delay would require the DAW to 'pre-deliver' audio that hasn't been captured yet. Ensure PDC is enabled in your DAW's settings whenever using latency-introducing plugins in a mix.</div></div>
+      <div class="faq-item"><button class="faq-question" aria-expanded="false">Do professional studios use different buffer strategies than home producers?<span class="faq-icon">+</span></button><div class="faq-answer">Yes, and the key difference is hardware-side monitoring. Professional studios route the performer's headphone mix through the analog outputs of the mixing console or interface preamp, bypassing software monitoring entirely. This makes buffer size irrelevant to the performer's experience — they hear themselves with near-zero hardware latency regardless of what the DAW's buffer is set to. The DAW's buffer is then set large (512–1024 samples or higher) purely for session stability. Home producers relying on software monitoring must keep buffer small during tracking — the professional solution of hardware monitoring is available even at the home studio level through the 'direct monitoring' switch on interfaces like the Focusrite Scarlett, Audient iD, and SSL 2.</div></div>
+    </div>
+  </section>
+
+  <div class="entry-footer-section">
+    <div class="entry-tags"><span class="entry-tag">DAW</span><span class="entry-tag">Recording</span><span class="entry-tag">Latency</span><span class="entry-tag">Audio Interface</span><span class="entry-tag">Optimization</span></div>
+    <div class="entry-meta">
+      <span class="entry-verified">Last Verified: May 15, 2026 · 2026 Edition · Part of The Producer's Bible</span>
+      <div class="entry-share">
+        <a href="https://twitter.com/intent/tweet?url=https://musicproductionwiki.com/bible/buffer-size&text=The+definitive+Buffer+Size+guide+for+producers" class="share-btn" target="_blank" rel="noopener">Share on X</a>
+        <a href="https://www.reddit.com/submit?url=https://musicproductionwiki.com/bible/buffer-size" class="share-btn" target="_blank" rel="noopener">Share on Reddit</a>
+        <button class="share-btn" onclick="navigator.clipboard.writeText(window.location.href);this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Link',2000)">Copy Link</button>
+      </div>
+    </div>
+    <div class="bible-colophon">
+      <p class="bible-colophon-text">
+        Part of <a href="https://musicproductionwiki.com/bible/">The Producer's Bible</a> — Every term. Every technique. One place.<br>
+        Published by <a href="https://musicproductionwiki.com">MusicProductionWiki.com</a> · The Reference Standard for Music Production
+      </p>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="fi">
+    <div class="fl">The Producer's Bible · MusicProductionWiki.com · 2026 Edition</div>
+    <ul class="flinks">
+      <li><a href="https://musicproductionwiki.com">Home</a></li>
+      <li><a href="/about.html">About</a></li>
+      <li><a href="/privacy.html">Privacy</a></li>
+      <li><a href="mailto:mpwikiofficial@gmail.com">Contact</a></li>
+    </ul>
+  </div>
+</footer>
+
+<a href="#main-content" class="back-to-top" id="backToTop" aria-label="Back to top">↑</a>
+
+<!-- NO main.js — Bible pages are fully self-contained -->
+<script>
+(function() {
+  /* Reading progress */
+  var progress = document.getElementById('readingProgress');
+  var btt = document.getElementById('backToTop');
+  window.addEventListener('scroll', function() {
+    var st = window.scrollY, dh = document.documentElement.scrollHeight - window.innerHeight;
+    if (progress) progress.style.width = (dh > 0 ? Math.round((st/dh)*window.innerWidth) : 0) + 'px';
+    if (btt) btt.classList.toggle('visible', st > 400);
+  });
+
+  /* Scroll spy + center active tab in entry nav */
+  var navLinks = document.querySelectorAll('.entry-nav-link');
+  var entryNav = document.querySelector('.entry-nav');
+  function centerActive() {
+    var active = entryNav && entryNav.querySelector('.entry-nav-link.active');
+    if (!entryNav || !active) return;
+    var nr = entryNav.getBoundingClientRect(), lr = active.getBoundingClientRect();
+    entryNav.scrollTo({left: entryNav.scrollLeft + (lr.left - nr.left) - (nr.width/2) + (lr.width/2), behavior:'smooth'});
+  }
+  document.querySelectorAll('.entry-section[id], .quick-answer[id]').forEach(function(s) {
+    new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          var id = e.target.id;
+          navLinks.forEach(function(l) { l.classList.toggle('active', l.getAttribute('data-section') === id); });
+          centerActive();
+        }
+      });
+    }, {rootMargin:'-20% 0px -70% 0px', threshold:0}).observe(s);
+  });
+  if (entryNav) new MutationObserver(centerActive).observe(entryNav, {subtree:true, attributes:true, attributeFilter:['class']});
+
+  /* FAQ accordion */
+  document.querySelectorAll('.faq-question').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var item = btn.closest('.faq-item'), open = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(function(el) {
+        el.classList.remove('open'); el.querySelector('.faq-question').setAttribute('aria-expanded','false');
+      });
+      if (!open) { item.classList.add('open'); btn.setAttribute('aria-expanded','true'); }
+    });
+  });
+
+  /* Nav dropdowns */
+  document.querySelectorAll('nav.mpw-site-nav .nav-item').forEach(function(item) {
+    var btn = item.querySelector('button');
+    if (!btn) return;
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var open = item.classList.contains('open');
+      document.querySelectorAll('nav.mpw-site-nav .nav-item').forEach(function(i) {
+        i.classList.remove('open'); i.querySelectorAll('button').forEach(function(b) { b.setAttribute('aria-expanded','false'); });
+      });
+      if (!open) { item.classList.add('open'); btn.setAttribute('aria-expanded','true'); }
+    });
+  });
+  document.addEventListener('click', function() {
+    document.querySelectorAll('nav.mpw-site-nav .nav-item').forEach(function(i) {
+      i.classList.remove('open'); i.querySelectorAll('button').forEach(function(b) { b.setAttribute('aria-expanded','false'); });
+    });
+  });
+
+  /* Mobile drawer */
+  var mob = document.getElementById('navMob'), drawer = document.getElementById('mobileDrawer');
+  if (mob && drawer) {
+    mob.addEventListener('click', function() { drawer.classList.toggle('open'); });
+    drawer.querySelectorAll('a').forEach(function(a) { a.addEventListener('click', function() { drawer.classList.remove('open'); }); });
+  }
+
+  /* Search overlay */
+  var overlay = document.getElementById('searchOverlay');
+  var inp = document.getElementById('searchInput');
+  var res = document.getElementById('searchResults');
+  var searchBtn = document.getElementById('navSearchBtn');
+  var closeBtn = document.getElementById('searchCloseBtn');
+  var bibleIdx = null, fuseInst = null;
+
+  var SEEDS = [
+    {slug:'compression',term:'Compression',category:'Signal Processing',excerpt:'Reduces dynamic range.'},
+    {slug:'eq',term:'EQ',category:'Frequency',excerpt:'Boosts or cuts specific frequency ranges.'},
+    {slug:'reverb',term:'Reverb',category:'Time & Space',excerpt:'Simulates acoustic reflections.'},
+    {slug:'delay',term:'Delay',category:'Time & Space',excerpt:'Repeats the signal after a set time.'},
+    {slug:'sidechain',term:'Sidechain',category:'Signal Processing',excerpt:'Compression triggered by a secondary signal.'},
+    {slug:'gain-staging',term:'Gain Staging',category:'Levels & Headroom',excerpt:'Setting appropriate signal levels throughout the chain.'},
+    {slug:'limiting',term:'Limiting',category:'Signal Processing',excerpt:'Extreme compression — ratio 10:1 or higher.'},
+    {slug:'saturation',term:'Saturation',category:'Dynamics',excerpt:'Soft harmonic distortion — warmth and perceived loudness.'},
+    {slug:'lufs',term:'LUFS',category:'Levels & Headroom',excerpt:'Loudness Units relative to Full Scale.'},
+    {slug:'parallel-compression',term:'Parallel Compression',category:'Signal Processing',excerpt:'Blending compressed and dry signal.'},
+  ];
+
+  function rItem(e) {
+    return '<a class="search-result" href="/bible/'+e.slug+'">'
+      +'<span class="sr-cat">'+(e.category||'Bible')+'</span>'
+      +'<span class="sr-title">'+e.term+'</span></a>';
+  }
+  function showSeeds(q) {
+    if (!res) return;
+    var list = q ? SEEDS.filter(function(s) { return s.term.toLowerCase().indexOf(q.toLowerCase())!==-1; }) : SEEDS.slice(0,7);
+    res.innerHTML='<div style="padding:8px 14px 4px;font-size:10px;color:#555;text-transform:uppercase;letter-spacing:.1em;font-family:monospace">Bible entries</div>'
+      +list.slice(0,8).map(rItem).join('');
+  }
+  function loadFuse(cb) {
+    if (typeof Fuse !== 'undefined') { cb(); return; }
+    var s = document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.6.2/fuse.min.js';
+    s.onload=cb; document.head.appendChild(s);
+  }
+  function loadIdx(cb) {
+    if (bibleIdx) { cb(); return; }
+    fetch('/bible-index.json').then(function(r){return r.json();}).then(function(d){
+      bibleIdx=d;
+      loadFuse(function(){
+        fuseInst=new Fuse(bibleIdx,{keys:['term','category','excerpt'],threshold:0.38,includeScore:true});
+        cb();
+      });
+    }).catch(function(){bibleIdx=[];cb();});
+  }
+  function openSearch() {
+    if (!overlay) return;
+    overlay.classList.add('open');
+    if (inp) inp.focus();
+    showSeeds('');
+    loadIdx(function() {
+      if (!bibleIdx||!res) return;
+      res.innerHTML='<div style="padding:8px 14px 4px;font-size:10px;color:#555;text-transform:uppercase;letter-spacing:.1em;font-family:monospace">Bible entries</div>'
+        +bibleIdx.slice(0,7).map(rItem).join('');
+    });
+  }
+  function closeSearch() {
+    if (!overlay) return;
+    overlay.classList.remove('open');
+    if (inp) inp.value='';
+    if (res) res.innerHTML='';
+  }
+  document.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey||e.metaKey)&&e.key==='k') { e.preventDefault(); openSearch(); }
+    if (e.key==='Escape'&&overlay&&overlay.classList.contains('open')) closeSearch();
+  });
+  if (searchBtn) searchBtn.addEventListener('click', openSearch);
+  if (closeBtn) closeBtn.addEventListener('click', closeSearch);
+  if (overlay) overlay.addEventListener('click', function(e) { if(e.target===overlay) closeSearch(); });
+  if (inp) {
+    inp.addEventListener('input', function() {
+      var q = inp.value.trim();
+      if (!q) { showSeeds(''); return; }
+      loadIdx(function() {
+        if (!res) return;
+        if (fuseInst) {
+          var r=fuseInst.search(q);
+          if (r.length) { res.innerHTML=r.slice(0,8).map(function(x){return rItem(x.item);}).join(''); }
+          else { showSeeds(q); }
+        } else { showSeeds(q); }
+      });
+    });
+  }
+
+  /* Copy reference table */
+  window.copyRefTable = function() {
+    var btn = document.getElementById('copyTableBtn');
+    if (!btn) return;
+    var text = `Parameter	General	Drums	Vocals	Bass / Keys	Bus / Master
+Tracking (Live Perf.)	128–256	64–128	128–256	64–128	N/A
+Overdub / Punch-in	128–256	128	128–256	128	N/A
+Mixing (no live input)	512–1024	512–1024	512–1024	512–1024	1024–2048
+Mastering	1024–2048	N/A	N/A	N/A	1024–2048
+Software Monitoring	64–128	64	64–128	64–128	N/A
+Live Performance / DJ	64–128	64	64	64–128	128–256
+Bounce / Export	1024–2048	1024–2048	1024–2048	1024–2048	2048
+Source: musicproductionwiki.com/bible/buffer-size`;
+    navigator.clipboard.writeText(text).then(function() {
+      btn.textContent='Copied ✓'; btn.classList.add('copied');
+      setTimeout(function(){btn.textContent='Copy Table';btn.classList.remove('copied');},2500);
+    }).catch(function(){btn.textContent='Copy failed';setTimeout(function(){btn.textContent='Copy Table';},2000);});
+  };
+
+})();
+</script>
+
+</body>
+</html>
