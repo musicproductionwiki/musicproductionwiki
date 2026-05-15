@@ -1,21 +1,81 @@
-# MPW — Technical Reference
-*Fetch via: `python mpw_session_start.py --fetch tech`*
+# MPW-HANDOFF-TECH.md
+*Updated: May 15, 2026 (SESSION 29)*
 
 ---
 
-# 3. Gold Standard Article — FULLY LOCKED
+# Infrastructure
 
-**URL:** https://musicproductionwiki.com/articles/suno-vs-udio.html
-**File:** articles/suno-vs-udio.html
-**Last confirmed commit:** 06a564c
+| Item | Value |
+| --- | --- |
+| Hosting | Netlify — project ID: classy-haupia-be8e43 |
+| Repo | github.com/musicproductionwiki/musicproductionwiki |
+| GitHub token | YOUR_GITHUB_TOKEN_HERE (expires Aug 2, 2026) |
+| Stack | Pure HTML/CSS/vanilla JS — no frameworks, no CMS |
+| Deploy | Auto-deploy from GitHub main branch |
+| Newsletter | Beehiiv — "The Producer's Briefing" |
+| Local files | C:\Users\swarn\OneDrive\Documents\Music Production Wiki\Articles |
+| Scripts dir | C:\Users\swarn\OneDrive\Desktop\mpw-scripts\ |
+| Search Console | Google Search Console |
+| Contact | mpwikiofficial@gmail.com |
+| Analytics | GA4 — G-79VB543KCT |
+| Pretty URLs | NEVER enable — breaks site |
+
+---
+
+# File Structure
+
+```
+repo root/
+├── index.html
+├── about.html
+├── genres.html
+├── brands.html (MISSING — in nav but no page)
+├── css/style.css
+├── js/main.js
+├── js/mpw-analytics.js
+├── search-index.json
+├── sitemap.xml
+├── bible-index.json (200 entries)
+├── MPW-CATALOG.md (auto-generated)
+├── MPW-HANDOFF-CORE.md
+├── MPW-HANDOFF-SCRIPTS.md
+├── MPW-HANDOFF-CONTENT.md
+├── MPW-HANDOFF-BIBLE.md
+├── MPW-HANDOFF-ARTICLES.md
+├── MPW-HANDOFF-TECH.md
+├── mpw_session_start.py
+├── articles/
+│   ├── [slug].html  (526 articles)
+│   └── ...
+├── bible/
+│   ├── index.html (LOCKED — commit 29ee26a9)
+│   ├── eq.html (GOLD STANDARD)
+│   ├── compression.html
+│   └── [term].html  (201 entries total)
+└── categories/
+    └── [category].html  (90 pages)
+```
+
+Asset paths in articles: `../css/style.css`, `../js/main.js`
+Asset paths in bible: self-contained (NO main.js on bible pages)
+Asset paths in categories: `../css/style.css`, `../js/main.js`
+
+---
+
+# 3. Article Gold Standard — FULLY LOCKED
+
+URL: https://musicproductionwiki.com/articles/suno-vs-udio.html
+File: articles/suno-vs-udio.html
+Last confirmed commit: 06a564c
+
 **DO NOT TOUCH UNDER ANY CIRCUMSTANCES.**
 
-## Structural Fingerprints (required on all articles)
+## Structural Fingerprints
 
 | # | Fingerprint | Label |
 | --- | --- | --- |
 | 1 | class="mpw-site-nav" | nav wrapper — r7 standard |
-| 2 | mpw-nav-v4-final-r7 | nav CSS fingerprint — current standard |
+| 2 | mpw-nav-v4-final-r7 | nav CSS fingerprint |
 | 3 | class="nav-logo-mark" | 32x32 teal square logo mark |
 | 4 | class="nav-logo-name" | logo text |
 | 5 | class="nav-toggle" | dropdown trigger — pure CSS :focus-within |
@@ -31,162 +91,87 @@
 | 15 | ../css/style.css | asset path css |
 | 16 | ../js/main.js | asset path js |
 
-**NOTE:** suno-vs-udio.html was written before r7. Its nav fingerprint is mpw-nav-v4-final-r6, not r7. Content structure fingerprints (items 9-16) are what matter for content quality checks. Items 1-8 are correct on all articles after the r7 run.
-
----
-
-# 3B. Bible Gold Standard Entry — LOCKED
-
-**File:** `bible/eq.html`
-**Canonical URL:** `https://musicproductionwiki.com/bible/eq`
-**Status:** LIVE — layout AND mobile BOTH fixed Session 26 ✅
-**NEVER TOUCH — it is the template.**
-
-**Old template (DO NOT USE):** `bible/compression.html` — LIVE — commit e387c341 — LOCKED — NOT the template.
-
 ---
 
 # 41. Nav Architecture — SESSION 20 FINAL STATE
 
-**Fingerprint:** `mpw-nav-homepage-v1` — Commit: dbc09281
+Fingerprint: **mpw-nav-homepage-v1**
+Commit: **dbc09281**
+Nav inner: `nav.mpw-site-nav .nav-inner { max-width:1360px !important; padding:0 24px !important; }`
 
-**CSS key rules:**
-```css
-/* Homepage and category pages: */
-nav.mpw-site-nav .nav-inner { max-width:1200px; padding:0 24px }
+All 614 article + category pages patched to this nav in 1 commit — dbc09281.
+Bible pages: SELF-CONTAINED nav — NO main.js.
 
-/* Article pages override (Session 21 LOCKED): */
-nav.mpw-site-nav .nav-inner { max-width:1360px !important; padding:0 24px !important; }
-
-.nav-item.open > .nav-dropdown { opacity:1; visibility:visible; pointer-events:auto }
-.nav-dropdown.wide { min-width:500px; display:grid; grid-template-columns:1fr 1fr }
-```
-
-**HTML:** `class="logo-mark"` (32x32 teal square), absolute paths throughout.
-**JS:** Scoped to `nav.mpw-site-nav .nav-item` — no conflict with main.js.
-**nav-inner article pages:** max-width:1360px confirmed correct — getBoundingClientRect() — logo-mark left = H1 left = 301px. LOCKED.
+Key nav rules:
+- ALL nav links must be absolute paths (/, /about.html, /bible/, /categories/x.html)
+- Dropdowns: CSS :focus-within ONLY — never JS-only
+- Logo: SVG logo-mark — 32x32 teal square, 18x18 waveform SVG, dark bars
+- NEVER relative paths (../) in nav links
 
 ---
 
-# 41B. Always Check for and Remove Old Inline Nav Scripts
+# 44. Mobile Nav Architecture — SESSION 25 FINAL STATE
 
-When running any nav patch, check for and remove old inline nav scripts in the same patch operation.
+## index.html mobile nav
+Bible bar: sticky top:0, z-index:9001. Nav: top:40px. Mobile drawer: The Producer's Bible → articles → gear → Sound Better.
+
+## Articles + category pages mobile nav
+Bible bar: bible-bar-v4. Nav: search icon restored. .mobile-drawer top:100px.
+
+## Bible pages mobile nav
+Self-contained. NO bible bar from main nav system. All mobile fixes via @media(max-width:768px) only — never touch desktop CSS. Append-only <style> blocks.
 
 ---
 
-# 44. Site Structure
+# 42. Multiagent Orchestration
 
-```
-repo root/
-├── index.html                     — Homepage — LOCKED Session 17
-├── about.html                     — Needs bible bar (P0.2)
-├── sitemap.xml                    — 598 URLs — resubmitted GSC May 13, 2026
-├── search-index.json              — 526 entries — CLEAN — commit 925f3931
-├── bible-index.json               — 1 entry (EQ) — grows with each batch
-├── netlify.toml                   — Needs /dictionary/* → /bible/:splat 301
-├── MPW-HANDOFF-CORE.md            — NEW Session 28
-├── MPW-HANDOFF-SCRIPTS.md         — NEW Session 28
-├── MPW-HANDOFF-CONTENT.md         — NEW Session 28
-├── MPW-HANDOFF-BIBLE.md           — NEW Session 28
-├── MPW-HANDOFF-ARTICLES.md        — NEW Session 28
-├── MPW-HANDOFF-TECH.md            — NEW Session 28
-├── articles/                      — 526 .html files
-├── bible/
-│   ├── index.html                 — LIVE — commit 29ee26a9 ✅
-│   ├── compression.html           — LIVE — LOCKED — commit e387c341
-│   └── eq.html                    — LIVE — LOCKED — gold standard ✅
-├── categories/                    — 90 category pages
-├── css/
-│   └── style.css
-└── js/
-    └── main.js
-```
+Architecture: Orchestrator → 8 parallel workers → assembler → Trees API commit.
+Rate limit: claude-sonnet-4-6 — 8 workers CONFIRMED SAFE.
+Backoff: 15s, 30s, 60s, 120s, 240s on 429.
+NEVER use parallel blob creation for GitHub API — always sequential with 403 backoff.
 
 ---
 
 # 37. Category Pages
 
-**Total:** 90 category pages
-- 89 original: ALL patched to mpw-nav-homepage-v1 via mpw_fix_sitewide_r7.py ✅
-- breakdowns.html: LIVE — commit ef987b6b — needs r7 nav on next mpw_fix_sitewide_r7.py run
-- /bible/index.html: LIVE — own nav system — no main.js
-
-**Pages that still need building:**
-- `recreations.html` — must exist before Batch 11
-- `vocal-autopsies.html` — must exist before Batch 12
-- `brands.html` — in nav but page doesn't exist
-
----
-
-# 35. Comprehensive Audit — mpw_full_audit.py
-
-**Location:** `Desktop\mpw-scripts\mpw_full_audit.py`
-**Last run:** May 14, 2026
-**Results:** 12 total issues: 7 date-2025 (4 fixed — 3 remain to verify), 5 missing og:image (retry mpw_fix_meta.py)
-**All other checks clean:** 0 missing canonicals, 0 duplicate titles, 0 old nav, 0 duplicate bible bars, 0 orphans.
-
-Run weekly: `python mpw_full_audit.py`
-
-**13 checks:**
-1. Canonical tags present and `/articles/filename.html` format (no trailing slash)
-2. Meta description present
-3. OG tags (og:title, og:description, og:image)
-4. Date strings — no 2025
-5. Bible bar — present exactly once (bible-bar-v4)
-6. Nav fingerprint — mpw-nav-v4-final-r7
-7. Structural elements (quick-answer, faq-accordion, article-layout, etc.)
-8. Word count — above floor for category
-9. Orphaned articles (not in search-index.json)
-10. Duplicate titles across site
-11. Canonical format check — no trailing slash
-12. robots meta — `max-snippet:-1` present
-13. Search index entry — slug present in search-index.json
+All 89 original category pages patched to mpw-nav-homepage-v1. breakdowns.html added Session 22. Total: 90 category pages.
+Location: categories/[name].html
+Do NOT commit breakdowns article subcategory pages before articles exist.
 
 ---
 
 # 36. Search Index
 
-| Index | Status |
-| --- | --- |
-| search-index.json | LIVE — 526 entries — ALL TITLES CLEAN — commit 925f3931 |
-| Session 27 audit | CLEAN — 0 dead slugs in search index ✅ |
-| bible-index.json | LIVE — 1 entry (EQ) — grows with each Bible batch |
+search-index.json: LIVE — commit 925f3931 — 526 entries — ALL TITLES CLEAN.
+bible-index.json: LIVE — 200 entries — grows with each Bible batch.
 
 ---
 
-# 39. Sidebar Structure — ALL ARTICLES
+# 35. Comprehensive Article Quality Audit
 
-Correct sidebar structure:
-```
-aside
-  └── TOC widget
-  └── Newsletter widget
-      └── Related Articles widget (nested inside newsletter widget)
-```
-
-Sidebar audit: COMPLETED Session 18 — 526 articles: ALL OK — 0 CRITICAL — 0 HIGH.
+mpw_full_audit.py — BUILT Session 27.
+Last run: May 14, 2026. Results: 12 total issues (7 date-2025, 5 missing-og-image).
+Run weekly: `python mpw_full_audit.py`
 
 ---
 
-# 40. mpw_writer.py v3.0 nav-inner
+# 34H. Strategy Notes
 
-```css
-nav.mpw-site-nav .nav-inner { max-width:1360px !important; padding:0 24px !important; }
-```
-Confirmed pixel-perfect. LOCKED. Do not change.
+## Bible entry economics (v3.0)
+200 entries × ~20,000 tokens = 4M tokens. Per entry: ~$0.09-0.12.
+
+## Bible entry economics (v4.0)
+200 entries × ~36,000 tokens = 7.2M tokens. Per entry: ~$0.18.
+
+## Suno audio as competitive moat
+Dry/wet clips per Bible term turn the reference from reading to listening. No competitor can replicate this without significant infrastructure.
+
+## TruClarify integration
+Every music business article should funnel to TruClarify. Currently underutilized — every article in the Music Business pillar should mention TruClarify for rights verification.
 
 ---
 
-# Repo & Hosting Reference
+# Affiliate Link Placeholder
 
-| Key | Value |
-| --- | --- |
-| GitHub repo | github.com/musicproductionwiki/musicproductionwiki |
-| GitHub token | ghp_YOUR_TOKEN_HERE |
-| Netlify site ID | classy-haupia-be8e43 |
-| Netlify plan | Pro ($20/mo) — 3,000 credits/month — NEVER use individual file commits |
-| Auto-deploy | GitHub push → Netlify build → live in 30-60 seconds |
-| Pretty URLs | NEVER enable — breaks site |
-| GA4 | G-79VB543KCT |
-| Email | mpwikiofficial@gmail.com |
-| Google Workspace | Case 70817574 — unresolved — domain conflict dispute pending |
+All affiliate links use `href="#affiliate"` as placeholder until approvals come through.
+Do NOT hardcode any affiliate URLs before approvals.
