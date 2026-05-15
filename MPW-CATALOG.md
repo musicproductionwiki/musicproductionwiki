@@ -1,14 +1,8 @@
-# MPW Living Catalog
+# MPW-CATALOG.md
+*Auto-generated 2026-05-15 10:11 — do not edit manually*
 
-*Auto-updated by mpw_commit_articles.py and mpw_bible_writer.py after every batch commit.*
-*Last updated: May 15, 2026 — Session 28*
+## Articles (526)
 
----
-
-## Articles — 526 live
-
-| # | Slug | Status |
-| --- | --- | --- |
 | 1 | ableton-live-12-review | ✅ |
 | 2 | ableton-live-12-vs-11 | ✅ |
 | 3 | ableton-live-12-vs-fl-studio-21 | ✅ |
@@ -482,7 +476,7 @@
 | 471 | studio-one-vs-logic-pro | ✅ |
 | 472 | suno-ai-beginners-guide | ✅ |
 | 473 | suno-ai-review-2026 | ✅ |
-| 474 | suno-vs-udio | ✅ GOLD STANDARD — DO NOT TOUCH |
+| 474 | suno-vs-udio | ✅ |
 | 475 | teenage-engineering-op-1-field-review | ✅ |
 | 476 | udio-beginners-guide | ✅ |
 | 477 | udio-review-2026 | ✅ |
@@ -536,12 +530,8 @@
 | 525 | yamaha-hs5-vs-krk-rokit-5-g5 | ✅ |
 | 526 | yamaha-hs8-review | ✅ |
 
----
+## Bible Entries (202)
 
-## Bible Entries — 202 live
-
-| # | Slug | Status |
-| --- | --- | --- |
 | 1 | 808 | ✅ |
 | 2 | additive-synthesis | ✅ |
 | 3 | adsr | ✅ |
@@ -744,7 +734,3 @@
 | 200 | wavetable | ✅ |
 | 201 | wet-dry | ✅ |
 | 202 | white-noise | ✅ |
-
----
-
-*MusicProductionWiki.com — Living Catalog — 526 articles + 202 Bible entries — May 15, 2026*
