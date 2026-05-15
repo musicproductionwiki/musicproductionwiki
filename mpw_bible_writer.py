@@ -65,7 +65,9 @@ Standards: Every claim is specific. Every technique has a number attached. Every
 
 This entry will be read by producers at every level — beginners who are learning, professionals who are checking a reference, and everyone in between. Beginners need the foundation. Professionals need the depth. Both need the precision.
 
-You are not writing marketing copy. You are not hedging. You are not being safe. You are telling producers exactly what they need to know, in the most useful format possible."""
+You are not writing marketing copy. You are not hedging. You are not being safe. You are telling producers exactly what they need to know, in the most useful format possible.
+
+CRITICAL SLUG RULE: For further_reading_slugs and related_terms slugs, ONLY use slugs from this confirmed list of live Bible entries: compression, eq, limiting, saturation, distortion, reverb, delay, sidechain-compression, parallel-compression, multiband-compression, transient-shaping, noise-gate, gain-staging, headroom, stereo-imaging, mid-side-processing, bus-compression, mix-bus, send-return, automation, mastering, lufs, dynamic-range, true-peak-limiting, loudness-normalization, subtractive-synthesis, fm-synthesis, wavetable-synthesis, additive-synthesis, lfo, envelope, oscillator, adsr, vocoder, high-pass-filter, low-pass-filter, parametric-eq, shelving-eq, resonance, harmonic-distortion, chorus, flanger, phaser, tremolo, vibrato, plate-reverb, room-reverb, convolution-reverb, clip-gain, air-frequency-eq. If a term is not on this list, do NOT include it as a slug — omit it entirely rather than guess."""
 
 
 # ─── PASS 1 PROMPT ─────────────────────────────────────────────────────────────
@@ -152,12 +154,12 @@ Return this exact JSON structure:
   ],
   "related_terms": [
     {{
-      "slug": "existing-bible-slug",
+      "slug": "compression",
       "term": "Term Name",
       "preview": "One sentence preview"
     }}
   ],
-  "further_reading_slugs": ["article-slug-1", "article-slug-2"],
+  "further_reading_slugs": ["compression", "eq", "limiting", "saturation"],
   "faq": [
     {{
       "q": "Question text?",
@@ -317,7 +319,8 @@ def call_claude_pass1(prompt, label='Pass 1'):
             print(f"  [{label}] Retry {attempt} — waiting {wait}s...")
             time.sleep(wait)
         try:
-            r = requests.post(
+            chunks = []
+            with requests.post(
                 'https://api.anthropic.com/v1/messages',
                 headers={
                     'x-api-key': api_key,
@@ -328,15 +331,32 @@ def call_claude_pass1(prompt, label='Pass 1'):
                     'model': MODEL,
                     'max_tokens': PASS1_TOKENS,
                     'system': SYSTEM_PROMPT,
-                    'messages': [{'role': 'user', 'content': prompt}]
+                    'messages': [{'role': 'user', 'content': prompt}],
+                    'stream': True
                 },
-                timeout=180
-            )
-            if r.status_code == 429:
-                print(f"  [{label}] Rate limited (429)")
-                continue
-            r.raise_for_status()
-            text = r.json()['content'][0]['text'].strip()
+                stream=True,
+                timeout=(30, 600)
+            ) as r:
+                if r.status_code == 429:
+                    print(f"  [{label}] Rate limited (429)")
+                    continue
+                r.raise_for_status()
+                for line in r.iter_lines():
+                    if line:
+                        line = line.decode('utf-8') if isinstance(line, bytes) else line
+                        if line.startswith('data: '):
+                            data_str = line[6:]
+                            if data_str == '[DONE]':
+                                break
+                            try:
+                                evt = json.loads(data_str)
+                                if evt.get('type') == 'content_block_delta':
+                                    delta = evt.get('delta', {})
+                                    if delta.get('type') == 'text_delta':
+                                        chunks.append(delta.get('text', ''))
+                            except json.JSONDecodeError:
+                                pass
+            text = ''.join(chunks).strip()
             # Strip markdown fences if present
             text = re.sub(r'^```(?:json)?\s*', '', text)
             text = re.sub(r'\s*```$', '', text)
@@ -365,7 +385,8 @@ def call_claude_pass2(prompt, label='Pass 2'):
             print(f"  [{label}] Retry {attempt} — waiting {wait}s...")
             time.sleep(wait)
         try:
-            r = requests.post(
+            chunks = []
+            with requests.post(
                 'https://api.anthropic.com/v1/messages',
                 headers={
                     'x-api-key': api_key,
@@ -376,15 +397,32 @@ def call_claude_pass2(prompt, label='Pass 2'):
                     'model': MODEL,
                     'max_tokens': PASS2_TOKENS,
                     'system': SYSTEM_PROMPT,
-                    'messages': [{'role': 'user', 'content': prompt}]
+                    'messages': [{'role': 'user', 'content': prompt}],
+                    'stream': True
                 },
-                timeout=240
-            )
-            if r.status_code == 429:
-                print(f"  [{label}] Rate limited (429)")
-                continue
-            r.raise_for_status()
-            text = r.json()['content'][0]['text'].strip()
+                stream=True,
+                timeout=(30, 600)
+            ) as r:
+                if r.status_code == 429:
+                    print(f"  [{label}] Rate limited (429)")
+                    continue
+                r.raise_for_status()
+                for line in r.iter_lines():
+                    if line:
+                        line = line.decode('utf-8') if isinstance(line, bytes) else line
+                        if line.startswith('data: '):
+                            data_str = line[6:]
+                            if data_str == '[DONE]':
+                                break
+                            try:
+                                evt = json.loads(data_str)
+                                if evt.get('type') == 'content_block_delta':
+                                    delta = evt.get('delta', {})
+                                    if delta.get('type') == 'text_delta':
+                                        chunks.append(delta.get('text', ''))
+                            except json.JSONDecodeError:
+                                pass
+            text = ''.join(chunks).strip()
             text = re.sub(r'^```(?:json)?\s*', '', text)
             text = re.sub(r'\s*```$', '', text)
             data = json.loads(text)
@@ -606,9 +644,12 @@ def build_further_reading_html(p1):
     items = ''
     for slug in slugs:
         title = slug.replace('-', ' ').title()
+        # Link to /bible/slug — AI must only return slugs that exist
+        href = f'/bible/{slug}' if slug else '/bible/'
         items += (
-            f'<a class="further-card" href="/articles/{slug}.html">'
+            f'<a class="further-card" href="{href}">'
             f'<span class="further-title">{title}</span>'
+            f'<span class="further-arrow">&rarr;</span>'
             f'</a>'
         )
     return f'<div class="further-grid">{items}</div>'
@@ -806,46 +847,177 @@ def build_html(p1, p2, slug, term, category, pub_date=None):
   </script>
 </div>"""
 
-    # Build nav from locked template
+    # Build nav from locked template — matches homepage nav exactly
     # NO main.js on bible pages — fully self-contained
-    nav_html = r"""<nav class="mpw-site-nav" aria-label="Main navigation">
-  <div class="nav-inner" style="max-width:1360px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:16px">
-    <a href="/" class="nav-logo-mark" aria-label="MusicProductionWiki home">
-      <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-        <rect width="32" height="32" rx="6" fill="#14b8a6"/>
-        <rect x="7" y="10" width="3" height="12" fill="#0f172a"/>
-        <rect x="12" y="7" width="3" height="18" fill="#0f172a"/>
-        <rect x="17" y="12" width="3" height="8" fill="#0f172a"/>
-        <rect x="22" y="9" width="3" height="14" fill="#0f172a"/>
-      </svg>
-      <span class="nav-logo-name">MusicProductionWiki</span>
-    </a>
-    <div style="flex:1"></div>
-    <div class="nav-toggle" tabindex="0" aria-haspopup="true">
-      <span>Articles</span>
-      <div class="nav-dropdown">
-        <a href="/categories/techniques.html">Techniques</a>
-        <a href="/categories/reviews.html">Reviews</a>
-        <a href="/categories/comparisons.html">Comparisons</a>
-        <a href="/categories/music-business.html">Music Business</a>
-        <a href="/categories/ai-music.html">AI Music</a>
-      </div>
-    </div>
-    <a href="/bible/" class="nav-bible-link">Producer's Bible</a>
-    <a href="/genres.html" class="nav-link">Genres</a>
-    <button class="nav-search-btn" aria-label="Search" onclick="document.getElementById('searchOverlay').style.display='flex'">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-      </svg>
-    </button>
-  </div>
-</nav>
-<div id="searchOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:9999;align-items:center;justify-content:center" onclick="if(event.target===this)this.style.display='none'">
-  <div style="background:#1a1a2e;border-radius:12px;padding:24px;width:90%;max-width:600px">
-    <input id="searchInput" type="text" placeholder="Search MusicProductionWiki..." style="width:100%;padding:12px;border-radius:8px;border:1px solid #444;background:#0d0d1a;color:#fff;font-size:16px">
-    <div id="searchResults" style="margin-top:12px;max-height:400px;overflow-y:auto"></div>
-  </div>
-</div>"""
+    nav_html = (
+        '<div class="bible-bar" style="position:sticky;top:0;z-index:100;background:#131000;'
+        'border-bottom:1px solid rgba(245,166,35,0.28);height:40px;display:flex;align-items:center;'
+        'justify-content:center;padding:0 24px">'
+        '<div style="display:flex;align-items:center;justify-content:center;gap:16px;max-width:1360px;width:100%">'
+        '<a href="/bible/" style="font-size:14px;font-weight:700;color:#f5a623;text-decoration:none;letter-spacing:-0.01em">'
+        'The Producer’s Bible</a>'
+        '<div style="width:1px;height:14px;background:rgba(245,166,35,0.3)"></div>'
+        '<span style="font-size:13px;color:rgba(245,166,35,0.6)">'
+        'The definitive music production reference</span>'
+        '</div></div>'
+
+        '<nav style="position:sticky;top:40px;z-index:400;background:rgba(10,10,11,0.97);'
+        'backdrop-filter:blur(24px);border-bottom:1px solid rgba(255,255,255,0.09)" '
+        'aria-label="Main navigation">'
+        '<div style="max-width:1360px;margin:0 auto;padding:0 40px;height:60px;display:flex;'
+        'align-items:center;gap:0">'
+
+        '<a href="/" style="display:flex;align-items:center;gap:12px;text-decoration:none;'
+        'flex-shrink:0;margin-right:36px">'
+        '<div style="width:32px;height:32px;border-radius:8px;background:#00e8a2;display:flex;'
+        'align-items:center;justify-content:center;flex-shrink:0">'
+        '<svg width="18" height="18" viewBox="0 0 18 18" fill="none">'
+        '<rect x="1.5" y="7" width="2.5" height="9" rx="1.2" fill="#0a0a0b"/>'
+        '<rect x="6" y="4" width="2.5" height="12" rx="1.2" fill="#0a0a0b"/>'
+        '<rect x="10.5" y="1" width="2.5" height="16" rx="1.2" fill="#0a0a0b"/>'
+        '<rect x="15" y="5" width="2.5" height="9" rx="1.2" fill="#0a0a0b"/>'
+        '</svg></div>'
+        '<div><div style="font-size:15px;font-weight:600;color:#f0f0f0;letter-spacing:-0.02em">'
+        'MusicProductionWiki</div>'
+        '<span style="font-size:10px;color:#6a6a7a;font-family:monospace;letter-spacing:0.07em;'
+        'text-transform:uppercase">The Producer\u2019s Reference</span></div></a>'
+
+        '<ul class="bible-nav-primary" style="display:flex;align-items:center;gap:2px;'
+        'list-style:none;flex:1;padding:0;margin:0">'
+
+        '<li class="bible-nav-item" style="position:relative">'
+        '<button class="bible-nav-btn" style="display:flex;align-items:center;gap:5px;color:#a0a0b4;'
+        'font-size:13.5px;padding:6px 12px;border-radius:7px;background:none;border:none;'
+        'cursor:pointer;font-family:inherit">Articles '
+        '<svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" '
+        'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+        '<polyline points="2 4 6 8 10 4"/></svg></button>'
+        '<div class="bible-nav-dd" style="display:none;position:absolute;top:calc(100% + 8px);left:0;'
+        'background:#111113;border:1px solid rgba(255,255,255,0.18);border-radius:14px;padding:8px;'
+        'min-width:440px;box-shadow:0 24px 48px rgba(0,0,0,.55);'
+        'display:none;grid-template-columns:1fr 1fr;gap:2px;z-index:500">'
+        '<div style="font-size:10px;font-family:monospace;color:#6a6a7a;text-transform:uppercase;'
+        'letter-spacing:.1em;padding:8px 12px 4px">Techniques &amp; Analysis</div>'
+        '<div style="font-size:10px;font-family:monospace;color:#6a6a7a;text-transform:uppercase;'
+        'letter-spacing:.1em;padding:8px 12px 4px">Reference &amp; Business</div>'
+        '<a href="/categories/techniques.html" style="padding:9px 12px;border-radius:9px;'
+        'text-decoration:none;color:#f0f0f0;font-size:13.5px;font-weight:500;display:block">Techniques</a>'
+        '<a href="/categories/reviews.html" style="padding:9px 12px;border-radius:9px;'
+        'text-decoration:none;color:#f0f0f0;font-size:13.5px;font-weight:500;display:block">Reviews</a>'
+        '<a href="/categories/comparisons.html" style="padding:9px 12px;border-radius:9px;'
+        'text-decoration:none;color:#f0f0f0;font-size:13.5px;font-weight:500;display:block">Comparisons</a>'
+        '<a href="/categories/ai-music.html" style="padding:9px 12px;border-radius:9px;'
+        'text-decoration:none;color:#f0f0f0;font-size:13.5px;font-weight:500;display:block">AI Music</a>'
+        '<a href="/categories/breakdowns.html" style="padding:9px 12px;border-radius:9px;'
+        'text-decoration:none;color:#f0f0f0;font-size:13.5px;font-weight:500;display:block">Breakdowns</a>'
+        '<a href="/categories/music-business.html" style="padding:9px 12px;border-radius:9px;'
+        'text-decoration:none;color:#f0f0f0;font-size:13.5px;font-weight:500;display:block">Music Business</a>'
+        '<a href="/categories/recreations.html" style="padding:9px 12px;border-radius:9px;'
+        'text-decoration:none;color:#f0f0f0;font-size:13.5px;font-weight:500;display:block">Recreations</a>'
+        '<a href="/genres.html" style="padding:9px 12px;border-radius:9px;'
+        'text-decoration:none;color:#f0f0f0;font-size:13.5px;font-weight:500;display:block">Genres</a>'
+        '</div></li>'
+
+        '<li class="bible-nav-item" style="position:relative">'
+        '<button class="bible-nav-btn" style="display:flex;align-items:center;gap:5px;color:#a0a0b4;'
+        'font-size:13.5px;padding:6px 12px;border-radius:7px;background:none;border:none;'
+        'cursor:pointer;font-family:inherit">Gear '
+        '<svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" '
+        'stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+        '<polyline points="2 4 6 8 10 4"/></svg></button>'
+        '<div class="bible-nav-dd" style="display:none;position:absolute;top:calc(100% + 8px);left:0;'
+        'background:#111113;border:1px solid rgba(255,255,255,0.18);border-radius:14px;padding:8px;'
+        'min-width:240px;box-shadow:0 24px 48px rgba(0,0,0,.55);z-index:500">'
+        '<a href="/categories/daws.html" style="padding:9px 12px;border-radius:9px;'
+        'text-decoration:none;color:#f0f0f0;font-size:13.5px;font-weight:500;display:block">DAWs</a>'
+        '<a href="/categories/plugins.html" style="padding:9px 12px;border-radius:9px;'
+        'text-decoration:none;color:#f0f0f0;font-size:13.5px;font-weight:500;display:block">Plugins</a>'
+        '<a href="/categories/gear.html" style="padding:9px 12px;border-radius:9px;'
+        'text-decoration:none;color:#f0f0f0;font-size:13.5px;font-weight:500;display:block">Hardware</a>'
+        '</div></li>'
+
+        '<li><a href="/about.html" style="color:#a0a0b4;font-size:13.5px;padding:6px 12px;'
+        'border-radius:7px;text-decoration:none">About</a></li>'
+        '<li><a href="/bible/" style="color:#f5a623;font-weight:600;font-size:13.5px;'
+        'padding:6px 12px;border-radius:7px;text-decoration:none">'
+        'The Producer\u2019s Bible &rarr;</a></li>'
+        '</ul>'
+
+        '<div style="display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0">'
+        '<button onclick="document.getElementById(\'bibleSearchOverlay\').style.display=\'flex\'" '
+        'style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;'
+        'border-radius:6px;background:none;border:none;cursor:pointer;color:#888" aria-label="Search">'
+        '<svg width="16" height="16" viewBox="0 0 16 16" fill="none">'
+        '<circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/>'
+        '<path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>'
+        '</svg></button>'
+        ''
+        '<button id="bibleMobBtn" style="display:none;background:none;border:none;cursor:pointer;'
+        'padding:8px;flex-direction:column;gap:5px" aria-label="Toggle menu">'
+        '<span style="display:block;width:22px;height:2px;background:#a0a0b4;border-radius:2px"></span>'
+        '<span style="display:block;width:22px;height:2px;background:#a0a0b4;border-radius:2px"></span>'
+        '<span style="display:block;width:22px;height:2px;background:#a0a0b4;border-radius:2px"></span>'
+        '</button></div>'
+        '</div></nav>'
+
+        '<div id="bibleMobDrawer" style="display:none;position:fixed;top:100px;left:0;right:0;'
+        'bottom:0;background:rgba(10,10,11,0.99);z-index:199;overflow-y:auto;padding:16px;'
+        'border-top:1px solid rgba(255,255,255,0.09);flex-direction:column;gap:4px">'
+        '<a href="/bible/" style="display:flex;align-items:center;gap:8px;padding:12px 16px;'
+        'border-radius:9px;background:rgba(245,166,35,0.07);border:1px solid rgba(245,166,35,0.22);'
+        'color:#f5a623;font-size:14px;font-weight:600;text-decoration:none;margin:4px 0 8px">'
+        'The Producer\u2019s Bible \u2014 Explore Free</a>'
+        '<div style="font-size:10px;font-family:monospace;color:#6a6a7a;text-transform:uppercase;'
+        'letter-spacing:.12em;padding:12px 12px 6px">Articles</div>'
+        '<a href="/categories/techniques.html" style="display:block;padding:11px 12px;'
+        'border-radius:9px;text-decoration:none;font-size:14px;color:#a0a0b4">Techniques</a>'
+        '<a href="/categories/reviews.html" style="display:block;padding:11px 12px;'
+        'border-radius:9px;text-decoration:none;font-size:14px;color:#a0a0b4">Reviews</a>'
+        '<a href="/categories/comparisons.html" style="display:block;padding:11px 12px;'
+        'border-radius:9px;text-decoration:none;font-size:14px;color:#a0a0b4">Comparisons</a>'
+        '<a href="/categories/breakdowns.html" style="display:block;padding:11px 12px;'
+        'border-radius:9px;text-decoration:none;font-size:14px;color:#a0a0b4">Breakdowns</a>'
+        '<a href="/categories/recreations.html" style="display:block;padding:11px 12px;'
+        'border-radius:9px;text-decoration:none;font-size:14px;color:#a0a0b4">Recreations</a>'
+        '<a href="/genres.html" style="display:block;padding:11px 12px;border-radius:9px;'
+        'text-decoration:none;font-size:14px;color:#a0a0b4">Genres</a>'
+        '<a href="/categories/ai-music.html" style="display:block;padding:11px 12px;'
+        'border-radius:9px;text-decoration:none;font-size:14px;color:#a0a0b4">AI Music</a>'
+        '<a href="/categories/music-business.html" style="display:block;padding:11px 12px;'
+        'border-radius:9px;text-decoration:none;font-size:14px;color:#a0a0b4">Music Business</a>'
+        '<div style="font-size:10px;font-family:monospace;color:#6a6a7a;text-transform:uppercase;'
+        'letter-spacing:.12em;padding:12px 12px 6px">Gear</div>'
+        '<a href="/categories/daws.html" style="display:block;padding:11px 12px;border-radius:9px;'
+        'text-decoration:none;font-size:14px;color:#a0a0b4">DAWs</a>'
+        '<a href="/categories/plugins.html" style="display:block;padding:11px 12px;border-radius:9px;'
+        'text-decoration:none;font-size:14px;color:#a0a0b4">Plugins</a>'
+        '<a href="/categories/gear.html" style="display:block;padding:11px 12px;border-radius:9px;'
+        'text-decoration:none;font-size:14px;color:#a0a0b4">Hardware</a>'
+        '<a href="/bible/" style="display:block;background:#f5a623;color:#000;font-weight:600;'
+        'font-size:14px;padding:13px 16px;border-radius:10px;text-decoration:none;'
+        'text-align:center;margin-top:8px">Browse The Producer’s Bible &rarr;</a>'
+        '</div>'
+
+        '<div id="bibleSearchOverlay" style="display:none;position:fixed;inset:0;'
+        'background:rgba(0,0,0,.88);z-index:99998;align-items:flex-start;justify-content:center;'
+        'padding-top:80px" onclick="if(event.target===this)this.style.display=\'none\'">'
+        '<div style="background:#18181c;border:1px solid rgba(255,255,255,.15);border-radius:14px;'
+        'width:100%;max-width:620px;overflow:hidden;margin:0 1rem">'
+        '<div style="display:flex;align-items:center;padding:16px 20px;gap:12px;'
+        'border-bottom:1px solid rgba(255,255,255,.07)">'
+        '<svg width="16" height="16" viewBox="0 0 16 16" fill="none">'
+        '<circle cx="6.5" cy="6.5" r="4.5" stroke="#666" stroke-width="1.5"/>'
+        '<path d="M10 10l3.5 3.5" stroke="#666" stroke-width="1.5" stroke-linecap="round"/></svg>'
+        '<input id="bibleSearchInput" type="text" placeholder="Search articles and Bible entries..." '
+        'style="flex:1;background:none;border:none;outline:none;font-size:16px;color:#fff;'
+        'font-family:inherit" autocomplete="off"/>'
+        '<span style="font-size:11px;color:#555;white-space:nowrap">ESC to close</span>'
+        '</div>'
+        '<div id="bibleSearchResults" style="max-height:420px;overflow-y:auto;padding:8px"></div>'
+        '</div></div>'
+    )
+
+
 
     read_time = p1.get('read_minutes', max(1, round(WORD_COUNT_TARGET / 325)))
 
@@ -873,10 +1045,10 @@ def build_html(p1, p2, slug, term, category, pub_date=None):
   <style>
     /* Bible page — NO main.js — fully self-contained */
     *{{box-sizing:border-box;margin:0;padding:0}}
-    body{{background:#0d0d1a;color:#e0e0f0;font-family:system-ui,-apple-system,sans-serif;line-height:1.7}}
+    html,body{{overflow-x:hidden;max-width:100%}}body{{background:#0d0d1a;color:#e0e0f0;font-family:system-ui,-apple-system,sans-serif;line-height:1.7}}
 
     /* Progress bar */
-    #reading-progress{{position:fixed;top:0;left:0;height:3px;background:#f5a623;z-index:99999;width:0;max-width:100vw;transition:width .1s linear}}
+    #reading-progress{{position:fixed;top:0;left:0;height:3px;background:#f5a623;z-index:99999;width:0%;max-width:100%;transition:width .1s linear;pointer-events:none}}
 
     /* Bible bar */
     .bible-bar-v4{{background:#1a1000;border-bottom:1px solid #f5a623;padding:6px 24px;text-align:center;font-size:13px;position:sticky;top:0;z-index:9001}}
@@ -896,7 +1068,7 @@ def build_html(p1, p2, slug, term, category, pub_date=None):
     .nav-search-btn{{background:none;border:none;cursor:pointer;color:#e0e0f0;padding:4px}}
 
     /* Entry nav */
-    .entry-nav{{background:#13132a;border-bottom:1px solid #2a2a4a;position:sticky;top:96px;z-index:800;overflow-x:auto;scrollbar-width:none}}
+    .entry-nav{{background:#13132a;border-bottom:1px solid #2a2a4a;position:sticky;top:60px;z-index:800;overflow-x:auto;scrollbar-width:none}}
     .entry-nav::-webkit-scrollbar{{display:none}}
     .entry-nav-inner{{display:flex;justify-content:center;gap:4px;padding:13px 10px;min-width:max-content;margin:0 auto}}
     .entry-nav-inner a{{color:#a0a0c0;text-decoration:none;font-size:9px;text-transform:uppercase;letter-spacing:.05em;padding:4px 8px;border-radius:4px;white-space:nowrap}}
@@ -1104,22 +1276,35 @@ def build_html(p1, p2, slug, term, category, pub_date=None):
     .site-footer p{{color:#666;font-size:13px;margin:4px 0}}
     .site-footer a{{color:#f5a623;text-decoration:none}}
 
+    /* ── MOBILE ─────────────────────────── */
+    @media(max-width:900px){{
+      .entry-sidebar{{display:none!important}}
+      .bible-entry-wrap{{grid-template-columns:1fr!important;padding:20px 16px!important}}
+    }}
     @media(max-width:768px){{
-      .entry-nav-inner{{justify-content:flex-start}}
+      .entry-nav{{top:60px!important}}
+      .entry-nav-inner{{justify-content:flex-start!important;padding:8px 10px!important}}
+      .entry-nav-inner a{{font-size:8px!important;padding:4px 7px!important}}
       .parameters-grid{{grid-template-columns:1fr}}
       .types-grid{{grid-template-columns:1fr}}
+      .red-green-flags{{grid-template-columns:1fr!important}}
+      .before-after{{grid-template-columns:1fr!important}}
+      .further-grid{{grid-template-columns:1fr!important}}
+      .bible-nav-primary{{display:none!important}}
+      #bibleMobBtn{{display:flex!important}}
+      .entry-term{{font-size:clamp(1.8rem,8vw,2.5rem)!important}}
+      .entry-masthead{{padding:20px 16px!important}}
+    }}
+    @media(max-width:480px){{
+      .bible-entry-wrap{{padding:12px!important}}
+      .entry-term{{font-size:1.8rem!important}}
     }}
   </style>
 </head>
 <body>
 <div id="reading-progress"></div>
 
-<!-- Bible Bar -->
-<div class="bible-bar-v4">
-  <a href="/bible/" class="bm-publisher">The Producer's Bible</a> by <a href="/">MusicProductionWiki.com</a>
-</div>
-
-<!-- Nav -->
+<!-- Nav — no bible bar on bible entry pages -->
 {nav_html}
 
 <!-- Entry Nav -->
@@ -1376,24 +1561,89 @@ def build_html(p1, p2, slug, term, category, pub_date=None):
   </div><!-- /bible-entry-wrap -->
 </main>
 
+<!-- Reader Next Step CTA -->
+<section style="background:#0d0d1f;border-top:1px solid #2a2a4a;padding:48px 24px;text-align:center">
+  <div style="max-width:680px;margin:0 auto">
+    <p style="font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:#f5a623;font-weight:700;margin-bottom:12px">Keep Going</p>
+    <h2 style="font-size:28px;font-weight:800;color:#fff;margin-bottom:12px">Sound better by Friday.</h2>
+    <p style="color:#a0a0c0;font-size:16px;margin-bottom:28px;line-height:1.6">One email a week. The techniques behind the terms — what's actually happening in the records you love, and how to apply it in your session today.</p>
+    <form style="display:flex;gap:8px;max-width:420px;margin:0 auto 32px" onsubmit="return false">
+      <input type="email" placeholder="your@email.com" style="flex:1;padding:12px 16px;background:#13132a;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0f0;font-size:14px;outline:none">
+      <button style="padding:12px 20px;background:#f5a623;color:#000;font-weight:700;font-size:14px;border:none;border-radius:6px;cursor:pointer;white-space:nowrap">Join Free</button>
+    </form>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+      <a href="/bible/" style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:#13132a;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0f0;text-decoration:none;font-size:13px;font-weight:600">&#8592; Browse The Bible</a>
+      <a href="/categories/techniques.html" style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:#13132a;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0f0;text-decoration:none;font-size:13px;font-weight:600">Techniques &rarr;</a>
+      <a href="/categories/comparisons.html" style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;background:#13132a;border:1px solid #2a2a4a;border-radius:6px;color:#e0e0f0;text-decoration:none;font-size:13px;font-weight:600">Gear Comparisons &rarr;</a>
+    </div>
+  </div>
+</section>
+
 <footer class="site-footer">
   <a href="/bible/" class="bm-publisher">The Producer's Bible</a>
-  <p>MusicProductionWiki.com &mdash; The Britannica of Music Production</p>
-  <p><a href="/">Home</a> &middot; <a href="/about.html">About</a> &middot; <a href="/bible/">Bible</a> &middot; <a href="/categories/techniques.html">Techniques</a></p>
-  <p style="margin-top:8px;font-size:11px;color:#444">&copy; {datetime.now().year} MusicProductionWiki.com</p>
+  <p style="font-size:15px;font-weight:600;color:#e0e0f0;margin:8px 0 4px">MusicProductionWiki.com</p>
+  <p style="font-size:12px;color:#666;margin-bottom:12px">The most comprehensive music production reference on the internet.</p>
+  <p><a href="/">Home</a> &middot; <a href="/about.html">About</a> &middot; <a href="/bible/">Producer's Bible</a> &middot; <a href="/categories/techniques.html">Techniques</a> &middot; <a href="/categories/reviews.html">Reviews</a> &middot; <a href="/categories/comparisons.html">Comparisons</a></p>
+  <p style="margin-top:8px;font-size:11px;color:#444">&copy; {{datetime.now().year}} MusicProductionWiki.com &mdash; Built for producers, by producers.</p>
 </footer>
 
 <script>
-// Reading progress bar — px-based, z-index:99999
+// Bible nav — dropdown + mobile toggle
+(function(){{
+  // Dropdowns
+  document.querySelectorAll('.bible-nav-item').forEach(function(item){{
+    var btn = item.querySelector('.bible-nav-btn');
+    var dd = item.querySelector('.bible-nav-dd');
+    if (!btn || !dd) return;
+    btn.addEventListener('click', function(e){{
+      e.stopPropagation();
+      var isOpen = dd.style.display === 'grid' || dd.style.display === 'block';
+      document.querySelectorAll('.bible-nav-dd').forEach(function(d){{ d.style.display='none'; }});
+      dd.style.display = isOpen ? 'none' : (dd.style.gridTemplateColumns ? 'grid' : 'block');
+    }});
+  }});
+  document.addEventListener('click', function(){{
+    document.querySelectorAll('.bible-nav-dd').forEach(function(d){{ d.style.display='none'; }});
+  }});
+  // Mobile toggle
+  var mobBtn = document.getElementById('bibleMobBtn');
+  var mobDrawer = document.getElementById('bibleMobDrawer');
+  if (mobBtn && mobDrawer) {{
+    mobBtn.addEventListener('click', function(){{
+      var open = mobDrawer.style.display === 'flex';
+      mobDrawer.style.display = open ? 'none' : 'flex';
+    }});
+  }}
+  // Search ESC
+  document.addEventListener('keydown', function(e){{
+    if (e.key === 'Escape') {{
+      var ov = document.getElementById('bibleSearchOverlay');
+      if (ov) ov.style.display = 'none';
+      document.querySelectorAll('.bible-nav-dd').forEach(function(d){{ d.style.display='none'; }});
+    }}
+  }});
+  // Show mobile btn on small screens
+  function checkMob(){{
+    if (mobBtn) mobBtn.style.display = window.innerWidth <= 1024 ? 'flex' : 'none';
+  }}
+  checkMob();
+  window.addEventListener('resize', checkMob);
+  // Articles dropdown uses grid
+  var articlesDd = document.querySelector('.bible-nav-item .bible-nav-dd[style*="grid-template-columns"]');
+  if (articlesDd) articlesDd.style.display = 'none';
+}})();
+
+// Reading progress bar — percentage-based, contained to viewport
 (function(){{
   var bar = document.getElementById('reading-progress');
   if (!bar) return;
+  bar.style.cssText = 'position:fixed;top:0;left:0;height:3px;background:#f5a623;z-index:99999;width:0%;max-width:100%;transition:width .1s linear;pointer-events:none';
   window.addEventListener('scroll', function(){{
     var st = window.scrollY || document.documentElement.scrollTop;
     var dh = document.documentElement.scrollHeight - window.innerHeight;
     if (dh <= 0) {{ bar.style.width = '100%'; return; }}
-    var pct = Math.round((st/dh)*window.innerWidth);
-    bar.style.width = pct + 'px';
+    var pct = Math.min(100, Math.round((st/dh)*100));
+    bar.style.width = pct + '%';
   }}, {{passive:true}});
 }})();
 
@@ -1407,20 +1657,43 @@ document.querySelectorAll('.faq-q').forEach(function(btn){{
   }});
 }});
 
-// Search overlay
+// Search overlay — works for both searchInput and bibleSearchInput
 (function(){{
-  var input = document.getElementById('searchInput');
-  var results = document.getElementById('searchResults');
-  if (!input || !results) return;
-  var idx = null;
-  fetch('/search-index.json').then(function(r){{ return r.json(); }}).then(function(d){{ idx = d; }}).catch(function(){{}});
-  input.addEventListener('input', function(){{
-    var q = this.value.trim().toLowerCase();
-    if (!q || !idx) {{ results.innerHTML = ''; return; }}
-    var hits = idx.filter(function(a){{ return (a.title||'').toLowerCase().includes(q) || (a.slug||'').includes(q); }}).slice(0,8);
-    results.innerHTML = hits.map(function(a){{
-      return '<a href="/articles/' + a.slug + '.html" style="display:block;padding:8px;color:#e0e0f0;text-decoration:none;border-bottom:1px solid #2a2a4a;font-size:14px">' + (a.title||a.slug) + '</a>';
-    }}).join('') || '<p style="color:#888;font-size:13px">No results</p>';
+  var articleIdx = null;
+  var bibleIdx = null;
+  fetch('/search-index.json').then(function(r){{ return r.json(); }}).then(function(d){{ articleIdx = d; }}).catch(function(){{}});
+  fetch('/bible-index.json').then(function(r){{ return r.json(); }}).then(function(d){{ bibleIdx = d; }}).catch(function(){{}});
+
+  function doSearch(q, resultsEl) {{
+    if (!q) {{ resultsEl.innerHTML = ''; return; }}
+    var hits = [];
+    if (bibleIdx) {{
+      bibleIdx.filter(function(e){{ return (e.term||'').toLowerCase().includes(q); }}).slice(0,4).forEach(function(e){{
+        hits.push('<a href="/bible/' + e.slug + '" style="display:flex;align-items:center;gap:8px;padding:8px;color:#e0e0f0;text-decoration:none;border-bottom:1px solid #2a2a4a;font-size:14px"><span style="background:#f5a623;color:#000;font-size:10px;font-weight:700;padding:2px 5px;border-radius:3px;flex-shrink:0">BIBLE</span>' + (e.term||e.slug) + '</a>');
+      }});
+    }}
+    if (articleIdx) {{
+      articleIdx.filter(function(a){{ return (a.title||'').toLowerCase().includes(q) || (a.slug||'').includes(q); }}).slice(0,4).forEach(function(a){{
+        hits.push('<a href="/articles/' + a.slug + '.html" style="display:flex;align-items:center;gap:8px;padding:8px;color:#e0e0f0;text-decoration:none;border-bottom:1px solid #2a2a4a;font-size:14px"><span style="background:#2a2a4a;color:#a0a0c0;font-size:10px;font-weight:700;padding:2px 5px;border-radius:3px;flex-shrink:0">ARTICLE</span>' + (a.title||a.slug) + '</a>');
+      }});
+    }}
+    resultsEl.innerHTML = hits.slice(0,8).join('') || '<p style="color:#888;font-size:13px;padding:8px">No results</p>';
+  }}
+
+  ['searchInput','bibleSearchInput'].forEach(function(id) {{
+    var input = document.getElementById(id);
+    var results = document.getElementById(id === 'searchInput' ? 'searchResults' : 'bibleSearchResults');
+    if (!input || !results) return;
+    input.addEventListener('input', function() {{
+      doSearch(this.value.trim().toLowerCase(), results);
+    }});
+    // ESC closes overlay
+    input.addEventListener('keydown', function(e) {{
+      if (e.key === 'Escape') {{
+        var ov = document.getElementById('bibleSearchOverlay');
+        if (ov) ov.style.display = 'none';
+      }}
+    }});
   }});
 }})();
 
@@ -1432,6 +1705,115 @@ document.querySelectorAll('.faq-q').forEach(function(btn){{
   if (aside && wrap && aside.parentElement !== wrap) {{
     wrap.appendChild(aside);
   }}
+}})();
+
+// Active TOC highlighting via IntersectionObserver
+(function(){{
+  var tocLinks = document.querySelectorAll('.sidebar-toc a');
+  if (!tocLinks.length) return;
+  var sectionIds = Array.from(tocLinks).map(function(a){{ return a.getAttribute('href').replace('#',''); }});
+  var sections = sectionIds.map(function(id){{ return document.getElementById(id); }}).filter(Boolean);
+  if (!sections.length) return;
+
+  function setActive(id) {{
+    tocLinks.forEach(function(a) {{
+      var isActive = a.getAttribute('href') === '#' + id;
+      a.style.color = isActive ? '#f5a623' : '';
+      a.style.fontWeight = isActive ? '700' : '';
+      a.style.borderLeft = isActive ? '2px solid #f5a623' : '2px solid transparent';
+      a.style.paddingLeft = isActive ? '8px' : '0';
+    }});
+  }}
+
+  var observer = new IntersectionObserver(function(entries) {{
+    entries.forEach(function(entry) {{
+      if (entry.isIntersecting) {{
+        setActive(entry.target.id);
+      }}
+    }});
+  }}, {{ rootMargin: '-20% 0px -70% 0px', threshold: 0 }});
+
+  sections.forEach(function(s){{ observer.observe(s); }});
+  // Set first active on load
+  if (sections[0]) setActive(sections[0].id);
+}})();
+
+// Entry nav active highlight + auto-scroll active item into view
+(function(){{
+  var navEl = document.querySelector('.entry-nav');
+  var navLinks = document.querySelectorAll('.entry-nav-inner a');
+  if (!navLinks.length) return;
+  var sectionIds = Array.from(navLinks).map(function(a){{ return a.getAttribute('href').replace('#',''); }});
+  var sections = sectionIds.map(function(id){{ return document.getElementById(id); }}).filter(Boolean);
+
+  function setActive(id) {{
+    navLinks.forEach(function(a) {{
+      var isActive = a.getAttribute('href') === '#' + id;
+      a.style.color = isActive ? '#f5a623' : '';
+      a.style.fontWeight = isActive ? '700' : '';
+      a.style.background = isActive ? 'rgba(245,166,35,0.1)' : '';
+      // Auto-scroll active link into view in the nav bar
+      if (isActive && navEl) {{
+        var linkLeft = a.offsetLeft;
+        var linkWidth = a.offsetWidth;
+        var navWidth = navEl.offsetWidth;
+        var target = linkLeft - (navWidth / 2) + (linkWidth / 2);
+        navEl.scrollTo({{ left: target, behavior: 'smooth' }});
+      }}
+    }});
+  }}
+
+  var observer = new IntersectionObserver(function(entries) {{
+    entries.forEach(function(entry) {{
+      if (entry.isIntersecting) setActive(entry.target.id);
+    }});
+  }}, {{ rootMargin: '-10% 0px -80% 0px', threshold: 0 }});
+
+  sections.forEach(function(s){{ observer.observe(s); }});
+  if (sections[0]) setActive(sections[0].id);
+}})();
+
+// Search — badge Bible vs Article results
+(function(){{
+  var input = document.getElementById('searchInput');
+  var results = document.getElementById('searchResults');
+  if (!input || !results) return;
+  var bibleIdx = null;
+  var articleIdx = null;
+  fetch('/bible-index.json').then(function(r){{ return r.json(); }}).then(function(d){{ bibleIdx = d; }}).catch(function(){{}});
+  fetch('/search-index.json').then(function(r){{ return r.json(); }}).then(function(d){{ articleIdx = d; }}).catch(function(){{}});
+
+  input.addEventListener('input', function(){{
+    var q = this.value.trim().toLowerCase();
+    if (!q) {{ results.innerHTML = ''; return; }}
+    var hits = [];
+    if (bibleIdx) {{
+      bibleIdx.filter(function(e){{ return (e.term||'').toLowerCase().includes(q); }}).slice(0,4).forEach(function(e){{
+        hits.push('<a href="/bible/' + e.slug + '" style="display:flex;align-items:center;gap:8px;padding:8px;color:#e0e0f0;text-decoration:none;border-bottom:1px solid #2a2a4a;font-size:14px"><span style="background:#f5a623;color:#000;font-size:10px;font-weight:700;padding:2px 5px;border-radius:3px;flex-shrink:0">BIBLE</span>' + (e.term||e.slug) + '</a>');
+      }});
+    }}
+    if (articleIdx) {{
+      articleIdx.filter(function(a){{ return (a.title||'').toLowerCase().includes(q) || (a.slug||'').includes(q); }}).slice(0,4).forEach(function(a){{
+        hits.push('<a href="/articles/' + a.slug + '.html" style="display:flex;align-items:center;gap:8px;padding:8px;color:#e0e0f0;text-decoration:none;border-bottom:1px solid #2a2a4a;font-size:14px"><span style="background:#2a2a4a;color:#a0a0c0;font-size:10px;font-weight:700;padding:2px 5px;border-radius:3px;flex-shrink:0">ARTICLE</span>' + (a.title||a.slug) + '</a>');
+      }});
+    }}
+    results.innerHTML = hits.slice(0,8).join('') || '<p style="color:#888;font-size:13px;padding:8px">No results</p>';
+  }});
+}})();
+</script>
+<button id="btt-btn" onclick="window.scrollTo({{top:0,behavior:'smooth'}})" 
+  style="position:fixed;bottom:24px;right:24px;width:44px;height:44px;border-radius:50%;
+  background:#f5a623;color:#000;border:none;cursor:pointer;font-size:20px;font-weight:700;
+  display:none;align-items:center;justify-content:center;z-index:9000;
+  box-shadow:0 4px 16px rgba(0,0,0,0.4);transition:opacity .2s" 
+  aria-label="Back to top">&#8593;</button>
+<script>
+(function(){{
+  var btn = document.getElementById('btt-btn');
+  if (!btn) return;
+  window.addEventListener('scroll', function(){{
+    btn.style.display = window.scrollY > 400 ? 'flex' : 'none';
+  }}, {{passive:true}});
 }})();
 </script>
 </body>

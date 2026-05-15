@@ -10,8 +10,9 @@ import requests
 import base64
 import json
 import sys
+import os
 
-TOKEN = 'YOUR_GITHUB_TOKEN_HERE'
+TOKEN = os.environ.get('GITHUB_TOKEN', '')
 REPO = 'musicproductionwiki/musicproductionwiki'
 HEADERS = {
     'Authorization': f'token {TOKEN}',
