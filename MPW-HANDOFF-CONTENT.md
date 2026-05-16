@@ -1,5 +1,5 @@
 # MPW-HANDOFF-CONTENT.md
-*Updated: May 15, 2026 (SESSION 29)*
+*Updated: May 15, 2026 (SESSION 30)*
 
 ---
 
@@ -20,7 +20,7 @@
 | Vocal Autopsy | 3,800w | 4,200w / 5,000w |
 | Budget Recreation | 2,800w | 3,000w / 3,200w |
 | Bible v3.0 | 3,000w | 3,200w / 3,500w |
-| Bible v4.0 | 5,500w | 6,000w / 6,500w |
+| Bible v5.0 | 5,500w | 6,000w / 6,500w |
 
 Read time: calculate at 325 wpm.
 
@@ -66,21 +66,22 @@ Every article must include:
 
 ## Bible Entry Count
 
-- Total live: 201 entries (EQ + 200 batch)
-- bible-index.json: 200 entries (air missing)
-- Pending: air entry retry
+- Total live: 202 entries
+- bible-index.json: 201 entries (air may be missing)
+- Pending: air entry retry after template confirmed
 - Full Bible target: 1,500 entries
 
 ## Queued Batches
 
 | Batch | Articles | Dependencies |
 | --- | --- | --- |
-| 09 — breakdown | 100 | breakdowns.html ✅ LIVE — GO |
+| Bible Tier 1 | 50 rewrites | v5.0 template confirmed — READY after --test |
+| 09 — breakdown | 100 | breakdowns.html ✅ LIVE — GO after Tier 1 |
 | 10 — studio-story | 50 | Batch 09 committed |
 | 11 — recreation | 60 | recreations.html must exist |
 | 12 — vocal-autopsy | 35 | vocal-autopsies.html must exist |
 | 13 — budget-recreation | 60 | Batch 11 committed |
-| Bible next batches | ~1,300 remaining | v4.0 writer only — do NOT use v3.0 |
+| Bible next batches | ~1,300 remaining | v5.0 writer only — do NOT use v3.0 |
 
 ---
 
@@ -88,11 +89,12 @@ Every article must include:
 
 | Action | Detail | Priority |
 | --- | --- | --- |
-| Run mpw_fix_spotify.py | Patches eq.html + compression.html only | P0.2 — RUN NOW |
-| Test v4.0 writer | python mpw_bible_writer.py --test --slug compression --term "Compression" --category "Signal Processing" | P0.1 |
-| Retry air entry | python mpw_bible_writer.py --test --slug air --term "Air Frequency EQ" --category "Frequency" | P1.1 |
-| Run Batch 09 | python mpw_writer.py --batch batch09.txt --start-date 2026-03-01 | P1 |
-| Fix 5 missing og:image | python mpw_fix_meta.py | P1.2 |
+| Run mpw_bible_writer.py --test | python mpw_bible_writer.py --test --slug compression --term "Compression" --category "Signal Processing" | P0 — DO FIRST |
+| Run mpw_bible_cat_pages.py --run | Generates 8 Bible category pages | P0.2 — after test confirmed |
+| Run Tier 1 batch | python mpw_bible_writer.py --batch-file bible-upgrade-tier1.txt --start-date 2026-05-15 | P1 — after QA |
+| Retry air entry | python mpw_bible_writer.py --test --slug air-frequency-eq --term "Air Frequency EQ" --category "Frequency" | P1.2 |
+| Run Batch 09 | python mpw_writer.py --batch batch09.txt --start-date 2026-03-01 | P2 |
+| Fix 5 missing og:image | python mpw_fix_meta.py | P3 |
 | Add netlify.toml redirect | /dictionary/* → /bible/:splat 301 | P1.3 |
 | Affiliate applications | Plugin Boutique, Amazon Associates, Sweetwater, Loopmasters, PluginFox | HIGH — REVENUE BLOCKER |
 | Google Workspace email | Case 70817574 dispute pending | URGENT |
@@ -100,6 +102,7 @@ Every article must include:
 | Fix aside scrollbar | aside { overflow: visible; } in style.css | LOW |
 | brands.html | Build before committing nav reference | LOW |
 | Skimlinks reapply | Wait 90 days from rejection | 90 days |
+| Request Dreaming access | console.anthropic.com → Managed Agents → Dreaming research preview | Future |
 
 ### about.html bible bar patch one-liner
 
@@ -154,6 +157,7 @@ else:
 
 GA4 Measurement ID: G-79VB543KCT — obtained May 8, 2026
 Injected into main.js — mpw-analytics.js committed to /js/mpw-analytics.js
+Also injected into all Bible entry pages via build_html() in mpw_bible_writer.py v5.0
 
 ---
 
@@ -191,3 +195,40 @@ Layer 3: TruClarify handoff — qualified lead generator.
 1. Frequency Conflict Detector
 2. Arrangement Blueprint Generator
 3. ClearCheck Layer 1
+
+---
+
+# SESSION 30 UPDATE — CONTENT STATUS
+
+## Article Pipeline
+- Live articles: 526
+- Batch 09 (100 track breakdowns): NOT YET RUN — waiting for Bible Tier 1 to go first
+- Batches 10-13: NOT YET RUN — blocked by category pages + template fix
+
+## Bible Content Pipeline
+- Live Bible entries: 202
+- Tier 1 upgrade batch: bible-upgrade-tier1.txt — 50 entries — READY pending --test confirmation
+- Air entry retry: --slug air-frequency-eq --term "Air Frequency EQ" --category "Frequency"
+- Bible category pages: 8 pages NOT YET COMMITTED — run mpw_bible_cat_pages.py --run
+
+## GSC Findings (May 15, 2026)
+Top performing content by impression:
+1. Comparison articles dominate — "serum 2 vs vital", "logic pro vs ableton" etc
+2. All top queries are comparisons or "vs" queries
+3. Average position 16.4 — just off page 1
+4. 0 clicks — CTR problem, not ranking problem
+5. Action: optimize title tags and meta descriptions on top comparison articles
+
+## Content Strategy Insight
+Comparisons are the traffic beachhead. Double down on:
+- DAW comparisons (Logic vs Ableton variants = 29 impressions from 6 queries)
+- Microphone comparisons (SM7B vs Rode NT1 variants)
+- Plugin comparisons (Serum 2 vs Vital)
+Getting these from position 16 to position 5 = clicks start
+
+## Word Count Standards (unchanged)
+- Reviews: 3,200–3,500w
+- Comparisons: 3,300–3,500w
+- Techniques: 4,000–4,200w
+- Roundups: 3,500–3,800w
+- Bible entries v5.0: 5,500–6,500w (floor 5,500, target 6,000, ceiling 6,500)
