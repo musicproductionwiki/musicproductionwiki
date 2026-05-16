@@ -1,5 +1,5 @@
 # MPW-HANDOFF-SCRIPTS.md
-*Updated: May 15, 2026 (SESSION 30)*
+*Updated: May 16, 2026 (SESSION 31)*
 
 All scripts at: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\`
 GitHub API blocked from Claude's environment — all GitHub operations run from Steve's PowerShell.
@@ -66,7 +66,7 @@ SESSION 29 UPDATE: Also regenerates MPW-CATALOG.md from live slug list and inclu
 
 ---
 
-# mpw_bible_writer.py — v5.0 — SESSION 30
+# mpw_bible_writer.py — v5.0 — SESSION 31
 
 Location: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\mpw_bible_writer.py`
 
@@ -202,7 +202,7 @@ print(f'Score: {len(ok)}/{len(checks)}')
 
 ---
 
-# mpw_bible_cat_pages.py — SESSION 30 NEW
+# mpw_bible_cat_pages.py — SESSION 31 NEW
 
 Location: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\mpw_bible_cat_pages.py`
 
@@ -321,7 +321,7 @@ Never edit manually — always regenerate from live slug list.
 
 ---
 
-# SESSION 30 UPDATE — SCRIPTS STATUS
+# SESSION 31 UPDATE — SCRIPTS STATUS
 
 ## Scripts In mpw-scripts\ (committed to GitHub repo root)
 
@@ -375,3 +375,92 @@ compression:Compression:Signal Processing
 eq:EQ:Frequency
 ```
 Colon-separated, 3 parts. Never pipe-separated.
+
+---
+
+# SESSION 31 FINAL UPDATE — SCRIPTS
+
+## mpw_bible_writer.py — v5.1 (TO BE BUILT SESSION 32)
+
+v5.1 is a complete rewrite. Do NOT patch v5.0. Start clean.
+
+### Key differences from v5.0
+- Pass 1.5 added: load_quotes() + filter_quotes() between Pass 1 and Pass 2
+- quotes.json must be in same directory as script
+- Track examples: text-only, no links (Option A)
+- Nav: MPW slim bar + Bible bar + entry nav (NO identity bar, NO progress bar desktop)
+- 13 new content features (see Section 32 of CORE)
+- 75+ check validation suite (was 54)
+- New Pass 1 JSON fields: difficulty, prerequisites, misconception, before_after_text, the_number, the_number_label, the_number_context, daw_implementations, plugin_recommendations, genre_settings_rows, wikipedia_slug, wikidata_id
+
+### Run order (Session 32)
+```powershell
+. .\setenv.ps1
+python mpw_bible_writer.py --validate
+python mpw_bible_writer.py --test --slug compression --term "Compression" --category "Signal Processing"
+# QA desktop + mobile
+python mpw_bible_cat_pages.py --run
+python mpw_bible_writer.py --batch-file bible-upgrade-tier1.txt --start-date 2026-05-16
+```
+
+### quotes.json integration
+```python
+import json
+
+def load_quotes(path='quotes.json'):
+    with open(path) as f:
+        return json.load(f)
+
+def filter_quotes(quotes, tags, max_results=10):
+    scored = []
+    for q in quotes:
+        overlap = len(set(q['tags']) & set(tags))
+        if overlap > 0:
+            scored.append((overlap, q))
+    scored.sort(key=lambda x: -x[0])
+    return [q for _, q in scored[:max_results]]
+
+def build_quotes_context(quotes, entry_tags):
+    filtered = filter_quotes(quotes, entry_tags)
+    if not filtered:
+        return "No verified quotes available for this entry."
+    lines = ["VERIFIED PRODUCER QUOTES — use 1-2 maximum, weave naturally into prose, cite source:"]
+    for q in filtered:
+        lines.append(f'"{q["quote"]}" — {q["person"]}, {q["role"]} ({q["source"]})')
+        lines.append(f'  Source URL: {q["url"]}')
+    return "\n".join(lines)
+```
+
+### Token configuration (unchanged from v5.0)
+- PASS1_TOKENS: 20000 (DO NOT REDUCE)
+- PASS2_TOKENS: 16000
+- MODEL: claude-sonnet-4-6
+- Workers: 8 (ThreadPoolExecutor)
+- Streaming: True both passes
+- p1_str to Pass 2: 8000 chars
+
+### Environment variables (unchanged)
+```powershell
+$env:ANTHROPIC_API_KEY="sk-ant-..."
+$env:GITHUB_TOKEN="YOUR_GITHUB_TOKEN_HERE"
+```
+
+### Beehiiv PDF gate
+BEEHIIV_API_KEY placeholder in build_html() — Steve replaces with real key before committing.
+Publication ID from Beehiiv dashboard settings.
+This is a subscribe-only key — safe to embed in page JS.
+
+## quotes.json — v2
+Location: mpw-scripts\quotes.json
+318 verified quotes, 177 unique people
+Schema per entry:
+  person: str
+  role: str
+  quote: str
+  source: str (book title or publication + issue/date)
+  url: str (direct URL to source)
+  tags: list[str] (matching Bible entry tags)
+
+Spot-check recommended before Tier 1 batch — especially Rick Rubin (The Creative Act), Geoff Emerick (Here There and Everywhere), J Dilla quotes.
+
+To expand: add entries following same schema. Tags must match terms in CONFIRMED_LIVE_SLUGS or content category names.

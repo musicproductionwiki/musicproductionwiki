@@ -1,5 +1,5 @@
 # MPW-HANDOFF-TECH.md
-*Updated: May 15, 2026 (SESSION 30)*
+*Updated: May 16, 2026 (SESSION 31)*
 
 ---
 
@@ -208,7 +208,7 @@ Do NOT hardcode any affiliate URLs before approvals.
 
 ---
 
-# SESSION 30 UPDATE — TECH STATUS
+# SESSION 31 UPDATE — TECH STATUS
 
 ## Bible Page Architecture — v5.0 (CORRECT)
 
@@ -270,3 +270,101 @@ EXCLUDED: sidechain-compression, transient-shaping (confirmed 404 on live site)
 ## Recent Commits (Sessions 29-30)
 - bb650280 — Updated handoff modules (Session 29B)
 - Session 30 — No commits made (context ran out before test and commit)
+
+---
+
+# SESSION 31 FINAL UPDATE — TECH DECISIONS
+
+## Bible Page Nav Stack v5.1 (LOCKED — approved Session 31)
+
+### Desktop Sticky Chain
+```
+MPW slim bar       position:sticky  top:0    z-index:700  height:40px  background:#181818
+Bible bar          position:sticky  top:40px z-index:600  height:50px  background:#0d0d0d  border-bottom:1px solid rgba(245,166,35,0.25)
+Entry section nav  position:sticky  top:90px z-index:400  height:38px  background:#080808
+Dropdowns          z-index:99999
+#reading-progress  display:none on desktop
+```
+
+### Mobile Overrides
+```css
+@media (max-width: 768px) {
+  .bb-cats { display:none; }
+  .bible-mobile-bar { display:flex; position:sticky; top:90px; z-index:300; height:36px; }
+  .entry-nav { top:126px; }
+  #reading-progress { display:block; }
+}
+```
+
+### scroll-margin-top Rule
+ALL section heading elements with IDs must have:
+```css
+[id].entry-section { scroll-margin-top: 128px; }
+@media (max-width: 768px) {
+  [id].entry-section { scroll-margin-top: 136px; }
+}
+```
+This fixes anchor jump — entry nav links now land correctly below sticky bars.
+
+## MPW Slim Bar Design
+- Background: #181818
+- Height: 40px
+- Logo mark: 22px teal square with waveform SVG
+- Logo name: "MusicProductionWiki" — 12px, weight 500, rgba(255,255,255,0.55)
+- Nav links: Articles, Gear, About — 11px, rgba(255,255,255,0.35) — hover rgba(255,255,255,0.65)
+- Publication credit: "A MusicProductionWiki Publication" — 10px, italic, rgba(255,255,255,0.25) — right aligned
+- Search icon: muted
+- Sound Better CTA: 11px, muted border button
+
+## Bible Bar Design
+- Background: #0d0d0d
+- Height: 50px
+- Brand: diamond + "The Producer's Bible" — 14px, weight 500, color:#f5a623
+- Divider: 0.5px rgba(245,166,35,0.25)
+- Category pills: 12px, inactive rgba(255,255,255,0.4), active color:#f5a623 background:rgba(245,166,35,0.12) border:0.5px solid rgba(245,166,35,0.2)
+- "All entries": 11px, rgba(245,166,35,0.5), border button
+- Border bottom: 1px solid rgba(245,166,35,0.25)
+
+## Entry Section Nav Design
+- Background: #080808
+- Height: 38px
+- Pills: 11px, inactive rgba(255,255,255,0.35), active color:#f5a623 background:rgba(245,166,35,0.08)
+- overflow-x: auto, scrollbar-width: none
+- NO label before pills
+
+## Critical Rules
+- overflow:clip on html/body — NOT overflow:hidden (hidden breaks position:sticky)
+- NO main.js on Bible pages — self-contained JS only
+- NO identity bar (.bible-identity-bar) — removed Session 31
+- NO progress bar on desktop — removed Session 31 (replaced by Bible bar)
+- Progress bar KEPT on mobile — TOC hidden mobile so progress still needed
+
+## Quotes Database
+- File: mpw-scripts\quotes.json
+- v2: 318 quotes, 177 unique people
+- Used by v5.1 Pass 1.5 — tag-matched, max 10 filtered to Pass 2
+- Sources: 10 verified books (Rick Rubin, Bob Katz, Geoff Emerick, Phil Ramone, Daniel Lanois, Ken Scott, Sylvia Massy, Mike Senior, David Gibson, Quincy Jones) + documented interviews
+- Spot-check high-profile quotes against sources before launching Tier 1 batch
+
+## PDF Print CSS (@media print)
+Applied to Bible entry pages for email-gated PDF export:
+```css
+@media print {
+  .mpw-slim-bar, .bible-bar, .entry-nav, .sidebar,
+  .pdf-export-btn, #pdf-gate-modal, .site-footer,
+  .producer-spotlight, .prereq-chain { display:none !important; }
+  .entry-layout { grid-template-columns: 1fr !important; }
+  body { background:white !important; color:black !important; font-size:11pt; }
+  .entry-title { font-size:22pt !important; color:black !important; }
+  a { color:black !important; text-decoration:none !important; }
+  .producer-quote { border-left:2px solid #000 !important; padding-left:12px; }
+  .the-number-box { border:1px solid #000 !important; }
+  @page { margin:1.5cm; }
+}
+```
+
+## Future Architecture (do not build yet)
+- /producers/{slug}/ — Producer Profile pages — after Batch 09
+- /bible/categories/{slug}/{sub-slug}/ — subcategory pages — after 500 entries
+- PWA service worker — offline Bible cache — after 1,000 entries + 25K visitors
+- React Native app — after PWA validated

@@ -1,5 +1,5 @@
 # MusicProductionWiki.com — CORE Handoff
-*Updated: May 15, 2026 (SESSION 30) · 526 articles + 202 Bible entries live*
+*Updated: May 16, 2026 (SESSION 31 FINAL) · 526 articles + 202 Bible entries live*
 *Modular format — 6 GitHub files replace single monolithic handoff*
 
 ---
@@ -12,7 +12,7 @@ Module files (all in repo root):
 - MPW-HANDOFF-CORE.md — this file
 - MPW-HANDOFF-SCRIPTS.md — all script documentation
 - MPW-HANDOFF-CONTENT.md — article standards, word counts, batch pipeline
-- MPW-HANDOFF-BIBLE.md — Producer's Bible architecture + v5.0 spec
+- MPW-HANDOFF-BIBLE.md — Producer's Bible architecture + v5.1 spec
 - MPW-HANDOFF-ARTICLES.md — pointer file (live catalog = MPW-CATALOG.md)
 - MPW-HANDOFF-TECH.md — nav architecture, gold standard fingerprints, infrastructure
 
@@ -44,7 +44,7 @@ If you cannot recite all four, you have not read this document. Stop and re-read
 | NEVER deliver under minimum word count | See MPW-HANDOFF-CONTENT.md |
 | NEVER use Updated May 2025 | Always 2026 |
 | NEVER truncate any handoff module | Full reproduction required |
-| NEVER use GitHub web editor for CSS or JS | Silent corruption — always fetch via API → edit → commit via API PUT |
+| NEVER use GitHub web editor for CSS or JS | Silent corruption — always fetch via API then edit then commit via API PUT |
 | NEVER start normalisation before gold standard confirmed clean | Gold standard = suno-vs-udio.html — LOCKED |
 | NEVER rewrite suno-vs-udio.html | It is the gold standard — do not touch it |
 | NEVER run injection scripts blind | Test on 3 articles first |
@@ -61,7 +61,7 @@ If you cannot recite all four, you have not read this document. Stop and re-read
 | ALWAYS regenerate article list from GitHub API | Never copy old list |
 | ALWAYS run . .\setenv.ps1 at start of every PowerShell session | Keys clear on window close |
 | ALWAYS use Trees API for multi-file scripts | 1 file = individual PUT OK. 2+ files = Trees API ONLY |
-| NEVER run batches 09-13 before new category pages exist | breakdowns.html LIVE ✅ — recreations.html + vocal-autopsies.html must exist first |
+| NEVER run batches 09-13 before new category pages exist | breakdowns.html LIVE — recreations.html + vocal-autopsies.html must exist first |
 | NEVER start Producer's Bible entries before entry template is approved | Gold standard entry must be confirmed first |
 | NEVER use /dictionary/ as the Bible URL | URL structure is /bible/ |
 | NEVER touch suno-vs-udio.html | Article gold standard — LOCKED |
@@ -104,13 +104,13 @@ If you cannot recite all four, you have not read this document. Stop and re-read
 | ALWAYS use absolute paths in nav links | /about.html, /categories/techniques.html, /bible/, etc. |
 | ALWAYS use claude-sonnet-4-6 for new article generation | Mandatory — upgraded Session 21 |
 | NEVER run multiagent batch without --dry-run first | Always dry-run then test then full run |
-| NEVER run mpw_count.py using old GitHub contents API pagination | Replaced with Trees API version ✅ |
+| NEVER run mpw_count.py using old GitHub contents API pagination | Replaced with Trees API version |
 | ALWAYS use mpw_slugs.py after every batch commit | Refreshes slugs.txt from live repo |
 | NEVER trust local slugs.txt as article count source | Only accurate immediately after mpw_slugs.py |
-| NEVER fix title capitalisation in mpw_search_index.py as patch | Correct fix is in article <title> tags |
+| NEVER fix title capitalisation in mpw_search_index.py as patch | Correct fix is in article title tags |
 | NEVER include main.js on /bible/ pages | Conflicts with Bible page nav JS — crashes silently |
-| NEVER write Bible page JS via Python heredoc with single-quote escaping | Use raw string r"""...""" |
-| NEVER commit bible-index.json before /bible/index.html exists | Index page must exist first — RESOLVED ✅ |
+| NEVER write Bible page JS via Python heredoc with single-quote escaping | Use raw string r triple-quote |
+| NEVER commit bible-index.json before /bible/index.html exists | Index page must exist first — RESOLVED |
 | NEVER use position:absolute for dropdowns inside section with overflow:hidden | Use position:fixed with getBoundingClientRect() |
 | NEVER use bible-compression.html as Bible entry gold standard | bible/eq.html is the v3.0 gold standard |
 | NEVER run mpw_bible_writer.py without --test first and visual confirmation | Mandatory — always test before batch |
@@ -122,33 +122,41 @@ If you cannot recite all four, you have not read this document. Stop and re-read
 | ALWAYS run mpw_slugs.py before every batch write AND after every batch commit | Stale slugs cause dead related-article links |
 | NEVER use parallel thread fetching for GitHub Contents API in fix scripts | 15-20 threads triggers secondary rate limit — use 10 max |
 | NEVER paste Python code directly into PowerShell | Save as .py file and run python script.py |
-| NEVER strip entire <style> blocks when looking for CSS fingerprints | Nukes all page CSS — use append-only with !important |
+| NEVER strip entire style blocks when looking for CSS fingerprints | Nukes all page CSS — use append-only with !important |
 | NEVER write Bible page mobile fixes that touch desktop CSS | ALL Bible mobile fixes are @media(max-width:768px) only |
-| ALWAYS append mobile CSS as new <style> block — never strip-and-replace | Append-only approach is correct |
+| ALWAYS append mobile CSS as new style block — never strip-and-replace | Append-only approach is correct |
 | NEVER guess live HTML structure of Bible page before writing patch | Always fetch live HTML first |
 | NEVER run parallel blob creation for GitHub API | Always sequential with 403 backoff |
 | NEVER assume GitHub API is reachable from Claude's environment | api.github.com blocked — all GitHub ops from Steve's PowerShell |
-| NEVER give Steve browser console commands to paste in PowerShell | Console commands go in Chrome F12 → Console only |
+| NEVER give Steve browser console commands to paste in PowerShell | Console commands go in Chrome F12 Console only |
 | NEVER deliver fix script without verifying target string exists in live file | Multiple scripts failed due to mismatched patterns |
-| NEVER build Bible writer without running verification suite first | v5.0 = 54-check suite — all must pass before delivery |
+| NEVER build Bible writer without running verification suite first | v5.1 = 75+ check suite — all must pass before delivery |
 | ALWAYS verify mpw_bible_writer.py with python3 check script before delivering | Syntax check + content checks — fix any MISSING before delivery |
-| NEVER include Spotify iframes in Bible entries | Always use YouTube search link buttons |
+| NEVER include Spotify iframes or YouTube links in Bible entries | v5.1 uses text-only track citations — Option A confirmed Session 31 |
 | Bible batch format is slug:Term:Category (colon-separated, 3 parts) | Pipe-separated format fails — colons required |
 | NEVER patch Bible template incrementally across multiple iterations | One complete rewrite — audit fully — then test once |
-| NEVER remove Sound Better from desktop nav | Desktop keeps it — mobile only removal via @media(max-width:1024px) |
-| NEVER use direct Spotify track URIs in Bible entries | AI hallucinates fake IDs — use YouTube search links instead |
-| NEVER allow producer quote to render with literal asterisks | Strip asterisks in post-processing — wrap in <blockquote class="producer-quote"> |
-| NEVER allow emotional_hook to render with literal asterisks | Strip asterisks via .strip().strip('*').strip() in masthead |
-| NEVER allow AI to output related_terms or further_reading slugs not in CONFIRMED_LIVE_SLUGS | Validate at build time — omit invalid ones — sidechain-compression and transient-shaping CONFIRMED 404 |
-| NEVER run Tier 1 batch before Bible template passes full desktop AND mobile visual QA | Template is v5.0 — test --slug compression first |
-| NEVER use position:sticky with overflow:hidden on parent | Use overflow:clip instead — hidden creates stacking context that breaks sticky |
-| NEVER hardcode Bible category anchor links (/bible/#frequency etc) | Bible index has no anchor sections — link to /bible/categories/{slug} instead |
-| NEVER link track examples to MPW article pages | YouTube search links only |
-| NEVER include track_examples spotify_uri in Pass 1 JSON | AI hallucinates URIs — removed from schema entirely |
-| NEVER use open.spotify.com/search/ URLs | Requires login — SSL error on click |
-| History API pushState MUST be used when opening mobile drawer | Prevents back button navigating away from current page |
-| NEVER set $env:GITHUB_TOKEN or $env:ANTHROPIC_API_KEY inline in a .py file committed to GitHub | GitHub secret scanning blocks the commit — always use env vars |
+| NEVER remove Sound Better from desktop nav | Desktop keeps it — mobile only removal via @media(max-width:768px) |
+| NEVER link track examples to any external page | v5.1 uses text-only track citations — no links of any kind |
+| NEVER allow producer quote to render with literal asterisks | Strip asterisks in post-processing — wrap in blockquote.producer-quote |
+| NEVER allow AI to output related_terms or further_reading slugs not in CONFIRMED_LIVE_SLUGS | Validate at build time — omit invalid ones silently |
+| NEVER run Tier 1 batch before Bible template passes full desktop AND mobile visual QA | --test must pass and be visually confirmed first |
+| NEVER commit Bible page with navs not sticky | overflow:clip on html/body — NOT overflow:hidden |
+| NEVER commit Bible page with horizontal scroll on mobile | Verify in DevTools mobile emulation before batch |
+| ALWAYS audit mpw_bible_writer.py output with python audit script before delivering | Run full 75+ check suite — all must pass |
+| NEVER set env vars inline in .py files committed to GitHub | GitHub secret scanning blocks commit — always use env vars |
 | ALWAYS set both env vars at start of every PowerShell session | $env:GITHUB_TOKEN and $env:ANTHROPIC_API_KEY — both required |
+| NEVER use overflow:hidden on html/body in Bible pages | Use overflow:clip — hidden breaks position:sticky on all descendants |
+| NEVER use Spotify URIs or YouTube links in v5.1 Bible entries | Track examples are text-only citations — Option A confirmed |
+| NEVER invent article slugs for related-article links | Always verify against CONFIRMED_LIVE_SLUGS |
+| NEVER use a progress bar on Bible pages desktop | Replaced by Bible category nav bar — progress bar mobile only |
+| NEVER fabricate quotes from real producers | All quotes must come from quotes.json with verified source URL |
+| NEVER add quotes to entries without tag matching against quotes.json | Pass 1.5 filters by tag — never invent quotes inline |
+| NEVER build Producer Profile pages before Batch 09 exists | Option C sidebar now — Option B full profiles after Batch 09 |
+| NEVER build app before 1000 Bible entries + 25000 monthly visitors | Milestone trigger — revisit then |
+| NEVER use identity bar on Bible pages | Removed Session 31 — MPW slim bar + Bible bar replace it |
+| NEVER use Sections label in entry nav | Removed Session 31 — pill links only no label |
+| ALWAYS set scroll-margin-top on all Bible section headings | 128px desktop / 136px mobile — see Section 32 |
+| NEVER use the old Bible nav stack (identity bar + main nav + entry nav) | New stack: MPW slim bar + Bible bar + entry nav — Session 31 locked |
 
 ---
 
@@ -156,7 +164,7 @@ If you cannot recite all four, you have not read this document. Stop and re-read
 
 At 75% context, Claude must stop all work immediately and tell Steve:
 
-***"⚠️ I am at approximately 75% context. I will complete the current task only, then update the handoff and stop. A new session is required after this."***
+"I am at approximately 75% context. I will complete the current task only, then update the handoff and stop. A new session is required after this."
 
 This is not optional.
 
@@ -180,253 +188,362 @@ Every handoff update requires ALL of the following:
 
 ---
 
-# 2. PRIORITY TABLE (Updated Session 30)
+# 2. PRIORITY TABLE (Updated Session 31 Final)
 
 | Priority | Task | Status | Detail |
 |---|---|---|---|
-| **P0** | Run --test on compression | ❌ NOT YET RUN | python mpw_bible_writer.py --test --slug compression --term "Compression" --category "Signal Processing" |
-| **P0.1** | Desktop + mobile visual QA | ❌ NOT YET DONE | Must pass all checks before any batch |
-| **P0.2** | Run mpw_bible_cat_pages.py --run | ❌ NOT YET RUN | Generates 8 Bible category pages at /bible/categories/{slug} |
-| **P1** | Tier 1 batch — 50 Bible rewrites | After P0 confirmed | bible-upgrade-tier1.txt ready in mpw-scripts\ |
-| **P1.1** | Sitemap regeneration + GSC resubmission | After Tier 1 batch | 202 Bible entries not yet in sitemap |
-| **P1.2** | Air Bible entry retry | After template confirmed | --slug air-frequency-eq --term "Air Frequency EQ" --category "Frequency" |
-| **P1.3** | netlify.toml redirect /dictionary/* → /bible/:splat | Pending | 301 redirect for old URLs |
-| **P2** | Batch 09 — 100 track breakdowns | After Tier 1 | python mpw_writer.py --batch batch09.txt --start-date 2026-03-01 |
-| **P3** | Fix 5 articles missing og:image | mpw_fix_meta.py | Rate limited Session 27 — retry |
-| **P4** | Affiliate applications | REVENUE BLOCKER | Plugin Boutique, Amazon Associates, Sweetwater, Loopmasters, PluginFox — Steve must do |
-| **P5** | Google Workspace email | Steve action | Case 70817574 — domain-in-use conflict |
-| **P6** | recreations.html category page | Before Batch 11 | Must exist before Batch 11 runs |
-| **P7** | vocal-autopsies.html category page | Before Batch 12 | Must exist before Batch 12 runs |
-| **P8** | Bible index page redesign | Future session | Current index doesn't match v5.0 entry design language |
-| **P9** | Dreaming integration | After Tier 1 batch | Request Managed Agents access — implement after real session history exists |
+| P0 | Build mpw_bible_writer.py v5.1 | SESSION 32 P0 | Full rewrite incorporating all Session 31 decisions — see Section 32 spec |
+| P0.1 | Run --validate on v5.1 | After v5.1 built | 75+ checks must pass |
+| P0.2 | Run --test compression on v5.1 | After --validate passes | Visual QA desktop + mobile |
+| P0.3 | Run mpw_bible_cat_pages.py --run | After --test confirmed | 8 Bible category pages committed |
+| P1 | Tier 1 batch — 50 Bible rewrites | After P0 confirmed | python mpw_bible_writer.py --batch-file bible-upgrade-tier1.txt --start-date 2026-05-16 |
+| P1.1 | Air entry retry | After Tier 1 | python mpw_bible_writer.py --test --slug air-frequency-eq --term "Air Frequency EQ" --category "Frequency" |
+| P1.2 | Sitemap regeneration + GSC resubmission | After Tier 1 | 202+ Bible entries not yet in sitemap |
+| P1.3 | netlify.toml redirect /dictionary/* to /bible/:splat | Pending | 301 redirect for old URLs |
+| P2 | Batch 09 — 100 track breakdowns | After Tier 1 | python mpw_writer.py --batch batch09.txt --start-date 2026-03-01 |
+| P2.1 | Run mpw_dead_slug_audit.py | After Tier 1 commits | Find all dead related-article links |
+| P3 | Fix 5 articles missing og:image | mpw_fix_meta.py | Rate limited Session 27 — retry |
+| P4 | Affiliate applications | REVENUE BLOCKER | Plugin Boutique, Amazon Associates, Sweetwater, Loopmasters, PluginFox — Steve must do |
+| P5 | Google Workspace email | Steve action | Case 70817574 — domain-in-use conflict |
+| P6 | recreations.html category page | Before Batch 11 | Must exist before Batch 11 runs |
+| P7 | vocal-autopsies.html category page | Before Batch 12 | Must exist before Batch 12 runs |
+| P8 | Producer Profile pages /producers/ | After Batch 09 | Full content pillar — Option B — see Section 32 |
+| P9 | Bible subcategory pages | After 500 entries | /bible/categories/dynamics/compression/ etc |
+| P10 | Mobile app PWA first then React Native | After 1000 entries + 25K monthly visitors | Milestone trigger |
 
 ---
 
-# 16. NEXT SESSION START PROMPT (Session 31)
+# 16. NEXT SESSION START PROMPT (Session 32)
 
-"Session 30 completed mpw_bible_writer.py v5.0 and ran out of context before testing. Steve has both files: mpw_bible_writer.py and mpw_bible_cat_pages.py in mpw-scripts. P0 is: run . .\setenv.ps1, then python mpw_bible_writer.py --validate (must show 54/54), then python mpw_bible_writer.py --test --slug compression --term 'Compression' --category 'Signal Processing'. Confirm live page on desktop AND mobile. Then run python mpw_bible_cat_pages.py --run to commit 8 Bible category pages. Then run Tier 1 batch. Do NOT patch mpw_bible_writer.py further before testing — it has been patched 30+ times this session."
+"Run python mpw_session_start.py. State article count, Bible entry count, P0 priority, and last 3 NEVER rules added. P0 is building mpw_bible_writer.py v5.1 — a complete rewrite incorporating all Session 31 decisions. Read Section 32 of CORE in full before writing a single line of code. The v5.1 spec is complete and locked. Build it, run --validate (75+ checks), run --test compression, do desktop + mobile visual QA against the checklist in Section 32, then run mpw_bible_cat_pages.py --run, then Tier 1 batch."
 
 ---
 
 # 21. SESSION LOG (3 Most Recent)
 
-## May 15, 2026 — SESSION 30 — BIBLE WRITER v5.0 COMPLETE + CATEGORY PAGES
+## May 16, 2026 — SESSION 31 FINAL — STRATEGIC PLANNING + HANDOFF
 
-### What Was Completed
-Full rewrite of build_html() in mpw_bible_writer.py — v5.0. 54/54 validation checks pass. Two new scripts delivered.
+### What Was Decided (major — all implemented in v5.1)
 
-### Scripts Delivered This Session
-| Script | Status | Location |
-|---|---|---|
-| mpw_bible_writer.py v5.0 | ✅ 54/54 checks — ready to test | mpw-scripts\ |
-| mpw_bible_cat_pages.py | ✅ Syntax OK — ready to run | mpw-scripts\ |
+Nav architecture locked:
+- MPW slim bar 40px top — publisher identity, muted, Articles/Gear/About links, "A MusicProductionWiki Publication" right, search, Sound Better CTA
+- Bible bar 50px below — dominant amber branding, category nav, All entries right
+- Entry section nav 38px third — pill links only, NO Sections label
+- Progress bar: REMOVED desktop (category bar replaces it). KEPT mobile.
+- Identity bar: REMOVED entirely
+- scroll-margin-top: 128px desktop / 136px mobile on ALL section headings
+- Anchor jump fix: section IDs must match entry nav href targets exactly
 
-### mpw_bible_writer.py v5.0 — What Changed from v4.0
+Track examples Option A confirmed:
+- Text-only citations. No links. No YouTube. No Spotify.
+- Format: Artist — Track Title (Year, Album). Produced by Name.
 
-**HEAD block:**
-- Title: `{term} — The Producer's Bible | MusicProductionWiki.com`
-- og:image: hardcoded to og-default.jpg fallback
-- Added: og:image:width/height, article:published/modified/section, og:locale
-- Added: robots meta
-- Added: twitter:image, twitter:site @mpwikiofficial
-- Added: GA4 (G-79VB543KCT)
-- 4 separate schema script blocks: Article, FAQPage, BreadcrumbList, Speakable
-- sameAs on Article schema from Pass 1 schema_about_same_as field
-- dateModified always uses today's date (not pub_date) — signals rewrites to Google
+Quotes database confirmed:
+- quotes.json: 318 verified quotes, 177 people — drop in mpw-scripts\
+- Pass 1.5 between Pass 1 and Pass 2 — filter by tag, send max 10 to Pass 2
+- Pass 2 picks 1-2, weaves naturally with attribution
+- blockquote.producer-quote with cite linking to source URL
+- NEVER fabricate. NEVER use quotes not in quotes.json.
 
-**Sticky chain fixed (overflow:clip not overflow:hidden):**
-- Bible identity bar: position:sticky top:0 z:600 height:32px — desktop only
-- Main nav: position:sticky top:32px z:500 height:60px
-- Entry nav: position:sticky top:92px z:400 (desktop) / top:96px (mobile)
-- Dropdowns: z:99999 — above everything
-- Mobile: identity bar hidden, nav resets to top:0, bible bar top:60px z:300, entry nav top:96px
+13 new v5.1 features confirmed:
+1. Producer Profiles sidebar — Option C quotes-driven, links to /producers/{slug} placeholder
+2. The Number box — one definitive stat per entry
+3. Before/After text examples — prose before/after processing
+4. Common misconception block — myth + truth per entry
+5. Difficulty indicator — Beginner / Intermediate / Advanced badge
+6. Prerequisite chain — understand this first linked terms
+7. Print/PDF export — email gated via Beehiiv modal
+8. Last verified date — in entry footer
+9. Speakable schema — definition + quote sections tagged
+10. sameAs entity disambiguation — Wikipedia + Wikidata in Article schema
+11. DAW implementation notes — tabbed: Ableton / Logic / FL Studio / Pro Tools
+12. Plugin recommendations — tiered Free / Mid / Pro with affiliate placeholders
+13. Genre-specific settings tables — concrete numbers per genre
 
-**Nav:**
-- "The Producer's Bible" is now a dropdown with all 8 Bible categories
-- Sound Better restored on desktop, hidden at ≤1024px
-- Hamburger at ≤1024px
-- Mobile drawer: 2-column grid for Bible categories, Articles, and Gear sections
-- History API pushState on drawer open — back button closes drawer, not navigates away
+Long term architecture confirmed:
+- Producer Profile pages /producers/{slug} — after Batch 09 — highest value pillar not yet built
+- Bible subcategory pages — after 500 entries
+- Mobile app — PWA first, then React Native — after 1000 entries + 25K monthly visitors
+- App pricing: Free (50 rotating) / Pro $4.99mo or $39yr / Studio $9.99mo or $79yr
+- One subscription covers web + app
 
-**Content fixes:**
-- emotional_hook: asterisks stripped via .strip().strip('*').strip()
-- producer_quote: asterisks stripped, wraps in blockquote.producer-quote
-- signal_chain_position: extracted before f-string (was TypeError: unhashable type)
-- Related terms: validated against CONFIRMED_LIVE_SLUGS at build time
-- Further reading: validated against CONFIRMED_LIVE_SLUGS at build time
-- sidechain-compression and transient-shaping REMOVED from confirmed slug list (confirmed 404 live)
-
-**Track examples — root cause fixed:**
-- track_examples now in Pass 1 JSON schema (was missing — caused "Unknown" titles)
-- spotify_uri removed from schema entirely (AI hallucinates fake IDs)
-- Pass 2 receives locked track list extracted from Pass 1 — cannot invent new tracks
-- Reference links use YouTube search: google.com/search is gone, youtube.com/results?search_query= is live
-- Section heading: "Listen on YouTube"
-
-**Social share:**
-- Removed from content body
-- Added to sidebar (visible while reading)
-- Added to footer (X and Reddit links)
-
-**Newsletter:**
-- Full-width breakout strip (margin:-24px, border-top/bottom amber)
-
-**Sidebar:**
-- align-self:start added — required for position:sticky to work
-- top:120px
-- "Browse The Bible" hardcoded list replaced with dynamic Related Terms from entry
-- Related Terms also shown in sidebar with validation
-
-**Bible identity bar:**
-- "◆ The Producer's Bible" dominant (large amber bold)
-- "A MusicProductionWiki Publication" secondary (dimmed)
-
-**Signal chain SVG:**
-- Fixed-width 140px boxes, labels truncated at 18 chars with ellipsis
-- dominant-baseline:middle for text centering
-- width:100% SVG scales to container
-
-**Mobile:**
-- Search button added to mobile drawer
-- Back-to-top: bottom:32px right:20px (clears iOS home indicator)
-- Entry nav: "Sections ›" label at left, 11px font, pill-shaped links
-- overflow:clip on html/body (not overflow:hidden — hidden breaks sticky)
-
-### mpw_bible_cat_pages.py — New Script
-
-Generates 8 Bible category pages at /bible/categories/{slug}/index.html:
-- dynamics, frequency, time-based, signal-processing, mixing, mastering, synthesis, music-theory
-- Each page: identity bar, nav with Bible dropdown, hero, category siblings strip, client-side search/filter, entry card grid from bible-index.json
-- Run: `python mpw_bible_cat_pages.py --test` then `python mpw_bible_cat_pages.py --run`
-
-### What Was NOT Done This Session
-- --test not run (session ran out of context)
-- Desktop/mobile visual QA not done
-- Tier 1 batch not run
-- Category pages not committed
-- Handoff not committed to GitHub (Steve must run commit_handoff.py)
-
-### Issues Identified and Fixed This Session
-| Issue | Root Cause | Fix |
-|---|---|---|
-| Progress bar + nav not sticky | overflow:hidden on body creates stacking context | Replaced with overflow:clip |
-| "Unknown" track titles | track_examples missing from Pass 1 JSON schema | Added to schema — Pass 2 receives locked list |
-| Spotify links 404 | AI hallucinates fake track IDs | Removed URI entirely — YouTube search URLs |
-| Spotify search SSL error | open.spotify.com/search requires login | Replaced with YouTube search |
-| Related terms 404 | sidechain-compression + transient-shaping in slug list but not live | Removed from CONFIRMED_LIVE_SLUGS |
-| Asterisks on emotional_hook | No stripping in masthead render | .strip().strip('*') added |
-| Identity bar wrong hierarchy | Publication credit was dominant | "The Producer's Bible" now dominant |
-| Sidebar hardcoded entries | Shows Compression link on Compression page | Dynamic related terms from entry |
-| Bible categories flat list | Not 2-column in drawer | All drawer sections now 2-column grid |
-| Back button navigates away | Drawer open not in browser history | History API pushState on drawer open |
-| signal_chain_position TypeError | Dict access inside f-string | Extracted to variable before f-string |
-
----
-
-## May 15, 2026 — SESSION 29B — BIBLE TEMPLATE QA + BUG LIST
-
-### What Was Tested
-Live visual QA of musicproductionwiki.com/bible/compression on desktop (Chrome) and mobile (iPhone).
-
-### What Works
-| Item | Status |
+### What Was Built
+| Deliverable | Status |
 |---|---|
-| Two-pass streaming generation | ✅ Pass 1: 36 fields, Pass 2: 11 fields |
-| Word count | ✅ 13,885 words |
-| Nav dropdowns desktop | ✅ Articles + Gear working |
-| TOC sidebar active highlighting | ✅ Amber highlight on scroll |
-| Progress bar | ✅ Percentage-based |
-| Back to top button | ✅ Amber, bottom right |
-| Further reading links | ✅ /bible/ paths |
-| Search overlay opens | ✅ ESC closes |
-| Content quality | ✅ Institutional grade |
-| mpw_fix_spotify.py | ✅ eq.html + compression.html patched |
+| quotes.json v2 | 318 quotes 177 people — delivered to Steve |
+| All 6 handoff modules updated | Session 31 Final versions |
+| Nav stack mockup | Approved and locked |
+| v5.1 spec written | Section 32 of this file |
 
-### What Was Broken (all fixed in Session 30)
-All 25 SEO items, nav stickiness, mobile bible bar, hamburger, asterisks, track examples, social share placement, sidebar, signal chain SVG.
+### Nothing Committed to GitHub This Session
+Steve commits via commit_handoff.py. quotes.json manually dropped into mpw-scripts\.
 
 ---
 
-## May 15, 2026 — SESSION 29 — HANDOFF RESTRUCTURE + BIBLE WRITER V4.0
+## May 16, 2026 — SESSION 31 MORNING — HANDOFF UPDATE + VALIDATE
 
-| Task | Result |
+### What Was Done
+- Uploaded all 6 handoff modules Session 30 versions
+- Updated all 6 handoff modules to Session 31
+- --validate confirmed 54/54 on v5.0
+- --test compression confirmed live
+
+---
+
+## May 15, 2026 — SESSION 30 — v5.0 BIBLE WRITER REWRITE
+
+### What Was Built
+| Deliverable | Status |
 |---|---|
-| Handoff restructure (6 modular files) | ✅ Committed — b0f1fbb |
-| mpw_bible_writer.py v4.0 | ✅ Built — streaming, 55-check suite |
-| mpw_fix_spotify.py | ✅ Built — patched eq.html + compression.html |
-| mpw_session_start.py | ✅ Built — fetches live state |
-| commit_handoff.py | ✅ Built — Trees API commit script |
+| mpw_bible_writer.py v5.0 | Built — 54/54 validation checks |
+| mpw_bible_cat_pages.py | Built — generates 8 Bible category pages |
+| All 6 handoff modules | Session 30 versions delivered |
+
+### Key v5.0 Changes
+- Two-pass architecture — Pass 1 20000 tokens JSON / Pass 2 16000 tokens prose
+- overflow:clip on html/body — fixed position:sticky
+- 54-check validation suite
+- CONFIRMED_LIVE_SLUGS dead link prevention
+- Track examples used YouTube search links (superseded by Option A text-only in v5.1)
 
 ---
 
-# 30. SESSION 30 — BIBLE TEMPLATE v5.0 SPEC (COMPLETED)
+# 32. SESSION 32 — v5.1 BIBLE WRITER COMPLETE SPEC
 
-See session log above for full list of changes. The v5.0 template is complete. The compression test entry must be run and visually confirmed before any batch.
+## Ground Rules
+- Read this entire section before writing a single line of code
+- v5.1 is a complete rewrite of build_html() AND pass architecture
+- Do NOT patch v5.0 incrementally — full clean rewrite
+- After writing run --validate — 75+ checks must all pass
+- Run --test compression — visual QA desktop + mobile — then batch
 
-## CONFIRMED_LIVE_SLUGS (Python constant in mpw_bible_writer.py)
+## Nav Architecture — LOCKED (approved Session 31)
 
+Desktop sticky chain (top to bottom):
+```
+MPW slim bar       position:sticky  top:0    z-index:700  height:40px  background:#181818
+Bible bar          position:sticky  top:40px z-index:600  height:50px  background:#0d0d0d
+Entry section nav  position:sticky  top:90px z-index:400  height:38px  background:#080808
+Dropdowns          z-index:99999
+Reading progress   display:none on desktop
+```
+
+MPW slim bar content: SVG logo-mark + MusicProductionWiki name (left) / Articles Gear About links (muted, center-left) / "A MusicProductionWiki Publication" italic muted (right) / search icon / Sound Better CTA button
+
+Bible bar content: diamond + "The Producer's Bible" amber (left) / vertical divider / 8 category pills center (active category highlighted amber) / "All entries right"
+
+Entry nav: pill links for each section. NO label. Active pill highlighted amber. overflow-x:auto scrollable. scrollbar-width:none.
+
+scroll-margin-top on ALL section heading elements:
+```css
+[id].entry-section { scroll-margin-top: 128px; }
+@media (max-width: 768px) {
+  [id].entry-section { scroll-margin-top: 136px; }
+}
+```
+
+Mobile overrides:
+```css
+@media (max-width: 768px) {
+  .bb-cats { display:none; }
+  .bible-mobile-bar { display:flex; position:sticky; top:90px; z-index:300; }
+  .entry-nav { top:126px; }
+  #reading-progress { display:block; }
+}
+```
+
+## Track Examples — Option A Text Only
+
+No links of any kind. Format:
+```html
+<div class="track-examples-list">
+  <div class="track-item">
+    <span class="track-artist">Michael Jackson</span> —
+    <span class="track-name">Billie Jean</span>
+    <span class="track-meta">(1982, Thriller). Produced by Quincy Jones.</span>
+    <div class="track-note">{listening_note from Pass 1}</div>
+  </div>
+</div>
+```
+
+## Quotes — Pass 1.5 Architecture
+
+Between Pass 1 JSON generation and Pass 2 prose generation, script:
+1. Loads quotes.json from same directory as script
+2. Filters by tag overlap with entry's category tags
+3. Scores by overlap count, takes top 10
+4. Passes as locked context string to Pass 2 prompt
+
+Pass 2 picks 1-2 quotes maximum and formats as:
+```html
+<blockquote class="producer-quote">
+  <p>"Quote text."</p>
+  <cite>— Person Name, Role (<a href="{url}" target="_blank" rel="noopener">{source short}</a>)</cite>
+</blockquote>
+```
+
+Producer spotlight sidebar — built from same filtered quotes:
+```html
+<div class="producer-spotlight">
+  <h3>Producers Who Master This</h3>
+  <div class="ps-card">
+    <div class="ps-name">{person}</div>
+    <div class="ps-role">{role}</div>
+    <a href="/producers/{name-slug}" class="ps-link">View Profile</a>
+  </div>
+</div>
+```
+
+## 13 New Features — Pass 1 JSON Fields Required
+
+Pass 1 must return these additional fields:
+- `difficulty`: "Beginner" | "Intermediate" | "Advanced"
+- `prerequisites`: list of up to 3 slugs from CONFIRMED_LIVE_SLUGS
+- `misconception`: {myth: str, truth: str}
+- `before_after_text`: {before: str, after: str}
+- `the_number`: str (the key stat e.g. "4:1")
+- `the_number_label`: str (e.g. "typical ratio for drums")
+- `the_number_context`: str (1-2 sentence explanation)
+- `daw_implementations`: {ableton: str, logic: str, fl_studio: str, pro_tools: str}
+- `plugin_recommendations`: {free: [{name, manufacturer}], mid: [...], pro: [...]}
+- `genre_settings_rows`: [{genre, ratio, attack, release, threshold, notes}]
+- `wikipedia_slug`: str or null (e.g. "Dynamic_range_compression")
+- `wikidata_id`: str or null (e.g. "Q134556") — omit if uncertain
+- `last_verified`: auto-set to current month + year at build time
+
+## PDF Export — Email Gate
+
+Button in entry content:
+```html
+<button class="pdf-export-btn" onclick="openPdfGate()">
+  Download Reference Sheet
+</button>
+```
+
+Modal (inline in page, hidden by default):
+```html
+<div id="pdf-gate-modal" class="pgm-overlay" style="display:none">
+  <div class="pgm-card">
+    <button class="pgm-close" onclick="closePdfGate()">x</button>
+    <h3>Get the {term} Reference Sheet</h3>
+    <p>Free with The Producer's Briefing — our weekly newsletter for music producers.</p>
+    <input type="email" id="pgm-email" placeholder="your@email.com">
+    <button class="pgm-submit" onclick="submitPdfGate()">Get My Free Sheet</button>
+    <p class="pgm-fine">No spam. Unsubscribe anytime.</p>
+    <p id="pgm-error" style="display:none;color:red"></p>
+  </div>
+</div>
+```
+
+JS flow:
+1. User clicks button — modal opens
+2. User enters email — clicks submit
+3. JS POSTs to Beehiiv subscriptions API with email
+4. On success: close modal, call window.print()
+5. @media print CSS hides all nav/sidebar/footer — clean one-pager prints
+
+Beehiiv API call (embed pub_id from Beehiiv dashboard — not a secret key):
+```javascript
+async function submitPdfGate() {
+  const email = document.getElementById('pgm-email').value;
+  if (!email) return;
+  const resp = await fetch('https://api.beehiiv.com/v2/publications/PUB_ID/subscriptions', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json','Authorization':'Bearer BEEHIIV_API_KEY'},
+    body: JSON.stringify({email, reactivate_existing:true, send_welcome_email:true})
+  });
+  if (resp.ok) { closePdfGate(); window.print(); }
+  else { document.getElementById('pgm-error').style.display='block'; }
+}
+```
+
+NOTE: BEEHIIV_API_KEY placeholder — Steve replaces with real key before committing. This is a publications-only key with no read access — low risk to embed.
+
+## sameAs Entity Disambiguation
+
+In Article JSON-LD schema, extend the `about` field:
+```json
+"about": {
+  "@type": "Thing",
+  "name": "{term}",
+  "sameAs": [
+    "https://en.wikipedia.org/wiki/{wikipedia_slug}",
+    "https://www.wikidata.org/wiki/{wikidata_id}"
+  ]
+}
+```
+Only include sameAs if Pass 1 returned non-null values. Never hallucinate IDs.
+
+## Updated Validation Check Suite (75+ target)
+
+All existing 54 checks plus:
+- 'mpw-slim-bar CSS': 'mpw-slim-bar' in content
+- 'bible-bar CSS': 'class="bible-bar"' in content
+- 'bb-cats CSS': 'bb-cats' in content
+- 'scroll-margin-top': 'scroll-margin-top' in content
+- 'reading-progress mobile only': 'display:none' in content and 'reading-progress' in content
+- 'track-item no href': 'track-item' in content
+- 'no youtube in tracks': 'youtube.com' not in content
+- 'no spotify in tracks': 'spotify.com' not in content
+- 'producer-quote blockquote': 'class="producer-quote"' in content
+- 'producer-spotlight': 'producer-spotlight' in content
+- 'prereq-chain': 'prereq-chain' in content
+- 'difficulty-badge': 'difficulty-badge' in content
+- 'misconception-block': 'misconception-block' in content
+- 'before-after-block': 'before-after-block' in content
+- 'the-number-box': 'the-number-box' in content
+- 'daw-tabs': 'daw-tabs' in content
+- 'plugin-recs': 'plugin-recs' in content
+- 'genre-settings-table': 'genre-settings-table' in content
+- 'pdf-export-btn': 'pdf-export-btn' in content
+- 'pdf-gate-modal': 'pdf-gate-modal' in content
+- 'last-verified': 'last-verified' in content
+- 'SpeakableSpecification': 'SpeakableSpecification' in content
+- 'sameAs in schema': 'sameAs' in content
+- 'load_quotes function': 'load_quotes' in content
+- 'filter_quotes function': 'filter_quotes' in content
+- 'no identity bar': 'bible-identity-bar' not in content
+- 'no Sections label': 'Sections' + chr(0xbb) not in content
+
+---
+
+# INFRASTRUCTURE REFERENCE
+
+- Repo: github.com/musicproductionwiki/musicproductionwiki
+- GitHub Token: YOUR_GITHUB_TOKEN_HERE (expires Aug 2, 2026)
+- Anthropic API Key: Set via $env:ANTHROPIC_API_KEY in PowerShell
+- Netlify: Project ID classy-haupia-be8e43 — auto-deploys on GitHub push
+- Scripts dir: C:\Users\swarn\OneDrive\Desktop\mpw-scripts\
+- Articles dir: C:\Users\swarn\OneDrive\Documents\Music Production Wiki\Articles\
+- GA4 ID: G-79VB543KCT
+- Newsletter: Beehiiv — "The Producer's Briefing"
+- Contact: mpwikiofficial@gmail.com
+- Twitter/X: @mpwikiofficial
+- Gold standard article: articles/suno-vs-udio.html — LOCKED do not touch
+- Gold standard Bible v3.0: bible/eq.html — CONFIRMED
+- Gold standard Bible v5.1: bible/compression.html — AFTER v5.1 --test confirmed and QA passes
+- OG default image: /images/og-default.jpg
+- Bible URL structure: /bible/{slug} — never /dictionary/
+- Quotes database: mpw-scripts\quotes.json — 318 quotes, 177 people — v2
+
+## GSC Data (May 15, 2026 — 3 month view)
+- 301 total impressions / 0 clicks / 0% CTR / 16.4 average position
+- Top queries: serum 2 vs vital (10), logic pro vs ableton (9), ableton live vs logic pro (6), rode nt1 vs shure sm7b (5)
+- Comparisons are the traffic beachhead — position 16 to 5 = clicks start
+- Action: title tag + meta description optimization on top comparison articles
+
+## Confirmed Live Bible Slugs (CONFIRMED_LIVE_SLUGS constant in script)
 compression, eq, limiting, saturation, distortion, reverb, delay, parallel-compression, multiband-compression, noise-gate, gain-staging, headroom, stereo-imaging, mid-side-processing, bus-compression, mix-bus, send-return, automation, mastering, lufs, dynamic-range, true-peak-limiting, loudness-normalization, subtractive-synthesis, fm-synthesis, wavetable-synthesis, additive-synthesis, lfo, envelope, oscillator, adsr, vocoder, high-pass-filter, low-pass-filter, parametric-eq, shelving-eq, resonance, harmonic-distortion, chorus, flanger, phaser, tremolo, vibrato, plate-reverb, room-reverb, convolution-reverb, clip-gain, air-frequency-eq, air
 
-NOTE: sidechain-compression and transient-shaping REMOVED — confirmed 404 on live site.
+EXCLUDED (confirmed 404): sidechain-compression, transient-shaping
 
-## Desktop Visual QA Checklist (must pass before batch)
-- [ ] Progress bar at top, 3px, amber — sticky
-- [ ] Identity bar "◆ The Producer's Bible | A MusicProductionWiki Publication" — sticky
-- [ ] Nav sticky below identity bar — doesn't move on scroll
-- [ ] "The Producer's Bible" nav item opens dropdown with 8 categories
-- [ ] Articles and Gear dropdowns work, appear above entry nav
-- [ ] Sound Better button present in nav
-- [ ] Entry section nav sticky below main nav, active item highlights amber
-- [ ] TOC sidebar sticky on right, highlights current section
-- [ ] Back to top visible after scrolling
-- [ ] Search opens with Ctrl+K, finds Bible + Article results with badges
-- [ ] Social share buttons in sidebar and footer
-- [ ] Breadcrumb visible above masthead
-- [ ] Further Reading links all go to /bible/ (not 404)
-- [ ] Related terms all go to /bible/ (not 404)
-- [ ] Producer quote styled as blockquote, no asterisks
-- [ ] Emotional hook — no asterisks
-- [ ] YouTube reference track links open YouTube search
-- [ ] Signal chain SVG readable, not overflowing
-
-## Mobile Visual QA Checklist (must pass before batch)
-- [ ] No horizontal scroll
-- [ ] Identity bar hidden on mobile
-- [ ] Bible bar visible as second sticky bar below nav
-- [ ] Hamburger shows, tapping opens drawer
-- [ ] Drawer: Bible categories in 2-column grid
-- [ ] Drawer: Articles in 2-column grid
-- [ ] Drawer: Gear in 2-column grid
-- [ ] Back button closes drawer (not navigates away)
-- [ ] Entry nav "Sections ›" label visible, scrolls horizontally
-- [ ] All content full width — nothing cut off right
-- [ ] Sidebar hidden
-- [ ] Back to top visible after scroll
-
-## Infrastructure Reference
-
-- **Repo:** github.com/musicproductionwiki/musicproductionwiki
-- **GitHub Token:** YOUR_GITHUB_TOKEN_HERE (expires Aug 2, 2026)
-- **Anthropic API Key:** Set via $env:ANTHROPIC_API_KEY in PowerShell
-- **Netlify:** Project ID classy-haupia-be8e43 — auto-deploys on GitHub push
-- **Scripts dir:** C:\Users\swarn\OneDrive\Desktop\mpw-scripts\
-- **GA4 ID:** G-79VB543KCT
-- **Newsletter:** Beehiiv — "The Producer's Briefing"
-- **Contact:** mpwikiofficial@gmail.com
-- **Twitter/X:** @mpwikiofficial
-- **Gold standard article:** articles/suno-vs-udio.html — LOCKED
-- **Gold standard Bible entry:** bible/compression.html (v5.0) — after test confirmed
-- **OG default image:** /images/og-default.jpg
-- **Bible URL structure:** /bible/{slug} — never /dictionary/
-- **Bible category pages:** /bible/categories/{slug} — generated by mpw_bible_cat_pages.py
-
-## Pending Owner Actions (Steve must do — not Claude)
+## Pending Owner Actions
 1. Affiliate applications: Plugin Boutique, Amazon Associates, Sweetwater, Loopmasters, PluginFox — REVENUE BLOCKER
 2. Google Workspace email: Case 70817574 — domain-in-use conflict
-3. Beehiiv newsletter: confirm embed code for Bible page newsletter widget
-4. Twitter/X account: confirm @mpwikiofficial handle is live for share buttons
-5. Request Managed Agents access for Dreaming feature (future session)
+3. Drop quotes.json v2 into mpw-scripts\ folder
+4. Replace BEEHIIV_API_KEY placeholder in v5.1 before committing
+5. Run v5.1 --validate then --test then QA then cat pages then Tier 1 batch
 
-## Batch Files Ready to Run (after template confirmed)
-- `bible-upgrade-tier1.txt` — 50 Tier 1 Bible rewrites — in mpw-scripts\
-- `batch09.txt` — 100 track breakdowns — location TBC
+## Batch Files Ready to Run (after v5.1 template QA confirmed)
+- bible-upgrade-tier1.txt — 50 Tier 1 Bible rewrites — in mpw-scripts\
+- batch09.txt — 100 track breakdowns — run after Tier 1

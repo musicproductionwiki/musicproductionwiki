@@ -1,5 +1,5 @@
 # MPW-HANDOFF-ARTICLES.md
-*Updated: May 15, 2026 (SESSION 30)*
+*Updated: May 16, 2026 (SESSION 31)*
 
 ---
 
@@ -62,7 +62,7 @@ ableton-live-12-review, ableton-live-12-vs-11, ableton-live-12-vs-fl-studio-21, 
 
 ---
 
-# SESSION 30 UPDATE — ARTICLES STATUS
+# SESSION 31 UPDATE — ARTICLES STATUS
 
 ## Live Count: 526 articles
 ## Bible Count: 202 entries
@@ -80,3 +80,28 @@ Use this for duplicate checking — never invent slugs.
 
 ## Action Required (Session 31)
 After Tier 1 batch commits, run mpw_dead_slug_audit.py to find all dead related-article links across all 526 articles and 202 Bible entries.
+
+---
+
+# SESSION 31 FINAL UPDATE — ARTICLES STATUS
+
+## Live Count: 526 articles (unchanged)
+## Bible Count: 202 entries (unchanged)
+## quotes.json: 318 verified quotes — v2 — in mpw-scripts\
+
+## Producer Profile Pages — Future Pillar
+URL structure: /producers/{slug}/
+Example slugs: andrew-scheps, rick-rubin, bob-clearmountain, quincy-jones
+NOT YET BUILT — build after Batch 09 exists
+When built: add to search-index.json + sitemap.xml + bible-index cross-references
+
+## Bible Subcategory Pages — Future Architecture
+URL structure: /bible/categories/{category}/{sub-slug}/
+NOT YET BUILT — build after 500 Bible entries live
+
+## Action Required (Session 32)
+P0: Build mpw_bible_writer.py v5.1 — see Section 32 of CORE
+After v5.1 confirmed: run Tier 1 batch (50 entries)
+After Tier 1: run mpw_dead_slug_audit.py across all 526 articles + 202 entries
+After Tier 1: run Batch 09 (100 breakdowns)
+After Batch 09: begin Producer Profile pages

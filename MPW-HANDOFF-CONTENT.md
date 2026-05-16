@@ -1,5 +1,5 @@
 # MPW-HANDOFF-CONTENT.md
-*Updated: May 15, 2026 (SESSION 30)*
+*Updated: May 16, 2026 (SESSION 31)*
 
 ---
 
@@ -198,7 +198,7 @@ Layer 3: TruClarify handoff — qualified lead generator.
 
 ---
 
-# SESSION 30 UPDATE — CONTENT STATUS
+# SESSION 31 UPDATE — CONTENT STATUS
 
 ## Article Pipeline
 - Live articles: 526
@@ -232,3 +232,68 @@ Getting these from position 16 to position 5 = clicks start
 - Techniques: 4,000–4,200w
 - Roundups: 3,500–3,800w
 - Bible entries v5.0: 5,500–6,500w (floor 5,500, target 6,000, ceiling 6,500)
+
+---
+
+# SESSION 31 FINAL UPDATE — CONTENT DECISIONS
+
+## Bible Entry v5.1 Word Count Standards
+- Floor: 5,500 words (unchanged)
+- Target: 6,000 words (unchanged)
+- Ceiling: 6,500 words (unchanged)
+- New content features add ~400-600 words per entry (DAW notes, genre tables, plugin recs)
+- Adjust Pass 2 prompt to target 6,000 words net of new structured sections
+
+## Track Examples — Option A (FINAL DECISION)
+Text-only citations. No links of any kind. Premium reference books don't link to streams.
+Format: Artist — Track Title (Year, Album). Produced by Name.
+Pass 1 field `listening_guide` provides context note for each track — shown as track-note div.
+3-5 tracks per entry.
+
+## Producer Quotes — System Confirmed
+318 verified quotes in quotes.json v2.
+Sources: 10 books + documented interviews from Sound On Sound, Tape Op, Rolling Stone, Billboard, Resident Advisor.
+Pass 1.5 filters by tag. Pass 2 picks 1-2 max.
+Attribution: full name, role, source, URL.
+NEVER fabricate. NEVER use quotes not in quotes.json.
+
+## New Content Sections Per Entry (v5.1)
+Each Bible entry now includes these additional sections beyond v5.0:
+1. Difficulty badge — in masthead
+2. Prerequisite chain — below masthead, above definition
+3. The Number box — early in content, amber card
+4. Before/After text — in How It Works section
+5. Common misconception block — in its own section
+6. DAW implementation tabs — Ableton / Logic / FL Studio / Pro Tools
+7. Plugin recommendations — tiered Free / Mid / Pro
+8. Genre settings table — concrete numbers
+9. Producer spotlight sidebar — quotes-driven
+10. Producer quote blockquote — woven into prose
+11. PDF export button — email gated
+12. Last verified date — in footer
+
+## Producer Profile Pages — Content Spec (Future — after Batch 09)
+URL: /producers/{slug}/
+Sections:
+- Hero: name, photo placeholder, role, known for
+- Production philosophy (3-4 paragraphs)
+- Signature gear (table: item, type, used for)
+- Signature techniques (3-5 with Bible entry links)
+- Notable productions (table: artist, album, year, role)
+- Quotes (from quotes.json filtered by person)
+- Bible entries they appear in (auto-generated from quotes.json tag matching)
+- Related producers (by shared tags/genre)
+Word count: 2,000-3,000 words
+This is a separate content pillar from breakdowns. Breakdowns cover tracks. Profiles cover people.
+
+## Content Pipeline Update
+Batch 09 (100 breakdowns) unlocks Producer Profile pages.
+Each breakdown links to the producer's profile page.
+Each profile links back to all their breakdowns.
+This creates a web of internal links that compounds with every new entry.
+
+## Bible Entry Economics (v5.1)
+Two passes + Pass 1.5 quote filtering = slightly more tokens per entry.
+Estimated: ~40,000 tokens per entry (was ~36,000).
+Per entry cost: ~$0.20.
+For 1,000 entries: ~$200.
