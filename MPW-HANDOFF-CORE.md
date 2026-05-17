@@ -1,5 +1,5 @@
 # MusicProductionWiki.com — CORE Handoff
-*Updated: May 17, 2026 (SESSION 33) · 526 articles + 202 Bible entries live*
+*Updated: May 17, 2026 (SESSION 34) · 526 articles + 202 Bible entries live*
 *Modular format — 6 GitHub files replace single monolithic handoff*
 
 ---
@@ -165,11 +165,21 @@ If you cannot recite all four, you have not read this document. Stop and re-read
 | NEVER stack multiple appended CSS style blocks on Bible pages | Causes cascading conflicts — use ONE consolidated override block |
 | NEVER hide .bible-bar on mobile | Bible bar must always show as product identity — hide only bb-cats/bb-all/bb-divider on mobile |
 | NEVER use stacked append-only CSS when patches conflict | Consolidate all overrides into one style block before committing |
-| Every shareable section must have Copy Link + Share on X + Reddit | Three buttons, uniform .mpw-share-btn styling, flex:1 equal width |
-| NEVER make share buttons different sizes | Use flex:1 on .mpw-share-btn so all three are always equal width |
+| Every shareable section must have Copy Link + Share on X + Reddit | Order: Copy Link → Share on X → Reddit — uniform .mpw-share-btn styling — equal height 34px |
+| NEVER make share buttons different sizes | All .mpw-share-btn must have same height (34px), same border-radius (6px), same font-size |
 | Producer's Verdict must be in the entry nav | 20th pill — id="verdict" on .producers-verdict wrapper |
 | Email API gate is bypassed — Kit/Brevo to be wired at P3.5 | openGateFor() fires downloads directly — no modal shown |
 | NEVER wire Beehiiv API — use Kit free API at P3.5 | Kit account created, API key in Bible gate API.txt in mpw-scripts\ |
+| NEVER patch a Bible page without first fetching the live file from GitHub via PowerShell script | Claude cannot access GitHub or the live site — all patches must be Python scripts run by Steve |
+| NEVER guess the target string in a patch script | Always fetch the live file in the same script and print the relevant section before replacing |
+| NEVER run fix_combined.py or similar without pasting the full audit output before committing | Audit output must be verified in chat before commit proceeds |
+| NEVER use display:block!important on the aside element | This prevents mobile CSS from hiding it — use CSS media queries only |
+| The sidebar was hidden because gain-calculator div was unclosed | That div swallowed the aside as a nested child — balance check: entry-main should have exactly 1 unclosed div |
+| NEVER commit Bible HTML without running balance check on entry-main | Opens=Closes+1 — any other value means broken DOM |
+| Footer share buttons are X and Reddit only — no Copy Link | Centered, equal size, branded colors — not full-width stretched |
+| .mpw-share-btn has flex:1 1 0 — footer buttons must use .footer-share-btn class to override | .footer-share-btn { flex:0 0 auto !important; width:auto !important; padding:0 18px !important; } |
+| Share bar order is ALWAYS: Copy Link → Share on X → Reddit | No exceptions — this order confirmed Session 34 |
+| NEVER use Set-Content in PowerShell for Python scripts with CSS values | Use create_file tool to output .py files — PowerShell mangles colons and semicolons |
 
 ---
 
@@ -201,18 +211,16 @@ Every handoff update requires ALL of the following:
 
 ---
 
-# 2. PRIORITY TABLE (Updated Session 33)
+# 2. PRIORITY TABLE (Updated Session 34)
 
 | Priority | Task | Status | Detail |
 |---|---|---|---|
-| P0 | compression.html v5.1 gold standard committed | COMPLETE Session 33 | Live at bible/compression.html — SHA d5427723 — 170KB — unified share bars — Producer's Verdict in nav — Bible bar always visible |
-| P0.1 | mpw_bible_writer.py v5.1 built | COMPLETE Session 33 | 2,387 lines — syntax OK — 80/81 checks vs gold standard — in mpw-scripts\ |
-| P0.2 | compression.html visual QA — mobile share bars uniform | IN PROGRESS Session 33 | Share bars have equal-width flex:1 buttons — DAW tab blank yellow box fix pending — sidebar confirmed on desktop — mobile buttons not fully uniform yet |
-| P0.3 | Run --test compression on updated writer | NEXT SESSION P0 | Run after compression.html visual QA confirmed clean |
+| P0 | Footer share buttons fix | INCOMPLETE Session 34 | X and Reddit only, centered, equal size — fix_footer_v5.py committed SHA to verify — .footer-share-btn class added — visual confirmation needed Session 35 |
+| P0.3 | Run --test compression on updated writer | NEXT after footer confirmed | Run after compression.html visual QA 100% confirmed clean |
 | P0.4 | Run mpw_bible_cat_pages.py --run | After --test confirmed | 8 Bible category pages committed |
-| P1 | Build Moat 1 — Glossary Tooltip System | Session 34 after P0 confirmed | data-tooltip system, JS lookup against bible-index.json, CSS tooltip card |
-| P1.1 | Build Moat 2 — "Was This Helpful?" feedback | Session 34 after Moat 1 | Level vote + text field + GA4 + Google Form/Sheets backend |
-| P1.2 | Build Moat 3 — DAW preference localStorage | Session 34 after Moat 2 | 10 lines JS — localStorage key mpw_daw_pref |
+| P1 | Build Moat 1 — Glossary Tooltip System | After P0 confirmed | data-tooltip system, JS lookup against bible-index.json, CSS tooltip card |
+| P1.1 | Build Moat 2 — "Was This Helpful?" feedback | After Moat 1 | Level vote + text field + GA4 + Google Form/Sheets backend |
+| P1.2 | Build Moat 3 — DAW preference localStorage | After Moat 2 | 10 lines JS — localStorage key mpw_daw_pref |
 | P2 | Tier 1 batch — 50 Bible rewrites | After P0.3 + P0.4 confirmed | python mpw_bible_writer.py --batch-file bible-upgrade-tier1.txt --start-date 2026-05-16 |
 | P2.1 | Air entry retry | After Tier 1 | python mpw_bible_writer.py --test --slug air-frequency-eq --term "Air Frequency EQ" --category "Frequency" |
 | P2.2 | Sitemap regeneration + GSC resubmission | After Tier 1 | 202+ Bible entries not yet in sitemap |
@@ -235,25 +243,87 @@ Every handoff update requires ALL of the following:
 
 ---
 
-# 16. NEXT SESSION START PROMPT (Session 34)
+# 16. NEXT SESSION START PROMPT (Session 35)
 
 "Run python mpw_session_start.py. State article count, Bible entry count, P0 priority, and last 5 NEVER rules added.
 
-P0 is completing visual QA on compression.html. The file is live at musicproductionwiki.com/bible/compression. Check these specific issues on both desktop and mobile:
-1. Share buttons — are all three (Copy Link / Share on X / Reddit) equal width on mobile AND desktop?
-2. DAW tabs — is the first tab (Ableton) showing blank yellow? If yes fix the active state CSS.
-3. Sidebar — is the TOC visible on desktop and scrollable?
-4. Producer's Verdict — is VERDICT in the entry nav and does it jump to the section?
+P0 is fixing the footer share buttons on compression.html. Check the live page at musicproductionwiki.com/bible/compression on mobile AND desktop:
+1. Footer — does it show X and Reddit only (no Copy Link)? Are they the same size? Are they centered and not stretched full width?
+2. If footer buttons are still full width: the .footer-share-btn class with flex:0 0 auto !important must be applied. Fetch the live file, check if .footer-share-btn CSS exists in style block 2, check if the footer buttons have class footer-share-btn. Fix whatever is wrong in ONE script that fetches, patches, and commits.
+3. All other share bars — verify Copy Link → Share on X → Reddit order on both desktop and mobile. Confirm equal height (34px) and branded colors (Copy=amber, X=black, Reddit=red).
+4. Sidebar — confirm hidden on mobile, visible on desktop with TOC scrolling.
 
-If any issues remain: fetch the live file, fix in one consolidated CSS block (NOT appended patches), commit. Do not add more than 2 style blocks total to any Bible page.
+After footer and share bars confirmed clean: proceed to P0.3 — python mpw_bible_writer.py --test --slug compression --term 'Compression' --category 'Signal Processing' --tier 1. Compare output to live gold standard. Fix discrepancies. Then P0.4 — mpw_bible_cat_pages.py --run.
 
-After visual QA passes: run P0.3 — python mpw_bible_writer.py --test --slug compression --term 'Compression' --category 'Signal Processing' --tier 1. Compare output to live gold standard. Fix discrepancies. Then run P0.4 — mpw_bible_cat_pages.py --run.
+Then build Moat 1 (glossary tooltip system). Read HANDOFF-CORE Section 33 spec before building.
 
-Then build Moat 1 (glossary tooltip system). Read HANDOFF-CORE Section 33 spec before building."
+KEY RULE FOR SESSION 35: Never use Set-Content in PowerShell for Python scripts. Always use create_file tool to output .py files and have Steve download and run them. PowerShell mangles colons and semicolons in CSS values."
 
 ---
 
 # 21. SESSION LOG (3 Most Recent)
+
+## May 17, 2026 — SESSION 34 — COMPRESSION.HTML VISUAL QA + SHARE BARS
+
+### What Was Done
+
+This session was entirely dedicated to visual QA on compression.html — fixing the sidebar, share buttons, and footer. It took approximately 40 commits due to cascading HTML structure bugs and iterative CSS patching.
+
+### Root Cause of Sidebar Failure — CRITICAL
+
+The sidebar (`<aside class="entry-sidebar">`) was a direct child of `.bible-entry-wrap` in the source HTML but was being swallowed inside `.entry-main` by the browser. Root cause: the `<div class="gain-calculator" id="gr-calculator">` div was NEVER CLOSED in the HTML. This caused the browser to treat everything after the calculator — including the aside — as nested inside the gain-calculator div, which was itself inside entry-main. The grid had only 1 direct child (entry-main) so the second column never rendered.
+
+**Fix:** Added `</div><!-- /gain-calculator -->` immediately before the `<!-- Signal Chain Position -->` comment. SHA: `da97338e3fdc0c75ec02634fc25668203d654619`
+
+**Lesson:** ALWAYS run a div balance check on entry-main before committing any Bible page. The correct balance is opens = closes + 1 (for entry-main itself). Use find_unclosed2.py pattern.
+
+### Sidebar CSS Fix
+
+The `display:block!important` inline style on the `<aside>` element was preventing the mobile `@media(max-width:768px)` CSS from hiding it. Fix: removed `display:block!important` from aside inline style, left only `min-width:280px;width:280px;position:sticky;top:148px;align-self:start;overflow-y:auto;height:calc(100vh - 168px)`. The `@media(min-width:769px)` CSS rule `display:block !important` handles desktop visibility. The `@media(max-width:768px)` rule `display:none !important` handles mobile hiding.
+
+### Share Bar System — Final Architecture
+
+All share bars rebuilt to be uniform: **Copy Link → Share on X → Reddit**, same height (34px), same border-radius (6px), branded colors.
+
+CSS class `.mpw-share-btn` properties:
+- `display:inline-flex; align-items:center; justify-content:center; gap:4px`
+- `flex:1 1 0; min-width:0; height:34px; padding:0 8px`
+- `border-radius:6px; font-size:11px; font-weight:700; box-sizing:border-box`
+- `.share-copy`: `background:#f5a623; color:#000; border:1px solid #f5a623`
+- `.share-x`: `background:#000; color:#fff; border:1px solid #000`
+- `.share-reddit`: `background:#ff4500; color:#fff; border:1px solid #ff4500`
+
+Mobile: `display:grid; grid-template-columns:1fr 1fr 1fr` — equal columns, buttons don't stretch vertically.
+
+### Footer Share Buttons
+
+Footer uses X and Reddit only — no Copy Link (Steve's decision). Buttons must be centered and same size. The problem: `.mpw-share-btn` has `flex:1 1 0` which stretches buttons full width inside a flex container.
+
+Fix attempted: Added `.footer-share-btn { flex:0 0 auto !important; width:auto !important; padding:0 18px !important; }` CSS class and applied it to footer buttons alongside `.mpw-share-btn`. SHA: last commit of session — visual confirmation needed Session 35.
+
+### Session 34 Commit Log (key SHAs)
+
+| SHA | What |
+|---|---|
+| 4a1d115b | First sidebar CSS fix attempt — bare display:none removed |
+| e5c6c614 | Aside height constraint removed |
+| b92be506 | Debug red border added to aside |
+| da97338e | **ROOT FIX — gain-calculator div closed — sidebar appeared** |
+| de721781 | Debug red border removed from aside |
+| 82a7f552 | Share bar CSS replaced — all branded colors |
+| 268a4949 | Tools share bar + footer share buttons fixed |
+| 48bc8bf3 | All share bars rebuilt — Copy Link > X > Reddit order |
+| 13a5351e | Unclosed span removed from calculator section |
+| Last | Footer share: .footer-share-btn class + X and Reddit only |
+
+### Outstanding Issues (Session 35 P0)
+
+1. **Footer share buttons** — .footer-share-btn class was added in fix_footer_v5.py — visual confirmation needed. If still stretching full width on mobile, the CSS class needs to be verified in the style block.
+2. **P0.3** — mpw_bible_writer.py --test still not run. Do not run Tier 1 batch until writer --test passes visual QA.
+3. **Bottom social-share** — replaced with mpw-share-bar — verify order and appearance.
+4. **Sidebar share widget** — converted from social-share (vertical) to mpw-share-bar (horizontal) — verify on desktop.
+
+---
 
 ## May 17, 2026 — SESSION 33 — COMPRESSION.HTML V5.1 GOLD STANDARD + INFRASTRUCTURE
 
@@ -288,28 +358,17 @@ Then build Moat 1 (glossary tooltip system). Read HANDOFF-CORE Section 33 spec b
 - All use .mpw-share-bar class with .mpw-share-btn flex:1 = equal width buttons
 - Every share bar: Copy Link + Share on X + Reddit
 - Verdict share copies all 6 rules as clean text to clipboard
-- Tools section has its own Share this tool bar (X + Reddit + Copy Link)
+- Tools section has its own Share this tool bar
 
 **CSS architecture:**
 - Reduced from 7 appended style blocks (conflicting) to 2 style blocks (main + consolidated override)
 - Desktop sidebar restored: @media(min-width:769px) grid:1fr 280px with display:block on entry-sidebar
 - All mobile overrides in single consolidated block
 
-**Email gate:**
-- openGateFor() bypassed — downloads fire directly
-- TODO P3.5: wire Kit free API (key in Bible gate API.txt)
-- Modal HTML kept in page but never shown
-
 **Infrastructure (Session 33):**
 - Fastmail: team@musicproductionwiki.com — MX records at Netlify DNS — DKIM/SPF verified
 - Kit: free plan — up to 10K subscribers with API — key saved
 - Beehiiv: free Launch plan — up to 2,500 subscribers — welcome email configured
-
-### Outstanding Issues on compression.html (Session 34 P0)
-
-1. **Share buttons mobile** — flex:1 applied but visual uniformity needs confirmation after latest commit
-2. **DAW tab blank yellow** — first tab (Ableton) rendering as amber box — text may be white-on-amber — CSS fix needed
-3. **Writer --test not yet run** — P0.3 not complete — do not run Tier 1 batch until --test passes visual QA
 
 ---
 
@@ -321,187 +380,29 @@ Then build Moat 1 (glossary tooltip system). Read HANDOFF-CORE Section 33 spec b
 | compression.html v5.1 gold standard | COMPLETE — 153KB — 38/38 checks — at /mnt/user-data/outputs/compression.html |
 | All 6 handoff modules updated | Session 32 Final versions — this commit |
 
-### Gold Standard compression.html — Full Feature List
-
-**Nav Stack (v5.1 locked):**
-- MPW slim bar (40px, z:700, #181818) — logo + Articles/Gear/About + "A MusicProductionWiki Publication" + search + Sound Better CTA
-- Bible bar (50px, z:600, #0d0800) — diamond + title + 8 category pills (active highlighted amber) + All entries
-- Entry nav (top:90px, z:400) — 19 pill links, no label, active tracking JS
-- Mobile: SVG hidden → vertical .scm-box stack. bible-mobile-bar shown. Entry nav top:126px.
-- 6 breakpoints: 380px, 400px, 480px, 600px, 768px, 1024px
-
-**Content (19 sections):**
-definition, how-it-works, parameters, quick-reference, signal-chain, diagram, history, how-to-use, genre-table, hardware-plugin, before-after, in-the-wild, types, mistakes, flags, progression, faq, tools, related
-
-**Content Features:**
-- Difficulty badge (Intermediate)
-- Prereq chain (3 linked terms)
-- Start Here learning path box
-- Quick Answer block
-- PDF export button (email gated)
-- Unified smart gate modal (3 assets: full PDF, quickref, genre table)
-- Common misconception block
-- The Number box (amber stat card)
-- Section summaries (amber left-border callouts)
-- Signal chain SVG 1440×160px — full labels + sub-descriptions + "YOU ARE HERE"
-- Mobile vertical signal chain (.scm-box stack)
-- Interaction warnings (3)
-- DAW tabs (Ableton/Logic/FL/Pro Tools) — localStorage preference next session
-- Genre settings table (5 genres × 5 parameters) — with share + email-gated download
-- Hardware vs plugin comparison table
-- Plugin recs (Free/Mid/Pro tiers) in outer card
-- Before/After block (outer card)
-- 7 track examples (text-only, no links)
-- 4 history sub-sections in left-bordered cards
-- 2 producer quotes (Rick Rubin + Bob Clearmountain — from quotes.json, compression tag)
-- Types grid (6 cards)
-- Comparison callouts (Compression vs Limiting, Compression vs Saturation) — mobile 1-col
-- Producers Verdict
-- Common Mistakes (6)
-- Red/Green Flags (cards)
-- Progression Path (3 stages)
-- FAQ accordion (8 questions)
-- Also in The Bible (8 related term cards with previews)
-- Tools section with GR Calculator
-
-**Interactive Tools:**
-- Gain Reduction Calculator (live JS — 4 inputs → GR, output level, excess above threshold, final after makeup)
-- Save Settings as PDF button (email gated → downloadQuickRef)
-- Copy Settings button (clipboard → tab-separated text)
-- Quick Reference share on X + Download Card (email gated)
-- By Genre share on X + Download Cheat Sheet (email gated)
-- Smart gate modal (openGateFor — 3 asset types, email validation, loading state)
-
-**SEO / Schema (5 blocks):**
-- Article + sameAs (Wikidata + DBpedia)
-- FAQPage (8 questions)
-- BreadcrumbList
-- Speakable (cssSelector: .qa-text, .entry-term, .entry-hook)
-- HowTo (5 steps for parameter setting)
-- lastReviewed in Article schema
-- Internal links: /bible/bus-compression, /bible/gain-staging, /bible/limiting, /bible/saturation, /bible/parallel-compression
-
-**Sidebar:**
-- Full TOC (19 links) with IntersectionObserver tracking
-- Producer spotlight (3 cards — Rubin, Clearmountain, Scheps)
-- Share buttons
-- Newsletter signup
-- (No duplicate related terms — consolidated into in-page "Also in The Bible" section)
-
-**Removed from v5.0:**
-- Audio toggle placeholder ("Coming Soon") — deleted entirely
-- Further Reading section — redundant with "Also in The Bible"
-- Duplicate sidebar related terms
-- YouTube track links — text-only citations only
-- Identity bar
-
-**Stats:**
-- Words: 7,058 content words
-- Read time: 22 min
-- File: 153KB (under 200KB Cloudflare limit)
-- Nav links: 19
-- H2s: 21 / H3s: 10
-- FAQs: 8 / Track items: 7 / Producer quotes: 2
-- Schema blocks: 5
-- Mobile checks: 38/38
-
-
 ### Key Strategic Decisions Made Session 32
 
 **Three-Tier Bible Template System — LOCKED:**
-| Tier | Name | Word Range | Pass 2 Prose Target | Use For |
-|---|---|---|---|---|
-| 1 | Flagship | 6,800–7,800w | 5,800–6,500w | Top 200-300 cornerstone terms |
-| 2 | Standard | 3,800–5,000w | 3,000–3,800w | Mid-range terms |
-| 3 | Reference | 1,500–2,500w | 1,200–1,800w | Narrow/technical terms |
-
-Batch file format extended: `slug:Term:Category:Tier` (was 3 parts, now 4)
-Tier determines which build_html function is called: build_html_t1(), build_html_t2(), build_html_t3()
-Tier 3 non-negotiables: full nav stack, all SEO schema, canonical, OG/Twitter, newsletter, Also in The Bible, Bible colophon
-
-**Tools as Moat — Architecture Decided:**
-
-Three moats built/planned:
-
-Moat 1 — Glossary Tooltip System (SESSION 33):
-- data-tooltip="slug" attribute on technical terms in prose
-- JS lookup against bible-index.json (already exists)
-- CSS tooltip card appears on hover/tap
-- Writer updated to wrap CONFIRMED_LIVE_SLUGS terms in spans
-- 1,500 entries × avg 15 tooltips = 22,500 automatic internal links
-- No other music production site has this
-
-Moat 2 — "Was This Helpful?" Feedback (SESSION 33):
-- Three buttons: Beginner / Intermediate / Advanced (level match vote)
-- One text field: "What's missing?" (open)
-- GA4 event on submission
-- Google Form/Sheets backend (no database needed initially)
-- Data calibrates tier classification and shapes future content decisions
-
-Moat 3 — DAW Preference localStorage (SESSION 33):
-- On first Bible visit: prompt "Which DAW?" — 4 buttons
-- Stores to localStorage key mpw_daw_pref
-- Every subsequent Bible entry auto-opens to preferred DAW tab
-- 10 lines of JS — highest effort:impact ratio of any planned feature
-
-**Tools Category Architecture — Decided:**
-
-Two entry points:
-1. `/tools/` — standalone hub page (grid of all tools, submittable to Product Hunt)
-2. `/bible/categories/tools/` — 9th Bible category pill (filters entries with interactive tools)
-3. Individual tool pages at `/tools/[slug]/` when a tool graduates beyond its Bible entry
-
-Tool priority order:
-1. GR Calculator — already live on compression entry ✅
-2. Delay Time Calculator — highest search volume ("delay time calculator bpm") — next
-3. Frequency Reference Tool — most linkable/shareable — on EQ entry
-4. LUFS Target Calculator — mastering/loudness entries
-5. Attack/Release Time Calculator — extends compression entry
-6. BPM Tap Tempo — trivially simple, very high volume
-7. ClearCheck Layer 1 — flagship, unique to MPW via TruClarify
-
-Gate strategy: NEVER gate the tool itself. Gate the download/save output only. Free tool use is the moat. Email capture on "Save as PDF" / "Download Cheat Sheet" — not on calculator use.
-
-**Section-Level Sharing System — Built:**
-- Genre table: Share on X + Copy Link + Download Cheat Sheet (email gated)
-- Quick Reference: Share on X + Copy Settings (clipboard) + Download Card (email gated)
-- Calculator: Save Settings as PDF (email gated)
-- Smart unified gate modal handles all 3 asset types
-
-**Moat 4 (future) — "Where to Go Next" Smart Nav:**
-- 3 opinionated next-steps per entry: Beginner path / Deeper dive / Solve a problem
-- Pass 1 returns next_steps field: {beginner_slug, deeper_slug, problem_slug}
-- Higher pages-per-session, turns Bible into a course not just a reference
-
-**Moat 5 (future) — Verified Settings Badges:**
-- Cross-reference genre settings with quotes.json documented settings
-- "↗ Verified from [Source]" badge on settings backed by engineer interviews
-- Citable claims that get linked to from forums and other sites
-
----
-
-## May 16, 2026 — SESSION 31 FINAL — STRATEGIC PLANNING + HANDOFF
-
-### What Was Decided
-Nav architecture locked: MPW slim bar + Bible bar + entry nav. Identity bar removed. Progress bar desktop removed, mobile kept. Quotes system confirmed (quotes.json, Pass 1.5). 13 new v5.1 features confirmed. Three-tier word count system initiated.
-
-### What Was Built
-quotes.json v2 (318 quotes, 177 people). All 6 handoff modules Session 31 Final. Nav stack mockup approved. v5.1 spec written.
+| Tier | Name | Word Range | Pass 2 Prose Target |
+|---|---|---|---|
+| 1 | Flagship | 6,800–7,800w | 5,800–6,500w |
+| 2 | Standard | 3,800–5,000w | 3,000–3,800w |
+| 3 | Reference | 1,500–2,500w | 1,200–1,800w |
 
 ---
 
 # 32. SESSION 32 — v5.1 GOLD STANDARD — COMPLETE SPEC
 
-This section documents the gold standard compression.html built in Session 32 and refined in Session 33. Do not modify the committed file directly — modify the writer to match it.
+This section documents the gold standard compression.html built in Session 32 and refined in Sessions 33 and 34. Do not modify the committed file directly — modify the writer to match it.
 
 ## The Gold Standard File
 
 Location: `bible/compression.html`
 Built: May 16, 2026 — Session 32
-Refined: May 17, 2026 — Session 33 (multiple commits)
-Current SHA: d5427723fb9758420a8bbc03cf6d072f59f35f22
-Size: 170KB (was 153KB — grew with share bars, verdict, CSS consolidation)
+Refined: May 17, 2026 — Sessions 33 + 34 (multiple commits)
+Current state: Visual QA in progress Session 34 — footer share pending confirmation Session 35
 Style blocks: 2 (main + consolidated override)
+Style block 2 now also contains: `.footer-share-btn` class for footer-only button sizing
 
 ## Nav Stack — FINAL v5.1 (Session 33 confirmed)
 
@@ -531,21 +432,59 @@ Mobile (≤768px):
 
 definition, how-it-works, parameters, quick-reference, signal-chain, history, how-to-use, genre-table, hardware-plugin, before-after, in-the-wild, types, **verdict**, plugin-recs, mistakes, flags, progression, faq, tools, related
 
-## Unified Share Bar System (Session 33)
+## Share Bar System — FINAL (Session 34)
 
-CSS class: `.mpw-share-bar` / `.mpw-share-btn`
-All buttons use `flex:1` for equal width — no exceptions.
-Button variants: `.share-copy` (amber) / `.share-x` (black) / `.share-reddit` (red #ff4500)
-4 shareable sections: quick-reference, genre-table, gr-calculator, verdict
-Label goes full-width on its own row (width:100%)
+CSS class: `.mpw-share-bar` / `.mpw-share-btn` / `.footer-share-btn`
+
+Button order: **Copy Link → Share on X → Reddit** (everywhere, no exceptions)
+
+Base `.mpw-share-btn`:
+- `display:inline-flex; align-items:center; justify-content:center; gap:4px`
+- `flex:1 1 0; min-width:0; height:34px; padding:0 8px; border-radius:6px`
+- `font-size:11px; font-weight:700; box-sizing:border-box; transition:opacity .15s`
+
+Variants:
+- `.share-copy`: `background:#f5a623; color:#000; border:1px solid #f5a623`
+- `.share-x`: `background:#000; color:#fff; border:1px solid #000`
+- `.share-reddit`: `background:#ff4500; color:#fff; border:1px solid #ff4500`
+
+Footer override `.footer-share-btn`:
+- `flex:0 0 auto !important; width:auto !important; padding:0 18px !important`
+- Footer shows X and Reddit only — no Copy Link
+
+Mobile `.mpw-share-bar`:
+- `display:grid !important; grid-template-columns:1fr 1fr 1fr !important; gap:6px !important`
+- Label spans full width: `grid-column:1 / -1`
+
+Share bars in the page (8 total):
+1. Quick Reference — Copy Link → X → Reddit
+2. GR Calculator — Copy Link → X → Reddit
+3. Genre Table — Copy Link → X → Reddit
+4. Verdict — Copy Link → X → Reddit (centered, dark background footer)
+5. Tools — Copy Link → X → Reddit
+6. Footer mpw-share-bar — X → Reddit only (no Copy Link, centered, .footer-share-btn class)
+7. Bottom page social-share — replaced with mpw-share-bar — Copy Link → X → Reddit
+8. Sidebar share widget — mpw-share-bar horizontal — Copy Link → X → Reddit
+
+## Sidebar — FINAL (Session 34)
+
+The sidebar was broken for most of Session 34 due to an unclosed gain-calculator div.
+
+Aside inline style (final): `style="min-width:280px;width:280px;position:sticky;top:148px;align-self:start;overflow-y:auto;height:calc(100vh - 168px);"`
+
+DO NOT add `display:block!important` to the aside inline style — it prevents mobile CSS from hiding it.
+
+Desktop: `@media(min-width:769px)` CSS sets `display:block !important` on `.entry-sidebar`
+Mobile: `@media(max-width:768px)` CSS sets `display:none !important` on `.entry-sidebar`
+
+The grid also has inline style: `style="display:grid!important;grid-template-columns:1fr 280px!important;gap:40px!important;align-items:start!important;max-width:1100px!important;margin:0 auto!important;padding:40px 24px!important"` — this was added as a nuclear override after style.css investigation revealed no conflicting rules. The inline grid is safe to keep.
 
 ## Email Gate — Bypassed (Session 33)
 
 openGateFor() fires downloads directly. No modal shown.
 TODO P3.5: wire Kit free API — key saved in Bible gate API.txt in mpw-scripts\
-Beehiiv API requires paid plan ($49+/month) — not used.
 
-## Infrastructure Added Session 33
+## Infrastructure (Session 33 — unchanged Session 34)
 
 - Email: team@musicproductionwiki.com via Fastmail — DNS verified at Netlify
 - Email list: Kit free plan (up to 10K subscribers, API included)
@@ -555,20 +494,6 @@ Beehiiv API requires paid plan ($49+/month) — not used.
 ---
 
 # 33. SESSION 33 — PRIORITIES + SPECS
-
-## P0: compression.html Gold Standard — COMPLETE
-
-Committed Session 33. Multiple fix commits during session refining:
-- Share bars unified (4 sections, 3 buttons each, flex:1 equal width)
-- Bible bar always visible as product identity
-- Producer's Verdict redesigned (amber header + 2-col grid + share bar)
-- CSS consolidated from 7 style blocks to 2
-
-## P0.2: Remaining Visual QA Items (Session 34 P0)
-
-1. Share buttons — confirm equal width on mobile after latest commit
-2. DAW tab blank yellow — fix active state CSS (daw-tab-btn.active background must be dark, not amber)
-3. Run --test on writer and compare to live gold standard
 
 ## P1: Moat 1 — Glossary Tooltip System
 
@@ -658,17 +583,20 @@ Also: add data-daw attribute to each .daw-tab-btn.
 - Kit: free plan — up to 10K subscribers — API key in Bible gate API.txt in mpw-scripts\
 - Gold standard article: articles/suno-vs-udio.html — LOCKED do not touch
 - Gold standard Bible v3.0: bible/eq.html — CONFIRMED LOCKED
-- Gold standard Bible v5.1: bible/compression.html — LIVE Session 33 — SHA d5427723
+- Gold standard Bible v5.1: bible/compression.html — LIVE Session 33 — Session 34 QA in progress
 - OG default image: /images/og-default.jpg
 - Bible URL structure: /bible/{slug} — never /dictionary/
 - Quotes database: mpw-scripts\quotes.json — 318 quotes, 177 people — v2
 - Tools hub (planned): /tools/ — not yet built
+- style.css: 52,585 chars — NO rules for .bible-entry-wrap or .entry-sidebar (confirmed Session 34)
+- style.css does have: .article-layout > aside { display:none !important } — does NOT affect Bible pages (different class)
 
 ## GSC Data (May 15, 2026 — 3 month view)
 - 301 total impressions / 0 clicks / 0% CTR / 16.4 average position
 - Top queries: serum 2 vs vital (10), logic pro vs ableton (9), ableton live vs logic pro (6), rode nt1 vs shure sm7b (5)
 - Comparisons are the traffic beachhead — position 16 to 5 = clicks start
 - Action: title tag + meta description optimization on top comparison articles
+- Sitemap regeneration needed after Tier 1 batch (202+ Bible entries not yet in sitemap)
 
 ## Confirmed Live Bible Slugs (CONFIRMED_LIVE_SLUGS constant in script)
 compression, eq, limiting, saturation, distortion, reverb, delay, parallel-compression, multiband-compression, noise-gate, gain-staging, headroom, stereo-imaging, mid-side-processing, bus-compression, mix-bus, send-return, automation, mastering, lufs, dynamic-range, true-peak-limiting, loudness-normalization, subtractive-synthesis, fm-synthesis, wavetable-synthesis, additive-synthesis, lfo, envelope, oscillator, adsr, vocoder, high-pass-filter, low-pass-filter, parametric-eq, shelving-eq, resonance, harmonic-distortion, chorus, flanger, phaser, tremolo, vibrato, plate-reverb, room-reverb, convolution-reverb, clip-gain, air-frequency-eq, air
@@ -677,9 +605,196 @@ EXCLUDED (confirmed 404): sidechain-compression, transient-shaping
 
 ## Pending Owner Actions
 1. Affiliate applications: Plugin Boutique, Amazon Associates, Sweetwater, Loopmasters, PluginFox — REVENUE BLOCKER
-2. Complete compression.html visual QA on mobile (share buttons, DAW tab) — Session 34 P0
+2. Confirm footer share buttons look correct on mobile — Session 35 first action
 3. Run Tier 1 batch after writer --test confirmed
 
 ## Batch Files Ready to Run (after v5.1 writer --test confirmed)
 - bible-upgrade-tier1.txt — 50 Tier 1 Bible rewrites — in mpw-scripts\ — format now slug:Term:Category:1
 - batch09.txt — 100 track breakdowns — run after Tier 1
+
+## Tools Platform Roadmap
+1. GR Calculator — already live on compression entry ✅
+2. Delay Time Calculator — highest search volume ("delay time calculator bpm") — next
+3. Frequency Reference Tool — most linkable/shareable — on EQ entry
+4. LUFS Target Calculator — mastering/loudness entries
+5. Attack/Release Time Calculator — extends compression entry
+6. BPM Tap Tempo — trivially simple, very high volume
+7. ClearCheck Layer 1 — flagship, unique to MPW via TruClarify
+
+Gate strategy: NEVER gate the tool itself. Gate the download/save output only. Free tool use is the moat. Email capture on "Save as PDF" / "Download Cheat Sheet" — not on calculator use.
+
+---
+
+## May 16, 2026 — SESSION 32 FINAL — GOLD STANDARD BUILD + STRATEGIC PLANNING
+
+### What Was Built
+| Deliverable | Status |
+|---|---|
+| compression.html v5.1 gold standard | COMPLETE — 153KB — 38/38 checks — at /mnt/user-data/outputs/compression.html |
+| All 6 handoff modules updated | Session 32 Final versions — this commit |
+
+### Gold Standard compression.html — Full Feature List
+
+**Nav Stack (v5.1 locked):**
+- MPW slim bar (40px, z:700, #181818) — logo + Articles/Gear/About + "A MusicProductionWiki Publication" + search + Sound Better CTA
+- Bible bar (50px, z:600, #0d0800) — diamond + title + 8 category pills (active highlighted amber) + All entries
+- Entry nav (top:90px, z:400) — 19 pill links, no label, active tracking JS
+- Mobile: SVG hidden → vertical .scm-box stack. bible-mobile-bar shown. Entry nav top:126px.
+- 6 breakpoints: 380px, 400px, 480px, 600px, 768px, 1024px
+
+**Content (20 sections — Verdict added Session 33):**
+definition, how-it-works, parameters, quick-reference, signal-chain, diagram, history, how-to-use, genre-table, hardware-plugin, before-after, in-the-wild, types, verdict, mistakes, flags, progression, faq, tools, related
+
+**Content Features:**
+- Difficulty badge (Intermediate)
+- Prereq chain (3 linked terms)
+- Start Here learning path box
+- Quick Answer block
+- PDF export button (email gated)
+- Unified smart gate modal (3 assets: full PDF, quickref, genre table)
+- Common misconception block
+- The Number box (amber stat card)
+- Section summaries (amber left-border callouts)
+- Signal chain SVG 1440×160px — full labels + sub-descriptions + "YOU ARE HERE"
+- Mobile vertical signal chain (.scm-box stack)
+- Interaction warnings (3)
+- DAW tabs (Ableton/Logic/FL/Pro Tools) — localStorage preference next session
+- Genre settings table (5 genres × 5 parameters) — with share + email-gated download
+- Hardware vs plugin comparison table
+- Plugin recs (Free/Mid/Pro tiers) in outer card
+- Before/After block (outer card)
+- 7 track examples (text-only, no links)
+- 4 history sub-sections in left-bordered cards
+- 2 producer quotes (Rick Rubin + Bob Clearmountain — from quotes.json, compression tag)
+- Types grid (6 cards)
+- Comparison callouts (Compression vs Limiting, Compression vs Saturation) — mobile 1-col
+- Producers Verdict (added Session 33 — amber header + 2-col grid of 6 rules)
+- Common Mistakes (6)
+- Red/Green Flags (cards)
+- Progression Path (3 stages)
+- FAQ accordion (8 questions)
+- Also in The Bible (8 related term cards with previews)
+- Tools section with GR Calculator
+
+**Interactive Tools:**
+- Gain Reduction Calculator (live JS — 4 inputs → GR, output level, excess above threshold, final after makeup)
+- Save Settings as PDF button (email gated → downloadQuickRef)
+- Copy Settings button (clipboard → tab-separated text)
+- Quick Reference share on X + Download Card (email gated)
+- By Genre share on X + Download Cheat Sheet (email gated)
+- Smart gate modal (openGateFor — 3 asset types, email validation, loading state)
+
+**SEO / Schema (5 blocks):**
+- Article + sameAs (Wikidata + DBpedia)
+- FAQPage (8 questions)
+- BreadcrumbList
+- Speakable (cssSelector: .qa-text, .entry-term, .entry-hook)
+- HowTo (5 steps for parameter setting)
+- lastReviewed in Article schema
+- Internal links: /bible/bus-compression, /bible/gain-staging, /bible/limiting, /bible/saturation, /bible/parallel-compression
+
+**Sidebar:**
+- Full TOC (20 links) with IntersectionObserver tracking
+- Producer spotlight (3 cards — Rubin, Clearmountain, Scheps)
+- Share buttons (mpw-share-bar — Copy Link → X → Reddit — horizontal)
+- Newsletter signup
+- (No duplicate related terms — consolidated into in-page "Also in The Bible" section)
+
+**Removed from v5.0:**
+- Audio toggle placeholder ("Coming Soon") — deleted entirely
+- Further Reading section — redundant with "Also in The Bible"
+- Duplicate sidebar related terms
+- YouTube track links — text-only citations only
+- Identity bar
+
+**Stats:**
+- Words: 7,058 content words
+- Read time: 22 min
+- File: ~175KB after Session 34 fixes (was 153KB)
+- Nav links: 20 (Verdict added Session 33)
+- H2s: 21 / H3s: 10
+- FAQs: 8 / Track items: 7 / Producer quotes: 2
+- Schema blocks: 5
+- Mobile checks: 38/38
+
+### Key Strategic Decisions Made Session 32
+
+**Three-Tier Bible Template System — LOCKED:**
+| Tier | Name | Word Range | Pass 2 Prose Target | Use For |
+|---|---|---|---|---|
+| 1 | Flagship | 6,800–7,800w | 5,800–6,500w | Top 200-300 cornerstone terms |
+| 2 | Standard | 3,800–5,000w | 3,000–3,800w | Mid-range terms |
+| 3 | Reference | 1,500–2,500w | 1,200–1,800w | Narrow/technical terms |
+
+Batch file format extended: `slug:Term:Category:Tier` (was 3 parts, now 4)
+Tier determines which build_html function is called: build_html_t1(), build_html_t2(), build_html_t3()
+Tier 3 non-negotiables: full nav stack, all SEO schema, canonical, OG/Twitter, newsletter, Also in The Bible, Bible colophon
+
+**Tools as Moat — Architecture Decided:**
+
+Moat 1 — Glossary Tooltip System (SESSION 33+):
+- data-tooltip="slug" attribute on technical terms in prose
+- JS lookup against bible-index.json (already exists)
+- CSS tooltip card appears on hover/tap
+- Writer updated to wrap CONFIRMED_LIVE_SLUGS terms in spans
+- 1,500 entries × avg 15 tooltips = 22,500 automatic internal links
+- No other music production site has this
+
+Moat 2 — "Was This Helpful?" Feedback (SESSION 33+):
+- Three buttons: Beginner / Intermediate / Advanced (level match vote)
+- One text field: "What's missing?" (open)
+- GA4 event on submission
+- Google Form/Sheets backend (no database needed initially)
+- Data calibrates tier classification and shapes future content decisions
+
+Moat 3 — DAW Preference localStorage (SESSION 33+):
+- On first Bible visit: prompt "Which DAW?" — 4 buttons
+- Stores to localStorage key mpw_daw_pref
+- Every subsequent Bible entry auto-opens to preferred DAW tab
+- 10 lines of JS — highest effort:impact ratio of any planned feature
+
+**Tools Category Architecture — Decided:**
+
+Three entry points:
+1. `/tools/` — standalone hub page (grid of all tools, submittable to Product Hunt)
+2. `/bible/categories/tools/` — 9th Bible category pill (filters entries with interactive tools)
+3. Individual tool pages at `/tools/[slug]/` when a tool graduates beyond its Bible entry
+
+Tool priority order:
+1. GR Calculator — already live on compression entry ✅
+2. Delay Time Calculator — highest search volume ("delay time calculator bpm") — next
+3. Frequency Reference Tool — most linkable/shareable — on EQ entry
+4. LUFS Target Calculator — mastering/loudness entries
+5. Attack/Release Time Calculator — extends compression entry
+6. BPM Tap Tempo — trivially simple, very high volume
+7. ClearCheck Layer 1 — flagship, unique to MPW via TruClarify
+
+Gate strategy: NEVER gate the tool itself. Gate the download/save output only. Free tool use is the moat. Email capture on "Save as PDF" / "Download Cheat Sheet" — not on calculator use.
+
+**Section-Level Sharing System — Final (Session 34):**
+- Every shareable section: Copy Link → Share on X → Reddit (this order always)
+- All buttons: same height (34px), same border-radius (6px), branded colors
+- Copy Link: amber (#f5a623 bg, #000 text)
+- Share on X: black (#000 bg, #fff text)
+- Reddit: orange-red (#ff4500 bg, #fff text)
+- Footer exception: X and Reddit only (no Copy Link), centered, .footer-share-btn class overrides flex:1
+
+**Moat 4 (future) — "Where to Go Next" Smart Nav:**
+- 3 opinionated next-steps per entry: Beginner path / Deeper dive / Solve a problem
+- Pass 1 returns next_steps field: {beginner_slug, deeper_slug, problem_slug}
+- Higher pages-per-session, turns Bible into a course not just a reference
+
+**Moat 5 (future) — Verified Settings Badges:**
+- Cross-reference genre settings with quotes.json documented settings
+- "↗ Verified from [Source]" badge on settings backed by engineer interviews
+- Citable claims that get linked to from forums and other sites
+
+---
+
+## May 16, 2026 — SESSION 31 FINAL — STRATEGIC PLANNING + HANDOFF
+
+### What Was Decided
+Nav architecture locked: MPW slim bar + Bible bar + entry nav. Identity bar removed. Progress bar desktop removed, mobile kept. Quotes system confirmed (quotes.json, Pass 1.5). 13 new v5.1 features confirmed. Three-tier word count system initiated.
+
+### What Was Built
+quotes.json v2 (318 quotes, 177 people). All 6 handoff modules Session 31 Final. Nav stack mockup approved. v5.1 spec written.

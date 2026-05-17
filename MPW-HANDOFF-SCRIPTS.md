@@ -1,5 +1,5 @@
 # MPW-HANDOFF-SCRIPTS.md
-*Updated: May 16, 2026 (SESSION 32 FINAL)*
+*Updated: May 17, 2026 (SESSION 34)*
 
 All scripts at: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\`
 GitHub API blocked from Claude's environment — all GitHub operations run from Steve's PowerShell.
@@ -179,7 +179,9 @@ Email gate: openGateFor('full'|'quickref'|'genre'), unified modal.
 Tools section: always present. Injects GR calculator if tool_type == 'calculator'.
 Comparison callouts: built from p1.comparison_terms (up to 2).
 History cards: 3-4 sub-sections in left-border cards (built by Pass 2 but CSS class added in post-processing).
-Sidebar: TOC (19 links) + producer spotlight + share + newsletter.
+Sidebar: TOC (20 links) + producer spotlight + share (mpw-share-bar) + newsletter.
+
+Share bars in generated entries: must use .mpw-share-bar class with buttons in order Copy Link → Share on X → Reddit.
 
 ## CONFIRMED_LIVE_SLUGS
 
@@ -214,20 +216,6 @@ Critical new checks that must pass:
 - comparison-callouts class
 - Also in The Bible (not Further Reading)
 - word count floor/ceiling per tier
-
-## v5.0 Changes from v4.0 (historical reference)
-
-- Two-pass streaming architecture
-- overflow:clip on html/body
-- 54-check validation suite
-- CONFIRMED_LIVE_SLUGS dead link prevention
-- Pass 1 track_examples field — real tracks, no URIs
-- Pass 2 locked track list
-- YouTube search links (superseded by text-only in v5.1)
-- 4 schema blocks (now 5 in v5.1)
-- Bible category dropdown in nav
-- 2-column mobile drawer
-- History API drawer fix
 
 ## Bible Entry Economics
 
@@ -277,6 +265,16 @@ Run at end of every session after all handoff files are updated.
 
 ---
 
+# commit_handoff_s34.py (Session 34)
+
+Updated version of commit_handoff.py for Session 34. Reads MPW-HANDOFF-CORE-S34.md from mpw-scripts\, fetches other 5 modules from GitHub, commits all 6 in one Trees API commit.
+
+```powershell
+python commit_handoff_s34.py
+```
+
+---
+
 # setenv.ps1
 
 Sets environment variables for the PowerShell session. Must run at start of every session.
@@ -290,6 +288,68 @@ Keys clear on window close — must re-run after reopening PowerShell.
 
 ---
 
+# Session 34 Patch Scripts (in mpw-scripts\ after download)
+
+These scripts were written during Session 34 to diagnose and fix compression.html. Keep them for reference — they document the debugging process.
+
+| Script | Purpose |
+|---|---|
+| check_wrap.py | Found bible-entry-wrap tag in body (first attempt — found CSS not HTML) |
+| check_wrap2.py | Found all occurrences of bible-entry-wrap string — revealed CSS positions |
+| check_wrap3.py | Printed exact wrap div tag from body section |
+| check_body.py | Found main tag and aside element ancestor context |
+| check_main.py | Confirmed main tag is `<main id="main-content">` with no container class |
+| check_children.py | **KEY DIAGNOSTIC** — walked DOM tree, found only 1 direct child of bible-entry-wrap (should be 2) |
+| find_unclosed.py | Counted div opens vs closes in entry-main segment — found balance of 2 (should be 1) |
+| find_unclosed2.py | **ROOT CAUSE FOUND** — iterated with stack, identified gain-calculator div at position 18781 as unclosed |
+| fix_calculator_div.py | **ROOT FIX** — added </div><!-- /gain-calculator --> before Signal Chain comment — SHA da97338e |
+| debug_aside.py | Added red border to aside to confirm it renders — confirmed sidebar appeared after fix |
+| remove_debug.py | Removed red border — SHA de721781 |
+| fix_combined.py | Combined: aside display fix + share bars rebuilt Copy Link → X → Reddit order |
+| fix_all_final.py | Rebuilt ALL mpw-share-bar divs in one pass from section context |
+| fix_footer_only.py | Footer: removed Copy Link, X and Reddit only, centered |
+| fix_footer_v2.py | Footer: inline-flex container attempt — still stretched |
+| fix_footer_v3.py | Footer: fixed 120px width on both — X still appeared wider due to text length |
+| fix_footer_v4.py | Footer: shortened X label to just "X", auto padding — buttons sized by content |
+| fix_footer_v5.py | Footer: added .footer-share-btn class (flex:0 0 auto !important) — PENDING VISUAL CONFIRM |
+| check_footer.py | Printed footer HTML from live file |
+| audit_share.py | Audited all share bars in file — found wrong order in bars 6,7,8 |
+| get_share_css.py | Printed exact share CSS from live style block |
+
+## Div Balance Check Pattern (reusable)
+
+```python
+import re
+
+def check_entry_main_balance(html):
+    body_start = html.find('<body')
+    body = html[body_start:]
+    em_open = body.find('<div class="entry-main">')
+    em_close = body.find('</div><!-- /entry-main -->')
+    segment = body[em_open:em_close]
+    opens = len(re.findall(r'<div[^>]*>', segment))
+    closes = len(re.findall(r'</div>', segment))
+    balance = opens - closes
+    # balance should be 1 — entry-main itself
+    return balance, opens, closes
+
+def find_unclosed_divs(html):
+    body_start = html.find('<body')
+    body = html[body_start:]
+    em_open = body.find('<div class="entry-main">')
+    em_close = body.find('</div><!-- /entry-main -->')
+    segment = body[em_open:em_close]
+    stack = []
+    for m in re.finditer(r'<(/?)div[^>]*>', segment):
+        if m.group(1) == '/':
+            if stack: stack.pop()
+        else:
+            stack.append((m.start(), m.group()[:80]))
+    return stack  # each item = (position, opening_tag) of unclosed div
+```
+
+---
+
 # Bible Batch Files
 
 Location: C:\Users\swarn\OneDrive\Desktop\mpw-scripts\
@@ -297,7 +357,7 @@ Location: C:\Users\swarn\OneDrive\Desktop\mpw-scripts\
 - bible-upgrade-tier1.txt — 50 Tier 1 rewrites — READY after writer v5.1 confirmed
   Format: slug:Term:Category:1 (4 parts, tier=1)
   Example line: compression:Compression:Signal Processing:1
-- bible-index.json — 201 entries — in repo root
+- bible-index.json — 202 entries — in repo root
 
 Run Tier 1 batch:
 ```powershell
@@ -351,3 +411,4 @@ NEVER run article quality audit blind. NEVER rewrite without checking audit outp
 - Single file commit: individual PUT acceptable
 - Rate limit: sequential blob creation with exponential backoff on 403s — never parallel
 - Max threads for Contents API: 10 (15-20 triggers secondary rate limit)
+- NEVER use Set-Content in PowerShell for Python scripts with CSS values — use create_file tool

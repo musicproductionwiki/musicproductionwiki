@@ -1,5 +1,5 @@
 # MPW-HANDOFF-TECH.md
-*Updated: May 16, 2026 (SESSION 32 FINAL)*
+*Updated: May 17, 2026 (SESSION 34)*
 
 ---
 
@@ -16,7 +16,8 @@
 | Local files | C:\Users\swarn\OneDrive\Documents\Music Production Wiki\Articles |
 | Scripts dir | C:\Users\swarn\OneDrive\Desktop\mpw-scripts\ |
 | Search Console | Google Search Console |
-| Contact | mpwikiofficial@gmail.com |
+| Contact | team@musicproductionwiki.com (Fastmail) |
+| Legacy contact | mpwikiofficial@gmail.com (kept as fallback) |
 | Analytics | GA4 — G-79VB543KCT |
 | Pretty URLs | NEVER enable — breaks site |
 
@@ -35,7 +36,7 @@ repo root/
 ├── js/mpw-analytics.js
 ├── search-index.json
 ├── sitemap.xml
-├── bible-index.json (201 entries)
+├── bible-index.json (202 entries)
 ├── MPW-CATALOG.md (auto-generated)
 ├── MPW-HANDOFF-CORE.md
 ├── MPW-HANDOFF-SCRIPTS.md
@@ -50,7 +51,7 @@ repo root/
 ├── bible/
 │   ├── index.html (LOCKED — commit 29ee26a9)
 │   ├── eq.html (v3.0 gold standard — LOCKED)
-│   ├── compression.html (v5.1 gold standard — commit Session 33)
+│   ├── compression.html (v5.1 gold standard — Session 34 QA in progress)
 │   └── [term].html  (202 entries total — v3.0/v4.0 template)
 │   └── categories/
 │       ├── dynamics/index.html
@@ -108,7 +109,8 @@ Last confirmed commit: 06a564c
 URL: https://musicproductionwiki.com/bible/compression
 File: bible/compression.html
 Built: Session 32, May 16, 2026
-Status: Built locally — COMMIT SESSION 33
+Refined: Sessions 33 + 34, May 17, 2026
+Status: Visual QA in progress — footer share buttons pending confirmation Session 35
 
 **DO NOT MODIFY THE COMMITTED FILE. Update the writer to match it.**
 
@@ -119,7 +121,7 @@ Status: Built locally — COMMIT SESSION 33
 | 1 | mpw-slim-bar | top:0, z:700, height:40px, bg:#181818 |
 | 2 | bible-bar | top:40px, z:600, height:50px, bg:#0d0800 |
 | 3 | bb-cats | 8 category pills, active highlighted amber |
-| 4 | entry-nav | top:90px, z:400, 19 pill links, no label |
+| 4 | entry-nav | top:90px, z:400, 20 pill links, no label |
 | 5 | signal-chain SVG | viewBox 0 0 1440 160, 8 boxes, full labels |
 | 6 | signal-chain-mobile | .scm-box vertical stack, shown @768px |
 | 7 | openGateFor | unified smart gate function, 3 asset types |
@@ -131,6 +133,9 @@ Status: Built locally — COMMIT SESSION 33
 | 13 | Also in The Bible | consolidates Further Reading + Related Terms |
 | 14 | 5 JSON-LD blocks | Article+sameAs, FAQPage, BreadcrumbList, Speakable, HowTo |
 | 15 | overflow-x:clip | on html and body — NOT overflow:hidden |
+| 16 | mpw-share-bar | unified share bar class — Copy Link → X → Reddit |
+| 17 | footer-share-btn | footer override class — flex:0 0 auto !important |
+| 18 | bible-entry-wrap inline grid | display:grid!important;grid-template-columns:1fr 280px!important — inline style on element |
 
 ## Nav Architecture — v5.1 (LOCKED)
 
@@ -145,12 +150,11 @@ Desktop sticky chain:
 Mobile (≤768px):
   #reading-progress display:block
   .bb-cats          display:none
-  .bible-mobile-bar display:flex, position:sticky, top:90px, z:300, height:36px
-  .entry-nav        top:126px
+  .entry-nav        top:84px (40px slim + 44px bible)
   .signal-chain-diagram svg display:none
   .signal-chain-mobile display:flex (vertical stack)
-  .entry-sidebar display:none
-  Grid: single column
+  .entry-sidebar display:none !important
+  .bible-entry-wrap display:block !important (grid collapses to single col)
 
 1024px: hide nav links, show hamburger
 768px: mobile layout (above)
@@ -160,9 +164,60 @@ Mobile (≤768px):
 380px: slim bar font/padding reduction
 ```
 
-MPW slim bar content: SVG logo-mark (24×24 teal) + site name / Articles, Gear, About links (muted) / "A MusicProductionWiki Publication" (italic, right) / search icon / Sound Better CTA button / hamburger (≤1024px)
+## style.css — Key Findings (Session 34)
 
-Bible bar content: ◆ + "The Producer's Bible" (amber, left) / divider / 8 category pills (active amber highlighted) / "All entries →" (right)
+- Total length: 52,585 chars
+- **NO rules for .bible-entry-wrap** — confirmed Session 34 via grep
+- **NO rules for .entry-sidebar** — confirmed Session 34 via grep
+- Has `.article-layout > aside { display:none !important }` — does NOT affect Bible pages (different class hierarchy)
+- Has `.article-sidebar` rules — does NOT affect Bible pages (different class)
+- Bible page layout is entirely self-contained in the page's two style blocks
+- The inline grid on `bible-entry-wrap` was added as a nuclear override after this was confirmed
+
+## Bible Page Layout — DOM Structure (Session 34 — confirmed)
+
+```html
+<main id="main-content">
+  <div class="bible-entry-wrap" style="display:grid!important;grid-template-columns:1fr 280px!important;gap:40px!important;align-items:start!important;max-width:1100px!important;margin:0 auto!important;padding:40px 24px!important">
+    <div class="entry-main">
+      <!-- ALL CONTENT SECTIONS -->
+      <!-- gain-calculator div MUST be closed before signal-chain section -->
+      </div><!-- /gain-calculator -->
+      <!-- Signal Chain Position -->
+      ...
+    </div><!-- /entry-main -->
+
+    <!-- Sidebar -->
+    <aside class="entry-sidebar" style="min-width:280px;width:280px;position:sticky;top:148px;align-self:start;overflow-y:auto;height:calc(100vh - 168px);">
+      ...
+    </aside>
+  </div><!-- /bible-entry-wrap -->
+</main>
+```
+
+**CRITICAL: The aside MUST be a direct child of bible-entry-wrap, NOT nested inside entry-main.**
+**NEVER close entry-main before the aside tag.**
+**NEVER add display:block!important to the aside inline style — mobile CSS cannot override inline !important.**
+
+## Sidebar Display Rules (Session 34 — CONFIRMED)
+
+Desktop (@media min-width:769px): CSS sets `display:block !important` on `.entry-sidebar`
+Mobile (@media max-width:768px): CSS sets `display:none !important` on `.entry-sidebar`
+Aside inline style: contains ONLY width/min-width/position/top/align-self/overflow/height — NO display property
+
+## Div Balance Check — MANDATORY before every Bible commit
+
+```python
+import re
+# segment = html between <div class="entry-main"> and </div><!-- /entry-main -->
+segment = body[em_open:em_close]
+opens = len(re.findall(r'<div[^>]*>', segment))
+closes = len(re.findall(r'</div>', segment))
+# balance should be 1 (entry-main itself is the one unclosed div)
+# Any other value = broken DOM — find and fix before committing
+```
+
+Pattern for finding specific unclosed divs: find_unclosed2.py — iterates with regex, maintains stack, prints context of each unclosed opener.
 
 ## Mobile Checklist (38 checks — must all pass before any commit)
 
@@ -174,15 +229,14 @@ Critical checks:
 - mpw-slim-bar links hidden @1024px
 - hamburger shown @1024px
 - bb-cats hidden @768px
-- bible-mobile-bar shown @768px
-- entry-nav top:126px @768px
+- entry-nav top:84px @768px (NOT 126px — updated Session 33)
 - entry-sidebar hidden @768px
 - signal-chain SVG hidden @768px
 - signal-chain-mobile shown @768px
 - single col grid @768px
 - tables overflow-x:auto
 - progress bar shown @768px
-- scroll-margin-top 136px @768px
+- scroll-margin-top 110px @768px
 - parameters 1-col @768px
 - types 2-col @768px, 1-col @480px
 - plugin-recs 1-col @768px
@@ -197,7 +251,7 @@ Critical checks:
 - QR table smaller font @480px
 - genre table smaller font @480px
 - slim bar font reduction @380px
-- progress bar z:99999
+- progress bar z:9999
 - entry-nav overflow-x:auto scrollbar-width:none
 - all section IDs have entry-section class
 - No horizontal scroll at 360px
@@ -231,10 +285,11 @@ History API: pushState({drawerOpen:true}) on drawer open — back button closes 
 # 7. CSS Injection Rules
 
 For Bible pages:
-- ALWAYS append CSS as new `<style>` block before `</style>` — NEVER strip or modify existing style blocks
+- ALWAYS append CSS as new `<style>` block before `</head>` — NEVER strip or modify existing style blocks
 - Mobile fixes go in @media(max-width:768px) — NEVER touch desktop CSS in mobile fix scripts
 - Use !important for override rules in media queries
 - If a class needs a mobile override, add the class first (not just an inline style)
+- Bible pages have exactly 2 style blocks — do not add a 3rd
 
 For article pages:
 - All CSS in /css/style.css — committed via GitHub API PUT (never web editor)
@@ -265,6 +320,13 @@ gh_trees_commit(files_dict, 'commit message')
 
 One commit = one Netlify deploy. Multiple individual commits = multiple deploys = rate limit risk.
 
+## PowerShell Script Creation — CRITICAL (Session 34)
+
+NEVER use Set-Content or here-strings in PowerShell to create Python scripts that contain CSS values.
+PowerShell mangles colons, semicolons, and CSS property syntax.
+
+ALWAYS use Claude's create_file tool to output .py files → Steve downloads → saves to mpw-scripts\ → runs.
+
 ---
 
 # 9. Search Index
@@ -274,7 +336,7 @@ File: /bible-index.json — array of {term, slug, category, definition}
 
 bible-index.json is used by:
 - Bible index page search (Fuse.js)
-- Tooltip system (Moat 1 — Session 33) — JS fetches and builds lookup map
+- Tooltip system (Moat 1 — planned) — JS fetches and builds lookup map
 - Search overlay on Bible entry pages
 
 Always include bible-index.json update in same Trees API commit as Bible entry commits.
@@ -300,7 +362,7 @@ Link from Bible bar as 9th category pill.
 
 Individual tool pages when tools graduate from Bible entries.
 GR Calculator → /tools/compression-calculator/ (future, when it has save history + sharing)
-Delay Calculator → /tools/delay-calculator/ (start here Session 33)
+Delay Calculator → /tools/delay-calculator/ (start here Session 33+)
 
 ## Tool-in-Entry Pattern (current)
 
@@ -350,7 +412,48 @@ After Tier 1 batch commits: regenerate sitemap.xml and resubmit to GSC.
 
 ---
 
-# 13. about.html Bible Bar Patch (one-liner — pending if not applied)
+# 13. Session 34 — Key Technical Findings
+
+## style.css Audit Results
+- Confirmed: NO .bible-entry-wrap rules in style.css
+- Confirmed: NO .entry-sidebar rules in style.css
+- Has: `.article-layout > aside { display:none !important }` — does not affect Bible pages
+- Has: `.article-sidebar` rules — does not affect Bible pages
+- Bible page layout is 100% self-contained in page style blocks
+
+## Share Bar CSS Architecture (Session 34 — FINAL)
+
+```css
+/* Base — all share buttons */
+.mpw-share-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+  flex: 1 1 0; min-width: 0;
+  height: 34px; padding: 0 8px; border-radius: 6px;
+  font-size: 11px; font-weight: 700; line-height: 1;
+  text-decoration: none; white-space: nowrap;
+  cursor: pointer; font-family: inherit;
+  box-sizing: border-box; transition: opacity .15s;
+}
+.mpw-share-btn:hover { opacity: 0.82; }
+.mpw-share-btn.share-x { background: #000; color: #fff; border: 1px solid #000; }
+.mpw-share-btn.share-reddit { background: #ff4500; color: #fff; border: 1px solid #ff4500; }
+.mpw-share-btn.share-copy { background: #f5a623; color: #000; border: 1px solid #f5a623; }
+
+/* Footer override — prevents flex:1 stretching */
+.footer-share-btn { flex: 0 0 auto !important; width: auto !important; padding: 0 18px !important; }
+
+/* Mobile — 3-column grid */
+@media(max-width:768px) {
+  .mpw-share-bar { display: grid !important; grid-template-columns: 1fr 1fr 1fr !important; gap: 6px !important; }
+  .mpw-share-label { grid-column: 1 / -1 !important; }
+  .mpw-share-btn { width: 100% !important; height: 34px !important; }
+}
+```
+
+Button order everywhere: **Copy Link → Share on X → Reddit**
+Footer exception: **Share on X → Reddit** only (no Copy Link), buttons use both `.mpw-share-btn` and `.footer-share-btn`
+
+## about.html Bible Bar Patch (pending if not applied)
 
 ```powershell
 cd C:\Users\swarn\OneDrive\Desktop\mpw-scripts
