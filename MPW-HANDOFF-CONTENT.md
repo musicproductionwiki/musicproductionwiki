@@ -1,5 +1,5 @@
 # MPW-HANDOFF-CONTENT.md
-*Updated: May 16, 2026 (SESSION 31)*
+*Updated: May 16, 2026 (SESSION 32 FINAL)*
 
 ---
 
@@ -19,10 +19,31 @@
 | Recreation | 3,800w | 4,200w / 5,000w |
 | Vocal Autopsy | 3,800w | 4,200w / 5,000w |
 | Budget Recreation | 2,800w | 3,000w / 3,200w |
-| Bible v3.0 | 3,000w | 3,200w / 3,500w |
-| Bible v5.0 | 5,500w | 6,000w / 6,500w |
 
 Read time: calculate at 325 wpm.
+
+---
+
+# Bible Entry Word Count Standards — LOCKED SESSION 32
+
+| Tier | Name | Total Range | Pass 2 Prose Target | Validation Floor | Validation Ceiling |
+|---|---|---|---|---|---|
+| 1 | Flagship | 6,800–7,800w | 5,800–6,500w | 6800 | 7800 |
+| 2 | Standard | 3,800–5,000w | 3,000–3,800w | 3800 | 5000 |
+| 3 | Reference | 1,500–2,500w | 1,200–1,800w | 1500 | 2500 |
+
+Gold standard compression.html: 7,058 content words / 22 min read.
+Structural sections (genre table, DAW tabs, plugin recs, tools, comparison callouts) contribute 600–1,200 words beyond Pass 2 prose. Target Pass 2 prose at lower end of range; structure fills the rest.
+
+Tier assignment rules:
+- Tier 1: cornerstone terms producers Google when learning concepts — compression, EQ, reverb, limiting, saturation, gain staging, parallel compression, bus compression, ADSR, LFO, automation, mid-side, stereo imaging, LUFS, dynamic range, noise gate, chorus, flanger, phaser, reverb types, compressor topologies
+- Tier 2: specific implementations of Tier 1 concepts — high-shelf EQ, VCA compressor, optical compressor, convolution reverb, parallel compression techniques, specific synthesis methods, send-return routing, clip gain, headroom
+- Tier 3: narrow technical terms — dither, wordlength, DC offset, zero-latency monitoring, buffer size, clip indicator, sum-and-difference, fletcher-munson curve, jitter, anti-aliasing, oversampling
+
+Batch file format: slug:Term:Category:Tier (4 parts, colon-separated)
+Example: compression:Compression:Signal Processing:1
+
+Tier creep prevention: validation suite enforces hard ceiling per tier. Tier 2 entries hitting 5,200 words fail validation — they either get trimmed or reclassified to Tier 1 before commit.
 
 ---
 
@@ -62,26 +83,28 @@ Every article must include:
 | Bible 14C | 106/179 entries (73 failed — retried) | LIVE |
 | Bible Retry 1 | 64/75 failed entries | LIVE |
 | Bible Retry 2 | 10/11 entries | LIVE |
-| Bible air | Failed JSON parse — PENDING retry with "Air Frequency EQ" | PENDING |
+| Bible air | Failed JSON parse — PENDING retry | PENDING |
 
 ## Bible Entry Count
 
-- Total live: 202 entries
+- Total live: 202 entries (v3.0/v4.0 template)
 - bible-index.json: 201 entries (air may be missing)
-- Pending: air entry retry after template confirmed
+- Pending: air entry retry after writer v5.1 confirmed
 - Full Bible target: 1,500 entries
+- Next milestone: 50 Tier 1 rewrites (Tier 1 batch — bible-upgrade-tier1.txt)
 
 ## Queued Batches
 
 | Batch | Articles | Dependencies |
 | --- | --- | --- |
-| Bible Tier 1 | 50 rewrites | v5.0 template confirmed — READY after --test |
+| Bible Tier 1 | 50 rewrites | v5.1 writer confirmed — READY — format slug:Term:Category:1 |
 | 09 — breakdown | 100 | breakdowns.html ✅ LIVE — GO after Tier 1 |
 | 10 — studio-story | 50 | Batch 09 committed |
 | 11 — recreation | 60 | recreations.html must exist |
 | 12 — vocal-autopsy | 35 | vocal-autopsies.html must exist |
 | 13 — budget-recreation | 60 | Batch 11 committed |
-| Bible next batches | ~1,300 remaining | v5.0 writer only — do NOT use v3.0 |
+| Bible Tier 2 batch | ~700 entries | After Tier 1 — classify terms before running |
+| Bible Tier 3 batch | ~500 entries | After Tier 2 starts |
 
 ---
 
@@ -89,45 +112,15 @@ Every article must include:
 
 | Action | Detail | Priority |
 | --- | --- | --- |
-| Run mpw_bible_writer.py --test | python mpw_bible_writer.py --test --slug compression --term "Compression" --category "Signal Processing" | P0 — DO FIRST |
-| Run mpw_bible_cat_pages.py --run | Generates 8 Bible category pages | P0.2 — after test confirmed |
-| Run Tier 1 batch | python mpw_bible_writer.py --batch-file bible-upgrade-tier1.txt --start-date 2026-05-15 | P1 — after QA |
-| Retry air entry | python mpw_bible_writer.py --test --slug air-frequency-eq --term "Air Frequency EQ" --category "Frequency" | P1.2 |
-| Run Batch 09 | python mpw_writer.py --batch batch09.txt --start-date 2026-03-01 | P2 |
-| Fix 5 missing og:image | python mpw_fix_meta.py | P3 |
-| Add netlify.toml redirect | /dictionary/* → /bible/:splat 301 | P1.3 |
+| Replace BEEHIIV_PUB_ID + BEEHIIV_API_KEY in compression.html | In openGateFor JS function — two placeholder strings | P0 — before commit |
+| Run Tier 1 batch | python mpw_bible_writer.py --batch-file bible-upgrade-tier1.txt | P2 — after writer confirmed |
+| Retry air entry | python mpw_bible_writer.py --test --slug air-frequency-eq --term "Air Frequency EQ" --category "Frequency" | P2.1 |
+| Run Batch 09 | python mpw_writer.py --batch batch09.txt --start-date 2026-03-01 | P4 |
+| Fix 5 missing og:image | python mpw_fix_meta.py | P5 |
+| Add netlify.toml redirect | /dictionary/* → /bible/:splat 301 | P2.3 |
 | Affiliate applications | Plugin Boutique, Amazon Associates, Sweetwater, Loopmasters, PluginFox | HIGH — REVENUE BLOCKER |
 | Google Workspace email | Case 70817574 dispute pending | URGENT |
-| Lead magnet — MPW Cheat Sheet Pack | PDF — start email list growth | P2 |
-| Fix aside scrollbar | aside { overflow: visible; } in style.css | LOW |
-| brands.html | Build before committing nav reference | LOW |
-| Skimlinks reapply | Wait 90 days from rejection | 90 days |
-| Request Dreaming access | console.anthropic.com → Managed Agents → Dreaming research preview | Future |
-
-### about.html bible bar patch one-liner
-
-```powershell
-cd C:\Users\swarn\OneDrive\Desktop\mpw-scripts
-. .\setenv.ps1
-python -c "
-import base64, requests, re
-TOKEN = 'YOUR_GITHUB_TOKEN_HERE'
-REPO = 'musicproductionwiki/musicproductionwiki'
-headers = {'Authorization': f'token {TOKEN}', 'Accept': 'application/vnd.github.v3+json'}
-r = requests.get(f'https://api.github.com/repos/{REPO}/contents/about.html', headers=headers)
-sha = r.json()['sha']
-html = base64.b64decode(r.json()['content']).decode('utf-8')
-if 'bible-bar-v4' in html:
-    print('Already patched')
-else:
-    from mpw_add_bible_bar import INJECT, NAV_MARKER, strip_old_bars
-    html = strip_old_bars(html)
-    html = html.replace(NAV_MARKER, INJECT + NAV_MARKER, 1)
-    encoded = base64.b64encode(html.encode('utf-8')).decode()
-    res = requests.put(f'https://api.github.com/repos/{REPO}/contents/about.html', headers=headers, json={'message': 'Add bible bar to about.html (bible-bar-v4)', 'content': encoded, 'sha': sha})
-    print(res.status_code, res.json().get('commit', {}).get('sha', ''))
-"
-```
+| Lead magnet — MPW Cheat Sheet Pack | PDF — start email list growth | P3 — compression QR card already built as model |
 
 ---
 
@@ -146,9 +139,9 @@ else:
 | Producer's Bible Free Tier | SEO magnet — affiliate links within entries | Compounds affiliate revenue |
 | Producer's Bible Paid Tier | $9/month or $79/year — trigger at 25,000 monthly /bible/ visitors | $5,000-50,000 at scale |
 | Institutional Licensing | Music schools — $299/year per institution | High value |
-| Tools Platform (Tier 1) | Email-gated interactive tools | Feeds paid tiers |
-| Tools Platform (Tier 2) | Paid tools $9-$19 one-time | Scales with traffic |
-| Tools Platform (Tier 3) | Bible Complete subscription — $9/mo or $79/yr | Recurring revenue |
+| Tools Platform (Email gate) | Free tool + email-gated download | Feeds paid tiers — GR calculator + cheat sheet downloads already live |
+| Tools Platform (Paid $9-$19) | Comprehensive reference materials | Scales with traffic |
+| Tools Platform (Subscription $9/mo or $79/yr) | Bible Complete tier | Recurring revenue |
 | ClearCheck | Risk assessment + TruClarify referral | Highest long-term potential |
 
 ---
@@ -157,7 +150,16 @@ else:
 
 GA4 Measurement ID: G-79VB543KCT — obtained May 8, 2026
 Injected into main.js — mpw-analytics.js committed to /js/mpw-analytics.js
-Also injected into all Bible entry pages via build_html() in mpw_bible_writer.py v5.0
+Also injected into all Bible entry pages via build_html() in mpw_bible_writer.py
+
+New GA4 events to add in Moat 2 (Session 33):
+- helpful_vote: {level: 'beginner|intermediate|advanced', slug: 'compression'}
+- helpful_submit: {level: str, has_feedback: bool, slug: str}
+- gate_open: {asset: 'full|quickref|genre', slug: str}
+- gate_submit: {asset: str, slug: str}
+- tool_interact: {tool: 'gr_calculator', slug: str}
+- daw_tab_click: {daw: 'ableton|logic|fl_studio|pro_tools', slug: str}
+- section_share: {section: 'genre|quickref', action: 'tweet|copy|download', slug: str}
 
 ---
 
@@ -165,7 +167,7 @@ Also injected into all Bible entry pages via build_html() in mpw_bible_writer.py
 
 Priority: Newsletter + lead magnet → YouTube → Free tool → Reddit → Discord → TikTok → Backlinks
 
-Lead magnet: 'MPW Cheat Sheet Pack' — NEEDS TO BE BUILT — P2
+Lead magnet: 'MPW Cheat Sheet Pack' — compression QR card and genre table are the first two assets. Build the pack PDF combining all cheat sheets once 10+ entries have downloadable assets.
 Newsletter: The Producer's Briefing — hosted on Beehiiv — 'Sound better by Friday' CTA
 TruClarify integration: Every music business article should funnel to TruClarify — underutilized
 
@@ -173,32 +175,53 @@ TruClarify integration: Every music business article should funnel to TruClarify
 
 # 45. Tools Platform — Strategic Roadmap
 
-**Milestone trigger: After 200 Bible entries + 100 Breakdowns + 100 Recreations are live.**
+**Milestone trigger: After gold standard template confirmed + Moats 1-3 built.**
+
+## Tools as Moat — Architecture
+
+Two entry points:
+1. `/tools/` — standalone hub page — grid of all tools — Product Hunt submission candidate
+2. `/bible/categories/tools/` — 9th Bible category — filters entries with interactive tools
+3. `/tools/[slug]/` — individual tool pages when tools graduate from Bible entries
+
+Gate strategy (LOCKED): NEVER gate the tool itself. Gate the download/save output only.
+Free tool use → email capture on save/download → newsletter → Bible Complete subscription.
+
+## Tool Priority Order
+
+| Priority | Tool | Home | Search Volume | Status |
+|---|---|---|---|---|
+| 1 | GR Calculator | compression entry | Medium | LIVE ✅ |
+| 2 | Delay Time Calculator | delay entry | Very High | SESSION 33 |
+| 3 | Frequency Reference Tool | eq entry | High | SESSION 33+ |
+| 4 | LUFS Target Calculator | mastering/lufs entries | High | Future |
+| 5 | Attack/Release Time Calculator | compression entry | Medium | Future |
+| 6 | BPM Tap Tempo | standalone | Very High | Future |
+| 7 | Pre-delay Calculator | reverb entry | Medium | Future |
+| 8 | Note-to-Frequency Table | music theory entries | High | Future |
+| 9 | Gain Staging Calculator | gain-staging entry | Medium | Future |
+| 10 | ClearCheck Layer 1 | /tools/clearcheck/ | High intent | After TruClarify spec |
 
 ## Three-Tier Tool Strategy
 
-### Tier 1 — Email Gate
-BPM → Delay/Reverb Calculator, Frequency Conflict Detector, Compressor Attack/Release Calculator, Gain Staging Calculator, Key & Scale Finder, Mix Checklist, DAW Shortcut Sheets (PDF).
+### Tier 1 Tools — Email Gate (Free)
+BPM → Delay/Reverb Calculator, Frequency Reference, GR Calculator, Attack/Release Calculator, Gain Staging Calculator, BPM Tap Tempo, Pre-delay Calculator, Note-to-Frequency Table.
 
-### Tier 2 — Paid One-Time ($9-$19)
+### Tier 2 Tools — Paid One-Time ($9-$19)
 Producer's Frequency Bible (PDF) $9, Arrangement Blueprint Generator $9, Producer's Mix Fingerprint $12, Plugin Chain Templates (PDF) $14, Genre Production Blueprint Pack (PDF) $19, Loudness Penalty Calculator $9.
 
 ### Tier 3 — Bible Complete Subscription ($9/month or $79/year)
 Everything from Tier 1 and Tier 2 plus full Bible access.
 
-## The Flagship Tool: ClearCheck
-Layer 1 (Free, email gate): Risk Score + plain-English explanation.
-Layer 2 (Paid $29 or $19/month): Full intelligence report + clearance request letter.
-Layer 3: TruClarify handoff — qualified lead generator.
-
-## Build Order
-1. Frequency Conflict Detector
-2. Arrangement Blueprint Generator
-3. ClearCheck Layer 1
+## ClearCheck — Flagship Tool
+Layer 1 (Free, email gate): Risk Score + plain-English explanation of clearance complexity.
+Layer 2 (Paid $29 or $19/month): Full intelligence report + clearance request letter template.
+Layer 3: TruClarify handoff — qualified lead generator to Steve's clearance business.
+Build trigger: separate spec session required — involves TruClarify API/intake design.
 
 ---
 
-# SESSION 31 UPDATE — CONTENT STATUS
+# SESSION 32 UPDATE — CONTENT STATUS
 
 ## Article Pipeline
 - Live articles: 526
@@ -206,10 +229,11 @@ Layer 3: TruClarify handoff — qualified lead generator.
 - Batches 10-13: NOT YET RUN — blocked by category pages + template fix
 
 ## Bible Content Pipeline
-- Live Bible entries: 202
-- Tier 1 upgrade batch: bible-upgrade-tier1.txt — 50 entries — READY pending --test confirmation
-- Air entry retry: --slug air-frequency-eq --term "Air Frequency EQ" --category "Frequency"
-- Bible category pages: 8 pages NOT YET COMMITTED — run mpw_bible_cat_pages.py --run
+- Live Bible entries: 202 (v3.0/v4.0 template)
+- Gold standard v5.1: compression.html — built Session 32 — commit Session 33
+- Tier 1 upgrade batch: bible-upgrade-tier1.txt — 50 entries — READY after writer v5.1 confirmed
+- Air entry retry: pending after writer confirmed
+- Bible category pages: 8 pages — run after writer confirmed
 
 ## GSC Findings (May 15, 2026)
 Top performing content by impression:
@@ -220,80 +244,44 @@ Top performing content by impression:
 5. Action: optimize title tags and meta descriptions on top comparison articles
 
 ## Content Strategy Insight
-Comparisons are the traffic beachhead. Double down on:
-- DAW comparisons (Logic vs Ableton variants = 29 impressions from 6 queries)
-- Microphone comparisons (SM7B vs Rode NT1 variants)
-- Plugin comparisons (Serum 2 vs Vital)
-Getting these from position 16 to position 5 = clicks start
+Comparisons are the traffic beachhead. Getting from position 16 to position 5 = clicks start.
 
-## Word Count Standards (unchanged)
-- Reviews: 3,200–3,500w
-- Comparisons: 3,300–3,500w
-- Techniques: 4,000–4,200w
-- Roundups: 3,500–3,800w
-- Bible entries v5.0: 5,500–6,500w (floor 5,500, target 6,000, ceiling 6,500)
+## Producer Profile Pages — Content Spec (Future — after Batch 09)
+URL: /producers/{slug}/
+Sections: Hero, Production philosophy, Signature gear table, Signature techniques, Notable productions table, Quotes from quotes.json, Bible entries they appear in, Related producers
+Word count: 2,000-3,000 words
+Build trigger: Batch 09 (100 breakdowns) complete — each breakdown links to profile
 
----
-
-# SESSION 31 FINAL UPDATE — CONTENT DECISIONS
-
-## Bible Entry v5.1 Word Count Standards
-- Floor: 5,500 words (unchanged)
-- Target: 6,000 words (unchanged)
-- Ceiling: 6,500 words (unchanged)
-- New content features add ~400-600 words per entry (DAW notes, genre tables, plugin recs)
-- Adjust Pass 2 prompt to target 6,000 words net of new structured sections
-
-## Track Examples — Option A (FINAL DECISION)
-Text-only citations. No links of any kind. Premium reference books don't link to streams.
+## Track Examples — Option A (FINAL DECISION — LOCKED)
+Text-only citations. No links of any kind.
 Format: Artist — Track Title (Year, Album). Produced by Name.
-Pass 1 field `listening_guide` provides context note for each track — shown as track-note div.
-3-5 tracks per entry.
+Pass 1 field `listening_guide` provides context note for each track — shown as .track-note div.
+3-7 tracks per Tier 1 entry. 3-5 for Tier 2. 2-3 for Tier 3.
 
 ## Producer Quotes — System Confirmed
 318 verified quotes in quotes.json v2.
 Sources: 10 books + documented interviews from Sound On Sound, Tape Op, Rolling Stone, Billboard, Resident Advisor.
-Pass 1.5 filters by tag. Pass 2 picks 1-2 max.
+Pass 1.5 filters by tag. Pass 2 picks 1-2 max for Tier 1. 0-1 for Tier 2. 0 for Tier 3.
 Attribution: full name, role, source, URL.
 NEVER fabricate. NEVER use quotes not in quotes.json.
 
-## New Content Sections Per Entry (v5.1)
-Each Bible entry now includes these additional sections beyond v5.0:
+## New Content Sections Per Tier 1 Entry (v5.1)
 1. Difficulty badge — in masthead
-2. Prerequisite chain — below masthead, above definition
-3. The Number box — early in content, amber card
-4. Before/After text — in How It Works section
-5. Common misconception block — in its own section
-6. DAW implementation tabs — Ableton / Logic / FL Studio / Pro Tools
-7. Plugin recommendations — tiered Free / Mid / Pro
-8. Genre settings table — concrete numbers
-9. Producer spotlight sidebar — quotes-driven
-10. Producer quote blockquote — woven into prose
-11. PDF export button — email gated
-12. Last verified date — in footer
-
-## Producer Profile Pages — Content Spec (Future — after Batch 09)
-URL: /producers/{slug}/
-Sections:
-- Hero: name, photo placeholder, role, known for
-- Production philosophy (3-4 paragraphs)
-- Signature gear (table: item, type, used for)
-- Signature techniques (3-5 with Bible entry links)
-- Notable productions (table: artist, album, year, role)
-- Quotes (from quotes.json filtered by person)
-- Bible entries they appear in (auto-generated from quotes.json tag matching)
-- Related producers (by shared tags/genre)
-Word count: 2,000-3,000 words
-This is a separate content pillar from breakdowns. Breakdowns cover tracks. Profiles cover people.
-
-## Content Pipeline Update
-Batch 09 (100 breakdowns) unlocks Producer Profile pages.
-Each breakdown links to the producer's profile page.
-Each profile links back to all their breakdowns.
-This creates a web of internal links that compounds with every new entry.
-
-## Bible Entry Economics (v5.1)
-Two passes + Pass 1.5 quote filtering = slightly more tokens per entry.
-Estimated: ~40,000 tokens per entry (was ~36,000).
-Per entry cost: ~$0.20.
-For 1,000 entries: ~$200.
+2. Prerequisite chain — below masthead
+3. Start Here learning path box — below quick answer
+4. The Number box — in quick-reference section
+5. Common misconception block — before definition
+6. Before/After text block — own section
+7. DAW implementation tabs — Ableton / Logic / FL Studio / Pro Tools
+8. Plugin recommendations — tiered Free / Mid / Pro in card
+9. Genre settings table — concrete numbers per genre
+10. Comparison callouts — term vs 2 related terms (before Types)
+11. Producer spotlight sidebar — quotes-driven, 3 cards
+12. Producer quote blockquote — woven into prose (1-2)
+13. PDF export button — email gated (smart modal, 3 assets)
+14. Last verified date — in entry footer
+15. Tools section — GR Calculator + email-gated save
+16. Section-level share buttons — By Genre + Quick Reference
+17. "Also in The Bible" — replaces Further Reading + Related Terms (consolidated)
+18. Sidebar TOC with IntersectionObserver tracking
+19. Sidebar newsletter signup (.sidebar-nl)
