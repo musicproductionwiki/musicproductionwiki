@@ -1017,6 +1017,121 @@
       scrollbar-color: #2a2a4a transparent !important;
     }
   </style>
+
+  <style>
+    /* v5.1.5 — Producer's Verdict — authoritative redesign */
+
+    .producers-verdict {
+      background: #080810 !important;
+      border: none !important;
+      border-top: none !important;
+      border-radius: 12px !important;
+      padding: 0 !important;
+      margin: 32px 0 !important;
+      overflow: hidden;
+    }
+
+    .verdict-header {
+      background: #f5a623;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      border-radius: 12px 12px 0 0;
+    }
+
+    .verdict-label {
+      display: inline !important;
+      font-size: 14px !important;
+      font-weight: 900 !important;
+      letter-spacing: .2em !important;
+      text-transform: uppercase !important;
+      color: #0d0d0d !important;
+      border: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      text-align: center !important;
+    }
+
+    .verdict-diamond {
+      color: #0d0d0d;
+      font-size: 12px;
+      opacity: .6;
+    }
+
+    .verdict-lead {
+      font-size: 15px !important;
+      color: #c8c8d8 !important;
+      line-height: 1.8 !important;
+      padding: 24px 28px 0 !important;
+      margin: 0 !important;
+      font-style: italic;
+      border-bottom: 1px solid #1a1a3a;
+      padding-bottom: 20px !important;
+    }
+
+    .verdict-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-bottom: 1px solid #1a1a3a;
+    }
+
+    .verdict-rule {
+      padding: 20px 24px;
+      border-right: 1px solid #1a1a3a;
+      border-bottom: 1px solid #1a1a3a;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .verdict-rule:nth-child(even) {
+      border-right: none;
+    }
+
+    .vr-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: #f5a623;
+    }
+
+    .vr-value {
+      font-size: 14px;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.4;
+    }
+
+    .vr-note {
+      font-size: 12px;
+      color: #888;
+      line-height: 1.6;
+    }
+
+    .verdict-close {
+      font-size: 14px !important;
+      color: #a0a0c0 !important;
+      line-height: 1.8 !important;
+      padding: 20px 28px !important;
+      margin: 0 !important;
+      font-style: italic;
+      text-align: center;
+      border-top: 1px solid #1a1a3a;
+    }
+
+    /* Mobile — single column grid */
+    @media(max-width:768px) {
+      .verdict-grid { grid-template-columns: 1fr !important; }
+      .verdict-rule { border-right: none !important; }
+      .verdict-lead, .verdict-close { padding: 16px 18px !important; }
+      .verdict-rule { padding: 16px 18px; }
+      .verdict-header { padding: 14px 16px; border-radius: 12px 12px 0 0; }
+    }
+  </style>
 </head>
 <body>
 
@@ -1569,7 +1684,49 @@
       </section>
 
       <!-- Producer's Verdict -->
-      <div class="producers-verdict"><span class="verdict-label">The Producer's Verdict</span><p>For most producers, start with: a 4:1 ratio, threshold set for 4–6 dB of gain reduction on peaks, attack at 10 ms, release at 150–200 ms, and makeup gain nulled to match the uncompressed RMS level. Use this as the baseline on every source until you understand what each parameter is actually changing in the sound before deviating from it.</p><p>If you are working on a mix bus or drum bus and need cohesion rather than control, use the SSL G-Bus compressor model at 2:1 to 4:1, attack 20–30 ms, auto release, 2–4 dB of gain reduction — set it before you start mixing and mix into it rather than adding it at the end.</p><p>Avoid parallel compression until you understand gain staging: blending a heavily compressed signal with a dry signal will inflate your bus levels unpredictably, and if you don't understand why the mix bus is suddenly clipping, you will compensate in the wrong place and introduce problems that compound across the entire session.</p></div>
+      <div class="producers-verdict">
+  <div class="verdict-header">
+    <span class="verdict-diamond">&#9670;</span>
+    <span class="verdict-label">The Producer&#8217;s Verdict</span>
+    <span class="verdict-diamond">&#9670;</span>
+  </div>
+  <p class="verdict-lead">Compression is the most misunderstood tool in production — not because it’s complex, but because its most seductive effect (perceived loudness from makeup gain) disguises bad decisions as good ones. Master the null test before anything else: bypass your compressor and match output levels by RMS, not peaks. If the compressed version doesn’t improve on that honest comparison, your settings are wrong.</p>
+
+  <div class="verdict-grid">
+    <div class="verdict-rule">
+      <span class="vr-label">The Starting Point</span>
+      <span class="vr-value">4:1 ratio · 10ms attack · 150ms release · null makeup gain</span>
+      <span class="vr-note">Set threshold for 4–6 dB of gain reduction on peaks. Use this on every source until you can hear exactly what each parameter changes before deviating from it.</span>
+    </div>
+    <div class="verdict-rule">
+      <span class="vr-label">Topology Decision</span>
+      <span class="vr-value">VCA for drums · Optical for vocals · FET for aggression · Vari-mu for mastering</span>
+      <span class="vr-note">Circuit type determines character, not just speed. A VCA on a vocal and an optical on a kick are both technically correct settings that will sound wrong. Match topology to source first, then dial parameters.</span>
+    </div>
+    <div class="verdict-rule">
+      <span class="vr-label">Mix Bus Rule</span>
+      <span class="vr-value">Set it first. Mix into it. Never add it last.</span>
+      <span class="vr-note">SSL G-Bus style: 4:1, attack 30ms, auto release, 2–4 dB GR on peaks. A compressor added after the mix is finished is a different tool than one the mix was built around. The latter glues. The former patches.</span>
+    </div>
+    <div class="verdict-rule">
+      <span class="vr-label">Transient Control</span>
+      <span class="vr-value">Attack time is the most important parameter</span>
+      <span class="vr-note">Ratio affects how much gain reduction. Attack affects what the listener perceives as impact. A slow attack on a snare (20–30ms) lets the crack through before the compressor clamps down. That window — not the ratio — is what makes a snare sound like a snare.</span>
+    </div>
+    <div class="verdict-rule">
+      <span class="vr-label">When NOT to Compress</span>
+      <span class="vr-value">When the performance dynamic IS the expression</span>
+      <span class="vr-note">A whispered vocal rising to a shout. A piano phrase that breathes. A bass line that swells intentionally. Not every dynamic excursion is a problem to solve. Before compressing anything, ask whether the dynamic range you’re about to eliminate is the performance. Sometimes the answer is yes.</span>
+    </div>
+    <div class="verdict-rule">
+      <span class="vr-label">The Professional Standard</span>
+      <span class="vr-value">Maximum 4 dB GR on any mix or mastering bus</span>
+      <span class="vr-note">Beyond 4 dB on a mix bus, you are no longer gluing — you are fighting. The mix is not ready for that much compression. Fix the gain staging, fix the arrangement density, or fix the individual track levels before reaching for more bus compression.</span>
+    </div>
+  </div>
+
+  <p class="verdict-close">The producers who use compression best are the ones who use the least of it to achieve the most. Every dB of unnecessary gain reduction is a dB of dynamic life you’ve chosen to remove. The invisibility of great compression is not an accident — it is the entire discipline.</p>
+</div>
 
       <!-- Common Mistakes -->
       <section class="entry-section" id="mistakes">
