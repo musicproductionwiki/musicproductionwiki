@@ -1,5 +1,5 @@
 # MPW-HANDOFF-CONTENT.md
-*Updated: May 18, 2026 (SESSION 36)*
+*Updated: May 18, 2026 (SESSION 37)*
 
 ---
 
@@ -24,16 +24,20 @@ Read time: calculate at 325 wpm.
 
 ---
 
-# Bible Entry Word Count Standards — LOCKED SESSION 32
+# Bible Entry Word Count Standards — UPDATED SESSION 37
 
 | Tier | Name | Total Range | Pass 2 Prose Target | Validation Floor | Validation Ceiling |
 |---|---|---|---|---|---|
-| 1 | Flagship | 6,800–7,800w | 5,800–6,500w | 6800 | 7800 |
+| 1 | Flagship | 7,000–8,000w | 4,800–5,500w | 6800 | 7800 |
 | 2 | Standard | 3,800–5,000w | 3,000–3,800w | 3800 | 5000 |
 | 3 | Reference | 1,500–2,500w | 1,200–1,800w | 1500 | 2500 |
 
 Gold standard compression.html: 7,058 content words / 22 min read.
-Structural sections (genre table, DAW tabs, plugin recs, tools, comparison callouts) contribute 600–1,200 words beyond Pass 2 prose. Target Pass 2 prose at lower end of range; structure fills the rest.
+
+**IMPORTANT SESSION 37 UPDATE:**
+- Tier 1 total range updated to 7,000–8,000w (was 6,800–7,800w) per Steve.
+- Tier 1 prose target dropped to 4,800–5,500w (was 5,800–6,500w).
+- Reason: builder adds 1,500–2,500w of structural components (tables, SVGs, DAW tabs, plugin cards, FAQ accordion, calculator, comparison callouts) on top of prose. Previous estimate of 600–1,200w was wrong.
 
 Tier assignment rules:
 - Tier 1: cornerstone terms producers Google when learning concepts — compression, EQ, reverb, limiting, saturation, gain staging, parallel compression, bus compression, ADSR, LFO, automation, mid-side, stereo imaging, LUFS, dynamic range, noise gate, chorus, flanger, phaser, reverb types, compressor topologies
@@ -89,15 +93,15 @@ Every article must include:
 
 - Total live: 210 entries (v3.0/v4.0 template)
 - bible-index.json: 210 entries
-- Pending: air entry retry after writer v5.1 visual QA confirmed
+- Pending: air entry retry after writer v5.1 confirmed
 - Full Bible target: 1,500 entries
-- Next milestone: 50 Tier 1 rewrites (Tier 1 batch — bible-upgrade-tier1.txt) — BLOCKED on Pass 2 prompt rewrite
+- Next milestone: 50 Tier 1 rewrites (bible-upgrade-tier1.txt) — READY TO RUN
 
 ## Queued Batches
 
 | Batch | Articles | Dependencies |
 | --- | --- | --- |
-| Bible Tier 1 | 50 rewrites | Pass 2 prompt rewrite + visual QA ≥90% — BLOCKED |
+| Bible Tier 1 | 50 rewrites | READY — writer approved Session 37 |
 | 09 — breakdown | 100 | breakdowns.html ✅ LIVE — GO after Tier 1 |
 | 10 — studio-story | 50 | Batch 09 committed |
 | 11 — recreation | 60 | recreations.html must exist |
@@ -113,9 +117,9 @@ Every article must include:
 | Action | Detail | Priority |
 | --- | --- | --- |
 | Affiliate applications | Plugin Boutique, Amazon Associates, Sweetwater, Loopmasters, PluginFox | HIGH — REVENUE BLOCKER |
-| Run Tier 1 batch | python mpw_bible_writer.py --batch-file bible-upgrade-tier1.txt | P2 — after Pass 2 prompt rewrite + visual QA |
+| Run Tier 1 batch | python mpw_bible_writer.py --batch-file bible-upgrade-tier1.txt --start-date 2026-05-18 | P2 — READY |
 | Retry air entry | python mpw_bible_writer.py --test --slug air-frequency-eq --term "Air Frequency EQ" --category "Frequency" | P2.1 |
-| Run Batch 09 | python mpw_writer.py --batch batch09.txt --start-date 2026-03-01 | P4 |
+| Run Batch 09 | python mpw_writer.py --batch batch09.txt --start-date 2026-03-01 | P4 — after Tier 1 |
 | Fix 5 missing og:image | python mpw_fix_meta.py | P5 |
 | Add netlify.toml redirect | /dictionary/* → /bible/:splat 301 | P2.3 |
 | GSC Request Indexing | Open ssl-2-plus-review/ and monitors canonical URL in GSC → Request Indexing | P13 — after deploy confirmed |
@@ -151,7 +155,7 @@ GA4 Measurement ID: G-79VB543KCT — obtained May 8, 2026
 Injected into main.js — mpw-analytics.js committed to /js/mpw-analytics.js
 Also injected into all Bible entry pages via build_html() in mpw_bible_writer.py
 
-New GA4 events to add in Moat 2 (Session 37+):
+New GA4 events to add in Moat 2 (Session 38+):
 - helpful_vote: {level: 'beginner|intermediate|advanced', slug: 'compression'}
 - helpful_submit: {level: str, has_feedback: bool, slug: str}
 - gate_open: {asset: 'full|quickref|genre', slug: str}
@@ -191,8 +195,8 @@ Free tool use → email capture on save/download → newsletter → Bible Comple
 | Priority | Tool | Home | Search Volume | Status |
 |---|---|---|---|---|
 | 1 | GR Calculator | compression entry | Medium | LIVE ✅ |
-| 2 | Delay Time Calculator | delay entry | Very High | SESSION 37+ |
-| 3 | Frequency Reference Tool | eq entry | High | SESSION 37+ |
+| 2 | Delay Time Calculator | delay entry | Very High | SESSION 38+ |
+| 3 | Frequency Reference Tool | eq entry | High | SESSION 38+ |
 | 4 | LUFS Target Calculator | mastering/lufs entries | High | Future |
 | 5 | Attack/Release Time Calculator | compression entry | Medium | Future |
 | 6 | BPM Tap Tempo | standalone | Very High | Future |
@@ -220,49 +224,30 @@ Build trigger: separate spec session required — involves TruClarify API/intake
 
 ---
 
-# SESSION 36 UPDATE — CONTENT STATUS
+# SESSION 37 UPDATE — CONTENT STATUS
 
 ## Article Pipeline
-- Live articles: 526 (unchanged Session 36)
-- Batch 09 (100 track breakdowns): NOT YET RUN — waiting for Bible Tier 1 to go first
+- Live articles: 526 (unchanged Session 37)
+- Batch 09 (100 track breakdowns): NOT YET RUN — waiting for Tier 1 to go first
 - Batches 10-13: NOT YET RUN — blocked by category pages + template fix
 
 ## Bible Content Pipeline
 - Live Bible entries: 210 (v3.0/v4.0 template)
-- Gold standard v5.1: compression.html — share bars fixed Session 36
-- Writer structural update: complete (81/81 checks pass)
-- Writer content quality: ~55% — Pass 2 prompt rewrite required Session 37
-- Tier 1 upgrade batch: bible-upgrade-tier1.txt — 50 entries — BLOCKED on prompt rewrite
-- Air entry retry: pending after writer visual QA confirmed
-- Bible category pages: 8 pages — run after writer confirmed
+- Gold standard v5.1: compression.html — writer QA COMPLETE Session 37
+- Writer Pass 2 rewrite: COMPLETE — approved by Steve
+- Tier 1 upgrade batch: bible-upgrade-tier1.txt — 50 entries — READY TO RUN
+- Air entry retry: pending after Tier 1 batch completes
+- Bible category pages: 8 pages — run after writer confirmed (now unblocked)
 
 ## GSC Findings (May 18, 2026)
 - 587 not indexed, 14 indexed
 - 585 "Discovered - currently not indexed" — normal for new large sitemap submission
-- 2 specific issues fixed: ssl-2-plus-review redirect + monitors canonical
-- Action: Request Indexing for fixed URLs. No other action needed — 585 queue will resolve over weeks as Google crawls.
+- 2 specific issues fixed Session 36: ssl-2-plus-review redirect + monitors canonical
+- Action: Request Indexing for fixed URLs. No other action needed — 585 queue will resolve over weeks.
 
-## Session 37B — Content Standards Update
-
-### Bible Tier 1 Word Count — UPDATED per Steve
-- Total range: 7,000–8,000w (was 6,800–7,800w)
-- Pass 2 prose target: 4,800–5,500w (was 5,800–6,500w)
-- Builder structural components: 1,500–2,500w (not 600–1,200w as previously estimated)
-
-### Bible Pipeline
-- Writer Pass 2 rewrite: COMPLETE — approved by Steve
-- Tier 1 batch (50 entries): READY TO RUN
-- Air entry retry: pending after Tier 1 batch
-- Bible category pages (8): unblocked — run after Tier 1 batch
-
-### Producer Quotes
-- Different producers across runs are acceptable
-- Spotlight must match whichever quotes appear in the entry prose
-- cite-tag parsing in build_producer_spotlight_html() guarantees this
-<!-- CONTENT_UPDATES_APPEND_HERE -->
 ## Content Strategy Insight
 Comparisons are the traffic beachhead. Getting from position 16 to position 5 = clicks start.
-The Bible Tier 1 batch (50 entries) is the next major SEO lever — but quality must be right first.
+The Bible Tier 1 batch (50 entries) is the next major SEO lever — writer is now ready.
 
 ## Producer Profile Pages — Content Spec (Future — after Batch 09)
 URL: /producers/{slug}/
@@ -282,6 +267,8 @@ Sources: 10 books + documented interviews from Sound On Sound, Tape Op, Rolling 
 Pass 1.5 filters by tag. Pass 2 picks exactly 2 for Tier 1 (MANDATORY — not 1-2). 0-1 for Tier 2. 0 for Tier 3.
 Attribution: full name, role, source, URL.
 NEVER fabricate. NEVER use quotes not in quotes.json.
+Different producers are acceptable across runs — they just must match what appears in the entry prose.
+Producer spotlight now reads cite tags from rendered HTML to guarantee match.
 
 ## New Content Sections Per Tier 1 Entry (v5.1)
 1. Difficulty badge — in masthead
@@ -294,13 +281,13 @@ NEVER fabricate. NEVER use quotes not in quotes.json.
 8. Plugin recommendations — tiered Free / Mid / Pro in card
 9. Genre settings table — concrete numbers per genre
 10. Comparison callouts — term vs 2 related terms (before Types)
-11. Producer spotlight sidebar — quotes-driven, 3 cards
+11. Producer spotlight sidebar — quotes-driven, matched to entry prose
 12. Producer quote blockquote — woven into prose (exactly 2 for Tier 1)
 13. PDF export button — email gated (smart modal, 3 assets)
 14. Last verified date — in entry footer
-15. Tools section — GR Calculator + email-gated save
+15. Tools section — GR Calculator + email-gated save — NOW POSITIONED after Quick Reference
 16. Section-level share buttons — By Genre + Quick Reference + Calculator (all mpw-share-bar)
 17. "Also in The Bible" — replaces Further Reading + Related Terms (consolidated)
-18. Sidebar TOC with IntersectionObserver tracking
+18. Sidebar TOC with IntersectionObserver tracking — now includes Verdict link
 19. Sidebar newsletter signup (.sidebar-nl)
-20. Sidebar share widget (mpw-share-bar vertical column) — added Session 36
+20. Sidebar share widget (mpw-share-bar vertical column)

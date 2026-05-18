@@ -1,5 +1,5 @@
 # MPW-HANDOFF-TECH.md
-*Updated: May 18, 2026 (SESSION 36)*
+*Updated: May 18, 2026 (SESSION 37)*
 
 ---
 
@@ -9,7 +9,7 @@
 | --- | --- |
 | Hosting | Netlify — project ID: classy-haupia-be8e43 |
 | Repo | github.com/musicproductionwiki/musicproductionwiki |
-| GitHub token | YOUR_GITHUB_TOKEN_HERE (expires Aug 2, 2026) |
+| GitHub token | stored in setenv.ps1 (expires Aug 2, 2026) — NEVER hardcode |
 | Stack | Pure HTML/CSS/vanilla JS — no frameworks, no CMS |
 | Deploy | Auto-deploy from GitHub main branch |
 | Newsletter | Beehiiv — "The Producer's Briefing" |
@@ -46,13 +46,14 @@ repo root/
 ├── MPW-HANDOFF-ARTICLES.md
 ├── MPW-HANDOFF-TECH.md
 ├── mpw_session_start.py
+├── handoff_state.json (LOCAL ONLY — never committed — tracks SHA state for handoff runner)
 ├── articles/
-│   ├── [slug].html  (526 articles — unchanged Session 36)
+│   ├── [slug].html  (526 articles — unchanged Session 37)
 │   └── ...
 ├── bible/
 │   ├── index.html (LOCKED — commit 29ee26a9)
 │   ├── eq.html (v3.0 gold standard — LOCKED)
-│   ├── compression.html (v5.1 gold standard — share bars fixed Session 36 — writer QA in progress)
+│   ├── compression.html (v5.1 gold standard — writer QA complete Session 37)
 │   └── [term].html  (210 entries total — v3.0/v4.0 template)
 │   └── categories/
 │       ├── dynamics/index.html
@@ -111,7 +112,8 @@ URL: https://musicproductionwiki.com/bible/compression
 File: bible/compression.html
 Built: Session 32, May 16, 2026
 Refined: Sessions 33 + 34 + 35 + 36, May 17–18, 2026
-Status: Share bars fully fixed Session 36 — writer visual QA at ~55% — Pass 2 prompt rewrite required Session 37
+Writer QA: Complete Session 37 — approved by Steve
+Status: READY FOR TIER 1 BATCH
 
 **DO NOT MODIFY THE COMMITTED FILE. Update the writer to match it.**
 
@@ -137,7 +139,9 @@ Status: Share bars fully fixed Session 36 — writer visual QA at ~55% — Pass 
 | 16 | mpw-share-bar | unified share bar class — Copy Link → X → Reddit |
 | 17 | footer-share-btn | footer override class — flex:0 0 auto !important |
 | 18 | bible-entry-wrap inline grid | display:grid!important;grid-template-columns:1fr 280px!important — inline style on element |
-| 19 | calc-share-bar | auto-width buttons on calculator and tools share bars — flex:0 0 auto; solid amber Copy Link |
+| 19 | calc-share-bar | auto-width buttons on calculator and tools share bars |
+| 20 | tools after quick-reference | Tools section injected immediately after quick-reference — never at bottom |
+| 21 | Verdict in sidebar TOC | ('verdict', 'Verdict') link between Types and Plugins |
 
 ## Nav Architecture — v5.1 (LOCKED)
 
@@ -345,7 +349,7 @@ Always include bible-index.json update in same Trees API commit as Bible entry c
 
 ---
 
-# 10. Tools Architecture (Planned — Session 33+)
+# 10. Tools Architecture (Planned — Session 38+)
 
 ## /tools/ Hub Page
 
@@ -364,16 +368,14 @@ Link from Bible bar as 9th category pill.
 
 Individual tool pages when tools graduate from Bible entries.
 GR Calculator → /tools/compression-calculator/ (future, when it has save history + sharing)
-Delay Calculator → /tools/delay-calculator/ (start here Session 33+)
+Delay Calculator → /tools/delay-calculator/ (next Session 38+)
 
-## Tool-in-Entry Pattern (current)
+## Tool-in-Entry Pattern (current — Session 37 update)
 
-Tools live inside Bible entries. The tool section (id="tools") in every Tier 1 entry:
-1. Cards the primary tool with description + "Jump to Tool ↓" button
-2. "More tools coming" teaser with newsletter subscribe link
-3. The actual tool (calculator etc) is embedded earlier in the content where contextually relevant
-
-Gate pattern: tool is always free. Email gate on the download/save output only.
+Tools live inside Bible entries. The tools section (id="tools") in every Tier 1 entry:
+- NOW injected immediately after id="quick-reference" closes — high-intent position for SEO and conversion
+- Contains GR Calculator + Share This Tool bar (Copy Link → X → Reddit)
+- Email gate on download/save output only — tool itself always free
 
 ---
 
@@ -415,10 +417,75 @@ GSC issues fixed Session 36:
 - After deploy: open each URL in GSC and click Request Indexing
 
 After Tier 1 batch commits: regenerate sitemap.xml and resubmit to GSC.
+Future improvement: add `<lastmod>` dates to sitemap.xml entries for better crawl budget allocation.
 
 ---
 
-# 14. Session 36 — Key Technical Findings
+# 14. Session 37 — Key Technical Findings
+
+## mpw_bible_writer.py State (end of Session 37 — FINAL)
+
+- Version: v5.1 — Pass 2 rewrite complete
+- Model: claude-sonnet-4-6 ✅
+- API timeout: 600s ✅
+- Validation: 81/81 checks pass ✅
+- Pass 2 content quality: APPROVED by Steve ✅
+- Tools position: after quick-reference ✅ (new Session 37)
+- Tools share bars: Copy Link + X + Reddit ✅ (new Session 37)
+- Producer spotlight: cite-tag parsing from rendered HTML ✅ (new Session 37)
+- Verdict in sidebar TOC ✅ (new Session 37)
+- FAQ empty answer filter ✅ (new Session 37)
+- History: 4 cards × 120–150w = 500–600w ✅ (new Session 37)
+- Verdict: MPW editorial opinion mandate ✅ (new Session 37)
+- UnboundLocalError on html variable: FIXED ✅ (new Session 37)
+- SEO: meta description, keywords, HowTo schema, timeRequired ✅ (new Session 37)
+- Internal linking: 6–10 amber links per entry ✅ (new Session 37)
+
+## Session 37 — Build Function Order in build_html_t1()
+
+**CRITICAL:** The following order is mandatory to prevent UnboundLocalError:
+
+```python
+# 1. Build all component HTML from p1 data
+signal_chain = build_signal_chain_svg(...)
+genre_html = build_genre_table_html(...)
+plugin_html = build_plugin_recs_html(...)
+# ... all other components ...
+tools_html = build_tools_section(p1, slug)
+sidebar_toc = build_sidebar_toc_html(slug)
+# NOTE: spotlight_html NOT called yet
+
+# 2. Build html from Pass 2 content
+html = content_html
+html = html.replace('THE_NUMBER_PLACEHOLDER', ...)
+# ... all other replacements ...
+
+# 3. Inject tools after quick-reference via string replacement
+if '</section>\n\n<section class="entry-section" id="signal-chain">' in html:
+    html = html.replace(..., f'</section>\n{tools_html}\n...')
+tools_html_final = ''  # don't append at bottom
+
+# 4. NOW build spotlight (html is fully populated with cite tags)
+spotlight_html = build_producer_spotlight_html(p1, quotes_filtered, html)
+
+# 5. Assemble full page
+word_count = count_words_html(html)
+# ...final assembly...
+```
+
+## Handoff Automation System (Session 37)
+
+- mpw_handoff_runner.py: permanent script — fetches, inserts at zone tags, validates, commits
+- add_zones.py: one-time — run SHA: 6afa90d5 — DO NOT run again
+- session_patch_s37.py: template — copy for each session, update patch dict
+- handoff_state.json: local only in mpw-scripts\ — never committed — tracks SHA state
+
+Zone tag format in markdown files: `# SESSION_APPEND_ZONE`
+Secrets scrubbed: ghp_ and sk-ant- patterns automatically removed before commit.
+
+---
+
+# 14B. Session 36 — Key Technical Findings
 
 ## compression.html Share Bar State (end of Session 36 — FINAL)
 
@@ -471,36 +538,6 @@ All share bars now use .mpw-share-bar class with correct order and branding:
 }
 ```
 
-## mpw_bible_writer.py State (end of Session 36)
-
-- Version: v5.1
-- Model: claude-sonnet-4-6 ✅
-- API timeout: 600s ✅
-- Validation: 81/81 checks pass ✅
-- css_block NameError: FIXED ✅
-- Consolidated overrides CSS block: present ✅
-- bible-entry-wrap inline grid: present ✅
-- aside inline style: present ✅
-- Genre share bar: mpw-share-bar ✅
-- Quick Ref share bar: mpw-share-bar ✅
-- build_footer: amber nl-card + correct footer ✅
-- Verdict prompt: id="verdict" standalone div ✅
-- Sidebar share widget: present ✅
-- calc-share-bar CSS: present ✅
-
-**Content quality: ~55% of gold standard — Pass 2 prompt rewrite required Session 37**
-
-Known content failures in generated output:
-1. Section h2 titles missing from Pass 2 output
-2. Only 1 producer quote (need 2)
-3. FAQ section absent (FAQ_PLACEHOLDER not being placed correctly)
-4. Plugin recs absent (PLUGIN_PLACEHOLDER not rendering)
-5. Entry nav anchor links broken
-6. Comparison callouts are one-liner stubs
-7. GR calculator not rendering (tool_type: null from Pass 1 for Compression)
-8. Producer Spotlight wrong (pulling from track produced_by)
-9. Content generic — not authoritative producer-language
-
 ## Session 36 netlify.toml (full content after update)
 
 ```toml
@@ -522,183 +559,7 @@ Known content failures in generated output:
 
 ---
 
-## Session 37 — Handoff System Technical Findings
-
-### mpw_handoff_runner.py Architecture
-- Uses requests library only — no urllib
-- GITHUB_TOKEN read from env var — never hardcoded
-- --dry-run fetches from GitHub (SHA sync) but skips commit
-- Zone tag insertion: insert_at_zone() + verify_insertion() — all-or-nothing
-- Trees API commit: sequential blob creation, 0.5s sleep between blobs, exponential backoff on 403
-- STATE_FILE = handoff_state.json — stores last commit SHA per file for drift detection
-
-### add_zones.py Notes
-- Run once only — tags are permanent anchors in handoff files
-- anchor strings are Session 36 content — if files were modified before running, update anchors
-- 11 zone tags across 6 files in one Trees API commit
-
-### Zone Tag Reference
-| File | Zone | Tag |
-|---|---|---|
-| CORE | counts | <!-- COUNTS_HERE --> |
-| CORE | never_rules | <!-- NEVER_RULES_APPEND_HERE --> |
-| CORE | priority_table | <!-- PRIORITY_TABLE_APPEND_HERE --> |
-| CORE | session_log | <!-- SESSION_LOG_APPEND_HERE --> |
-| CORE | next_session | <!-- NEXT_SESSION_PROMPT_HERE --> |
-| TECH | tech_findings | ## May 18, 2026 — SESSION 37B — Key Technical Findings
-
-### build_html_t1() — Mandatory Function Order
-
-To prevent UnboundLocalError on html variable:
-1. Build component HTML: signal_chain, genre_html, plugin_html, daw_html etc.
-2. Build tools_html = build_tools_section(p1, slug)
-3. Build sidebar_toc — DO NOT call spotlight yet
-4. Build html = content_html + all placeholder replacements
-5. Inject tools: replace '</section>\n\n<section id="signal-chain">' with tools between
-   Set tools_html_final = '' to prevent double-render
-6. THEN call spotlight_html = build_producer_spotlight_html(p1, quotes_filtered, html)
-7. Assemble full page with tools_html_final (empty)
-
-### Tier 1 Word Count — UPDATED
-
-Total target: 7,000–8,000w per Steve (was 6,800–7,800w)
-Prose target: 4,800–5,500w (was 5,800–6,500w)
-Builder adds: 1,500–2,500w structural components
-  (tables, SVGs, DAW tabs, plugin cards, FAQ accordion, calculator, comparison callouts)
-
-WORD_FLOOR_T1 = 6800 / WORD_CEIL_T1 = 7800 unchanged in validation suite
-
-### Section Word Count Targets (Session 37 Final)
-
-SUBSTANTIVE (write fully):
-  Definition: 550–700w | How It Works: 350–450w | Parameters: 550–650w
-  History: 500–600w (4 cards x 120-150w each) | How To Use: 450–550w
-  Types: 400–500w | Mistakes: 400–500w
-
-STRUCTURAL (hard ceilings):
-  Quick Ref: 60-80w | Signal Chain: 80-110w | Interaction Warnings: 120-160w
-  Genre Table: 50-70w | Hardware/Plugin: 100-140w | Before/After: 80-110w
-  In The Wild: 160-220w | Verdict: 60-80w | Flags: 60-80w | Progression: 200-280w
-  FAQ: 0w (placeholder only)
-
-### Producer Spotlight Fix
-
-build_producer_spotlight_html(p1, quotes_filtered=None, rendered_html='')
-Primary: re.findall(r'<cite[^>]*>\s*—\s*([^,<]+),\s*([^—<\n]+)', rendered_html)
-Fallback chain: cite tags → quotes_filtered → producer_quote_source → track produced_by
-
-### Sidebar TOC
-
-('verdict', 'Verdict') inserted between ('types', 'Types') and ('plugin-recs', 'Plugins')
-All 20 sections now in TOC.
-
-### SEO Architecture (Session 37 Final)
-
-Meta description: "Master {term} in music production: settings, techniques, and {types} 
-  explained with DAW guides, producer quotes, and track examples. The definitive reference."
-  155-char limit enforced. Falls back to "attack, release, ratio, and threshold" if no types.
-
-Keywords: {term}, {category}, {term} music production, {term} settings,
-  how to use {term}, {term} tutorial, {term} explained + Pass 1 tags
-
-HowTo steps (5 universal):
-  1. Set the Threshold
-  2. Choose Ratio and Time Constants  
-  3. Set Attack Time for Transient Control
-  4. Set Release Time
-  5. Apply Makeup Gain and A/B at Matched Levels
-
-Article schema additions: timeRequired: PT{read_min}M, inLanguage: en-US
-datePublished/dateModified: full ISO 8601 with T00:00:00Z
-
-Internal link style (amber):
-  color:#f5a623;text-decoration:none;border-bottom:1px solid rgba(245,166,35,0.3)
-<!-- TECH_FINDINGS_APPEND_HERE --> |
-| BIBLE | writer_status | <!-- WRITER_STATUS_HERE --> |
-| SCRIPTS | script_updates | <!-- SCRIPT_UPDATES_APPEND_HERE --> |
-| CONTENT | content_updates | <!-- CONTENT_UPDATES_APPEND_HERE --> |
-| ARTICLES | article_updates | <!-- ARTICLE_UPDATES_APPEND_HERE --> |
-## May 18, 2026 — SESSION 37B — Key Technical Findings
-
-### build_html_t1() — Mandatory Function Order
-
-To prevent UnboundLocalError on html variable:
-1. Build component HTML: signal_chain, genre_html, plugin_html, daw_html etc.
-2. Build tools_html = build_tools_section(p1, slug)
-3. Build sidebar_toc — DO NOT call spotlight yet
-4. Build html = content_html + all placeholder replacements
-5. Inject tools: replace '</section>\n\n<section id="signal-chain">' with tools between
-   Set tools_html_final = '' to prevent double-render
-6. THEN call spotlight_html = build_producer_spotlight_html(p1, quotes_filtered, html)
-7. Assemble full page with tools_html_final (empty)
-
-### Tier 1 Word Count — UPDATED
-
-Total target: 7,000–8,000w per Steve (was 6,800–7,800w)
-Prose target: 4,800–5,500w (was 5,800–6,500w)
-Builder adds: 1,500–2,500w structural components
-  (tables, SVGs, DAW tabs, plugin cards, FAQ accordion, calculator, comparison callouts)
-
-WORD_FLOOR_T1 = 6800 / WORD_CEIL_T1 = 7800 unchanged in validation suite
-
-### Section Word Count Targets (Session 37 Final)
-
-SUBSTANTIVE (write fully):
-  Definition: 550–700w | How It Works: 350–450w | Parameters: 550–650w
-  History: 500–600w (4 cards x 120-150w each) | How To Use: 450–550w
-  Types: 400–500w | Mistakes: 400–500w
-
-STRUCTURAL (hard ceilings):
-  Quick Ref: 60-80w | Signal Chain: 80-110w | Interaction Warnings: 120-160w
-  Genre Table: 50-70w | Hardware/Plugin: 100-140w | Before/After: 80-110w
-  In The Wild: 160-220w | Verdict: 60-80w | Flags: 60-80w | Progression: 200-280w
-  FAQ: 0w (placeholder only)
-
-### Producer Spotlight Fix
-
-build_producer_spotlight_html(p1, quotes_filtered=None, rendered_html='')
-Primary: re.findall(r'<cite[^>]*>\s*—\s*([^,<]+),\s*([^—<\n]+)', rendered_html)
-Fallback chain: cite tags → quotes_filtered → producer_quote_source → track produced_by
-
-### Sidebar TOC
-
-('verdict', 'Verdict') inserted between ('types', 'Types') and ('plugin-recs', 'Plugins')
-All 20 sections now in TOC.
-
-### SEO Architecture (Session 37 Final)
-
-Meta description: "Master {term} in music production: settings, techniques, and {types} 
-  explained with DAW guides, producer quotes, and track examples. The definitive reference."
-  155-char limit enforced. Falls back to "attack, release, ratio, and threshold" if no types.
-
-Keywords: {term}, {category}, {term} music production, {term} settings,
-  how to use {term}, {term} tutorial, {term} explained + Pass 1 tags
-
-HowTo steps (5 universal):
-  1. Set the Threshold
-  2. Choose Ratio and Time Constants  
-  3. Set Attack Time for Transient Control
-  4. Set Release Time
-  5. Apply Makeup Gain and A/B at Matched Levels
-
-Article schema additions: timeRequired: PT{read_min}M, inLanguage: en-US
-datePublished/dateModified: full ISO 8601 with T00:00:00Z
-
-Internal link style (amber):
-  color:#f5a623;text-decoration:none;border-bottom:1px solid rgba(245,166,35,0.3)
-<!-- TECH_FINDINGS_APPEND_HERE -->
 # 13. Session 35 — Key Technical Findings
-
-## compression.html End of Session 35
-
-Current SHA: see latest commit on bible/compression.html
-
-**Aside inline style (CORRECT — do not change):**
-- NO display:block!important — this was the root cause of mobile sidebar showing
-- Mobile hide handled by @media(max-width:768px) CSS: .entry-sidebar{display:none!important}
-
-**bible-entry-wrap inline style (CORRECT — do not change):**
-- display:grid!important;grid-template-columns:1fr 280px!important;gap:40px!important;align-items:start!important;max-width:1100px!important;margin:0 auto!important;padding:40px 24px!important
 
 ## PowerShell Lessons (Session 35 — CRITICAL)
 
@@ -766,4 +627,4 @@ Footer exception: **Share on X → Reddit** only (no Copy Link), buttons use bot
 - midi-controller-buying-guide → ../categories/gear.html
 - plugins-explained → ../categories/plugins.html
 
-fix_dead_slugs.py written but did not patch (href format mismatch — bare slugs not matching). Needs investigation Session 37 — fetch one category page and print actual href format before writing replacement strings.
+fix_dead_slugs.py written but did not patch (href format mismatch — bare slugs not matching). Needs investigation Session 38 — fetch one category page and print actual href format before writing replacement strings.

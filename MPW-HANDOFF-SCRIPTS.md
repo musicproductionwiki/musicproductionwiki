@@ -1,5 +1,5 @@
 # MPW-HANDOFF-SCRIPTS.md
-*Updated: May 18, 2026 (SESSION 36)*
+*Updated: May 18, 2026 (SESSION 38)*
 
 All scripts at: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\`
 GitHub API blocked from Claude's environment — all GitHub operations run from Steve's PowerShell.
@@ -66,20 +66,32 @@ SESSION 29 UPDATE: Also regenerates MPW-CATALOG.md from live slug list and inclu
 
 ---
 
-# mpw_bible_writer.py — v5.1 — SESSION 36 UPDATE COMPLETE
+# mpw_bible_writer.py — v5.1 — SESSION 38 FINAL — READY FOR BATCH
 
 Location: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\mpw_bible_writer.py`
 
-**STATUS: Structural update complete (81/81 checks). Content quality ~55% of gold standard. Pass 2 prompt rewrite required Session 37 before any batch.**
+**CRITICAL: The v5.1 writer is NOT in the GitHub repo. The repo contains an old v4.0 version. ALWAYS use the local mpw-scripts\ copy. NEVER restore from GitHub.**
+
+**STATUS: 16 Tier 1 entries committed. Tools need visual upgrade before remaining 34 run.**
+
+**CONFIRMED STATE of delivered writer (Session 38):**
+- Syntax: CLEAN
+- TOOL_OVERRIDES: DEFINED (all 13 tools)
+- build_html_t1, PASS2_SYSTEM_T1, build_tools_section: PRESENT
+- --workers flag: PRESENT (ThreadPoolExecutor, default 4, max 8)
+- SC = '</' + 'script>': DEFINED
+- _delay function: COMPLETE (html= and return lines present)
+- Tools nav pill: AFTER Quick Ref (position 5)
+- Tools sidebar TOC: AFTER Quick Ref (position 5)
+- Validation: 80/80
 
 ## Run Commands
 
 ```powershell
 . .\setenv.ps1
 python mpw_bible_writer.py --validate
-python mpw_bible_writer.py --test --slug compression --term "Compression" --category "Signal Processing" --tier 1
-python mpw_bible_writer.py --validate --html-file compression.html
-python mpw_bible_writer.py --batch-file bible-upgrade-tier1.txt --start-date 2026-05-16
+python mpw_bible_writer.py --test --slug delay --term "Delay" --category "Time-Based" --tier 1
+python mpw_bible_writer.py --batch-file bible-tier1-remaining34.txt --start-date 2026-05-18 --workers 8
 ```
 
 ## Architecture
@@ -87,9 +99,9 @@ python mpw_bible_writer.py --batch-file bible-upgrade-tier1.txt --start-date 202
 **Three-tier routing:**
 ```
 slug:Term:Category:Tier  (4 parts, colon-separated)
-Tier 1 → build_html_t1()  — 6,800-7,800 words — full gold standard template
-Tier 2 → build_html_t2()  — 3,800-5,000 words — standard template
-Tier 3 → build_html_t3()  — 1,500-2,500 words — reference template
+Tier 1 → build_html_t1()  — 7,000–8,000 words — full gold standard template
+Tier 2 → build_html_t2()  — 3,800–5,000 words — standard template
+Tier 3 → build_html_t3()  — 1,500–2,500 words — reference template
 ```
 
 **Pass Architecture:**
@@ -97,7 +109,7 @@ Tier 3 → build_html_t3()  — 1,500-2,500 words — reference template
 - Pass 1.5 (no API call) — quotes.json filter by tag
 - Pass 2 (22,000 tokens Tier 1 / 14,000 Tier 2 / 8,000 Tier 3) — Prose HTML
 
-**Key constants (Session 36 final):**
+**Key constants (Session 38 final):**
 - Model: claude-sonnet-4-6 ✅
 - PASS1_TOKENS: 20000
 - PASS2_TOKENS_T1: 22000
@@ -107,6 +119,118 @@ Tier 3 → build_html_t3()  — 1,500-2,500 words — reference template
 - WORD_FLOOR_T1: 6800 / WORD_CEIL_T1: 7800
 - WORD_FLOOR_T2: 3800 / WORD_CEIL_T2: 5000
 - WORD_FLOOR_T3: 1500 / WORD_CEIL_T3: 2500
+
+## TOOL_OVERRIDES Map (Session 38)
+
+```python
+TOOL_OVERRIDES = {
+    'compression':           'gr_calculator',
+    'saturation':            'gr_calculator',
+    'distortion':            'gr_calculator',
+    'parallel-compression':  'gr_calculator',
+    'multiband-compression': 'gr_calculator',
+    'noise-gate':            'gr_calculator',
+    'bus-compression':       'gr_calculator',
+    'delay':                 'delay_calculator',
+    'plate-reverb':          'delay_calculator',
+    'automation':            'delay_calculator',
+    'limiting':              'lufs_calculator',
+    'lufs':                  'lufs_calculator',
+    'mastering':             'lufs_calculator',
+    'loudness-normalization':'lufs_calculator',
+    'true-peak-limiting':    'lufs_calculator',
+    'eq':                    'frequency_reference',
+    'parametric-eq':         'frequency_reference',
+    'high-pass-filter':      'frequency_reference',
+    'low-pass-filter':       'frequency_reference',
+    'shelving-eq':           'frequency_reference',
+    'air-frequency-eq':      'frequency_reference',
+    'resonance':             'frequency_reference',
+    'harmonic-distortion':   'frequency_reference',
+    'reverb':                'rt60_calculator',
+    'convolution-reverb':    'rt60_calculator',
+    'room-reverb':           'rt60_calculator',
+    'oscillator':            'note_freq',
+    'fm-synthesis':          'note_freq',
+    'wavetable-synthesis':   'note_freq',
+    'additive-synthesis':    'note_freq',
+    'vocoder':               'note_freq',
+    'subtractive-synthesis': 'note_freq',
+    'adsr':                  'adsr_visualizer',
+    'envelope':              'adsr_visualizer',
+    'gain-staging':          'gain_staging',
+    'send-return':           'gain_staging',
+    'clip-gain':             'gain_staging',
+    'headroom':              'headroom_calc',
+    'mix-bus':               'headroom_calc',
+    'stereo-imaging':        'stereo_width',
+    'mid-side-processing':   'stereo_width',
+    'lfo':                   'lfo_sync',
+    'chorus':                'lfo_sync',
+    'flanger':               'lfo_sync',
+    'phaser':                'lfo_sync',
+    'tremolo':               'lfo_sync',
+    'vibrato':               'lfo_sync',
+}
+```
+
+**IMPORTANT: tool_type from Pass 1 is unreliable. TOOL_OVERRIDES is the authoritative routing map.**
+
+## SC — Safe Script Closing Tag
+
+```python
+SC = '</' + 'script>'
+```
+
+This constant is defined before all tool functions. NEVER write `</script>` as a literal string inside Python string literals — it closes the browser's script parser early and breaks all JS on the page. Always use SC for the closing tag in tool HTML strings.
+
+## _delay function — Known Issue
+
+The _delay function has html= and return lines present in the delivered writer, but the Delay Time Calculator output was visually rejected (BPM input only, no note value grid visible). This is because the tool was rejected for quality reasons before the JS was fully verified. The entire tool suite needs a visual rebuild next session — _delay will be rewritten as part of that rebuild.
+
+## Session 37 Changes to mpw_bible_writer.py
+
+### System Prompt (PASS2_SYSTEM_T1) — Complete Rewrite
+
+1. **Identity reframe** — "senior editor of The Producer's Bible" — most comprehensive treatment on the internet
+2. **NON-NEGOTIABLE LAWS (LAW 1–7)** — structural mandates moved from user prompt to system prompt as identity constraints
+3. **Failure description** — 7 explicit failure signatures Pass 2 self-checks before outputting
+4. **Voice — 3 BAD/GOOD pairs** — parameters (attack ms), history (1176 all-buttons), mistakes (bypass test)
+5. **Word count** — prose 4,800–5,500w, explains builder adds 1,500–2,500w to reach 7,000–8,000w total
+6. **Section-level hard limits** — SUBSTANTIVE vs STRUCTURAL classification with specific word ranges
+
+### User Prompt (build_pass2_prompt_t1) — Key Additions
+
+- CONFIRMED_LIVE_SLUGS injected directly into prompt body
+- Internal link format specified: `color:#f5a623;text-decoration:none;border-bottom:1px solid rgba(245,166,35,0.3)`
+- History template: 4 cards × 1 paragraph × 120–150w (500–600w total)
+- Verdict template: MPW editorial opinion mandate with example voice
+- Final Checks: 8 checklist items including internal links count
+
+### SEO Improvements
+
+- Meta description: search-intent driven pattern, 155-char enforced, uses types from Pass 1
+- Keywords: intent-phrase front-loading (how to use, tutorial, explained)
+- HowTo schema: 5 universal workflow steps (was 2 DAW-specific)
+- Article schema: `timeRequired`, `inLanguage: en-US`, ISO 8601 datetime
+
+### Builder Changes
+
+- **Tools position**: injected after `id="quick-reference"` via string replacement — confirmed by Steve as correct
+- **Tools nav pill**: position 5 in entry nav (after Quick Ref) — confirmed by Steve
+- **Tools sidebar TOC**: position 5 (after Quick Ref) — confirmed by Steve
+- **Tools share bars**: Copy Link + Share on X + Reddit added to calculator section
+- **Producer spotlight**: parses `<cite>` tags from rendered HTML — called after html is fully built
+- **Verdict in sidebar TOC**: `('verdict', 'Verdict')` added between Types and Plugins
+- **FAQ filter**: `build_faq_html()` skips items with empty `a` field
+- **History template**: 4 cards × 1 paragraph × 120–150w
+
+### Bug Fixes (Session 38)
+
+- SyntaxError in _freq, _gs, _hr, _chord: bare unescaped single quotes at innerHTML= inside single-quoted Python strings — fixed by escaping 56 single quotes across 4 lines
+- TOOL_OVERRIDES not defined: referenced at line 2017 but never assigned — fixed by inserting full dict after SC = line
+- _delay missing html= and return lines: truncated function — fixed by inserting html and return after js= block
+- Validation suite: gc-input and calcGR checks removed — these were GR calculator specific, now replaced with tool-agnostic check that matches any tool's DOM elements
 
 ## Pass 1 JSON Schema — All Required Fields
 
@@ -149,149 +273,16 @@ NEW v5.1 fields:
 
 All slug fields validated against CONFIRMED_LIVE_SLUGS at build time. Invalid slugs → null.
 
-**IMPORTANT: tool_type from Pass 1 is unreliable — Compression returned null. Use hardcoded TOOL_OVERRIDES map in build_tools_section().**
+## Validation Suite — v5.1 (80 checks)
 
-## Pass 1.5 — Quotes Filter
+See HANDOFF-BIBLE Section 47 for full updated check list.
 
-```python
-def load_quotes(path='quotes.json'):
-    # load from same dir as script
-def filter_quotes(quotes, tags, max_results=10):
-    # score by tag overlap, return top max_results
-def build_quotes_context(quotes, tags):
-    # format top 10 as string for Pass 2 prompt
-```
+Critical checks updated Session 38:
+- gc-input check REMOVED — was GR calculator specific
+- calcGR check REMOVED — was GR calculator specific
+- Replaced with: 'tool present': any(x in c for x in ['gc-input','dt-bpm','lc-cur','rt-vol','freq-bands','nf-note','adsr-c','gs-s','hr-pk','sw-cv','lfo-b','ck-r'])
 
-## Pass 2 Prompt — Required Fixes (Session 37)
-
-The current pass 2 prompt in build_pass2_prompt_t1() is insufficient. Required fixes:
-
-1. **Mandate h2 tags** — Every section must open with `<h2>ExactTitle</h2>`. Show exact h2 text for each section.
-2. **Mandate 2 producer quotes** — "Tier 1 entries MUST include exactly 2 producer quotes from quotes_context. Place one in the definition section and one in the history or how-to-use section."
-3. **Fix FAQ_PLACEHOLDER placement** — Show exact required line: `FAQ_PLACEHOLDER` alone on its own line inside the faq section.
-4. **Fix PLUGIN_PLACEHOLDER placement** — Show exact required position after hardware-plugin table.
-5. **Strengthen system prompt** — "Every sentence must contain a concrete, actionable, specific claim. No hedging. No generic explainer prose. You are writing the definitive professional reference that producers bookmark and return to."
-6. **Mandate entry-section class + exact IDs** — "Every section element must have class=\"entry-section\" and the exact id shown. Never use a different id."
-
-## Pass 2 Current Placeholder List (build_html_t1 replaces these)
-
-```
-THE_NUMBER_PLACEHOLDER     → build_the_number_html()
-SIGNAL_CHAIN_PLACEHOLDER   → build_signal_chain_svg()
-GENRE_PLACEHOLDER          → build_genre_table_html()
-PLUGIN_PLACEHOLDER         → build_plugin_recs_html()
-DAW_PLACEHOLDER            → build_daw_tabs_html()
-COMPARISON_PLACEHOLDER     → build_comparison_callouts_html()
-TRACK_PLACEHOLDER          → build_track_list_html()
-FAQ_PLACEHOLDER            → build_faq_html()
-FLAGS_PLACEHOLDER          → build_flags_html()
-BEFORE_AFTER_PLACEHOLDER   → build_before_after_html()
-QUICKREF_SHARE_PLACEHOLDER → mpw-share-bar for quick reference
-```
-
-## build_html_t1() — Required Outputs
-
-All sections listed in HANDOFF-BIBLE Section 47 table.
-Signal chain SVG: viewBox 0 0 1440 160, 8 boxes, full labels, mobile stack.
-Email gate: openGateFor('full'|'quickref'|'genre'), unified modal.
-Tools section: always present. Injects GR calculator if tool_type == 'calculator' OR slug is in TOOL_OVERRIDES.
-Comparison callouts: built from p1.comparison_terms (up to 2).
-History cards: 3-4 sub-sections in left-border cards (built by Pass 2).
-Sidebar: TOC (20 links) + producer spotlight + share widget (mpw-share-bar vertical) + newsletter.
-bible-entry-wrap: inline grid style MUST be present as inline style on the element.
-aside: inline style MUST contain min-width:280px;width:280px;position:sticky;top:148px;align-self:start;overflow-y:auto;height:calc(100vh - 168px) — NO display property.
-
-## Session 36 Bug Fixes Applied
-
-1. **MODEL string** — was `claude-sonnet-4-20250514` → now `claude-sonnet-4-6`
-2. **API timeout** — was 300s → now 600s
-3. **css_block NameError** — build_head() referenced `{css_block}` in f-string without defining it. Fixed: `css_block = build_css()` added before return statement.
-4. **Stale validation checks** — 5 checks updated:
-   - scroll-margin mobile: 136px → 110px
-   - no audio toggle: `'Coming Soon' not in c` → `'audio-toggle' not in c`
-   - Download Cheat Sheet: → mpw-share-bar present check
-   - Copy Settings: → calc-share-bar present check
-   - entry-nav 126px: → entry-nav 84px mobile
-
-## Session 37 — New Scripts
-
-### mpw_handoff_runner.py (NEW — PERMANENT)
-Location: C:\Users\swarn\OneDrive\Desktop\mpw-scripts\mpw_handoff_runner.py
-Purpose: Automated handoff update — runs every session end via session_patch_sNN.py
-Never modify this file unless architecture changes. Session-specific data goes in session_patch only.
-
-### add_zones.py (ONE-TIME — DONE)
-Location: C:\Users\swarn\OneDrive\Desktop\mpw-scripts\add_zones.py
-Purpose: Added 11 zone tags to 6 handoff files. Already run — do not run again.
-
-### session_patch_s37.py (TEMPLATE)
-Location: C:\Users\swarn\OneDrive\Desktop\mpw-scripts\session_patch_s37.py
-Purpose: Session 37 handoff data. Use as template for session_patch_s38.py.
-Run: python session_patch_s37.py [--dry-run]
-## mpw_bible_writer.py — Session 37B Changes
-
-### System Prompt (PASS2_SYSTEM_T1) — Complete Rewrite
-- Identity: "senior editor of The Producer's Bible"
-- LAW 1-7: structural mandates as identity constraints (moved from user prompt)
-- 7 failure signatures for self-check
-- 3 BAD/GOOD voice pairs: parameters (attack ms), history (1176 all-buttons), mistakes (bypass test)
-- Word count: 4,800–5,500w prose, builder adds 1,500–2,500w, total 7,000–8,000w
-- Section-level hard limits: SUBSTANTIVE vs STRUCTURAL
-
-### User Prompt (build_pass2_prompt_t1)
-- CONFIRMED_LIVE_SLUGS injected into prompt body
-- Internal link format specified (amber + bottom border)
-- History template: 4 cards x 1 paragraph x 120–150w
-- Verdict template: MPW editorial opinion mandate with example
-- Final Checks: 8 items including internal links count
-
-### Builder Changes
-- build_tools_section(): Share This Tool bar added (Copy Link + X + Reddit)
-- build_html_t1(): tools injected after quick-reference, not at bottom
-- build_producer_spotlight_html(): now parses cite tags from rendered HTML
-- build_sidebar_toc_html(): ('verdict', 'Verdict') added
-- build_faq_html(): skips items with empty 'a' field
-
-### Bug Fixes
-- UnboundLocalError: spotlight moved to after html is built
-- Wrong spotlight names: fixed with cite-tag parsing
-
-### SEO
-- Meta description: search-intent pattern, 155-char limit
-- Keywords: intent-phrase front-loading
-- HowTo schema: 5 universal workflow steps
-- Article schema: timeRequired, inLanguage, ISO 8601 dates
-<!-- SCRIPT_UPDATES_APPEND_HERE -->
-## CONFIRMED_LIVE_SLUGS
-
-```python
-CONFIRMED_LIVE_SLUGS = {
-    'compression', 'eq', 'limiting', 'saturation', 'distortion', 'reverb', 'delay',
-    'parallel-compression', 'multiband-compression', 'noise-gate', 'gain-staging',
-    'headroom', 'stereo-imaging', 'mid-side-processing', 'bus-compression', 'mix-bus',
-    'send-return', 'automation', 'mastering', 'lufs', 'dynamic-range',
-    'true-peak-limiting', 'loudness-normalization', 'subtractive-synthesis',
-    'fm-synthesis', 'wavetable-synthesis', 'additive-synthesis', 'lfo', 'envelope',
-    'oscillator', 'adsr', 'vocoder', 'high-pass-filter', 'low-pass-filter',
-    'parametric-eq', 'shelving-eq', 'resonance', 'harmonic-distortion', 'chorus',
-    'flanger', 'phaser', 'tremolo', 'vibrato', 'plate-reverb', 'room-reverb',
-    'convolution-reverb', 'clip-gain', 'air-frequency-eq', 'air'
-}
-# EXCLUDED (confirmed 404): sidechain-compression, transient-shaping
-```
-
-## Validation Suite — v5.1 (81 checks)
-
-See HANDOFF-BIBLE Section 47 for full updated check list (updated Session 36).
-
-Critical updated checks:
-- scroll-margin mobile now checks 110px (not 136px)
-- no audio toggle now checks audio-toggle class (not 'Coming Soon' string)
-- mpw-share-bar present replaces Download Cheat Sheet check
-- calc-share-bar present replaces Copy Settings check
-- entry-nav 84px mobile replaces 126px check
-
-**VALIDATION SCORE ≠ CONTENT QUALITY. 81/81 structural checks do not guarantee content matches gold standard. Always visual QA.**
+**VALIDATION SCORE ≠ CONTENT QUALITY. 80/80 structural checks do not guarantee content matches gold standard. Always visual QA.**
 
 ## Bible Entry Economics
 
@@ -299,6 +290,113 @@ Tier 1: ~50,000 tokens = ~$0.25/entry
 Tier 2: ~32,000 tokens = ~$0.16/entry
 Tier 3: ~15,000 tokens = ~$0.075/entry
 For 1,500 entries (300 T1 + 700 T2 + 500 T3): ~$300 total
+
+---
+
+# add_workers.py — SESSION 38
+
+Patches mpw_bible_writer.py to add --workers flag via concurrent.futures.ThreadPoolExecutor.
+
+```powershell
+python add_workers.py
+```
+
+Output: [OK] Added concurrent.futures import / [OK] Added --workers argparse argument / [OK] Replaced sequential loop with ThreadPoolExecutor
+
+**NOTE: Workers are now baked into the delivered writer. Only run add_workers.py if starting from the project knowledge base file (which does not have workers).**
+
+---
+
+# fix_writer.py — SESSION 38
+
+Fixes two bugs in a broken mpw_bible_writer.py:
+- BUG 1: SyntaxError in _freq/_gs/_hr/_chord js= strings (bare unescaped single quotes)
+- BUG 2: TOOL_OVERRIDES not defined
+
+```powershell
+python fix_writer.py
+```
+
+Reads and writes `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\mpw_bible_writer.py` in-place.
+Creates backup at mpw_bible_writer.py.pre_fix.bak before modifying.
+
+---
+
+# patch_live_tools.py — SESSION 38 — CORRECT — NOT YET RUN
+
+Fetches 15 non-compression Bible entries from GitHub, replaces tools section with correct tool per slug, commits via Trees API.
+
+```powershell
+python patch_live_tools.py
+```
+
+**STATUS: Correct script, not yet run because tools need visual quality upgrade first.**
+**Run AFTER tool suite rebuild in next session.**
+
+Imports build_tools_section and TOOL_OVERRIDES from local mpw_bible_writer.py.
+ENTRIES list: all 15 non-compression Tier 1 entries committed Session 38.
+compression is correctly excluded — it already has the correct GR calculator.
+
+---
+
+# patch_tools_v2.py — DO NOT USE — BROKEN
+
+_delay function missing html= and return lines. Will produce None for delay/plate-reverb/automation entries. Do not run.
+
+---
+
+# patch_tools_v3.py — DO NOT USE — INCOMPATIBLE
+
+Searches for OLD_OVERRIDES string containing 'calculator' values. That string no longer exists in the writer (TOOL_OVERRIDES was already updated). Script will fail immediately with "[ERROR] TOOL_OVERRIDES block not found".
+
+---
+
+# mpw_handoff_runner.py — NEW SESSION 37
+
+Location: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\mpw_handoff_runner.py`
+
+**PURPOSE:** Automates end-of-session handoff commits. Replaces manual 30-min handoff process.
+
+```powershell
+# At end of each session:
+python session_patch_sNN.py --dry-run   # verify first
+python session_patch_sNN.py             # commit
+```
+
+**Architecture:**
+- Fetches live handoff files from GitHub (current SHA for each)
+- Inserts session updates at append zone tags (never floating string search)
+- Scrubs secrets: ghp_ and sk-ant- patterns removed automatically
+- Validates sentinels + line count floors before committing
+- Single Trees API commit (one Netlify deploy)
+- Saves SHA state to handoff_state.json (local only, never committed)
+
+**Zone tags** (added to all 6 handoff files by add_zones.py, committed SHA: 6afa90d5):
+```
+<!-- SESSION_APPEND_ZONE -->  (in .md files: # SESSION_APPEND_ZONE)
+```
+
+**Session patch template (session_patch_sNN.py):**
+```python
+patch = {
+    'MPW-HANDOFF-CORE.md': "## Session NN Update\n...",
+    'MPW-HANDOFF-BIBLE.md': "## Session NN Bible Update\n...",
+    # ... other files as needed
+}
+run_patch(patch, dry_run=False)
+```
+
+Session 37 handoff committed — SHA: 7c321e33
+Session 38 handoff: DELIVERED AS FILES — commit manually via GitHub API (see upload instructions in this handoff)
+
+---
+
+# add_zones.py — ONE-TIME (already run)
+
+Added 11 append zone tags across 6 handoff files.
+All 10 anchors verified against actual live files before run.
+Committed SHA: 6afa90d5.
+Do NOT run again.
 
 ---
 
@@ -331,13 +429,12 @@ Automatically called by mpw_commit_articles.py after every successful commit.
 
 # commit_handoff.py
 
-Commits all 6 handoff modules + MPW-CATALOG.md to GitHub in one Trees API commit.
+Legacy — superseded by mpw_handoff_runner.py + session_patch_sNN.py workflow.
+Still functional as fallback if handoff runner fails.
 
 ```powershell
 python commit_handoff.py
 ```
-
-Run at end of every session after all handoff files are updated.
 
 ---
 
@@ -363,6 +460,7 @@ python gen_sitemap.py
 ```
 
 Output: 739 URLs (526 articles + 210 Bible entries + 3 static pages). Commits to repo root.
+Future: add `<lastmod>{today_str}</lastmod>` for Bible entries — improves crawl budget.
 
 ---
 
@@ -375,32 +473,14 @@ Committed via Trees API — SHA: d6f787db46f8dc4bbbe5b7d4f1fd2ba0b45e0505
 
 ---
 
-# fix_share_bars_s36*.py (Session 36 — series)
-
-Series of scripts that fixed share bars on compression.html:
-- fix_share_bars_s36.py — removed outer wrapper div from calculator bar
-- fix_share_bars_s36b.py — added calc-share-bar class to both bars
-- fix_share_bars_s36c.py — injected CSS: calc-share-bar auto-width
-- fix_share_bars_s36d.py — CSS: solid amber Copy Link
-- fix_share_bars_s36e.py — CSS: 3-col equal grid on mobile
-All committed. Final state: all share bars uniform on compression.html.
-
----
-
 # Bible Batch Files
 
 Location: C:\Users\swarn\OneDrive\Desktop\mpw-scripts\
 
-- bible-upgrade-tier1.txt — 50 Tier 1 rewrites — READY after writer visual QA ≥90%
-  Format: slug:Term:Category:1 (4 parts, tier=1)
-  Example line: compression:Compression:Signal Processing:1
-- bible-index.json — 210 entries — in repo root
-
-Run Tier 1 batch (ONLY after Pass 2 prompt rewrite + visual QA confirmed):
-```powershell
-. .\setenv.ps1
-python mpw_bible_writer.py --batch-file bible-upgrade-tier1.txt --start-date 2026-05-16
-```
+- bible-upgrade-tier1.txt — 50 Tier 1 rewrites — 16 DONE, 34 REMAINING
+  Format: compression:Compression:Signal Processing:1 (4 parts, tier=1)
+- bible-index.json — 210 entries (v3.0/v4.0) — in repo root — NOT updated for v5.1 entries yet
+- bible-tier1-remaining34.txt — CREATE before running remaining batch (see CORE for command)
 
 ---
 

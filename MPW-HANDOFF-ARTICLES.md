@@ -1,5 +1,5 @@
 # MPW-HANDOFF-ARTICLES.md
-*Updated: May 18, 2026 (SESSION 36)*
+*Updated: May 18, 2026 (SESSION 37)*
 
 ---
 
@@ -17,7 +17,7 @@ Or fetch directly:
 python mpw_count.py
 ```
 
-Current count as of Session 36: **526 articles live** (unchanged from Session 35)
+Current count as of Session 37: **526 articles live** (unchanged — no article batches ran Session 37)
 
 ---
 
@@ -68,6 +68,7 @@ Key requirements for every article:
 |---|---|---|
 | 01-07 | LIVE | 406 articles |
 | 08 | LIVE | 120 articles |
+| Bible Tier 1 (50 rewrites) | READY | Writer approved Session 37 — run next |
 | 09 (breakdowns) | QUEUED | Run after Bible Tier 1 batch completes |
 | 10 (studio-story) | QUEUED | After Batch 09 |
 | 11 (recreation) | QUEUED | After recreations.html category page |
@@ -85,12 +86,12 @@ Missing category pages blocking batches:
 - 5 articles missing og:image — mpw_fix_meta.py (rate limited Session 27 — retry)
 - brands.html — in nav but no page exists — build when ready
 - netlify.toml redirect: /dictionary/* → /bible/:splat 301 — pending
-- Dead category card slugs — 448 references, 7 slugs — fix_dead_slugs.py needs href format investigation (Session 37)
+- Dead category card slugs — 448 references, 7 slugs — fix_dead_slugs.py needs href format investigation (Session 38)
+- Title tag + meta description optimization: 4 top comparison articles at position ~16 in GSC — schedule after Bible Tier 1 batch
 
 ---
 
-<!-- ARTICLE_UPDATES_APPEND_HERE -->
-# GSC Top Queries (May 15, 2026)
+# GSC Top Queries (May 18, 2026)
 
 Position ~16 on these comparison queries — optimize title/meta to improve CTR:
 - serum 2 vs vital
@@ -132,3 +133,12 @@ This creates a three-way internal link web: Article ↔ Producer Profile ↔ Bib
 Content spec: 2,000-3,000 words. Sections: Hero, Philosophy, Signature gear, Signature techniques, Notable productions, Quotes, Bible entries, Related producers.
 
 Do NOT build before Batch 09 completes.
+
+---
+
+# Session 37 — No Article Changes
+
+Session 37 was entirely focused on mpw_bible_writer.py Pass 2 rewrite and handoff automation.
+No articles were written, modified, or committed.
+Article count remains 526.
+Next article batch: Batch 09 (100 breakdowns) — queued after Bible Tier 1 completes.
