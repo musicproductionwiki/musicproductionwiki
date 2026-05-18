@@ -1,6 +1,7 @@
 # MusicProductionWiki.com — CORE Handoff
 *Updated: May 18, 2026 (SESSION 36) · 526 articles + 210 Bible entries live*
 *Updated: May 18, 2026 (SESSION 37) · 526 articles + 210 Bible entries live*
+*Updated: May 18, 2026 (SESSION 37b) · 526 articles + 210 Bible entries live*
 <!-- COUNTS_HERE -->
 *Modular format — 6 GitHub files replace single monolithic handoff*
 
@@ -208,6 +209,11 @@ If you cannot recite all four, you have not read this document. Stop and re-read
 | NEVER use floating string search in patch scripts — always use append zone tags | Floating search breaks when file content shifts. Zone tags are structural anchors. |
 | NEVER commit handoff files manually — always use mpw_handoff_runner.py | Manual commits bypass sentinel validation and truncation detection. |
 | NEVER skip --dry-run before first live run of any new handoff patch | Dry run confirms zone tags exist and insertions are correct before committing. |
+| NEVER call build_producer_spotlight_html before html variable is assigned | Spotlight must be called AFTER all placeholder replacements and tools injection — UnboundLocalError otherwise. |
+| NEVER place the tools section at the bottom of a Bible entry | Inject tools immediately after id="quick-reference" closing tag via string replacement in build_html_t1(). |
+| NEVER declare writer ready for batch based on validation score alone | Visual QA against gold standard is mandatory. 81/81 structural checks do not guarantee content quality. |
+| NEVER use tool_type from Pass 1 to determine GR calculator rendering | Pass 1 returns null for compression. Use hardcoded TOOL_OVERRIDES map in build_tools_section(). |
+| NEVER set API timeout below 600 seconds for Pass 2 | 22,000 token Pass 2 can take up to 10 minutes. 300s is insufficient. |
 <!-- NEVER_RULES_APPEND_HERE -->
 | NEVER truncate a handoff module to save context | If context is low, warn Steve and stop — do NOT deliver a partial handoff |
 
@@ -280,6 +286,13 @@ Every handoff update requires ALL of the following:
 | P13 | GSC — 2 URL fixes committed | DONE Session 36 | ssl-2-plus-review/ redirect + monitors canonical fixed — commit d6f787db |
 | P0 | Build handoff runner system | COMPLETE Session 37 | mpw_handoff_runner.py + add_zones.py + session_patch format delivered |
 | P1 | Pass 2 prompt rewrite | IN PROGRESS Session 37 | Rewrite build_pass2_prompt_t1() — fix 9 content failures — then visual QA |
+| P0 | mpw_bible_writer.py Pass 2 prompt rewrite | COMPLETE Session 37 | All 9 content failures fixed — 5 test runs — approved by Steve |
+| P1 | Visual QA vs gold standard | COMPLETE Session 37 | Approved by Steve after 5 iterations — ready for batch |
+| P2 | Tier 1 batch — 50 Bible rewrites | READY | python mpw_bible_writer.py --batch-file bible-upgrade-tier1.txt --start-date 2026-05-18 |
+| P0.4 | Run mpw_bible_cat_pages.py --run | READY after Tier 1 | 8 Bible category pages — now unblocked |
+| P2.1 | Air entry retry | After Tier 1 | python mpw_bible_writer.py --test --slug air-frequency-eq --term "Air Frequency EQ" --category "Frequency" |
+| P2.2 | Sitemap regeneration + GSC resubmission | After Tier 1 | Regenerate after Tier 1 batch commits |
+| P6 | Affiliate applications | REVENUE BLOCKER | Plugin Boutique, Amazon Associates, Sweetwater, Loopmasters, PluginFox — Steve must action |
 <!-- PRIORITY_TABLE_APPEND_HERE -->
 
 ---
@@ -310,6 +323,29 @@ After rewrite:
 4. Only then proceed: Tier 1 batch (50 entries)
 
 Run session patch at end: python session_patch_s38.py
+Run python mpw_session_start.py. State article count, Bible entry count, P2 priority, last 5 NEVER rules.
+
+P2 SESSION 38 is the Tier 1 Bible batch. Writer is approved and ready.
+
+Run:
+    . .\setenv.ps1
+    python mpw_bible_writer.py --batch-file bible-upgrade-tier1.txt --start-date 2026-05-18
+
+After batch completes:
+1. python mpw_bible_cat_pages.py --run
+2. python gen_sitemap.py — then resubmit to GSC
+3. python mpw_dead_slug_audit.py
+
+Secondary priorities Session 38:
+- Fix dead category card slugs (fetch one live category page to get actual href format first)
+- Title/meta optimization on 4 GSC top queries at position ~16
+- Begin Moat 1 planning (Glossary Tooltip System)
+
+CRITICAL SESSION 38 RULES:
+- NEVER truncate handoff modules — warn and stop if context runs low
+- NEVER commit Bible entries without 81-check validation suite passing
+- handoff_state.json is local only — never commit it
+- Run session_patch_s38.py at end of session
 <!-- NEXT_SESSION_PROMPT_HERE -->
 
 P0 SESSION 37 is a complete rewrite of the mpw_bible_writer.py Pass 2 prompt. The current writer produces structurally valid HTML that passes 81/81 checks but fails visual QA at approximately 55% quality vs the gold standard compression.html. Specific failures:
@@ -767,6 +803,61 @@ Implementation:
 |---|---|
 | (add_zones.py run SHA) | Zone tags added to all 6 handoff files |
 | (session_patch_s37.py run SHA) | Session 37 handoff update |
+## May 18, 2026 — SESSION 37B — PASS 2 REWRITE + WRITER QA
+
+### What Was Done
+
+1. **Pass 2 system prompt complete rewrite (PASS2_SYSTEM_T1):**
+   - Identity reframe: "senior editor of The Producer's Bible"
+   - NON-NEGOTIABLE LAWS (LAW 1–7): structural mandates as identity constraints
+   - Failure description: 7 explicit failure signatures for self-check before outputting
+   - Voice: 3 BAD/GOOD pairs — parameters (attack ms on snare), history (1176 all-buttons), mistakes (bypass test)
+   - Word count: prose 4,800–5,500w + builder adds 1,500–2,500w = 7,000–8,000w total
+   - Section-level hard limits: SUBSTANTIVE vs STRUCTURAL classification
+   - Internal linking mandate: 6–10 amber links per entry, CONFIRMED_LIVE_SLUGS injected into prompt body
+
+2. **SEO improvements:**
+   - Meta description: search-intent pattern "Master {term} in music production...", 155-char enforced
+   - Keywords: intent-phrase front-loading (how to use, tutorial, explained) before tags
+   - HowTo schema: 5 universal production workflow steps (replaced 2 DAW-specific steps)
+   - Article schema: timeRequired: PT{read_min}M, inLanguage: en-US, ISO 8601 datetimes
+
+3. **Builder fixes:**
+   - Tools injected after id="quick-reference" via string replacement — not at bottom
+   - Share bars (Copy Link + X + Reddit) added to calculator section (calc-share-bar)
+   - Producer spotlight parses <cite> tags from rendered HTML — guarantees match
+   - Verdict added to sidebar TOC between Types and Plugins
+   - FAQ empty answer filter: build_faq_html() skips items with empty 'a' field
+   - UnboundLocalError fixed: spotlight called after html is fully built
+
+4. **Word count target updated per Steve:**
+   - Total range: 7,000–8,000w (was 6,800–7,800w)
+   - Prose target: 4,800–5,500w (was 5,800–6,500w)
+   - Builder adds 1,500–2,500w structural components (not 600–1,200w as previously estimated)
+
+5. **5 test runs — progression:**
+   | Run | Read Time | Key Fix |
+   |---|---|---|
+   | 1 | 44 min | Tools at bottom, history overflow, wrong spotlight |
+   | 2 | 33 min | Tools fixed, history fixed, verdict short |
+   | 3 | 32 min | Verdict fixed, spotlight fixed |
+   | 4 | 32 min | 81/81 checks, spotlight from cite tags |
+   | 5 | 28 min | Verdict in sidebar, FAQ filter — approved by Steve |
+
+6. **Visual QA approved by Steve** — writer ready for Tier 1 batch
+
+### Key Learnings
+
+- Build_producer_spotlight_html must be called AFTER html is fully built — UnboundLocalError otherwise
+- Tools must be injected after quick-reference via string replacement — never appended at bottom
+- Builder adds 1,500–2,500w structural components — prose target 4,800–5,500w is correct ceiling
+- Different producers in spotlight across runs is fine — they just need to match the entry prose
+
+### Commit Log
+| SHA | What |
+|---|---|
+| (this commit) | Session 37b handoff — Pass 2 rewrite completion |
+| (mpw_bible_writer.py) | Final approved version — ready for Tier 1 batch |
 <!-- SESSION_LOG_APPEND_HERE -->
 ## May 16, 2026 — SESSION 32 FINAL — KEY DECISIONS
 

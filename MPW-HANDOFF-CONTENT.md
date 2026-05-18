@@ -242,6 +242,23 @@ Build trigger: separate spec session required — involves TruClarify API/intake
 - 2 specific issues fixed: ssl-2-plus-review redirect + monitors canonical
 - Action: Request Indexing for fixed URLs. No other action needed — 585 queue will resolve over weeks as Google crawls.
 
+## Session 37B — Content Standards Update
+
+### Bible Tier 1 Word Count — UPDATED per Steve
+- Total range: 7,000–8,000w (was 6,800–7,800w)
+- Pass 2 prose target: 4,800–5,500w (was 5,800–6,500w)
+- Builder structural components: 1,500–2,500w (not 600–1,200w as previously estimated)
+
+### Bible Pipeline
+- Writer Pass 2 rewrite: COMPLETE — approved by Steve
+- Tier 1 batch (50 entries): READY TO RUN
+- Air entry retry: pending after Tier 1 batch
+- Bible category pages (8): unblocked — run after Tier 1 batch
+
+### Producer Quotes
+- Different producers across runs are acceptable
+- Spotlight must match whichever quotes appear in the entry prose
+- cite-tag parsing in build_producer_spotlight_html() guarantees this
 <!-- CONTENT_UPDATES_APPEND_HERE -->
 ## Content Strategy Insight
 Comparisons are the traffic beachhead. Getting from position 16 to position 5 = clicks start.

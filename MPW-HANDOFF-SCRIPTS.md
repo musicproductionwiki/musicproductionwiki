@@ -228,6 +228,39 @@ Purpose: Added 11 zone tags to 6 handoff files. Already run — do not run again
 Location: C:\Users\swarn\OneDrive\Desktop\mpw-scripts\session_patch_s37.py
 Purpose: Session 37 handoff data. Use as template for session_patch_s38.py.
 Run: python session_patch_s37.py [--dry-run]
+## mpw_bible_writer.py — Session 37B Changes
+
+### System Prompt (PASS2_SYSTEM_T1) — Complete Rewrite
+- Identity: "senior editor of The Producer's Bible"
+- LAW 1-7: structural mandates as identity constraints (moved from user prompt)
+- 7 failure signatures for self-check
+- 3 BAD/GOOD voice pairs: parameters (attack ms), history (1176 all-buttons), mistakes (bypass test)
+- Word count: 4,800–5,500w prose, builder adds 1,500–2,500w, total 7,000–8,000w
+- Section-level hard limits: SUBSTANTIVE vs STRUCTURAL
+
+### User Prompt (build_pass2_prompt_t1)
+- CONFIRMED_LIVE_SLUGS injected into prompt body
+- Internal link format specified (amber + bottom border)
+- History template: 4 cards x 1 paragraph x 120–150w
+- Verdict template: MPW editorial opinion mandate with example
+- Final Checks: 8 items including internal links count
+
+### Builder Changes
+- build_tools_section(): Share This Tool bar added (Copy Link + X + Reddit)
+- build_html_t1(): tools injected after quick-reference, not at bottom
+- build_producer_spotlight_html(): now parses cite tags from rendered HTML
+- build_sidebar_toc_html(): ('verdict', 'Verdict') added
+- build_faq_html(): skips items with empty 'a' field
+
+### Bug Fixes
+- UnboundLocalError: spotlight moved to after html is built
+- Wrong spotlight names: fixed with cite-tag parsing
+
+### SEO
+- Meta description: search-intent pattern, 155-char limit
+- Keywords: intent-phrase front-loading
+- HowTo schema: 5 universal workflow steps
+- Article schema: timeRequired, inLanguage, ISO 8601 dates
 <!-- SCRIPT_UPDATES_APPEND_HERE -->
 ## CONFIRMED_LIVE_SLUGS
 

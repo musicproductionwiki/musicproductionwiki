@@ -545,11 +545,147 @@ Known content failures in generated output:
 | CORE | priority_table | <!-- PRIORITY_TABLE_APPEND_HERE --> |
 | CORE | session_log | <!-- SESSION_LOG_APPEND_HERE --> |
 | CORE | next_session | <!-- NEXT_SESSION_PROMPT_HERE --> |
-| TECH | tech_findings | <!-- TECH_FINDINGS_APPEND_HERE --> |
+| TECH | tech_findings | ## May 18, 2026 — SESSION 37B — Key Technical Findings
+
+### build_html_t1() — Mandatory Function Order
+
+To prevent UnboundLocalError on html variable:
+1. Build component HTML: signal_chain, genre_html, plugin_html, daw_html etc.
+2. Build tools_html = build_tools_section(p1, slug)
+3. Build sidebar_toc — DO NOT call spotlight yet
+4. Build html = content_html + all placeholder replacements
+5. Inject tools: replace '</section>\n\n<section id="signal-chain">' with tools between
+   Set tools_html_final = '' to prevent double-render
+6. THEN call spotlight_html = build_producer_spotlight_html(p1, quotes_filtered, html)
+7. Assemble full page with tools_html_final (empty)
+
+### Tier 1 Word Count — UPDATED
+
+Total target: 7,000–8,000w per Steve (was 6,800–7,800w)
+Prose target: 4,800–5,500w (was 5,800–6,500w)
+Builder adds: 1,500–2,500w structural components
+  (tables, SVGs, DAW tabs, plugin cards, FAQ accordion, calculator, comparison callouts)
+
+WORD_FLOOR_T1 = 6800 / WORD_CEIL_T1 = 7800 unchanged in validation suite
+
+### Section Word Count Targets (Session 37 Final)
+
+SUBSTANTIVE (write fully):
+  Definition: 550–700w | How It Works: 350–450w | Parameters: 550–650w
+  History: 500–600w (4 cards x 120-150w each) | How To Use: 450–550w
+  Types: 400–500w | Mistakes: 400–500w
+
+STRUCTURAL (hard ceilings):
+  Quick Ref: 60-80w | Signal Chain: 80-110w | Interaction Warnings: 120-160w
+  Genre Table: 50-70w | Hardware/Plugin: 100-140w | Before/After: 80-110w
+  In The Wild: 160-220w | Verdict: 60-80w | Flags: 60-80w | Progression: 200-280w
+  FAQ: 0w (placeholder only)
+
+### Producer Spotlight Fix
+
+build_producer_spotlight_html(p1, quotes_filtered=None, rendered_html='')
+Primary: re.findall(r'<cite[^>]*>\s*—\s*([^,<]+),\s*([^—<\n]+)', rendered_html)
+Fallback chain: cite tags → quotes_filtered → producer_quote_source → track produced_by
+
+### Sidebar TOC
+
+('verdict', 'Verdict') inserted between ('types', 'Types') and ('plugin-recs', 'Plugins')
+All 20 sections now in TOC.
+
+### SEO Architecture (Session 37 Final)
+
+Meta description: "Master {term} in music production: settings, techniques, and {types} 
+  explained with DAW guides, producer quotes, and track examples. The definitive reference."
+  155-char limit enforced. Falls back to "attack, release, ratio, and threshold" if no types.
+
+Keywords: {term}, {category}, {term} music production, {term} settings,
+  how to use {term}, {term} tutorial, {term} explained + Pass 1 tags
+
+HowTo steps (5 universal):
+  1. Set the Threshold
+  2. Choose Ratio and Time Constants  
+  3. Set Attack Time for Transient Control
+  4. Set Release Time
+  5. Apply Makeup Gain and A/B at Matched Levels
+
+Article schema additions: timeRequired: PT{read_min}M, inLanguage: en-US
+datePublished/dateModified: full ISO 8601 with T00:00:00Z
+
+Internal link style (amber):
+  color:#f5a623;text-decoration:none;border-bottom:1px solid rgba(245,166,35,0.3)
+<!-- TECH_FINDINGS_APPEND_HERE --> |
 | BIBLE | writer_status | <!-- WRITER_STATUS_HERE --> |
 | SCRIPTS | script_updates | <!-- SCRIPT_UPDATES_APPEND_HERE --> |
 | CONTENT | content_updates | <!-- CONTENT_UPDATES_APPEND_HERE --> |
 | ARTICLES | article_updates | <!-- ARTICLE_UPDATES_APPEND_HERE --> |
+## May 18, 2026 — SESSION 37B — Key Technical Findings
+
+### build_html_t1() — Mandatory Function Order
+
+To prevent UnboundLocalError on html variable:
+1. Build component HTML: signal_chain, genre_html, plugin_html, daw_html etc.
+2. Build tools_html = build_tools_section(p1, slug)
+3. Build sidebar_toc — DO NOT call spotlight yet
+4. Build html = content_html + all placeholder replacements
+5. Inject tools: replace '</section>\n\n<section id="signal-chain">' with tools between
+   Set tools_html_final = '' to prevent double-render
+6. THEN call spotlight_html = build_producer_spotlight_html(p1, quotes_filtered, html)
+7. Assemble full page with tools_html_final (empty)
+
+### Tier 1 Word Count — UPDATED
+
+Total target: 7,000–8,000w per Steve (was 6,800–7,800w)
+Prose target: 4,800–5,500w (was 5,800–6,500w)
+Builder adds: 1,500–2,500w structural components
+  (tables, SVGs, DAW tabs, plugin cards, FAQ accordion, calculator, comparison callouts)
+
+WORD_FLOOR_T1 = 6800 / WORD_CEIL_T1 = 7800 unchanged in validation suite
+
+### Section Word Count Targets (Session 37 Final)
+
+SUBSTANTIVE (write fully):
+  Definition: 550–700w | How It Works: 350–450w | Parameters: 550–650w
+  History: 500–600w (4 cards x 120-150w each) | How To Use: 450–550w
+  Types: 400–500w | Mistakes: 400–500w
+
+STRUCTURAL (hard ceilings):
+  Quick Ref: 60-80w | Signal Chain: 80-110w | Interaction Warnings: 120-160w
+  Genre Table: 50-70w | Hardware/Plugin: 100-140w | Before/After: 80-110w
+  In The Wild: 160-220w | Verdict: 60-80w | Flags: 60-80w | Progression: 200-280w
+  FAQ: 0w (placeholder only)
+
+### Producer Spotlight Fix
+
+build_producer_spotlight_html(p1, quotes_filtered=None, rendered_html='')
+Primary: re.findall(r'<cite[^>]*>\s*—\s*([^,<]+),\s*([^—<\n]+)', rendered_html)
+Fallback chain: cite tags → quotes_filtered → producer_quote_source → track produced_by
+
+### Sidebar TOC
+
+('verdict', 'Verdict') inserted between ('types', 'Types') and ('plugin-recs', 'Plugins')
+All 20 sections now in TOC.
+
+### SEO Architecture (Session 37 Final)
+
+Meta description: "Master {term} in music production: settings, techniques, and {types} 
+  explained with DAW guides, producer quotes, and track examples. The definitive reference."
+  155-char limit enforced. Falls back to "attack, release, ratio, and threshold" if no types.
+
+Keywords: {term}, {category}, {term} music production, {term} settings,
+  how to use {term}, {term} tutorial, {term} explained + Pass 1 tags
+
+HowTo steps (5 universal):
+  1. Set the Threshold
+  2. Choose Ratio and Time Constants  
+  3. Set Attack Time for Transient Control
+  4. Set Release Time
+  5. Apply Makeup Gain and A/B at Matched Levels
+
+Article schema additions: timeRequired: PT{read_min}M, inLanguage: en-US
+datePublished/dateModified: full ISO 8601 with T00:00:00Z
+
+Internal link style (amber):
+  color:#f5a623;text-decoration:none;border-bottom:1px solid rgba(245,166,35,0.3)
 <!-- TECH_FINDINGS_APPEND_HERE -->
 # 13. Session 35 — Key Technical Findings
 
