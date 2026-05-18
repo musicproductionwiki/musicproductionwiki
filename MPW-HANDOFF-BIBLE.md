@@ -1,13 +1,13 @@
 # MPW-HANDOFF-BIBLE.md
-*Updated: May 16, 2026 (SESSION 32 FINAL)*
+*Updated: May 18, 2026 (SESSION 36)*
 
 ---
 
 # 11. The Producer's Bible — Strategic Overview
 
 Goal: 1,500 entries — most comprehensive music production reference on the internet.
-Current: 202 entries live (v3.0/v4.0 template)
-Gold standard: compression.html v5.1 — built Session 32 — commit Session 33
+Current: 210 entries live (v3.0/v4.0 template)
+Gold standard: compression.html v5.1 — built Session 32 — refined Sessions 33–36
 URL structure: /bible/[term] — NEVER /dictionary/
 Category pages: /bible/categories/[slug] — 8 pages — run mpw_bible_cat_pages.py --run after writer confirmed
 
@@ -16,19 +16,20 @@ Category pages: /bible/categories/[slug] — 8 pages — run mpw_bible_cat_pages
 # 3B. Bible Gold Standard Entry
 
 **v3.0 gold standard: bible/eq.html — CONFIRMED LOCKED — do not touch**
-**v5.1 gold standard: bible/compression.html — BUILT SESSION 32 — commit Session 33 before running any batch**
+**v5.1 gold standard: bible/compression.html — BUILT SESSION 32 — share bars fixed Session 36 — writer Pass 2 prompt rewrite required Session 37**
 
 compression.html v5.1 gold standard stats:
 - Words: 7,058 content words / 22 min read
-- File: 153KB (under 200KB Cloudflare limit)
-- Checks: 38/38 mobile + gold standard audit
-- Sections: 19 entry-section IDs
-- Nav links: 19 pills
+- File: ~175KB (under 200KB Cloudflare limit)
+- Checks: 38/38 mobile + 81/81 structural audit
+- Sections: 20 entry-section IDs (Verdict added Session 33)
+- Nav links: 20 pills
 - Schema blocks: 5 (Article+sameAs, FAQPage, BreadcrumbList, Speakable, HowTo)
 - Producer quotes: 2 (from quotes.json, compression tag)
 - Track examples: 7 (text-only, no links)
 - FAQs: 8
 - Tools: GR Calculator + 3 email-gated downloads
+- Share bars: 7 bars — all mpw-share-bar — Copy Link → X → Reddit
 
 The gold standard file is the ONLY reference for the writer update. Read it before writing a single function.
 
@@ -80,19 +81,21 @@ Future 9th category: tools — /bible/categories/tools/ — filters entries with
 - v3.0: original — 3,000-3,500 words — old template — 200 entries live — SUPERSEDED
 - v4.0: broken template — SUPERSEDED
 - v5.0: built Session 30 — 54/54 checks — YouTube links — identity bar — SUPERSEDED
-- v5.1: built Session 32 (gold standard HTML) — writer update due Session 33
+- v5.1: built Session 32 (gold standard HTML) — writer update completed Session 36 — 81/81 structural checks pass — content quality ~55% — Pass 2 prompt rewrite required Session 37
 
 ---
 
-# 47. mpw_bible_writer.py v5.1 — FULL SPEC FOR SESSION 33
+# 47. mpw_bible_writer.py v5.1 — FULL SPEC
 
 ## Critical Rules Before Writing
 
 1. Read the full gold standard compression.html BEFORE writing a single function
 2. This is NOT a patch of v5.0 — write build_html_t1() fresh, matching compression.html exactly
-3. Run --validate after writing — 75+ checks must all pass
-4. Run --test compression — compare output to gold standard visually
-5. The batch format changes: slug:Term:Category:Tier (4 parts, colon-separated)
+3. Run --validate after writing — 81 checks must all pass
+4. Run --test compression — compare output to gold standard VISUALLY — not just check count
+5. The batch format is: slug:Term:Category:Tier (4 parts, colon-separated)
+6. MODEL = "claude-sonnet-4-6" — never claude-sonnet-4-20250514
+7. API timeout = 600 seconds minimum for Pass 2
 
 ## Three-Tier Architecture
 
@@ -165,6 +168,8 @@ NEW fields required in v5.1:
 
 All slug fields validated against CONFIRMED_LIVE_SLUGS. Invalid slugs set to null, not omitted with error.
 
+**IMPORTANT: tool_type from Pass 1 is unreliable. For Compression, always inject the GR calculator regardless of tool_type. Build a hardcoded slug→tool_type override map in build_tools_section().**
+
 ### Pass 1.5 — Quotes Filter (no API call)
 
 Between Pass 1 and Pass 2:
@@ -175,7 +180,7 @@ Between Pass 1 and Pass 2:
 
 ### Pass 2 (22,000 tokens for Tier 1) — Prose HTML
 
-Increase PASS2_TOKENS from 16,000 to 22,000 for Tier 1 to support 6,000+ prose word target.
+PASS2_TOKENS must be 22,000 for Tier 1. API timeout must be 600 seconds minimum.
 Receives Pass 1 JSON (8,000 chars) + locked track list + quotes_context.
 Cannot invent tracks. Cannot invent quotes. Must leave PLACEHOLDERS for dynamic sections.
 
@@ -186,11 +191,35 @@ LOCKED TRACK LIST (use exactly these — do not substitute):
 ```
 
 Pass 2 returns HTML sections. Placeholders for dynamic content that build_html_t1 fills:
-- TRACK_PLACEHOLDER → built from p1.track_examples by build_track_html()
-- GENRE_PLACEHOLDER → built from p1.genre_settings_rows by build_genre_table()
-- PLUGIN_PLACEHOLDER → built from p1.plugin_recommendations by build_plugin_recs()
-- DAW_PLACEHOLDER → built from p1.daw_implementations by build_daw_tabs()
-- COMPARISON_PLACEHOLDER → built from p1.comparison_terms by build_comparison_callouts()
+- THE_NUMBER_PLACEHOLDER → built from p1.the_number by build_the_number_html()
+- SIGNAL_CHAIN_PLACEHOLDER → built from p1.signal_chain_position by build_signal_chain_svg()
+- TRACK_PLACEHOLDER → built from p1.track_examples by build_track_list_html()
+- GENRE_PLACEHOLDER → built from p1.genre_settings_rows by build_genre_table_html()
+- PLUGIN_PLACEHOLDER → built from p1.plugin_recommendations by build_plugin_recs_html()
+- DAW_PLACEHOLDER → built from p1.daw_implementations by build_daw_tabs_html()
+- COMPARISON_PLACEHOLDER → built from p1.comparison_terms by build_comparison_callouts_html()
+- FAQ_PLACEHOLDER → built from p1.faq by build_faq_html()
+- FLAGS_PLACEHOLDER → built from p1.red_flags/green_flags by build_flags_html()
+- BEFORE_AFTER_PLACEHOLDER → built from p1.before_after_text by build_before_after_html()
+- QUICKREF_SHARE_PLACEHOLDER → mpw-share-bar for quick reference section
+
+## Pass 2 Prompt — Known Failures (Session 36) — MUST FIX SESSION 37
+
+The current Pass 2 prompt produces structurally valid HTML that passes 81/81 checks but fails visual QA at ~55% quality. Specific failures that must be addressed in the prompt rewrite:
+
+1. **Missing h2 titles** — Pass 2 is not including `<h2>` tags inside sections. The prompt must mandate: every section must open with `<h2>SectionName</h2>` using exact gold standard text.
+
+2. **Missing 2nd producer quote** — The prompt says 1-2 quotes but Pass 2 is only including 1. Must mandate: Tier 1 entries MUST include exactly 2 producer quotes from quotes_context, placed at different points in the prose.
+
+3. **FAQ_PLACEHOLDER missing** — The FAQ section (`<section class="entry-section" id="faq">`) must contain `FAQ_PLACEHOLDER` on its own line so build_html_t1 can replace it with the accordion. Pass 2 is likely writing prose FAQ answers instead.
+
+4. **PLUGIN_PLACEHOLDER missing** — The hardware-plugin section must contain `PLUGIN_PLACEHOLDER` immediately after the hardware-plugin table. Pass 2 is either skipping it or placing it incorrectly.
+
+5. **Anchor nav broken** — Every section must have `class="entry-section"` AND the exact `id="..."` shown in ENTRY_NAV_LINKS. Pass 2 may be using different IDs or omitting the class.
+
+6. **Comparison callouts stub** — COMPARISON_PLACEHOLDER must be placed before the types section. The callout content must come from p1.comparison_terms which has full term names and slugs. The current output shows one-liner stubs.
+
+7. **Generic content** — The prompt system prompt must be strengthened: "Write in authoritative producer-language throughout. Every sentence must contain a concrete, actionable, specific claim. No hedging language. No generic explainer prose. You are writing the definitive professional reference."
 
 ## build_html_t1() — Full Section Requirement
 
@@ -198,47 +227,68 @@ Every Tier 1 entry must include ALL of these sections with entry-section class:
 
 | Section ID | Content | Built by |
 |---|---|---|
-| definition | Hook + definition prose | Pass 2 |
-| how-it-works | Mechanism prose | Pass 2 |
-| parameters | Parameters grid (cards) | Pass 2 + p1 |
-| quick-reference | The Number box + QR table + copy btn + share/download | build_html_t1 |
-| signal-chain | SVG (1440×160) + mobile stack + note | build_signal_chain_svg() |
-| diagram | SVG diagram + explanation text | Pass 2 |
-| history | 4 sub-sections in left-border cards | Pass 2 |
-| how-to-use | DAW tabs + prose | PASS 2 with DAW_PLACEHOLDER |
-| genre-table | Genre settings table + share/download | GENRE_PLACEHOLDER |
-| hardware-plugin | HW vs plugin table + plugin recs | Pass 2 + PLUGIN_PLACEHOLDER |
-| before-after | Before/after text block | build_html_t1 from p1 |
-| in-the-wild | Track examples (text-only) | TRACK_PLACEHOLDER |
-| types | Types grid (min 4 cards) | Pass 2 |
-| mistakes | Mistakes list | Pass 2 |
-| flags | Red/green flags | build_html_t1 from p1 |
-| progression | Progression path (3 stages) | Pass 2 |
-| faq | FAQ accordion (8 questions) | build_html_t1 from p1 |
-| tools | Tool card + GR calculator | build_html_t1 |
-| related | Also in The Bible (related-term-cards) | build_related_terms_html() |
+| definition | Hook + definition prose + h2 "What Is [Term]?" | Pass 2 |
+| how-it-works | Mechanism prose + h2 "How [Term] Works" | Pass 2 |
+| parameters | h2 + Parameters grid (cards) | Pass 2 + p1 |
+| quick-reference | h2 + The Number box + QR table + share bar | build_html_t1 |
+| signal-chain | h2 + SVG (1440×160) + mobile stack + note | build_signal_chain_svg() |
+| diagram | h2 + SVG diagram + explanation text | Pass 2 |
+| history | h2 + 4 sub-sections in left-border cards | Pass 2 |
+| how-to-use | h2 + DAW tabs + prose | PASS 2 with DAW_PLACEHOLDER |
+| genre-table | h2 + Genre settings table + share | GENRE_PLACEHOLDER |
+| hardware-plugin | h2 + HW vs plugin table + plugin recs | Pass 2 + PLUGIN_PLACEHOLDER |
+| before-after | h2 + Before/after text block | build_html_t1 from p1 |
+| in-the-wild | h2 + Track examples (text-only) | TRACK_PLACEHOLDER |
+| types | h2 + Types grid (min 4 cards) | Pass 2 |
+| verdict | h2 + Producers Verdict | Pass 2 — standalone div after types |
+| mistakes | h2 + Mistakes list | Pass 2 |
+| flags | h2 + Red/green flags | build_html_t1 from p1 |
+| progression | h2 + Progression path (3 stages) | Pass 2 |
+| faq | h2 + FAQ accordion (8 questions) | build_html_t1 from p1 via FAQ_PLACEHOLDER |
+| tools | h2 + Tool card + GR calculator | build_html_t1 |
+| related | h2 + Also in The Bible (related-term-cards) | build_related_terms_html() |
 
 Also required (not sections):
 - Difficulty badge + prereq chain (in masthead)
 - Start Here learning path box (after quick answer)
 - Misconception block (after masthead, before definition)
 - The Number box (in quick-reference section)
-- Producer quotes 1-2 (woven into prose by Pass 2)
+- Producer quotes 1-2 (woven into prose by Pass 2) — MUST be 2 for Tier 1
 - Comparison callouts (before types section) — built from p1.comparison_terms
-- Producers Verdict (after types)
+- Producers Verdict (after types) — id="verdict" standalone div
 - Interaction warnings (after signal chain)
 - Newsletter breakout strip (before in-the-wild)
 - Social share block (after related)
 - Last verified date
-- Sidebar: TOC (19 links) + producer spotlight + share + newsletter
+- Sidebar: TOC (20 links) + producer spotlight + share widget + newsletter
+
+## build_html_t1() — Tools Section
+
+The tools section ALWAYS renders. Content is conditional on tool type.
+
+**Hardcoded tool overrides (tool_type from Pass 1 is unreliable):**
+```python
+TOOL_OVERRIDES = {
+    'compression': 'calculator',
+    'eq': None,  # frequency reference tool — not yet built
+    'delay': 'calculator',  # delay time calculator — not yet built
+    'lufs': 'calculator',  # LUFS target calculator — not yet built
+}
+def build_tools_section(p1, slug):
+    tool_type = TOOL_OVERRIDES.get(slug) or (p1.get('tool_type') or '').lower()
+    # ... rest of function
+```
+
+If tool_type == 'calculator', inject the GR calculator block.
+If tool_type is None or unknown, inject "tool coming soon" teaser.
 
 ## build_html_t1() — Signal Chain SVG
 
 ```python
-def build_signal_chain_svg(positions, term):
+def build_signal_chain_svg(positions, slug):
     """
     positions: list of dicts [{label, sublabel1, sublabel2, active: bool}]
-    term: the entry term (used for active box identification)
+    slug: the entry slug (used for aria title ID)
     ViewBox: 0 0 1440 160
     Box width: 158px, height: 72px (active: 178px × 92px)
     Arrows: #4a4a6a with polygon marker
@@ -253,13 +303,7 @@ def build_signal_chain_svg(positions, term):
 
 Single modal handles 3 asset types. openGateFor(asset) accepts 'full', 'quickref', 'genre'.
 JS functions required: openGateFor, closeGate, submitGate, downloadQuickRef, downloadGenreTable.
-BEEHIIV_PUB_ID and BEEHIIV_API_KEY are placeholders in the generated HTML — Steve replaces before committing.
-
-## build_html_t1() — Tool Injection
-
-If p1.tool_type == 'calculator', inject the GR calculator block.
-If p1.tool_type is null or unknown, inject a "tool coming soon" teaser in the tools section.
-The tools section always renders — the content within it is conditional.
+Currently bypassed — downloads fire directly. Kit API to be wired at P3.5.
 
 ## SEO Head Block (v5.1)
 
@@ -274,6 +318,8 @@ Robots meta: `max-snippet:-1, max-image-preview:large, max-video-preview:-1`
 OG locale: en_US
 dateModified: always today's date (not pub_date)
 
+build_head() must define `css_block = build_css()` as a local variable before the f-string return. This was a bug fixed Session 36.
+
 ## Mobile Requirement
 
 Every Tier 1 entry must pass the 38-check mobile audit. Key requirements:
@@ -287,72 +333,94 @@ Every Tier 1 entry must pass the 38-check mobile audit. Key requirements:
 - PDF gate modal: full-width @480px
 - Breakpoints: 380px, 400px, 480px, 600px, 768px, 1024px
 
-## Validation Suite — v5.1 (75+ checks)
+## Validation Suite — v5.1 (81 checks)
 
-All v5.0 checks PLUS new v5.1 checks:
+Current validated checks (all must pass):
 ```python
-'mpw-slim-bar': 'mpw-slim-bar' in content,
-'bible-bar': 'class="bible-bar"' in content,
-'bb-cats': 'bb-cats' in content,
-'no identity bar': 'bible-identity-bar' not in content,
-'no Sections label': 'entry-nav-label' not in content,
-'slim bar z700': 'z-index:700' in content,
-'bible bar z600': 'z-index:600' in content,
-'entry nav top 90px': 'top:90px' in content,
-'scroll-margin-top': 'scroll-margin-top:128px' in content,
-'scroll-margin mobile 136px': 'scroll-margin-top:136px' in content,
-'progress display none desktop': 'display:none' in content and 'reading-progress' in content,
-'progress display block mobile': 'display:block' in content and 'reading-progress' in content,
-'track-item no href': 'class="track-item"' in content,
-'track-artist class': 'class="track-artist"' in content,
-'no youtube': 'youtube.com' not in content,
-'no spotify': 'spotify.com' not in content,
-'no audio toggle html': 'Coming Soon' not in content,
-'producer-quote blockquote': 'class="producer-quote"' in content,
-'producer-quote-block': 'class="producer-quote-block"' in content,
-'producer-spotlight': 'producer-spotlight' in content,
-'prereq-chain': 'prereq-chain' in content,
-'difficulty-badge': 'difficulty-badge' in content,
-'misconception-block': 'misconception-block' in content,
-'before-after-block': 'before-after-block' in content,
-'the-number-box': 'the-number-box' in content,
-'daw-tabs': 'daw-tabs' in content,
-'daw-tab-btn': 'daw-tab-btn' in content,
-'plugin-recs': 'class="plugin-recs"' in content,
-'plugin-tier': 'plugin-tier' in content,
-'genre-settings-table': 'genre-settings-table' in content,
-'signal-chain svg 1440': 'viewBox="0 0 1440 160"' in content,
-'signal-chain mobile': 'signal-chain-mobile' in content,
-'scm-box': 'scm-box' in content,
-'comparison-callouts': 'comparison-callouts' in content,
-'pdf-export-btn': 'pdf-export-btn' in content,
-'unified gate': 'openGateFor' in content,
-'downloadQuickRef': 'downloadQuickRef' in content,
-'downloadGenreTable': 'downloadGenreTable' in content,
-'last-verified': 'last-verified' in content,
-'SpeakableSpecification': 'SpeakableSpecification' in content,
-'HowTo schema': '"@type": "HowTo"' in content,
-'sameAs in schema': 'sameAs' in content,
-'lastReviewed in schema': 'lastReviewed' in content,
-'sidebar-toc': 'sidebar-toc' in content,
-'sidebar-toc tracking js': 'setTocActive' in content,
-'sidebar-nl': 'sidebar-nl' in content,
-'tools section': 'id="tools"' in content,
-'gain calculator': 'gc-input' in content,
-'calculator js': 'calcGR' in content,
-'start-here box': 'start-here-box' in content,
-'also in the bible': 'Also in The Bible' in content,
-'section share buttons': 'Download Cheat Sheet' in content,
-'copy settings btn': 'Copy Settings' in content,
-'mobile daw wrap': 'daw-tab-nav{flex-wrap:wrap' in content,
-'mobile comparison 1col': 'comparison-callouts{grid-template-columns:1fr' in content,
-'history cards': 'history-card' in content,
-'word count floor 6800': '6800' in content,
-'word count ceiling 7800': '7800' in content,
-'load_quotes': 'load_quotes' in content,
-'filter_quotes': 'filter_quotes' in content,
-'build_quotes_context': 'build_quotes_context' in content,
+'mpw-slim-bar': 'mpw-slim-bar' in c,
+'bible-bar': 'class="bible-bar"' in c,
+'bb-cats': 'bb-cats' in c,
+'no identity bar': 'bible-identity-bar' not in c,
+'no Sections label': 'entry-nav-label' not in c,
+'slim bar z700': 'z-index:700' in c,
+'bible bar z600': 'z-index:600' in c,
+'entry nav top 90px': 'top:90px' in c,
+'scroll-margin 128px': 'scroll-margin-top:128px' in c,
+'scroll-margin mobile 110px': 'scroll-margin-top:110px' in c,  # updated Session 36
+'progress display none': '#reading-progress' in c and 'display:none' in c,
+'progress display block mobile': 'display:block' in c and 'reading-progress' in c,
+'track-artist class': 'class="track-artist"' in c,
+'no youtube': 'youtube.com' not in c,
+'no spotify': 'spotify.com' not in c,
+'no audio toggle': 'audio-toggle' not in c,  # updated Session 36
+'producer-quote': 'class="producer-quote"' in c,
+'producer-quote-block': 'class="producer-quote-block"' in c,
+'prereq-chain': 'prereq-chain' in c,
+'difficulty-badge': 'difficulty-badge' in c,
+'misconception-block': 'misconception-block' in c,
+'before-after': 'before-after' in c,
+'the-number-box': 'the-number-box' in c,
+'daw-tabs': 'daw-tabs' in c,
+'daw-tab-btn': 'daw-tab-btn' in c,
+'plugin-recs': 'class="plugin-recs"' in c,
+'plugin-tier': 'plugin-tier' in c,
+'genre-settings-table': 'genre-settings-table' in c,
+'signal-chain svg 1440': 'viewBox="0 0 1440 160"' in c,
+'signal-chain-mobile': 'signal-chain-mobile' in c,
+'scm-box': 'scm-box' in c,
+'comparison-callouts': 'comparison-callouts' in c,
+'pdf-export-btn': 'pdf-export-btn' in c,
+'openGateFor': 'openGateFor' in c,
+'downloadQuickRef': 'downloadQuickRef' in c,
+'downloadGenreTable': 'downloadGenreTable' in c,
+'last-verified': 'last-verified' in c,
+'SpeakableSpecification': 'SpeakableSpecification' in c,
+'HowTo schema': '"@type": "HowTo"' in c,
+'sameAs in schema': 'sameAs' in c,
+'lastReviewed in schema': 'lastReviewed' in c,
+'sidebar-toc': 'sidebar-toc' in c,
+'setTocActive': 'setTocActive' in c,
+'sidebar-nl': 'sidebar-nl' in c,
+'tools section': 'id="tools"' in c,
+'gc-input': 'gc-input' in c,
+'calcGR': 'calcGR' in c,
+'start-here-box': 'start-here-box' in c,
+'Also in The Bible': 'Also in The Bible' in c,
+'mpw-share-bar present': 'mpw-share-bar' in c,  # updated Session 36
+'calc-share-bar present': 'calc-share-bar' in c,  # updated Session 36
+'mobile daw wrap': 'flex-wrap:wrap' in c and 'daw-tab' in c,
+'mobile comparison 1col': 'comparison-callouts' in c and 'grid-template-columns:1fr' in c,
+'history-card': 'history-card' in c,
+'load_quotes fn in script': 'load_quotes' in script_src,
+'filter_quotes fn in script': 'filter_quotes' in script_src,
+'build_quotes_context fn': 'build_quotes_context' in script_src,
+'overflow clip body comment': 'overflow:clip on both' in c or 'overflow-x:clip' in c,
+'entry-sidebar hidden mobile': 'entry-sidebar' in c and 'display:none' in c,
+'signal-chain svg hidden mobile': 'signal-chain-diagram' in c and 'display:none' in c,
+'bible-mobile-bar flex': 'bible-mobile-bar' in c and 'display:flex' in c,
+'entry-nav 84px mobile': 'top:84px' in c,  # updated Session 36
+'grid 1col mobile': 'grid-template-columns:1fr' in c,
+'viewport meta': 'width=device-width' in c,
+'canonical': 'rel="canonical"' in c,
+'og:type': 'og:type' in c,
+'twitter:card': 'twitter:card' in c,
+'GA4': 'G-79VB543KCT' in c,
+'FAQPage schema': '"@type": "FAQPage"' in c,
+'BreadcrumbList schema': '"@type": "BreadcrumbList"' in c,
+'Article schema': '"@type": "Article"' in c,
+'no main.js': '/js/main.js' not in c,
+'beehiiv': 'beehiiv' in c,
+'entry-section class': 'class="entry-section"' in c,
+'quick-answer-block': 'quick-answer-block' in c,
+'entry-masthead': 'entry-masthead' in c,
+'producer-spotlight': 'producer-spotlight' in c,
+'no Further Reading h2': '<h2>Further Reading</h2>' not in c,
+'helpful-block': 'helpful-block' in c,
+'word count floor 6800': '6800' in script_src,
+'word count ceil 7800': '7800' in script_src,
 ```
+
+**NOTE: These 81 checks validate structure only. A score of 81/81 does NOT mean content quality is acceptable. Visual QA against the gold standard is mandatory before declaring the writer ready for batch.**
 
 ## Bible Entry Economics (v5.1)
 
@@ -366,14 +434,51 @@ For 1,500 entries (300 T1 + 700 T2 + 500 T3): ~$300 total.
 
 # 3E. Bible Batch Files
 
-- bible-upgrade-tier1.txt — 50 Tier 1 rewrites — in mpw-scripts\ — READY after writer confirmed
+- bible-upgrade-tier1.txt — 50 Tier 1 rewrites — in mpw-scripts\ — READY after writer visual QA confirmed ≥90%
   Format: compression:Compression:Signal Processing:1 (4 parts, tier appended)
-- bible-index.json — 201 entries live in repo root
+- bible-index.json — 210 entries live in repo root
 - Future batches: classify each term as Tier 1/2/3 before running
 
 ---
 
-# SESSION 31 UPDATE — BIBLE TEMPLATE STATUS (historical — kept for reference)
+# SESSION 36 UPDATE — BIBLE WRITER STATUS
+
+## mpw_bible_writer.py v5.1 — Session 36 Changes
+
+Changes committed to mpw_bible_writer.py in Session 36:
+1. MODEL: claude-sonnet-4-20250514 → claude-sonnet-4-6
+2. API timeout: 300s → 600s
+3. css_block NameError fixed: `css_block = build_css()` added in build_head() before f-string return
+4. Consolidated overrides CSS block added as second style block (desktop sidebar grid, mobile overrides, verdict amber header, mistakes colors, newsletter amber, unified mpw-share-bar, DAW tab active states, entry nav tap targets, calc-share-bar)
+5. bible-entry-wrap inline grid override added to build_html_t1()
+6. aside inline style added to build_html_t1()
+7. Genre share bar: old section-share-bar → mpw-share-bar
+8. Quick Ref QUICKREF_SHARE_PLACEHOLDER: → mpw-share-bar
+9. build_footer(): amber bible-nl-card + correct footer structure
+10. Verdict prompt: id="verdict" standalone div after types section
+11. Sidebar share widget: mpw-share-bar vertical column added
+12. calc-share-bar CSS added to consolidated overrides block
+13. 5 stale validation checks corrected to match actual v5.1 gold standard values
+
+## Visual QA Results (Session 36)
+
+The writer now passes 81/81 structural checks. Visual QA of the generated compression.html revealed the following failures (~55% quality vs gold standard):
+
+| Issue | Severity | Root Cause | Fix Required |
+|---|---|---|---|
+| h2 section titles missing | Critical | Pass 2 not outputting h2 tags inside sections | Pass 2 prompt rewrite — mandate h2 |
+| Only 1 producer quote | High | Prompt says 1-2 — Pass 2 chooses minimum | Mandate exactly 2 for Tier 1 |
+| FAQ absent | Critical | FAQ_PLACEHOLDER not placed by Pass 2 | Tighten prompt — show exact position |
+| Plugin recs absent | Critical | PLUGIN_PLACEHOLDER not placed correctly | Tighten prompt — show exact position |
+| Anchor nav broken | High | Section IDs may differ from ENTRY_NAV_LINKS | Audit Pass 2 output, enforce exact IDs |
+| Comparison callouts stub | Medium | COMPARISON_PLACEHOLDER content thin | Pass 1 data may be thin — enrich prompt |
+| GR calculator missing | High | Pass 1 returned tool_type: null | Hardcode compression → calculator |
+| Producer Spotlight wrong | Medium | Using track produced_by instead of real data | Fix build_producer_spotlight_html() |
+| Generic content | High | System prompt not firm enough | Strengthen system prompt |
+
+---
+
+# SESSION 31-35 UPDATE — HISTORICAL REFERENCE (kept for context)
 
 ## v5.0 Writer — What Was Built
 - Two-pass streaming architecture
@@ -388,41 +493,6 @@ For 1,500 entries (300 T1 + 700 T2 + 500 T3): ~$300 total.
 - 2-column drawer
 
 v5.0 is superseded by v5.1. Do not use v5.0 for new entries.
-
----
-
-# SESSION 31 FINAL UPDATE — BIBLE v5.1 DECISIONS (historical — kept for reference)
-
-Key decisions that shaped v5.1:
-- Identity bar removed, replaced by MPW slim bar + Bible bar
-- Track examples: text-only Option A (no YouTube, no Spotify)
-- Quotes: Pass 1.5 filter system, quotes.json required in mpw-scripts\
-- 13 new content features (all implemented in gold standard)
-- Three-tier word count system initiated (completed Session 32)
-
----
-
-# SESSION 32 FINAL UPDATE — WHAT WAS BUILT
-
-The gold standard compression.html v5.1 was hand-built across Session 32. It is the definitive reference for all Tier 1 Bible entries going forward.
-
-Key additions beyond v5.1 spec:
-- GR Calculator (interactive, live JS)
-- Unified smart email gate (3 asset types)
-- Section-level share buttons (By Genre, Quick Reference, Calculator)
-- downloadQuickRef() and downloadGenreTable() functions
-- Mobile signal chain vertical stack (.scm-box)
-- "Also in The Bible" (replaces Further Reading + Related Terms duplication)
-- Sidebar TOC with IntersectionObserver tracking
-- Sidebar newsletter (.sidebar-nl)
-- Comparison callouts (Compression vs Limiting, Compression vs Saturation)
-- Start Here learning path box
-- History sub-sections in left-border cards
-- HowTo schema (5th schema block)
-- lastReviewed in Article schema
-- Internal links to /bible/bus-compression and /bible/gain-staging
-
-All of the above must be reproduced by build_html_t1() in the updated writer.
 
 ## Producer Profile Pages — Long Term Vision
 

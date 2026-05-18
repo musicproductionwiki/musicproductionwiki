@@ -1,5 +1,5 @@
 # MPW-HANDOFF-ARTICLES.md
-*Updated: May 16, 2026 (SESSION 32 FINAL)*
+*Updated: May 18, 2026 (SESSION 36)*
 
 ---
 
@@ -17,7 +17,7 @@ Or fetch directly:
 python mpw_count.py
 ```
 
-Current count as of Session 32: **526 articles live**
+Current count as of Session 36: **526 articles live** (unchanged from Session 35)
 
 ---
 
@@ -68,7 +68,7 @@ Key requirements for every article:
 |---|---|---|
 | 01-07 | LIVE | 406 articles |
 | 08 | LIVE | 120 articles |
-| 09 (breakdowns) | QUEUED | Run after Bible Tier 1 |
+| 09 (breakdowns) | QUEUED | Run after Bible Tier 1 batch completes |
 | 10 (studio-story) | QUEUED | After Batch 09 |
 | 11 (recreation) | QUEUED | After recreations.html category page |
 | 12 (vocal-autopsy) | QUEUED | After vocal-autopsies.html category page |
@@ -85,6 +85,7 @@ Missing category pages blocking batches:
 - 5 articles missing og:image — mpw_fix_meta.py (rate limited Session 27 — retry)
 - brands.html — in nav but no page exists — build when ready
 - netlify.toml redirect: /dictionary/* → /bible/:splat 301 — pending
+- Dead category card slugs — 448 references, 7 slugs — fix_dead_slugs.py needs href format investigation (Session 37)
 
 ---
 
@@ -96,7 +97,17 @@ Position ~16 on these comparison queries — optimize title/meta to improve CTR:
 - ableton live vs logic pro
 - rode nt1 vs shure sm7b
 
-Action: fetch these articles and update title tags + meta descriptions to better match search intent. One session can handle all 4.
+Action: fetch these articles and update title tags + meta descriptions to better match search intent. One session can handle all 4. Schedule after Bible Tier 1 batch.
+
+---
+
+# GSC Fixes Applied (Session 36)
+
+Two specific GSC issues fixed and committed (SHA: d6f787db):
+1. **/ssl-2-plus-review/** — 301 redirect added to netlify.toml → /articles/ssl-2-plus-review.html
+2. **/articles/best-studio-monitors-under-300.html** — canonical self-closing slash removed
+
+After Netlify deploys: go to GSC, find each URL in "Alternate page with proper canonical tag" and "Duplicate without user-selected canonical" reports, click Request Indexing.
 
 ---
 

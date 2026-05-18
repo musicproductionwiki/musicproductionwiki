@@ -1,5 +1,5 @@
 # MPW-HANDOFF-CONTENT.md
-*Updated: May 16, 2026 (SESSION 32 FINAL)*
+*Updated: May 18, 2026 (SESSION 36)*
 
 ---
 
@@ -87,17 +87,17 @@ Every article must include:
 
 ## Bible Entry Count
 
-- Total live: 202 entries (v3.0/v4.0 template)
-- bible-index.json: 201 entries (air may be missing)
-- Pending: air entry retry after writer v5.1 confirmed
+- Total live: 210 entries (v3.0/v4.0 template)
+- bible-index.json: 210 entries
+- Pending: air entry retry after writer v5.1 visual QA confirmed
 - Full Bible target: 1,500 entries
-- Next milestone: 50 Tier 1 rewrites (Tier 1 batch — bible-upgrade-tier1.txt)
+- Next milestone: 50 Tier 1 rewrites (Tier 1 batch — bible-upgrade-tier1.txt) — BLOCKED on Pass 2 prompt rewrite
 
 ## Queued Batches
 
 | Batch | Articles | Dependencies |
 | --- | --- | --- |
-| Bible Tier 1 | 50 rewrites | v5.1 writer confirmed — READY — format slug:Term:Category:1 |
+| Bible Tier 1 | 50 rewrites | Pass 2 prompt rewrite + visual QA ≥90% — BLOCKED |
 | 09 — breakdown | 100 | breakdowns.html ✅ LIVE — GO after Tier 1 |
 | 10 — studio-story | 50 | Batch 09 committed |
 | 11 — recreation | 60 | recreations.html must exist |
@@ -112,14 +112,13 @@ Every article must include:
 
 | Action | Detail | Priority |
 | --- | --- | --- |
-| Replace BEEHIIV_PUB_ID + BEEHIIV_API_KEY in compression.html | In openGateFor JS function — two placeholder strings | P0 — before commit |
-| Run Tier 1 batch | python mpw_bible_writer.py --batch-file bible-upgrade-tier1.txt | P2 — after writer confirmed |
+| Affiliate applications | Plugin Boutique, Amazon Associates, Sweetwater, Loopmasters, PluginFox | HIGH — REVENUE BLOCKER |
+| Run Tier 1 batch | python mpw_bible_writer.py --batch-file bible-upgrade-tier1.txt | P2 — after Pass 2 prompt rewrite + visual QA |
 | Retry air entry | python mpw_bible_writer.py --test --slug air-frequency-eq --term "Air Frequency EQ" --category "Frequency" | P2.1 |
 | Run Batch 09 | python mpw_writer.py --batch batch09.txt --start-date 2026-03-01 | P4 |
 | Fix 5 missing og:image | python mpw_fix_meta.py | P5 |
 | Add netlify.toml redirect | /dictionary/* → /bible/:splat 301 | P2.3 |
-| Affiliate applications | Plugin Boutique, Amazon Associates, Sweetwater, Loopmasters, PluginFox | HIGH — REVENUE BLOCKER |
-| Google Workspace email | Case 70817574 dispute pending | URGENT |
+| GSC Request Indexing | Open ssl-2-plus-review/ and monitors canonical URL in GSC → Request Indexing | P13 — after deploy confirmed |
 | Lead magnet — MPW Cheat Sheet Pack | PDF — start email list growth | P3 — compression QR card already built as model |
 
 ---
@@ -152,7 +151,7 @@ GA4 Measurement ID: G-79VB543KCT — obtained May 8, 2026
 Injected into main.js — mpw-analytics.js committed to /js/mpw-analytics.js
 Also injected into all Bible entry pages via build_html() in mpw_bible_writer.py
 
-New GA4 events to add in Moat 2 (Session 33):
+New GA4 events to add in Moat 2 (Session 37+):
 - helpful_vote: {level: 'beginner|intermediate|advanced', slug: 'compression'}
 - helpful_submit: {level: str, has_feedback: bool, slug: str}
 - gate_open: {asset: 'full|quickref|genre', slug: str}
@@ -179,7 +178,7 @@ TruClarify integration: Every music business article should funnel to TruClarify
 
 ## Tools as Moat — Architecture
 
-Two entry points:
+Three entry points:
 1. `/tools/` — standalone hub page — grid of all tools — Product Hunt submission candidate
 2. `/bible/categories/tools/` — 9th Bible category — filters entries with interactive tools
 3. `/tools/[slug]/` — individual tool pages when tools graduate from Bible entries
@@ -192,8 +191,8 @@ Free tool use → email capture on save/download → newsletter → Bible Comple
 | Priority | Tool | Home | Search Volume | Status |
 |---|---|---|---|---|
 | 1 | GR Calculator | compression entry | Medium | LIVE ✅ |
-| 2 | Delay Time Calculator | delay entry | Very High | SESSION 33 |
-| 3 | Frequency Reference Tool | eq entry | High | SESSION 33+ |
+| 2 | Delay Time Calculator | delay entry | Very High | SESSION 37+ |
+| 3 | Frequency Reference Tool | eq entry | High | SESSION 37+ |
 | 4 | LUFS Target Calculator | mastering/lufs entries | High | Future |
 | 5 | Attack/Release Time Calculator | compression entry | Medium | Future |
 | 6 | BPM Tap Tempo | standalone | Very High | Future |
@@ -221,30 +220,31 @@ Build trigger: separate spec session required — involves TruClarify API/intake
 
 ---
 
-# SESSION 32 UPDATE — CONTENT STATUS
+# SESSION 36 UPDATE — CONTENT STATUS
 
 ## Article Pipeline
-- Live articles: 526
+- Live articles: 526 (unchanged Session 36)
 - Batch 09 (100 track breakdowns): NOT YET RUN — waiting for Bible Tier 1 to go first
 - Batches 10-13: NOT YET RUN — blocked by category pages + template fix
 
 ## Bible Content Pipeline
-- Live Bible entries: 202 (v3.0/v4.0 template)
-- Gold standard v5.1: compression.html — built Session 32 — commit Session 33
-- Tier 1 upgrade batch: bible-upgrade-tier1.txt — 50 entries — READY after writer v5.1 confirmed
-- Air entry retry: pending after writer confirmed
+- Live Bible entries: 210 (v3.0/v4.0 template)
+- Gold standard v5.1: compression.html — share bars fixed Session 36
+- Writer structural update: complete (81/81 checks pass)
+- Writer content quality: ~55% — Pass 2 prompt rewrite required Session 37
+- Tier 1 upgrade batch: bible-upgrade-tier1.txt — 50 entries — BLOCKED on prompt rewrite
+- Air entry retry: pending after writer visual QA confirmed
 - Bible category pages: 8 pages — run after writer confirmed
 
-## GSC Findings (May 15, 2026)
-Top performing content by impression:
-1. Comparison articles dominate — "serum 2 vs vital", "logic pro vs ableton" etc
-2. All top queries are comparisons or "vs" queries
-3. Average position 16.4 — just off page 1
-4. 0 clicks — CTR problem, not ranking problem
-5. Action: optimize title tags and meta descriptions on top comparison articles
+## GSC Findings (May 18, 2026)
+- 587 not indexed, 14 indexed
+- 585 "Discovered - currently not indexed" — normal for new large sitemap submission
+- 2 specific issues fixed: ssl-2-plus-review redirect + monitors canonical
+- Action: Request Indexing for fixed URLs. No other action needed — 585 queue will resolve over weeks as Google crawls.
 
 ## Content Strategy Insight
 Comparisons are the traffic beachhead. Getting from position 16 to position 5 = clicks start.
+The Bible Tier 1 batch (50 entries) is the next major SEO lever — but quality must be right first.
 
 ## Producer Profile Pages — Content Spec (Future — after Batch 09)
 URL: /producers/{slug}/
@@ -261,7 +261,7 @@ Pass 1 field `listening_guide` provides context note for each track — shown as
 ## Producer Quotes — System Confirmed
 318 verified quotes in quotes.json v2.
 Sources: 10 books + documented interviews from Sound On Sound, Tape Op, Rolling Stone, Billboard, Resident Advisor.
-Pass 1.5 filters by tag. Pass 2 picks 1-2 max for Tier 1. 0-1 for Tier 2. 0 for Tier 3.
+Pass 1.5 filters by tag. Pass 2 picks exactly 2 for Tier 1 (MANDATORY — not 1-2). 0-1 for Tier 2. 0 for Tier 3.
 Attribution: full name, role, source, URL.
 NEVER fabricate. NEVER use quotes not in quotes.json.
 
@@ -277,11 +277,12 @@ NEVER fabricate. NEVER use quotes not in quotes.json.
 9. Genre settings table — concrete numbers per genre
 10. Comparison callouts — term vs 2 related terms (before Types)
 11. Producer spotlight sidebar — quotes-driven, 3 cards
-12. Producer quote blockquote — woven into prose (1-2)
+12. Producer quote blockquote — woven into prose (exactly 2 for Tier 1)
 13. PDF export button — email gated (smart modal, 3 assets)
 14. Last verified date — in entry footer
 15. Tools section — GR Calculator + email-gated save
-16. Section-level share buttons — By Genre + Quick Reference
+16. Section-level share buttons — By Genre + Quick Reference + Calculator (all mpw-share-bar)
 17. "Also in The Bible" — replaces Further Reading + Related Terms (consolidated)
 18. Sidebar TOC with IntersectionObserver tracking
 19. Sidebar newsletter signup (.sidebar-nl)
+20. Sidebar share widget (mpw-share-bar vertical column) — added Session 36

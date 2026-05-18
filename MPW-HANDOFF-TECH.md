@@ -1,5 +1,5 @@
 # MPW-HANDOFF-TECH.md
-*Updated: May 17, 2026 (SESSION 34)*
+*Updated: May 18, 2026 (SESSION 36)*
 
 ---
 
@@ -31,12 +31,13 @@ repo root/
 ├── about.html
 ├── genres.html
 ├── brands.html (MISSING — in nav but no page)
+├── netlify.toml (updated Session 36 — ssl-2-plus-review redirect added)
 ├── css/style.css
 ├── js/main.js
 ├── js/mpw-analytics.js
 ├── search-index.json
-├── sitemap.xml
-├── bible-index.json (202 entries)
+├── sitemap.xml (739 URLs — regenerated Session 35)
+├── bible-index.json (210 entries)
 ├── MPW-CATALOG.md (auto-generated)
 ├── MPW-HANDOFF-CORE.md
 ├── MPW-HANDOFF-SCRIPTS.md
@@ -46,13 +47,13 @@ repo root/
 ├── MPW-HANDOFF-TECH.md
 ├── mpw_session_start.py
 ├── articles/
-│   ├── [slug].html  (526 articles)
+│   ├── [slug].html  (526 articles — unchanged Session 36)
 │   └── ...
 ├── bible/
 │   ├── index.html (LOCKED — commit 29ee26a9)
 │   ├── eq.html (v3.0 gold standard — LOCKED)
-│   ├── compression.html (v5.1 gold standard — Session 34 QA in progress)
-│   └── [term].html  (202 entries total — v3.0/v4.0 template)
+│   ├── compression.html (v5.1 gold standard — share bars fixed Session 36 — writer QA in progress)
+│   └── [term].html  (210 entries total — v3.0/v4.0 template)
 │   └── categories/
 │       ├── dynamics/index.html
 │       ├── frequency/index.html
@@ -109,8 +110,8 @@ Last confirmed commit: 06a564c
 URL: https://musicproductionwiki.com/bible/compression
 File: bible/compression.html
 Built: Session 32, May 16, 2026
-Refined: Sessions 33 + 34, May 17, 2026
-Status: Visual QA in progress — footer share buttons pending confirmation Session 35
+Refined: Sessions 33 + 34 + 35 + 36, May 17–18, 2026
+Status: Share bars fully fixed Session 36 — writer visual QA at ~55% — Pass 2 prompt rewrite required Session 37
 
 **DO NOT MODIFY THE COMMITTED FILE. Update the writer to match it.**
 
@@ -136,6 +137,7 @@ Status: Visual QA in progress — footer share buttons pending confirmation Sess
 | 16 | mpw-share-bar | unified share bar class — Copy Link → X → Reddit |
 | 17 | footer-share-btn | footer override class — flex:0 0 auto !important |
 | 18 | bible-entry-wrap inline grid | display:grid!important;grid-template-columns:1fr 280px!important — inline style on element |
+| 19 | calc-share-bar | auto-width buttons on calculator and tools share bars — flex:0 0 auto; solid amber Copy Link |
 
 ## Nav Architecture — v5.1 (LOCKED)
 
@@ -405,14 +407,149 @@ File names: compression-quick-reference-mpw.txt, compression-by-genre-mpw.txt
 
 Property: musicproductionwiki.com
 Sitemap submitted: ✅ Success
-Current state (May 15, 2026): 301 impressions, 0 clicks, position 16.4
-Action: optimize title tags + meta descriptions on top comparison articles
+State (May 18, 2026): 587 not indexed, 14 indexed. "Discovered - currently not indexed" (585) is normal — Google crawls at its own pace for new sitemaps. Will resolve over weeks.
+
+GSC issues fixed Session 36:
+- /ssl-2-plus-review/ — 301 redirect added to netlify.toml → /articles/ssl-2-plus-review.html (both with and without trailing slash)
+- /articles/best-studio-monitors-under-300.html — canonical self-closing slash removed
+- After deploy: open each URL in GSC and click Request Indexing
 
 After Tier 1 batch commits: regenerate sitemap.xml and resubmit to GSC.
 
 ---
 
-# 13. Session 34 — Key Technical Findings
+# 14. Session 36 — Key Technical Findings
+
+## compression.html Share Bar State (end of Session 36 — FINAL)
+
+All share bars now use .mpw-share-bar class with correct order and branding:
+
+| Bar | Status | Class |
+|---|---|---|
+| Quick Reference | ✅ Copy Link → X → Reddit | mpw-share-bar |
+| GR Calculator | ✅ Copy Link → X → Reddit | mpw-share-bar calc-share-bar |
+| Genre Table | ✅ Copy Link → X → Reddit | mpw-share-bar |
+| Verdict | ✅ Copy Link → X → Reddit (centered) | mpw-share-bar |
+| Tools | ✅ Copy Link → X → Reddit | mpw-share-bar calc-share-bar |
+| Bottom page | ✅ Copy Link → X → Reddit | mpw-share-bar |
+| Sidebar | ✅ Copy Link → X → Reddit (vertical) | mpw-share-bar |
+| Footer | ✅ X → Reddit (Steve's decision — no Copy Link) | inline styled |
+
+## calc-share-bar CSS (Session 36 — appended before </head>)
+
+```css
+/* calc-share-bar: auto-width buttons, not flex:1 stretched */
+.calc-share-bar { justify-content: flex-start !important; }
+.calc-share-bar .mpw-share-btn {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  padding: 0 18px !important;
+  height: 34px !important;
+}
+/* Copy Link — solid amber inside calc bars */
+.calc-share-bar .mpw-share-btn.share-copy {
+  background: #f5a623 !important;
+  color: #000 !important;
+  border-color: #f5a623 !important;
+}
+/* Mobile: 3 equal columns so all buttons sit on one row */
+@media(max-width:768px) {
+  .calc-share-bar {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr !important;
+    gap: 6px !important;
+  }
+  .calc-share-bar .mpw-share-label {
+    grid-column: 1 / -1 !important;
+  }
+  .calc-share-bar .mpw-share-btn {
+    width: 100% !important;
+    padding: 0 4px !important;
+    font-size: 11px !important;
+    justify-content: center !important;
+  }
+}
+```
+
+## mpw_bible_writer.py State (end of Session 36)
+
+- Version: v5.1
+- Model: claude-sonnet-4-6 ✅
+- API timeout: 600s ✅
+- Validation: 81/81 checks pass ✅
+- css_block NameError: FIXED ✅
+- Consolidated overrides CSS block: present ✅
+- bible-entry-wrap inline grid: present ✅
+- aside inline style: present ✅
+- Genre share bar: mpw-share-bar ✅
+- Quick Ref share bar: mpw-share-bar ✅
+- build_footer: amber nl-card + correct footer ✅
+- Verdict prompt: id="verdict" standalone div ✅
+- Sidebar share widget: present ✅
+- calc-share-bar CSS: present ✅
+
+**Content quality: ~55% of gold standard — Pass 2 prompt rewrite required Session 37**
+
+Known content failures in generated output:
+1. Section h2 titles missing from Pass 2 output
+2. Only 1 producer quote (need 2)
+3. FAQ section absent (FAQ_PLACEHOLDER not being placed correctly)
+4. Plugin recs absent (PLUGIN_PLACEHOLDER not rendering)
+5. Entry nav anchor links broken
+6. Comparison callouts are one-liner stubs
+7. GR calculator not rendering (tool_type: null from Pass 1 for Compression)
+8. Producer Spotlight wrong (pulling from track produced_by)
+9. Content generic — not authoritative producer-language
+
+## Session 36 netlify.toml (full content after update)
+
+```toml
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "/ssl-2-plus-review/"
+  to = "/articles/ssl-2-plus-review.html"
+  status = 301
+  force = false
+
+[[redirects]]
+  from = "/ssl-2-plus-review"
+  to = "/articles/ssl-2-plus-review.html"
+  status = 301
+  force = false
+```
+
+---
+
+# 13. Session 35 — Key Technical Findings
+
+## compression.html End of Session 35
+
+Current SHA: see latest commit on bible/compression.html
+
+**Aside inline style (CORRECT — do not change):**
+- NO display:block!important — this was the root cause of mobile sidebar showing
+- Mobile hide handled by @media(max-width:768px) CSS: .entry-sidebar{display:none!important}
+
+**bible-entry-wrap inline style (CORRECT — do not change):**
+- display:grid!important;grid-template-columns:1fr 280px!important;gap:40px!important;align-items:start!important;max-width:1100px!important;margin:0 auto!important;padding:40px 24px!important
+
+## PowerShell Lessons (Session 35 — CRITICAL)
+
+NEVER paste multi-line Python with CSS values inline in PowerShell.
+PowerShell interprets semicolons, colons, and exclamation marks in CSS as command separators.
+ALWAYS use Claude's create_file tool → Steve downloads .py file → runs python script.py.
+
+## Sitemap (Session 35)
+
+gen_sitemap.py written and committed to mpw-scripts\.
+Counts: 526 articles + 210 Bible entries + 3 static pages = 739 URLs.
+Committed to repo. Resubmit to Google Search Console.
+
+---
+
+# 13B. Session 34 — Key Technical Findings
 
 ## style.css Audit Results
 - Confirmed: NO .bible-entry-wrap rules in style.css
@@ -453,27 +590,15 @@ After Tier 1 batch commits: regenerate sitemap.xml and resubmit to GSC.
 Button order everywhere: **Copy Link → Share on X → Reddit**
 Footer exception: **Share on X → Reddit** only (no Copy Link), buttons use both `.mpw-share-btn` and `.footer-share-btn`
 
-## about.html Bible Bar Patch (pending if not applied)
+## Dead Category Card Slugs (Session 35 — Partial Fix)
 
-```powershell
-cd C:\Users\swarn\OneDrive\Desktop\mpw-scripts
-. .\setenv.ps1
-python -c "
-import base64, requests, re
-TOKEN = 'YOUR_GITHUB_TOKEN_HERE'
-REPO = 'musicproductionwiki/musicproductionwiki'
-headers = {'Authorization': f'token {TOKEN}', 'Accept': 'application/vnd.github.v3+json'}
-r = requests.get(f'https://api.github.com/repos/{REPO}/contents/about.html', headers=headers)
-sha = r.json()['sha']
-html = base64.b64decode(r.json()['content']).decode('utf-8')
-if 'bible-bar-v4' in html:
-    print('Already patched')
-else:
-    from mpw_add_bible_bar import INJECT, NAV_MARKER, strip_old_bars
-    html = strip_old_bars(html)
-    html = html.replace(NAV_MARKER, INJECT + NAV_MARKER, 1)
-    encoded = base64.b64encode(html.encode('utf-8')).decode()
-    res = requests.put(f'https://api.github.com/repos/{REPO}/contents/about.html', headers=headers, json={'message': 'Add bible bar to about.html (bible-bar-v4)', 'content': encoded, 'sha': sha})
-    print(res.status_code, res.json().get('commit', {}).get('sha', ''))
-"
-```
+7 dead slugs found by mpw_dead_slug_audit.py — 448 references in category card pages:
+- about → ../about.html
+- genres → ../categories/techniques.html
+- daw-comparison-2026 → ../articles/ableton-live-12-vs-fl-studio-21.html
+- fl-studio-beginner-guide → ../articles/fl-studio-beginners-guide.html
+- how-to-license-music → ../articles/how-music-royalties-work.html
+- midi-controller-buying-guide → ../categories/gear.html
+- plugins-explained → ../categories/plugins.html
+
+fix_dead_slugs.py written but did not patch (href format mismatch — bare slugs not matching). Needs investigation Session 37 — fetch one category page and print actual href format before writing replacement strings.
