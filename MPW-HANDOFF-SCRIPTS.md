@@ -213,6 +213,21 @@ aside: inline style MUST contain min-width:280px;width:280px;position:sticky;top
    - Copy Settings: → calc-share-bar present check
    - entry-nav 126px: → entry-nav 84px mobile
 
+## Session 37 — New Scripts
+
+### mpw_handoff_runner.py (NEW — PERMANENT)
+Location: C:\Users\swarn\OneDrive\Desktop\mpw-scripts\mpw_handoff_runner.py
+Purpose: Automated handoff update — runs every session end via session_patch_sNN.py
+Never modify this file unless architecture changes. Session-specific data goes in session_patch only.
+
+### add_zones.py (ONE-TIME — DONE)
+Location: C:\Users\swarn\OneDrive\Desktop\mpw-scripts\add_zones.py
+Purpose: Added 11 zone tags to 6 handoff files. Already run — do not run again.
+
+### session_patch_s37.py (TEMPLATE)
+Location: C:\Users\swarn\OneDrive\Desktop\mpw-scripts\session_patch_s37.py
+Purpose: Session 37 handoff data. Use as template for session_patch_s38.py.
+Run: python session_patch_s37.py [--dry-run]
 <!-- SCRIPT_UPDATES_APPEND_HERE -->
 ## CONFIRMED_LIVE_SLUGS
 

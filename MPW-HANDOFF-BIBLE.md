@@ -83,6 +83,7 @@ Future 9th category: tools — /bible/categories/tools/ — filters entries with
 - v5.0: built Session 30 — 54/54 checks — YouTube links — identity bar — SUPERSEDED
 - v5.1: built Session 32 (gold standard HTML) — writer update completed Session 36 — 81/81 structural checks pass — content quality ~55% — Pass 2 prompt rewrite required Session 37
 <!-- WRITER_STATUS_HERE -->
+v5.1 — 81/81 structural checks pass — content quality ~55% — Pass 2 prompt rewrite required Session 38
 
 ---
 

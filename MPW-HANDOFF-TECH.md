@@ -522,6 +522,34 @@ Known content failures in generated output:
 
 ---
 
+## Session 37 — Handoff System Technical Findings
+
+### mpw_handoff_runner.py Architecture
+- Uses requests library only — no urllib
+- GITHUB_TOKEN read from env var — never hardcoded
+- --dry-run fetches from GitHub (SHA sync) but skips commit
+- Zone tag insertion: insert_at_zone() + verify_insertion() — all-or-nothing
+- Trees API commit: sequential blob creation, 0.5s sleep between blobs, exponential backoff on 403
+- STATE_FILE = handoff_state.json — stores last commit SHA per file for drift detection
+
+### add_zones.py Notes
+- Run once only — tags are permanent anchors in handoff files
+- anchor strings are Session 36 content — if files were modified before running, update anchors
+- 11 zone tags across 6 files in one Trees API commit
+
+### Zone Tag Reference
+| File | Zone | Tag |
+|---|---|---|
+| CORE | counts | <!-- COUNTS_HERE --> |
+| CORE | never_rules | <!-- NEVER_RULES_APPEND_HERE --> |
+| CORE | priority_table | <!-- PRIORITY_TABLE_APPEND_HERE --> |
+| CORE | session_log | <!-- SESSION_LOG_APPEND_HERE --> |
+| CORE | next_session | <!-- NEXT_SESSION_PROMPT_HERE --> |
+| TECH | tech_findings | <!-- TECH_FINDINGS_APPEND_HERE --> |
+| BIBLE | writer_status | <!-- WRITER_STATUS_HERE --> |
+| SCRIPTS | script_updates | <!-- SCRIPT_UPDATES_APPEND_HERE --> |
+| CONTENT | content_updates | <!-- CONTENT_UPDATES_APPEND_HERE --> |
+| ARTICLES | article_updates | <!-- ARTICLE_UPDATES_APPEND_HERE --> |
 <!-- TECH_FINDINGS_APPEND_HERE -->
 # 13. Session 35 — Key Technical Findings
 

@@ -1,5 +1,6 @@
 # MusicProductionWiki.com — CORE Handoff
 *Updated: May 18, 2026 (SESSION 36) · 526 articles + 210 Bible entries live*
+*Updated: May 18, 2026 (SESSION 37) · 526 articles + 210 Bible entries live*
 <!-- COUNTS_HERE -->
 *Modular format — 6 GitHub files replace single monolithic handoff*
 
@@ -204,6 +205,9 @@ If you cannot recite all four, you have not read this document. Stop and re-read
 | NEVER use tool_type from Pass 1 to determine GR calculator rendering | Hardcode Compression to always get GR calculator — tool_type is unreliable |
 | NEVER use MODEL = "claude-sonnet-4-20250514" | Model string is claude-sonnet-4-6 — always |
 | NEVER set API timeout below 600 seconds for Pass 2 | 22,000 token Pass 2 requires up to 10 minutes — 300s is insufficient |
+| NEVER use floating string search in patch scripts — always use append zone tags | Floating search breaks when file content shifts. Zone tags are structural anchors. |
+| NEVER commit handoff files manually — always use mpw_handoff_runner.py | Manual commits bypass sentinel validation and truncation detection. |
+| NEVER skip --dry-run before first live run of any new handoff patch | Dry run confirms zone tags exist and insertions are correct before committing. |
 <!-- NEVER_RULES_APPEND_HERE -->
 | NEVER truncate a handoff module to save context | If context is low, warn Steve and stop — do NOT deliver a partial handoff |
 
@@ -274,6 +278,8 @@ Every handoff update requires ALL of the following:
 | P11 | Bible subcategory pages | After 500 entries | /bible/categories/dynamics/compression/ etc |
 | P12 | Mobile app PWA first then React Native | After 1000 entries + 25K monthly visitors | Milestone trigger |
 | P13 | GSC — 2 URL fixes committed | DONE Session 36 | ssl-2-plus-review/ redirect + monitors canonical fixed — commit d6f787db |
+| P0 | Build handoff runner system | COMPLETE Session 37 | mpw_handoff_runner.py + add_zones.py + session_patch format delivered |
+| P1 | Pass 2 prompt rewrite | IN PROGRESS Session 37 | Rewrite build_pass2_prompt_t1() — fix 9 content failures — then visual QA |
 <!-- PRIORITY_TABLE_APPEND_HERE -->
 
 ---
@@ -283,6 +289,27 @@ Every handoff update requires ALL of the following:
 **⛔ ANTI-TRUNCATION RULE #6: THE NEXT SESSION START PROMPT MUST BE REPRODUCED IN FULL. DO NOT SUMMARIZE.**
 
 "Run python mpw_session_start.py. State article count, Bible entry count, P0 priority, and last 5 NEVER rules added.
+Run python mpw_session_start.py. State article count, Bible entry count, P0 priority, last 5 NEVER rules.
+
+P0 SESSION 38 is the Pass 2 prompt rewrite for mpw_bible_writer.py. The writer passes 81/81 structural checks but content quality is ~55% of gold standard. Fix all 9 failures:
+
+1. Section h2 titles missing
+2. Only 1 producer quote (need exactly 2 for Tier 1)
+3. FAQ section absent — FAQ_PLACEHOLDER not placed correctly
+4. Plugin recs absent — PLUGIN_PLACEHOLDER not placed correctly
+5. Entry nav anchor links broken
+6. Comparison callouts are one-liner stubs
+7. GR calculator not rendering — use TOOL_OVERRIDES hardcode
+8. Producer Spotlight wrong — pulling from track produced_by
+9. Content generic — not authoritative producer-language
+
+After rewrite:
+1. Run --test compression again
+2. Visual QA vs live gold standard — must reach 90%+
+3. Confirm 81/81 checks still pass
+4. Only then proceed: Tier 1 batch (50 entries)
+
+Run session patch at end: python session_patch_s38.py
 <!-- NEXT_SESSION_PROMPT_HERE -->
 
 P0 SESSION 37 is a complete rewrite of the mpw_bible_writer.py Pass 2 prompt. The current writer produces structurally valid HTML that passes 81/81 checks but fails visual QA at approximately 55% quality vs the gold standard compression.html. Specific failures:
@@ -706,6 +733,40 @@ Implementation:
 </div>
 ```
 
+## May 19, 2026 — SESSION 37 — HANDOFF SYSTEM BUILD
+
+### What Was Done
+1. **Built mpw_handoff_runner.py** — permanent automated handoff script
+   - load_state / save_state — handoff_state.json SHA tracking
+   - fetch_github_content — fetches live files each run (guarantees correct SHA)
+   - check_sha_sync — warns on local/GitHub drift
+   - insert_at_zone — appends at zone tags, never floating string search
+   - verify_insertion — post-insertion check, aborts on silent failure
+   - scrub_secrets — strips ghp_ and sk-ant- tokens before commit
+   - validate_sentinels — 6 required sentinel lists per file
+   - validate_line_count — enforces MIN_LINES floor per file
+   - commit_all — Trees API single commit, sequential blobs, 0.5s sleep
+   - run_patch() — main entry point called by session_patch_sNN.py
+
+2. **Built add_zones.py** — one-time zone tag installer
+   - Inserts all 11 zone tags across 6 handoff files
+   - --dry-run previews insertions without committing
+   - --run commits via Trees API single commit
+   - Anchor-based insertion — finds exact line in live file
+
+3. **Built session_patch_s37.py** — sample/template for all future sessions
+
+### Key Learnings
+- Append zone tags prevent truncation by design — insertions never rewrite existing content
+- Post-insertion verify_insertion() catches silent replace() no-ops
+- SHA sync check catches local/GitHub drift before commit
+- Fetching live file inside the runner guarantees correct target strings
+
+### Commit Log
+| SHA | What |
+|---|---|
+| (add_zones.py run SHA) | Zone tags added to all 6 handoff files |
+| (session_patch_s37.py run SHA) | Session 37 handoff update |
 <!-- SESSION_LOG_APPEND_HERE -->
 ## May 16, 2026 — SESSION 32 FINAL — KEY DECISIONS
 
