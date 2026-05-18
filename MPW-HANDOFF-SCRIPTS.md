@@ -213,6 +213,7 @@ aside: inline style MUST contain min-width:280px;width:280px;position:sticky;top
    - Copy Settings: → calc-share-bar present check
    - entry-nav 126px: → entry-nav 84px mobile
 
+<!-- SCRIPT_UPDATES_APPEND_HERE -->
 ## CONFIRMED_LIVE_SLUGS
 
 ```python

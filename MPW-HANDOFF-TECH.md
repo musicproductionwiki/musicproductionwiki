@@ -522,6 +522,7 @@ Known content failures in generated output:
 
 ---
 
+<!-- TECH_FINDINGS_APPEND_HERE -->
 # 13. Session 35 — Key Technical Findings
 
 ## compression.html End of Session 35

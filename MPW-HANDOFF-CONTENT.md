@@ -242,6 +242,7 @@ Build trigger: separate spec session required — involves TruClarify API/intake
 - 2 specific issues fixed: ssl-2-plus-review redirect + monitors canonical
 - Action: Request Indexing for fixed URLs. No other action needed — 585 queue will resolve over weeks as Google crawls.
 
+<!-- CONTENT_UPDATES_APPEND_HERE -->
 ## Content Strategy Insight
 Comparisons are the traffic beachhead. Getting from position 16 to position 5 = clicks start.
 The Bible Tier 1 batch (50 entries) is the next major SEO lever — but quality must be right first.

@@ -1,5 +1,6 @@
 # MusicProductionWiki.com — CORE Handoff
 *Updated: May 18, 2026 (SESSION 36) · 526 articles + 210 Bible entries live*
+<!-- COUNTS_HERE -->
 *Modular format — 6 GitHub files replace single monolithic handoff*
 
 ---
@@ -203,6 +204,7 @@ If you cannot recite all four, you have not read this document. Stop and re-read
 | NEVER use tool_type from Pass 1 to determine GR calculator rendering | Hardcode Compression to always get GR calculator — tool_type is unreliable |
 | NEVER use MODEL = "claude-sonnet-4-20250514" | Model string is claude-sonnet-4-6 — always |
 | NEVER set API timeout below 600 seconds for Pass 2 | 22,000 token Pass 2 requires up to 10 minutes — 300s is insufficient |
+<!-- NEVER_RULES_APPEND_HERE -->
 | NEVER truncate a handoff module to save context | If context is low, warn Steve and stop — do NOT deliver a partial handoff |
 
 ---
@@ -272,6 +274,7 @@ Every handoff update requires ALL of the following:
 | P11 | Bible subcategory pages | After 500 entries | /bible/categories/dynamics/compression/ etc |
 | P12 | Mobile app PWA first then React Native | After 1000 entries + 25K monthly visitors | Milestone trigger |
 | P13 | GSC — 2 URL fixes committed | DONE Session 36 | ssl-2-plus-review/ redirect + monitors canonical fixed — commit d6f787db |
+<!-- PRIORITY_TABLE_APPEND_HERE -->
 
 ---
 
@@ -280,6 +283,7 @@ Every handoff update requires ALL of the following:
 **⛔ ANTI-TRUNCATION RULE #6: THE NEXT SESSION START PROMPT MUST BE REPRODUCED IN FULL. DO NOT SUMMARIZE.**
 
 "Run python mpw_session_start.py. State article count, Bible entry count, P0 priority, and last 5 NEVER rules added.
+<!-- NEXT_SESSION_PROMPT_HERE -->
 
 P0 SESSION 37 is a complete rewrite of the mpw_bible_writer.py Pass 2 prompt. The current writer produces structurally valid HTML that passes 81/81 checks but fails visual QA at approximately 55% quality vs the gold standard compression.html. Specific failures:
 
@@ -702,6 +706,7 @@ Implementation:
 </div>
 ```
 
+<!-- SESSION_LOG_APPEND_HERE -->
 ## May 16, 2026 — SESSION 32 FINAL — KEY DECISIONS
 
 **Three-Tier Bible Template System — LOCKED:**

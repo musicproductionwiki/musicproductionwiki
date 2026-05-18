@@ -89,6 +89,7 @@ Missing category pages blocking batches:
 
 ---
 
+<!-- ARTICLE_UPDATES_APPEND_HERE -->
 # GSC Top Queries (May 15, 2026)
 
 Position ~16 on these comparison queries — optimize title/meta to improve CTR:
