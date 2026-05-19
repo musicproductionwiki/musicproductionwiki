@@ -1663,9 +1663,17 @@ function dawTab(btn, daw) {
     });
   }
   var sections = document.querySelectorAll('.entry-section[id]');
-  var obs = new IntersectionObserver(function(entries){
-    entries.forEach(function(e){ if (e.isIntersecting) setTocActive(e.target.id); });
-  }, {rootMargin: '-120px 0px -30% 0px'} /* observer-fix-s42 */);
+  var _tocVisible = new Set();
+  var obs = new IntersectionObserver(function(entries){ /* observer-v2-s42 */
+    entries.forEach(function(e){
+      if (e.isIntersecting) { _tocVisible.add(e.target); }
+      else { _tocVisible.delete(e.target); }
+    });
+    if (_tocVisible.size === 0) return;
+    var allSections = Array.from(document.querySelectorAll('.entry-section[id]'));
+    var topmost = allSections.filter(function(s){ return _tocVisible.has(s); })[0];
+    if (topmost) setTocActive(topmost.id);
+  }, {rootMargin: '-120px 0px -30% 0px'});
   sections.forEach(function(s){ obs.observe(s); });
   if (sections[0]) setTocActive(sections[0].id);
 })();
@@ -1678,9 +1686,17 @@ function dawTab(btn, daw) {
     });
   }
   var sections = document.querySelectorAll('.entry-section[id]');
-  var obs2 = new IntersectionObserver(function(entries){
-    entries.forEach(function(e){ if (e.isIntersecting) setNavActive(e.target.id); });
-  }, {rootMargin: '-100px 0px -40% 0px'} /* observer-fix-s42 */);
+  var _navVisible = new Set();
+  var obs2 = new IntersectionObserver(function(entries){ /* observer-v2-s42 */
+    entries.forEach(function(e){
+      if (e.isIntersecting) { _navVisible.add(e.target); }
+      else { _navVisible.delete(e.target); }
+    });
+    if (_navVisible.size === 0) return;
+    var allSections = Array.from(document.querySelectorAll('.entry-section[id]'));
+    var topmost = allSections.filter(function(s){ return _navVisible.has(s); })[0];
+    if (topmost) setNavActive(topmost.id);
+  }, {rootMargin: '-100px 0px -40% 0px'});
   sections.forEach(function(s){ obs2.observe(s); });
 })();
 
