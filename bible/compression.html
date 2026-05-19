@@ -1860,20 +1860,33 @@ function dawTab(btn, id) {
   if (!navLinks.length) return;
   var sectionIds = Array.from(navLinks).map(function(a){ return a.getAttribute('href').replace('#',''); });
   var sections = sectionIds.map(function(id){ return document.getElementById(id); }).filter(Boolean);
-  function setActive(id){
+  function setActive(id){ /* compression-scroll-v5-s42 */
+    var navEl = document.querySelector('.entry-nav');
+    var navLinks = document.querySelectorAll('.entry-nav-inner a');
     navLinks.forEach(function(a){
-      var active = a.getAttribute('href')==='#'+id;
-      a.style.color = active ? '#f5a623' : '';
-      a.style.fontWeight = active ? '700' : '';
-      a.style.background = active ? 'rgba(245,166,35,0.1)' : '';
-      if (active && navEl) navEl.scrollTo({left:a.offsetLeft - navEl.offsetWidth/2 + a.offsetWidth/2, behavior:'smooth'});
+      var active = a.getAttribute('href') === '#' + id;
+      a.classList.toggle('active', active);
+      a.style.color = '';
+      a.style.fontWeight = '';
+      a.style.background = '';
+      if (active && navEl) navEl.scrollTo({left: a.offsetLeft - navEl.offsetWidth/2 + a.offsetWidth/2, behavior:'smooth'});
     });
   }
-  var obs = new IntersectionObserver(function(entries){ entries.forEach(function(e){ if (e.isIntersecting) setActive(e.target.id); }); }, {rootMargin:'-10% 0px -80% 0px', threshold:0});
-  sections.forEach(function(s){ obs.observe(s); });
-  if (sections[0]) setActive(sections[0].id);
+  var _sections = Array.from(document.querySelectorAll('.entry-section:not(.entry-section-notrack)[id]'));
+  function _getActiveId(){
+    var best = null, bestTop = -Infinity;
+    _sections.forEach(function(s){
+      var top = s.getBoundingClientRect().top;
+      if (top <= 150 && top > bestTop){ bestTop = top; best = s.id; }
+    });
+    if (!best && _sections.length) best = _sections[0].id;
+    return best;
+  }
+  function _onScroll(){ var id = _getActiveId(); if (id) setActive(id); }
+  window.addEventListener('scroll', _onScroll, {passive:true});
+  window.addEventListener('touchmove', _onScroll, {passive:true});
+  _onScroll();
 })();
-
 // ── SIDEBAR TOC active ────────────────────────────────────────────────────────
 (function(){
   var tocLinks = document.querySelectorAll('.sidebar-toc a');
