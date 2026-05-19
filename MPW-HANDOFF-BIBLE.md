@@ -1,5 +1,5 @@
 # MPW-HANDOFF-BIBLE.md
-*Updated: May 18, 2026 (SESSION 39)*
+*Updated: May 19, 2026 (SESSION 41)*
 
 ---
 
@@ -613,3 +613,121 @@ Trigger: 1,000 Bible entries + 25,000 monthly visitors
 Pricing: Free (50 rotating) / Pro $4.99mo or $39yr / Studio $9.99mo or $79yr
 One subscription covers web + app
 Do NOT plan or build before milestone.
+
+---
+
+# SESSION 41 UPDATE — BIBLE WRITER AND LIVE STATE
+
+## Live Bible State After Session 41
+
+| Group | Count | Mobile | Nav Scroll | BTT | Tools Position |
+|---|---|---|---|---|---|
+| v5.1 original 16 | 16 | ✅ FIXED | ❌ BROKEN | ❌ MISSING | ✅ CORRECT |
+| v5.1 Session 40 new 54 | 54 | ✅ FIXED | ❌ BROKEN | ❌ MISSING | ❌ BOTTOM |
+| v3.0/v4.0 legacy 153 | 153 | ✅ N/A | ✅ N/A | ✅ N/A | ✅ N/A |
+
+NOTE: Entry counts corrected — was 226 and 210 v3.0. Actual: 223 and 153 v3.0.
+
+## v5.2 Writer — Full Spec (12 Required Fixes)
+
+Full spec in Session 41 section of this file. Key items:
+
+**FIX 1:** Tools position — inject after quick-reference </section>, remove from bottom f-string
+**FIX 2:** Back-to-top button HTML — copy EXACT from compression.html (see CORE Session 41 update)
+**FIX 3:** Mobile grid fix JS — copy EXACT checkWidth() from compression.html
+**FIX 4:** Remove inline style from bible-entry-wrap — DONE by patch_writer_inline_style.py ✅
+**FIX 5:** Remove aside inline style from f-string template
+**FIX 6:** Add .entry-nav-inner{margin:0!important} to CONSOLIDATED OVERRIDES in build_css()
+**FIX 7:** LAW 8 — Verdict minimum 100w, mistake in sentence 1, specific test, specific number
+**FIX 8:** LAW 4 — minimum 3 quotes (was exactly 2)
+**FIX 9:** Producer spotlight — 3 producers matching quote authors, ps-link to /producers/
+**FIX 10:** Genre table — category-aware column headers
+**FIX 11:** CONFIRMED_LIVE_SLUGS — update to all 223 live slugs
+**FIX 12:** HowTo schema — entry-specific parameter workflow (5 steps)
+
+## Regeneration — 54 Session 40 Entries
+
+After v5.2 confirmed (--validate 80/80 + Steve visual QA on chorus --no-commit):
+Cost: ~$13.50 | Time: ~25 min at 8 workers
+Fixes: tools position, verdicts, genre tables, 3 quotes, correct spotlight
+
+## SEO Vision (Steve confirmed Session 41)
+
+Central hub, most authoritative in the industry. Future: licensing, classes, publishing middleman.
+Every entry = definitive industry reference. Not a wiki contributor. Not a help page.
+
+**Title format:** [Term] — The Producer's Bible | MusicProductionWiki.com (keep as-is)
+**Meta description:** Master [term] in music production: [2-3 key aspects] explained with track examples, genre settings, and pro techniques.
+**sameAs:** Wikipedia + Wikidata + DBpedia (3 entities)
+**HowTo:** Entry-specific parameter workflow — never generic DAW steps
+**FAQPage:** 8 questions, long-tail keyword optimized, all entry-specific
+
+## Gold Standard — compression.html Working Features
+
+READ THIS FILE BEFORE EVERY PATCH AND EVERY WRITER CHANGE.
+
+1. Entry nav scrolls — .entry-nav-inner has NO margin:0 auto in CONSOLIDATED OVERRIDES
+2. Back-to-top works — both button HTML and scroll JS present
+3. Mobile layout works — CONSOLIDATED OVERRIDES + checkWidth() JS
+4. Producer spotlight — 3 producers: Rick Rubin, Bob Clearmountain, Andrew Scheps
+5. Verdict strong — 85w lead, mistake in sentence 1, specific test, specific number
+6. Genre table correct — Dynamics columns, parameter rows, genre columns
+7. HowTo schema entry-specific — 5 compression-specific steps
+8. sameAs has 3 entities — Wikidata + DBpedia
+9. FAQPage has 8 specific technical questions
+10. Tools section — special case for compression (GR calc between QR and Signal Chain)
+
+---
+
+# SESSION 41 ADDENDUM — Tools Section Nav Tracking Issue
+
+## The Problem (confirmed from reading compression.html and mpw_bible_writer.py)
+
+**compression.html special case:**
+- The actual GR Calculator lives at `id="gr-calculator"` — it is NOT a `<section class="entry-section">`, it has no `<h2>`, and it sits between Quick Ref and Signal Chain
+- The `id="tools"` section is near the BOTTOM of compression.html (after Related Terms) — it contains only a link card pointing back to the calculator
+- The IntersectionObserver in the nav JS watches for `id="tools"` — but that fires only when the user scrolls all the way to the bottom nav card, NOT when they are looking at the actual GR Calculator
+- Result: when a user is viewing the GR Calculator, the "Tools" nav pill does NOT activate. It only activates at the wrong position (bottom of page).
+
+**For all other v5.1 entries — nav is broken on ALL 70 entries:**
+- The entry nav does NOT scroll horizontally on mobile on ANY of the 70 v5.1 entries
+- The pills freeze — user sees Definition, How It Works, Parameters, Quick Ref and no further
+- Scrolling down through the content does NOT move the nav — Tools, Signal Chain, etc. never highlight
+- This is confirmed by Steve on mobile — reported multiple times — visible on reverb, mastering, chorus, all entries
+- Root cause: `margin:0 auto` on `.entry-nav-inner` — pills center and do not overflow — scroll never activates
+- The h2 inside the tools section is irrelevant to this bug — it is a CSS layout bug on the nav container
+- The 54 Session 40 entries additionally have tools at the BOTTOM — wrong position compounds the problem
+
+## The Fix
+
+**For compression.html:**
+The targeted fix is to wrap the GR Calculator in a proper section:
+```html
+<!-- Change this: -->
+<div class="gain-calculator" id="gr-calculator" ...>
+
+<!-- To this: -->
+<section class="entry-section" id="tools">
+  <h2>Tools for This Entry</h2>
+  <div class="gain-calculator" id="gr-calculator" ...>
+  ...
+  </div>
+</section>
+```
+And remove the separate `id="tools"` nav card at the bottom.
+This is a targeted patch on compression.html — do NOT do it from memory. Fetch the file first.
+
+**For all 54 Session 40 entries:**
+Regenerating with v5.2 writer (FIX 1 — tools position) puts tools in the correct position after quick-reference using the proper `_wrap()` structure. Nav and TOC will track correctly after regeneration.
+
+**For v5.2 writer:**
+No writer change needed — `_wrap()` already generates the correct structure with `<section class="entry-section" id="tools"><h2>Tools for This Entry</h2>`. FIX 1 (tools position) ensures it lands after quick-reference.
+
+## Summary
+
+| Entry | Tools h2 Present | Tools in Right Position | Nav Tracks Tools |
+|---|---|---|---|
+| compression.html | ❌ No (GR calc has no h2) | ✅ Yes (gr-calculator position) | ❌ No |
+| v5.1 original 15 (reverb etc.) | ✅ Yes (_wrap()) | ✅ Yes (patched S39) | ❌ No — nav frozen on mobile |
+| Session 40 54 entries | ✅ Yes (_wrap()) | ❌ No (at bottom) | ❌ Wrong position |
+| After v5.2 regen | ✅ Yes | ✅ Yes | ✅ Yes |

@@ -1,5 +1,5 @@
 # MPW-HANDOFF-TECH.md
-*Updated: May 18, 2026 (SESSION 39)*
+*Updated: May 19, 2026 (SESSION 41)*
 
 ---
 
@@ -651,3 +651,76 @@ Footer exception: **Share on X → Reddit** only (no Copy Link)
 - plugins-explained → ../categories/plugins.html
 
 fix_dead_slugs.py written but did not patch (href format mismatch — bare slugs not matching). Needs investigation — fetch one category page and print actual href format before writing replacement strings.
+
+---
+
+# SESSION 41 UPDATE — KEY TECHNICAL FINDINGS
+
+## Mobile Fix — Root Cause Confirmed
+
+Inline `style="display:grid!important;..."` on `<div class="bible-entry-wrap">` beat the CONSOLIDATED OVERRIDES stylesheet `display:block!important` at mobile breakpoint.
+
+CSS specificity rule: **inline !important > stylesheet !important**
+
+Fix: removed inline style. CONSOLIDATED OVERRIDES + checkWidth() JS now controls layout correctly.
+patch_mobile_fix.py — SHA: a0553356 — 70 entries fixed ✅
+
+## Entry Nav Scroll — Root Cause Confirmed
+
+From live writer CSS line 724 (read directly from mpw_bible_writer.py upload):
+`.entry-nav-inner{display:flex;justify-content:center;gap:4px;padding:10px 10px;min-width:max-content;margin:0 auto}`
+
+`min-width:max-content` = inner div exactly as wide as its content.
+`justify-content:flex-start` has zero effect when min-width = content width.
+
+**Real fix:** `margin:0!important` — removes auto-centering. Pills start at left edge. Content overflows right. `overflow-x:auto` on `.entry-nav` activates. Scroll works.
+
+patch_nav_mobile.py injected wrong fix — DO NOT USE.
+patch_nav_and_btt.py needed — copy margin:0!important from this spec.
+
+## Back-to-Top — Root Cause Confirmed
+
+patch_mobile_fix.py injected checkWidth() JS before `</body>`.
+build_js() scroll listener calls `getElementById('btt-btn')`.
+The `<button id="btt-btn">` HTML element was NEVER injected into entries.
+`getElementById` returned null. Listener attached to non-existent element.
+Nothing shown.
+
+Fix: inject the button HTML element + scroll JS before `</body>`.
+Exact code in MPW-HANDOFF-CORE.md Session 41 update section.
+
+## Live Bible State After All Session 41 Patches
+
+| Issue | v5.1 Original 16 | Session 40 new 54 | v3.0 153 |
+|---|---|---|---|
+| Mobile layout | ✅ FIXED | ✅ FIXED | ✅ N/A |
+| Entry nav scroll | ❌ BROKEN | ❌ BROKEN | ✅ N/A |
+| Back-to-top button | ❌ MISSING (15 of 16) | ❌ MISSING | ✅ N/A |
+| Tools position | ✅ CORRECT | ❌ AT BOTTOM | ✅ N/A |
+| Verdict quality | ✅ GOOD | ❌ WEAK | ✅ N/A |
+| Genre table | ✅ CORRECT | ❌ N/A COLUMNS | ✅ N/A |
+| Producer quotes | ✅ 2 (ok for now) | ❌ 2 ONLY | ✅ N/A |
+
+compression.html: ALL features working ✅ (only entry with everything correct)
+
+## Entry Count Correction
+
+Previous handoff incorrectly stated 226 entries and 210 v3.0 entries.
+mpw_diagnose.py confirmed: **223 total — 16 + 54 + 153**.
+bible-index.json still shows 210 (v3.0 only — not updated for v5.1 entries).
+
+---
+
+# SESSION 41 ADDENDUM — Tools Section Nav Tracking
+
+## Root Cause (read from live writer and compression.html)
+
+compression.html GR Calculator: `id="gr-calculator"` — NOT a `<section class="entry-section">`, NO `<h2>`. Sits between Quick Ref and Signal Chain. The IntersectionObserver watches for `id="tools"` — that's the nav card at the BOTTOM of compression, not the calculator.
+
+Result: Tools nav pill does not activate when user views the GR Calculator.
+
+mpw_tools_v3.py `_wrap()` generates correct structure: `<section class="entry-section" id="tools"><h2>Tools for This Entry</h2>`. This WILL track correctly for all entries that use it in the right position.
+
+Fix for compression.html: wrap gr-calculator in `<section class="entry-section" id="tools"><h2>Tools for This Entry</h2>` and remove the separate bottom tools nav card. Fetch file before patching.
+
+Fix for Session 40 entries: regenerate with v5.2 writer (tools position fix).

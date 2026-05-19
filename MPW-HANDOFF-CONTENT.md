@@ -1,5 +1,5 @@
 # MPW-HANDOFF-CONTENT.md
-*Updated: May 18, 2026 (SESSION 39)*
+*Updated: May 19, 2026 (SESSION 41)*
 
 ---
 
@@ -294,3 +294,39 @@ Producer spotlight now reads cite tags from rendered HTML to guarantee match.
 18. Sidebar TOC with IntersectionObserver tracking — now includes Verdict link
 19. Sidebar newsletter signup (.sidebar-nl)
 20. Sidebar share widget (mpw-share-bar vertical column)
+
+---
+
+# SESSION 41 UPDATE — CONTENT STATE
+
+## Bible Count Correction
+
+Previous count of 226 and 210 v3.0 was wrong. Confirmed by mpw_diagnose.py:
+- Total: 223 entries
+- v5.1 original 16 ✅
+- v5.1 Session 40 new 54 — need regen with v5.2 ❌
+- v3.0/v4.0: 153 (not 210)
+
+## Session 40 54 Entries — Content Issues (will fix via regeneration)
+
+- Tools section at bottom instead of after Quick Reference
+- Producer's Verdict weak — no mistake named, no test, no number, under 100w
+- Genre table shows N/A for non-dynamics entries — wrong column headers
+- Producer Spotlight shows wrong people — track producers not quote authors
+- Only 2 producer quotes — v5.2 requires minimum 3
+- All will be fixed by regenerating with v5.2 writer (~$13.50)
+
+## v5.2 Writer Content Changes
+
+- LAW 4: minimum 3 quotes (was exactly 2) — in Definition, History, and How To Use
+- LAW 8 (new): verdict-lead minimum 100w, mistake in sentence 1, specific test, specific number
+- Genre table: category-aware headers (Dynamics/Modulation/Frequency/Time-Based/Synthesis/Recording)
+- Producer spotlight: 3 producers matching quote authors
+- HowTo schema: entry-specific parameter workflow
+
+## SEO Direction (Steve confirmed Session 41)
+
+Central hub. Most authoritative in the industry. Future: licensing, classes, publishing middleman.
+Bible entries = definitive industry reference for every term a producer searches.
+Title format: [Term] — The Producer's Bible | MusicProductionWiki.com
+Meta: Master [term] in music production: [key aspects] explained with track examples, genre settings, and pro techniques.

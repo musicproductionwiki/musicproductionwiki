@@ -1,5 +1,5 @@
 # MPW-HANDOFF-ARTICLES.md
-*Updated: May 18, 2026 (SESSION 39)*
+*Updated: May 19, 2026 (SESSION 41)*
 
 ---
 
@@ -143,3 +143,11 @@ Session 39 was focused entirely on mpw_tools_v3.py build, live tool patching of 
 No articles were written, modified, or committed.
 Article count remains 526.
 Next article batch: Batch 09 (100 breakdowns) — queued after Bible Tier 1 completes.
+
+---
+
+# SESSION 41 UPDATE
+
+Sessions 38, 39, 40, and 41 focused entirely on Bible infrastructure.
+Article count: 526 — unchanged since Batch 08.
+Next article batch: Batch 09 (100 breakdowns) — after Bible v5.2 complete and 54 entries regenerated.

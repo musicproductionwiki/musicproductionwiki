@@ -1,5 +1,5 @@
 # MusicProductionWiki.com — CORE Handoff
-*Updated: May 18, 2026 (SESSION 39) · 526 articles + 226 Bible entries live*
+*Updated: May 19, 2026 (SESSION 41) · 526 articles + 226 Bible entries live*
 *Modular format — 6 GitHub files replace single monolithic handoff*
 
 ---
@@ -426,3 +426,111 @@ Before running session_patch_sNN.py or any handoff commit script:
 In Session 36, the CORE handoff was delivered at 527 lines when the original was 848 lines — a loss of 321 lines containing Sections 32, 33, infrastructure reference, gold standard feature list, moat implementation specs, and tooltip system code. If this had been committed to GitHub, all future sessions would have permanently lost that context. The project's continuity depends entirely on these handoff files being complete.
 
 TRUNCATION = PROJECT DESTRUCTION. NEVER TRUNCATE. WARN AND STOP INSTEAD.
+
+---
+
+# ⛔ SESSION 41 UPDATE — May 19, 2026
+
+## What Changed This Session
+
+### Confirmed Live Counts (mpw_diagnose.py — authoritative)
+- Articles: **526** (unchanged)
+- Bible entries: **223 total** (was incorrectly stated as 226)
+  - 16 v5.1 original (Session 38) — tools correct ✅ — but entry nav BROKEN on mobile, btt MISSING
+  - 54 v5.1 Session 40 new — content issues — will regenerate with v5.2 ❌
+  - 153 v3.0/v4.0 legacy (was incorrectly stated as 210) ✅
+
+### patch_mobile_fix.py — SUCCESS ✅
+Commit SHA: a0553356ebc41e2ddb166875e9009d0e18a7d674
+- Removed inline style from bible-entry-wrap on all 70 v5.1 entries
+- Removed inline style from aside on all 70 v5.1 entries
+- Injected checkWidth() JS on all 70 v5.1 entries
+- Mobile single-column layout now works ✅
+
+### patch_nav_mobile.py — FAILED ❌ DO NOT USE
+Injected justify-content:flex-start!important — NO EFFECT.
+Root cause: .entry-nav-inner has min-width:max-content + margin:0 auto.
+When min-width equals content width, justify-content has zero effect.
+REAL FIX: margin:0!important on .entry-nav-inner — removes auto-centering.
+
+### Entry Nav — BROKEN ON ALL 70 v5.1 ENTRIES ❌
+Confirmed by Steve on mobile — reported multiple times — screenshots provided.
+Symptom: Pills freeze. User sees Definition, How It Works, Parameters, Quick Ref — then nothing.
+Scrolling down through the content does NOT advance the nav highlight.
+Tools, Signal Chain, History, etc. never activate in the nav pill bar.
+This affects ALL 70 v5.1 entries — the original 16 AND the 54 Session 40 entries.
+Root cause: margin:0 auto on .entry-nav-inner — pills center and cannot overflow — scroll never activates.
+This is a CSS layout bug. The h2 inside tool sections is irrelevant to this bug.
+Fix: append .entry-nav-inner{margin:0!important} before </head> on all 70 entries.
+
+### Back-to-Top Button — STILL MISSING ❌
+patch_mobile_fix.py injected JS only — never injected `<button id="btt-btn">` element.
+getElementById('btt-btn') returned null — nothing shown.
+
+### patch_live_tools_v6.py — CONFIRMED COMPLETED ✅ (P0 from Session 39)
+Steve confirmed done. Duplicate .t3 blocks removed from 15 original entries.
+
+## P0 Next Session — patch_nav_and_btt.py
+
+BEFORE WRITING: Fetch and read compression.html. Copy exact code. Never write from memory.
+
+Exact btt-btn HTML (from compression.html — confirmed working):
+```html
+<button id="btt-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  style="position:fixed;bottom:32px;right:20px;width:44px;height:44px;border-radius:50%;
+  background:#f5a623;color:#000;border:none;cursor:pointer;font-size:20px;font-weight:700;
+  display:none;align-items:center;justify-content:center;z-index:9000;
+  box-shadow:0 4px 16px rgba(0,0,0,0.4)"
+  aria-label="Back to top">↑</button>
+```
+
+Exact btt scroll listener JS (from compression.html — confirmed working):
+```javascript
+(function(){
+  var btn = document.getElementById('btt-btn');
+  if (!btn) return;
+  window.addEventListener('scroll', function(){ btn.style.display = window.scrollY > 400 ? 'flex' : 'none'; }, {passive:true});
+})();
+```
+
+Exact nav scroll fix CSS (append before </head> — confirmed working):
+```css
+.entry-nav-inner{margin:0!important}
+```
+
+## New NEVER Rules Added Session 41
+
+| Rule | Detail |
+|---|---|
+| ⛔ NEVER GUESS — CHECK LIVE FILE 10 TIMES | Session 41: multiple patch failures from writing CSS/JS from memory instead of reading live files. This is mandatory. No exceptions. |
+| NEVER write a patch without reading the ACTUAL live HTML file first | Always fetch and read before writing a single line |
+| NEVER guess CSS property values | Always copy exact strings from compression.html or the live file |
+| NEVER assume justify-content:flex-start fixes nav scroll | WRONG — real fix is margin:0!important on .entry-nav-inner |
+| NEVER inject JS without also injecting the HTML element it controls | Injected btt JS without the button element — nothing appeared |
+| NEVER assume a patch ran on all entries without verifying | Run mpw_diagnose.py and check samples before declaring success |
+| NEVER run more than one patch on same issue without reading live file in between | Multiple failed nav patches Session 41 |
+| ALWAYS copy exact code from compression.html for any Bible page feature | compression.html is the proven working reference |
+
+## Updated Priority Queue (Session 41)
+
+| Priority | Task | Status |
+|---|---|---|
+| P0 | Fix entry nav scroll + btt on all 70 v5.1 entries | PENDING — read compression.html FIRST |
+| P1 | Rebuild mpw_bible_writer.py as v5.2 | PENDING — full spec in HANDOFF-BIBLE.md |
+| P2 | Test v5.2: chorus --no-commit | After writer |
+| P3 | Regenerate 54 Session 40 entries | ~$13.50 — fixes all content issues |
+| P4 | mpw_bible_cat_pages.py --run | After regen |
+| P5 | gen_sitemap.py → GSC | After cat pages |
+| P6 | Batch 09 (100 breakdowns) | After Bible all clean |
+| P7 | Affiliate applications | REVENUE BLOCKER — Steve action |
+
+## Confirmed All 223 Live Slugs (mpw_diagnose.py output — authoritative)
+
+v5.1 original 16:
+compression, eq, limiting, saturation, distortion, multiband-compression, parallel-compression, noise-gate, reverb, delay, convolution-reverb, plate-reverb, room-reverb, gain-staging, headroom, stereo-imaging
+
+Session 40 new 54:
+chorus, flanger, phaser, tremolo, vibrato, high-pass-filter, low-pass-filter, parametric-eq, shelving-eq, air-frequency-eq, resonance, harmonic-distortion, mid-side-processing, bus-compression, mix-bus, send-return, automation, clip-gain, mastering, loudness-normalization, true-peak-limiting, lufs, dynamic-range, subtractive-synthesis, fm-synthesis, wavetable-synthesis, additive-synthesis, lfo, envelope, oscillator, adsr, vocoder, sidechain-compression, transient-shaping, pitch-shifting, time-stretching, recording, midi, arrangement, mixing, sampling, compression-ratio, attack-release, threshold, bit-depth, sample-rate, latency, daw, audio-interface, microphone-placement, vocal-production, beat-making, sound-design, music-theory
+
+v3.0/v4.0 153:
+808, air, analog, arpeggiator, attack, audio-routing, audio-track, automation-clip, aux-send, bell-curve, bible-index, boom-bap, bounce, bpm, breakdown, bridge, buffer-size, bus, call-and-response, chop, chord, chord-progression, chorus-section, clip, clipping, clocking, condenser-microphone, daw-workflow, dbfs, de-esser, decay, detune, di-box, digital, dithering, drill, drop, dynamic-eq, dynamic-microphone, exciter, expansion, fader, feedback, fet-compressor, filter, freeze, frequency, frequency-masking, fundamental, gain, gain-reduction, gain-structure, glue, granular-synthesis, graphic-eq, groove, hall-reverb, harmonic, harmony, hook, humanization, impedance, instrument-track, integrated-loudness, interval, intro, key, knee, layering, linear-phase-eq, lo-fi, loudness, loudness-matching, loudness-war, makeup-gain, master-limiter, melody, meter, mid-side-eq, mix-translation, mode, modulation, mono-compatibility, mud, noise-floor, notch-filter, octave, optical-compressor, outro, overdrive, panning, parallel-processing, patch, pdc, peak, phantom-power, phase, phase-cancellation, phonk, ping-pong-delay, pitch, plugin, polar-pattern, polyrhythm, portamento, pre-delay, preamp, presence, q-factor, quantization, ratio, reference-mastering, reference-track, release, return-track, rhythm, rms, sample-flip, scale, shelf, shimmer-reverb, short-term-loudness, sidechain, signal-chain, slapback-delay, space, spring-reverb, stem, stem-mastering, stereo-width, subfrequency, summing, swing, syncopation, tempo-sync, tension-release, the-pocket, timbre, time-signature, transient, transient-shaper, trap, true-peak, tube-compressor, unison, vca-compressor, velocity, verse, vst, waveform, wavetable, wet-dry, white-noise

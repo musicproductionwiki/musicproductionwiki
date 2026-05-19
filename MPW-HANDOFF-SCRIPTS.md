@@ -1,5 +1,5 @@
 # MPW-HANDOFF-SCRIPTS.md
-*Updated: May 18, 2026 (SESSION 39)*
+*Updated: May 19, 2026 (SESSION 41)*
 
 All scripts at: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\`
 GitHub API blocked from Claude's environment — all GitHub operations run from Steve's PowerShell.
@@ -600,3 +600,53 @@ NEVER run article quality audit blind. NEVER rewrite without checking audit outp
 - Single file commit: individual PUT acceptable
 - Rate limit: sequential blob creation with exponential backoff on 403s — never parallel
 - Max threads for Contents API: 10 (15-20 triggers secondary rate limit)
+
+---
+
+# SESSION 41 UPDATE — SCRIPT STATE
+
+## Patch Scripts Status After Session 41
+
+| Script | Status | Notes |
+|---|---|---|
+| patch_mobile_fix.py | ✅ COMPLETED | SHA: a0553356 — 70 entries — wrap + aside + JS |
+| patch_nav_mobile.py | ❌ FAILED — DO NOT USE | justify-content:flex-start has no effect |
+| patch_nav_and_btt.py | ⏳ NEEDED | Read compression.html first — copy exact code |
+| patch_writer_inline_style.py | ✅ COMPLETED | Removed inline style from local writer |
+| patch_writer_spotlight.py | ❓ RUN STATUS UNKNOWN | Verify with --validate |
+| patch_writer_tools_position.py | ❓ RUN STATUS UNKNOWN | Verify with --test chorus --no-commit |
+| patch_live_tools_v6.py | ✅ COMPLETED | Confirmed by Steve — Session 40 P0 |
+| mpw_diagnose.py | ✅ NEW | Delivered and run Session 41 — 223 entries confirmed |
+
+## Entry Nav — BROKEN ON ALL 70 v5.1 ENTRIES ❌
+
+Confirmed by Steve on mobile — reported multiple times — screenshots provided.
+Symptom: Pills freeze at Quick Ref. Scrolling content does NOT advance the nav.
+Tools, Signal Chain, History, etc. never highlight in the nav pill bar.
+Affects ALL 70 v5.1 entries — original 16 AND the 54 Session 40 entries.
+Root cause: margin:0 auto on .entry-nav-inner — pills center, cannot overflow, scroll never activates.
+The h2 inside the tools section is irrelevant to this bug.
+Fix: patch_nav_and_btt.py — append .entry-nav-inner{margin:0!important} before </head>.
+READ compression.html before writing. Copy exact code. Never write from memory.
+
+## patch_nav_and_btt.py — What It Must Do
+
+1. Append `<style>.entry-nav-inner{margin:0!important}</style>` before `</head>`
+2. Inject exact btt-btn button HTML before `</body>` — copy from compression.html
+3. Inject exact btt scroll listener JS before `</body>` — copy from compression.html
+4. Sentinel check — skip entries already patched
+5. Single Trees API commit — all 70 v5.1 entries
+
+BEFORE WRITING: fetch bible/compression.html from GitHub. Read it. Copy exact strings.
+
+## mpw_bible_writer.py v5.2 — Build Next Session
+
+Current local writer has bugs. Full v5.2 spec in HANDOFF-BIBLE.md.
+Pre-build checklist:
+1. Read compression.html in full
+2. Read HANDOFF-BIBLE.md v5.2 spec completely
+3. Make all 12 fixes in one pass
+4. Run --validate → 80/80
+5. Run --test chorus --no-commit
+6. Steve visual QA
+7. THEN regenerate 54 entries
