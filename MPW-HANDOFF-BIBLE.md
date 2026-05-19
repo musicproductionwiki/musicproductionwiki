@@ -1,5 +1,5 @@
 # MPW-HANDOFF-BIBLE.md
-*Updated: May 19, 2026 (SESSION 41)*
+*Updated: May 19, 2026 (SESSION 42)*
 
 ---
 
@@ -33,8 +33,14 @@ compression.html v5.1 gold standard stats:
 
 The gold standard file is the ONLY reference for the writer. Read it before writing a single function.
 
-**NOTE: compression.html Tools section architecture differs from other entries.**
-In compression.html, the GR Calculator lives between Quick Ref and Signal Chain as a named div (id=gr-calculator), and the Tools section (id=tools) is near the end with a link back to the calculator. For all OTHER entries, the tool is embedded directly in the Tools section (id=tools) which is positioned after Quick Ref. This is correct and intentional — the gold standard predates the tools positioning decision.
+**NOTE: compression.html Tools section architecture — UPDATED Session 42.**
+Session 42 patch_compression_tools.py wrapped the GR Calculator in `<section id="tools"><h2>Tools for This Entry</h2>`. The separate bottom tools nav card was removed. compression.html now matches the standard architecture: Tools section (id=tools) wraps the interactive tool, positioned after Quick Ref.
+
+**KNOWN BUG on compression.html (P0 next session):** The tools section now has `class="entry-section" id="tools"` — this causes the IntersectionObserver to track it. Because it is a short section, the Tools pill stays highlighted blue after scrolling past it into adjacent sections. Fix: change class from `entry-section` to `entry-section-notrack` on the tools section only. Do NOT touch rootMargin or any JS. Fetch live file before writing anything.
+
+**Sidebar TOC:** Tools is now correctly at position 5 (after Quick Reference) — fixed Session 42 patch_compression_final.py.
+
+**For ALL OTHER entries:** Tool is embedded directly in `<section class="entry-section" id="tools">` positioned after quick-reference. This is correct and unchanged.
 
 ---
 
