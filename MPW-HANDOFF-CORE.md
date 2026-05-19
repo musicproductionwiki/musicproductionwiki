@@ -1,5 +1,5 @@
 # MusicProductionWiki.com — CORE Handoff
-*Updated: May 19, 2026 (SESSION 41) · 526 articles + 226 Bible entries live*
+*Updated: May 19, 2026 (SESSION 42) · 526 articles + 223 Bible entries live*
 *Modular format — 6 GitHub files replace single monolithic handoff*
 
 ---
@@ -143,15 +143,14 @@ If you cannot recite all four, you have not read this document. Stop and re-read
 
 | Priority | Task | Status |
 |---|---|---|
-| P0 | Run patch_live_tools_v6.py | PENDING — removes duplicate bare .t3 blocks from 15 patched entries |
-| P1 | Run remaining 33 Tier 1 Bible entries | READY — all tool mappings confirmed — create bible-tier1-remaining34.txt first |
-| P2 | Run mpw_bible_cat_pages.py --run | After Tier 1 batch complete |
-| P3 | gen_sitemap.py → resubmit to GSC | After cat pages |
-| P4 | mpw_dead_slug_audit.py | After each batch commit |
-| P5 | Batch 09 (100 track breakdowns) | After Tier 1 |
-| P6 | Affiliate applications | REVENUE BLOCKER — Steve action required |
-| P7 | Fix 5 missing og:image (mpw_fix_meta.py) | Low priority |
-| P8 | Add netlify.toml redirect /dictionary/* → /bible/:splat | Pending owner action |
+| P0 | **DECISION REQUIRED**: Revert all 70 entries OR accept broken nav and build v5.2 writer with correct nav baked in | See Session 42 Options A/B/C in update section |
+| P1 | Rebuild mpw_bible_writer.py as v5.2 — nav must use scroll+touchmove+dynamic style tag from the start | Do NOT patch existing entries further |
+| P2 | Test v5.2: chorus --no-commit — confirm nav works on real iPhone before batch | |
+| P3 | Regenerate all 70 v5.1 entries with v5.2 | Fixes nav, content issues, everything in one shot |
+| P4 | mpw_bible_cat_pages.py --run | After regen |
+| P5 | gen_sitemap.py → GSC | After cat pages |
+| P6 | Batch 09 (100 track breakdowns) | After Bible clean |
+| P7 | Affiliate applications | REVENUE BLOCKER — Steve action |
 
 ---
 
@@ -429,102 +428,116 @@ TRUNCATION = PROJECT DESTRUCTION. NEVER TRUNCATE. WARN AND STOP INSTEAD.
 
 ---
 
-# ⛔ SESSION 41 UPDATE — May 19, 2026
+# ⛔ SESSION 42 UPDATE — May 19, 2026
 
-## What Changed This Session
+## Confirmed Live Counts (unchanged from Session 41)
+- Articles: **526**
+- Bible entries: **223 total**
+  - 16 v5.1 original (Session 38) — tools injected ✅ — nav BROKEN ❌ — btt working ✅
+  - 54 v5.1 Session 40 — content issues — will regenerate with v5.2 ❌ — nav BROKEN ❌ — btt working ✅
+  - 153 v3.0/v4.0 legacy — untouched ✅
 
-### Confirmed Live Counts (mpw_diagnose.py — authoritative)
-- Articles: **526** (unchanged)
-- Bible entries: **223 total** (was incorrectly stated as 226)
-  - 16 v5.1 original (Session 38) — tools correct ✅ — but entry nav BROKEN on mobile, btt MISSING
-  - 54 v5.1 Session 40 new — content issues — will regenerate with v5.2 ❌
-  - 153 v3.0/v4.0 legacy (was incorrectly stated as 210) ✅
+---
 
-### patch_mobile_fix.py — SUCCESS ✅
-Commit SHA: a0553356ebc41e2ddb166875e9009d0e18a7d674
-- Removed inline style from bible-entry-wrap on all 70 v5.1 entries
-- Removed inline style from aside on all 70 v5.1 entries
-- Injected checkWidth() JS on all 70 v5.1 entries
-- Mobile single-column layout now works ✅
+## ⚠️ SESSION 42 DAMAGE SUMMARY
 
-### patch_nav_mobile.py — FAILED ❌ DO NOT USE
-Injected justify-content:flex-start!important — NO EFFECT.
-Root cause: .entry-nav-inner has min-width:max-content + margin:0 auto.
-When min-width equals content width, justify-content has zero effect.
-REAL FIX: margin:0!important on .entry-nav-inner — removes auto-centering.
+Session 42 attempted to fix entry nav pill tracking across all 70 v5.1 entries. The session resulted in **multiple overlapping patches stacked on every entry** without confirming each one worked before moving to the next. The nav is now in a worse state than when the session began.
 
-### Entry Nav — BROKEN ON ALL 70 v5.1 ENTRIES ❌
-Confirmed by Steve on mobile — reported multiple times — screenshots provided.
-Symptom: Pills freeze. User sees Definition, How It Works, Parameters, Quick Ref — then nothing.
-Scrolling down through the content does NOT advance the nav highlight.
-Tools, Signal Chain, History, etc. never activate in the nav pill bar.
-This affects ALL 70 v5.1 entries — the original 16 AND the 54 Session 40 entries.
-Root cause: margin:0 auto on .entry-nav-inner — pills center and cannot overflow — scroll never activates.
-This is a CSS layout bug. The h2 inside tool sections is irrelevant to this bug.
-Fix: append .entry-nav-inner{margin:0!important} before </head> on all 70 entries.
+### All Session 42 Commits (in order)
 
-### Back-to-Top Button — STILL MISSING ❌
-patch_mobile_fix.py injected JS only — never injected `<button id="btt-btn">` element.
-getElementById('btt-btn') returned null — nothing shown.
+| SHA | What It Did | Result |
+|---|---|---|
+| 6b5e6db6 | nav: `margin:0!important` on all 70; btt: button+JS on all 70 | btt ✅ working — nav ❌ |
+| 52a6a556 | nav v2: `margin:0 + padding-left:16px + padding-right:48px` on all 70 | nav ❌ still broken |
+| c24b5310 | compression only: wrapped GR Calculator in `<section class="entry-section" id="tools">` | Tools link works ✅ — NEW BUG: observer tracks tools section ❌ |
+| a84cbad0 | compression only: TOC order fixed, stacked style blocks cleaned, nav centering fixed | TOC ✅ centering ✅ — observer bug persists ❌ |
+| 12c7b6c3 | 69 entries: rootMargin `-60%`→`-30%`, `-70%`→`-40%` | Committed — nav still broken ❌ |
+| a0bc22e2 | 69 entries: topmost-wins IntersectionObserver callback | Committed — nav still broken ❌ |
+| 9631f255 | 69 entries: replaced IntersectionObserver with scroll+touchmove | Nav advances on desktop ✅ — blue residual highlight ❌ |
+| ba55f607 | 69 entries: removed inline styles — CSS-only active state | Blue highlight persists ❌ |
+| cad7bb46 | 69 entries: added touchmove listener | Nav advances on real iPhone ✅ — blue residual highlight ❌ |
+| fedd74c2 | compression only: scroll+touchmove attempt v1 | Nothing highlights ❌ |
+| 6bf0787a | compression only: scroll+touchmove attempt v2 | Nothing highlights ❌ |
+| 6fd26937 | compression only: inline styles restored | Nothing highlights ❌ |
+| 5b78a4b4 | compression only: dynamic style tag approach | Amber confirmed ✅ — nav stops at Quick Ref on eq ❌ |
 
-### patch_live_tools_v6.py — CONFIRMED COMPLETED ✅ (P0 from Session 39)
-Steve confirmed done. Duplicate .t3 blocks removed from 15 original entries.
+---
 
-## P0 Next Session — patch_nav_and_btt.py
+## True Current State — End of Session 42
 
-BEFORE WRITING: Fetch and read compression.html. Copy exact code. Never write from memory.
+### compression.html
+| Feature | Status |
+|---|---|
+| BTT button | ✅ Working |
+| Mobile single-column | ✅ Working |
+| Desktop nav pills centered | ✅ Fixed |
+| Sidebar TOC — Tools at position 5 | ✅ Fixed |
+| Tools nav pill → jumps to GR Calculator | ✅ Fixed |
+| Nav pills — amber highlight | ✅ Working via dynamic style tag |
+| Nav pills — advance past Quick Ref | ❌ UNKNOWN — not confirmed on real device |
+| Tools pill staying highlighted | ❌ UNKNOWN — may still be present |
 
-Exact btt-btn HTML (from compression.html — confirmed working):
-```html
-<button id="btt-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})"
-  style="position:fixed;bottom:32px;right:20px;width:44px;height:44px;border-radius:50%;
-  background:#f5a623;color:#000;border:none;cursor:pointer;font-size:20px;font-weight:700;
-  display:none;align-items:center;justify-content:center;z-index:9000;
-  box-shadow:0 4px 16px rgba(0,0,0,0.4)"
-  aria-label="Back to top">↑</button>
-```
+### 69 entries (all v5.1 except compression)
+| Feature | Status |
+|---|---|
+| BTT button | ✅ All 69 working |
+| Mobile single-column | ✅ All 69 working |
+| Nav pills — scroll+touchmove listener | ✅ Committed — replaces IntersectionObserver |
+| Nav pills — advance past Quick Ref | ❌ BROKEN — confirmed stopping at Quick Ref on eq on real iPhone |
+| Nav pills — blue residual highlight | ❌ Status unknown after multiple patches |
 
-Exact btt scroll listener JS (from compression.html — confirmed working):
-```javascript
-(function(){
-  var btn = document.getElementById('btt-btn');
-  if (!btn) return;
-  window.addEventListener('scroll', function(){ btn.style.display = window.scrollY > 400 ? 'flex' : 'none'; }, {passive:true});
-})();
-```
+---
 
-Exact nav scroll fix CSS (append before </head> — confirmed working):
-```css
-.entry-nav-inner{margin:0!important}
-```
+## What Each Entry Now Has (nav JS layer cake)
 
-## New NEVER Rules Added Session 41
+Every one of the 69 entries now has ALL of the following stacked in its JS:
+1. Original IntersectionObserver (Session 38/40) — REPLACED but sentinel comments remain
+2. rootMargin patch (observer-fix-s42) — obsolete
+3. Topmost-wins observer patch (observer-v2-s42) — obsolete  
+4. Scroll+touchmove replacement (observer-v3-s42 through observer-v5-s42) — CURRENT active code
+5. Multiple stacked CSS blocks in `<head>` for nav
+
+The active nav code on all 69 entries is the scroll+touchmove IIFE block (observer-v5-s42). The observer is gone. The scroll listener fires on scroll and touchmove events and uses `getBoundingClientRect` to find the topmost section.
+
+**compression.html** has a different implementation — dynamic style tag approach (compression-scroll-v8-s42).
+
+---
+
+## P0 Next Session — Revert or Fix
+
+### Option A — Revert all 70 entries to pre-Session-42 state
+Revert all 70 v5.1 entries to commit `fabf7549` (May 15, modular handoff). This loses BTT button on all 70 and the compression TOC/tools fixes. Clean slate. Then approach nav fix correctly with a single confirmed-working solution.
+
+### Option B — Fix the current scroll+touchmove approach on 69 entries
+The scroll listener IS attached and IS working on desktop. The issue on real iPhone is nav stops at Quick Ref. Before writing any patch:
+1. Fetch live eq.html
+2. Run console diagnostic on eq desktop: `document.querySelectorAll('.entry-section[id]')` — confirm all 18+ sections are found
+3. Run `_getActiveId()` equivalent while scrolled past Quick Ref — confirm it returns correct section
+4. Only then write a targeted fix
+
+### Option C — Accept current state and move on to v5.2
+The 54 Session 40 entries will be regenerated with v5.2 writer anyway. The 16 originals have broken nav but working content. The nav can be fixed correctly when v5.2 is built with scroll+touchmove baked into the writer template. Treat nav as a v5.2 writer issue, not a patch issue.
+
+**Recommended: Option C.** Stop patching. Build v5.2 writer with correct nav from the start. Regenerate all 70 entries cleanly.
+
+---
+
+## New NEVER Rules Added Session 42
 
 | Rule | Detail |
 |---|---|
-| ⛔ NEVER GUESS — CHECK LIVE FILE 10 TIMES | Session 41: multiple patch failures from writing CSS/JS from memory instead of reading live files. This is mandatory. No exceptions. |
-| NEVER write a patch without reading the ACTUAL live HTML file first | Always fetch and read before writing a single line |
-| NEVER guess CSS property values | Always copy exact strings from compression.html or the live file |
-| NEVER assume justify-content:flex-start fixes nav scroll | WRONG — real fix is margin:0!important on .entry-nav-inner |
-| NEVER inject JS without also injecting the HTML element it controls | Injected btt JS without the button element — nothing appeared |
-| NEVER assume a patch ran on all entries without verifying | Run mpw_diagnose.py and check samples before declaring success |
-| NEVER run more than one patch on same issue without reading live file in between | Multiple failed nav patches Session 41 |
-| ALWAYS copy exact code from compression.html for any Bible page feature | compression.html is the proven working reference |
+| NEVER run more than ONE patch on nav JS without confirming on real iPhone first | Session 42: 9 nav patches committed — each one stacked on the last without real device confirmation |
+| NEVER layer observer patches on top of each other | Each patch must remove all prior nav JS and replace with single clean block |
+| NEVER declare nav working based on desktop DevTools alone | Desktop emulation ≠ real iOS device. Only real device confirmation counts. |
+| NEVER add `entry-section` class to a section without checking IntersectionObserver scope | Tools section was added to observer scope causing highlight bleed |
+| NEVER patch compression.html and 69 entries in the same session | Too many moving parts — impossible to isolate what broke what |
+| NEVER use `a.style.setProperty` with `important` on compression.html nav links | Confirmed non-functional — CSS in compression.html overrides inline important. Use dynamic style tag instead. |
+| NEVER patch nav JS without first printing the exact target string from the live file | Multiple patches failed because target strings didn't match live file content |
+| ALWAYS confirm on real iPhone before committing next patch | Every patch this session was committed before real device confirmation |
 
-## Updated Priority Queue (Session 41)
+---
 
-| Priority | Task | Status |
-|---|---|---|
-| P0 | Fix entry nav scroll + btt on all 70 v5.1 entries | PENDING — read compression.html FIRST |
-| P1 | Rebuild mpw_bible_writer.py as v5.2 | PENDING — full spec in HANDOFF-BIBLE.md |
-| P2 | Test v5.2: chorus --no-commit | After writer |
-| P3 | Regenerate 54 Session 40 entries | ~$13.50 — fixes all content issues |
-| P4 | mpw_bible_cat_pages.py --run | After regen |
-| P5 | gen_sitemap.py → GSC | After cat pages |
-| P6 | Batch 09 (100 breakdowns) | After Bible all clean |
-| P7 | Affiliate applications | REVENUE BLOCKER — Steve action |
-
-## Confirmed All 223 Live Slugs (mpw_diagnose.py output — authoritative)
+## Confirmed All 223 Live Slugs (unchanged from Session 41)
 
 v5.1 original 16:
 compression, eq, limiting, saturation, distortion, multiband-compression, parallel-compression, noise-gate, reverb, delay, convolution-reverb, plate-reverb, room-reverb, gain-staging, headroom, stereo-imaging
