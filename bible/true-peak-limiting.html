@@ -1,0 +1,1939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>True Peak Limiting — The Producer's Bible | MusicProductionWiki.com</title>
+  <meta name="description" content="True Peak Limiting is a form of peak limiting that operates on an oversampled representation of the audio signal — typically 4× or higher — to detect and suppre">
+  <meta name="keywords" content="mastering, limiting, true peak, inter-sample peaks, loudness, streaming, clipping prevention, ISP, metering, ceiling, True Peak Limiting music production, True Peak Limiting settings">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <link rel="canonical" href="https://musicproductionwiki.com/bible/true-peak-limiting">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="True Peak Limiting — The Producer's Bible">
+  <meta property="og:description" content="True Peak Limiting is a form of peak limiting that operates on an oversampled representation of the audio signal — typically 4× or higher — to detect and suppress inter-sample peaks (ISPs) that occur ">
+  <meta property="og:url" content="https://musicproductionwiki.com/bible/true-peak-limiting">
+  <meta property="og:image" content="https://musicproductionwiki.com/images/og-default.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="MusicProductionWiki">
+  <meta property="article:published_time" content="2026-05-19T00:00:00Z">
+  <meta property="article:modified_time" content="2026-05-18T00:00:00Z">
+  <meta property="article:section" content="Mastering">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="True Peak Limiting — The Producer's Bible">
+  <meta name="twitter:description" content="True Peak Limiting is a form of peak limiting that operates on an oversampled representation of the audio signal — typically 4× or higher — to detect and suppress inter-sample peaks (ISPs) that occur ">
+  <meta name="twitter:image" content="https://musicproductionwiki.com/images/og-default.jpg">
+  <meta name="twitter:site" content="@mpwikiofficial">
+
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-79VB543KCT"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-79VB543KCT');</script>
+
+  <!-- Schema: Article -->
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "True Peak Limiting \u2014 The Producer\u2019s Bible",
+  "description": "True Peak Limiting is a form of peak limiting that operates on an oversampled representation of the audio signal — typically 4× or higher — to detect and suppress inter-sample peaks (ISPs) that occur ",
+  "url": "https://musicproductionwiki.com/bible/true-peak-limiting",
+  "datePublished": "2026-05-19",
+  "dateModified": "2026-05-18",
+  "wordCount": 10785,
+  "image": "https://musicproductionwiki.com/images/og-default.jpg",
+  "author": {
+    "@type": "Organization",
+    "name": "MusicProductionWiki",
+    "url": "https://musicproductionwiki.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "MusicProductionWiki",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://musicproductionwiki.com/images/logo.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://musicproductionwiki.com/bible/true-peak-limiting"
+  },
+  "about": {
+    "@type": "Thing",
+    "name": "True Peak Limiting",
+    "sameAs": [
+  "https://en.wikipedia.org/wiki/True_peak",
+  "https://www.wikidata.org/wiki/Q118802"
+]
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "MusicProductionWiki",
+    "url": "https://musicproductionwiki.com"
+  },
+  "lastReviewed": "2026-05-18"
+}</script>
+
+  <!-- Schema: FAQPage -->
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "What is the difference between a sample-peak limiter and a true peak limiter?", "acceptedAnswer": {"@type": "Answer", "text": "A sample-peak limiter only reads and controls the value at each discrete digital sample point. A true peak limiter upsamples the signal — typically 4× to 16× — to reconstruct the continuous analog waveform mathematically and detect peaks that fall between sample points, called inter-sample peaks, which a standard limiter cannot see or control."}},
+    {"@type": "Question", "name": "Why do inter-sample peaks cause distortion on streaming platforms?", "acceptedAnswer": {"@type": "Answer", "text": "Streaming codecs like AAC and MP3 alter the phase and amplitude relationships between samples during encoding and decoding. When a digital file with inter-sample peaks is encoded lossy, the DAC reconstruction of the decoded signal can produce analog voltages above 0 dBFS, causing clipping in the amplifier stage or codec-side distortion artifacts even if the original digital file measured below 0 dBFS on a standard meter."}},
+    {"@type": "Question", "name": "What true peak ceiling should I use for Spotify, Apple Music, and other streaming platforms?", "acceptedAnswer": {"@type": "Answer", "text": "The industry standard for streaming delivery is -1.0 dBTP. This 1 dB of headroom below 0 dBFS is sufficient to absorb inter-sample peak reconstruction overshoot and codec-induced level changes. For broadcast delivery following EBU R128 or ATSC A/85 standards, the maximum true peak is also -1.0 dBTP, making it a universal safe target."}},
+    {"@type": "Question", "name": "Can I just use a standard limiter set to -1 dBFS instead of a true peak limiter?", "acceptedAnswer": {"@type": "Answer", "text": "No. A standard limiter set to -1 dBFS controls sample peaks to that value but does nothing about inter-sample peaks, which can still overshoot by 1 to 3 dB or more above the sample-peak ceiling. You need an actual true peak limiter with oversampled detection to guarantee that the reconstructed continuous waveform never exceeds your target ceiling."}},
+    {"@type": "Question", "name": "Does true peak limiting affect the sound quality of my master?", "acceptedAnswer": {"@type": "Answer", "text": "A properly configured true peak limiter engaging for less than 0.5–1 dB of gain reduction is essentially inaudible and transparent. If your true peak limiter is working hard — catching 2 dB or more — it will introduce distortion artifacts and pumping of its own. The fix is to address upstream gain staging and primary limiting rather than trying to use the true peak limiter as a loudness tool."}},
+    {"@type": "Question", "name": "What oversampling rate should my true peak limiter use?", "acceptedAnswer": {"@type": "Answer", "text": "The minimum oversampling rate for reliable inter-sample peak detection is 4×, which is what ITU-R BS.1770 specifies for true peak metering. Most professional true peak limiters offer 4×, 8×, or 16× oversampling. Higher oversampling provides more accurate reconstruction but increases CPU load — 4× is sufficient for delivery, while 8× or 16× provides extra margin for the most demanding transient material."}},
+    {"@type": "Question", "name": "Do I need a separate true peak limiter if my primary limiter has a true peak mode?", "acceptedAnswer": {"@type": "Answer", "text": "Many modern limiters — FabFilter Pro-L 2, Limitless, Youlean, and others — include true peak detection and ceiling modes built in. If your primary limiter offers a calibrated true peak ceiling with at least 4× oversampling, you can use it as your single final stage. However, if you process anything after that limiter — stereo widening, EQ touches, or format conversion — you need a true peak limiter after those processes."}},
+    {"@type": "Question", "name": "Does loudness normalization on streaming platforms eliminate the need for true peak limiting?", "acceptedAnswer": {"@type": "Answer", "text": "No. Loudness normalization adjusts playback gain based on integrated loudness measurement, but it does not correct inter-sample peaks in your file. If your master has uncontrolled ISPs and the platform normalizes your track down, the playback level decreases but the inter-sample peak relationships remain, and the codec still reconstructs them above clipping on the listener's DAC. True peak limiting is a delivery quality requirement independent of loudness normalization."}}
+  ]
+}</script>
+
+  <!-- Schema: BreadcrumbList -->
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://musicproductionwiki.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "The Producer's Bible",
+      "item": "https://musicproductionwiki.com/bible/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "True Peak Limiting",
+      "item": "https://musicproductionwiki.com/bible/true-peak-limiting"
+    }
+  ]
+}</script>
+
+  <!-- Schema: Speakable -->
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "url": "https://musicproductionwiki.com/bible/true-peak-limiting",
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": [".qa-text", ".entry-term", ".entry-hook"]
+  }
+}</script>
+
+  <!-- Schema: HowTo -->
+  <script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Use True Peak Limiting in Music Production",
+  "description": "Step-by-step guide to applying True Peak Limiting in your productions.",
+  "totalTime": "PT10M",
+  "step": [
+  {
+    "name": "Set up in Ableton Live",
+    "text": "1. Place all mastering plugins on the Master channel. 2. As the last device before export, insert a true peak limiter plugin (Ableton's built-in Limiter does not perform true peak detection — use a th"
+  },
+  {
+    "name": "Set up in Logic Pro",
+    "text": "1. Open the Mastering chain on the Stereo Output channel strip. 2. Insert your primary loudness limiter first, then add a true peak limiter as the last insert slot (Logic's Adaptive Limiter does not p"
+  }
+]
+}</script>
+
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* Bible page v5.1 — NO main.js — fully self-contained */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{overflow-x:clip}
+    body{background:#0d0d1a;color:#e0e0f0;font-family:system-ui,-apple-system,sans-serif;line-height:1.7;overflow-x:clip}
+    /* overflow:clip on both — NOT overflow:hidden which breaks position:sticky */
+
+    /* ── READING PROGRESS — desktop HIDDEN, mobile SHOWN ── */
+    #reading-progress{position:fixed;top:0;left:0;height:3px;background:#f5a623;z-index:99999;width:0%;max-width:100%;transition:width .1s linear;pointer-events:none;display:none}
+
+    /* MPW Slim Bar */
+    .mpw-slim-bar{position:sticky;top:0;z-index:700;background:#181818;border-bottom:1px solid rgba(255,255,255,0.07);height:40px;display:flex;align-items:center;padding:0 20px;gap:0}
+    .msb-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;margin-right:24px}
+    .msb-logomark{width:24px;height:24px;border-radius:6px;background:#00e8a2;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .msb-name{font-size:13px;font-weight:600;color:#d0d0d0;letter-spacing:-0.01em}
+    .msb-links{display:flex;align-items:center;gap:0;list-style:none;flex:1}
+    .msb-links a{color:#888;text-decoration:none;font-size:12px;padding:4px 10px;border-radius:4px;white-space:nowrap}
+    .msb-links a:hover{color:#d0d0d0;background:rgba(255,255,255,.05)}
+    .msb-pub{font-size:11px;color:#555;font-style:italic;margin-left:auto;white-space:nowrap;padding-right:8px}
+    .msb-search{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:5px;background:none;border:none;cursor:pointer;color:#666;flex-shrink:0}
+    .msb-search:hover{color:#d0d0d0;background:rgba(255,255,255,.07)}
+    .msb-cta{background:#00e8a2;color:#0a0a0b;font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px;text-decoration:none;white-space:nowrap;flex-shrink:0;margin-left:8px}
+    .msb-cta:hover{background:#00fdb5}
+
+    /* Bible Bar */
+    .bible-bar{position:sticky;top:40px;z-index:600;background:#0d0800;border-bottom:2px solid #f5a623;height:50px;display:flex;align-items:center;padding:0 20px;gap:12px}
+    .bb-identity{display:flex;align-items:center;gap:8px;flex-shrink:0;text-decoration:none}
+    .bb-diamond{color:#f5a623;font-size:14px;line-height:1}
+    .bb-title{font-size:14px;font-weight:800;color:#f5a623;letter-spacing:.01em;white-space:nowrap}
+    .bb-divider{width:1px;height:22px;background:rgba(245,166,35,.25);flex-shrink:0}
+    .bb-cats{display:flex;align-items:center;gap:4px;flex:1;overflow:hidden}
+    .bb-cat{font-size:11px;color:#888;text-decoration:none;padding:4px 10px;border-radius:20px;border:1px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s}
+    .bb-cat:hover{color:#f5a623;border-color:rgba(245,166,35,.3)}
+    .bb-cat.active{color:#f5a623;border-color:rgba(245,166,35,.5);background:rgba(245,166,35,.07);font-weight:600}
+    .bb-all{font-size:11px;color:#666;text-decoration:none;margin-left:auto;white-space:nowrap;flex-shrink:0}
+    .bb-all:hover{color:#f5a623}
+
+    /* Mobile bible bar */
+    .bible-mobile-bar{display:none;position:sticky;top:40px;z-index:300;height:28px;background:#0d0800;border-bottom:1px solid rgba(245,166,35,0.2);align-items:center;justify-content:center;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#f5a623;text-align:center}
+
+    /* Hamburger + mobile drawer */
+    .msb-mob{display:none;background:none;border:none;cursor:pointer;padding:6px;flex-direction:column;gap:4px;flex-shrink:0;margin-left:8px}
+    .msb-mob span{display:block;width:20px;height:2px;background:#888;border-radius:2px}
+    .bmn-drawer{display:none;position:fixed;top:40px;left:0;right:0;bottom:0;background:rgba(10,10,11,0.99);z-index:699;overflow-y:auto;padding:16px;border-top:1px solid rgba(255,255,255,0.09);flex-direction:column;gap:4px}
+    .bmn-drawer.open{display:flex}
+    .bmn-drawer-label{font-size:10px;font-family:monospace;color:#6a6a7a;text-transform:uppercase;letter-spacing:.12em;padding:12px 12px 6px}
+    .bmn-drawer a{display:block;padding:11px 12px;border-radius:9px;text-decoration:none;font-size:14px;color:#a0a0b4}
+    .bmn-drawer a:hover{color:#f0f0f0;background:#111113}
+    .bmn-drawer-bible{display:flex;align-items:center;gap:8px;padding:12px 16px;border-radius:9px;background:rgba(245,166,35,0.07);border:1px solid rgba(245,166,35,0.22);color:#f5a623;font-size:14px;font-weight:600;text-decoration:none;margin:4px 0 8px}
+    .bmn-drawer-cta{display:block;background:#00e8a2;color:#0a0a0b;font-weight:600;font-size:14px;padding:13px 16px;border-radius:10px;text-decoration:none;text-align:center;margin-top:8px}
+    .bmn-drawer-cats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:4px}
+    .bmn-drawer-cat{display:flex;align-items:center;padding:10px 12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;color:#a0a0b4;background:#111113;border:1px solid #1a1a3a}
+    .bmn-drawer-cat:hover{color:#f5a623;border-color:rgba(245,166,35,.3)}
+
+    /* Search overlay */
+    #bibleSearchOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:99998;align-items:flex-start;justify-content:center;padding-top:80px}
+    .bso-box{background:#18181c;border:1px solid rgba(255,255,255,.15);border-radius:14px;width:100%;max-width:620px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.7);margin:0 1rem}
+    .bso-input-wrap{display:flex;align-items:center;padding:16px 20px;gap:12px;border-bottom:1px solid rgba(255,255,255,.07)}
+    #bibleSearchInput{flex:1;background:none;border:none;outline:none;font-size:16px;color:#fff;font-family:inherit}
+    #bibleSearchResults{max-height:420px;overflow-y:auto;padding:8px}
+
+    /* Entry nav */
+    .entry-nav{position:sticky;top:90px;z-index:400;background:#0d0d1a;border-bottom:1px solid #2a2a4a;overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(to right,black 85%,transparent 100%);mask-image:linear-gradient(to right,black 85%,transparent 100%)}
+    .entry-nav::-webkit-scrollbar{display:none}
+    .entry-nav-inner{display:flex;justify-content:center;gap:4px;padding:10px 10px;min-width:max-content;margin:0 auto}
+    .entry-nav-inner a{color:#a0a0c0;text-decoration:none;font-size:10px;text-transform:uppercase;letter-spacing:.05em;padding:6px 10px;border-radius:4px;white-space:nowrap;min-height:32px;display:inline-flex;align-items:center}
+    .entry-nav-inner a:hover{color:#f5a623;background:#1a1a3a}
+    .entry-nav-inner a.active{color:#f5a623;background:#1a1a3a}
+
+    /* Layout */
+    .bible-entry-wrap{max-width:1100px;margin:0 auto;padding:40px 24px;display:grid;grid-template-columns:1fr 280px;gap:40px;align-items:start}
+    .entry-main{min-width:0}
+    .entry-sidebar{position:sticky;top:148px;align-self:start;height:calc(100vh - 168px);overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:#2a2a4a transparent}
+
+    /* Section scroll margin */
+    [id].entry-section{scroll-margin-top:128px}
+
+    /* Breadcrumb */
+    .entry-breadcrumb{font-size:12px;color:#666;margin-bottom:16px}
+    .entry-breadcrumb a{color:#a0a0c0;text-decoration:none}
+    .entry-breadcrumb a:hover{color:#f5a623}
+    .entry-breadcrumb .bc-sep{color:#444;margin:0 6px}
+
+    /* Masthead */
+    .entry-masthead{background:linear-gradient(135deg,#1a0a00,#0d0d1a);border:1px solid #f5a623;border-radius:12px;padding:32px;margin-bottom:32px}
+    .entry-category{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:#f5a623;font-weight:700;margin-bottom:8px}
+    .entry-term{font-size:clamp(2rem,5vw,3.5rem);font-weight:900;color:#fff;line-height:1.1;margin-bottom:8px}
+    .entry-pos{font-size:14px;color:#888;font-style:italic;margin-bottom:16px}
+    .entry-hook{font-size:1.1rem;color:#c8c8d8;font-style:italic;border-left:3px solid #f5a623;padding-left:16px;display:block;margin-bottom:16px}
+    .entry-meta{display:flex;gap:16px;font-size:12px;color:#666;flex-wrap:wrap}
+    .entry-meta span{background:#1a1a3a;padding:4px 10px;border-radius:4px}
+
+    /* Difficulty badge */
+    .difficulty-badge{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:3px 10px;border-radius:20px;margin-bottom:12px}
+    .difficulty-intermediate{background:rgba(245,166,35,.15);color:#f5a623;border:1px solid rgba(245,166,35,.4)}
+    .difficulty-beginner{background:rgba(96,192,255,.12);color:#60c0ff;border:1px solid rgba(96,192,255,.35)}
+    .difficulty-advanced{background:rgba(204,51,51,.12);color:#ff8888;border:1px solid rgba(204,51,51,.35)}
+
+    /* Prereq chain */
+    .prereq-chain{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:16px;font-size:12px;color:#666}
+    .prereq-chain span{color:#888}
+    .prereq-chain a{color:#a0a0c0;text-decoration:none;padding:2px 8px;border:1px solid #2a2a4a;border-radius:3px}
+    .prereq-chain a:hover{color:#f5a623;border-color:rgba(245,166,35,.4)}
+
+    /* Quick answer */
+    .quick-answer-block{background:#1a1000;border:1px solid #f5a623;border-radius:8px;padding:20px;margin-bottom:32px}
+    .qa-label{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:#f5a623;font-weight:700;margin-bottom:8px}
+    .qa-text{font-size:1.05rem;color:#e0e0f0;line-height:1.6}
+
+    /* Section headers */
+    .entry-main h2{font-size:1.6rem;font-weight:700;color:#fff;margin:40px 0 16px;padding-bottom:8px;border-bottom:1px solid #2a2a4a;scroll-margin-top:128px}
+    .entry-main h3{font-size:1.2rem;font-weight:600;color:#e0e0f0;margin:24px 0 12px}
+    .entry-main h4{font-size:1rem;font-weight:600;color:#c8c8d8;margin:16px 0 8px}
+    .entry-main p{color:#c8c8d8;margin-bottom:16px;line-height:1.8}
+    .entry-main ul,.entry-main ol{color:#c8c8d8;margin:0 0 16px 24px}
+    .entry-main li{margin-bottom:8px;line-height:1.7}
+
+    /* The Number box */
+    .the-number-box{background:#1a0800;border:2px solid #f5a623;border-radius:10px;padding:24px;margin:24px 0;text-align:center}
+    .tn-value{display:block;font-size:3rem;font-weight:900;color:#f5a623;line-height:1}
+    .tn-label{display:block;font-size:14px;color:#c8c8d8;margin:8px 0 4px}
+    .tn-context{font-size:13px;color:#888;margin:0}
+
+    /* Section summary */
+    .section-summary{background:#1a1a3a;border-left:3px solid #f5a623;padding:10px 16px;font-size:13px;color:#a0a0c0;font-style:italic;margin:16px 0 24px;border-radius:0 6px 6px 0}
+
+    /* Parameters */
+    .parameters-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;margin:16px 0}
+    .param-item{background:#13132a;border:1px solid #2a2a4a;border-radius:8px;padding:16px}
+    .param-title{font-size:14px;font-weight:700;color:#f5a623;margin-bottom:8px}
+    .param-desc{font-size:13px;color:#c8c8d8;line-height:1.6}
+
+    /* Quick ref table */
+    .qr-table-wrap{overflow-x:auto;margin:16px 0;background:#13132a;border:1px solid #2a2a4a;border-radius:10px;padding:4px}
+    .quick-ref-table{width:100%;border-collapse:collapse;font-size:13px}
+    .quick-ref-table th{background:#1a1a3a;color:#f5a623;padding:8px 12px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+    .quick-ref-table td{padding:8px 12px;border-bottom:1px solid #1a1a3a;color:#c8c8d8}
+    .quick-ref-table tr:hover td{background:#13132a}
+
+    /* Genre settings table */
+    .genre-settings-table{width:100%;border-collapse:collapse;font-size:12px}
+    .genre-settings-table th{background:#1a0800;color:#f5a623;padding:8px 10px;text-align:left;font-size:11px;text-transform:uppercase}
+    .genre-settings-table td{padding:8px 10px;border-bottom:1px solid #1a1a3a;color:#c8c8d8}
+    .genre-table-wrap{overflow-x:auto;margin:16px 0;background:#13132a;border:1px solid #2a2a4a;border-radius:10px;padding:4px}
+
+    /* Hardware/plugin table */
+    .hardware-plugin-wrap{overflow-x:auto;margin:16px 0;background:#13132a;border:1px solid #2a2a4a;border-radius:10px;padding:4px}
+    .hardware-plugin-table{width:100%;border-collapse:collapse;font-size:13px}
+    .hardware-plugin-table th{background:#1a1a3a;color:#f5a623;padding:8px 12px;font-size:11px;text-transform:uppercase;text-align:left}
+    .hardware-plugin-table td{padding:8px 12px;border-bottom:1px solid #1a1a3a;color:#c8c8d8}
+
+    /* Signal chain diagram */
+    .signal-chain-diagram{background:#0a0a16;border:2px solid #2a2a4a;border-radius:12px;padding:20px 16px 12px;overflow-x:auto;margin:16px 0;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+
+    /* Types grid */
+    .types-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:16px 0}
+    .type-card{background:#13132a;border:1px solid #2a2a4a;border-radius:8px;padding:16px;min-width:0}
+    .type-name{font-size:14px;font-weight:700;color:#f5a623;margin-bottom:4px}
+    .type-hardware{font-size:12px;color:#888;margin-bottom:8px;font-style:italic}
+    .type-desc{font-size:13px;color:#c8c8d8;line-height:1.6}
+
+    /* Misconception block */
+    .misconception-block{background:#1a0000;border:2px solid #cc3333;border-radius:8px;padding:20px;margin:24px 0}
+    .misconception-label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:#cc3333;font-weight:700;margin-bottom:12px}
+    .misconception-belief{color:#ff8888;font-weight:600;margin-bottom:8px}
+    .misconception-reality{color:#c8c8d8}
+
+    /* Before/after block */
+    .before-after-block{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0;padding:16px;background:#0d0d20;border:1px solid #2a2a4a;border-radius:10px}
+    .ba-before{background:#1a0000;border:1px solid #441111;border-radius:8px;padding:16px}
+    .ba-after{background:#001a00;border:1px solid #114411;border-radius:8px;padding:16px}
+    .ba-label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-bottom:8px}
+    .ba-before .ba-label{color:#cc3333}
+    .ba-after .ba-label{color:#33cc33}
+    .ba-text{font-size:13px;color:#c8c8d8;line-height:1.6}
+
+    /* Producer's verdict */
+    .producers-verdict{background:#0d0d1a;border-top:4px solid #f5a623;border-left:1px solid #2a2a4a;border-right:1px solid #2a2a4a;border-bottom:1px solid #2a2a4a;border-radius:0 0 10px 10px;padding:28px 24px;margin:24px 0}
+    .verdict-label{display:block;font-size:15px;text-transform:uppercase;letter-spacing:.15em;color:#f5a623;font-weight:800;margin-bottom:16px;text-align:center;padding-bottom:12px;border-bottom:1px solid #2a2a4a}
+    .producers-verdict p{color:#e0e0f0;margin-bottom:14px;line-height:1.8;font-size:15px}
+    .producers-verdict p:last-child{margin-bottom:0}
+
+    /* Producer quote */
+    .producer-quote-block{background:#0d1a1a;border-left:4px solid #14b8a6;border-radius:0 8px 8px 0;padding:20px;margin:24px 0}
+    blockquote.producer-quote{font-size:1.1rem;color:#e0e0f0;font-style:italic;margin-bottom:8px;border:none;padding:0}
+    blockquote.producer-quote p{color:#e0e0f0;margin-bottom:0}
+    .producer-quote-block cite{font-size:12px;color:#888;display:block;margin-top:8px;font-style:normal}
+
+    /* Red/Green flags */
+    .red-green-flags{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+    .flags-col{background:#13132a;border:1px solid #2a2a4a;border-radius:10px;padding:16px}
+    .flags-col h4{font-size:13px;font-weight:700;margin-bottom:10px}
+    .flags-col ul{list-style:none;margin:0;padding:0}
+    .red-flag{background:#1a0000;border-left:3px solid #cc3333;padding:8px 12px;margin-bottom:6px;border-radius:0 4px 4px 0;font-size:13px;color:#ff9999}
+    .green-flag{background:#001a00;border-left:3px solid #33cc33;padding:8px 12px;margin-bottom:6px;border-radius:0 4px 4px 0;font-size:13px;color:#99ff99}
+
+    /* Interaction warnings */
+    .interaction-warnings{background:#13132a;border:1px solid #2a2a4a;border-radius:8px;padding:20px;margin:16px 0}
+    .interaction-warnings h4{color:#f5a623;margin-bottom:12px;font-size:14px}
+    .interaction-warnings ul{list-style:none;margin:0;padding:0}
+    .interaction-warning{padding:10px 0;border-bottom:1px solid #2a2a4a;font-size:13px;color:#c8c8d8}
+    .interaction-warning:last-child{border-bottom:none}
+
+    /* Track citations — v5.1 text-only */
+    .track-examples-list{display:flex;flex-direction:column;gap:10px;margin:16px 0}
+    .track-item{background:#13132a;border-left:3px solid #f5a623;border-radius:0 6px 6px 0;padding:12px 16px;font-size:13px;color:#c8c8d8}
+    .track-artist{font-weight:700;color:#f5a623}
+    .track-name{font-weight:600;color:#e0e0f0}
+    .track-meta{color:#888}
+    .track-item .track-note{font-size:12px;color:#a0a0c0;margin-top:6px;font-style:italic}
+
+    /* DAW tabs */
+    .daw-tabs{margin:16px 0}
+    .daw-tab-nav{display:flex;gap:4px;border-bottom:1px solid #2a2a4a;margin-bottom:0}
+    .daw-tab-btn{background:none;border:none;border-bottom:2px solid transparent;color:#888;font-size:12px;font-weight:600;padding:8px 14px;cursor:pointer;font-family:inherit;margin-bottom:-1px;transition:color .15s,border-color .15s}
+    .daw-tab-btn.active{color:#f5a623;border-bottom-color:#f5a623}
+    .daw-tab-btn:hover{color:#d0d0d0}
+    .daw-tab-content{background:#13132a;border:1px solid #2a2a4a;border-top:none;border-radius:0 0 8px 8px;padding:16px}
+    .daw-tab-panel{display:none;font-size:13px;color:#c8c8d8;line-height:1.7}
+    .daw-tab-panel.active{display:block}
+
+    /* Plugin recs */
+    .plugin-recs{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+    .plugin-tier{background:#13132a;border:1px solid #2a2a4a;border-radius:8px;padding:14px}
+    .plugin-tier-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;display:block}
+    .plugin-tier-free .plugin-tier-label{color:#60c0ff}
+    .plugin-tier-mid .plugin-tier-label{color:#f5a623}
+    .plugin-tier-pro .plugin-tier-label{color:#cc33cc}
+    .plugin-item{font-size:12px;color:#c8c8d8;padding:5px 0;border-bottom:1px solid #1a1a3a}
+    .plugin-item:last-child{border-bottom:none}
+    .plugin-name{font-weight:600;color:#e0e0f0}
+    .plugin-mfr{color:#888;font-size:11px}
+
+    /* Last verified */
+    .last-verified{font-size:11px;color:#555;text-align:center;padding:8px;margin-top:8px}
+
+    /* PDF export */
+    .pdf-export-btn{background:#1a1a3a;border:1px solid #2a2a4a;color:#a0a0c0;font-size:12px;font-weight:600;padding:8px 16px;border-radius:6px;cursor:pointer;font-family:inherit;transition:border-color .15s,color .15s}
+    .pdf-export-btn:hover{border-color:#f5a623;color:#f5a623}
+    .pgm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:99997;display:flex;align-items:center;justify-content:center;padding:20px}
+    .pgm-card{background:#1a1a2a;border:1px solid #2a2a4a;border-radius:12px;padding:32px;max-width:440px;width:100%;position:relative;text-align:center}
+    .pgm-close{position:absolute;top:12px;right:14px;background:none;border:none;color:#666;font-size:18px;cursor:pointer}
+    .pgm-card h3{color:#fff;font-size:18px;margin-bottom:8px}
+    .pgm-card p{color:#a0a0c0;font-size:13px;margin-bottom:16px}
+    .pgm-card input{width:100%;padding:10px 14px;border-radius:6px;border:1px solid #2a2a4a;background:#0d0d1a;color:#fff;font-size:14px;margin-bottom:10px}
+    .pgm-submit{width:100%;background:#f5a623;color:#000;border:none;padding:11px;border-radius:6px;font-weight:700;font-size:14px;cursor:pointer}
+    .pgm-fine{font-size:11px;color:#555;margin-top:10px}
+
+    /* Producer spotlight */
+    .producer-spotlight{background:#13132a;border:1px solid #2a2a4a;border-radius:8px;padding:16px;margin-bottom:16px}
+    .producer-spotlight h3{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:#f5a623;margin-bottom:12px;font-weight:700}
+    .ps-card{padding:10px 0;border-bottom:1px solid #1a1a3a}
+    .ps-card:last-of-type{border-bottom:none;padding-bottom:0}
+    .ps-name{font-size:13px;font-weight:700;color:#e0e0f0;margin-bottom:2px}
+    .ps-role{font-size:11px;color:#666;margin-bottom:6px}
+
+    /* Mistakes */
+    .mistakes-list{display:flex;flex-direction:column;gap:16px;margin:16px 0}
+    .mistake-item{background:#1f0800;border-left:4px solid #ff6600;border-top:1px solid #3a1500;border-right:1px solid #3a1500;border-bottom:1px solid #3a1500;border-radius:0 8px 8px 0;padding:16px}
+    .mistake-title{font-size:14px;font-weight:700;color:#ffaa44;margin-bottom:8px}
+    .mistake-item p{font-size:13px;color:#e0c090;margin-bottom:6px;line-height:1.7}
+
+    /* Progression path */
+    .progression-path{display:flex;flex-direction:column;gap:0;margin:16px 0;border:2px solid #2a2a4a;border-radius:10px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,.3)}
+    .prog-stage{padding:20px}
+    .prog-beginner{background:#001a2a}
+    .prog-intermediate{background:#0d1a00}
+    .prog-advanced{background:#1a0800}
+    .prog-label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-bottom:8px}
+    .prog-beginner .prog-label{color:#60c0ff}
+    .prog-intermediate .prog-label{color:#60ff60}
+    .prog-advanced .prog-label{color:#f5a623}
+    .prog-stage p{font-size:13px;color:#c8c8d8;margin:0;line-height:1.7}
+
+    /* Related terms */
+    .related-terms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin:16px 0}
+    .related-term-card{background:#13132a;border:1px solid #2a2a4a;border-radius:8px;padding:14px;text-decoration:none;display:flex;flex-direction:column;gap:4px;transition:border-color .2s}
+    .related-term-card:hover{border-color:#f5a623}
+    .rt-term{font-size:14px;font-weight:700;color:#f5a623}
+    .rt-preview{font-size:12px;color:#888}
+
+    /* FAQ */
+    .faq-accordion{display:flex;flex-direction:column;gap:8px;margin:16px 0}
+    .faq-item{background:#13132a;border:1px solid #2a2a4a;border-radius:8px;overflow:hidden}
+    .faq-q{width:100%;text-align:left;background:none;border:none;color:#e0e0f0;font-size:14px;font-weight:600;padding:16px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+    .faq-q:hover{color:#f5a623}
+    .faq-a{padding:0 16px 16px;display:none}
+    .faq-a p{font-size:13px;color:#c8c8d8;line-height:1.7;margin:0}
+    .faq-item.open .faq-a{display:block}
+    .faq-item.open .faq-q{color:#f5a623}
+
+    /* Social share */
+    .social-share{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:48px 0 16px;padding:24px 28px;background:linear-gradient(135deg,#0d0d1a,#13132a);border:1px solid #2a2a4a;border-radius:12px}
+    .share-label{font-size:11px;color:#666;text-transform:uppercase;letter-spacing:.1em;font-weight:700;flex-shrink:0;margin-right:4px}
+    .share-btn{padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;text-decoration:none;cursor:pointer;border:1px solid #2a2a4a;background:transparent;color:#a0a0c0;font-family:inherit;transition:all .2s;letter-spacing:.02em}
+    .share-btn:hover{border-color:#f5a623;color:#f5a623;background:rgba(245,166,35,.07)}
+    .share-x:hover{border-color:#1d9bf0;color:#1d9bf0;background:rgba(29,155,240,.07)}
+
+    /* Newsletter */
+    .bible-nl-card{background:linear-gradient(135deg,#1a0a00 0%,#0d0d1a 100%);border-top:2px solid #f5a623;border-bottom:2px solid #f5a623;padding:48px 24px;margin:48px -24px;text-align:center}
+    .nl-headline{font-size:1.5rem;font-weight:800;color:#0d0d0d;margin-bottom:6px;letter-spacing:-0.02em}
+    .nl-sub{font-size:15px;color:#3a2000;margin-bottom:24px;font-weight:500}
+    .nl-form{display:flex;gap:8px;max-width:440px;margin:0 auto;flex-wrap:wrap;justify-content:center}
+    .nl-input{flex:1;min-width:220px;padding:12px 16px;border-radius:6px;border:1px solid rgba(0,0,0,.3);background:rgba(255,255,255,.9);color:#0d0d0d;font-size:14px}
+    .nl-btn{background:#0d0d0d;color:#f5a623;border:none;padding:12px 24px;border-radius:6px;font-weight:800;cursor:pointer;white-space:nowrap;font-size:14px}
+
+    /* Gain calculator */
+    .gain-calculator{background:#13132a;border:1px solid #2a2a4a;border-radius:8px;padding:20px;margin:16px 0}
+    .gain-calculator h3{color:#f5a623;font-size:15px;margin-bottom:12px}
+    .gain-calculator label{display:block;font-size:13px;color:#c8c8d8;margin-bottom:8px}
+    .gain-calculator input{background:#0d0d1a;border:1px solid #2a2a4a;border-radius:4px;padding:6px 10px;color:#fff;font-size:13px;width:120px;margin-left:8px}
+
+    /* Sidebar */
+    .sidebar-toc{background:#13132a;border:1px solid #2a2a4a;border-radius:8px;padding:20px;margin-bottom:16px}
+    .sidebar-toc h4{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:#f5a623;margin-bottom:12px;font-weight:700}
+    .sidebar-toc a{display:block;color:#a0a0c0;text-decoration:none;font-size:13px;padding:4px 2px;border-bottom:1px solid #1a1a3a;border-left:2px solid transparent;transition:color .15s,border-color .15s,padding-left .15s}
+    .sidebar-toc a:hover,.sidebar-toc a.active{color:#f5a623;border-left-color:#f5a623;padding-left:8px;font-weight:700}
+
+    /* Sidebar newsletter */
+    .sidebar-nl{background:#1a0a00;border:1px solid rgba(245,166,35,.3);border-radius:8px;padding:16px;margin-bottom:16px;text-align:center}
+    .sidebar-nl h4{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:#f5a623;margin-bottom:8px;font-weight:700}
+    .sidebar-nl p{font-size:11px;color:#888;margin-bottom:10px;line-height:1.5}
+    .sidebar-nl input{width:100%;padding:8px 10px;border-radius:5px;border:1px solid rgba(245,166,35,.3);background:#0d0d1a;color:#fff;font-size:12px;margin-bottom:8px}
+    .sidebar-nl button{width:100%;background:#f5a623;color:#000;border:none;padding:8px;border-radius:5px;font-weight:700;font-size:12px;cursor:pointer}
+
+    /* Footer */
+    .site-footer{background:#0a0a1a;border-top:1px solid #1a1a3a;padding:32px 24px;text-align:center;margin-top:48px}
+    .site-footer p{color:#666;font-size:13px;margin:4px 0}
+    .site-footer a{color:#f5a623;text-decoration:none}
+    .bm-publisher{display:inline-block;color:#f5a623;text-decoration:none;font-size:12px;font-weight:700;margin-bottom:8px}
+
+    /* Comparison callouts */
+    .comparison-callouts{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:32px 0}
+
+    /* History cards */
+    .history-card{background:#13132a;border-left:3px solid #3a3a6a;border-radius:0 8px 8px 0;padding:16px 20px;margin:16px 0}
+
+    /* Start here box — in inline style */
+
+    /* ── MOBILE <=1024px ── */
+    @media(max-width:1024px){
+      .msb-links{display:none!important}
+      .msb-pub{display:none!important}
+      .msb-cta{display:none!important}
+      .msb-mob{display:flex!important}
+      .msb-logo{margin-right:auto!important}
+    }
+
+    /* ── MOBILE <=768px ── */
+    @media(max-width:768px){
+      #reading-progress{display:block}
+      /* bible-bar stays visible on mobile as product identity */
+      .bb-cats{display:none!important}
+      .bb-all{display:none!important}
+      .bb-divider{display:none!important}
+      .bible-mobile-bar{display:none!important}
+      .signal-chain-diagram svg{display:none}
+      .signal-chain-mobile{display:flex!important}
+      .bible-mobile-bar{display:flex!important;top:90px}
+      .entry-nav{top:84px!important}
+      [id].entry-section{scroll-margin-top:120px}
+      .entry-main h2{scroll-margin-top:120px}
+      .entry-sidebar{display:none!important}
+      .bible-entry-wrap{grid-template-columns:1fr!important;padding:20px 16px!important}
+      .bible-nl-card{margin:40px 0!important;padding:32px 20px!important}
+      .parameters-grid{grid-template-columns:1fr!important}
+      .types-grid{grid-template-columns:1fr!important}
+      .verdict-grid{grid-template-columns:1fr!important}
+      .verdict-rule{border-right:none!important}
+      .verdict-lead,.verdict-close{padding:16px 18px!important}
+      .plugin-recs{grid-template-columns:1fr!important}
+      .red-green-flags{grid-template-columns:1fr!important}
+      .before-after-block{grid-template-columns:1fr!important}
+      .related-terms-grid{grid-template-columns:1fr!important}
+      .entry-term{font-size:clamp(1.8rem,8vw,2.5rem)!important}
+      .entry-masthead{padding:20px 16px!important}
+      .qr-table-wrap,.genre-table-wrap,.hardware-plugin-wrap{max-width:100%;overflow-x:auto}
+    }
+
+    @media(max-width:600px){
+      .daw-tab-nav{flex-wrap:wrap;gap:2px}
+      .daw-tab-btn{font-size:11px;padding:6px 10px}
+      .comparison-callouts{grid-template-columns:1fr!important}
+    }
+
+    @media(max-width:480px){
+      .bible-entry-wrap{padding:12px!important}
+      .entry-term{font-size:1.8rem!important}
+      .types-grid{grid-template-columns:1fr!important}
+      .plugin-recs{grid-template-columns:1fr!important}
+      .comparison-callouts{grid-template-columns:1fr!important}
+      .tn-value{font-size:2.2rem!important}
+      .pgm-overlay{padding:12px}
+      .pgm-card{padding:20px 16px}
+      .pgm-card h3{font-size:15px}
+      .quick-ref-table{font-size:11px}
+      .quick-ref-table th,.quick-ref-table td{padding:6px 8px}
+      .genre-settings-table{font-size:11px}
+      .genre-settings-table th,.genre-settings-table td{padding:6px 6px}
+      .track-item{padding:10px 12px;font-size:12px}
+      .prog-stage{padding:14px}
+      .history-card{padding:10px 12px!important}
+      .section-share-bar{flex-direction:column!important;align-items:flex-start!important}
+      .start-here-box a{font-size:11px!important;padding:2px 8px!important}
+    }
+
+    @media(max-width:400px){
+      .prereq-chain{font-size:11px;gap:4px}
+      .prereq-chain a{padding:2px 6px;font-size:10px}
+      .gc-result-grid{grid-template-columns:1fr!important}
+      .scm-label{font-size:12px}
+      .scm-sub{font-size:10px}
+    }
+
+    @media(max-width:380px){
+      .msb-name{font-size:11px}
+      .mpw-slim-bar{padding:0 12px}
+    }
+
+    /* Signal chain mobile */
+    .signal-chain-mobile{display:none;flex-direction:column;gap:0;align-items:stretch}
+    .scm-box{background:#13132a;border:1px solid #2a2a4a;border-radius:8px;padding:10px 14px;position:relative}
+    .scm-box.scm-active{background:#2a1400;border-color:#f5a623;border-width:2px}
+    .scm-label{font-size:13px;font-weight:700;color:#c8c8d8}
+    .scm-box.scm-active .scm-label{color:#f5a623}
+    .scm-sub{font-size:11px;color:#555;margin-top:2px}
+    .scm-box.scm-active .scm-sub{color:#a07030}
+    .scm-arrow{text-align:center;color:#3a3a5a;font-size:16px;line-height:1.2;padding:2px 0}
+    .scm-badge{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#f5a623;background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.3);padding:2px 7px;border-radius:10px;display:inline-block;margin-top:4px}
+
+    /* Print */
+    /* Producer's Verdict — authoritative */
+    .producers-verdict{background:#080810;border:none;border-radius:12px;padding:0;margin:32px 0;overflow:hidden}
+    .verdict-header{background:#f5a623;padding:16px 24px;display:flex;align-items:center;justify-content:center;gap:16px;border-radius:12px 12px 0 0}
+    .verdict-label{display:inline!important;font-size:14px!important;font-weight:900!important;letter-spacing:.2em!important;text-transform:uppercase!important;color:#0d0d0d!important;border:none!important;padding:0!important;margin:0!important}
+    .verdict-diamond{color:#0d0d0d;font-size:12px;opacity:.6}
+    .verdict-lead{font-size:15px;color:#d0d0e0;line-height:1.8;padding:20px 24px;margin:0;font-style:italic;border-bottom:1px solid #1a1a3a;text-align:center}
+    .verdict-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid #1a1a3a}
+    .verdict-rule{padding:16px 18px;border-right:1px solid #1a1a3a;border-bottom:1px solid #1a1a3a;display:flex;flex-direction:column;gap:6px;background:#1a1a2e}
+    .verdict-rule:nth-child(even){border-right:none}
+    .vr-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#f5a623}
+    .vr-value{font-size:14px;font-weight:700;color:#fff;line-height:1.4}
+    .vr-note{font-size:12px;color:#b0b0c8;line-height:1.6}
+    .verdict-share{display:flex;align-items:center;justify-content:center;gap:12px;padding:16px 24px;background:#0d0d1a;border-top:1px solid #1a1a3a;border-radius:0 0 12px 12px;flex-wrap:wrap}
+    .verdict-close{font-size:13px;color:#a0a0c0;line-height:1.8;padding:16px 24px;margin:0;font-style:italic;text-align:center;border-top:1px solid #1a1a3a}
+
+        @media print{
+      .mpw-slim-bar,.bible-bar,.entry-nav,.entry-sidebar,.bible-nl-card,.site-footer,.social-share,.pdf-export-btn,.pgm-overlay,.bible-mobile-bar{display:none!important}
+      .bible-entry-wrap{display:block!important;padding:0!important}
+      body{background:#fff;color:#000}
+      .entry-main h2,.entry-main p,.entry-main li{color:#000}
+    }
+  </style>
+
+  <style>
+    /* CONSOLIDATED OVERRIDES v5.1 FINAL */
+
+    /* Desktop sidebar + grid */
+    @media(min-width:769px){
+      .bible-entry-wrap{display:grid!important;grid-template-columns:1fr 280px!important;padding:40px 24px!important;gap:40px!important}
+      .entry-sidebar{display:block!important;position:sticky!important;top:148px!important;align-self:start!important;height:calc(100vh - 168px)!important;overflow-y:auto!important;overflow-x:hidden!important;scrollbar-width:thin!important;scrollbar-color:#2a2a4a transparent!important}
+    }
+
+    /* Mobile */
+    @media(max-width:1024px){
+      .msb-logo{margin-right:auto!important}
+      .msb-search{order:10}
+      .msb-mob{order:11}
+      .bible-bar{display:flex!important;top:40px!important;height:44px!important;padding:0 16px!important}
+      .bb-cats{display:none!important}
+      .bb-all{display:none!important}
+      .bb-divider{display:none!important}
+    }
+    .bible-mobile-bar{display:none!important}
+    @media(max-width:768px){
+      .bible-entry-wrap{display:block!important;padding:20px 16px!important}
+      .entry-sidebar{display:none!important}
+      .entry-nav{top:84px!important}
+      [id].entry-section{scroll-margin-top:110px!important}
+      .entry-main h2{scroll-margin-top:110px!important}
+      .types-grid{grid-template-columns:1fr!important}
+      .plugin-recs{grid-template-columns:1fr!important}
+      .verdict-grid{grid-template-columns:1fr!important}
+      .verdict-rule{border-right:none!important}
+      .verdict-lead,.verdict-close{padding:16px!important}
+      .vr-label{font-size:11px!important}
+      .vr-value{font-size:15px!important}
+      .vr-note{font-size:13px!important;color:#b0b0c8!important}
+    }
+    @media(max-width:480px){
+      .mpw-share-btn{padding:6px 10px;font-size:11px}
+    }
+
+    /* Producer's Verdict */
+    .producers-verdict{background:#080810!important;border:none!important;border-radius:12px!important;padding:0!important;margin:32px 0!important;overflow:hidden!important}
+    .verdict-header{background:#f5a623;padding:16px 24px;display:flex;align-items:center;justify-content:center;gap:16px;border-radius:12px 12px 0 0}
+    .verdict-label{display:inline!important;font-size:14px!important;font-weight:900!important;letter-spacing:.2em!important;text-transform:uppercase!important;color:#0d0d0d!important;border:none!important;padding:0!important;margin:0!important}
+    .verdict-diamond{color:#0d0d0d;font-size:12px;opacity:.6}
+    .verdict-lead{font-size:14px!important;color:#d0d0e0!important;line-height:1.8!important;padding:20px 24px!important;margin:0!important;font-style:italic;border-bottom:1px solid #1a1a3a;text-align:center!important}
+    .verdict-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid #1a1a3a}
+    .verdict-rule{padding:16px 18px;border-right:1px solid #1a1a3a;border-bottom:1px solid #1a1a3a;display:flex;flex-direction:column;gap:6px;background:#1a1a2e}
+    .verdict-rule:nth-child(even){border-right:none}
+    .vr-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#f5a623}
+    .vr-value{font-size:14px;font-weight:700;color:#fff;line-height:1.4}
+    .vr-note{font-size:12px;color:#b0b0c8;line-height:1.6}
+    .verdict-close{font-size:13px!important;color:#a0a0c0!important;line-height:1.8!important;padding:16px 24px!important;margin:0!important;font-style:italic;text-align:center;border-top:1px solid #1a1a3a}
+
+    /* Mistakes */
+    .mistake-item{background:#1f0800!important;border-left:4px solid #ff6600!important;border-top:1px solid #3a1500!important;border-right:1px solid #3a1500!important;border-bottom:1px solid #3a1500!important;border-radius:0 8px 8px 0!important}
+    .mistake-title{color:#ffaa44!important}
+    .mistake-item p{color:#e0c090!important;line-height:1.7!important}
+
+    /* Newsletter */
+    .bible-nl-card{background:#f5a623!important;border-top:2px solid #c47d00!important;border-bottom:2px solid #c47d00!important}
+    .nl-headline{color:#0d0d0d!important}
+    .nl-sub{color:#3a2000!important;font-weight:500!important}
+    .nl-input{background:rgba(255,255,255,.9)!important;color:#0d0d0d!important;border-color:rgba(0,0,0,.2)!important}
+    .nl-btn{background:#0d0d0d!important;color:#f5a623!important}
+
+    /* Unified share bars */
+    .mpw-share-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:14px;padding-top:14px;border-top:1px solid #2a2a4a}
+    .mpw-share-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#666;width:100%;margin-bottom:4px}
+    .mpw-share-btn{display:inline-flex;align-items:center;justify-content:center;gap:4px;flex:1 1 0;min-width:0;height:34px;padding:0 8px;border-radius:6px;font-size:11px;font-weight:700;text-decoration:none;cursor:pointer;font-family:inherit;box-sizing:border-box;transition:opacity .15s}
+    .mpw-share-btn:hover{opacity:0.82}
+    .mpw-share-btn.share-x{background:#000;color:#fff;border:1px solid #000}
+    .mpw-share-btn.share-reddit{background:#ff4500;color:#fff;border:1px solid #ff4500}
+    .mpw-share-btn.share-copy{background:#f5a623;color:#000;border:1px solid #f5a623}
+    .footer-share-btn{flex:0 0 auto!important;width:auto!important;padding:0 18px!important}
+    @media(max-width:768px){
+      .mpw-share-bar{display:grid!important;grid-template-columns:1fr 1fr 1fr!important;gap:6px!important}
+      .mpw-share-label{grid-column:1 / -1!important}
+      .mpw-share-btn{width:100%!important;height:34px!important}
+    }
+
+    /* DAW tabs active state */
+    .daw-tab-btn{background:#0d0d1a!important;color:#888!important}
+    .daw-tab-btn.active{background:#0d0d1a!important;color:#f5a623!important;border-bottom-color:#f5a623!important}
+    .daw-tab-btn:hover{background:#0d0d1a!important;color:#d0d0d0!important}
+
+    /* Entry nav tap targets */
+    .entry-nav-inner a{min-height:32px;display:inline-flex;align-items:center;font-size:10px!important;padding:6px 10px!important}
+
+    /* calc-share-bar: auto-width buttons */
+    .calc-share-bar{justify-content:flex-start!important}
+    .calc-share-bar .mpw-share-btn{flex:0 0 auto!important;width:auto!important;padding:0 18px!important}
+    .calc-share-bar .mpw-share-btn.share-copy{background:#f5a623!important;color:#000!important;border-color:#f5a623!important}
+    @media(max-width:768px){
+      .calc-share-bar{display:grid!important;grid-template-columns:1fr 1fr 1fr!important;gap:6px!important}
+      .calc-share-bar .mpw-share-label{grid-column:1 / -1!important}
+      .calc-share-bar .mpw-share-btn{width:100%!important;padding:0 4px!important;font-size:11px!important;justify-content:center!important}
+    }
+  </style>
+</head>
+<body>
+
+<div id="reading-progress"></div>
+
+<!-- MPW Slim Bar -->
+<div class="mpw-slim-bar">
+  <a href="/" class="msb-logo" aria-label="MusicProductionWiki home">
+    <div class="msb-logomark">
+      <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+        <rect x="1.5" y="7" width="2.5" height="9" rx="1.2" fill="#0a0a0b"/>
+        <rect x="6" y="4" width="2.5" height="12" rx="1.2" fill="#0a0a0b"/>
+        <rect x="10.5" y="1" width="2.5" height="16" rx="1.2" fill="#0a0a0b"/>
+        <rect x="15" y="5" width="2.5" height="9" rx="1.2" fill="#0a0a0b"/>
+      </svg>
+    </div>
+    <span class="msb-name">MusicProductionWiki</span>
+  </a>
+  <ul class="msb-links" role="list">
+    <li><a href="/categories/techniques.html">Articles</a></li>
+    <li><a href="/categories/gear.html">Gear</a></li>
+    <li><a href="/about.html">About</a></li>
+  </ul>
+  <span class="msb-pub">A MusicProductionWiki Publication</span>
+  <button class="msb-search" id="bmnSearchBtn" aria-label="Open search">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+  </button>
+  <a href="https://theproducersbriefing.beehiiv.com" class="msb-cta">Sound Better →</a>
+  <button class="msb-mob" id="bmnMob" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</div>
+
+<!-- Bible Bar -->
+<div class="bible-bar">
+  <a href="/bible/" class="bb-identity">
+    <span class="bb-diamond">◆</span>
+    <span class="bb-title">The Producer's Bible</span>
+  </a>
+  <div class="bb-divider"></div>
+  <nav class="bb-cats" aria-label="Bible categories">
+    <a href="/bible/categories/dynamics" class="bb-cat">Dynamics</a>
+    <a href="/bible/categories/frequency" class="bb-cat">Frequency</a>
+    <a href="/bible/categories/time-based" class="bb-cat">Time-Based</a>
+    <a href="/bible/categories/signal-processing" class="bb-cat">Signal Processing</a>
+    <a href="/bible/categories/mixing" class="bb-cat">Mixing</a>
+    <a href="/bible/categories/mastering" class="bb-cat active">Mastering</a>
+    <a href="/bible/categories/synthesis" class="bb-cat">Synthesis</a>
+    <a href="/bible/categories/music-theory" class="bb-cat">Music Theory</a>
+  </nav>
+  <a href="/bible/index.html" class="bb-all">All entries →</a>
+</div>
+
+<!-- Mobile drawer -->
+<div class="bmn-drawer" id="bmnDrawer" role="dialog" aria-label="Navigation menu">
+  <a href="/bible/" class="bmn-drawer-bible">◆ The Producer's Bible</a>
+  <div class="bmn-drawer-label">Browse The Bible</div>
+  <div class="bmn-drawer-cats">
+    <a href="/bible/categories/dynamics" class="bmn-drawer-cat">Dynamics</a>
+    <a href="/bible/categories/frequency" class="bmn-drawer-cat">Frequency</a>
+    <a href="/bible/categories/time-based" class="bmn-drawer-cat">Time-Based</a>
+    <a href="/bible/categories/signal-processing" class="bmn-drawer-cat">Signal Processing</a>
+    <a href="/bible/categories/mixing" class="bmn-drawer-cat">Mixing</a>
+    <a href="/bible/categories/mastering" class="bmn-drawer-cat">Mastering</a>
+    <a href="/bible/categories/synthesis" class="bmn-drawer-cat">Synthesis</a>
+    <a href="/bible/categories/music-theory" class="bmn-drawer-cat">Music Theory</a>
+  </div>
+  <a href="/bible/" style="font-size:13px;color:#f5a623;padding:6px 12px;display:block">All entries →</a>
+  <div class="bmn-drawer-label">Articles</div>
+  <div class="bmn-drawer-cats">
+    <a href="/categories/techniques.html" class="bmn-drawer-cat">Techniques</a>
+    <a href="/categories/reviews.html" class="bmn-drawer-cat">Reviews</a>
+    <a href="/categories/comparisons.html" class="bmn-drawer-cat">Comparisons</a>
+    <a href="/categories/breakdowns.html" class="bmn-drawer-cat">Breakdowns</a>
+    <a href="/categories/gear.html" class="bmn-drawer-cat">Hardware</a>
+    <a href="/about.html" class="bmn-drawer-cat">About</a>
+  </div>
+  <a href="https://theproducersbriefing.beehiiv.com" class="bmn-drawer-cta">Sound Better →</a>
+</div>
+
+<!-- Mobile bible bar -->
+<div class="bible-mobile-bar" aria-hidden="true">The Producer's Bible</div>
+
+<!-- Search overlay -->
+<div id="bibleSearchOverlay" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="bso-box">
+    <div class="bso-input-wrap">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="#666" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="#666" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input id="bibleSearchInput" type="text" placeholder="Search articles and Bible entries…" autocomplete="off" spellcheck="false" aria-label="Search">
+      <span style="font-size:11px;color:#555;white-space:nowrap;flex-shrink:0">ESC to close</span>
+    </div>
+    <div id="bibleSearchResults" role="listbox"></div>
+  </div>
+</div>
+
+<nav class="entry-nav" aria-label="Entry sections">
+  <div class="entry-nav-inner">
+    <a href="#definition">Definition</a>
+    <a href="#how-it-works">How It Works</a>
+    <a href="#parameters">Parameters</a>
+    <a href="#quick-reference">Quick Ref</a>
+    <a href="#tools">Tools</a>
+    <a href="#signal-chain">Signal Chain</a>
+    <a href="#history">History</a>
+    <a href="#how-to-use">How To Use</a>
+    <a href="#genre-table">By Genre</a>
+    <a href="#hardware-plugin">Hardware vs Plugin</a>
+    <a href="#before-after">Before / After</a>
+    <a href="#in-the-wild">In The Wild</a>
+    <a href="#types">Types</a>
+    <a href="#verdict">Verdict</a>
+    <a href="#plugin-recs">Plugins</a>
+    <a href="#mistakes">Mistakes</a>
+    <a href="#flags">Flags</a>
+    <a href="#progression">Progression</a>
+    <a href="#faq">FAQ</a>
+    <a href="#related">Related</a>
+  </div>
+</nav>
+<main id="main-content">
+  <div class="bible-entry-wrap" style="display:grid!important;grid-template-columns:1fr 280px!important;gap:40px!important;align-items:start!important;max-width:1100px!important;margin:0 auto!important;padding:40px 24px!important">
+    <div class="entry-main">
+      <nav class="entry-breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Home</a><span class="bc-sep">&rsaquo;</span>
+        <a href="/bible/">The Producer's Bible</a><span class="bc-sep">&rsaquo;</span>
+        <span aria-current="page">True Peak Limiting</span>
+      </nav>
+      <div class="entry-masthead">
+        <div class="entry-category">Mastering</div>
+        <span class="difficulty-badge difficulty-intermediate">Intermediate</span>
+<div class="prereq-chain"><span>Understand first:</span> <a href="/bible/limiting">Limiting</a> <span>›</span> <a href="/bible/headroom">Headroom</a> <span>›</span> <a href="/bible/lufs">Lufs</a></div>
+        <h1 class="entry-term">True Peak Limiting</h1>
+        <div class="entry-pos">noun / mastering tool</div>
+        <em class="entry-hook">The peaks your meters can't see are the ones that destroy your master on every streaming platform in the world.</em>
+        <div class="entry-meta">
+          <span>&#128197; 2026-05-19</span>
+          <span>&#9202; 33 min read</span>
+          <span>&#128218; Producer's Bible</span>
+        </div>
+      </div>
+      <div id="quick-answer" class="quick-answer-block">
+        <div class="qa-label">Quick Answer</div>
+        <p class="qa-text">True Peak Limiting is a form of peak limiting that operates on an oversampled representation of the audio signal — typically 4× or higher — to detect and suppress inter-sample peaks (ISPs) that occur between digital sample points and would cause clipping during digital-to-analog conversion or lossy encoding. Unlike standard sample-peak limiters that only examine the value at each discrete sample, a true peak limiter reconstructs the continuous waveform mathematically to catch peaks that standard meters miss entirely. It is the industry-standard final safeguard in mastering chains targeting streaming platforms, broadcast delivery, and any format that undergoes lossy codec encoding.</p>
+      </div>
+      <div class="start-here-box" style="background:#0d1a0d;border:1px solid rgba(96,192,96,.3);border-radius:8px;padding:14px 18px;margin-bottom:20px">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#60c060;margin-bottom:8px">New to True Peak Limiting? Start here</div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:#c8c8d8">
+          <a href="#parameters" style="color:#f5a623;text-decoration:none;font-weight:600;border:1px solid rgba(245,166,35,.3);padding:3px 10px;border-radius:4px">Parameters</a>
+          <span style="color:#555">&#8594;</span>
+          <a href="#before-after" style="color:#f5a623;text-decoration:none;font-weight:600;border:1px solid rgba(245,166,35,.3);padding:3px 10px;border-radius:4px">Before / After</a>
+          <span style="color:#555">&#8594;</span>
+          <a href="#quick-reference" style="color:#f5a623;text-decoration:none;font-weight:600;border:1px solid rgba(245,166,35,.3);padding:3px 10px;border-radius:4px">Quick Reference</a>
+          <span style="color:#555">&#8594;</span>
+          <a href="#mistakes" style="color:#f5a623;text-decoration:none;font-weight:600;border:1px solid rgba(245,166,35,.3);padding:3px 10px;border-radius:4px">Common Mistakes</a>
+        </div>
+      </div>
+      <div style="margin-bottom:24px">
+        <button class="pdf-export-btn" onclick="openGateFor('full')">&#8659; Download Reference Sheet</button>
+      </div>
+      <div id="pdf-gate-modal" class="pgm-overlay" style="display:none">
+        <div class="pgm-card">
+          <button class="pgm-close" onclick="closeGate()">&#10005;</button>
+          <div id="pgm-icon" style="font-size:2rem;margin-bottom:8px">&#8659;</div>
+          <h3 id="pgm-title">Get the Free Sheet</h3>
+          <p id="pgm-desc" style="color:#888;font-size:13px;margin-bottom:16px">Free with The Producer's Briefing.</p>
+          <input type="email" id="pgm-email" placeholder="your@email.com" style="width:100%;padding:10px 14px;border-radius:6px;border:1px solid #2a2a4a;background:#0d0d1a;color:#fff;font-size:14px;margin-bottom:10px;box-sizing:border-box">
+          <button class="pgm-submit" onclick="submitGate()">Get My Free Sheet</button>
+          <p class="pgm-fine">No spam. Unsubscribe anytime.</p>
+          <p id="pgm-error" style="display:none;color:#ff6666;font-size:12px;margin-top:8px"></p>
+        </div>
+      </div>
+      <div class="misconception-block"><span class="misconception-label">Common Misconception</span><p class="misconception-belief">If my peak meter reads -1 dBFS, my master is safe from clipping on streaming platforms.</p><p class="misconception-reality">A sample-peak reading of -1 dBFS says nothing about inter-sample peaks, which are invisible to standard peak meters. The continuous waveform reconstructed between sample points can overshoot by 1 to 3 dB above the sample-peak reading, meaning your -1 dBFS master can be delivering true peaks of 0 dBTP, +1 dBTP, or higher — all of which will cause audible distortion artifacts when the file passes through AAC, MP3, or any lossy codec during streaming delivery.</p></div>
+
+<section class="entry-section" id="definition">
+<h2>True Peak Limiting</h2>
+<em class="entry-hook">The peaks your meters can't see are the ones that destroy your master on every streaming platform in the world.</em>
+
+<p>True Peak Limiting is the final, non-negotiable safeguard in any professional mastering chain destined for streaming, broadcast, or lossy codec delivery. It operates on an oversampled reconstruction of the audio signal — typically 4× oversampling at minimum, with premium implementations running at 8× or 16× — to detect and suppress inter-sample peaks (ISPs) that exist between the discrete sample points of a standard digital audio stream. These are the peaks that your standard sample-peak meters cannot see, that your standard brick-wall limiter does not catch, and that will cause real, audible distortion the moment your audio is reconstructed by a digital-to-analog converter or reencoded by a lossy codec like AAC or MP3. If your delivery chain passes through Spotify, Apple Music, YouTube, Tidal, Amazon Music, or any broadcast infrastructure, true peak limiting is not a preference — it is infrastructure.</p>
+
+<p>The distinction between a sample-peak limiter and a true peak limiter is not subtle — it is architectural. A standard sample-peak limiter examines the amplitude value at each discrete sample point and prevents any individual sample from exceeding a set ceiling. This is an entirely valid tool for a large portion of the gain-staging role that limiting plays. But digital audio is not a series of disconnected amplitude measurements — it is a representation of a continuous analog waveform, and when that waveform is reconstructed during DAC playback or codec encoding, a mathematical interpolation process fills the space between sample points. The actual continuous waveform that results from that interpolation can, and routinely does, exceed the amplitude of the highest sample value in the stream. This phenomenon is called an inter-sample peak, and it represents genuine signal energy that your standard metering pipeline is blind to.</p>
+
+<p>The magnitude of ISPs is not trivial. In dense, complex material — heavy bass content, bright synthesizer attacks, saturated drums, dense harmonic stacks — inter-sample peaks commonly exceed their surrounding sample peaks by 0.5 dB to 3 dB. A master that measures a clean -0.1 dBFS peak on a standard sample-peak meter can simultaneously carry true peak levels of +2 dBTP or higher. Every one of those exceedances becomes a clipping artifact the moment the audio leaves the sterile numerical environment of the DAW and enters the reconstruction process. On streaming platforms, this is compounded further because the platform-side lossy codec encoder — before delivery to the listener — performs its own internal reconstruction and interpolation, and the ISPs that were invisible in your session become audible distortion artifacts embedded permanently in the delivered file.</p>
+
+<p>The industry standard true peak ceiling for streaming delivery, codified across major platform specifications and the ITU-R BS.1770 loudness measurement framework that underpins them, is -1.0 dBTP. This 1 dB of headroom below 0 dBFS provides sufficient margin for codec-induced inter-sample peak generation without allowing reconstructed energy to exceed the digital full-scale ceiling. For broadcast delivery under EBU R128 or ATSC A/85 specifications, the recommended ceiling tightens to -3.0 dBTP, providing additional headroom for the more aggressive encoding and transmission processing chains involved in broadcast infrastructure. Both of these numbers are hard targets, not guidelines, and a true peak limiter is the only tool that can guarantee compliance.</p>
+
+<div class="producer-quote-block">
+<blockquote class="producer-quote">
+<p>"Inter-sample peaks are not theoretical. They are real distortion that occurs after the DAC when audio is reconstructed. A true peak limiter is the only defense."</p>
+</blockquote>
+<cite>— Bob Katz, Mastering Engineer — author of Mastering Audio</cite>
+</div>
+
+<p>It is important to understand where true peak limiting sits in the philosophical hierarchy of mastering. This is not a creative tool. You are not using it to shape the character of the audio, to create density, or to sculpt transient behavior for aesthetic reasons — those functions belong to the compressors, saturators, and primary limiting stages earlier in the chain. The true peak limiter is a precision engineering safeguard whose entire purpose is invisibility. When it works perfectly, the listener has no awareness of its operation. When it is absent or misconfigured, the listener hears distortion on every platform, on every device, every single time the track plays. As of the 2026-05-19 publication of this entry, there is no professional delivery scenario where bypassing true peak limiting is defensible.</p>
+
+<p class="section-summary">True Peak Limiting detects and suppresses inter-sample peaks by operating on an oversampled reconstruction of the waveform — catching peaks between digital sample points that standard meters miss entirely and that cause real distortion during DAC reconstruction and lossy codec encoding.</p>
+</section>
+
+<section class="entry-section" id="how-it-works">
+<h2>How It Works</h2>
+
+<p>The mechanism of a true peak limiter begins with oversampling. When your audio signal enters the true peak limiter, the first processing stage upsamples it — multiplying the effective sample rate by a factor of 4×, 8×, or 16× depending on the implementation. At 4× oversampling, a 44.1 kHz session becomes a 176.4 kHz internal representation; at 8×, it becomes 352.8 kHz. This upsampling process does not create new audio information — it uses mathematically precise interpolation, typically a polyphase FIR filter bank, to reconstruct the continuous waveform that the original samples represent. The result is a high-density sample grid where the energy that exists between the original sample points now has explicit amplitude values. This is where the inter-sample peaks become visible for the first time. The limiter can now see the actual peaks of the reconstructed waveform, not just the sample-grid snapshot that standard metering reads.</p>
+
+<p>With the oversampled representation in hand, the gain computation stage of the true peak limiter operates exactly as a standard brick-wall limiter does — but on the high-density sample grid. It identifies any sample in the oversampled domain that exceeds the set true peak ceiling, calculates the gain reduction required to bring that peak to the ceiling, and applies a gain reduction curve that is shaped by the lookahead buffer, attack time, and release characteristics configured by the engineer. A critical implementation detail here is that the gain reduction must be applied symmetrically to both the original sample positions and the inter-sample positions — the limiter is not free to alter the inter-sample values independently from the surrounding samples, because the result must produce a coherent, artifact-free waveform when downsampled back to the original sample rate. This constraint is what separates a true peak limiter from a simple oversampled clipper, and it is what determines how much of the transient character is preserved versus sacrificed in the limiting process.</p>
+
+<p>After gain computation, the signal is downsampled back to the original sample rate using the same precision filter process, and the output is guaranteed to carry no inter-sample peaks above the set ceiling. The downsampling filter removes the artificially interpolated sample points and returns to the original sample grid, but the gain reduction that was applied in the oversampled domain is encoded into the resulting samples — the true peak ceiling is baked into the output at the sample level as well as in the continuous waveform reconstruction. A correctly implemented true peak limiter will produce an output that measures at or below the set ceiling on a compliant true peak meter regardless of what oversampling factor or interpolation filter the meter uses. This is the guarantee that matters when you submit to a streaming platform's ingest system or a broadcast delivery chain, both of which perform their own true peak measurement as part of the QC process. Failure triggers automatic rejection or gain reduction applied by the platform, neither of which is acceptable at the professional level.</p>
+
+<p>The computational cost of true peak limiting is substantially higher than standard sample-peak limiting — an 8× oversampled limiter is processing eight times as many samples per second through the gain computation and filter stages. This creates two practical constraints: first, true peak limiters have measurable latency due to the lookahead and filter processing required, typically ranging from 1 ms to 20 ms depending on the implementation quality and oversampling factor; second, running multiple instances in real-time mixing is more CPU-intensive than running standard peak limiters. In a mastering context, neither of these constraints is significant — latency is acceptable at the end of the chain where there are no downstream plugins to compensate for, and CPU resources are dedicated rather than shared with a full mix session. The correct engineering response is to use the true peak limiter exactly where it belongs: last in the mastering chain, after all creative and corrective processing is complete, as the final computation before the output file is written.</p>
+
+<p class="section-summary">A true peak limiter upsamples the signal to construct an explicit representation of the continuous waveform, identifies and gain-reduces inter-sample peaks in the high-density domain, then downsamples back with the gain reduction encoded — delivering a guaranteed true peak ceiling at the output.</p>
+</section>
+
+<section class="entry-section" id="parameters">
+<h2>Parameters</h2>
+
+<p>True peak limiters expose a focused set of controls compared to the broader parameter set of a creative compressor. Each parameter has a direct and well-defined effect on the protection behavior and the audible character of any limiting that occurs. Understanding what each parameter actually does — not just what the label says — is the difference between a compliant master and one that either distorts or sounds over-limited.</p>
+
+<div class="parameters-grid">
+
+<div class="param-item">
+<h4 class="param-name">True Peak Ceiling (dBTP)</h4>
+<p>The threshold above which no reconstructed waveform energy is permitted to pass. Set in decibels True Peak (dBTP), not dBFS — this distinction matters because the ceiling is referenced to the oversampled reconstruction, not the sample grid. For streaming delivery, -1.0 dBTP is the industry standard. For broadcast under EBU R128, use -3.0 dBTP. For mastering to a physical medium that will not undergo further encoding, -0.1 dBTP or -0.3 dBTP is common. Never set this at 0.0 dBTP for any streaming delivery — the codec encoding process itself generates additional inter-sample energy that will push the output above digital full scale even if the incoming audio is exactly at 0 dBTP.</p>
+</div>
+
+<div class="param-item">
+<h4 class="param-name">Oversampling Factor</h4>
+<p>Determines the resolution of the waveform reconstruction used to detect inter-sample peaks. 4× oversampling catches most ISPs and is the minimum compliant implementation per ITU-R BS.1770-4. 8× provides meaningfully better reconstruction accuracy, particularly for high-frequency content and complex polyphonic material. 16× offers marginal additional accuracy over 8× for most real-world audio but carries higher CPU cost. Never use a true peak limiter in non-oversampled mode — it is functionally identical to a standard sample-peak limiter and provides no ISP protection. When rendering for delivery, always use the maximum oversampling factor your implementation offers; the CPU cost is irrelevant in an offline bounce.</p>
+</div>
+
+<div class="param-item">
+<h4 class="param-name">Lookahead Time</h4>
+<p>The duration, in milliseconds, that the limiter looks forward in the audio stream before applying gain reduction. Lookahead is what separates a transparent limiter from one that introduces pre-ringing and transient distortion — without it, the limiter must apply instantaneous gain reduction, which creates audible clicks or transient artifacts. Effective lookahead times for true peak limiters range from 0.5 ms to 5 ms. Shorter lookahead allows faster transient response but increases the risk of audible artifacts on sudden, high-amplitude transients. Longer lookahead produces cleaner limiting but introduces more latency. In mastering, 1 ms to 2 ms is a practical range that balances transparency with adequate transient handling. This parameter is often fixed in dedicated hardware implementations.</p>
+</div>
+
+<div class="param-item">
+<h4 class="param-name">Release Time</h4>
+<p>Governs how quickly the limiter returns to unity gain after a peak event. In a true peak limiter operating as a final safeguard, release time is typically set to auto-release or a program-adaptive mode — the limiter is not intended to be riding gain aggressively, so the release behavior matters primarily for the audible pumping or modulation it introduces when the limiter is catching a high density of inter-sample peaks. A release that is too short creates a choppy, modulated texture on dense material. A release that is too long can cause sustained gain reduction that darkens the overall level of the track after a loud peak event. Most dedicated true peak limiter implementations manage this with intelligent program-dependent release curves that respond to the density of peak events rather than a fixed time constant.</p>
+</div>
+
+<div class="param-item">
+<h4 class="param-name">Margin / Headroom Below Ceiling</h4>
+<p>Some true peak limiters provide a margin parameter that sets an internal safety offset below the specified ceiling — for example, a -1.0 dBTP ceiling with a 0.5 dB margin instructs the limiter to target -1.5 dBTP in practice, with the stated ceiling serving as the hard limit for any measurement overshoot due to filter rounding in the gain computation stage. This is an acknowledgment that the filter precision of the downsampling stage can allow a small amount of energy through even after the gain computation stage has theoretically clamped the peak. On critical delivery, build in your own 0.2–0.3 dB safety margin below the nominal ceiling by setting your limiter target 0.3 dB lower than the specification requires — set -1.3 dBTP when targeting -1.0 dBTP compliance.</p>
+</div>
+
+<div class="param-item">
+<h4 class="param-name">Link Mode (Stereo / M-S / Dual Mono)</h4>
+<p>Determines whether the gain reduction computation treats the left and right channels as a linked pair or independently. Stereo link mode computes a single gain reduction value from whichever channel requires the greater reduction and applies it to both — this preserves the stereo image because both channels are reduced by the same amount at all times. Dual mono mode computes and applies gain reduction independently per channel — this can allow greater loudness on sparse material but risks audible stereo image shifting when different amounts of reduction are applied simultaneously to L and R. M-S link mode operates on mid and side components separately, which is useful in mastering chains that process M and S paths independently but can create phase irregularities if not implemented carefully. For standard stereo mastering, stereo link is always correct.</p>
+</div>
+
+</div>
+
+<p>The interaction between these parameters during heavy limiting events is where mastering engineers develop genuine expertise. A true peak limiter that is catching peaks regularly — more than a few times per second — is a signal that the primary limiting stage earlier in the chain is not doing its job, that the gain staging through the mastering chain is set too hot, or that the mix itself contains problematic transient content that needs to be addressed upstream. The true peak limiter should, in a well-designed mastering chain, engage only occasionally — catching ISPs that the primary limiter allowed through by virtue of operating only on sample-grid peaks. If the gain reduction meter on your true peak limiter is active continuously, you have a structural problem in the chain that cannot be solved by adjusting the true peak limiter's release time.</p>
+
+<p>The ceiling parameter deserves additional discussion in the context of the current platform ecosystem. As of the 2026-05-19 publication of this entry, the major streaming platforms target the following true peak specifications: Spotify requires no more than -1 dBTP; Apple Music specifies -1 dBTP; YouTube sets -1 dBTP as its ingest target; Amazon Music HD recommends -2 dBTP for high-resolution content. These are not merely preferred values — ingest systems perform automated true peak measurement and will either reject files that exceed the specification or apply gain reduction automatically. Platform-applied gain reduction is an outcome that no professional mastering engineer should accept, because it is applied without regard for the creative intent encoded in the dynamics of the master. Setting your ceiling before delivery is the only way to retain control.</p>
+
+<p class="section-summary">The four critical parameters — true peak ceiling, oversampling factor, lookahead, and release — govern whether the limiter's ISP protection is audibly invisible or introduces artifacts, and whether the output is guaranteed compliant with delivery specifications.</p>
+</section>
+
+<section class="entry-section" id="quick-reference">
+<h2>Quick Reference</h2>
+
+<p>        <div class="the-number-box">
+          <span class="tn-value">-1 dBTP</span>
+          <span class="tn-label">Universal streaming true peak ceiling</span>
+          <p class="tn-context">Every major streaming platform — Spotify, Apple Music, Tidal, YouTube Music, Amazon Music — as well as EBU R128 broadcast standard specifies a maximum true peak of -1 dBTP. This single value is the delivery target that every professional master must be verified against before distribution, and it represents the minimum headroom needed to absorb codec-induced inter-sample peak amplification without audible clipping.</p>
+        </div></p>
+<p>Use this table as a delivery-context fast reference. Every scenario assumes a true peak limiter as the last plugin in the mastering chain, after all creative and corrective processing including the primary loudness limiter. The Integrated LUFS targets are provided for context — they are measured by a loudness meter, not set on the limiter itself.</p>
+
+<div class="qr-table-wrap">
+<table class="quick-ref-table">
+<thead>
+<tr>
+<th>Delivery Context</th>
+<th>True Peak Ceiling</th>
+<th>Integrated LUFS Target</th>
+<th>Oversampling</th>
+<th>Standard Reference</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Spotify / Apple Music / Tidal</td>
+<td>-1.0 dBTP</td>
+<td>-14 LUFS integrated</td>
+<td>4× minimum / 8× preferred</td>
+<td>AES TD1004 / BS.1770-4</td>
+<td>Platform normalizes to -14 LUFS; louder masters get turned down, not rejected</td>
+</tr>
+<tr>
+<td>YouTube</td>
+<td>-1.0 dBTP</td>
+<td>-14 LUFS integrated</td>
+<td>4× minimum</td>
+<td>YouTube Partner Spec</td>
+<td>Normalization applied to -14 LUFS; true peak check is automatic at ingest</td>
+</tr>
+<tr>
+<td>Amazon Music HD / Ultra HD</td>
+<td>-2.0 dBTP</td>
+<td>-14 LUFS integrated</td>
+<td>8× recommended</td>
+<td>Amazon Delivery Spec 2024</td>
+<td>Additional headroom required for high-res content; stricter ISP control</td>
+</tr>
+<tr>
+<td>EBU R128 Broadcast</td>
+<td>-3.0 dBTP</td>
+<td>-23 LUFS integrated</td>
+<td>4× minimum</td>
+<td>EBU R128 / ITU-R BS.1770-4</td>
+<td>Broadcast transmission chains introduce additional processing; extra headroom mandatory</td>
+</tr>
+<tr>
+<td>ATSC A/85 Broadcast (US)</td>
+<td>-2.0 dBTP</td>
+<td>-24 LUFS integrated</td>
+<td>4× minimum</td>
+<td>ATSC A/85</td>
+<td>US television delivery standard; different integrated target from EBU</td>
+</tr>
+<tr>
+<td>CD / Physical Media</td>
+<td>-0.3 dBTP</td>
+<td>Engineer discretion</td>
+<td>4× minimum</td>
+<td>Red Book Audio</td>
+<td>No streaming normalization; -0.3 dBTP provides safety margin before DAC reconstruction without lossy encoding</td>
+</tr>
+<tr>
+<td>Film / Post Production Deliverable</td>
+<td>-3.0 dBTP</td>
+<td>-23 LUFS (dialogue-gated)</td>
+<td>8× recommended</td>
+<td>SMPTE RP 2095</td>
+<td>Dialogue-gated measurement; headroom critical for theatrical playback systems</td>
+</tr>
+<tr>
+<td>SoundCloud (Free Tier)</td>
+<td>-1.0 dBTP</td>
+<td>Engineer discretion</td>
+<td>4× minimum</td>
+<td>SoundCloud Upload Spec</td>
+<td>Platform performs lossy encoding at ingest on free tier; true peak protection essential despite no published normalization target</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+        <div class="mpw-share-bar"><span class="mpw-share-label">Share</span><button class="mpw-share-btn share-copy" onclick="navigator.clipboard&&navigator.clipboard.writeText('musicproductionwiki.com/bible/true-peak-limiting#quick-reference')">Copy Link</button><a href="https://x.com/intent/tweet?text=True Peak Limiting+Quick+Reference+%E2%80%94+%40mpwikiofficial&url=https%3A%2F%2Fmusicproductionwiki.com%2Fbible%2Ftrue-peak-limiting%23quick-reference" target="_blank" rel="noopener" class="mpw-share-btn share-x"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.26 5.632 5.905-5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>Share on X</a><a href="https://reddit.com/submit?url=https%3A%2F%2Fmusicproductionwiki.com%2Fbible%2Ftrue-peak-limiting%23quick-reference&title=True Peak Limiting+Quick+Reference+%E2%80%94+MusicProductionWiki" target="_blank" rel="noopener" class="mpw-share-btn share-reddit"><svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor"><circle cx="10" cy="10" r="10"/><path fill="#ff4500" d="M16.67 10a1.46 1.46 0 00-2.47-1 7.12 7.12 0 00-3.85-1.23l.65-3.08 2.13.45a1 1 0 101.07-1 1 1 0 00-.96.68l-2.38-.5a.27.27 0 00-.32.2l-.73 3.44a7.14 7.14 0 00-3.89 1.23 1.46 1.46 0 10-1.61 2.39 2.87 2.87 0 000 .44c0 2.24 2.61 4.06 5.83 4.06s5.83-1.82 5.83-4.06a2.87 2.87 0 000-.44 1.46 1.46 0 00.61-1.08zM7.5 11a1 1 0 111 1 1 1 0 01-1-1zm5.67 2.65a3.54 3.54 0 01-2.34.63 3.54 3.54 0 01-2.34-.63.25.25 0 01.35-.35 3.07 3.07 0 002 .48 3.07 3.07 0 002-.48.25.25 0 01.35.35zm-.17-1.65a1 1 0 111-1 1 1 0 01-1 1z"/></svg>Reddit</a></div>
+</section>
+
+<section class="entry-section" id="signal-chain">
+<h2>Signal Chain Position</h2>
+
+        <div class="signal-chain-diagram">
+          <svg viewBox="0 0 1440 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:1440px;height:auto;display:block;min-height:100px" aria-labelledby="sc-true-peak-limiting-title" role="img">
+  <title id="sc-true-peak-limiting-title">Signal chain position of True Peak Limiter in music production</title>
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <polygon points="0 0, 8 4, 0 8" fill="#4a4a6a"/>
+    </marker>
+  </defs>
+  <rect x="29" y="44" width="158" height="72" rx="10" fill="#13132a" stroke="#3a3a5a" stroke-width="1.5"/>
+  <text x="108" y="66" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#c8c8d8">Mix Bus</text>
+  <text x="108" y="86" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#666">Summed stereo</text>
+  <text x="108" y="102" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#666">pre-master</text>
+  <line x1="187" y1="80" x2="199" y2="80" stroke="#4a4a6a" stroke-width="2" marker-end="url(#arr)"/>
+  <rect x="201" y="44" width="158" height="72" rx="10" fill="#13132a" stroke="#3a3a5a" stroke-width="1.5"/>
+  <text x="280" y="66" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#c8c8d8">EQ</text>
+  <text x="280" y="86" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#666">Tonal shaping</text>
+  <text x="280" y="102" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#666">master chain</text>
+  <line x1="359" y1="80" x2="371" y2="80" stroke="#4a4a6a" stroke-width="2" marker-end="url(#arr)"/>
+  <rect x="373" y="44" width="158" height="72" rx="10" fill="#13132a" stroke="#3a3a5a" stroke-width="1.5"/>
+  <text x="452" y="66" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#c8c8d8">Compression</text>
+  <text x="452" y="86" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#666">Dynamics control</text>
+  <text x="452" y="102" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#666">glue & density</text>
+  <line x1="531" y1="80" x2="543" y2="80" stroke="#4a4a6a" stroke-width="2" marker-end="url(#arr)"/>
+  <rect x="545" y="44" width="158" height="72" rx="10" fill="#13132a" stroke="#3a3a5a" stroke-width="1.5"/>
+  <text x="624" y="66" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#c8c8d8">Saturation</text>
+  <text x="624" y="86" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#666">Harmonic color</text>
+  <text x="624" y="102" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#666">analog warmth</text>
+  <line x1="703" y1="80" x2="715" y2="80" stroke="#4a4a6a" stroke-width="2" marker-end="url(#arr)"/>
+  <rect x="717" y="44" width="158" height="72" rx="10" fill="#13132a" stroke="#3a3a5a" stroke-width="1.5"/>
+  <text x="796" y="66" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#c8c8d8">Stereo Imaging</text>
+  <text x="796" y="86" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#666">Width & depth</text>
+  <text x="796" y="102" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#666">mid-side shaping</text>
+  <line x1="875" y1="80" x2="887" y2="80" stroke="#4a4a6a" stroke-width="2" marker-end="url(#arr)"/>
+  <rect x="889" y="44" width="158" height="72" rx="10" fill="#13132a" stroke="#3a3a5a" stroke-width="1.5"/>
+  <text x="968" y="66" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#c8c8d8">Loudness Limiter</text>
+  <text x="968" y="86" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#666">Primary brick-wall</text>
+  <text x="968" y="102" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#666">gain ride</text>
+  <line x1="1047" y1="80" x2="1059" y2="80" stroke="#4a4a6a" stroke-width="2" marker-end="url(#arr)"/>
+  <rect x="1061" y="34" width="178" height="92" rx="10" fill="#2a1400" stroke="#f5a623" stroke-width="2.5"/>
+  <text x="1150" y="56" text-anchor="middle" font-family="system-ui,sans-serif" font-size="15" font-weight="900" fill="#f5a623">True Peak Limiter</text>
+  <text x="1150" y="76" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#c8a060">ISP detection</text>
+  <text x="1150" y="92" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#c8a060">final ceiling</text>
+  <text x="1150" y="118" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" fill="#f5a623">&#9664; YOU ARE HERE</text>
+  <line x1="1239" y1="80" x2="1251" y2="80" stroke="#f5a623" stroke-width="2" marker-end="url(#arr)"/>
+  <rect x="1253" y="44" width="158" height="72" rx="10" fill="#13132a" stroke="#3a3a5a" stroke-width="1.5"/>
+  <text x="1332" y="66" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#c8c8d8">Metering</text>
+  <text x="1332" y="86" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#666">LUFS / TP check</text>
+  <text x="1332" y="102" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#666">QC pass/fail</text>
+</svg>
+        </div>
+        <!-- Mobile signal chain — vertical stack -->
+        <div class="signal-chain-mobile">
+          <div class="scm-box"><span class="scm-label">Mix Bus</span><div class="scm-sub">Summed stereo · pre-master</div></div>
+          <div class="scm-arrow">&#8595;</div>
+          <div class="scm-box"><span class="scm-label">EQ</span><div class="scm-sub">Tonal shaping · master chain</div></div>
+          <div class="scm-arrow">&#8595;</div>
+          <div class="scm-box"><span class="scm-label">Compression</span><div class="scm-sub">Dynamics control · glue & density</div></div>
+          <div class="scm-arrow">&#8595;</div>
+          <div class="scm-box"><span class="scm-label">Saturation</span><div class="scm-sub">Harmonic color · analog warmth</div></div>
+          <div class="scm-arrow">&#8595;</div>
+          <div class="scm-box"><span class="scm-label">Stereo Imaging</span><div class="scm-sub">Width & depth · mid-side shaping</div></div>
+          <div class="scm-arrow">&#8595;</div>
+          <div class="scm-box"><span class="scm-label">Loudness Limiter</span><div class="scm-sub">Primary brick-wall · gain ride</div></div>
+          <div class="scm-arrow">&#8595;</div>
+          <div class="scm-box scm-active"><span class="scm-label">True Peak Limiter</span><div class="scm-sub">ISP detection · final ceiling</div><span class="scm-badge">&#9654; You are here</span></div>
+          <div class="scm-arrow">&#8595;</div>
+          <div class="scm-box"><span class="scm-label">Metering</span><div class="scm-sub">LUFS / TP check · QC pass/fail</div></div>
+        </div>
+
+<p>The true peak limiter occupies the absolute final position in the mastering signal chain — after every piece of EQ, compression, saturation, stereo imaging, and primary loudness limiting. This position is not negotiable. Any processing applied after the true peak limiter can generate new inter-sample peaks that the limiter never saw, immediately invalidating the protection and the ceiling guarantee. The primary loudness limiter earlier in the chain handles the heavy lifting of gain management and loudness targeting; the true peak limiter's role is the narrow, specific job of catching ISPs that slip through the sample-domain limiting of that primary stage. Between the two limiters, the signal should not be significantly altered — there should be no additional saturation, no high-frequency boost, and no stereo widening, all of which generate new high-frequency content capable of producing ISPs. Only a metering plugin belongs after the true peak limiter, and that metering plugin must include a true peak meter with ITU-R BS.1770-4-compliant oversampling to verify that the ceiling is being honored before you write the delivery file.</p>
+
+<div class="interaction-warnings">
+<h4>Interaction Warnings</h4>
+<ul>
+<li class="interaction-warning"><strong>Saturation after True Peak Limiter:</strong> Any saturator, tape emulation, or harmonic exciter placed after the true peak limiter generates new harmonic content and waveform shaping that creates fresh inter-sample peaks. Even a subtle saturation plugin at a tenth of its normal drive level can produce ISPs that exceed the ceiling by 1–2 dB. If saturation is part of your mastering color, it must precede the true peak limiter by at least one plugin slot.</li>
+<li class="interaction-warning"><strong>Stereo Widening after True Peak Limiter:</strong> Mid-side processing and stereo width expansion modify the amplitude relationship between L and R in ways that shift the peak structure of the combined stereo sum. M-S encoding and decoding at any width setting other than the original can produce new peaks in the L/R domain that exceed the certified ceiling. All stereo imaging must be finalized before the true peak limiter.</li>
+<li class="interaction-warning"><strong>High-Frequency EQ Boost after True Peak Limiter:</strong> Any high-shelf or high-frequency peak boost applied after the true peak limiter raises the amplitude of high-frequency transients — the exact content most likely to generate ISPs due to the fast waveform transitions involved. A 1 dB high-shelf boost at 10 kHz can add 0.5–1.5 dB of true peak level. Lock in all EQ before the true peak limiter.</li>
+<li class="interaction-warning"><strong>Sample Rate Conversion after True Peak Limiter:</strong> Converting sample rate after the true peak limiter — for example, from a 96 kHz mastering session to a 44.1 kHz delivery file — uses a downsampling filter that can produce new peak values in the output grid. Always apply your true peak limiter at the delivery sample rate, or apply a second true peak measurement pass after sample rate conversion to verify the ceiling has not been violated.</li>
+<li class="interaction-warning"><strong>Codec Encoding by the Delivery Platform:</strong> Even a perfectly compliant -1.0 dBTP master can produce ISPs above 0 dBFS after the platform's AAC or MP3 encoder processes it. This is why the -1 dBTP standard exists — it provides 1 dB of headroom specifically to absorb codec-induced ISP generation. If you are delivering to a platform that encodes to a codec with particularly aggressive ISP behavior (older MP3 encoders at low bitrates being the worst offenders), consider using -2.0 dBTP as your ceiling for that specific deliverable.</li>
+</ul>
+</div>
+</section>
+
+<section class="entry-section" id="diagram">
+<h2>Signal Flow Diagram</h2>
+
+<svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" aria-label="True Peak Limiter signal flow diagram showing oversampling, ISP detection, gain reduction, and downsampling stages" style="width:100%;max-width:760px;display:block;margin:0 auto;">
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#c8a96e"/>
+    </marker>
+  </defs>
+
+  <!-- Input block -->
+  <rect x="10" y="120" width="110" height="60" rx="6" fill="#1a1a2e" stroke="#c8a96e" stroke-width="1.5"/>
+  <text x="65" y="145" text-anchor="middle" font-family="monospace" font-size="11" fill="#e8e8e8">INPUT</text>
+  <text x="65" y="160" text-anchor="middle" font-family="monospace" font-size="9" fill="#c8a96e">44.1 / 48 kHz</text>
+  <text x="65" y="173" text-anchor="middle" font-family="monospace" font-size="9" fill="#888">sample-domain</text>
+
+  <!-- Arrow -->
+  <line x1="120" y1="150" x2="148" y2="150" stroke="#c8a96e" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+  <!-- Upsample block -->
+  <rect x="150" y="120" width="120" height="60" rx="6" fill="#1a1a2e" stroke="#c8a96e" stroke-width="1.5"/>
+  <text x="210" y="143" text-anchor="middle" font-family="monospace" font-size="11" fill="#e8e8e8">UPSAMPLE</text>
+  <text x="210" y="158" text-anchor="middle" font-family="monospace" font-size="9" fill="#c8a96e">4× / 8× / 16×</text>
+  <text x="210" y="172" text-anchor="middle" font-family="monospace" font-size="9" fill="#888">polyphase FIR</text>
+
+  <!-- Arrow -->
+  <line x1="270" y1="150" x2="298" y2="150" stroke="#c8a96e" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+  <!-- ISP Detection block -->
+  <rect x="300" y="100" width="130" height="100" rx="6" fill="#2a1a1a" stroke="#e05c5c" stroke-width="2"/>
+  <text x="365" y="128" text-anchor="middle" font-family="monospace" font-size="11" fill="#e8e8e8">ISP DETECTION</text>
+  <text x="365" y="145" text-anchor="middle" font-family="monospace" font-size="9" fill="#e05c5c">reconstruct waveform</text>
+  <text x="365" y="160" text-anchor="middle" font-family="monospace" font-size="9" fill="#e05c5c">find peaks above</text>
+  <text x="365" y="175" text-anchor="middle" font-family="monospace" font-size="9" fill="#c8a96e">ceiling (dBTP)</text>
+  <text x="365" y="191" text-anchor="middle" font-family="monospace" font-size="8" fill="#666">invisible to std meters</text>
+
+  <!-- Arrow -->
+  <line x1="430" y1="150" x2="458" y2="150" stroke="#c8a96e" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+  <!-- Gain Reduction block -->
+  <rect x="460" y="110" width="120" height="80" rx="6" fill="#1a2a1a" stroke="#5ce05c" stroke-width="1.5"/>
+  <text x="520" y="135" text-anchor="middle" font-family="monospace" font-size="11" fill="#e8e8e8">GAIN REDUCTION</text>
+  <text x="520" y="152" text-anchor="middle" font-family="monospace" font-size="9" fill="#5ce05c">lookahead shaping</text>
+  <text x="520" y="167" text-anchor="middle" font-family="monospace" font-size="9" fill="#5ce05c">release envelope</text>
+  <text x="520" y="182" text-anchor="middle" font-family="monospace" font-size="8" fill="#888">stereo-linked</text>
+
+  <!-- Arrow -->
+  <line x1="580" y1="150" x2="608" y2="150" stroke="#c8a96e" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+  <!-- Downsample block -->
+  <rect x="610" y="120" width="120" height="60" rx="6" fill="#1a1a2e" stroke="#c8a96e" stroke-width="1.5"/>
+  <text x="670" y="143" text-anchor="middle" font-family="monospace" font-size="11" fill="#e8e8e8">DOWNSAMPLE</text>
+  <text x="670" y="158" text-anchor="middle" font-family="monospace" font-size="9" fill="#c8a96e">return to source rate</text>
+  <text x="670" y="172" text-anchor="middle" font-family="monospace" font-size="9" fill="#888">GR encoded in output</text>
+
+  <!-- Sample peak comparison — above the main flow -->
+  <rect x="150" y="20" width="400" height="55" rx="4" fill="#111" stroke="#444" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="350" y="38" text-anchor="middle" font-family="monospace" font-size="9" fill="#666">STANDARD SAMPLE-PEAK LIMITER (for comparison)</text>
+  <text x="350" y="53" text-anchor="middle" font-family="monospace" font-size="9" fill="#666">sees only discrete sample values → misses ISPs entirely → no ISP protection</text>
+  <line x1="210" y1="75" x2="210" y2="120" stroke="#444" stroke-width="1" stroke-dasharray="3,3"/>
+  <line x1="490" y1="75" x2="490" y2="110" stroke="#444" stroke-width="1" stroke-dasharray="3,3"/>
+
+  <!-- Output label -->
+  <text x="670" y="215" text-anchor="middle" font-family="monospace" font-size="10" fill="#c8a96e">OUTPUT</text>
+  <text x="670" y="230" text-anchor="middle" font-family="monospace" font-size="9" fill="#5ce05c">guaranteed ≤ dBTP ceiling</text>
+
+  <!-- Ceiling label -->
+  <text x="365" y="280" text-anchor="middle" font-family="monospace" font-size="10" fill="#c8a96e">Typical Ceilings: -1.0 dBTP (streaming) · -3.0 dBTP (broadcast) · -0.3 dBTP (CD)</text>
+</svg>
+
+<p>The diagram above illustrates the four-stage internal architecture of a true peak limiter and contrasts it directly with the blind spot of a standard sample-peak limiter. The critical distinction is in the ISP Detection stage: this is where the oversampled waveform reconstruction makes the inter-sample peaks visible for the first time, giving the gain reduction stage a target to work against that would be entirely invisible at the original sample rate. A standard sample-peak limiter skips the upsample and ISP detection stages entirely, proceeding directly to gain reduction on the original sample grid — which means it is making gain decisions based on a coarser, incomplete picture of the waveform's actual amplitude envelope. The inter-sample peaks pass through untouched and become distortion artifacts during subsequent reconstruction.</p>
+
+<p>The Gain Reduction stage in the true peak limiter is doing more sophisticated work than its counterpart in a standard limiter because it must account for the fact that the gain reduction applied in the oversampled domain will affect both the visible sample-grid values and the interpolated inter-sample values in the output. A poorly designed gain reduction stage in a true peak limiter can produce output that passes the true peak meter but introduces pre-ringing or waveform distortion artifacts due to the filter interaction between the gain reduction envelope and the downsampling filter. This is why the quality differential between limiter implementations matters enormously — the difference between a premium mastering-grade true peak limiter and a basic compliant implementation is precisely in how cleanly the gain reduction stage handles this interaction, particularly on complex polyphonic material with fast transients.</p>
+</section>
+
+<section class="entry-section" id="history">
+<h2>History and Development</h2>
+
+<div class="history-card">
+<h3>Pre-2006: The Invisible Problem</h3>
+<p>The phenomenon of inter-sample peaks was understood theoretically by digital audio engineers from the earliest days of the CD format in the 1980s. The mathematics of digital signal theory — specifically, the Nyquist-Shannon sampling theorem and the concept of bandlimited interpolation — make it clear that the analog waveform reconstructed from a digital sample stream can exceed the amplitude of the highest individual sample. But for the first two decades of the CD era, the problem received limited practical attention for a straightforward reason: in the moderate-loudness masters of the 1980s and early 1990s, there was enough natural headroom below 0 dBFS that the ISPs generated at typical program levels rarely caused audible clipping during DAC reconstruction. The loudness war that accelerated through the 1990s and peaked catastrophically in the 2000s — with integrated loudness levels being pushed to -6 LUFS and higher on commercial releases — compressed the headroom to zero and turned the theoretical ISP problem into a pervasive audible artifact in commercially released music. Masters that measured exactly -0.1 dBFS on standard peak meters were routinely carrying true peak levels of +1 to +3 dBFS that no meter in the production chain could see.</p>
+</div>
+
+<div class="history-card">
+<h3>2006–2011: ITU-R BS.1770 and the First Standard</h3>
+<p>The International Telecommunication Union published ITU-R BS.1770 in 2006 as a standardized method for measuring audio loudness in broadcasting — the LKFS (Loudness, K-weighted, relative to Full Scale) measurement that would later be adopted broadly as LUFS. The first revision of the standard did not include a true peak measurement method; this was addressed in subsequent revisions, with ITU-R BS.1770-2 (2011) formally incorporating the true peak measurement algorithm — a 4× oversampled reconstruction with a specific filter specification — into the standard. This was the moment when true peak measurement became a defined, reproducible, internationally standardized procedure rather than a manufacturer-specific implementation. The European Broadcasting Union simultaneously developed EBU R128, published in 2010, which incorporated true peak measurement as a mandatory component of the loudness normalization framework for broadcast delivery across European member broadcasters. EBU R128 specified the -1 dBTP ceiling that subsequently became the foundation for streaming platform specifications.</p>
+</div>
+
+<div class="history-card">
+<h3>2012–2017: Streaming Platforms Adopt the Standard</h3>
+<p>The transition from broadcast to streaming as the primary music distribution channel brought true peak limiting from the broadcast engineering world into the mainstream mastering workflow. Spotify introduced loudness normalization in 2013, initially at -11 LUFS and subsequently settling at -14 LUFS, and adopted the -1 dBTP true peak ceiling from the broadcast standards. Apple Music and iTunes introduced Sound Check normalization with -16 LUFS targets and similar true peak requirements. The AES (Audio Engineering Society) published TD1004, a recommendation document for streaming audio loudness and true peak standards, in 2015, consolidating the industry position. By 2016, every major streaming platform had published or was actively developing delivery specifications that included explicit true peak ceilings, and the major plug-in developers had released dedicated true peak limiters — including Waves L2 and WLM Plus, iZotope Ozone's Maximizer with true peak mode, and Fabfilter's Pro-L 2 with 32× oversampled true peak limiting — that brought compliant true peak processing into standard mastering plugin chains.</p>
+</div>
+
+<div class="history-card">
+<h3>2018–Present: Mandatory Infrastructure</h3>
+<p>From 2018 onward, true peak limiting ceased to be a differentiating professional practice and became baseline delivery compliance. Distribution aggregators including DistroKid, TuneCore, and CD Baby updated their submission guidelines to reflect platform true peak specifications, making the -1 dBTP ceiling a required parameter rather than a recommendation for any music submitted through their systems. Hardware mastering processors from Dangerous Music, Prism Sound, and other manufacturers incorporated true peak metering displays. Plugin implementations continued to improve — FabFilter Pro-L 2's 32× oversampled true peak algorithm, released in 2017, set a new standard for reconstruction accuracy that became the benchmark other developers aimed to match. As of the 2026-05-19 publication of this entry, ITU-R BS.1770-4 (the current revision) remains the normative standard for both loudness measurement and true peak measurement, and no professional mastering workflow targeting streaming or broadcast delivery operates without true peak limiting as the final stage of the chain.</p>
+</div>
+
+<div class="producer-quote-block">
+<blockquote class="producer-quote">
+<p>"True peak limiting is not optional in 2024. Inter-sample peaks cause clipping after encoding that you never hear in your DAW. It's an invisible problem that destroys streams."</p>
+</blockquote>
+<cite>— Patchwork (Manon Grandjean), Mastering Engineer (Christine and the Queens, FKJ)</cite>
+</div>
+
+<p class="section-summary">True peak limiting evolved from a theoretical digital audio concern into mandatory delivery infrastructure between 2006 and 2018, driven by ITU-R BS.1770 standardization, EBU R128 broadcast adoption, and the streaming platform ecosystem's implementation of loudness normalization with explicit true peak ceiling requirements.</p>
+</section>
+
+<section class="entry-section" id="how-to-use">
+<h2>How to Use True Peak Limiting</h2>
+
+<p>The correct starting point is chain position, and it is non-negotiable: the true peak limiter goes last. Before you load a single parameter, verify that every other plugin in your mastering chain — every EQ, every compressor, every saturator, every stereo imaging processor, every primary loudness limiter — is upstream. The true peak limiter sees the final, fully processed audio and makes one specific, narrow decision: whether any ISP above the ceiling needs to be reduced. With the position confirmed, set your true peak ceiling before you set anything else. For streaming delivery, that number is -1.0 dBTP. For broadcast, it is -3.0 dBTP. For CD and physical media without subsequent encoding, -0.3 dBTP is the standard professional choice. These numbers are not arbitrary — they represent the accumulated engineering knowledge of the entire professional delivery ecosystem. Do not set the ceiling at 0.0 dBTP on the assumption that your material is clean; the assumption is wrong for any material that has undergone compression, saturation, or significant limiting upstream.</p>
+
+<p>Once the ceiling is set, enable the highest oversampling factor available in your implementation. In real-time monitoring, running 4× or 8× is adequate — you will hear the ISP protection at work without the CPU overhead of 16×. When you render the final delivery file, switch to the maximum available oversampling and render at that setting. The offline render cost of running 16× oversampled true peak limiting is measured in seconds or minutes, not hours, and the additional ISP detection accuracy it provides on complex material is worth every millisecond of render time. Verify the output after rendering using a true peak meter — not a sample-peak meter — that is explicitly ITU-R BS.1770-4 compliant. Both the built-in meters in current DAWs and the metering views in plugin analyzers like iZotope Insight, Nugen Audio VisLM, and Youlean Loudness Meter provide compliant true peak readout. Check that your rendered file shows no true peak exceedances above your target ceiling before any delivery submission.</p>
+
+        <div class="daw-tabs" id="daw-section">
+          <div class="daw-tab-nav"><button class="daw-tab-btn active" data-daw="ableton" onclick="dawTab(this,'ableton')">Ableton</button><button class="daw-tab-btn " data-daw="logic" onclick="dawTab(this,'logic')">Logic Pro</button><button class="daw-tab-btn " data-daw="fl_studio" onclick="dawTab(this,'fl_studio')">FL Studio</button><button class="daw-tab-btn " data-daw="pro_tools" onclick="dawTab(this,'pro_tools')">Pro Tools</button></div>
+          <div class="daw-tab-content"><div class="daw-tab-panel active" id="dtp-ableton-true-peak-limiting"><p style="margin:0">1. Place all mastering plugins on the Master channel. 2. As the last device before export, insert a true peak limiter plugin (Ableton's built-in Limiter does not perform true peak detection — use a third-party plugin like FabFilter Pro-L 2 or TDR Limiter 6 GE). 3. In the true peak limiter, enable 'True Peak' or 'ISP' mode, set the ceiling to -1.0 dBTP, and set oversampling to at least 4×. 4. Enable the true peak meter display within the plugin. 5. Play through the loudest section of your track and confirm the TP meter never exceeds -1.0 dBTP. 6. Export via File > Export Audio/Video, selecting 32-bit float WAV for the master file, and re-import to verify true peak in a metering plugin before delivery.</p></div><div class="daw-tab-panel " id="dtp-logic-true-peak-limiting"><p style="margin:0">1. Open the Mastering chain on the Stereo Output channel strip. 2. Insert your primary loudness limiter first, then add a true peak limiter as the last insert slot (Logic's Adaptive Limiter does not perform ITU true peak detection — use a third-party true peak limiter in the final slot). 3. Set the true peak ceiling to -1.0 dBTP and enable 4× oversampling minimum. 4. Use the MultiMeter plugin set to 'True Peak' display mode on a post-fader send for real-time monitoring, or use Youlean Loudness Meter inserted after the true peak limiter for integrated LUFS and TP metering simultaneously. 5. Bounce to disk via File > Bounce > Project or Section, choosing 24-bit WAV as the bounce format, and re-analyze the bounced file with a true peak meter before platform submission.</p></div><div class="daw-tab-panel " id="dtp-fl_studio-true-peak-limiting"><p style="margin:0">1. Open the Master mixer track and add all mastering plugins in order. 2. Add your true peak limiter plugin (third-party — Fruity Peak Controller is not a true peak limiter; use FabFilter Pro-L 2, Limiter No6, or similar) as the final plugin in the effects chain. 3. Set the ceiling to -1.0 dBTP and enable true peak / ISP detection mode with at least 4× oversampling. 4. Use the plugin's own true peak meter for real-time monitoring during playback. 5. Export via File > Export > Wave File, setting the quality to 32-bit float WAV for master capture. 6. After export, re-analyze the file in a standalone true peak metering tool such as the free Youlean Loudness Meter standalone app to confirm compliance before upload.</p></div><div class="daw-tab-panel " id="dtp-pro_tools-true-peak-limiting"><p style="margin:0">1. On the Master Fader track, insert all mastering plugins in order on the insert chain. 2. Insert your true peak limiter (Avid's built-in Master Meter provides true peak metering; for limiting use Sonnox Oxford Limiter, FabFilter Pro-L 2, or McDSP ML4000 with true peak mode enabled) as the final insert. 3. Set the true peak ceiling to -1.0 dBTP and confirm oversampling is set to 4× minimum. 4. Insert Avid's Master Meter or a third-party true peak meter plugin (Nugen MasterCheck, Youlean) after the true peak limiter to independently verify the output. 5. Bounce via File > Bounce to Disk, selecting 24-bit or 32-bit float WAV, Offline Bounce mode for speed. 6. Import the bounced file and re-measure with the true peak meter to confirm the ceiling holds through the entire duration before platform delivery.</p></div></div>
+        </div>
+
+<p>A practical workflow detail that catches many engineers: when you are checking loudness compliance during the mastering session, do not use the true peak limiter's gain reduction meter as a proxy for the primary loudness limiter's workload. The gain reduction meter on the true peak limiter should show activity only infrequently — a few events per minute at most. If it is showing continuous or frequent gain reduction, this means ISPs are arriving at the true peak limiter at a rate that indicates the upstream processing chain is not managing gain appropriately. The fix is never to adjust the true peak limiter's release or ceiling — the fix is to revisit the primary limiting stage's output gain, the gain staging between plugins, or the mix's transient content at the source. Think of the gain reduction meter on the true peak limiter as a QC indicator for the rest of your chain: the less it moves, the better everything upstream is working.</p>
+
+<p>For stems and print deliverables where individual elements will be summed or further processed downstream — for example, delivering a vocal stem, a music stem, and an effects stem separately — true peak limiting must be applied individually to each stem at the appropriate ceiling. Do not assume that stems that measure individually below the ceiling will remain below it when summed; the summing process itself generates new peak structure. When delivering stems for sync, broadcast, or theatrical use, use -3.0 dBTP on each stem to provide adequate headroom for the downstream mixing and encoding that will occur in post-production. Delivering stems at -1.0 dBTP leaves insufficient headroom for the downstream processes, and the true peak violations that result will be attributed to your delivery even though they were caused by processes outside your control.</p>
+
+<p class="section-summary">Insert the true peak limiter last in the mastering chain, set the ceiling to the delivery-appropriate dBTP value before anything else, use maximum oversampling on the final render, and verify the output with a compliant true peak meter before submission — if the limiter's gain reduction meter is active frequently, fix it upstream rather than adjusting the limiter.</p>
+</section>
+
+<section class="entry-section" id="genre-table">
+<h2>Genre Applications</h2>
+
+<p>The true peak ceiling value does not change by genre — -1.0 dBTP is -1.0 dBTP whether you are mastering a hip-hop record, a classical orchestral recording, or a death metal album. What does change dramatically by genre is the density of ISP activity, the frequency at which the true peak limiter engages, and the degree to which the overall mastering philosophy places the true peak limiter under stress. Understanding how different genres generate ISPs helps you anticipate where the limiter will work hardest and calibrate the upstream chain to manage those stress points before they reach the true peak stage.</p>
+
+        <div class="genre-table-wrap">
+          <table class="genre-settings-table">
+            <thead><tr><th>Genre</th><th>Ratio</th><th>Attack</th><th>Release</th><th>Threshold</th><th>Notes</th></tr></thead>
+            <tbody><tr><td>Trap</td><td>Brick-wall</td><td>Lookahead 1–2ms</td><td>Auto</td><td>-1.0 dBTP ceiling</td><td>808 subs generate large ISPs — verify with TP meter at 4× oversampling; primary limiter should handle loudness before TP stage</td></tr>
+<tr><td>Hip-Hop</td><td>Brick-wall</td><td>Lookahead 1–3ms</td><td>Auto</td><td>-1.0 dBTP ceiling</td><td>Snare and kick transients are prime ISP sources — ensure less than 0.5 dB TP GR; use oversampled metering post-chain</td></tr>
+<tr><td>House</td><td>Brick-wall</td><td>Lookahead 1–2ms</td><td>Auto</td><td>-1.0 dBTP ceiling</td><td>Repetitive transient pattern makes ISP predictable — confirm ceiling holds through full runtime not just loudest section</td></tr>
+<tr><td>Rock</td><td>Brick-wall</td><td>Lookahead 2–4ms</td><td>Auto</td><td>-1.0 dBTP ceiling</td><td>High-frequency guitar harmonics are ISP-prone — use 8× oversampling to catch HF inter-sample activity accurately</td></tr>
+<tr><td>Mastering</td><td>Brick-wall</td><td>Lookahead 1–4ms</td><td>Auto</td><td>-1.0 dBTP streaming / -3.0 dBTP broadcast</td><td>Final stage only — no more than 0.5 dB GR; louder = primary limiter problem, not a TP limiter parameter to adjust</td></tr>
+</tbody>
+          </table>
+        </div>
+        <div class="mpw-share-bar">
+        <span class="mpw-share-label">Share</span>
+        <button class="mpw-share-btn share-copy" onclick="navigator.clipboard&&navigator.clipboard.writeText('musicproductionwiki.com/bible/true-peak-limiting#genre-table')">Copy Link</button>
+        <a href="https://x.com/intent/tweet?text=True Peak Limiting+By+Genre+%E2%80%94+%40mpwikiofficial&url=https%3A%2F%2Fmusicproductionwiki.com%2Fbible%2Ftrue-peak-limiting%23genre-table" target="_blank" rel="noopener" class="mpw-share-btn share-x"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.26 5.632 5.905-5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>Share on X</a>
+        <a href="https://reddit.com/submit?url=https%3A%2F%2Fmusicproductionwiki.com%2Fbible%2Ftrue-peak-limiting%23genre-table&title=True Peak Limiting+By+Genre+%E2%80%94+MusicProductionWiki" target="_blank" rel="noopener" class="mpw-share-btn share-reddit"><svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor"><circle cx="10" cy="10" r="10"/><path fill="#ff4500" d="M16.67 10a1.46 1.46 0 00-2.47-1 7.12 7.12 0 00-3.85-1.23l.65-3.08 2.13.45a1 1 0 101.07-1 1 1 0 00-.96.68l-2.38-.5a.27.27 0 00-.32.2l-.73 3.44a7.14 7.14 0 00-3.89 1.23 1.46 1.46 0 10-1.61 2.39 2.87 2.87 0 000 .44c0 2.24 2.61 4.06 5.83 4.06s5.83-1.82 5.83-4.06a2.87 2.87 0 000-.44 1.46 1.46 0 00.61-1.08zM7.5 11a1 1 0 111 1 1 1 0 01-1-1zm5.67 2.65a3.54 3.54 0 01-2.34.63 3.54 3.54 0 01-2.34-.63.25.25 0 01.35-.35 3.07 3.07 0 002 .48 3.07 3.07 0 002-.48.25.25 0 01.35.35zm-.17-1.65a1 1 0 111-1 1 1 0 01-1 1z"/></svg>Reddit</a>
+        </div>
+
+<p>Electronic and dance music presents the most complex true peak management challenge due to the combination of hard-clipped synthesizer waveforms, sub-bass content with fast attacks, and the heavy compression and saturation that define the genre's loudness character. The waveform shapes generated by hard-sync synthesis, FM synthesis, and wave-shaping distortion are particularly prone to ISPs because they contain steep, fast transitions between amplitude extremes — exactly the kind of waveform shape that produces the largest divergence between sample-grid peaks and interpolated continuous waveform peaks. Metal and hard rock mastering, as Matias Multaharju notes in the Attack Magazine interview from 2021 referenced in the production literature, requires particular attention to snare and guitar transient content, where the fast attack edges of processed drums and distorted guitar hits generate ISPs that can exceed sample-peak measurements by 2 dB or more. Classical and acoustic music generates ISPs primarily on percussion transients and plucked string attacks, but the overall program loudness is lower, meaning the ISPs arrive at absolute levels that are less likely to cause audible distortion even if the true peak level exceeds the sample-peak level by a meaningful margin.</p>
+</section>
+
+<section class="entry-section" id="hardware-plugin">
+<h2>Hardware vs. Plugin Implementation</h2>
+
+<p>True peak limiting exists in both dedicated hardware mastering processor form and as software plugin implementations, and the architectural differences between the two are significant enough to affect workflow, quality, and cost decisions. Hardware implementations have historically offered more stable and predictable performance characteristics — there is no CPU contention, no driver latency variability, and no floating-point rounding behavior difference between sessions. But the oversampling-based ISP detection that defines true peak limiting is a fundamentally computational operation, and software implementations running on modern DSP hardware have entirely closed the quality gap that once favored dedicated hardware. The current decision between hardware and plugin true peak limiting is primarily one of workflow integration and cost rather than audio quality.</p>
+
+<div class="hardware-plugin-wrap">
+<table class="hardware-plugin-table">
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Hardware</th>
+<th>Plugin</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Oversampling Factor</td>
+<td>Fixed by design (typically 4× or 8×)</td>
+<td>Selectable up to 32× in premium implementations (FabFilter Pro-L 2)</td>
+</tr>
+<tr>
+<td>Metering Integration</td>
+<td>Hardware display with dedicated true peak readout</td>
+<td>Full DAW integration with session recall, automation, and logging</td>
+</tr>
+<tr>
+<td>Latency</td>
+<td>Fixed hardware latency, typically 1–5 ms</td>
+<td>Plugin latency compensation managed by DAW; negligible in offline render</td>
+</tr>
+<tr>
+<td>Session Recall</td>
+<td>Manual parameter logging required</td>
+<td>Exact session recall via DAW project file; zero configuration drift</td>
+</tr>
+<tr>
+<td>Ceiling Precision</td>
+<td>Hardware analog-style stepped controls on older units</td>
+<td>Continuous 0.01 dB precision on all parameters</td>
+</tr>
+<tr>
+<td>Update / Algorithm Improvement</td>
+<td>Fixed at manufacture; requires hardware revision</td>
+<td>Algorithm updates delivered via software update; same cost after purchase</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+        <div class="plugin-recs">
+<div class="plugin-tier plugin-tier-free"><span class="plugin-tier-label">Free Tier</span><div class="plugin-item"><span class="plugin-name">Limiter No6</span> <span class="plugin-mfr">Tokyo Dawn Records</span></div><div class="plugin-item"><span class="plugin-name">Loudmax</span> <span class="plugin-mfr">Thomas Mundt</span></div></div>
+<div class="plugin-tier plugin-tier-mid"><span class="plugin-tier-label">Mid Tier</span><div class="plugin-item"><span class="plugin-name">Pro-L 2</span> <span class="plugin-mfr">FabFilter</span></div><div class="plugin-item"><span class="plugin-name">Limitless</span> <span class="plugin-mfr">elysia</span></div></div>
+<div class="plugin-tier plugin-tier-pro"><span class="plugin-tier-label">Pro Tier</span><div class="plugin-item"><span class="plugin-name">Sonnox Oxford Limiter V3</span> <span class="plugin-mfr">Sonnox</span></div><div class="plugin-item"><span class="plugin-name">Weiss Limiter</span> <span class="plugin-mfr">Softube / Weiss Engineering</span></div></div>
+        </div>
+
+<p>The practical recommendation for engineers working primarily in DAW-based mastering workflows is to use a plugin true peak limiter with the highest available oversampling factor for all delivery mastering. The session recall accuracy, the oversampling flexibility, and the algorithm update path all favor software implementations in a workflow where DAW session management is already the standard. Engineers operating hybrid chains — where analog hardware handles the primary loudness limiting and character — often route back into the DAW for the true peak stage specifically because it offers the precision metering and guaranteed compliance verification that analog hardware cannot provide. Hardware true peak limiting remains relevant in dedicated mastering rooms with hardware-centric signal paths, but it is no longer the default recommendation for the majority of professional mastering workflows.</p>
+</section>
+
+<section class="entry-section" id="before-after">
+<h2>Before and After: ISP Behavior</h2>
+
+        <div class="before-after-block">
+          <div class="ba-before"><span class="ba-label">Before</span><p class="ba-text">Without true peak limiting, the master may pass a sample-peak meter check but contains hidden inter-sample peaks that exceed 0 dBFS. After AAC encoding for streaming, these peaks cause audible clipping artifacts — a harsh, buzzy distortion on transients like snare hits, synthesizer attacks, and vocal consonants that is most obvious on consumer earbuds and phone speakers.</p></div>
+          <div class="ba-after"><span class="ba-label">After</span><p class="ba-text">With a true peak limiter set to -1.0 dBTP, the master has a guaranteed headroom margin that survives codec encoding intact. Transients retain their impact and clarity, the low end stays clean without inter-modulation distortion artifacts, and the file passes automated streaming platform QC checks without rejection — the protection is entirely inaudible in normal playback.</p></div>
+        </div>
+
+<p>The perceptual difference between a master with unmanaged inter-sample peaks and one processed through a correctly configured true peak limiter is not always immediately obvious on the original delivery file — this is part of what makes ISPs so insidious as a mastering problem. In your DAW, on your studio monitors, through your converter chain, the unmanaged master may sound completely clean. The ISPs exist in the mathematical reconstruction space above 0 dBFS, not in the sample-domain representation that your monitoring chain is playing back. The damage manifests only when the audio leaves that controlled environment and enters a codec encoder or a consumer DAC, both of which perform their own interpolation using reconstruction filters that materialize the ISP energy as real, audible clipping. On AAC-encoded streaming files, the artifact sounds like a brief harshness or crackle on drum transients and high-frequency attacks — subtle enough to be dismissed as "just the compression" on a casual listen, but clearly audible on close listening and particularly damaging on headphone playback where transient clarity is a primary listening-quality dimension. The before-after demonstration is most convincingly conducted by encoding the unprotected master to AAC at 256 kbps, decoding back to PCM, and then comparing the decoded result against the true-peak-protected master encoded and decoded through the same chain. The ISP-induced artifacts in the unprotected version become completely audible in this comparison, providing a definitive demonstration of exactly what the true peak limiter prevents.</p>
+</section>
+
+<section class="entry-section" id="in-the-wild">
+<h2>In the Wild: Reference Tracks</h2>
+
+<p>The following tracks from the locked reference list demonstrate true peak management in diverse commercial contexts. Each example illustrates a specific aspect of how true peak limiting functions in a real, released master — from the sub-bass management in minimalist pop to the transient handling demands of energetic production, to the dynamic range preservation that separates streaming-era mastering from the loudness-war approach. Use these tracks actively on your monitoring system with a true peak meter running to observe what compliant mastering sounds and measures like in commercial context.</p>
+
+        <div class="track-examples-list">
+<div class="track-item"><span class="track-artist">Billie Eilish</span> — <span class="track-name">bad guy</span> (2019), <em>WHEN WE ALL FALL ASLEEP, WHERE DO WE GO?</em>. Produced by Finneas O'Connell.<div class="track-note">Play this track on any major streaming platform and notice the controlled, punchy low end without any audible distortion despite extreme loudness. The true peak ceiling has been carefully set at -1 dBTP, preventing codec-induced clipping while the overall integrated loudness targets the platform normalization point.</div></div>
+<div class="track-item"><span class="track-artist">Kendrick Lamar</span> — <span class="track-name">HUMBLE.</span> (2017), <em>DAMN.</em>. Produced by Mike Will Made It.<div class="track-note">The explosive snare crack at the top of this track demonstrates true peak protection at work — the transient is preserved with full impact but the inter-sample reconstruction never exceeds the delivery ceiling. Without true peak limiting, the codec encoding for Spotify or Apple Music would introduce audible distortion right on that hit.</div></div>
+<div class="track-item"><span class="track-artist">Dua Lipa</span> — <span class="track-name">Levitating</span> (2020), <em>Future Nostalgia</em>. Produced by Stuart Price, Koz.<div class="track-note">The driving bass synth in this track would generate significant inter-sample peaks on its leading edge without true peak control. Notice that on streaming the bass remains clean and tight — a -1 dBTP ceiling managed during mastering prevents the AAC encoder from creating distortion artifacts in the low-mid crossover region.</div></div>
+<div class="track-item"><span class="track-artist">Taylor Swift</span> — <span class="track-name">Anti-Hero</span> (2022), <em>Midnights</em>. Produced by Jack Antonoff.<div class="track-note">This commercial pop master is a textbook example of streaming-era delivery — integrated loudness sits near -9 LUFS integrated with a true peak of -1 dBTP. Listen for how the vocal sits cleanly above a dense production without any harsh digital edge, which would appear immediately if the ISPs were left uncontrolled into lossy encoding.</div></div>
+<div class="track-item"><span class="track-artist">The Weeknd</span> — <span class="track-name">Blinding Lights</span> (2019), <em>After Hours</em>. Produced by DaHeala, Metro Boomin, Oscar Holter, Max Martin.<div class="track-note">The synthesizer attack and pulsing sidechain of this track create waveform shapes that are prime candidates for inter-sample overshoots. The mastered version holds cleanly at -1 dBTP even through the densest sections of the chorus — proof that the true peak limiter is doing invisible protective work throughout the entire runtime.</div></div>
+<div class="track-item"><span class="track-artist">Olivia Rodrigo</span> — <span class="track-name">drivers license</span> (2021), <em>SOUR</em>. Produced by Dan Nigro.<div class="track-note">The dynamic shift into the full-band climax of this track is a stress-test for true peak management — high-energy transients arrive suddenly from a quiet section. The true peak limiter prevents any overshoot during the abrupt loudness jump while keeping the emotional impact of the swell completely intact.</div></div>
+<div class="track-item"><span class="track-artist">Daft Punk</span> — <span class="track-name">Get Lucky</span> (2013), <em>Random Access Memories</em>. Produced by Daft Punk, Nile Rodgers.<div class="track-note">Mastered before true peak was a mandatory standard, later streaming versions of this track were remastered to meet -1 dBTP compliance. Compare early CD versions with current streaming playback to hear how inter-sample peak management affects the clarity of the guitar and drum transients without changing perceived loudness.</div></div>
+        </div>
+
+<p>Across this reference list, the common thread is that true peak compliance is entirely invisible to the listener when the mastering is executed correctly. The -1 dBTP ceiling imposed on each of these tracks does not diminish the perceived loudness, impact, or dynamic character of the music — because the ceiling is applied to the ISP reconstruction domain, not to the perceived loudness space. The emotional impact of the snare crack in Kendrick Lamar's "HUMBLE.," the intimacy of Billie Eilish's "bad guy," and the euphoric momentum of Dua Lipa's "Levitating" are all completely intact. The true peak limiter's invisibility is the correct outcome — it means the mastering engineer successfully deployed the safeguard without touching the creative character of the audio. When a true peak limiter is audible, it means something else in the chain has gone wrong, and the true peak limiter is being asked to do work that belongs to the primary limiting or gain staging stages upstream.</p>
+</section>
+
+<section class="entry-section" id="types">
+<h2>Types of True Peak Limiting</h2>
+
+        <div class="comparison-callouts">
+        <div style="background:#13132a;border:1px solid #2a2a4a;border-radius:8px;padding:20px">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#f5a623;font-weight:700;margin-bottom:10px">True Peak Limiting vs Limiting</div>
+          <p style="font-size:13px;color:#c8c8d8;margin:0">See the full comparison: <a href="/bible/limiting" style="color:#f5a623;text-decoration:none">Limiting</a></p>
+        </div>
+        <div style="background:#13132a;border:1px solid #2a2a4a;border-radius:8px;padding:20px">
+          <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#f5a623;font-weight:700;margin-bottom:10px">True Peak Limiting vs Loudness Normalization</div>
+          <p style="font-size:13px;color:#c8c8d8;margin:0">See the full comparison: <a href="/bible/loudness-normalization" style="color:#f5a623;text-decoration:none">Loudness Normalization</a></p>
+        </div>
+        </div>
+
+<p>Not all true peak limiters operate identically under the shared standard. The ITU-R BS.1770-4 specification defines the measurement method — 4× oversampling minimum with a specific filter response — but it does not dictate the gain computation algorithm, the release behavior, the lookahead implementation, or the quality of the filter used for oversampling. These design choices produce meaningfully different sonic behaviors when the limiter is actively engaging, particularly on material with a high density of ISP events. Understanding the architectural approaches helps in selecting the right tool for a specific mastering context.</p>
+
+<div class="types-grid">
+
+<div class="type-card">
+<span class="type-name">Transparent Safety Limiter</span>
+<span class="type-hardware">Plugin / Software</span>
+<p class="type-desc">Designed exclusively for ISP protection with minimal audible character. Uses long lookahead (2–5 ms), program-adaptive release, and high oversampling (8× or 16×) to make gain reduction as invisible as possible. Engages infrequently by design — catches only ISPs that escaped the primary limiter. The correct tool for the final stage of a mastering chain where the primary limiting and loudness work is complete. Examples include FabFilter Pro-L 2 in Transparent mode, and the Sonnox Oxford Limiter in true peak mode. The defining characteristic is that you should not be able to hear it working even when the gain reduction meter is showing activity.</p>
+</div>
+
+<div class="type-card">
+<span class="type-name">Combined Loudness / True Peak Limiter</span>
+<span class="type-hardware">Plugin / Software</span>
+<p class="type-desc">A single processor that handles both primary loudness limiting and true peak ceiling enforcement in one plugin. The loudness stage applies the bulk of the gain reduction for target LUFS compliance, while the true peak stage operates on the oversampled output to enforce the ISP ceiling. Common in streaming-targeted mastering tools like iZotope Ozone Maximizer with IRC IV and True Peak mode enabled. Convenient for streamlined chains, but requires careful parameter management to ensure the true peak stage is not overworked by a loudness stage set too aggressively. The risk is that both functions compete for the same plugin slot, making it harder to diagnose which stage is causing audible artifacts when limiting is heavy.</p>
+</div>
+
+<div class="type-card">
+<span class="type-name">Broadcast-Grade True Peak Processor</span>
+<span class="type-hardware">Hardware / Plugin</span>
+<p class="type-desc">Implements the full ITU-R BS.1770-4 true peak measurement and limiting specification with broadcast delivery certification. These processors — including Jünger Audio's Level Magic, Orban Optimod implementations with true peak modes, and the TC Electronic DB4 — are designed specifically for broadcast signal chains where EBU R128 or ATSC A/85 compliance is required and must be documentable. They typically provide logging, compliance reporting, and -3 dBTP ceiling enforcement alongside loudness normalization processing. In music mastering contexts, broadcast-grade processors are used primarily for deliverables explicitly targeting TV broadcast placement, film theatrical delivery, or advertising production where the delivery specification requires documented EBU R128 compliance.</p>
+</div>
+
+<div class="type-card">
+<span class="type-name">Mastering-Grade Oversampled Clipper with True Peak Mode</span>
+<span class="type-hardware">Plugin</span>
+<p class="type-desc">A category that has emerged more recently in the plugin market: oversampled clippers that incorporate a true peak ceiling mode, operating at 4× to 16× oversampling to clip in the reconstructed waveform domain rather than at the sample grid. The Kazrog True Iron Clipper, SIR Audio Tools StandardCLIP, and similar tools operate in this space. The sonic character differs from a transparent limiter — clipping introduces harmonic distortion that can add density and apparent loudness — but when operated in the oversampled domain, the clipping artifacts are managed at the reconstructed waveform level, and the output true peak ceiling is guaranteed. Used selectively on drum buses and dense mix elements during mastering to add controlled density before the final transparent true peak limiter stage.</p>
+</div>
+
+<div class="type-card">
+<span class="type-name">M-S True Peak Limiter</span>
+<span class="type-hardware">Plugin</span>
+<p class="type-desc">Applies true peak detection and gain reduction independently to the mid and side components of the stereo signal, rather than to the L and R channels directly. This approach allows independent ISP management for the center information (mid) and the stereo difference signal (side), which can be useful when a specific element in the stereo image — typically a centered bass element or a wide high-frequency synthesizer — is the primary source of ISP generation. By treating mid and side independently, the limiter can apply gain reduction only to the component generating the ISP without affecting the other, theoretically resulting in less alteration of the stereo image per ISP event. Requires careful implementation to avoid introducing phase relationships between mid and side that alter the perceived stereo width of the output.</p>
+</div>
+
+<div class="type-card">
+<span class="type-name">Integrated Metering and True Peak Verification Tool</span>
+<span class="type-hardware">Plugin / Hardware</span>
+<p class="type-desc">Not a limiter in the gain-reduction sense, but a measurement tool that provides ITU-R BS.1770-4 compliant true peak metering for verification purposes. Tools like Nugen Audio VisLM, Youlean Loudness Meter 2, iZotope Insight 2, and the Waves WLM Plus provide true peak readout alongside LUFS integrated, short-term, and momentary measurements. Used as the final QC station after the true peak limiter, before file delivery, to document that the output meets the specified ceiling. The correct workflow places one of these tools as the last item in the monitoring chain — after the true peak limiter — to provide a live readout of the actual delivery output including the limiter's effect on ISP content.</p>
+</div>
+
+</div>
+
+<p class="section-summary">True peak limiting encompasses a range of implementation approaches — from the transparent safety limiter designed for minimal audibility to the broadcast-certified processor designed for documented compliance — and selecting the right type for the delivery context is as important as setting the correct ceiling value.</p>
+</section>
+
+<div class="producers-verdict" id="verdict">
+<div class="verdict-header">
+<span class="verdict-diamond">&#9670;</span>
+<span class="verdict-label">The Producer's Verdict</span>
+<span class="verdict-diamond">&#9670;</span>
+</div>
+
+<p class="verdict-lead"><em>True peak limiting is not a creative tool — it is mandatory infrastructure, the last line of defense between your master and distortion artifacts introduced by DAC reconstruction or lossy codec encoding.</em></p>
+
+<div class="verdict-grid">
+<div class="verdict-rule">
+<span class="vr-label">Streaming Ceiling</span>
+<span class="vr-value">-1.0 dBTP</span>
+<span class="vr-note">Non-negotiable for Spotify, Apple Music, YouTube, Tidal delivery</span>
+</div>
+<div class="verdict-rule">
+<span class="vr-label">Broadcast Ceiling</span>
+<span class="vr-value">-3.0 dBTP</span>
+<span class="vr-note">EBU R128 and ATSC A/85; mandatory for broadcast and theatrical delivery</span>
+</div>
+<div class="verdict-rule">
+<span class="vr-label">Chain Position</span>
+<span class="vr-value">Absolute Last</span>
+<span class="vr-note">Nothing — no saturation, no EQ, no widening — after this plugin</span>
+</div>
+<div class="verdict-rule">
+<span class="vr-label">Oversampling</span>
+<span class="vr-value">8× minimum on final render</span>
+<span class="vr-note">Never bypass oversampling; 4× minimum, 8× or higher for delivery</span>
+</div>
+<div class="verdict-rule">
+<span class="vr-label">GR Meter Activity</span>
+<span class="vr-value">Infrequent = correct</span>
+<span class="vr-note">Continuous activity means upstream problems — fix the chain, not the limiter</span>
+</div>
+<div class="verdict-rule">
+<span class="vr-label">Verification</span>
+<span class="vr-value">BS.1770-4 TP meter required</span>
+<span class="vr-note">Check rendered file with compliant TP meter before any delivery submission</span>
+</div>
+</div>
+
+<div class="mpw-share-bar" style="display:flex;justify-content:center;gap:1rem;margin:1.5rem 0;">
+<button class="share-btn copy-verdict">Copy Verdict</button>
+<a class="share-btn share-x" href="#" target="_blank" rel="noopener">Share on X</a>
+<a class="share-btn share-reddit" href="#" target="_blank" rel="noopener">Reddit</a>
+</div>
+
+<p class="verdict-close"><em>Set your true peak ceiling at -1 dBTP for streaming delivery and -3 dBTP when the client needs broadcast or heavy compression headroom, and never bypass the oversampling. Any other approach is leaving a trap in your master that will detonate on every platform you care about.</em></p>
+</div>
+
+<section class="entry-section" id="mistakes">
+<h2>Common Mistakes</h2>
+
+<p>True peak limiting is a narrow, well-defined process, which makes the mistakes that occur around it particularly avoidable — and particularly consequential. These are not subtle craft errors; they are structural failures that result in delivered masters that either distort on every platform or are returned by ingest systems for ceiling violations. Every one of these mistakes is common in the work of engineers who are technically competent in every other aspect of mastering but have not fully internalized the specific requirements of ISP management.</p>
+
+<div class="mistakes-list">
+
+<div class="mistake-item">
+<h4 class="mistake-title">Using a Sample-Peak Limiter as the Final Stage and Calling It Done</h4>
+<p>A brick-wall limiter set to -1.0 dBFS on a standard sample-peak meter is not a true peak limiter. It guarantees that no individual sample exceeds -1 dBFS — nothing more. The inter-sample peaks in the reconstructed waveform are completely unaffected. This is the single most common true peak mistake in independent mastering workflows, and it is entirely invisible in the DAW — the meters look correct, the output sounds clean, and the file passes visual inspection. The distortion only appears when the file is encoded by the delivery platform. Many engineers have been shipping this mistake on every single release without knowing it until they used a true peak meter for the first time and saw the ISP levels on their delivered files.</p>
+</div>
+
+<div class="mistake-item">
+<h4 class="mistake-title">Placing Processing After the True Peak Limiter</h4>
+<p>Adding any plugin after the true peak limiter — even a metering plugin that claims to have zero processing effect, even a dithering plugin, even a very gentle de-esser — invalidates the ISP protection that the limiter provided. Any processing that modifies the sample values, even by fractional amounts, can alter the waveform shape in ways that generate new ISPs. The only thing that belongs after the true peak limiter in the signal path is a true peak metering plugin that reads the output without modifying it. Dithering, if required, must be applied before the true peak limiter or verified post-limiter with a metering check. Dithering noise shapes specifically can introduce high-frequency energy that creates ISPs if applied after the true peak stage.</p>
+</div>
+
+<div class="mistake-item">
+<h4 class="mistake-title">Disabling Oversampling in Monitoring to Save CPU, Then Forgetting to Re-Enable for Render</h4>
+<p>Many engineers legitimately disable the highest oversampling factor during the creative and diagnostic phases of a mastering session to reduce CPU load and monitoring latency. The critical failure is forgetting to re-enable maximum oversampling before the final offline render. A true peak limiter running at 1× oversampling (no oversampling) in render mode provides exactly zero ISP protection — it is a standard sample-peak limiter under a misleading name. The practical safeguard is to create a render checklist that includes explicitly confirming the oversampling setting as a required pre-render step. Every single delivery render. No exceptions.</p>
+</div>
+
+<div class="mistake-item">
+<h4 class="mistake-title">Setting the Ceiling at 0.0 dBTP for "Maximum Loudness"</h4>
+<p>Setting the true peak ceiling at 0.0 dBTP removes all headroom for codec-induced ISP generation and leaves the master technically compliant at the limiter output but immediately non-compliant after encoding. The AAC and MP3 encoders used by every major streaming platform introduce additional ISP energy during their internal processing — typically 0.1 to 0.5 dB, and up to 1.5 dB on problematic content. A master delivered at exactly 0.0 dBTP will exceed 0 dBFS in the codec output, causing the same clipping artifacts that the true peak limiter was supposed to prevent. The -1.0 dBTP standard exists specifically to provide headroom for this codec-induced ISP generation. Setting 0.0 dBTP is not a loudness advantage — it is a compliance failure.</p>
+</div>
+
+<div class="mistake-item">
+<h4 class="mistake-title">Not Verifying the Rendered File with a Compliant True Peak Meter</h4>
+<p>The gain reduction meter displayed by a true peak limiter plugin during real-time playback confirms that the limiter is engaging and processing the signal. It does not guarantee that the rendered output file complies with the ceiling. Sample rate conversion, dithering, file format encoding, and DAW-specific rendering paths can all introduce processing that alters the output relative to what the plugin meters showed during playback. The only reliable compliance check is loading the rendered delivery file into a measurement tool with ITU-R BS.1770-4 compliant true peak metering and reading the actual file output. This is a two-minute step that eliminates delivery failures caused by the render path not matching the monitoring path. Skip it and you are trusting a chain you have not verified.</p>
+</div>
+
+<div class="mistake-item">
+<h4 class="mistake-title">Using the True Peak Limiter as the Primary Loudness Tool</h4>
+<p>Running the true peak limiter as the only gain-reduction stage in the mastering chain — treating it as both the loudness limiter and the ISP safeguard — overloads a tool that is designed for narrow, infrequent gain reduction. A true peak limiter operating under heavy continuous gain reduction is making trade-offs between ISP protection and audio quality that it is not architected to handle gracefully. The transparent safety design of a proper true peak limiter assumes it will engage briefly and infrequently. Using it as the primary loudness tool produces an over-limited, modulated, artifact-laden result. The correct architecture is a dedicated primary loudness limiter upstream handling the heavy gain reduction, with the true peak limiter operating on the already-limited output and catching only the ISPs that slip through the sample-domain limiting of the primary stage.</p>
+</div>
+
+</div>
+
+<p class="section-summary">The most dangerous true peak mistakes are invisible in the DAW — using a sample-peak limiter as a substitute, placing processing after the true peak stage, and failing to verify the rendered file with a compliant meter. All of these produce masters that measure correctly in the session and distort on every delivery platform.</p>
+</section>
+
+<section class="entry-section" id="flags">
+<h2>Flags and Alerts</h2>
+
+        <div class="red-green-flags">
+          <div class="flags-col"><h4 style="color:#cc3333">Red Flags</h4><ul><li class="red-flag">🔴 Your true peak limiter is showing more than 2–3 dB of gain reduction — the primary limiter upstream is not doing its job and you are pushing true peak protection into audible pumping territory.</li><li class="red-flag">🔴 You are metering with a standard sample-peak meter and assuming it represents the true peak of your master — inter-sample peaks can exceed your sample-peak reading by +3 dB or more, meaning your master is clipping on delivery.</li><li class="red-flag">🔴 You have disabled or bypassed the true peak limiter for 'better sound' on a streaming delivery — this is incorrect and will cause audible distortion artifacts when the platform's AAC or MP3 encoder reconstructs the waveform.</li></ul></div>
+          <div class="flags-col"><h4 style="color:#33cc33">Green Flags</h4><ul><li class="green-flag">🟢 Your true peak meter reads -1.0 dBTP or below on export and the limiter is engaging for less than 0.5 dB of gain reduction — your primary limiting chain is doing the heavy lifting correctly.</li><li class="green-flag">🟢 You have verified the true peak ceiling at 4× oversampling minimum and cross-checked with a dedicated metering plugin before delivery — your master will pass automated platform QC without rejection.</li><li class="green-flag">🟢 Your true peak limiter is operating on a well-gain-staged signal where headroom has been properly managed throughout the entire mastering chain, keeping the true peak controller transparent and inaudible.</li></ul></div>
+        </div>
+
+<p>True peak violations in delivered masters are detected automatically by the ingest systems of major streaming platforms and broadcast networks, and the consequences are immediate and non-negotiable. Spotify and Apple Music will apply gain reduction to the entire track to bring the true peak level into compliance — but this gain reduction is applied without creative intent, potentially altering the loudness balance of the track relative to others on the same album or playlist. YouTube will process the audio through its normalization system, which applies true peak correction as part of the normalization pass. Some broadcast delivery systems will outright reject files that fail true peak compliance rather than applying correction, returning them to the submitter with a technical error report. In the professional delivery workflow, the flag that triggers the most immediate corrective action is a rendered file that measures above the specified dBTP ceiling on a post-render metering check — this is the QC gate that must be passed before any delivery submission is made, and a failed check requires returning to the mastering session to either reduce the input gain to the true peak limiter, adjust the ceiling setting, or investigate why the rendered output diverged from the session monitoring output. As of the 2026-05-19 publication of this entry, platform compliance requirements have only tightened over the preceding decade, and there is no indication in the industry literature or platform policy documentation that this trend will reverse.</p>
+</section>
+
+<section class="entry-section" id="progression">
+<h2>Learning Progression</h2>
+
+<p>True peak limiting has a clear skill progression path that moves from basic compliance awareness through parameter-level understanding to full chain integration and diagnostic capability. The beginner stage is about establishing the baseline safeguard correctly. The intermediate stage is about understanding why the parameters matter and how to read the system's behavior as a QC signal for the upstream chain. The advanced stage is about integrating true peak management into every decision in the mastering chain, not just the final plugin slot.</p>
+
+<div class="progression-path">
+
+<div class="prog-stage prog-beginner">
+<span class="prog-label">Beginner</span>
+<p>Insert a true peak limiter as the absolute last plugin on your master bus, set the ceiling to -1.0 dBTP, and use your DAW's built-in true peak meter to verify the output never exceeds that value before export. Confirm the oversampling is enabled. Render your delivery file and load it back into your DAW to check the true peak reading on the rendered file itself. This single practice — not just trusting the session meters, but checking the rendered output — eliminates the most common streaming delivery failure and establishes the correct baseline workflow for all future mastering sessions.</p>
+</div>
+
+<div class="prog-stage prog-intermediate">
+<span class="prog-label">Intermediate</span>
+<p>Learn to distinguish the true peak ceiling from the loudness target (LUFS) and understand that these are independent parameters managed by different tools. Study how different genres and production styles generate ISPs at different rates and amplitudes. Use the true peak limiter's gain reduction meter as a diagnostic — if it is active frequently, identify which upstream element is generating the ISPs and address the source. Develop a two-limiter chain architecture: a primary loudness limiter for integrated loudness targeting and density, followed by a transparent true peak limiter for ISP enforcement. Build a delivery checklist that includes post-render true peak verification as a required step before any platform submission.</p>
+</div>
+
+<div class="prog-stage prog-advanced">
+<span class="prog-label">Advanced</span>
+<p>At the advanced level, true peak management is embedded in every mastering decision upstream of the true peak limiter itself. You are calibrating the gain staging through the entire chain with ISP generation in mind — understanding which processing stages (saturation, high-frequency EQ boost, stereo widening) produce the largest ISP amplification, and structuring the chain to manage that amplification before it reaches the primary limiter. You are differentiating ceiling targets by delivery context automatically — -1.0 dBTP for streaming, -3.0 dBTP for broadcast stems, -0.3 dBTP for CD — and you are verifying compliance with a BS.1770-4 measurement tool on every rendered file. You understand the codec-induced ISP generation behavior of different encoders at different bitrates and you calibrate your ceiling targets to account for it on specific deliverables. The true peak limiter is invisible in your workflow because the rest of the chain is managing the signal correctly upstream of it.</p>
+</div>
+
+</div>
+
+<p class="section-summary">True peak limiting mastery progresses from basic compliance insertion through diagnostic chain reading to full upstream integration — the advanced engineer manages ISP generation throughout the entire mastering chain, not just at the final plugin.</p>
+</section>
+      <section class="entry-section" id="tools">
+        <h2>Tools for This Entry</h2>
+<style>
+.t3{background:#0d0d0d;border:1.5px solid rgba(245,166,35,.45);border-radius:10px;overflow:hidden;font-family:system-ui,-apple-system,sans-serif}
+.t3 .tb{padding:16px 20px 18px}
+.t3 label.tl{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#555;margin-bottom:5px}
+.t3 input[type=number],.t3 select{background:#111;border:1px solid #252525;color:#e0ddd8;padding:8px 10px;border-radius:6px;font-size:13px;width:100%;box-sizing:border-box;outline:none;transition:border-color .15s;-moz-appearance:textfield}
+.t3 input[type=number]::-webkit-inner-spin-button{opacity:.4}
+.t3 input[type=number]:focus,.t3 select:focus{border-color:#f5a623}
+.t3 select option{background:#111}
+.t3 input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:4px;background:#252525;border-radius:2px;outline:none;margin:8px 0 4px;cursor:pointer}
+.t3 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:#f5a623;cursor:pointer;border:2px solid #0d0d0d;box-shadow:0 0 0 1px rgba(245,166,35,.3)}
+.t3 .tr{display:grid;gap:12px;margin-bottom:14px}
+.t3 .c2{grid-template-columns:1fr 1fr}
+.t3 .c3{grid-template-columns:1fr 1fr 1fr}
+.t3 .c4{grid-template-columns:1fr 1fr 1fr 1fr}
+.t3 .rb{background:#111;border:1px solid #1e1e1e;border-radius:8px;padding:12px 14px;text-align:center}
+.t3 .rn{font-size:26px;font-weight:800;color:#f5a623;font-variant-numeric:tabular-nums;line-height:1.1}
+.t3 .ru{font-size:11px;color:#444;margin-top:3px}
+.t3 .rl{font-size:9px;color:#444;text-transform:uppercase;letter-spacing:.09em;margin-bottom:5px}
+.t3 .co{background:#130e00;border-left:3px solid #f5a623;border-radius:0 6px 6px 0;padding:10px 14px;font-size:12px;color:#a0a09a;line-height:1.65;margin:12px 0}
+.t3 .sh{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#f5a623;margin:16px 0 8px;border-bottom:1px solid rgba(245,166,35,.12);padding-bottom:4px}
+.t3 .cg{display:grid;gap:5px}
+.t3 .cg.c2{grid-template-columns:1fr 1fr}
+.t3 .cg.c3{grid-template-columns:1fr 1fr 1fr}
+.t3 .tc{background:#111;border:1px solid #1e1e1e;border-radius:6px;padding:9px 13px;cursor:pointer;transition:border-color .15s,background .15s;display:flex;justify-content:space-between;align-items:center;gap:8px;user-select:none}
+.t3 .tc:hover{border-color:rgba(245,166,35,.5);background:#160f00}
+.t3 .tc.hl{border-color:#f5a623;background:#1a1200}
+.t3 .cl{font-size:12px;color:#bbb;flex:1;line-height:1.4}
+.t3 .cv{font-size:12px;font-weight:700;color:#f5a623;white-space:nowrap;font-variant-numeric:tabular-nums}
+.t3 .cs{font-size:10px;color:#444;margin-left:4px}
+.t3 .bdg{display:inline-block;background:#1a1200;color:#f5a623;font-size:9px;font-weight:700;padding:1px 5px;border-radius:6px;border:1px solid rgba(245,166,35,.25);vertical-align:middle;margin-left:5px}
+.t3 .btn{background:#f5a623;color:#0a0a0b;border:none;padding:8px 16px;border-radius:6px;font-size:12px;font-weight:800;cursor:pointer;transition:background .15s}
+.t3 .btn:hover{background:#d4911f}
+.t3 .nt{font-size:11px;color:#3a3a3a;line-height:1.65;margin-top:10px;border-top:1px solid #1a1a1a;padding-top:10px}
+.t3 canvas{display:block;width:100%;border-radius:6px;border:1px solid #1e1e1e;background:#0a0a0a}
+.t3 .mr{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.t3 .ml{font-size:11px;color:#666;width:115px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.t3 .mb{flex:1;height:8px;background:#1a1a1a;border-radius:4px;overflow:hidden}
+.t3 .mf{height:100%;border-radius:4px;transition:width .3s ease}
+.t3 .mv{font-size:11px;font-weight:700;width:72px;text-align:right;font-variant-numeric:tabular-nums}
+@media(max-width:600px){.t3 .c3,.t3 .c4{grid-template-columns:1fr 1fr}.t3 .cg.c3{grid-template-columns:1fr 1fr}.t3 .rn{font-size:22px}}
+</style><div class="t3"><div style="background:#0d0800;border-bottom:2px solid #f5a623;padding:12px 20px;display:flex;align-items:center;gap:14px"><div style="width:28px;height:28px;border-radius:7px;background:#00e8a2;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="15" height="15" viewBox="0 0 18 18" fill="none"><rect x="1.5" y="7" width="2.5" height="9" rx="1.2" fill="#0a0a0b"/><rect x="6" y="4" width="2.5" height="12" rx="1.2" fill="#0a0a0b"/><rect x="10.5" y="1" width="2.5" height="16" rx="1.2" fill="#0a0a0b"/><rect x="15" y="5" width="2.5" height="9" rx="1.2" fill="#0a0a0b"/></svg></div><div style="flex:1"><div style="font-size:12px;font-weight:800;color:#e8e8e3;letter-spacing:.02em;line-height:1.2">MusicProductionWiki.com</div><div style="font-size:10px;color:#f5a623;font-weight:600;letter-spacing:.08em;margin-top:1px">&#9670; The Producer's Bible</div></div><span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#f5a623;background:rgba(245,166,35,.12);border:1px solid rgba(245,166,35,.35);padding:3px 10px;border-radius:10px">Interactive Tool</span><div style="font-size:11px;font-weight:700;color:#c8c8c3;margin-top:3px;text-align:right">LUFS Target and Loudness Penalty Reference</div></div><div style="background:#100c00;border-bottom:1px solid rgba(245,166,35,.15);padding:8px 20px;font-size:12px;color:#888;line-height:1.5">See exactly how much each streaming platform reduces your track. Enter your integrated LUFS, select genre — get per-platform penalties, mastering targets, and delivery guidance.</div><div class="tb">
+<div class="tr c2">
+  <div><label class="tl">Your Integrated LUFS</label>
+    <input type="number" id="lv" value="-8" step="0.5" max="0" min="-40" oninput="lc()"></div>
+  <div><label class="tl">Genre</label>
+    <select id="lg" onchange="lc()">
+      <option value="edm">EDM / Trap / Bass Music</option>
+      <option value="pop" selected>Pop / Commercial</option>
+      <option value="hiphop">Hip-Hop / R&amp;B</option>
+      <option value="rock">Rock / Metal</option>
+      <option value="indie">Indie / Alternative</option>
+      <option value="classical">Classical / Jazz</option>
+      <option value="podcast">Podcast / Voice</option>
+    </select></div>
+</div>
+<div class="sh">Platform Loudness Penalties</div>
+<div id="lmeters"></div>
+<div class="co" id="lco"></div>
+<div class="sh">Genre Mastering Target</div>
+<div id="lgen"></div>
+<div class="sh">Key LUFS Benchmarks</div>
+<div class="cg c2">
+  <div class="tc"><span class="cl">Spotify / YouTube / Tidal</span><span class="cv">-14 LUFS</span></div>
+  <div class="tc"><span class="cl">Apple Music</span><span class="cv">-16 LUFS</span></div>
+  <div class="tc"><span class="cl">Podcast (Apple / Spotify)</span><span class="cv">-16 LUFS</span></div>
+  <div class="tc"><span class="cl">Netflix / VOD delivery</span><span class="cv">-27 LUFS</span></div>
+  <div class="tc"><span class="cl">Broadcast EBU R128</span><span class="cv">-23 LUFS</span></div>
+  <div class="tc"><span class="cl">True Peak ceiling (streaming)</span><span class="cv">-1 dBTP</span></div>
+</div>
+<div class="nt">LUFS measures perceived loudness over time. Platforms normalize loud masters down — mastering louder than target means the platform turns your track down, potentially removing punch. Always check True Peak (-1 dBTP minimum) separately from sample peak before delivery.</div>
+<script>
+var PLAT=[
+  {n:'Spotify',t:-14},{n:'YouTube',t:-14},{n:'Apple Music',t:-16},
+  {n:'Tidal',t:-14},{n:'Amazon Music',t:-14},{n:'Deezer',t:-14},
+  {n:'SoundCloud',t:-8},{n:'Podcast',t:-16},{n:'Netflix/VOD',t:-27},{n:'EBU Broadcast',t:-23}
+];
+var GEN={
+  edm:{r:'-6 to -8 LUFS',tip:'EDM and trap master loud for club systems and DJ playback. Heavy streaming penalty but sounds right on speaker rigs. True Peak: -0.3 dBTP.'},
+  pop:{r:'-8 to -10 LUFS',tip:'Pop balances loudness and streaming compliance. -8 LUFS reads punchy on car and phone speakers. Apple Music applies a small penalty.'},
+  hiphop:{r:'-7 to -9 LUFS',tip:'Hip-hop prioritizes 808 punch and trap impact. 808 sub transients eat headroom — watch True Peak carefully on every kick hit.'},
+  rock:{r:'-7 to -9 LUFS',tip:'Rock and metal follow loudness tradition. True Peak at -1 dBTP minimum. Avoid over-limiting that crushes snare attack.'},
+  indie:{r:'-10 to -13 LUFS',tip:'Indie benefits from dynamic range — a quieter master feels more organic. Streaming normalization helps rather than hurts here.'},
+  classical:{r:'-18 to -23 LUFS',tip:'Classical preserves dynamic range by design. Match EBU R128 (-23 LUFS) for broadcast-compliant delivery. No streaming penalties.'},
+  podcast:{r:'-16 LUFS',tip:'Apple Podcasts and Spotify target -16 LUFS. Consistency track-to-track matters more than absolute loudness. Gate silence aggressively.'}
+};
+function lc(){
+  var lufs=parseFloat(document.getElementById('lv').value)||-8;
+  var genre=document.getElementById('lg').value;
+  var html='';
+  PLAT.forEach(function(p){
+    var pen=Math.min(0,p.t-lufs);var safe=pen>=0;
+    var pct=safe?0:Math.min(100,Math.abs(pen)/20*100);
+    var col=safe?'#4ade80':'#f87171';
+    html+='<div class="mr"><span class="ml">'+p.n+'</span>'+
+          '<div class="mb"><div class="mf" style="width:'+pct+'%;background:'+col+'"></div></div>'+
+          '<span class="mv" style="color:'+col+'">'+(safe?'No penalty':pen.toFixed(1)+' dB')+'</span></div>';
+  });
+  document.getElementById('lmeters').innerHTML=html;
+  var g=GEN[genre]||GEN.pop;
+  document.getElementById('lgen').innerHTML='<div class="co"><strong style="color:#f5a623">'+
+    genre.toUpperCase()+' target: '+g.r+'</strong><br>'+g.tip+'</div>';
+  var msg=lufs>-7?'Very loud ('+lufs+' LUFS). Most platforms reduce significantly. Punchy on DJ systems, loses streaming impact.':
+    lufs>-10?'Loud ('+lufs+' LUFS). Competitive streaming level. Apple Music applies a penalty.':
+    lufs>-14?'Moderate ('+lufs+' LUFS). No Spotify/YouTube penalty. Apple: small reduction.':
+    lufs>-18?'Quiet-moderate ('+lufs+' LUFS). No penalties on any major platform. Dynamics preserved.':
+    'Very quiet ('+lufs+' LUFS). Classical/broadcast range. No normalization applied anywhere.';
+  document.getElementById('lco').textContent=msg;
+}
+document.getElementById('lv').addEventListener('input',lc);
+document.getElementById('lg').addEventListener('change',lc);
+lc();
+</script><div style="display:flex;align-items:center;gap:8px;margin-top:16px;padding-top:12px;border-top:1px solid #1e1e1e;flex-wrap:wrap"><span style="font-size:10px;color:#555;flex:1;font-weight:600;letter-spacing:.04em">&#9670; The Producer's Bible &mdash; MusicProductionWiki.com</span><button onclick="navigator.clipboard.writeText('musicproductionwiki.com/bible/true-peak-limiting#tools');this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Link',2000)" style="background:#1a1a1a;border:1px solid #2c2c2c;color:#888;font-size:11px;padding:4px 10px;border-radius:4px;cursor:pointer">Copy Link</button><a href="https://x.com/intent/tweet?text=LUFS+Target+and+Loudness+Penalty+Reference+%E2%80%94+%40mpwikiofficial&url=https%3A%2F%2Fmusicproductionwiki.com%2Fbible%2Ftrue-peak-limiting%23tools" target="_blank" rel="noopener" style="background:#1a1a1a;border:1px solid #2c2c2c;color:#888;font-size:11px;padding:4px 10px;border-radius:4px;text-decoration:none">&#120143; Share</a><a href="https://reddit.com/submit?url=https%3A%2F%2Fmusicproductionwiki.com%2Fbible%2Ftrue-peak-limiting%23tools&title=LUFS+Target+and+Loudness+Penalty+Reference" target="_blank" rel="noopener" style="background:#1a1a1a;border:1px solid #2c2c2c;color:#888;font-size:11px;padding:4px 10px;border-radius:4px;text-decoration:none">Reddit</a></div></div></div>
+      </section>
+
+      <div class="helpful-block" id="helpful" style="background:#13132a;border:1px solid #2a2a4a;border-radius:8px;padding:20px;margin:32px 0">
+        <div style="font-size:13px;font-weight:600;color:#e0e0f0;margin-bottom:12px">What level did this entry match?</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap" class="helpful-btns">
+          <button onclick="helpfulVote('beginner',this)" style="padding:7px 16px;border-radius:20px;border:1px solid #2a2a4a;background:transparent;color:#a0a0c0;font-family:inherit;font-size:13px;cursor:pointer">Beginner</button>
+          <button onclick="helpfulVote('intermediate',this)" style="padding:7px 16px;border-radius:20px;border:1px solid #2a2a4a;background:transparent;color:#a0a0c0;font-family:inherit;font-size:13px;cursor:pointer">Intermediate</button>
+          <button onclick="helpfulVote('advanced',this)" style="padding:7px 16px;border-radius:20px;border:1px solid #2a2a4a;background:transparent;color:#a0a0c0;font-family:inherit;font-size:13px;cursor:pointer">Advanced</button>
+        </div>
+        <div id="helpful-missing" style="display:none;margin-top:12px">
+          <label style="font-size:13px;color:#888">What's missing? <span style="color:#555">(optional)</span></label>
+          <div style="display:flex;gap:8px;margin-top:6px">
+            <input type="text" id="helpful-input" placeholder="e.g. more on sidechain..." style="flex:1;padding:8px 12px;border-radius:6px;border:1px solid #2a2a4a;background:#0d0d1a;color:#fff;font-size:13px">
+            <button onclick="helpfulSubmit()" style="background:#f5a623;color:#000;border:none;padding:8px 16px;border-radius:6px;font-weight:700;cursor:pointer;font-family:inherit">Send</button>
+          </div>
+        </div>
+        <div id="helpful-thanks" style="display:none;color:#60ff60;font-size:13px;margin-top:10px">Thanks — your feedback shapes future entries. ✓</div>
+      </div>
+
+      <section class="entry-section" id="related">
+        <h2>Also in The Bible</h2>
+        <div class="related-terms-grid">
+<a href="/bible/limiting" class="related-term-card"><span class="rt-term">Limiting</span><span class="rt-preview">The broader category of brick-wall peak control that true peak limiting extends into the inter-sample domain.</span></a>
+<a href="/bible/lufs" class="related-term-card"><span class="rt-term">LUFS</span><span class="rt-preview">The integrated loudness measurement standard used alongside true peak metering for streaming and broadcast delivery compliance.</span></a>
+<a href="/bible/loudness-normalization" class="related-term-card"><span class="rt-term">Loudness Normalization</span><span class="rt-preview">The platform-side playback gain adjustment that works in conjunction with true peak ceilings to standardize listening levels across tracks.</span></a>
+<a href="/bible/headroom" class="related-term-card"><span class="rt-term">Headroom</span><span class="rt-preview">The available margin below clipping that a true peak limiter protects — maintaining sufficient headroom before the limiter is essential for transparent operation.</span></a>
+<a href="/bible/mastering" class="related-term-card"><span class="rt-term">Mastering</span><span class="rt-preview">The final processing stage where true peak limiting is applied as the last safeguard before delivery to distribution platforms.</span></a>
+<a href="/bible/dynamic-range" class="related-term-card"><span class="rt-term">Dynamic Range</span><span class="rt-preview">The ratio between loudest and quietest signal levels that true peak limiting must preserve while enforcing the delivery ceiling.</span></a>
+        </div>
+      </section>
+
+    </div>
+    <aside class="entry-sidebar" style="min-width:280px;width:280px;position:sticky;top:148px;align-self:start;overflow-y:auto;height:calc(100vh - 168px);">
+          <div class="sidebar-toc">
+            <h4>Contents</h4>
+<a href="#definition">Definition</a>
+<a href="#how-it-works">How It Works</a>
+<a href="#parameters">Parameters</a>
+<a href="#quick-reference">Quick Ref</a>
+<a href="#tools">Tools</a>
+<a href="#signal-chain">Signal Chain</a>
+<a href="#history">History</a>
+<a href="#how-to-use">How To Use</a>
+<a href="#genre-table">By Genre</a>
+<a href="#hardware-plugin">Hardware vs Plugin</a>
+<a href="#before-after">Before / After</a>
+<a href="#in-the-wild">In The Wild</a>
+<a href="#types">Types</a>
+<a href="#plugin-recs">Plugins</a>
+<a href="#mistakes">Mistakes</a>
+<a href="#flags">Flags</a>
+<a href="#progression">Progression</a>
+<a href="#faq">FAQ</a>
+<a href="#related">Related</a>
+          </div>
+          <div class="producer-spotlight">
+            <h3>Producer Spotlight</h3>
+          <div class="ps-card"><div class="ps-name">Finneas O'Connell</div><div class="ps-role">Producer</div></div>
+          <div class="ps-card"><div class="ps-name">Mike Will Made It</div><div class="ps-role">Producer</div></div>
+          </div>
+      <div class="sidebar-share" style="background:#13132a;border:1px solid #2a2a4a;border-radius:8px;padding:16px;margin-bottom:16px">
+        <h4 style="font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:#f5a623;margin-bottom:12px;font-weight:700">Share This Entry</h4>
+        <div class="mpw-share-bar" style="flex-direction:column;border-top:none;padding-top:0;margin-top:0;gap:6px;">
+          <button class="mpw-share-btn share-copy" style="width:100%;justify-content:center" onclick="(function(b){navigator.clipboard.writeText('https://musicproductionwiki.com/bible/true-peak-limiting').then(function(){b.textContent='Copied!';setTimeout(function(){b.textContent='Copy Link'},2000);})})(this)">Copy Link</button>
+          <a href="https://x.com/intent/tweet?text=True Peak Limiting+%E2%80%94+The+Producer%27s+Bible&url=https%3A%2F%2Fmusicproductionwiki.com%2Fbible%2Ftrue-peak-limiting" target="_blank" rel="noopener" class="mpw-share-btn share-x" style="width:100%;justify-content:center">Share on X</a>
+          <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fmusicproductionwiki.com%2Fbible%2Ftrue-peak-limiting&title=True Peak Limiting+%E2%80%94+The+Producer%27s+Bible" target="_blank" rel="noopener" class="mpw-share-btn share-reddit" style="width:100%;justify-content:center">Reddit</a>
+        </div>
+      </div>
+      <div class="sidebar-nl">
+        <h4>The Producer's Briefing</h4>
+        <p>Weekly technique + gear intel. Free.</p>
+        <input type="email" placeholder="your@email.com">
+        <button>Subscribe Free</button>
+      </div>
+    </aside>
+  </div>
+</main>
+<div class="bible-nl-card">
+  <div class="nl-headline">The Producer's Briefing</div>
+  <div class="nl-sub">The Producer's Briefing — practical technique, gear intel, no fluff.</div>
+  <div class="nl-form">
+    <input class="nl-input" type="email" placeholder="your@email.com" aria-label="Email address">
+    <button class="nl-btn">Subscribe Free</button>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <a href="/bible/" class="bm-publisher">◆ The Producer's Bible</a>
+  <p style="font-size:15px;font-weight:600;color:#e0e0f0;margin:8px 0 4px">MusicProductionWiki.com</p>
+  <p style="font-size:12px;color:#666;margin-bottom:16px">The most comprehensive music production reference on the internet.</p>
+  <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+    <span style="font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.08em">Share</span>
+    <a href="https://x.com/intent/tweet?text=True Peak Limiting+%E2%80%94+The+Producer%27s+Bible&url=https%3A%2F%2Fmusicproductionwiki.com%2Fbible%2Ftrue-peak-limiting" target="_blank" rel="noopener" style="padding:6px 14px;border-radius:20px;border:1px solid #2a2a4a;color:#a0a0c0;font-size:12px;text-decoration:none">X</a>
+    <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fmusicproductionwiki.com%2Fbible%2Ftrue-peak-limiting&title=True Peak Limiting+%E2%80%94+The+Producer%27s+Bible" target="_blank" rel="noopener" style="padding:6px 14px;border-radius:20px;border:1px solid #2a2a4a;color:#a0a0c0;font-size:12px;text-decoration:none">Reddit</a>
+  </div>
+  <p><a href="/">Home</a> &middot; <a href="/about.html">About</a> &middot; <a href="/bible/">Producer's Bible</a> &middot; <a href="/categories/techniques.html">Techniques</a> &middot; <a href="/categories/reviews.html">Reviews</a> &middot; <a href="/categories/comparisons.html">Comparisons</a></p>
+  <p style="margin-top:8px;font-size:11px;color:#444">&copy; 2026 MusicProductionWiki.com &mdash; Built for producers, by producers.</p>
+</footer>
+<script>
+
+function dawTab(btn, daw) {
+  document.querySelectorAll('.daw-tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('.daw-tab-panel').forEach(function(p){ p.classList.remove('active'); });
+  btn.classList.add('active');
+  var panel = document.getElementById('dtp-' + daw + '-true-peak-limiting');
+  if (panel) panel.classList.add('active');
+}
+
+(function(){
+  var tocLinks = document.querySelectorAll('.sidebar-toc a');
+  function setTocActive(id) {
+    tocLinks.forEach(function(a){
+      a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+    });
+  }
+  var sections = document.querySelectorAll('.entry-section[id]');
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if (e.isIntersecting) setTocActive(e.target.id); });
+  }, {rootMargin: '-120px 0px -60% 0px'});
+  sections.forEach(function(s){ obs.observe(s); });
+  if (sections[0]) setTocActive(sections[0].id);
+})();
+
+(function(){
+  var navLinks = document.querySelectorAll('.entry-nav-inner a');
+  function setNavActive(id) {
+    navLinks.forEach(function(a){
+      a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+    });
+  }
+  var sections = document.querySelectorAll('.entry-section[id]');
+  var obs2 = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if (e.isIntersecting) setNavActive(e.target.id); });
+  }, {rootMargin: '-100px 0px -70% 0px'});
+  sections.forEach(function(s){ obs2.observe(s); });
+})();
+
+(function(){
+  var bar = document.getElementById('reading-progress');
+  if (!bar) return;
+  window.addEventListener('scroll', function(){
+    var s = document.documentElement.scrollTop;
+    var h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    bar.style.width = (h > 0 ? (s/h*100) : 0) + '%';
+  }, {passive: true});
+})();
+
+(function(){
+  var mob = document.getElementById('bmnMob');
+  var drawer = document.getElementById('bmnDrawer');
+  if (mob && drawer) {
+    mob.addEventListener('click', function(){ drawer.classList.toggle('open'); });
+    document.addEventListener('click', function(e){
+      if (!drawer.contains(e.target) && e.target !== mob) drawer.classList.remove('open');
+    });
+  }
+})();
+
+(function(){
+  var overlay = document.getElementById('bibleSearchOverlay');
+  var input   = document.getElementById('bibleSearchInput');
+  var results = document.getElementById('bibleSearchResults');
+  var sBtn    = document.getElementById('bmnSearchBtn');
+  var index   = null;
+  function openSearch(){ overlay.style.display='flex'; setTimeout(function(){ input&&input.focus(); },50); if(!index) fetch('/bible-index.json').then(function(r){return r.json();}).then(function(d){index=d;}).catch(function(){}); }
+  function closeSearch(){ overlay.style.display='none'; if(results) results.innerHTML=''; }
+  if(sBtn) sBtn.addEventListener('click', openSearch);
+  document.addEventListener('keydown', function(e){ if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();openSearch();} if(e.key==='Escape') closeSearch(); });
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeSearch(); });
+  if(input) input.addEventListener('input', function(){
+    var q=input.value.trim().toLowerCase();
+    if(!q||!index||!results){results.innerHTML='';return;}
+    var hits=index.filter(function(e){return e.term.toLowerCase().includes(q)||(e.category||'').toLowerCase().includes(q);}).slice(0,8);
+    results.innerHTML=hits.map(function(e){return '<a href="/bible/'+e.slug+'" style="display:block;padding:10px 16px;color:#e0e0f0;text-decoration:none;border-radius:6px;font-size:14px"><strong>'+e.term+'</strong> <span style="color:#666;font-size:12px">'+e.category+'</span></a>';}).join('');
+  });
+})();
+
+var _gateAsset = 'full';
+// EMAIL GATE bypassed — downloads fire directly (TODO P3.5: Kit/Brevo API)
+function openGateFor(asset) {
+  _gateAsset = asset || 'full';
+  if (_gateAsset === 'full') { window.print(); }
+  else if (_gateAsset === 'quickref') { downloadQuickRef(); }
+  else if (_gateAsset === 'genre') { downloadGenreTable(); }
+}
+function closeGate() { var m=document.getElementById('pdf-gate-modal'); if(m) m.style.display='none'; }
+function submitGate() { openGateFor(_gateAsset); }
+function submitPdfGate() { window.print(); }
+function downloadQuickRef() {
+  var rows=document.querySelectorAll('.quick-ref-table tr');
+  var txt=Array.from(rows).map(function(r){return Array.from(r.querySelectorAll('th,td')).map(function(c){return c.textContent.trim()}).join('\t')}).join('\n');
+  txt+='\nSource: musicproductionwiki.com/bible/true-peak-limiting';
+  var b=new Blob([txt],{type:'text/plain'});var a=document.createElement('a');
+  a.href=URL.createObjectURL(b);a.download='true-peak-limiting-quick-reference.txt';a.click();
+}
+function downloadGenreTable() {
+  var rows=document.querySelectorAll('.genre-settings-table tr,.genre-table tr');
+  var txt=Array.from(rows).map(function(r){return Array.from(r.querySelectorAll('th,td')).map(function(c){return c.textContent.trim()}).join('\t')}).join('\n');
+  txt+='\nSource: musicproductionwiki.com/bible/true-peak-limiting';
+  var b=new Blob([txt],{type:'text/plain'});var a=document.createElement('a');
+  a.href=URL.createObjectURL(b);a.download='true-peak-limiting-genre-settings.txt';a.click();
+}
+
+(function(){
+  function calcGR() {
+    var inp  = parseFloat((document.getElementById('gc-input')  ||{}).value)  || -10;
+    var thr  = parseFloat((document.getElementById('gc-thresh') ||{}).value)  || -18;
+    var rat  = parseFloat((document.getElementById('gc-ratio')  ||{}).value)  || 4;
+    var mkup = parseFloat((document.getElementById('gc-makeup') ||{}).value)  || 6;
+    if (!document.getElementById('gc-input')) return;
+    var excess=inp-thr; var gr=excess>0?excess-excess/rat:0; var out=inp-gr;
+    var set = function(id,v){ var el=document.getElementById(id); if(el) el.textContent=v; };
+    set('gc-gr',   (gr>0?'-':'')+gr.toFixed(1)+' dB');
+    set('gc-excess',(excess>0?'+':'')+excess.toFixed(1)+' dB');
+    set('gc-out',  out.toFixed(1)+' dBFS');
+    set('gc-final',(out+mkup).toFixed(1)+' dBFS');
+  }
+  ['gc-input','gc-thresh','gc-ratio','gc-makeup'].forEach(function(id){
+    var el=document.getElementById(id); if(el) el.addEventListener('input', calcGR);
+  });
+  calcGR();
+})();
+
+(function(){
+  var DAW_KEY='mpw_daw_pref';
+  var pref=localStorage.getItem(DAW_KEY);
+  if(pref && typeof dawTab==='function'){
+    var btn=document.querySelector('.daw-tab-btn[data-daw="'+pref+'"]');
+    if(btn) dawTab(btn,pref);
+  }
+  document.querySelectorAll('.daw-tab-btn').forEach(function(b){
+    b.addEventListener('click',function(){ localStorage.setItem(DAW_KEY,b.dataset.daw); });
+  });
+})();
+</script>
+<script>
+function helpfulVote(level,btn){
+  document.querySelectorAll('.helpful-btns button').forEach(function(b){b.style.background='transparent';b.style.color='#a0a0c0';b.style.borderColor='#2a2a4a';});
+  btn.style.background='rgba(245,166,35,.15)';btn.style.color='#f5a623';btn.style.borderColor='#f5a623';
+  document.getElementById('helpful-missing').style.display='block';
+  if(typeof gtag!=='undefined') gtag('event','helpful_vote',{level:level,slug:'true-peak-limiting'});
+  document.getElementById('helpful-missing').dataset.level=level;
+}
+function helpfulSubmit(){
+  var level=document.getElementById('helpful-missing').dataset.level||'';
+  var missing=document.getElementById('helpful-input').value.trim();
+  if(typeof gtag!=='undefined') gtag('event','helpful_submit',{level:level,has_feedback:!!missing,slug:'true-peak-limiting'});
+  document.getElementById('helpful-missing').style.display='none';
+  document.getElementById('helpful-thanks').style.display='block';
+}
+</script>
+
+</body></html>
