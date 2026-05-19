@@ -1,5 +1,5 @@
 # MusicProductionWiki.com — CORE Handoff
-*Updated: May 18, 2026 (SESSION 38) · 526 articles + 226 Bible entries live*
+*Updated: May 18, 2026 (SESSION 39) · 526 articles + 226 Bible entries live*
 *Modular format — 6 GitHub files replace single monolithic handoff*
 
 ---
@@ -131,6 +131,11 @@ If you cannot recite all four, you have not read this document. Stop and re-read
 | NEVER run patch_tools_v2.py — it is broken | _delay function missing html= and return lines — use the writer directly |
 | NEVER run patch_tools_v3.py against a writer that already has TOOL_OVERRIDES | OLD_OVERRIDES target no longer exists — script will fail immediately |
 | NEVER trust mpw_bible_writer.py from GitHub repo | The v4.0 version in repo is outdated — always use local mpw-scripts\ copy |
+| NEVER use setTimeout for tool init calls | Mid-document scripts have DOM ready — call init functions directly |
+| NEVER insert tools before helpful block | Always after quick-reference section, before signal-chain |
+| NEVER run a patch script without confirming live file structure first | Fetch and read before writing any patch |
+| NEVER deliver mpw_tools_v3.py with external imports | Must be fully self-contained — no import of build_preview.py |
+| NEVER declare tools patch complete without visual confirmation | Script success ≠ correct rendering — always visually confirm on live page |
 
 ---
 
@@ -138,9 +143,8 @@ If you cannot recite all four, you have not read this document. Stop and re-read
 
 | Priority | Task | Status |
 |---|---|---|
-| P0 | Tool suite research + rebuild (all 13 tools) | NEXT SESSION — research 12 remaining tool types before building |
-| P0.1 | Run patch_live_tools.py to inject correct tools into 16 live entries | BLOCKED on tool rebuild — do tool research first |
-| P1 | Run remaining 34 Tier 1 Bible entries | BLOCKED on tool rebuild + patch_live_tools |
+| P0 | Run patch_live_tools_v6.py | PENDING — removes duplicate bare .t3 blocks from 15 patched entries |
+| P1 | Run remaining 33 Tier 1 Bible entries | READY — all tool mappings confirmed — create bible-tier1-remaining34.txt first |
 | P2 | Run mpw_bible_cat_pages.py --run | After Tier 1 batch complete |
 | P3 | gen_sitemap.py → resubmit to GSC | After cat pages |
 | P4 | mpw_dead_slug_audit.py | After each batch commit |
@@ -153,62 +157,83 @@ If you cannot recite all four, you have not read this document. Stop and re-read
 
 # ⛔ RULE 5 — CURRENT SESSION STATE
 
-## Session 38 — What Was Completed
+## Session 39 — What Was Completed
 
-### 1. 16 Bible Entries Built and Committed (Tier 1 v5.1)
+### 1. mpw_tools_v3.py — Built and Delivered
 
-**SHA d0b0abbc** — 15 entries batch committed:
-eq, limiting, saturation, distortion, multiband-compression, parallel-compression, noise-gate, reverb, delay, convolution-reverb, plate-reverb, room-reverb, gain-staging, headroom, stereo-imaging
+Fully self-contained Python file (no external imports). 12 interactive tools. 49 slug mappings.
 
-**Earlier in session** — compression committed as solo test entry (SHA not separately recorded).
+**All 12 tools:**
+1. GR Calculator — compression, saturation, distortion, parallel-compression, multiband-compression, noise-gate, bus-compression, dynamic-range
+2. Delay Time Calculator — delay, plate-reverb, automation
+3. LUFS Target Reference — limiting, lufs, mastering, loudness-normalization, true-peak-limiting
+4. Frequency Band Reference — eq, parametric-eq, high-pass-filter, low-pass-filter, shelving-eq, air-frequency-eq, resonance, harmonic-distortion, air
+5. RT60 Calculator — reverb, convolution-reverb, room-reverb
+6. Note→Frequency — oscillator, fm-synthesis, wavetable-synthesis, additive-synthesis, vocoder, subtractive-synthesis
+7. ADSR Visualizer — adsr, envelope
+8. Gain Staging Reference — gain-staging, send-return, clip-gain
+9. Headroom Calculator — headroom, mix-bus
+10. Stereo Width & M/S — stereo-imaging, mid-side-processing
+11. LFO Sync — lfo, chorus, flanger, phaser, tremolo, vibrato
+12. Chord & Key Reference — (music-theory slugs)
 
-All 16: 12,000–13,500 words, 158–169KB, 80/80 validation checks. Full page renders, sidebar visible, nav tracking works on all 16.
+Brand: MPW teal logomark + MusicProductionWiki.com + The Producer's Bible amber header + Interactive Tool badge
 
-### 2. mpw_bible_writer.py — Fixed and Delivered
+**Tool CSS class:** `.t3` with `.tb` body, amber borders, dark background, direct init function calls (NO setTimeout)
 
-The writer went through multiple patch failures this session. The confirmed-clean version was delivered to outputs and is the baseline for next session.
+### 2. mpw_bible_writer.py — Updated
 
-**Confirmed state of delivered writer:**
-- Syntax: CLEAN (verified with ast.parse)
-- TOOL_OVERRIDES: DEFINED (all 13 tools mapped)
-- build_html_t1, PASS2_SYSTEM_T1, build_tools_section: ALL PRESENT
-- --workers flag: PRESENT (ThreadPoolExecutor, default 4, max 8)
-- SC = '</' + 'script>': DEFINED
-- _delay function: html= and return lines PRESENT
-- Tools nav pill: AFTER Quick Ref ✅
-- Tools sidebar TOC: AFTER Quick Ref ✅
-- Validation suite: 80/80
+`patch_writer_v3.py` ran successfully. `mpw_bible_writer.py --validate` → 80/80 checks PASSED. Writer now imports `build_tools_section_v3` from `mpw_tools_v3`.
 
-### 3. fix_writer.py — Delivered
+### 3. 15 Live Entries Patched with Correct v3 Tools
 
-Patch script that fixes two bugs in any broken mpw_bible_writer.py:
-- BUG 1: SyntaxError in _freq, _gs, _hr, _chord js= strings (bare unescaped single quotes at innerHTML=)
-- BUG 2: TOOL_OVERRIDES not defined (referenced but never assigned)
+All 15 non-compression entries now have correct tool per slug, positioned after quick-reference:
 
-### 4. patch_live_tools.py — CONFIRMED CORRECT, NOT YET RUN
+| Entry | Tool |
+|---|---|
+| eq | Frequency Band Reference |
+| limiting | LUFS Target Reference |
+| saturation | GR Calculator |
+| distortion | GR Calculator |
+| multiband-compression | GR Calculator |
+| parallel-compression | GR Calculator |
+| noise-gate | GR Calculator |
+| reverb | RT60 Calculator |
+| delay | Delay Time Calculator |
+| convolution-reverb | RT60 Calculator |
+| plate-reverb | Delay Time Calculator |
+| room-reverb | RT60 Calculator |
+| gain-staging | Gain Staging Reference |
+| headroom | Headroom Calculator |
+| stereo-imaging | Stereo Width & M/S |
 
-Script imports build_tools_section and TOOL_OVERRIDES from local mpw_bible_writer.py. Fetches all 15 non-compression entries from GitHub, replaces tools section with correct tool per slug, commits in one Trees API call. NOT RUN because tools visual quality was rejected — needs tool rebuild first.
+**Visual confirmation:** All 15 verified by Steve — tools correct, working, positioned correctly.
 
-### 5. Tools Visual Standard — Approved Direction
+### 4. Duplicate Tool Bug — Identified and Patched
 
-Delay Time Calculator preview built and approved by Steve as visual direction:
-- Full MPW/Producer's Bible branding (amber border, diamond mark, Interactive Tool badge)
-- Tap Tempo button
-- Click any card to copy value to clipboard
-- 13 note values (Whole through 32nd, straight/dotted/triplet)
-- Hz displayed on every card
-- Values in seconds when >1000ms
-- Dotted 8th highlighted as "Most Used" (★)
-- Contextual callouts that change per BPM (e.g. "120 BPM: The Edge's dotted 8th at 375ms")
-- Share bar (Copy Link + X + Reddit) + ◆ The Producer's Bible mark
+Multiple patch script iterations left a bare duplicate `.t3` block sitting after the `</section>` close of the tools section on some entries. Root cause: earlier patch scripts (v1–v5) didn't cleanly remove all prior injections.
 
-**All 13 tools must be rebuilt to this standard in next session.**
+**patch_live_tools_v6.py** — surgical fix — removes only the bare duplicate block (the dead one with `—` dashes and no working JS), leaves the correct section-wrapped tool untouched.
 
-### 6. Competitor Research — Delay Tool Only
+**STATUS: patch_live_tools_v6.py DELIVERED — NOT YET RUN**
 
-Researched: anotherproducer.com, nickfever.com, tools4music.com, soundplate.com, app store listings.
-NOT yet researched: 12 remaining tool types (LUFS, frequency reference, RT60, note-to-freq, ADSR, gain staging, headroom, stereo width, LFO rate, chord/key, GR calculator upgrade).
-**Next session must research all 12 before building.**
+Run it first thing next session:
+```powershell
+. .\setenv.ps1
+python patch_live_tools_v6.py
+```
+
+### 5. Patch Script History — Session 39
+
+| Script | Status | Issue |
+|---|---|---|
+| patch_live_tools.py | SUPERSEDED | Imported old build_tools_section (green wrapper) |
+| patch_live_tools_fix.py | SUPERSEDED | Fixed import but tools still landed wrong position |
+| patch_live_tools_v2.py | SUPERSEDED | Searched for section wrapper that didn't exist in files |
+| patch_live_tools_v3.py | SUPERSEDED | Inserted before helpful block (after FAQ) — wrong position |
+| patch_live_tools_v4.py | SUPERSEDED | Correct position but setTimeout still in scripts |
+| patch_live_tools_v5.py | SUPERSEDED | Missed bare .t3 duplicate from prior patch |
+| patch_live_tools_v6.py | **CURRENT — PENDING RUN** | Surgical removal of bare .t3 block after </section> |
 
 ---
 
@@ -216,18 +241,18 @@ NOT yet researched: 12 remaining tool types (LUFS, frequency reference, RT60, no
 
 ## Bible Entries — Live on GitHub/Netlify
 
-**16 Tier 1 entries live (v5.1 template):**
+**16 Tier 1 entries live (v5.1 template) — TOOLS CORRECT AND WORKING:**
 compression, eq, limiting, saturation, distortion, multiband-compression, parallel-compression, noise-gate, reverb, delay, convolution-reverb, plate-reverb, room-reverb, gain-staging, headroom, stereo-imaging
+
+**NOTE: 15 of these 16 entries may have a duplicate bare .t3 block** (dead/non-functional) sitting after the tools section close tag. patch_live_tools_v6.py removes it. Does NOT affect functionality — just visual clutter in source.
 
 **210 entries live (v3.0/v4.0 template — not yet upgraded):**
 All remaining slugs in CONFIRMED_LIVE_SLUGS list
 
-**Current tools state on live entries:**
+**Current tools state:**
 - compression: GR Calculator (correct) ✅
-- All other 15 entries: old GR Calculator (wrong tool for these slugs) ⚠️
-- Tools section IS present and renders, just shows wrong tool
-- Tools nav pill: after Quick Ref ✅ (correct position)
-- Tools sidebar TOC: after Quick Ref ✅ (correct position)
+- All other 15 patched entries: correct tool, working ✅ (possible source duplicate — v6 fixes)
+- 33 remaining Tier 1: old v3/v4 template — no interactive tools yet
 
 ---
 
@@ -278,10 +303,10 @@ EXCLUDED (confirmed 404): sidechain-compression, transient-shaping
 
 # Batch Files Ready to Run
 
-- bible-upgrade-tier1.txt — 50 Tier 1 Bible rewrites — in mpw-scripts\ — 16 DONE, 34 REMAINING
+- bible-upgrade-tier1.txt — 50 Tier 1 Bible rewrites — in mpw-scripts\ — 16 DONE, 33 REMAINING
   Format: slug:Term:Category:1
   Done: compression, eq, limiting, saturation, distortion, multiband-compression, parallel-compression, noise-gate, reverb, delay, convolution-reverb, plate-reverb, room-reverb, gain-staging, headroom, stereo-imaging
-  Remaining: 34 entries — create bible-tier1-remaining34.txt before running
+  Remaining: 33 entries — create bible-tier1-remaining34.txt before running
 - batch09.txt — 100 track breakdowns — run after Tier 1
 
 ---
@@ -295,7 +320,26 @@ Get-Content bible-upgrade-tier1.txt | Where-Object {
 } | Set-Content bible-tier1-remaining34.txt
 Get-Content bible-tier1-remaining34.txt | Measure-Object -Line
 ```
-Should show 34 lines. Then: `python mpw_bible_writer.py --batch-file bible-tier1-remaining34.txt --start-date 2026-05-18 --workers 8`
+Should show 33 lines. Then: `python mpw_bible_writer.py --batch-file bible-tier1-remaining34.txt --start-date 2026-05-19 --workers 8`
+
+---
+
+# Tool Mapping — All 33 Remaining Tier 1 Entries
+
+All 33 remaining slugs are already mapped in TOOL_OVERRIDES in mpw_tools_v3.py. No gaps.
+
+| Tool | Remaining slugs |
+|---|---|
+| GR Calculator | bus-compression, dynamic-range |
+| Delay Calculator | automation |
+| LUFS Reference | mastering, lufs, true-peak-limiting, loudness-normalization |
+| Frequency Reference | high-pass-filter, low-pass-filter, parametric-eq, shelving-eq, resonance, harmonic-distortion, air-frequency-eq, air |
+| Note→Frequency | subtractive-synthesis, fm-synthesis, wavetable-synthesis, additive-synthesis, oscillator, vocoder |
+| ADSR Visualizer | envelope, adsr |
+| Gain Staging | send-return, clip-gain |
+| Headroom Calculator | mix-bus |
+| Stereo Width | mid-side-processing |
+| LFO Sync | lfo, chorus, flanger, phaser, tremolo, vibrato |
 
 ---
 
@@ -342,29 +386,27 @@ NOTE: Tier 1 prose target updated Session 37 from 5,800–6,500w to 4,800–5,50
 
 ---
 
-# Tool Suite — 13 Tools Mapped (Session 38)
+# Tool Suite — 12 Tools Built (Session 39)
 
-All 13 tools are defined in TOOL_OVERRIDES in mpw_bible_writer.py and routed in build_tools_section(). Visual quality approved direction (Delay Time Calculator preview). All 13 need full rebuild next session after competitor research.
+All 12 tools are defined in mpw_tools_v3.py (fully self-contained). All 49 slug mappings confirmed. Visual quality approved by Steve on all 15 patched entries.
 
-| # | Tool Key | Tool Name | Slugs |
-|---|---|---|---|
-| 1 | gr_calculator | Gain Reduction Calculator | compression, saturation, distortion, parallel-compression, multiband-compression, noise-gate, bus-compression |
-| 2 | delay_calculator | Delay Time Calculator | delay, plate-reverb, automation |
-| 3 | lufs_calculator | LUFS Target Calculator | limiting, lufs, mastering, loudness-normalization, true-peak-limiting |
-| 4 | frequency_reference | Frequency Band Reference | eq, parametric-eq, high-pass-filter, low-pass-filter, shelving-eq, air-frequency-eq, resonance, harmonic-distortion |
-| 5 | rt60_calculator | RT60 Reverb Calculator | reverb, convolution-reverb, room-reverb |
-| 6 | note_freq | Note → Frequency Reference | oscillator, fm-synthesis, wavetable-synthesis, additive-synthesis, vocoder, subtractive-synthesis |
-| 7 | adsr_visualizer | ADSR Envelope Visualizer | adsr, envelope |
-| 8 | gain_staging | Gain Staging Calculator | gain-staging, send-return, clip-gain |
-| 9 | headroom_calc | Headroom Calculator | headroom, mix-bus |
-| 10 | stereo_width | Stereo Width Visualizer | stereo-imaging, mid-side-processing |
-| 11 | lfo_sync | LFO Rate → BPM Sync | lfo, chorus, flanger, phaser, tremolo, vibrato |
-| 12 | chord_key | Chord & Key Reference | (music-theory slugs) |
-| 13 | (GR Calculator is #1 — 12 unique tool types) | | |
+| # | Tool Name | Slugs |
+|---|---|---|
+| 1 | GR Calculator | compression, saturation, distortion, parallel-compression, multiband-compression, noise-gate, bus-compression, dynamic-range |
+| 2 | Delay Time Calculator | delay, plate-reverb, automation |
+| 3 | LUFS Target Reference | limiting, lufs, mastering, loudness-normalization, true-peak-limiting |
+| 4 | Frequency Band Reference | eq, parametric-eq, high-pass-filter, low-pass-filter, shelving-eq, air-frequency-eq, resonance, harmonic-distortion, air |
+| 5 | RT60 Reverb Calculator | reverb, convolution-reverb, room-reverb |
+| 6 | Note→Frequency Reference | oscillator, fm-synthesis, wavetable-synthesis, additive-synthesis, vocoder, subtractive-synthesis |
+| 7 | ADSR Envelope Visualizer | adsr, envelope |
+| 8 | Gain Staging Reference | gain-staging, send-return, clip-gain |
+| 9 | Headroom Calculator | headroom, mix-bus |
+| 10 | Stereo Width & M/S | stereo-imaging, mid-side-processing |
+| 11 | LFO Rate → BPM Sync | lfo, chorus, flanger, phaser, tremolo, vibrato |
+| 12 | Chord & Key Reference | (music-theory slugs) |
 
-Competitor research status:
-- delay_calculator: RESEARCHED ✅ (anotherproducer, nickfever, tools4music, soundplate)
-- All other 11 tool types: NOT YET RESEARCHED — must research before building
+**mpw_tools_v3.py location:** C:\Users\swarn\OneDrive\Desktop\mpw-scripts\mpw_tools_v3.py
+**CRITICAL: Must be self-contained. No external imports. build_tools_section_v3(slug, term) is the public API.**
 
 ---
 

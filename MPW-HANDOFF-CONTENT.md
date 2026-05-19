@@ -1,5 +1,5 @@
 # MPW-HANDOFF-CONTENT.md
-*Updated: May 18, 2026 (SESSION 37)*
+*Updated: May 18, 2026 (SESSION 39)*
 
 ---
 
@@ -91,17 +91,17 @@ Every article must include:
 
 ## Bible Entry Count
 
-- Total live: 210 entries (v3.0/v4.0 template)
-- bible-index.json: 210 entries
-- Pending: air entry retry after writer v5.1 confirmed
+- Total live: 226 entries (16 v5.1 template + 210 v3.0/v4.0 template)
+- bible-index.json: 210 entries (v3.0/v4.0 only — NOT yet updated for v5.1 entries)
+- Pending: air entry retry after Tier 1 batch completes
 - Full Bible target: 1,500 entries
-- Next milestone: 50 Tier 1 rewrites (bible-upgrade-tier1.txt) — READY TO RUN
+- Next milestone: complete remaining 33 Tier 1 rewrites → 50 total Tier 1 live
 
 ## Queued Batches
 
 | Batch | Articles | Dependencies |
 | --- | --- | --- |
-| Bible Tier 1 | 50 rewrites | READY — writer approved Session 37 |
+| Bible Tier 1 (remaining 33) | 33 rewrites | READY — writer + tools approved Session 39 |
 | 09 — breakdown | 100 | breakdowns.html ✅ LIVE — GO after Tier 1 |
 | 10 — studio-story | 50 | Batch 09 committed |
 | 11 — recreation | 60 | recreations.html must exist |
@@ -117,7 +117,8 @@ Every article must include:
 | Action | Detail | Priority |
 | --- | --- | --- |
 | Affiliate applications | Plugin Boutique, Amazon Associates, Sweetwater, Loopmasters, PluginFox | HIGH — REVENUE BLOCKER |
-| Run Tier 1 batch | python mpw_bible_writer.py --batch-file bible-upgrade-tier1.txt --start-date 2026-05-18 | P2 — READY |
+| Run patch_live_tools_v6.py | Remove duplicate bare .t3 blocks from 15 patched entries | P0 — first thing next session |
+| Run Tier 1 remaining batch | python mpw_bible_writer.py --batch-file bible-tier1-remaining34.txt --start-date 2026-05-19 | P1 — READY |
 | Retry air entry | python mpw_bible_writer.py --test --slug air-frequency-eq --term "Air Frequency EQ" --category "Frequency" | P2.1 |
 | Run Batch 09 | python mpw_writer.py --batch batch09.txt --start-date 2026-03-01 | P4 — after Tier 1 |
 | Fix 5 missing og:image | python mpw_fix_meta.py | P5 |
@@ -195,15 +196,18 @@ Free tool use → email capture on save/download → newsletter → Bible Comple
 | Priority | Tool | Home | Search Volume | Status |
 |---|---|---|---|---|
 | 1 | GR Calculator | compression entry | Medium | LIVE ✅ |
-| 2 | Delay Time Calculator | delay entry | Very High | SESSION 38+ |
-| 3 | Frequency Reference Tool | eq entry | High | SESSION 38+ |
-| 4 | LUFS Target Calculator | mastering/lufs entries | High | Future |
-| 5 | Attack/Release Time Calculator | compression entry | Medium | Future |
-| 6 | BPM Tap Tempo | standalone | Very High | Future |
-| 7 | Pre-delay Calculator | reverb entry | Medium | Future |
-| 8 | Note-to-Frequency Table | music theory entries | High | Future |
-| 9 | Gain Staging Calculator | gain-staging entry | Medium | Future |
-| 10 | ClearCheck Layer 1 | /tools/clearcheck/ | High intent | After TruClarify spec |
+| 2 | Delay Time Calculator | delay entry | Very High | LIVE ✅ Session 39 |
+| 3 | Frequency Reference Tool | eq entry | High | LIVE ✅ Session 39 |
+| 4 | LUFS Target Reference | mastering/lufs entries | High | LIVE ✅ Session 39 |
+| 5 | RT60 Calculator | reverb entries | Medium | LIVE ✅ Session 39 |
+| 6 | Note→Frequency Table | synthesis entries | High | LIVE ✅ Session 39 |
+| 7 | ADSR Visualizer | adsr/envelope entries | Medium | LIVE ✅ Session 39 |
+| 8 | Gain Staging Reference | gain-staging entry | Medium | LIVE ✅ Session 39 |
+| 9 | Headroom Calculator | headroom entry | Medium | LIVE ✅ Session 39 |
+| 10 | Stereo Width & M/S | stereo-imaging entry | Medium | LIVE ✅ Session 39 |
+| 11 | LFO Rate Sync | lfo/modulation entries | Medium | LIVE ✅ Session 39 |
+| 12 | Chord & Key Reference | music-theory entries | High | LIVE ✅ Session 39 |
+| 13 | ClearCheck Layer 1 | /tools/clearcheck/ | High intent | After TruClarify spec |
 
 ## Three-Tier Tool Strategy
 
@@ -224,20 +228,19 @@ Build trigger: separate spec session required — involves TruClarify API/intake
 
 ---
 
-# SESSION 37 UPDATE — CONTENT STATUS
+# SESSION 39 UPDATE — CONTENT STATUS
 
 ## Article Pipeline
-- Live articles: 526 (unchanged Session 37)
-- Batch 09 (100 track breakdowns): NOT YET RUN — waiting for Tier 1 to go first
+- Live articles: 526 (unchanged Sessions 38 + 39)
+- Batch 09 (100 track breakdowns): NOT YET RUN — waiting for Tier 1 to complete
 - Batches 10-13: NOT YET RUN — blocked by category pages + template fix
 
 ## Bible Content Pipeline
-- Live Bible entries: 210 (v3.0/v4.0 template)
-- Gold standard v5.1: compression.html — writer QA COMPLETE Session 37
-- Writer Pass 2 rewrite: COMPLETE — approved by Steve
-- Tier 1 upgrade batch: bible-upgrade-tier1.txt — 50 entries — READY TO RUN
+- Live Bible entries: 226 (16 v5.1 + 210 v3.0/v4.0)
+- Tools: all 12 built in mpw_tools_v3.py — 15 live entries confirmed working by Steve
+- Remaining 33 Tier 1 entries: READY TO RUN next session
 - Air entry retry: pending after Tier 1 batch completes
-- Bible category pages: 8 pages — run after writer confirmed (now unblocked)
+- Bible category pages: 8 pages — run mpw_bible_cat_pages.py --run after Tier 1 complete
 
 ## GSC Findings (May 18, 2026)
 - 587 not indexed, 14 indexed
@@ -247,7 +250,7 @@ Build trigger: separate spec session required — involves TruClarify API/intake
 
 ## Content Strategy Insight
 Comparisons are the traffic beachhead. Getting from position 16 to position 5 = clicks start.
-The Bible Tier 1 batch (50 entries) is the next major SEO lever — writer is now ready.
+The Bible Tier 1 batch (50 entries) is the next major SEO lever — writer and tools now fully ready.
 
 ## Producer Profile Pages — Content Spec (Future — after Batch 09)
 URL: /producers/{slug}/
@@ -285,7 +288,7 @@ Producer spotlight now reads cite tags from rendered HTML to guarantee match.
 12. Producer quote blockquote — woven into prose (exactly 2 for Tier 1)
 13. PDF export button — email gated (smart modal, 3 assets)
 14. Last verified date — in entry footer
-15. Tools section — GR Calculator + email-gated save — NOW POSITIONED after Quick Reference
+15. Tools section — interactive tool per entry — positioned after Quick Reference
 16. Section-level share buttons — By Genre + Quick Reference + Calculator (all mpw-share-bar)
 17. "Also in The Bible" — replaces Further Reading + Related Terms (consolidated)
 18. Sidebar TOC with IntersectionObserver tracking — now includes Verdict link

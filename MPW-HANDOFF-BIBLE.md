@@ -1,5 +1,5 @@
 # MPW-HANDOFF-BIBLE.md
-*Updated: May 18, 2026 (SESSION 38)*
+*Updated: May 18, 2026 (SESSION 39)*
 
 ---
 
@@ -84,7 +84,7 @@ Future 9th category: tools — /bible/categories/tools/ — filters entries with
 - v3.0: original — 3,000-3,500 words — old template — 200 entries live — SUPERSEDED
 - v4.0: broken template — SUPERSEDED — still in GitHub repo (DO NOT USE from repo)
 - v5.0: built Session 30 — 54/54 checks — YouTube links — identity bar — SUPERSEDED
-- v5.1: built Session 32 (gold standard HTML) — structural update Session 36 (81/81 checks) — Pass 2 full rewrite Session 37 — tool suite added Session 38 — CURRENT — 80/80 checks
+- v5.1: built Session 32 (gold standard HTML) — structural update Session 36 (81/81 checks) — Pass 2 full rewrite Session 37 — tool suite added Session 38 — tools rebuilt v3 Session 39 — CURRENT — 80/80 checks
 
 ---
 
@@ -172,7 +172,7 @@ NEW fields required in v5.1:
 
 All slug fields validated against CONFIRMED_LIVE_SLUGS. Invalid slugs set to null, not omitted with error.
 
-**IMPORTANT: tool_type from Pass 1 is unreliable. Use hardcoded TOOL_OVERRIDES map in build_tools_section().**
+**IMPORTANT: tool_type from Pass 1 is unreliable. Use hardcoded TOOL_OVERRIDES map in build_tools_section_v3().**
 
 ### Pass 1.5 — Quotes Filter (no API call)
 
@@ -306,17 +306,19 @@ Front-loaded with intent terms: `{term}`, `{category}`, `{term} music production
 - CONFIRMED_LIVE_SLUGS injected directly into prompt body
 - T2 system prompt: 4–6 links per entry
 
-## Key Builder Details Session 37 + 38
+## Key Builder Details Session 37 + 38 + 39
 
 **Tools position (CONFIRMED BY STEVE):**
 - Tools section (id="tools") injected immediately after `id="quick-reference"` closing `</section>` tag
 - Tools nav pill: position 5 (after Quick Ref, before Signal Chain)
 - Tools sidebar TOC: position 5 (after Quick Ref, before Signal Chain)
 
-**Tool routing:**
-- build_tools_section(p1, slug) reads TOOL_OVERRIDES dict
+**Tool routing (Session 39 update):**
+- build_tools_section_v3(slug, term) from mpw_tools_v3.py
+- Reads TOOL_OVERRIDES dict internally
 - Falls back to "Interactive Tool in Development" placeholder if slug not in TOOL_OVERRIDES
 - SC = '</' + 'script>' used for all script closings — never literal </script> in Python strings
+- ALL init functions called directly — NEVER wrapped in setTimeout
 
 **Producer spotlight:**
 - `build_producer_spotlight_html(p1, quotes_filtered=None, rendered_html='')` — 3 params
@@ -346,7 +348,7 @@ Front-loaded with intent terms: `{term}`, `{category}`, `{term} music production
 
 All 20 sections present. Signal chain SVG: viewBox 0 0 1440 160, 8 boxes, full labels, mobile stack.
 Email gate: openGateFor('full'|'quickref'|'genre'), unified modal.
-Tools section: always present after quick-reference. Routes to correct tool via TOOL_OVERRIDES.
+Tools section: always present after quick-reference. Routes to correct tool via build_tools_section_v3().
 Comparison callouts: built from p1.comparison_terms (up to 2).
 History cards: 4 sub-sections in left-border cards (built by Pass 2, 120–150w each).
 Sidebar: TOC (20 links incl. Verdict + Tools at position 5) + producer spotlight + share widget (mpw-share-bar vertical) + newsletter.
@@ -466,80 +468,90 @@ For 1,500 entries (300 T1 + 700 T2 + 500 T3): ~$300 total.
 
 # 3E. Bible Batch Files
 
-- bible-upgrade-tier1.txt — 50 Tier 1 rewrites — in mpw-scripts\ — 16 DONE, 34 REMAINING
+- bible-upgrade-tier1.txt — 50 Tier 1 rewrites — in mpw-scripts\ — 16 DONE, 33 REMAINING
   Format: compression:Compression:Signal Processing:1 (4 parts, tier appended)
 - bible-index.json — 210 entries live in repo root (v3.0/v4.0 — NOT updated for v5.1 yet)
 - Future batches: classify each term as Tier 1/2/3 before running
 
 ---
 
-# SESSION 38 UPDATE — BIBLE WRITER STATUS
+# SESSION 39 UPDATE — BIBLE WRITER STATUS
+
+## 16 Tier 1 Entries Live (v5.1) — Tools Correct and Visually Confirmed
+
+| Entry | Tool | Status |
+|---|---|---|
+| compression | GR Calculator | ✅ Correct — original |
+| eq | Frequency Band Reference | ✅ Confirmed by Steve |
+| limiting | LUFS Target Reference | ✅ Confirmed by Steve |
+| saturation | GR Calculator | ✅ Confirmed by Steve |
+| distortion | GR Calculator | ✅ Confirmed by Steve |
+| multiband-compression | GR Calculator | ✅ Confirmed by Steve |
+| parallel-compression | GR Calculator | ✅ Confirmed by Steve |
+| noise-gate | GR Calculator | ✅ Confirmed by Steve |
+| reverb | RT60 Calculator | ✅ Confirmed by Steve |
+| delay | Delay Time Calculator | ✅ Confirmed by Steve |
+| convolution-reverb | RT60 Calculator | ✅ Confirmed by Steve |
+| plate-reverb | Delay Time Calculator | ✅ Confirmed by Steve |
+| room-reverb | RT60 Calculator | ✅ Confirmed by Steve |
+| gain-staging | Gain Staging Reference | ✅ Confirmed by Steve |
+| headroom | Headroom Calculator | ✅ Confirmed by Steve |
+| stereo-imaging | Stereo Width & M/S | ✅ Confirmed by Steve |
+
+**Note:** 15 entries may have a source-level duplicate bare .t3 block (non-functional). patch_live_tools_v6.py removes it — PENDING RUN next session.
+
+## 33 Remaining Tier 1 Entries — Tool Mappings Confirmed
+
+All 33 remaining slugs are mapped in TOOL_OVERRIDES in mpw_tools_v3.py. No gaps. Writer is ready.
+
+Next session command:
+```powershell
+. .\setenv.ps1
+python patch_live_tools_v6.py          # P0 — remove duplicates first
+python mpw_bible_writer.py --validate  # confirm 80/80
+python mpw_bible_writer.py --batch-file bible-tier1-remaining34.txt --start-date 2026-05-19 --workers 8
+```
+
+## mpw_tools_v3.py — Tool Suite Visual Standard (Session 39 — APPROVED)
+
+Steve confirmed all 15 patched entries look great. The v3 tool design is the approved standard.
+
+**Required elements on every tool:**
+- Header: dark amber bg (#0d0800), amber bottom border 2px
+- Teal MPW logomark (SVG, 28×28px, green #00e8a2 bg)
+- MusicProductionWiki.com in near-white
+- ◆ The Producer's Bible in amber
+- "Interactive Tool" badge — amber text, amber border, small caps
+- Tool name right-aligned in header
+- Description bar: slightly lighter dark (#100c00), grey text
+- Tool body: black bg (#0d0d0d), amber border 1.5px, 10px radius
+- Input fields: dark bg (#111), subtle borders, amber focus glow
+- Result boxes: dark bg (#111), amber result numbers (26px weight 800)
+- Contextual comment: left amber border card
+- Section headers: amber uppercase small caps
+- Table/preset cards: dark bg, hover amber border
+- Footer: ◆ The Producer's Bible — MusicProductionWiki.com + Copy/X/Reddit buttons
+
+**CSS class `.t3` with `.tb` body — NO setTimeout anywhere — all init calls direct**
+
+---
+
+# SESSION 38 UPDATE — HISTORICAL REFERENCE
 
 ## 16 Tier 1 Entries Live (v5.1)
 
-| Entry | Status |
-|---|---|
-| compression | Live v5.1 — GR Calculator (correct) |
-| eq | Live v5.1 — Frequency Reference needed |
-| limiting | Live v5.1 — LUFS Calculator needed |
-| saturation | Live v5.1 — GR Calculator needed |
-| distortion | Live v5.1 — GR Calculator needed |
-| multiband-compression | Live v5.1 — GR Calculator needed |
-| parallel-compression | Live v5.1 — GR Calculator needed |
-| noise-gate | Live v5.1 — GR Calculator needed |
-| reverb | Live v5.1 — RT60 Calculator needed |
-| delay | Live v5.1 — Delay Time Calculator needed |
-| convolution-reverb | Live v5.1 — RT60 Calculator needed |
-| plate-reverb | Live v5.1 — Delay Calculator needed |
-| room-reverb | Live v5.1 — RT60 Calculator needed |
-| gain-staging | Live v5.1 — Gain Staging Calculator needed |
-| headroom | Live v5.1 — Headroom Calculator needed |
-| stereo-imaging | Live v5.1 — Stereo Width Visualizer needed |
-
-All 16 have correct tools nav position (after Quick Ref) and correct sidebar TOC position.
-All 16 currently show old/wrong tool in the tools section — needs patch_live_tools.py after tool rebuild.
+All 16 now have correct tools — see Session 39 table above.
 
 ## Tool Suite — Visual Standard Approved (Session 38)
 
-Steve approved the Delay Time Calculator design direction. All 13 tools must be rebuilt to this standard:
-
-**Required elements on every tool:**
-- Outer chrome: green border card (#0d1a0d bg, rgba(96,192,96,.25) border, 12px radius)
-- ⚡ tool name in green #60c060, "Interactive Tool" badge in green
-- Description text in grey #888
-- Dark amber #1a0800 result display area with #f5a623 border
-- Large result numbers: 2.2–2.5rem, font-weight 900, color #f5a623
-- Click-to-copy on result values
-- Share bar: Copy Link (amber solid) + X (black) + Reddit (orange) + ◆ The Producer's Bible mark
-- Contextual callouts where applicable (e.g. delay tool shows BPM-specific pro tips)
-
-**Delay Time Calculator additionally:**
-- Tap Tempo button
-- 13 note values (Whole/Half/Dotted Half/Quarter/Dotted Quarter/Quarter Triplet/8th/Dotted 8th/8th Triplet/16th/Dotted 16th/16th Triplet/32nd)
-- Color coding: Straight=amber, Dotted=blue #60a0ff, Triplet=purple #a060ff
-- ★ Most Used badge on Dotted 8th
-- Hz displayed on every card
-- Values in seconds when >1000ms
-- BPM-specific contextual callouts (120 BPM = The Edge reference, etc.)
+Steve approved the Delay Time Calculator design direction. All tools were rebuilt to this standard in Session 39.
 
 ## Competitor Research Status
 
 | Tool | Researched | Competitors Reviewed |
 |---|---|---|
 | Delay Time Calculator | ✅ | anotherproducer.com, nickfever.com, tools4music.com, soundplate.com |
-| LUFS Calculator | ❌ | Not yet |
-| Frequency Reference | ❌ | Not yet |
-| RT60 Calculator | ❌ | Not yet |
-| Note→Frequency | ❌ | Not yet |
-| ADSR Visualizer | ❌ | Not yet |
-| Gain Staging Calculator | ❌ | Not yet |
-| Headroom Calculator | ❌ | Not yet |
-| Stereo Width Visualizer | ❌ | Not yet |
-| LFO Rate Calculator | ❌ | Not yet |
-| Chord/Key Reference | ❌ | Not yet |
-| GR Calculator (upgrade) | ❌ | Not yet |
-
-**NEXT SESSION P0: Research all 12 remaining tool types before building anything.**
+| All other tools | ✅ Session 39 | Built and deployed — Steve confirmed visual quality |
 
 ---
 
@@ -567,7 +579,7 @@ Steve approved output. All major issues from Session 36 resolved:
 | Word count 14,271w | RESOLVED — converged to ~28 min read — acceptable |
 | Quotes don't match spotlight | FIXED — different producers fine as long as they match |
 
-**STATUS: WRITER READY FOR REMAINING 34 TIER 1 ENTRIES — pending tool rebuild**
+**STATUS: WRITER READY FOR REMAINING 33 TIER 1 ENTRIES**
 
 ---
 

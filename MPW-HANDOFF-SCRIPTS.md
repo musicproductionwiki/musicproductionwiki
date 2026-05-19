@@ -1,5 +1,5 @@
 # MPW-HANDOFF-SCRIPTS.md
-*Updated: May 18, 2026 (SESSION 38)*
+*Updated: May 18, 2026 (SESSION 39)*
 
 All scripts at: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\`
 GitHub API blocked from Claude's environment — all GitHub operations run from Steve's PowerShell.
@@ -66,24 +66,26 @@ SESSION 29 UPDATE: Also regenerates MPW-CATALOG.md from live slug list and inclu
 
 ---
 
-# mpw_bible_writer.py — v5.1 — SESSION 38 FINAL — READY FOR BATCH
+# mpw_bible_writer.py — v5.1 — SESSION 39 FINAL — READY FOR BATCH
 
 Location: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\mpw_bible_writer.py`
 
 **CRITICAL: The v5.1 writer is NOT in the GitHub repo. The repo contains an old v4.0 version. ALWAYS use the local mpw-scripts\ copy. NEVER restore from GitHub.**
 
-**STATUS: 16 Tier 1 entries committed. Tools need visual upgrade before remaining 34 run.**
+**STATUS: 16 Tier 1 entries committed with correct tools. 33 remaining — READY TO RUN.**
 
-**CONFIRMED STATE of delivered writer (Session 38):**
+**CONFIRMED STATE of delivered writer (Session 39):**
 - Syntax: CLEAN
-- TOOL_OVERRIDES: DEFINED (all 13 tools)
-- build_html_t1, PASS2_SYSTEM_T1, build_tools_section: PRESENT
+- Imports build_tools_section_v3 from mpw_tools_v3 ✅
+- TOOL_OVERRIDES: DEFINED (all 12 tools, 49 slugs)
+- build_html_t1, PASS2_SYSTEM_T1, build_tools_section_v3: PRESENT
 - --workers flag: PRESENT (ThreadPoolExecutor, default 4, max 8)
 - SC = '</' + 'script>': DEFINED
 - _delay function: COMPLETE (html= and return lines present)
 - Tools nav pill: AFTER Quick Ref (position 5)
 - Tools sidebar TOC: AFTER Quick Ref (position 5)
 - Validation: 80/80
+- Tool init functions: direct calls only — NO setTimeout anywhere
 
 ## Run Commands
 
@@ -91,7 +93,7 @@ Location: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\mpw_bible_writer.py`
 . .\setenv.ps1
 python mpw_bible_writer.py --validate
 python mpw_bible_writer.py --test --slug delay --term "Delay" --category "Time-Based" --tier 1
-python mpw_bible_writer.py --batch-file bible-tier1-remaining34.txt --start-date 2026-05-18 --workers 8
+python mpw_bible_writer.py --batch-file bible-tier1-remaining34.txt --start-date 2026-05-19 --workers 8
 ```
 
 ## Architecture
@@ -109,7 +111,7 @@ Tier 3 → build_html_t3()  — 1,500–2,500 words — reference template
 - Pass 1.5 (no API call) — quotes.json filter by tag
 - Pass 2 (22,000 tokens Tier 1 / 14,000 Tier 2 / 8,000 Tier 3) — Prose HTML
 
-**Key constants (Session 38 final):**
+**Key constants (Session 39 final):**
 - Model: claude-sonnet-4-6 ✅
 - PASS1_TOKENS: 20000
 - PASS2_TOKENS_T1: 22000
@@ -120,61 +122,64 @@ Tier 3 → build_html_t3()  — 1,500–2,500 words — reference template
 - WORD_FLOOR_T2: 3800 / WORD_CEIL_T2: 5000
 - WORD_FLOOR_T3: 1500 / WORD_CEIL_T3: 2500
 
-## TOOL_OVERRIDES Map (Session 38)
+## TOOL_OVERRIDES Map (Session 39 — via mpw_tools_v3.py)
 
 ```python
 TOOL_OVERRIDES = {
-    'compression':           'gr_calculator',
-    'saturation':            'gr_calculator',
-    'distortion':            'gr_calculator',
-    'parallel-compression':  'gr_calculator',
-    'multiband-compression': 'gr_calculator',
-    'noise-gate':            'gr_calculator',
-    'bus-compression':       'gr_calculator',
-    'delay':                 'delay_calculator',
-    'plate-reverb':          'delay_calculator',
-    'automation':            'delay_calculator',
-    'limiting':              'lufs_calculator',
-    'lufs':                  'lufs_calculator',
-    'mastering':             'lufs_calculator',
-    'loudness-normalization':'lufs_calculator',
-    'true-peak-limiting':    'lufs_calculator',
-    'eq':                    'frequency_reference',
-    'parametric-eq':         'frequency_reference',
-    'high-pass-filter':      'frequency_reference',
-    'low-pass-filter':       'frequency_reference',
-    'shelving-eq':           'frequency_reference',
-    'air-frequency-eq':      'frequency_reference',
-    'resonance':             'frequency_reference',
-    'harmonic-distortion':   'frequency_reference',
-    'reverb':                'rt60_calculator',
-    'convolution-reverb':    'rt60_calculator',
-    'room-reverb':           'rt60_calculator',
-    'oscillator':            'note_freq',
-    'fm-synthesis':          'note_freq',
-    'wavetable-synthesis':   'note_freq',
-    'additive-synthesis':    'note_freq',
-    'vocoder':               'note_freq',
-    'subtractive-synthesis': 'note_freq',
-    'adsr':                  'adsr_visualizer',
-    'envelope':              'adsr_visualizer',
-    'gain-staging':          'gain_staging',
-    'send-return':           'gain_staging',
-    'clip-gain':             'gain_staging',
-    'headroom':              'headroom_calc',
-    'mix-bus':               'headroom_calc',
-    'stereo-imaging':        'stereo_width',
-    'mid-side-processing':   'stereo_width',
-    'lfo':                   'lfo_sync',
-    'chorus':                'lfo_sync',
-    'flanger':               'lfo_sync',
-    'phaser':                'lfo_sync',
-    'tremolo':               'lfo_sync',
-    'vibrato':               'lfo_sync',
+    'compression':           'gr',
+    'saturation':            'gr',
+    'distortion':            'gr',
+    'parallel-compression':  'gr',
+    'multiband-compression': 'gr',
+    'noise-gate':            'gr',
+    'bus-compression':       'gr',
+    'dynamic-range':         'gr',
+    'delay':                 'delay',
+    'plate-reverb':          'delay',
+    'automation':            'delay',
+    'limiting':              'lufs',
+    'lufs':                  'lufs',
+    'mastering':             'lufs',
+    'loudness-normalization':'lufs',
+    'true-peak-limiting':    'lufs',
+    'eq':                    'freq',
+    'parametric-eq':         'freq',
+    'high-pass-filter':      'freq',
+    'low-pass-filter':       'freq',
+    'shelving-eq':           'freq',
+    'air-frequency-eq':      'freq',
+    'resonance':             'freq',
+    'harmonic-distortion':   'freq',
+    'air':                   'freq',
+    'reverb':                'rt60',
+    'convolution-reverb':    'rt60',
+    'room-reverb':           'rt60',
+    'oscillator':            'note',
+    'fm-synthesis':          'note',
+    'wavetable-synthesis':   'note',
+    'additive-synthesis':    'note',
+    'vocoder':               'note',
+    'subtractive-synthesis': 'note',
+    'adsr':                  'adsr',
+    'envelope':              'adsr',
+    'gain-staging':          'gs',
+    'send-return':           'gs',
+    'clip-gain':             'gs',
+    'headroom':              'hc',
+    'mix-bus':               'hc',
+    'stereo-imaging':        'sw',
+    'mid-side-processing':   'sw',
+    'lfo':                   'lfo',
+    'chorus':                'lfo',
+    'flanger':               'lfo',
+    'phaser':                'lfo',
+    'tremolo':               'lfo',
+    'vibrato':               'lfo',
 }
 ```
 
 **IMPORTANT: tool_type from Pass 1 is unreliable. TOOL_OVERRIDES is the authoritative routing map.**
+**IMPORTANT: writer calls build_tools_section_v3(slug, term) from mpw_tools_v3.py — NOT the old build_tools_section.**
 
 ## SC — Safe Script Closing Tag
 
@@ -184,9 +189,15 @@ SC = '</' + 'script>'
 
 This constant is defined before all tool functions. NEVER write `</script>` as a literal string inside Python string literals — it closes the browser's script parser early and breaks all JS on the page. Always use SC for the closing tag in tool HTML strings.
 
-## _delay function — Known Issue
+## _delay function — Session 39 Status
 
-The _delay function has html= and return lines present in the delivered writer, but the Delay Time Calculator output was visually rejected (BPM input only, no note value grid visible). This is because the tool was rejected for quality reasons before the JS was fully verified. The entire tool suite needs a visual rebuild next session — _delay will be rewritten as part of that rebuild.
+The _delay function is present and working. Delay Time Calculator renders correctly on delay.html and plate-reverb.html — confirmed visually by Steve in Session 39.
+
+## Session 39 Changes to mpw_bible_writer.py
+
+- patch_writer_v3.py patched writer to import build_tools_section_v3 from mpw_tools_v3
+- build_tools_section_v3 replaces old build_tools_section
+- 80/80 validation confirmed after patch
 
 ## Session 37 Changes to mpw_bible_writer.py
 
@@ -228,9 +239,9 @@ The _delay function has html= and return lines present in the delivered writer, 
 ### Bug Fixes (Session 38)
 
 - SyntaxError in _freq, _gs, _hr, _chord: bare unescaped single quotes at innerHTML= inside single-quoted Python strings — fixed by escaping 56 single quotes across 4 lines
-- TOOL_OVERRIDES not defined: referenced at line 2017 but never assigned — fixed by inserting full dict after SC = line
+- TOOL_OVERRIDES not defined: referenced but never assigned — fixed by inserting full dict after SC = line
 - _delay missing html= and return lines: truncated function — fixed by inserting html and return after js= block
-- Validation suite: gc-input and calcGR checks removed — these were GR calculator specific, now replaced with tool-agnostic check that matches any tool's DOM elements
+- Validation suite: gc-input and calcGR checks removed — replaced with tool-agnostic check matching any tool's DOM elements
 
 ## Pass 1 JSON Schema — All Required Fields
 
@@ -293,6 +304,95 @@ For 1,500 entries (300 T1 + 700 T2 + 500 T3): ~$300 total
 
 ---
 
+# mpw_tools_v3.py — SESSION 39 — NEW — CONFIRMED WORKING
+
+Location: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\mpw_tools_v3.py`
+
+**PURPOSE:** Fully self-contained Python file with all 12 interactive tools and 49 slug mappings. No external imports. Public API: `build_tools_section_v3(slug, term)` returns complete HTML string for injection into Bible entries.
+
+**CRITICAL RULES:**
+- NEVER import build_preview.py or any external script — mpw_tools_v3.py must be self-contained
+- NEVER use setTimeout for any init function call — call all init functions directly
+- Tool init functions called at end of each tool's `<script>` block — no deferred execution
+
+**Tool CSS class architecture:**
+```
+.t3          — outer container (black bg, amber border 1.5px, 10px radius)
+.t3 .tb      — tool body (padding 16px 20px 18px)
+.t3 .tr      — input row grid
+.t3 .c2/c3/c4 — column counts
+.t3 .rb      — result box (dark bg, amber number)
+.t3 .rn      — result number (26px, weight 800, amber)
+.t3 .co      — contextual comment (left border amber)
+.t3 .sh      — section header (amber, uppercase)
+.t3 .tc      — table/preset card (clickable, hover amber)
+.t3 .btn     — amber button
+```
+
+**Brand header on every tool:**
+- Green teal logomark (same SVG as site nav)
+- MusicProductionWiki.com in white
+- ◆ The Producer's Bible in amber
+- "Interactive Tool" badge in amber
+- Tool name right-aligned
+- Dark amber header background (#0d0800)
+
+**Footer on every tool:**
+- ◆ The Producer's Bible — MusicProductionWiki.com
+- Copy Link button
+- X Share button
+- Reddit button
+
+```powershell
+# Test import:
+python -c "from mpw_tools_v3 import build_tools_section_v3; print(build_tools_section_v3('reverb','Reverb')[:200])"
+```
+
+---
+
+# patch_writer_v3.py — SESSION 39
+
+Patched mpw_bible_writer.py to import build_tools_section_v3 from mpw_tools_v3 instead of using old inline build_tools_section. Validated 80/80 after patch.
+
+```powershell
+python patch_writer_v3.py
+python mpw_bible_writer.py --validate
+```
+
+---
+
+# patch_live_tools_v6.py — SESSION 39 — PENDING RUN
+
+**PURPOSE:** Surgical removal of duplicate bare `.t3` tool blocks that sit after `</section>` of the tools section on the 15 patched entries. The correct section-wrapped tool stays. The dead bare block (showing dashes, no working JS) is removed.
+
+**HOW IT WORKS:**
+- Fetches each of the 15 entries from GitHub
+- Detects if a bare `.t3` block exists after the tools `</section>` close
+- Removes only the bare block — leaves `<section id="tools">` untouched
+- Reports `.t3` div count and tools section count before and after
+- Skips entries where no duplicate detected
+- Single Trees API commit for all changed files
+
+```powershell
+. .\setenv.ps1
+python patch_live_tools_v6.py
+```
+
+**Run this FIRST at the start of next session before anything else.**
+
+---
+
+# patch_live_tools_v1 through v5 — ALL SUPERSEDED — DO NOT USE
+
+- patch_live_tools.py — SUPERSEDED — imported old green-wrapper build_tools_section
+- patch_live_tools_fix.py — SUPERSEDED — wrong insertion position
+- patch_live_tools_v2.py — SUPERSEDED — searched for missing section wrapper
+- patch_live_tools_v3.py — SUPERSEDED — inserted before helpful block
+- patch_live_tools_v4.py — SUPERSEDED — still had setTimeout in tool scripts
+- patch_live_tools_v5.py — SUPERSEDED — missed bare .t3 duplicate
+
+---
+
 # add_workers.py — SESSION 38
 
 Patches mpw_bible_writer.py to add --workers flag via concurrent.futures.ThreadPoolExecutor.
@@ -319,35 +419,6 @@ python fix_writer.py
 
 Reads and writes `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\mpw_bible_writer.py` in-place.
 Creates backup at mpw_bible_writer.py.pre_fix.bak before modifying.
-
----
-
-# patch_live_tools.py — SESSION 38 — CORRECT — NOT YET RUN
-
-Fetches 15 non-compression Bible entries from GitHub, replaces tools section with correct tool per slug, commits via Trees API.
-
-```powershell
-python patch_live_tools.py
-```
-
-**STATUS: Correct script, not yet run because tools need visual quality upgrade first.**
-**Run AFTER tool suite rebuild in next session.**
-
-Imports build_tools_section and TOOL_OVERRIDES from local mpw_bible_writer.py.
-ENTRIES list: all 15 non-compression Tier 1 entries committed Session 38.
-compression is correctly excluded — it already has the correct GR calculator.
-
----
-
-# patch_tools_v2.py — DO NOT USE — BROKEN
-
-_delay function missing html= and return lines. Will produce None for delay/plate-reverb/automation entries. Do not run.
-
----
-
-# patch_tools_v3.py — DO NOT USE — INCOMPATIBLE
-
-Searches for OLD_OVERRIDES string containing 'calculator' values. That string no longer exists in the writer (TOOL_OVERRIDES was already updated). Script will fail immediately with "[ERROR] TOOL_OVERRIDES block not found".
 
 ---
 
@@ -387,7 +458,8 @@ run_patch(patch, dry_run=False)
 ```
 
 Session 37 handoff committed — SHA: 7c321e33
-Session 38 handoff: DELIVERED AS FILES — commit manually via GitHub API (see upload instructions in this handoff)
+Session 38 handoff: DELIVERED AS FILES — committed via GitHub API
+Session 39 handoff: DELIVERED AS FILES — commit via GitHub API (see upload command in this handoff)
 
 ---
 
@@ -477,7 +549,7 @@ Committed via Trees API — SHA: d6f787db46f8dc4bbbe5b7d4f1fd2ba0b45e0505
 
 Location: C:\Users\swarn\OneDrive\Desktop\mpw-scripts\
 
-- bible-upgrade-tier1.txt — 50 Tier 1 rewrites — 16 DONE, 34 REMAINING
+- bible-upgrade-tier1.txt — 50 Tier 1 rewrites — 16 DONE, 33 REMAINING
   Format: compression:Compression:Signal Processing:1 (4 parts, tier=1)
 - bible-index.json — 210 entries (v3.0/v4.0) — in repo root — NOT updated for v5.1 entries yet
 - bible-tier1-remaining34.txt — CREATE before running remaining batch (see CORE for command)

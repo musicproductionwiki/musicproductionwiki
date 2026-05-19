@@ -1,5 +1,5 @@
 # MPW-HANDOFF-ARTICLES.md
-*Updated: May 18, 2026 (SESSION 37)*
+*Updated: May 18, 2026 (SESSION 39)*
 
 ---
 
@@ -17,7 +17,7 @@ Or fetch directly:
 python mpw_count.py
 ```
 
-Current count as of Session 37: **526 articles live** (unchanged — no article batches ran Session 37)
+Current count as of Session 39: **526 articles live** (unchanged — no article batches ran Sessions 38 or 39)
 
 ---
 
@@ -68,8 +68,9 @@ Key requirements for every article:
 |---|---|---|
 | 01-07 | LIVE | 406 articles |
 | 08 | LIVE | 120 articles |
-| Bible Tier 1 (50 rewrites) | READY | Writer approved Session 37 — run next |
-| 09 (breakdowns) | QUEUED | Run after Bible Tier 1 batch completes |
+| Bible Tier 1 (16 done) | LIVE | 16 entries v5.1 — tools confirmed by Steve |
+| Bible Tier 1 (33 remaining) | READY | Run next session after patch_live_tools_v6.py |
+| 09 (breakdowns) | QUEUED | Run after Bible Tier 1 completes |
 | 10 (studio-story) | QUEUED | After Batch 09 |
 | 11 (recreation) | QUEUED | After recreations.html category page |
 | 12 (vocal-autopsy) | QUEUED | After vocal-autopsies.html category page |
@@ -136,9 +137,9 @@ Do NOT build before Batch 09 completes.
 
 ---
 
-# Session 37 — No Article Changes
+# Session 39 — No Article Changes
 
-Session 37 was entirely focused on mpw_bible_writer.py Pass 2 rewrite and handoff automation.
+Session 39 was focused entirely on mpw_tools_v3.py build, live tool patching of 15 Bible entries, and duplicate tool block cleanup.
 No articles were written, modified, or committed.
 Article count remains 526.
 Next article batch: Batch 09 (100 breakdowns) — queued after Bible Tier 1 completes.

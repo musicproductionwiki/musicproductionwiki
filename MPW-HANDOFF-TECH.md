@@ -1,5 +1,5 @@
 # MPW-HANDOFF-TECH.md
-*Updated: May 18, 2026 (SESSION 37)*
+*Updated: May 18, 2026 (SESSION 39)*
 
 ---
 
@@ -48,12 +48,13 @@ repo root/
 ├── mpw_session_start.py
 ├── handoff_state.json (LOCAL ONLY — never committed — tracks SHA state for handoff runner)
 ├── articles/
-│   ├── [slug].html  (526 articles — unchanged Session 37)
+│   ├── [slug].html  (526 articles — unchanged Sessions 38 + 39)
 │   └── ...
 ├── bible/
 │   ├── index.html (LOCKED — commit 29ee26a9)
 │   ├── eq.html (v3.0 gold standard — LOCKED)
 │   ├── compression.html (v5.1 gold standard — writer QA complete Session 37)
+│   ├── [15 other v5.1 entries with correct tools — patched Session 39]
 │   └── [term].html  (210 entries total — v3.0/v4.0 template)
 │   └── categories/
 │       ├── dynamics/index.html
@@ -113,7 +114,7 @@ File: bible/compression.html
 Built: Session 32, May 16, 2026
 Refined: Sessions 33 + 34 + 35 + 36, May 17–18, 2026
 Writer QA: Complete Session 37 — approved by Steve
-Status: READY FOR TIER 1 BATCH
+Status: LOCKED
 
 **DO NOT MODIFY THE COMMITTED FILE. Update the writer to match it.**
 
@@ -187,10 +188,6 @@ Mobile (≤768px):
   <div class="bible-entry-wrap" style="display:grid!important;grid-template-columns:1fr 280px!important;gap:40px!important;align-items:start!important;max-width:1100px!important;margin:0 auto!important;padding:40px 24px!important">
     <div class="entry-main">
       <!-- ALL CONTENT SECTIONS -->
-      <!-- gain-calculator div MUST be closed before signal-chain section -->
-      </div><!-- /gain-calculator -->
-      <!-- Signal Chain Position -->
-      ...
     </div><!-- /entry-main -->
 
     <!-- Sidebar -->
@@ -226,8 +223,6 @@ closes = len(re.findall(r'</div>', segment))
 Pattern for finding specific unclosed divs: find_unclosed2.py — iterates with regex, maintains stack, prints context of each unclosed opener.
 
 ## Mobile Checklist (38 checks — must all pass before any commit)
-
-Run this audit on every generated Bible entry before committing:
 
 Critical checks:
 - Viewport meta: width=device-width, initial-scale=1.0
@@ -349,11 +344,17 @@ Always include bible-index.json update in same Trees API commit as Bible entry c
 
 ---
 
-# 10. Tools Architecture (Planned — Session 38+)
+# 10. Tools Architecture
 
-## /tools/ Hub Page
+## Current State (Session 39)
 
-Standalone page. Not a category page in the existing sense.
+12 tools live in Bible entries via mpw_tools_v3.py. All 16 Tier 1 entries have working tools confirmed by Steve. Tools section always at id="tools", positioned after id="quick-reference".
+
+Tool CSS class: `.t3` — self-contained, amber branding, no external dependencies, no setTimeout.
+
+## /tools/ Hub Page (Planned)
+
+Standalone page. Not a category page.
 Grid of tool cards: tool name + one-line description + which Bible entry it belongs to + "Try Free" button.
 Submit to Product Hunt after 5+ tools are live.
 URL: musicproductionwiki.com/tools/
@@ -367,15 +368,16 @@ Link from Bible bar as 9th category pill.
 ## /tools/[slug]/
 
 Individual tool pages when tools graduate from Bible entries.
-GR Calculator → /tools/compression-calculator/ (future, when it has save history + sharing)
-Delay Calculator → /tools/delay-calculator/ (next Session 38+)
+GR Calculator → /tools/compression-calculator/ (future)
+Delay Calculator → /tools/delay-calculator/ (future)
 
-## Tool-in-Entry Pattern (current — Session 37 update)
+## Tool-in-Entry Pattern (current)
 
 Tools live inside Bible entries. The tools section (id="tools") in every Tier 1 entry:
-- NOW injected immediately after id="quick-reference" closes — high-intent position for SEO and conversion
-- Contains GR Calculator + Share This Tool bar (Copy Link → X → Reddit)
+- Injected immediately after id="quick-reference" closes — high-intent position for SEO and conversion
+- Contains correct interactive tool per slug (per TOOL_OVERRIDES in mpw_tools_v3.py)
 - Email gate on download/save output only — tool itself always free
+- Share bar: Copy Link + X + Reddit
 
 ---
 
@@ -421,7 +423,56 @@ Future improvement: add `<lastmod>` dates to sitemap.xml entries for better craw
 
 ---
 
-# 14. Session 37 — Key Technical Findings
+# 14. Session 39 — Key Technical Findings
+
+## mpw_tools_v3.py — Architecture
+
+- Fully self-contained Python file — no external imports
+- Public API: `build_tools_section_v3(slug, term)` returns complete HTML string
+- 12 tools, 49 slug mappings
+- Tool CSS class `.t3` with `.tb` body
+- All init functions called directly at end of each tool's script block — NEVER setTimeout
+- Brand: teal logomark + MusicProductionWiki.com + ◆ The Producer's Bible + Interactive Tool badge
+- Dark amber header (#0d0800), amber border 2px, amber result numbers
+
+## Duplicate Tool Block Root Cause (Session 39)
+
+Multiple patch script iterations (v1–v5) each injected a new tool without cleanly removing all prior injections. Result: some entries ended up with TWO `.t3` blocks:
+1. The correct one: inside `<section id="tools">` with direct init calls — WORKING
+2. A dead bare block: sitting after `</section>` with dashes (—) for results, possibly with setTimeout — NON-FUNCTIONAL
+
+patch_live_tools_v6.py removes the dead bare block surgically. Does not touch the working section.
+
+Detection pattern: `html.count('<div class="t3">')` — if > 1, duplicate exists.
+Removal: find `</section>\n\n` followed by `<style>\n.t3{` — that's the start of the bare block. Remove everything from there to the next `<section class="entry-section"`.
+
+## Tool Init Call Pattern (NEVER use setTimeout)
+
+**WRONG:**
+```javascript
+setTimeout(function(){ rtCalc(); }, 0);
+```
+
+**CORRECT:**
+```javascript
+rtCalc();
+```
+
+Mid-document scripts execute after their preceding DOM is parsed. The tool's inputs and result elements are already in the DOM when the script runs. setTimeout is unnecessary and caused tools to fail to initialize in some browser/load-order combinations.
+
+---
+
+# 14A. Session 38 — Key Technical Findings
+
+## mpw_bible_writer.py State (end of Session 38)
+
+- 16 Tier 1 entries committed (compression + 15 batch)
+- Tools visual quality: tools were wrong for 15 entries — needed rebuild
+- Tools rebuild completed Session 39 — all 15 now confirmed correct by Steve
+
+---
+
+# 14B. Session 37 — Key Technical Findings
 
 ## mpw_bible_writer.py State (end of Session 37 — FINAL)
 
@@ -430,16 +481,16 @@ Future improvement: add `<lastmod>` dates to sitemap.xml entries for better craw
 - API timeout: 600s ✅
 - Validation: 81/81 checks pass ✅
 - Pass 2 content quality: APPROVED by Steve ✅
-- Tools position: after quick-reference ✅ (new Session 37)
-- Tools share bars: Copy Link + X + Reddit ✅ (new Session 37)
-- Producer spotlight: cite-tag parsing from rendered HTML ✅ (new Session 37)
-- Verdict in sidebar TOC ✅ (new Session 37)
-- FAQ empty answer filter ✅ (new Session 37)
-- History: 4 cards × 120–150w = 500–600w ✅ (new Session 37)
-- Verdict: MPW editorial opinion mandate ✅ (new Session 37)
-- UnboundLocalError on html variable: FIXED ✅ (new Session 37)
-- SEO: meta description, keywords, HowTo schema, timeRequired ✅ (new Session 37)
-- Internal linking: 6–10 amber links per entry ✅ (new Session 37)
+- Tools position: after quick-reference ✅
+- Tools share bars: Copy Link + X + Reddit ✅
+- Producer spotlight: cite-tag parsing from rendered HTML ✅
+- Verdict in sidebar TOC ✅
+- FAQ empty answer filter ✅
+- History: 4 cards × 120–150w = 500–600w ✅
+- Verdict: MPW editorial opinion mandate ✅
+- UnboundLocalError on html variable: FIXED ✅
+- SEO: meta description, keywords, HowTo schema, timeRequired ✅
+- Internal linking: 6–10 amber links per entry ✅
 
 ## Session 37 — Build Function Order in build_html_t1()
 
@@ -451,7 +502,7 @@ signal_chain = build_signal_chain_svg(...)
 genre_html = build_genre_table_html(...)
 plugin_html = build_plugin_recs_html(...)
 # ... all other components ...
-tools_html = build_tools_section(p1, slug)
+tools_html = build_tools_section_v3(slug, term)
 sidebar_toc = build_sidebar_toc_html(slug)
 # NOTE: spotlight_html NOT called yet
 
@@ -485,11 +536,9 @@ Secrets scrubbed: ghp_ and sk-ant- patterns automatically removed before commit.
 
 ---
 
-# 14B. Session 36 — Key Technical Findings
+# 14C. Session 36 — Key Technical Findings
 
 ## compression.html Share Bar State (end of Session 36 — FINAL)
-
-All share bars now use .mpw-share-bar class with correct order and branding:
 
 | Bar | Status | Class |
 |---|---|---|
@@ -505,36 +554,18 @@ All share bars now use .mpw-share-bar class with correct order and branding:
 ## calc-share-bar CSS (Session 36 — appended before </head>)
 
 ```css
-/* calc-share-bar: auto-width buttons, not flex:1 stretched */
 .calc-share-bar { justify-content: flex-start !important; }
 .calc-share-bar .mpw-share-btn {
-  flex: 0 0 auto !important;
-  width: auto !important;
-  padding: 0 18px !important;
-  height: 34px !important;
+  flex: 0 0 auto !important; width: auto !important;
+  padding: 0 18px !important; height: 34px !important;
 }
-/* Copy Link — solid amber inside calc bars */
 .calc-share-bar .mpw-share-btn.share-copy {
-  background: #f5a623 !important;
-  color: #000 !important;
-  border-color: #f5a623 !important;
+  background: #f5a623 !important; color: #000 !important; border-color: #f5a623 !important;
 }
-/* Mobile: 3 equal columns so all buttons sit on one row */
 @media(max-width:768px) {
-  .calc-share-bar {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr 1fr !important;
-    gap: 6px !important;
-  }
-  .calc-share-bar .mpw-share-label {
-    grid-column: 1 / -1 !important;
-  }
-  .calc-share-bar .mpw-share-btn {
-    width: 100% !important;
-    padding: 0 4px !important;
-    font-size: 11px !important;
-    justify-content: center !important;
-  }
+  .calc-share-bar { display: grid !important; grid-template-columns: 1fr 1fr 1fr !important; gap: 6px !important; }
+  .calc-share-bar .mpw-share-label { grid-column: 1 / -1 !important; }
+  .calc-share-bar .mpw-share-btn { width: 100% !important; padding: 0 4px !important; font-size: 11px !important; justify-content: center !important; }
 }
 ```
 
@@ -587,25 +618,17 @@ Committed to repo. Resubmit to Google Search Console.
 ## Share Bar CSS Architecture (Session 34 — FINAL)
 
 ```css
-/* Base — all share buttons */
 .mpw-share-btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 4px;
-  flex: 1 1 0; min-width: 0;
-  height: 34px; padding: 0 8px; border-radius: 6px;
-  font-size: 11px; font-weight: 700; line-height: 1;
-  text-decoration: none; white-space: nowrap;
-  cursor: pointer; font-family: inherit;
-  box-sizing: border-box; transition: opacity .15s;
+  flex: 1 1 0; min-width: 0; height: 34px; padding: 0 8px; border-radius: 6px;
+  font-size: 11px; font-weight: 700; text-decoration: none; white-space: nowrap;
+  cursor: pointer; font-family: inherit; box-sizing: border-box; transition: opacity .15s;
 }
 .mpw-share-btn:hover { opacity: 0.82; }
 .mpw-share-btn.share-x { background: #000; color: #fff; border: 1px solid #000; }
 .mpw-share-btn.share-reddit { background: #ff4500; color: #fff; border: 1px solid #ff4500; }
 .mpw-share-btn.share-copy { background: #f5a623; color: #000; border: 1px solid #f5a623; }
-
-/* Footer override — prevents flex:1 stretching */
 .footer-share-btn { flex: 0 0 auto !important; width: auto !important; padding: 0 18px !important; }
-
-/* Mobile — 3-column grid */
 @media(max-width:768px) {
   .mpw-share-bar { display: grid !important; grid-template-columns: 1fr 1fr 1fr !important; gap: 6px !important; }
   .mpw-share-label { grid-column: 1 / -1 !important; }
@@ -614,7 +637,7 @@ Committed to repo. Resubmit to Google Search Console.
 ```
 
 Button order everywhere: **Copy Link → Share on X → Reddit**
-Footer exception: **Share on X → Reddit** only (no Copy Link), buttons use both `.mpw-share-btn` and `.footer-share-btn`
+Footer exception: **Share on X → Reddit** only (no Copy Link)
 
 ## Dead Category Card Slugs (Session 35 — Partial Fix)
 
@@ -627,4 +650,4 @@ Footer exception: **Share on X → Reddit** only (no Copy Link), buttons use bot
 - midi-controller-buying-guide → ../categories/gear.html
 - plugins-explained → ../categories/plugins.html
 
-fix_dead_slugs.py written but did not patch (href format mismatch — bare slugs not matching). Needs investigation Session 38 — fetch one category page and print actual href format before writing replacement strings.
+fix_dead_slugs.py written but did not patch (href format mismatch — bare slugs not matching). Needs investigation — fetch one category page and print actual href format before writing replacement strings.
