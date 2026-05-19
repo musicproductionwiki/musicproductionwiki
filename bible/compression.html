@@ -1860,15 +1860,16 @@ function dawTab(btn, id) {
   if (!navLinks.length) return;
   var sectionIds = Array.from(navLinks).map(function(a){ return a.getAttribute('href').replace('#',''); });
   var sections = sectionIds.map(function(id){ return document.getElementById(id); }).filter(Boolean);
-  function setActive(id){ /* compression-scroll-v7-s42 */
+  var _compNavStyle = document.createElement('style');
+  document.head.appendChild(_compNavStyle);
+  function setActive(id){ /* compression-scroll-v8-s42 */
     var navEl = document.querySelector('.entry-nav');
     var navLinks = document.querySelectorAll('.entry-nav-inner a');
+    var activeHref = '#' + id;
+    _compNavStyle.textContent = '.entry-nav-inner a[href="' + activeHref + '"]{color:#f5a623!important;background:rgba(245,166,35,0.1)!important;font-weight:700!important;}';
     navLinks.forEach(function(a){
-      var active = a.getAttribute('href') === '#' + id;
+      var active = a.getAttribute('href') === activeHref;
       a.classList.toggle('active', active);
-      a.style.setProperty('color', active ? '#f5a623' : '', active ? 'important' : '');
-      a.style.setProperty('font-weight', active ? '700' : '', active ? 'important' : '');
-      a.style.setProperty('background', active ? 'rgba(245,166,35,0.1)' : '', active ? 'important' : '');
       if (active && navEl) navEl.scrollTo({left: a.offsetLeft - navEl.offsetWidth/2 + a.offsetWidth/2, behavior:'smooth'});
     });
   }
