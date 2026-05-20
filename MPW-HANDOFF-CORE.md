@@ -580,9 +580,10 @@ v3.0/v4.0 153:
 
 | Priority | Task | Status |
 |---|---|---|
-| **P0** | **Fix mpw_tools_v3.py delivery to Steve's machine** — encoding corruption blocked all delivery attempts — see P0 options in Session 44 update | BLOCKED |
+| **P0** | **Run `.\install_tools_v3.ps1`** -- installs fixed mpw_tools_v3.py (1185 lines, all 12 tools, syntax clean) to mpw-scripts\ | READY -- script delivered |
 | **P0b** | **Fix verdict wrapper in mpw_bible_writer.py** — `<div class="producers-verdict">` missing from build_html_t1() — see P0b spec in Session 44 update | PENDING |
-| P1 | 3-entry batch test: chorus, limiting, gain-staging — after P0+P0b resolved | WAITING |
+| **P0c** | **Rebuild mpw_bible_writer.py v5.2** -- lost when Claude container reset -- rebuild from BIBLE handoff S44 spec | NEXT SESSION |
+| P1 | 3-entry batch test: chorus, limiting, gain-staging -- after P0+P0b+P0c resolved | WAITING |
 | P2 | Regenerate all 70 v5.1 entries with v5.2 writer (~$21, ~25 min at 8 workers) | After P1 confirmed |
 | P3 | mpw_bible_cat_pages.py --run | After regen |
 | P4 | gen_sitemap.py → GSC | After cat pages |
@@ -596,9 +597,11 @@ v3.0/v4.0 153:
 | NEVER use IntersectionObserver for entry nav tracking | Confirmed broken on real iPhone — always use scroll+touchmove+scrollIntoView |
 | NEVER patch compression.html nav | Has different Session 42 implementation — regenerate with v5.2 instead |
 | NEVER declare nav working without testing scrollIntoView behavior | Scroll listener alone is insufficient — active pill must auto-scroll into view |
-| NEVER deliver .py files via Claude artifact download | Cloudflare/browser encoding corruption guaranteed — use PowerShell here-string or Python patch script instead |
+| NEVER deliver .py files via Claude artifact download | Cloudflare/browser encoding corruption guaranteed — use base64 PowerShell script with WriteAllBytes instead |
 | NEVER use innerHTML for card population in tool JS | Netlify CSP headers block innerHTML on /bible/* pages — always use createElement/appendChild |
 | lfoCalc and lfoCopy MUST be assigned to window.* | oninput/onclick HTML attributes cannot access functions not on the window object |
+| NEVER try to patch encoding-corrupted Python files with byte replacement | If triple-quoted strings lost closing delimiters, byte replacement cannot fix structural corruption — use AST-guided reconstruction or base64 delivery |
+| ALWAYS deliver large .py files via base64 PowerShell script | Write raw bytes with [System.IO.File]::WriteAllBytes() — the only guaranteed encoding-safe delivery method |
 
 ---
 
@@ -718,19 +721,48 @@ Fix in build_html_t1(): inject wrapper programmatically after Pass 2 returns con
 
 | File | Location | Status |
 |---|---|---|
-| mpw_bible_writer.py v5.2 | /home/claude/mpw/ (2904 lines) | NOT on Steve's machine |
-| mpw_tools_v3.py NEW | /home/claude/mpw/ (1174 lines) | NOT on Steve's machine |
-| mpw_tools_v3.py OLD (corrupted) | C:\Users\swarn\OneDrive\Desktop\mpw-scripts\ | Encoding-corrupted old version |
-| quotes.json (380 quotes) | /mnt/user-data/outputs/ | Needs drop into mpw-scripts\ |
-| _headers (Netlify CSP) | /mnt/user-data/outputs/ | Needs commit to GitHub repo root |
+| mpw_bible_writer.py v5.2 | Claude container (2904 lines) — NOT persistent | NOT on Steve's machine — rebuild next session |
+| mpw_tools_v3.py FIXED | install_tools_v3.ps1 delivered — run to install | **Run .\install_tools_v3.ps1 to write to mpw-scripts\** |
+| mpw_tools_v3.py.bak | C:\Users\swarn\OneDrive\Desktop\mpw-scripts\ | Encoding-corrupted — leave as .bak |
+| quotes.json (380 quotes) | Delivered earlier this session | Needs drop into mpw-scripts\ |
+| _headers (Netlify CSP) | Delivered earlier this session | Needs commit to GitHub repo root |
+
+## mpw_tools_v3.py — Delivery Resolution (End of Session 44)
+
+The tools file went through multiple failed delivery attempts this session. Root cause chain:
+
+1. Claude artifact download → Cloudflare saves as wrong encoding (UTF-8 bytes as cp1252/Latin-1)
+2. The uploaded `mpw_tools_v3_py.bak` was the correct 1174-line self-contained new version BUT double-encoded — AND the triple-quoted Python strings had their closing `"""` stripped by the corruption, making the file structurally broken (not just a character replacement fix)
+3. PowerShell byte-loop patches failed because the byte sequences were cp1252-encoded, not raw UTF-8 E2 80 94
+4. The old `mpw_tools_v3.py` in mpw-scripts\ imports from `build_preview.py` (which doesn't exist) — it was never self-contained
+
+**Final fix applied this session:**
+- Decoded bak file: strip BOM → decode UTF-8 → encode cp1252 → decode UTF-8 (recovers original chars)
+- Replaced all non-ASCII with ASCII/HTML entity equivalents (em dashes → `--`, degree → `&deg;`, etc.)
+- Found and re-inserted missing `"""` closing quotes in all 11 affected tool functions using AST-guided insertion before each `_wrap(` call
+- Verified all 12 tools render correctly (tested: compression, delay, limiting, eq, reverb, oscillator, adsr, gain-staging, headroom, stereo-imaging, chorus, lfo — all OK)
+- Delivered as `install_tools_v3.ps1` — base64-encoded PowerShell script that writes raw bytes directly, bypassing all encoding issues
+
+**To install:**
+```powershell
+.\install_tools_v3.ps1
+```
+Writes `mpw_tools_v3.py` (1185 lines, all ASCII, syntax clean, all 12 tools working) to mpw-scripts\.
+
+**Then test:**
+```powershell
+python mpw_bible_writer.py --test --slug chorus --term "Chorus" --category "Time-Based" --tier 1 --no-commit
+```
 
 ## New NEVER Rules Added Session 44
 
 | Rule | Detail |
 |---|---|
-| NEVER deliver .py files via Claude artifact download | Cloudflare/browser encoding corruption guaranteed — use PowerShell here-string or Python patch script instead |
+| NEVER deliver .py files via Claude artifact download | Cloudflare/browser encoding corruption guaranteed — use PowerShell here-string or base64 PS script instead |
 | NEVER use innerHTML for card population in tool JS | Netlify CSP headers block innerHTML on /bible/* pages — always use createElement/appendChild |
 | lfoCalc and lfoCopy MUST be assigned to window.* | oninput/onclick HTML attributes cannot access functions not on the window object |
+| NEVER try to patch encoding-corrupted Python files with byte replacement | If triple-quoted strings have lost their closing delimiters, byte replacement cannot fix structural corruption — must use AST-guided reconstruction or base64 delivery |
+| ALWAYS deliver large .py files via base64 PowerShell script | Write raw bytes with [System.IO.File]::WriteAllBytes() — the only guaranteed encoding-safe delivery method |
 
 ## Confirmed All 223 Live Slugs (unchanged from Session 41)
 
