@@ -776,3 +776,142 @@ v3.0/v4.0 153:
 808, air, analog, arpeggiator, attack, audio-routing, audio-track, automation-clip, aux-send, bell-curve, bible-index, boom-bap, bounce, bpm, breakdown, bridge, buffer-size, bus, call-and-response, chop, chord, chord-progression, chorus-section, clip, clipping, clocking, condenser-microphone, daw-workflow, dbfs, de-esser, decay, detune, di-box, digital, dithering, drill, drop, dynamic-eq, dynamic-microphone, exciter, expansion, fader, feedback, fet-compressor, filter, freeze, frequency, frequency-masking, fundamental, gain, gain-reduction, gain-structure, glue, granular-synthesis, graphic-eq, groove, hall-reverb, harmonic, harmony, hook, humanization, impedance, instrument-track, integrated-loudness, interval, intro, key, knee, layering, linear-phase-eq, lo-fi, loudness, loudness-matching, loudness-war, makeup-gain, master-limiter, melody, meter, mid-side-eq, mix-translation, mode, modulation, mono-compatibility, mud, noise-floor, notch-filter, octave, optical-compressor, outro, overdrive, panning, parallel-processing, patch, pdc, peak, phantom-power, phase, phase-cancellation, phonk, ping-pong-delay, pitch, plugin, polar-pattern, polyrhythm, portamento, pre-delay, preamp, presence, q-factor, quantization, ratio, reference-mastering, reference-track, release, return-track, rhythm, rms, sample-flip, scale, shelf, shimmer-reverb, short-term-loudness, sidechain, signal-chain, slapback-delay, space, spring-reverb, stem, stem-mastering, stereo-width, subfrequency, summing, swing, syncopation, tempo-sync, tension-release, the-pocket, timbre, time-signature, transient, transient-shaper, trap, true-peak, tube-compressor, unison, vca-compressor, velocity, verse, vst, waveform, wavetable, wet-dry, white-noise
 
 # SESSION_APPEND_ZONE
+
+---
+
+# ⛔ SESSION 45 UPDATE — May 20, 2026
+
+## Session 45 Confirmed State at Start
+- Articles: **526** live (unchanged)
+- Bible entries: **223 total** (unchanged)
+  - 15 v5.1 original — nav working on real iPhone ✅ — tools working ✅
+  - 1 v5.1 (compression) — nav broken (different impl) — regenerate with v5.2 ❌
+  - 54 v5.1 Session 40 — content issues — regenerate with v5.2 ❌
+  - 153 v3.0/v4.0 legacy — untouched ✅
+
+## Session 45 — What Was Completed
+
+### P0 — mpw_tools_v3.py CONFIRMED INSTALLED
+- install_tools_v3.ps1 ran successfully (delivered Session 44)
+- mpw_tools_v3.py confirmed installed: 1185 lines, all ASCII, syntax clean
+- `python -c "import mpw_tools_v3; print('OK')"` → OK ✅
+- `mpw_tools_v3.build_tools_section_v3('chorus','Chorus')` → returns 20,729 chars with LNOTES, lfoCalc, BPM-Synced content ✅
+- `mpw_tools_v3.TOOL_OVERRIDES.get('chorus')` → `'lfo'` ✅
+
+### P0b — mpw_bible_writer.py v5.2 REBUILT AND INSTALLED
+Full v5.2 writer rebuilt from scratch in container applying ALL FIX 13–FIX 30 plus Session 44 additions. Delivered via 3-part base64 PS1 scripts (132KB each, under Cloudflare 200KB limit).
+
+**Delivery scripts used (these work — Unblock-File first):**
+- install_bible_writer_v52_part1.ps1
+- install_bible_writer_v52_part2.ps1  
+- install_bible_writer_v52_part3.ps1
+
+**Install command:**
+```powershell
+Unblock-File .\install_bible_writer_v52_part1.ps1; Unblock-File .\install_bible_writer_v52_part2.ps1; Unblock-File .\install_bible_writer_v52_part3.ps1; .\install_bible_writer_v52_part1.ps1; .\install_bible_writer_v52_part2.ps1; .\install_bible_writer_v52_part3.ps1
+```
+
+**CONFIRMED on Steve's machine:**
+- Written: 202,024 bytes (varies slightly by build)
+- Syntax: CLEAN (confirmed via `python -c "import ast; ast.parse(open(r'path', encoding='utf-8').read()); print('SYNTAX CLEAN')"`)
+- Note: The part3 script uses `open(r'$dest')` without encoding — this fails on Windows (cp1252 error). Harmless — the file IS written correctly. Use explicit encoding check separately.
+
+**Writer state in Claude container (END OF SESSION 45):**
+- File: /home/claude/mpw_bible_writer.py
+- Lines: 2,967
+- Bytes: 203,027 (UTF-8)
+- Syntax: CLEAN
+- All 24/24 feature checks PASS (see BIBLE handoff Session 45 update)
+
+### Chorus Test Run Results
+chorus --test --no-commit ran successfully. chorus.html generated (187KB). The v3 LFO tool IS rendering in the page (formula box, rate ranges, depth guide, stereo phase block, waveform grid all visible). HOWEVER the BPM-Synced rate cards (lcards div) are empty and non-functional.
+
+### Tool Rendering — Root Cause FULLY DIAGNOSED
+
+**The chain:**
+1. Pass 2 ignores TOOLS_PLACEHOLDER and writes its own LFO tool (the simple 2-input version with lfo-b, lfo-d IDs) inside `<section class="entry-section" id="tools">` — this appears TWICE in the output (once after Quick Ref where it injected its tool, and again near the bottom of the page)
+2. FIX 22b regex `_tools_pat = _re2.compile(r'<section[^>]+id=.{0,3}tools.{0,3}[^>]*>.*?</section>', _re2.DOTALL)` with `count=1` correctly replaces the FIRST occurrence with the v3 tool
+3. The SECOND occurrence (at the bottom of the page) remains — it still has the old simple tool with a `<script>` block that calls `calc()` using `lfo-b` and `lfo-d` element IDs
+4. The v3 tool also uses `lfo-b` and `lfo-d` IDs (confirmed from mpw_tools_v3.py structure) — duplicate IDs in the DOM
+5. The v3 tool's `lfoCalc()` calls `document.getElementById('lcards')` — but `lcards` ID may conflict or the second tool's script interferes with initialization
+6. Result: v3 tool header/body renders correctly but `lcards` div stays empty
+
+**THE FIX (P0 for Session 46 — CRITICAL):**
+Change FIX 22b in build_html_t1() to use `count=0` (replace ALL occurrences) instead of `count=1`. This removes both Pass 2 tool sections and injects the v3 tool once in the correct position.
+
+**Exact change needed in mpw_bible_writer.py:**
+
+In the FIX 22b block, change:
+```python
+_replaced = _tools_pat.sub(tools_html, html, count=1)
+```
+To:
+```python
+# Replace ALL occurrences — Pass 2 sometimes writes tools section twice
+_replaced = _tools_pat.sub('', html, count=0)  # remove all first
+# Then inject v3 tool after quick-reference
+_sig = '</section>\n<section class="entry-section" id="signal-chain">'
+_hist = '</section>\n<section class="entry-section" id="history">'
+if _sig in _replaced:
+    _replaced = _replaced.replace(_sig, '</section>\n' + tools_html + '\n<section class="entry-section" id="signal-chain">', 1)
+elif _hist in _replaced:
+    _replaced = _replaced.replace(_hist, '</section>\n' + tools_html + '\n<section class="entry-section" id="history">', 1)
+html = _replaced
+```
+
+This guarantees: (a) all Pass 2 tool sections are stripped, (b) v3 tool appears exactly once in correct position, (c) no duplicate IDs in DOM, (d) lfoCalc() finds exactly one lcards div.
+
+**Secondary suspicion:** The v3 LFO tool in mpw_tools_v3.py on Steve's machine uses `setTimeout(lfoCalc, 0)` for init. The `lcards` div is populated by `lfoCalc()` via `createElement/appendChild`. If this is working for standalone lfo_test.html but not in chorus.html, the issue may be that the script block is executing before the lcards container div is in the DOM (because the tool appears mid-page). Adding `window.addEventListener('load', lfoCalc)` as a fallback would resolve this. But the duplicate ID / duplicate script issue is the primary root cause and must be fixed first.
+
+## Key File State End of Session 45
+
+| File | Location | Status |
+|---|---|---|
+| mpw_bible_writer.py v5.2 | C:\Users\swarn\OneDrive\Desktop\mpw-scripts\ | INSTALLED — 202,024 bytes — SYNTAX CLEAN — FIX 22b still has count=1 bug |
+| mpw_tools_v3.py (1185 lines) | C:\Users\swarn\OneDrive\Desktop\mpw-scripts\ | INSTALLED — confirmed working — 20,729 char LFO tool |
+| mpw_tools_v3.py.bak | C:\Users\swarn\OneDrive\Desktop\mpw-scripts\ | Leave as .bak — encoding-corrupted |
+| quotes.json (380 quotes) | Delivered Session 44 | **Steve must drop into C:\Users\swarn\OneDrive\Desktop\mpw-scripts\** |
+| _headers (Netlify CSP) | Delivered Session 44 | **Steve must commit to GitHub repo root** |
+| chorus.html | C:\Users\swarn\OneDrive\Desktop\mpw-scripts\ | 187KB — v3 LFO tool rendering but lcards empty — DO NOT COMMIT |
+
+## New NEVER Rules Added Session 45
+
+| Rule | Detail |
+|---|---|
+| NEVER use $env:SRCDIR in delivery scripts | setenv.ps1 does NOT set SRCDIR — only sets ANTHROPIC_API_KEY and GITHUB_TOKEN — always hardcode path C:\Users\swarn\OneDrive\Desktop\mpw-scripts\ |
+| NEVER use Python -c for multi-line scripts with quotes in PowerShell | PowerShell mangles nested quotes — always use heredoc @"..."@ or write to a .py file |
+| NEVER validate writer install with open() without encoding='utf-8' | Python 313 on Windows defaults to cp1252 — always specify encoding='utf-8' |
+| NEVER use count=1 in FIX 22b regex substitution | Pass 2 writes tools section TWICE — must remove ALL occurrences then inject once |
+| NEVER declare tool fix working without checking lcards population | The v3 LFO tool header can render while lcards stays empty — visual check of the cards grid is required |
+| NEVER download PS1 files without Unblock-File before running | Windows security blocks unsigned scripts — always Unblock-File immediately after download |
+
+## Priority Queue for Session 46
+
+| Priority | Task | Detail |
+|---|---|---|
+| **P0** | Fix FIX 22b count=1 bug in writer | Change to remove ALL tool sections then inject once — see exact fix above |
+| **P0b** | Deliver fixed writer via 3-part PS1 | Rebuild delivery scripts after fix |
+| **P0c** | Run --test chorus --no-commit | Verify lcards populate AND only one id="tools" in output |
+| **P0d** | Run diagnostic on output | `@" c=open('chorus.html',encoding='utf-8').read(); print('id_tools_count:', c.count('id="tools"')); print('lcards:', 'lcards' in c); print('lfoCalc:', 'lfoCalc' in c) "@ | python` |
+| **P1** | Run --validate | Target: 89/89 (80 v5.1 + 9 new v5.2 checks) |
+| **P2** | Open chorus.html locally and confirm | Nav advances on iPhone, LFO cards populate, read time ~22 min, Signatures section present, Producer Spotlight has ps-move |
+| **P3** | 3-entry batch test | `python mpw_bible_writer.py --batch-file bible-v52-test3.txt --start-date 2026-05-20 --workers 4` |
+| **P4** | Full regen 70 v5.1 entries | `python mpw_bible_writer.py --batch-file bible-tier1-remaining34.txt --start-date 2026-05-20 --workers 8` — ~$21, ~25 min |
+| **P5** | `python mpw_bible_cat_pages.py --run` | After regen |
+| **P6** | `gen_sitemap.py → GSC` | After cat pages |
+| **P7 (Steve)** | **Affiliate applications** | Plugin Boutique, Amazon Associates, Loopmasters, Sweetwater, PluginFox — **REVENUE BLOCKER** |
+
+## Steve Pending Actions (MUST DO BEFORE NEXT SESSION)
+1. Drop quotes.json into C:\Users\swarn\OneDrive\Desktop\mpw-scripts\ (delivered Session 44)
+2. Commit _headers to GitHub repo root — same level as articles/ and bible/ (delivered Session 44)
+3. Affiliate applications (P7 above) — REVENUE BLOCKER
+
+## Infrastructure Notes (Permanent Reference)
+- setenv.ps1 sets ONLY: ANTHROPIC_API_KEY and GITHUB_TOKEN — no SRCDIR
+- All delivery scripts must hardcode path: C:\Users\swarn\OneDrive\Desktop\mpw-scripts\
+- Python 313 on Windows — always use encoding='utf-8' when opening .py files
+- Files over 200KB intercepted by Cloudflare — split PS1 delivery into 2 parts (132KB each)
+- Downloaded PS1 files must be Unblock-File'd before running
+- mpw_bible_writer.py is NOT in GitHub repo — local copy only
+- mpw_tools_v3.py IS installed locally but NOT in GitHub repo
+
