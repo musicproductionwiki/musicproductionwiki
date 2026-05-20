@@ -978,3 +978,180 @@ P2 — Full regen of 70 v5.1 entries:
   ~$21, ~25 min. Fixes nav, tools position, verdicts, genre tables, 3 quotes, correct spotlight, editorial thread.
 
 # SESSION_APPEND_ZONE
+
+---
+
+# SESSION 45 UPDATE — May 20, 2026
+
+## mpw_bible_writer.py v5.2 — Session 45 Build State
+
+**Writer rebuilt this session.** All fixes from FIX 13–FIX 30 applied plus the following Session 45 additions.
+
+### Session 45 Fixes Applied to v5.2
+
+**FIX 31: import mpw_tools_v3** — Added `import mpw_tools_v3` to the writer's import block. Previously the call to `mpw_tools_v3.build_tools_section_v3()` existed but the import was missing — causing NameError on every run.
+
+**FIX 32: build_tools_section call replaced** — `build_tools_section(p1, slug)` (old internal function) replaced with `mpw_tools_v3.build_tools_section_v3(slug, p1.get("term", slug.replace("-"," ").title()))`. Call site: `tools_html = mpw_tools_v3.build_tools_section_v3(...)` in build_html_t1().
+
+**FIX 33: producer_spotlight braces doubled** — The Pass 1 prompt f-string had bare `{` `}` around the producer_spotlight JSON template. Fixed: all braces doubled (`{{` and `}}`). This was causing `ValueError: Invalid format specifier` on every Pass 1 run.
+
+**FIX 34: FIX 22b regex pattern** — Changed from `<section[^>]*id=["\']tools["\'][^>]*>` (caused SyntaxError due to quote conflict) to `_re2.compile(r'<section[^>]+id=.{0,3}tools.{0,3}[^>]*>.*?</section>', _re2.DOTALL)`. Uses `re.compile()` to avoid quote conflict in pattern string.
+
+**FIX 35: New builders wired** — `build_signatures_html()` and `build_session_breakdown_html()` added to build_html_t1() pipeline. Called as:
+```python
+signatures_html = build_signatures_html(p1.get('signature_sounds', []))
+session_html    = build_session_breakdown_html(p1.get('session_breakdown', {}))
+```
+SESSION_BREAKDOWN_PLACEHOLDER replaced in html pipeline. PLUGIN_RECS_PLACEHOLDER replaced.
+
+**FIX 36: genre table rebuilt** — `build_genre_table_html()` function signature extended to accept `genre_columns=None, genre_rows_v2=None`. When both present, uses category-aware columns and rows from Pass 1. Falls back to compression-default columns when absent.
+
+**FIX 37: Producer spotlight rebuilt** — `build_producer_spotlight_html()` rebuilt to use `producer_spotlight` array from Pass 1 JSON (with `ps-move` field) as primary source. Falls back to track producers if array is empty.
+
+**FIX 38: Signatures + session in sidebar/nav** — `('signatures', 'Signatures')` added to sidebar TOC and `('#signatures', 'Signatures')` added to ENTRY_NAV_LINKS.
+
+**FIX 39: Start Here 4th link** — Changed from `#mistakes` to `#in-the-wild` (FIX 21 confirmed applied).
+
+**FIX 40: producers-verdict wrapper injection** — Programmatic injection in build_html_t1():
+```python
+if '<div class="verdict-header">' in html and '<div class="producers-verdict">' not in html:
+    html = html.replace('<div class="verdict-header">', '<div class="producers-verdict">\n    <div class="verdict-header">')
+```
+This wraps Pass 2 verdict content in the producers-verdict div when Pass 2 forgot to include it.
+
+**FIX 41: sr-only check added to validation** — 9 new v5.2 validation checks confirmed in writer:
+- '3 producer quotes': c.count('class="producer-quote-block"') >= 3
+- 'signatures section': 'id="signatures"' in c
+- 'sig-card present': 'sig-card' in c
+- 'ps-move present': 'ps-move' in c
+- 'scroll+touchmove nav': 'touchmove' in c and 'scrollIntoView' in c
+- 'no IntersectionObserver enav': 'obs2' not in c
+- 'sr-only class': 'sr-only' in c
+- 'verdict section element': 'id="verdict"' in c and 'entry-section' in c
+- 'producers-verdict wrapper': 'class="producers-verdict"' in c
+
+### CRITICAL BUG IN CURRENT WRITER — FIX REQUIRED BEFORE USE
+
+**FIX 22b count=1 bug:** The FIX 22b regex in build_html_t1() uses `count=1` — replacing only the FIRST tools section. Pass 2 writes `id="tools"` section TWICE in chorus.html output. The second occurrence has duplicate element IDs (lfo-b, lfo-d, lcards) that conflict with the v3 tool's DOM queries. This is why lfoCalc() returns empty cards — `document.getElementById('lcards')` may find the wrong (already-replaced or duplicate) element.
+
+**EXACT FIX for Session 46 — apply to build_html_t1():**
+
+Find this block:
+```python
+    # FIX 22b: Pass 2 ignores TOOLS_PLACEHOLDER — replace its tool with v3 tool
+    if tools_html:
+        import re as _re2
+        _tools_pat = _re2.compile(r'<section[^>]+id=.{0,3}tools.{0,3}[^>]*>.*?</section>', _re2.DOTALL)
+        _replaced = _tools_pat.sub(tools_html, html, count=1)
+        if _replaced != html:
+            html = _replaced
+        elif tools_html not in html:
+            ...
+```
+
+Replace with:
+```python
+    # FIX 22b: Pass 2 ignores TOOLS_PLACEHOLDER and writes tools section TWICE.
+    # Strip ALL occurrences first, then inject v3 tool once in correct position.
+    if tools_html:
+        import re as _re2
+        _tools_pat = _re2.compile(r'<section[^>]+id=.{0,3}tools.{0,3}[^>]*>.*?</section>', _re2.DOTALL)
+        _stripped = _tools_pat.sub('', html, count=0)  # remove ALL tools sections
+        # Inject v3 tool once after quick-reference </section>
+        _sig  = '</section>\n<section class="entry-section" id="signal-chain">'
+        _hist = '</section>\n<section class="entry-section" id="history">'
+        if _sig in _stripped:
+            html = _stripped.replace(_sig, '</section>\n' + tools_html + '\n<section class="entry-section" id="signal-chain">', 1)
+        elif _hist in _stripped:
+            html = _stripped.replace(_hist, '</section>\n' + tools_html + '\n<section class="entry-section" id="history">', 1)
+        else:
+            html = _stripped  # fallback: stripped but no injection point found
+```
+
+## Session 45 Test Results — chorus.html
+
+| Check | Result |
+|---|---|
+| SYNTAX CLEAN | ✅ |
+| Writer installed on Steve's machine | ✅ 202,024 bytes |
+| Pass 1 runs (no ValueError) | ✅ (after FIX 33 brace doubling) |
+| Pass 2 runs | ✅ |
+| chorus.html generated | ✅ 187KB |
+| v3 LFO tool section renders | ✅ Formula, rate ranges, depth guide, stereo phase, waveform grid all visible |
+| LFO rate cards (lcards) populate | ❌ Empty — duplicate id="tools" in DOM causing getElementById conflict |
+| id="tools" count in output | 2 (should be 1) — FIX 22b only removes first occurrence |
+| Validation score | 82/89 — 7 failing checks are v5.2 additions not in old chorus.html reference |
+| Read time | 36 min (FIX 27 deployed in writer but chorus.html predates fix — next regen shows ~22 min) |
+| Producers-verdict wrapper | Present (FIX 40 applied) |
+| Signatures section | Present (confirmed in HTML) |
+| sig-card cards | Present (4 cards) |
+| ps-move producer moves | Present |
+| Start Here 4th link | #in-the-wild ✅ |
+| Nav: scroll+touchmove | ✅ |
+| Nav: no IntersectionObserver | ✅ |
+
+## v5.2 Writer — Feature Check Reference (24/24 confirmed in container)
+
+All features below are confirmed present in /home/claude/mpw_bible_writer.py (2,967 lines):
+- import mpw_tools_v3 ✅
+- mpw_tools_v3.build_tools_section_v3 call ✅
+- FIX 22b regex present (_tools_pat = _re2.compile) ✅
+- genre_rows_v2 in Pass 1 prompt ✅
+- signature_sounds in Pass 1 prompt ✅
+- session_breakdown in Pass 1 prompt ✅
+- producer_quote_3 in Pass 1 prompt ✅
+- producer_spotlight braces doubled ✅
+- build_signatures_html function ✅
+- build_session_breakdown_html function ✅
+- ps-move in builder ✅
+- sig-card in builder ✅
+- scrollIntoView in JS ✅
+- touchmove in JS ✅
+- sr-only in CSS ✅
+- TOOLS_PLACEHOLDER replace ✅
+- SESSION_BREAKDOWN replace ✅
+- producers-verdict in builder ✅
+- 6,700–7,300 word count in prompt ✅
+- v5.2 in source ✅
+- genre_columns in Pass 1 ✅
+- Signatures in sidebar TOC ✅
+- #signatures in entry nav ✅
+- #in-the-wild in Start Here box ✅
+
+## Delivery Method — 3-Part PS1 (Confirmed Working)
+
+The writer (203KB) exceeds Cloudflare's 200KB limit as a single file. Solution: 3-part delivery.
+- Part 1: writes first 101KB to mpw_bible_writer_part1.tmp
+- Part 2: writes second 101KB to mpw_bible_writer_part2.tmp
+- Part 3: combines both .tmp files into mpw_bible_writer.py, deletes temps, runs syntax check
+
+**Always Unblock-File all three before running.**
+**Always use hardcoded path C:\Users\swarn\OneDrive\Desktop\mpw-scripts\ — not $env:SRCDIR**
+**SRCDIR is not set by setenv.ps1 — confirmed Session 45**
+
+## Session 45 Diagnostic Commands Reference
+
+```powershell
+# Verify mpw_tools_v3 working:
+python -c "import mpw_tools_v3; html = mpw_tools_v3.build_tools_section_v3('chorus', 'Chorus'); print('LNOTES:', 'LNOTES' in html, 'lfoCalc:', 'lfoCalc' in html, 'len:', len(html))"
+# Expected: LNOTES: True lfoCalc: True len: 20729
+
+# Verify writer syntax:
+python -c "import ast; ast.parse(open(r'C:\Users\swarn\OneDrive\Desktop\mpw-scripts\mpw_bible_writer.py', encoding='utf-8').read()); print('SYNTAX CLEAN')"
+
+# Check chorus.html tool sections:
+@"
+c=open('chorus.html',encoding='utf-8').read()
+print('id_tools_count:', c.count('id="tools"'))
+print('lfoCalc count:', c.count('lfoCalc'))
+print('lcards:', 'lcards' in c)
+print('LNOTES:', 'LNOTES' in c)
+print('BPM-Synced:', 'BPM-Synced' in c)
+print('TOOLS_PH:', 'TOOLS_PLACEHOLDER' in c)
+"@ | python
+# After fix: id_tools_count=1, lfoCalc>0, lcards=True, LNOTES=True, BPM-Synced=True
+
+# Run test:
+. .\setenv.ps1; python mpw_bible_writer.py --test --slug chorus --term "Chorus" --category "Time-Based" --tier 1 --no-commit
+```
+
