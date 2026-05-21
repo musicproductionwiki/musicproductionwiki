@@ -1,5 +1,5 @@
 # MusicProductionWiki.com — CORE Handoff
-*Updated: May 21, 2026 (SESSION 47)* · 526 articles + 223 Bible entries live
+*Updated: May 21, 2026 (SESSION 50)* · 526 articles + 223 Bible entries live
 *Modular format — 6 GitHub files replace single monolithic handoff*
 
 ---
@@ -97,6 +97,9 @@ If you cannot recite all four, you have not read this document. Stop and re-read
 | NEVER wrap commented-out JS code in /* */ if code contains */ | Use if(false){} wrapper instead |
 | NEVER fetch and recommit a file without applying ALL needed fixes in same operation | Avoid accidental restores |
 | NEVER guess HTML structure | Always fetch live file before writing any patch script |
+| NEVER commit a Bible entry without BTT button present | grep for btt-btn — if absent, pull from live chorus.html and inject before </body> |
+| NEVER commit a Bible entry with inline grid/display/padding on bible-entry-wrap | Inline style must be max-width and margin ONLY — inline display:grid!important overrides mobile media queries |
+| NEVER commit a Bible entry without mobile QA on real device | Verify masthead full-width, nav pills scroll, footer share buttons compact, BTT appears on scroll |
 | NEVER check for Bible link in footer and call it already in nav | Check specifically inside nav element |
 | NEVER hardcode category page paths without running list_categories.py first | 89 category pages confirmed |
 | NEVER run mpw_fix_sitewide_r7.py without --test first | Full run touches 614 files |
