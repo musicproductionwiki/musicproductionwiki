@@ -1390,3 +1390,24 @@ Before committing ANY Bible entry to GitHub, verify all of the following:
 6. **dateModified matches session date** — both in Article schema and OG meta
 
 NEVER commit a Bible entry that has not passed all 6 checks.
+
+---
+
+## Session 51 Priority Items
+
+**P0 — Producer Spotlight quotes must match quote authors**
+The writer currently places random quotes in the Producer Spotlight sidebar regardless of whether the quoted producer appears in the ps-cards. Fix requires:
+1. Filter quotes.json by producer name matching ps-card names
+2. Each ps-card must display a quote FROM that producer, not a generic quote
+3. Visual QA: ps-name and blockquote cite must reference the same person
+4. Affects chorus.html (live, needs regen) and all future writer output
+This is a content integrity issue — mismatched quotes/spotlights are factually wrong.
+
+**P1 — Back-engineer v5.3 writer from improved gold standard entry**
+If a better Bible entry is built next session, extract the writer spec from the HTML directly:
+1. Parameterize every templated section from the gold standard HTML
+2. Map each section to the corresponding writer build function
+3. Diff against current v5.2 writer output to identify gaps
+4. Lock new output as gold standard, bump writer to v5.3
+5. Run --validate 90/90 before any batch
+Working from confirmed HTML output is more reliable than abstract spec.
