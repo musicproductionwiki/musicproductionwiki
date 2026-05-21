@@ -1,5 +1,5 @@
 # MPW-HANDOFF-CONTENT.md
-*Updated: May 19, 2026 (SESSION 41)*
+*Updated: May 21, 2026 (SESSION 47)*
 
 ---
 
@@ -20,7 +20,8 @@
 | Vocal Autopsy | 3,800w | 4,200w / 5,000w |
 | Budget Recreation | 2,800w | 3,000w / 3,200w |
 
-Read time: calculate at 325 wpm.
+Read time for articles: calculate at 325 wpm.
+Read time for Bible entries: calculate at 500 wpm (updated Session 47 — confirmed by Steve).
 
 ---
 
@@ -32,12 +33,16 @@ Read time: calculate at 325 wpm.
 | 2 | Standard | 3,800–5,000w | 3,000–3,800w | 3800 | 5000 |
 | 3 | Reference | 1,500–2,500w | 1,200–1,800w | 1500 | 2500 |
 
-Gold standard compression.html: 7,058 content words / 22 min read.
+Gold standard compression.html: 7,058 content words.
 
 **IMPORTANT SESSION 37 UPDATE:**
 - Tier 1 total range updated to 7,000–8,000w (was 6,800–7,800w) per Steve.
 - Tier 1 prose target dropped to 4,800–5,500w (was 5,800–6,500w).
-- Reason: builder adds 1,500–2,500w of structural components (tables, SVGs, DAW tabs, plugin cards, FAQ accordion, calculator, comparison callouts) on top of prose. Previous estimate of 600–1,200w was wrong.
+- Reason: builder adds 1,500–2,500w of structural components (tables, SVGs, DAW tabs, plugin cards, FAQ accordion, calculator, comparison callouts) on top of prose.
+
+**IMPORTANT SESSION 47 UPDATE:**
+- Bible read time: 500 wpm (confirmed by Steve). Articles remain 325 wpm.
+- count_words_html() now strips non-prose blocks before counting — read time based on prose only.
 
 Tier assignment rules:
 - Tier 1: cornerstone terms producers Google when learning concepts — compression, EQ, reverb, limiting, saturation, gain staging, parallel compression, bus compression, ADSR, LFO, automation, mid-side, stereo imaging, LUFS, dynamic range, noise gate, chorus, flanger, phaser, reverb types, compressor topologies
@@ -91,8 +96,8 @@ Every article must include:
 
 ## Bible Entry Count
 
-- Total live: 226 entries (16 v5.1 template + 210 v3.0/v4.0 template)
-- bible-index.json: 210 entries (v3.0/v4.0 only — NOT yet updated for v5.1 entries)
+- Total live: 223 entries (16 v5.1 original + 54 v5.1 Session 40 + 153 v3.0/v4.0)
+- bible-index.json: 210 entries (v3.0/v4.0 only — NOT yet updated for v5.1/v5.2 entries)
 - Pending: air entry retry after Tier 1 batch completes
 - Full Bible target: 1,500 entries
 - Next milestone: complete remaining 33 Tier 1 rewrites → 50 total Tier 1 live
@@ -101,7 +106,7 @@ Every article must include:
 
 | Batch | Articles | Dependencies |
 | --- | --- | --- |
-| Bible Tier 1 (remaining 33) | 33 rewrites | READY — writer + tools approved Session 39 |
+| Bible Tier 1 (remaining 33) | 33 rewrites | BLOCKED — chorus.html QA + spotlight fix |
 | 09 — breakdown | 100 | breakdowns.html ✅ LIVE — GO after Tier 1 |
 | 10 — studio-story | 50 | Batch 09 committed |
 | 11 — recreation | 60 | recreations.html must exist |
@@ -117,8 +122,10 @@ Every article must include:
 | Action | Detail | Priority |
 | --- | --- | --- |
 | Affiliate applications | Plugin Boutique, Amazon Associates, Sweetwater, Loopmasters, PluginFox | HIGH — REVENUE BLOCKER |
-| Run patch_live_tools_v6.py | Remove duplicate bare .t3 blocks from 15 patched entries | P0 — first thing next session |
-| Run Tier 1 remaining batch | python mpw_bible_writer.py --batch-file bible-tier1-remaining34.txt --start-date 2026-05-19 | P1 — READY |
+| Add missing producer quotes | Add Kevin Parker, Robin Guthrie, Andy Summers, Brian Eno, etc. to quotes.json with chorus/modulation tags | P0 Session 48 |
+| Confirm chorus.html QA complete | Visual QA then commit | P0 |
+| Run Tier 1 remaining batch | python mpw_bible_writer.py --batch-file bible-tier1-remaining34.txt --start-date 2026-05-21 | P1 — after chorus committed |
+| Run mpw_bible_cat_pages.py | python mpw_bible_cat_pages.py --run | P2 — after regen |
 | Retry air entry | python mpw_bible_writer.py --test --slug air-frequency-eq --term "Air Frequency EQ" --category "Frequency" | P2.1 |
 | Run Batch 09 | python mpw_writer.py --batch batch09.txt --start-date 2026-03-01 | P4 — after Tier 1 |
 | Fix 5 missing og:image | python mpw_fix_meta.py | P5 |
@@ -157,19 +164,10 @@ Injected into main.js — mpw-analytics.js committed to /js/mpw-analytics.js
 Also injected into all Bible entry pages via build_html() in mpw_bible_writer.py
 
 New GA4 events to add in Moat 2 (Session 38+):
-- helpful_vote: {level: 'beginner|intermediate|advanced', slug: 'compression'}
-- helpful_submit: {level: str, has_feedback: bool, slug: str}
-- gate_open: {asset: 'full|quickref|genre', slug: str}
-- gate_submit: {asset: str, slug: str}
-- tool_interact: {tool: 'gr_calculator', slug: str}
-- daw_tab_click: {daw: 'ableton|logic|fl_studio|pro_tools', slug: str}
-- section_share: {section: 'genre|quickref', action: 'tweet|copy|download', slug: str}
-
----
-
-# 9. Audience Ownership & Google-Proofing
-
-Priority: Newsletter + lead magnet → YouTube → Free tool → Reddit → Discord → TikTok → Backlinks
+- bible_tool_use: fired when producer uses interactive tool
+- bible_share: fired on share bar clicks
+- bible_email_gate: fired on PDF download attempt
+- pdf_download: fired on gate form submit
 
 Lead magnet: 'MPW Cheat Sheet Pack' — compression QR card and genre table are the first two assets. Build the pack PDF combining all cheat sheets once 10+ entries have downloadable assets.
 Newsletter: The Producer's Briefing — hosted on Beehiiv — 'Sound better by Friday' CTA
@@ -205,7 +203,7 @@ Free tool use → email capture on save/download → newsletter → Bible Comple
 | 8 | Gain Staging Reference | gain-staging entry | Medium | LIVE ✅ Session 39 |
 | 9 | Headroom Calculator | headroom entry | Medium | LIVE ✅ Session 39 |
 | 10 | Stereo Width & M/S | stereo-imaging entry | Medium | LIVE ✅ Session 39 |
-| 11 | LFO Rate Sync | lfo/modulation entries | Medium | LIVE ✅ Session 39 |
+| 11 | LFO Rate Sync | lfo/chorus/flanger/phaser/tremolo/vibrato entries | Medium | LIVE ✅ Session 39 — tool JS fixed Session 46 |
 | 12 | Chord & Key Reference | music-theory entries | High | LIVE ✅ Session 39 |
 | 13 | ClearCheck Layer 1 | /tools/clearcheck/ | High intent | After TruClarify spec |
 
@@ -228,6 +226,70 @@ Build trigger: separate spec session required — involves TruClarify API/intake
 
 ---
 
+# New Content Sections Per Tier 1 Entry (v5.2)
+
+1. Difficulty data — in JSON-LD schema ONLY (visual badge removed from masthead Session 47)
+2. Prerequisite chain — below masthead
+3. Start Here learning path box — below quick answer
+4. The Number box — in quick-reference section
+5. Common misconception block — before definition
+6. Before/After text block — own section
+7. DAW implementation tabs — Ableton / Logic / FL Studio / Pro Tools
+8. Plugin recommendations — MusicProductionWiki Recommends block + tiered Free / Mid / Pro card grid (Session 47 update)
+9. Genre settings table — concrete numbers per genre
+10. Comparison callouts — term vs 2 related terms (before Types)
+11. Producer spotlight sidebar — quotes-driven, matched to entry prose (spotlight fix in progress)
+12. Producer quote blockquotes — woven into prose (exactly 3 for Tier 1 — definition, history, how-to-use)
+13. PDF export button — email gated (smart modal, 3 assets)
+14. Last verified date — in entry footer
+15. Tools section — interactive tool per entry — positioned after Quick Reference
+16. Section-level share buttons — By Genre + Quick Reference + Calculator (all mpw-share-bar)
+17. "Also in The Bible" — replaces Further Reading + Related Terms (consolidated)
+18. Sidebar TOC with IntersectionObserver tracking — includes all 20 canonical sections
+19. Sidebar newsletter signup (.sidebar-nl)
+20. Sidebar share widget (mpw-share-bar vertical column)
+21. Session File Breakdown — numbered amber circles, no "Step N" prefix (Session 47 update)
+22. Hardware vs Plugin comparison table — inside id="plugins" section (Session 47 update)
+
+---
+
+# Producer Quotes — System (v5.2 Update)
+
+380 verified quotes in quotes.json.
+Sources: 10 books + documented interviews from Sound On Sound, Tape Op, Rolling Stone, Billboard, Resident Advisor.
+
+**v5.2 quote system:**
+1. Pass 1 receives full list of producer names from quotes.json — MUST pick producer_spotlight from this list
+2. filter_quotes() pulls spotlight producer quotes first, then fills by tag match
+3. build_pass2_prompt_t1() injects ACTUAL QUOTE TEXT verbatim for each spotlight producer + exact HTML markup
+4. Pass 2 uses the injected text exactly — cannot fabricate or substitute
+
+**REMAINING GAP (Session 48 action):**
+quotes.json is missing entries for Kevin Parker, Robin Guthrie, Andy Summers, Brian Eno, Tony Visconti, Steve Lillywhite. When Pass 1 would naturally pick these producers for modulation/chorus entries, the filter falls back to available quotes (Alan Moulder, Spike Stent, etc.) — creating spotlight vs quote mismatches.
+
+Fix: add 20+ verified quotes for missing producers with appropriate tags.
+
+---
+
+# SEO Direction (Steve confirmed Session 41)
+
+Central hub. Most authoritative in the industry. Future: licensing, classes, publishing middleman.
+Bible entries = definitive industry reference for every term a producer searches.
+Title format: [Term] — The Producer's Bible | MusicProductionWiki.com
+Meta: Master [term] in music production: [key aspects] explained with track examples, genre settings, and pro techniques.
+
+---
+
+# 9. Audience Ownership & Google-Proofing
+
+Priority: Newsletter + lead magnet → YouTube → Free tool → Reddit → Discord → TikTok → Backlinks
+
+Lead magnet: 'MPW Cheat Sheet Pack' — compression QR card and genre table are the first two assets. Build the pack PDF combining all cheat sheets once 10+ entries have downloadable assets.
+Newsletter: The Producer's Briefing — hosted on Beehiiv — 'Sound better by Friday' CTA
+TruClarify integration: Every music business article should funnel to TruClarify — underutilized
+
+---
+
 # SESSION 39 UPDATE — CONTENT STATUS
 
 ## Article Pipeline
@@ -236,9 +298,9 @@ Build trigger: separate spec session required — involves TruClarify API/intake
 - Batches 10-13: NOT YET RUN — blocked by category pages + template fix
 
 ## Bible Content Pipeline
-- Live Bible entries: 226 (16 v5.1 + 210 v3.0/v4.0)
+- Live Bible entries: 223 (16 v5.1 + 54 v5.1 S40 + 153 v3.0/v4.0)
 - Tools: all 12 built in mpw_tools_v3.py — 15 live entries confirmed working by Steve
-- Remaining 33 Tier 1 entries: READY TO RUN next session
+- Remaining 33 Tier 1 entries: BLOCKED — chorus.html QA pending
 - Air entry retry: pending after Tier 1 batch completes
 - Bible category pages: 8 pages — run mpw_bible_cat_pages.py --run after Tier 1 complete
 
@@ -263,37 +325,6 @@ Text-only citations. No links of any kind.
 Format: Artist — Track Title (Year, Album). Produced by Name.
 Pass 1 field `listening_guide` provides context note for each track — shown as .track-note div.
 3-7 tracks per Tier 1 entry. 3-5 for Tier 2. 2-3 for Tier 3.
-
-## Producer Quotes — System Confirmed
-318 verified quotes in quotes.json v2.
-Sources: 10 books + documented interviews from Sound On Sound, Tape Op, Rolling Stone, Billboard, Resident Advisor.
-Pass 1.5 filters by tag. Pass 2 picks exactly 2 for Tier 1 (MANDATORY — not 1-2). 0-1 for Tier 2. 0 for Tier 3.
-Attribution: full name, role, source, URL.
-NEVER fabricate. NEVER use quotes not in quotes.json.
-Different producers are acceptable across runs — they just must match what appears in the entry prose.
-Producer spotlight now reads cite tags from rendered HTML to guarantee match.
-
-## New Content Sections Per Tier 1 Entry (v5.1)
-1. Difficulty badge — in masthead
-2. Prerequisite chain — below masthead
-3. Start Here learning path box — below quick answer
-4. The Number box — in quick-reference section
-5. Common misconception block — before definition
-6. Before/After text block — own section
-7. DAW implementation tabs — Ableton / Logic / FL Studio / Pro Tools
-8. Plugin recommendations — tiered Free / Mid / Pro in card
-9. Genre settings table — concrete numbers per genre
-10. Comparison callouts — term vs 2 related terms (before Types)
-11. Producer spotlight sidebar — quotes-driven, matched to entry prose
-12. Producer quote blockquote — woven into prose (exactly 2 for Tier 1)
-13. PDF export button — email gated (smart modal, 3 assets)
-14. Last verified date — in entry footer
-15. Tools section — interactive tool per entry — positioned after Quick Reference
-16. Section-level share buttons — By Genre + Quick Reference + Calculator (all mpw-share-bar)
-17. "Also in The Bible" — replaces Further Reading + Related Terms (consolidated)
-18. Sidebar TOC with IntersectionObserver tracking — now includes Verdict link
-19. Sidebar newsletter signup (.sidebar-nl)
-20. Sidebar share widget (mpw-share-bar vertical column)
 
 ---
 
@@ -330,3 +361,49 @@ Central hub. Most authoritative in the industry. Future: licensing, classes, pub
 Bible entries = definitive industry reference for every term a producer searches.
 Title format: [Term] — The Producer's Bible | MusicProductionWiki.com
 Meta: Master [term] in music production: [key aspects] explained with track examples, genre settings, and pro techniques.
+
+---
+
+# SESSION 47 UPDATE — CONTENT CHANGES
+
+## Bible Read Time
+500 wpm confirmed by Steve (was 325 wpm). Articles remain 325 wpm.
+count_words_html() strips non-prose blocks before counting for accurate read time.
+
+## Difficulty Badge
+Removed from visual masthead. Stays in JSON-LD schema. No more visual badge at top of entries.
+
+## Plugin Section
+"MusicProductionWiki Recommends" amber intro block now hardcoded before Free/Mid/Pro plugin cards.
+Never "MPW Recommends." Full brand name always.
+
+## Session File Breakdown
+Numbers shown by amber circles. "Step N —" prefix stripped from step text.
+
+## Producer Quotes — System v5.2
+Pass 1 now constrained to producers in quotes.json only. Pass 2 receives actual quote text verbatim.
+**Gap (Session 48 P0):** Kevin Parker, Robin Guthrie, Andy Summers, Brian Eno, Tony Visconti, Steve Lillywhite — 0 quotes each in quotes.json. Add 20+ verified quotes before next chorus regen.
+
+## New Content Sections Per Tier 1 Entry (v5.2 — updated from v5.1 list)
+1. Difficulty data — JSON-LD schema ONLY (visual badge removed from masthead Session 47)
+2. Prerequisite chain — below masthead
+3. Start Here learning path box — below quick answer
+4. The Number box — in quick-reference section
+5. Common misconception block — before definition
+6. Before/After text block — own section
+7. DAW implementation tabs — Ableton / Logic / FL Studio / Pro Tools
+8. Plugin recommendations — MusicProductionWiki Recommends block + tiered Free / Mid / Pro card grid (Session 47)
+9. Genre settings table — concrete numbers per genre
+10. Comparison callouts — term vs 2 related terms (before Types)
+11. Producer spotlight sidebar — quotes-driven, matched to entry prose
+12. Producer quote blockquotes — exactly 3 for Tier 1 (definition, history, how-to-use)
+13. PDF export button — email gated (smart modal, 3 assets)
+14. Last verified date — in entry footer
+15. Tools section — interactive tool per entry — positioned after Quick Reference
+16. Section-level share buttons — By Genre + Quick Reference + Calculator (all mpw-share-bar)
+17. "Also in The Bible" — replaces Further Reading + Related Terms (consolidated)
+18. Sidebar TOC with scroll+touchmove tracking — includes all canonical sections
+19. Sidebar newsletter signup (.sidebar-nl)
+20. Sidebar share widget (mpw-share-bar vertical column)
+21. Session File Breakdown — numbered amber circles, no "Step N" prefix (Session 47)
+22. Hardware vs Plugin comparison table — inside id="plugins" section (Session 47)

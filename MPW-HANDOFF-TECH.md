@@ -776,3 +776,112 @@ python verify_fixes.py
 # Generate test entry:
 . .\setenv.ps1; python mpw_bible_writer.py --test --slug chorus --term "Chorus" --category "Time-Based" --tier 1 --no-commit
 ```
+
+---
+
+# SESSION 47 UPDATE — KEY TECHNICAL FINDINGS
+
+## v5.2 Writer — Architecture Changes Session 47
+
+### Plugin Section Merge (FIX 43)
+`id="hardware-plugin"` and `id="plugin-recs"` merged into single `id="plugins"`. All nav pills, sidebar TOC entries, and Pass 2 prompt references updated. `PLUGIN_RECS_PLACEHOLDER` now lives inside `id="plugins"`. Nav order and sidebar TOC order now match canonical section order exactly.
+
+### Quote System (FIX 44)
+Pass 1 now receives `available_quote_authors` list from quotes.json and must select spotlight producers from it. Pass 2 now receives actual quote text verbatim for each spotlight producer. However, quotes.json is missing entries for Kevin Parker, Robin Guthrie, Andy Summers, Brian Eno, and other producers that Pass 1 wants to select for modulation entries. The mismatch continues until these quotes are added to quotes.json.
+
+### Internal Link Color (FIX 50)
+`.entry-main a` now has explicit amber color in both regular CSS and CONSOLIDATED OVERRIDES with !important. Mobile browser-default blue links eliminated. `.entry-breadcrumb a` rule is more specific and wins — breadcrumb links not affected.
+
+### Verdict Share Bar (FIX 45)
+Post-processor in build_html_t1() hardcodes the verdict share bar regardless of what Pass 2 writes. No more plain text "Copy Verdict + Share on X + Reddit" appearing in the verdict section.
+
+### Session File Breakdown (FIX 49)
+Step text "Step N —" prefix stripped by build_session_breakdown_html() regex. Number circles handle numbering.
+
+### Difficulty Badge (FIX 48)
+Removed from masthead visual display. Remains in JSON-LD schema for SEO. Visual badge was confusing — entries cover all three levels in their progression section.
+
+### Read Time (FIX 47)
+500 wpm confirmed by Steve. count_words_html() strips non-prose blocks (tables, tools, nav, DAW tabs, signal chain) before counting. Read time now reflects prose only.
+
+### Footer Share Bar (FIX 46)
+Footer share buttons converted from inline styles to mpw-share-btn classes. X + Reddit only (no Copy Link) — Steve's confirmed decision. Pattern now consistent with spec.
+
+## v5.2 Structural Fingerprints — New in Session 47
+
+| # | Fingerprint | Value |
+|---|---|---|
+| 22 | id="plugins" (merged) | Single section — hardware table + plugin recs — no id="hardware-plugin" or id="plugin-recs" |
+| 23 | MusicProductionWiki Recommends | Hardcoded amber intro block before plugin cards — never "MPW Recommends" |
+| 24 | .sfb-step / .sfb-num / .sfb-text | Session File Breakdown CSS — amber number circles |
+| 25 | .entry-main a color | Amber #f5a623 — explicit override to prevent browser-default blue |
+| 26 | Verdict share bar post-processed | Hardcoded by build_html_t1() — not written by Pass 2 |
+
+## Canonical Section Order — v5.2 (LOCKED)
+
+Nav pills and sidebar TOC MUST match this order exactly:
+1. Definition
+2. How It Works
+3. Parameters
+4. Quick Reference
+5. Tools (after Quick Reference)
+6. Signal Chain
+7. History
+8. How To Use
+9. Genre Table
+10. Plugins & Hardware (merged — id="plugins")
+11. Before / After
+12. In The Wild
+13. Signatures
+14. Types
+15. Verdict
+16. Mistakes
+17. Flags
+18. Progression
+19. FAQ
+20. Related
+
+## Session 47 CSS Additions to build_css()
+
+```css
+/* entry-main link color — prevents browser-default blue */
+.entry-main a{color:#f5a623;text-decoration:none;border-bottom:1px solid rgba(245,166,35,0.3)}
+.entry-main a:hover{color:#ffbb44;border-bottom-color:rgba(245,166,35,0.7)}
+
+/* CONSOLIDATED OVERRIDES addition */
+.entry-main a{color:#f5a623!important;text-decoration:none!important}
+.entry-main a:hover{color:#ffbb44!important}
+
+/* Session File Breakdown */
+.sfb-step{display:flex;gap:10px;margin-bottom:10px;font-size:13px;color:#c8c8d8;line-height:1.6}
+.sfb-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;min-width:22px;background:#f5a623;color:#000;font-size:11px;font-weight:800;border-radius:50%;flex-shrink:0;margin-top:2px}
+.sfb-text{flex:1}
+```
+
+## Install Scripts State — End of Session 47
+
+| Script | Status |
+|---|---|
+| install_writer_v52_s47d_part1/2/3.ps1 | ✅ CURRENT — use these |
+| install_writer_v52_s47b_part1/2/3.ps1 | ❌ SUPERSEDED — DO NOT RUN |
+| install_writer_v52_s47_part1/2/3.ps1 | ❌ PS1 syntax error — DO NOT RUN |
+| install_writer_v52_s46_part1/2/3.ps1 | ❌ SUPERSEDED — DO NOT RUN |
+| install_bible_writer_v52_part1/2/3.ps1 | ❌ Writes unfixed writer — DO NOT RUN |
+
+## Diagnostic Commands — Session 47
+
+```powershell
+# Verify all fixes applied:
+python verify_fixes.py
+
+# Test chorus entry:
+. .\setenv.ps1; python mpw_bible_writer.py --test --slug chorus --term "Chorus" --category "Time-Based" --tier 1 --no-commit
+
+# After chorus confirmed — regen all 70:
+. .\setenv.ps1; python mpw_bible_writer.py --batch-file bible-tier1-remaining34.txt --start-date 2026-05-21 --workers 8
+
+# After regen:
+python mpw_bible_cat_pages.py --run
+python gen_sitemap.py
+# Submit sitemap to GSC manually
+```

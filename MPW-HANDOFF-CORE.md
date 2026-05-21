@@ -1,5 +1,5 @@
 # MusicProductionWiki.com — CORE Handoff
-*Updated: May 20, 2026 (SESSION 46)* · 526 articles + 223 Bible entries live
+*Updated: May 21, 2026 (SESSION 47)* · 526 articles + 223 Bible entries live
 *Modular format — 6 GitHub files replace single monolithic handoff*
 
 ---
@@ -165,6 +165,8 @@ If you cannot recite all four, you have not read this document. Stop and re-read
 | ALWAYS verify tool section count before commit | c.count('<section class="entry-section" id="tools">') must equal 1 |
 | ALWAYS test tool on live Netlify not file:// | Clipboard API and CSP differ on file:// — not a reliable test environment |
 | ALWAYS run verify_fixes.py after any mpw_tools_v3.py or writer reinstall | Confirms all 3 Session 46 fixes survived |
+| NEVER create id="hardware-plugin" or id="plugin-recs" sections | Use id="plugins" only — merged section — Session 47 |
+| NEVER run old install_writer_v52_s47b_part*.ps1 or earlier | Use install_writer_v52_s47d_part*.ps1 — current as of Session 47 |
 
 ---
 
@@ -172,9 +174,9 @@ If you cannot recite all four, you have not read this document. Stop and re-read
 
 | Priority | Task | Status |
 |---|---|---|
-| **P0** | **Confirm chorus.html committed and live on Netlify — tool works** | Pending Steve confirm |
-| **P0b** | **Generate NEW 3-part PS1 install scripts from the fixed writer on disk** | CRITICAL — old scripts write unfixed writer |
-| P1 | Regenerate all 70 v5.1 entries with fixed v5.2 writer | After P0 confirmed |
+| **P0** | **Add missing quotes to quotes.json (Kevin Parker, Robin Guthrie, Andy Summers, Brian Eno, Tony Visconti, Steve Lillywhite)** | Session 48 |
+| **P0b** | **Regenerate chorus.html after quotes added — visual QA — commit** | Session 48 |
+| P1 | Regenerate all 70 v5.1 entries with fixed v5.2 writer | After chorus committed |
 | P2 | mpw_bible_cat_pages.py --run | After regen |
 | P3 | gen_sitemap.py → GSC | After cat pages |
 | P4 | Batch 09 (100 track breakdowns) | After Bible clean |
@@ -336,7 +338,7 @@ Get-Content bible-upgrade-tier1.txt | Where-Object {
 } | Set-Content bible-tier1-remaining34.txt
 Get-Content bible-tier1-remaining34.txt | Measure-Object -Line
 ```
-Should show 33 lines. Then: `python mpw_bible_writer.py --batch-file bible-tier1-remaining34.txt --start-date 2026-05-20 --workers 8`
+Should show 33 lines. Then: `. .\setenv.ps1; python mpw_bible_writer.py --batch-file bible-tier1-remaining34.txt --start-date 2026-05-21 --workers 8`
 
 ---
 
@@ -617,7 +619,7 @@ v3.0/v4.0 153:
 | NEVER deliver .py files via Claude artifact download | Cloudflare/browser encoding corruption guaranteed — use base64 PowerShell script with WriteAllBytes instead |
 | NEVER use innerHTML for card population in tool JS | Netlify CSP headers block innerHTML on /bible/* pages — always use createElement/appendChild |
 | lfoCalc and lfoCopy MUST be assigned to window.* | oninput/onclick HTML attributes cannot access functions not on the window object |
-| NEVER try to patch encoding-corrupted Python files with byte replacement | If triple-quoted strings lost closing delimiters, byte replacement cannot fix structural corruption — use AST-guided reconstruction or base64 delivery |
+| NEVER try to patch encoding-corrupted Python files with byte replacement | If triple-quoted strings have lost their closing delimiters, byte replacement cannot fix structural corruption — must use AST-guided reconstruction or base64 delivery |
 | ALWAYS deliver large .py files via base64 PowerShell script | Write raw bytes with [System.IO.File]::WriteAllBytes() — the only guaranteed encoding-safe delivery method |
 
 ---
@@ -894,3 +896,114 @@ python verify_fixes.py
 2. Confirm _headers committed to GitHub repo root (delivered Session 44)
 3. Confirm quotes.json dropped into mpw-scripts\ (delivered Session 44)
 4. Affiliate applications — Plugin Boutique, Amazon Associates, Loopmasters, Sweetwater, PluginFox — REVENUE BLOCKER
+
+---
+
+# ⛔ SESSION 47 UPDATE — May 21, 2026
+
+## Session 47 Confirmed State at Start
+- Articles: **526** live (unchanged)
+- Bible entries: **223 total** (unchanged)
+  - 15 v5.1 original — nav working ✅ — tools working ✅
+  - 1 v5.1 (compression) — nav broken — regenerate with v5.2 ❌
+  - 54 v5.1 Session 40 — content issues — regenerate with v5.2 ❌
+  - 153 v3.0/v4.0 legacy — untouched ✅
+
+## Session 47 — What Was Completed
+
+### P0-B through P0-G Writer Fixes (all applied in one pass)
+
+**P0-B — Canonical Section Order:**
+ENTRY_NAV_LINKS and build_sidebar_toc_html() now use locked canonical order (see BIBLE handoff). Nav pills and sidebar TOC are identical. No more order mismatches between nav and content.
+
+**P0-C — Merged Plugins Section:**
+`id="hardware-plugin"` and `id="plugin-recs"` removed. Single `id="plugins"` section in nav, TOC, and Pass 2 prompt. `PLUGIN_RECS_PLACEHOLDER` now lives inside `id="plugins"`. `build_plugin_recs_html()` returns "MusicProductionWiki Recommends" amber intro block + Free/Mid/Pro card grid.
+
+**P0-D — Producer Quote Matching:**
+1. Pass 1 now receives full list of producer names from quotes.json (available_quote_authors) and MUST pick producer_spotlight from that list — prevents Pass 1 selecting producers with no quotes.
+2. filter_quotes() prioritizes spotlight producer quotes first, then fills by tag.
+3. build_pass2_prompt_t1() injects ACTUAL QUOTE TEXT verbatim for each spotlight producer including exact HTML markup — Pass 2 cannot fabricate or substitute.
+
+**P0-E — Share Bars:**
+All hardcoded share bars confirmed correct pattern (Copy Link → X → Reddit). Footer uses X + Reddit only (Steve's decision — confirmed). Verdict share bar post-processed: hardcoded by build_html_t1() regardless of what Pass 2 writes.
+
+**P0-F — Internal Link Color:**
+`.entry-main a{color:#f5a623;...}` added to build_css(). `.entry-main a{color:#f5a623!important;...}` added to CONSOLIDATED OVERRIDES. Browser-default blue links on mobile eliminated. Breadcrumb links not affected (.entry-breadcrumb a is more specific).
+
+**P0-G — Prose Flow:**
+PASS2_SYSTEM_T1 updated with prose flow instruction + FAILURE/PASS examples. Model instructed to write magazine-feature transitions between paragraphs, not isolated reference document bullets.
+
+### Additional Session 47 Fixes
+
+**Read Time:**
+count_words_html() strips tables, tool sections, DAW tabs, signal chain SVG, nav blocks before counting. read_min = max(1, round(word_count / 500)). Confirmed by Steve at 500 wpm.
+
+**Difficulty Badge:**
+Removed from masthead visual display. Stays in JSON-LD schema for SEO. Removing confusion about who the entry is for — all entries cover Beginner through Advanced in the progression section.
+
+**Session File Breakdown:**
+build_session_breakdown_html() strips "Step N —" prefix from Pass 1 step text. Number circles (.sfb-num) handle numbering — no redundancy.
+
+**MusicProductionWiki Recommends:**
+build_plugin_recs_html() now hardcodes "MusicProductionWiki Recommends" intro block. Never "MPW Recommends." Full brand name.
+
+**Footer Share Bar:**
+Footer share buttons standardized to mpw-share-btn classes (were inline styled). Pattern: X + Reddit only (no Copy Link) per Steve's decision.
+
+### Producer Spotlight Mismatch — Partial Fix
+
+The constraint system works: Pass 1 now only selects producers who have quotes in quotes.json. However, quotes.json is missing entries for Kevin Parker, Robin Guthrie, Andy Summers, Brian Eno, Tony Visconti, and Steve Lillywhite. These are the producers Pass 1 most wants to select for modulation/chorus/time-based entries. Until quotes are added for these producers, the spotlight mismatch continues for those entry types.
+
+**Session 48 P0:** Add 20+ verified quotes for missing producers with appropriate tags.
+
+### Install Scripts — Current Version
+
+**Current:** `install_writer_v52_s47d_part1/2/3.ps1`
+
+Superseded (DO NOT RUN):
+- install_writer_v52_s47b_part*.ps1 — missing fixes
+- install_writer_v52_s47_part*.ps1 — PS1 syntax error
+- install_writer_v52_s46_part*.ps1 — superseded
+- install_bible_writer_v52_part*.ps1 — writes unfixed writer
+
+### chorus.html Status — End of Session 47
+
+Generated locally with v5.2 s47d writer. All P0-B through P0-G fixes present. Validation: 90/90 when generated fresh. Producer Spotlight mismatch still present (quotes.json gap). Commit status: PENDING — Steve decision on whether to commit with partial spotlight fix or wait for Session 48 quotes.
+
+## New NEVER Rules Added Session 47
+
+| Rule | Detail |
+|---|---|
+| NEVER create id="hardware-plugin" or id="plugin-recs" sections | Use id="plugins" only — single merged section |
+| NEVER run install_writer_v52_s47b_part*.ps1 or older | Use install_writer_v52_s47d_part*.ps1 — current as of Session 47 |
+
+## Current File State on Steve's Machine — End of Session 47
+
+| File | Size | Status |
+|---|---|---|
+| mpw_bible_writer.py | 214,478 bytes | v5.2 s47d — all P0 fixes applied |
+| mpw_tools_v3.py | confirmed working | Session 46 fixes intact — verify_fixes.py passes |
+| fix_v3_permanent.py | in mpw-scripts\ | Run after any mpw_tools_v3.py reinstall |
+| fix_writer_permanent.py | in mpw-scripts\ | Run after any writer reinstall |
+| fix_settimeout.py | in mpw-scripts\ | Already baked into s47d — only needed if tools reinstalled from old source |
+| verify_fixes.py | in mpw-scripts\ | Run any time — all checks green ✅ |
+| quotes.json | 380 quotes | MISSING: Kevin Parker, Robin Guthrie, Andy Summers, Brian Eno, Tony Visconti, Steve Lillywhite |
+| chorus.html | generated locally | Not yet committed — Steve decision pending |
+
+## Session 47 Diagnostic Commands
+
+```powershell
+# Standard session start:
+. .\setenv.ps1
+python verify_fixes.py
+
+# Test chorus:
+python mpw_bible_writer.py --test --slug chorus --term "Chorus" --category "Time-Based" --tier 1 --no-commit
+
+# After quotes.json updated and chorus confirmed:
+. .\setenv.ps1; python mpw_bible_writer.py --batch-file bible-tier1-remaining34.txt --start-date 2026-05-21 --workers 8
+
+# After batch regen:
+python mpw_bible_cat_pages.py --run
+python gen_sitemap.py
+```

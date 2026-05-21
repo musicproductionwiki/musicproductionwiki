@@ -1,5 +1,5 @@
 # MPW-HANDOFF-ARTICLES.md
-*Updated: May 19, 2026 (SESSION 41)*
+*Updated: May 21, 2026 (SESSION 47)*
 
 ---
 
@@ -17,7 +17,7 @@ Or fetch directly:
 python mpw_count.py
 ```
 
-Current count as of Session 39: **526 articles live** (unchanged — no article batches ran Sessions 38 or 39)
+Current count as of Session 47: **526 articles live** (unchanged — no article batches ran Sessions 38–47)
 
 ---
 
@@ -69,7 +69,7 @@ Key requirements for every article:
 | 01-07 | LIVE | 406 articles |
 | 08 | LIVE | 120 articles |
 | Bible Tier 1 (16 done) | LIVE | 16 entries v5.1 — tools confirmed by Steve |
-| Bible Tier 1 (33 remaining) | READY | Run next session after patch_live_tools_v6.py |
+| Bible Tier 1 (33 remaining) | BLOCKED | Waiting for chorus.html QA + spotlight fix |
 | 09 (breakdowns) | QUEUED | Run after Bible Tier 1 completes |
 | 10 (studio-story) | QUEUED | After Batch 09 |
 | 11 (recreation) | QUEUED | After recreations.html category page |
@@ -137,6 +137,38 @@ Do NOT build before Batch 09 completes.
 
 ---
 
+# Sessions 38–47 — No Article Changes
+
+Sessions 38 through 47 focused entirely on Bible infrastructure, tool JS debugging, and v5.2 writer development.
+Article count: **526** — unchanged since Batch 08.
+Next article batch: Batch 09 (100 breakdowns) — after Bible v5.2 chorus confirmed and 70 entries regenerated.
+
+---
+
+# Bible Entry State — End of Session 47
+
+| Group | Count | Status |
+|---|---|---|
+| v5.1 original 15 | 15 | Nav working ✅ — tools working ✅ — need regen with v5.2 for new features |
+| compression | 1 | Nav different impl — needs v5.2 regen |
+| v5.1 Session 40 | 54 | Content issues — need regen with v5.2 |
+| v3.0/v4.0 legacy | 153 | Untouched — will upgrade in future |
+| **Total** | **223** | |
+
+## chorus.html — Current Status
+
+Generated locally with v5.2 writer (install_writer_v52_s47d).
+All P0-B through P0-G fixes confirmed in output.
+Producer Spotlight mismatch: UNRESOLVED (quotes.json missing entries).
+Commit status: PENDING — awaiting Steve QA decision.
+
+Once committed, run batch regen of all 70 v5.1 entries:
+```powershell
+. .\setenv.ps1; python mpw_bible_writer.py --batch-file bible-tier1-remaining34.txt --start-date 2026-05-21 --workers 8
+```
+
+---
+
 # Session 39 — No Article Changes
 
 Session 39 was focused entirely on mpw_tools_v3.py build, live tool patching of 15 Bible entries, and duplicate tool block cleanup.
@@ -159,19 +191,3 @@ Next article batch: Batch 09 (100 breakdowns) — after Bible v5.2 complete and 
 Sessions 43, 44, 45, and 46 focused entirely on Bible infrastructure — tool JS debugging and fixes.
 Article count: **526** — unchanged since Batch 08.
 Next article batch: Batch 09 (100 breakdowns) — after Bible v5.2 tool confirmed working and 70 entries regenerated.
-
-## Bible Entry State End of Session 46
-
-| Group | Count | Status |
-|---|---|---|
-| v5.1 original 15 | 15 | Nav working ✅ — tools working ✅ |
-| compression | 1 | Nav different impl — regenerate with v5.2 |
-| v5.1 Session 40 | 54 | Content issues — regenerate with v5.2 |
-| v3.0/v4.0 legacy | 153 | Untouched — will upgrade in future |
-| **Total** | **223** | |
-
-## chorus.html — Status
-
-Generated locally with fixed v5.2 writer. Tool confirmed working (BPM cards populate).
-Commit status: pending Steve confirmation.
-Once committed, run `python mpw_bible_writer.py --batch-file bible-tier1-remaining34.txt --start-date 2026-05-20 --workers 8` to regenerate all 70.

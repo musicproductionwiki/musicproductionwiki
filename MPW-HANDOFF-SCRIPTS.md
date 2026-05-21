@@ -710,3 +710,99 @@ python verify_fixes.py
 # Then test:
 . .\setenv.ps1; python mpw_bible_writer.py --test --slug chorus --term "Chorus" --category "Time-Based" --tier 1 --no-commit
 ```
+
+---
+
+# SESSION 47 — Writer Install Scripts + New Fix Scripts
+
+## mpw_bible_writer.py — v5.2 s47d — CURRENT STATE
+
+**Size:** 214,478 bytes
+**Syntax:** CLEAN
+**Validation:** 90/90 when chorus.html generated fresh
+
+**CRITICAL: The v5.2 s47d writer is NOT in the GitHub repo. The repo contains an old v4.0 version. ALWAYS use the local mpw-scripts\ copy. NEVER restore from GitHub.**
+
+## Current Install Scripts
+
+```powershell
+Unblock-File .\install_writer_v52_s47d_part1.ps1
+Unblock-File .\install_writer_v52_s47d_part2.ps1
+Unblock-File .\install_writer_v52_s47d_part3.ps1
+.\install_writer_v52_s47d_part1.ps1
+.\install_writer_v52_s47d_part2.ps1
+.\install_writer_v52_s47d_part3.ps1
+python verify_fixes.py
+```
+
+**Always Unblock-File before running.**
+
+## ⚠️ STALE Scripts — Updated List
+
+| Script | Issue |
+|---|---|
+| install_bible_writer_v52_part1/2/3.ps1 | Writes UNFIXED writer — DO NOT RUN |
+| install_writer_v52_s46_part1/2/3.ps1 | Session 46 — superseded by s47d |
+| install_writer_v52_s47_part1/2/3.ps1 | PS1 syntax error — DO NOT RUN |
+| install_writer_v52_s47b_part1/2/3.ps1 | Session 47b — missing fixes — DO NOT RUN |
+
+**CURRENT:** install_writer_v52_s47d_part1/2/3.ps1
+
+## fix_settimeout.py — NEW Session 47 (Other Context)
+
+Removes setTimeout(lfoCalc, 0) from mpw_tools_v3.py LFO tool init. Restores direct lfoCalc() call.
+
+```powershell
+python fix_settimeout.py
+```
+
+**NOTE:** This fix is already baked into the s47d writer install scripts. Only needed if mpw_tools_v3.py is reinstalled from an old source.
+
+## Run Order After Any Reinstall — Updated Session 47
+
+```powershell
+# If mpw_tools_v3.py reinstalled from old source:
+python fix_v3_permanent.py
+python fix_settimeout.py
+python verify_fixes.py
+
+# If mpw_bible_writer.py reinstalled (use s47d scripts instead):
+python fix_writer_permanent.py
+python verify_fixes.py
+
+# Then test:
+. .\setenv.ps1; python mpw_bible_writer.py --test --slug chorus --term "Chorus" --category "Time-Based" --tier 1 --no-commit
+```
+
+## Key Function Changes — v5.2 s47d
+
+### filter_quotes(quotes, tags, max_results=10, spotlight_names=None)
+Spotlight producer quotes always returned first (regardless of tag match), then remaining slots filled by tag overlap score. Guarantees Pass 2 always has quote text for spotlight producers.
+
+### build_pass2_prompt_t1(..., quotes_filtered=None)
+Injects ACTUAL QUOTE TEXT verbatim for each spotlight producer into the prompt body, including exact HTML markup. Pass 2 cannot fabricate or substitute.
+
+### build_plugin_recs_html(plugin_recs)
+Returns "MusicProductionWiki Recommends" amber intro block + Free/Mid/Pro card grid. Never says "MPW."
+
+### build_session_breakdown_html(session_breakdown)
+Strips "Step N —" prefix from Pass 1 step text before rendering. Number circles handle numbering.
+
+### count_words_html(html)
+Strips script, style, table, tool section (.t3), DAW tabs, signal chain diagram, and nav blocks before counting words. Returns prose-only word count for accurate read time.
+
+## Pass Architecture — v5.2 Final
+
+- Pass 1 (20,000 tokens) — Structured JSON — receives available_quote_authors list from quotes.json
+- Pass 1.5 (no API call) — quotes.json filter by tag + spotlight producer priority
+- Pass 2 (22,000 tokens T1 / 14,000 T2 / 8,000 T3) — Prose HTML
+
+**Key constants (Session 47 final):**
+- Model: claude-sonnet-4-6
+- PASS1_TOKENS: 20000
+- PASS2_TOKENS_T1: 22000
+- PASS2_TOKENS_T2: 14000
+- PASS2_TOKENS_T3: 8000
+- API timeout: 600 seconds
+- WORD_FLOOR_T1: 6800 / WORD_CEIL_T1: 7800
+- Read time: 500 wpm (updated Session 47)
