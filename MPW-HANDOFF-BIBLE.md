@@ -1375,3 +1375,18 @@ Once committed:
 ```powershell
 . .\setenv.ps1; python mpw_bible_writer.py --batch-file bible-tier1-remaining34.txt --start-date 2026-05-21 --workers 8
 ```
+
+---
+
+## Bible Entry Pre-Commit Checklist (MANDATORY — Session 50)
+
+Before committing ANY Bible entry to GitHub, verify all of the following:
+
+1. **BTT button present** — grep for `btt-btn` — if absent, pull exact markup from live chorus.html and inject before `</body>`
+2. **bible-entry-wrap inline style** — must be `max-width:1100px!important;margin:0 auto!important` ONLY — no display/grid/gap/padding properties (those override mobile media queries)
+3. **Footer share buttons** — `.footer-share-btn` must have scoped `.site-footer .mpw-share-bar` mobile override in CONSOLIDATED OVERRIDES block
+4. **Mobile QA on real device** — masthead full-width, nav pills scroll horizontally, footer share buttons compact (not full-width grid), BTT appears on scroll
+5. **All internal /bible/ links verified live** — run slug check against GitHub API before commit
+6. **dateModified matches session date** — both in Article schema and OG meta
+
+NEVER commit a Bible entry that has not passed all 6 checks.
