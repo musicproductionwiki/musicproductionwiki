@@ -407,3 +407,57 @@ Pass 1 now constrained to producers in quotes.json only. Pass 2 receives actual 
 20. Sidebar share widget (mpw-share-bar vertical column)
 21. Session File Breakdown — numbered amber circles, no "Step N" prefix (Session 47)
 22. Hardware vs Plugin comparison table — inside id="plugins" section (Session 47)
+
+---
+
+# SESSION 51 UPDATE — May 21, 2026
+
+## reverb.html Built — New Batch Status
+
+| Batch | Status | Notes |
+|---|---|---|
+| reverb.html | LOCAL — pending commit | S51 manual build — mobile QA required first |
+| Bible Tier 1 (33 remaining) | BLOCKED | Waiting for reverb.html commit + v5.3 writer build |
+
+Bible entry count after reverb.html commit: **225 live**
+
+## New Content Standards Added S51
+
+### History Section — Minimum Word Count (NEW)
+Tier 1 entries: History section minimum **800 words**. S51 reverb.html History is ~1,700 words across 7 cards:
+1. Physical Echo Chambers (1940s-50s)
+2. EMT 140 Plate Reverb (1957)
+3. Hardware Golden Era — Lexicon and AMS (1978-1988)
+4. Spring Reverb and Guitar Amplification (1960s-present)
+5. Convolution Reverb and Impulse Response Revolution (1999-2008)
+6. Plugin Era and the Valhalla Standard (2009-present)
+7. LUFS Era — Restraint as Aesthetic (2015-present)
+
+This depth is required for institutional licensing credibility. Thin history (<500 words) signals a reference card, not an authoritative entry.
+
+## New Content Sections Added in S51 (beyond v5.2 list)
+
+23 existing sections (see v5.2 list above) PLUS:
+
+24. Symptom Diagnostic — 7-button triage at top of entry — routes to specific sections (NEW S51)
+25. Psychoacoustics block — 6-card neuroscience grid (D/R ratio, Haas effect, envelopment, etc) (NEW S51)
+26. Era Translator table — 6 eras, hardware → characteristic sound → typical settings → modern plugin (NEW S51)
+27. Contrast Listen — exactly 2 tracks, maximum philosophical contrast, VS separator (NEW S51)
+28. Mono Compatibility Check — 6 reverb types, risk ratings (Low/Medium/High), check protocol (NEW S51)
+29. Recall Sheet — contenteditable session fields, .txt download button (NEW S51)
+30. Settings Fingerprint radar chart — 5-axis SVG, 8 genres, genre selector buttons (NEW S51)
+31. Decision Tree — 16-node branching JS diagnostic, 6-problem preview grid (NEW S51)
+32. Common Error Diagnostic — 8 clickable symptom buttons, combined fix text (NEW S51)
+33. Producer DNA — 3-card in-body section per producer with philosophy + quote + signature setup (NEW S51)
+34. Editorial flow guide — how-to-navigate callout at top of Definition section (NEW S51)
+35. Professional Test block — in Before/After section (NEW S51)
+
+## Pending Owner Actions (updated S51)
+
+| Action | Detail | Priority |
+|---|---|---|
+| Mobile QA on reverb.html | Real device before commit — NEVER rule | P0 NOW |
+| Commit reverb.html | Save → commit to bible/reverb.html | P0 |
+| Affiliate applications | Plugin Boutique, Amazon Associates, Sweetwater, Loopmasters, PluginFox | HIGH — REVENUE BLOCKER |
+| Add missing producer quotes | Kevin Parker, Robin Guthrie, Andy Summers, Brian Eno, Tony Visconti, Steve Lillywhite | P1 |
+| Run Tier 1 remaining batch | After v5.3 writer locked | P2 |

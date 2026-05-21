@@ -1010,3 +1010,94 @@ python mpw_bible_writer.py --test --slug chorus --term "Chorus" --category "Time
 python mpw_bible_cat_pages.py --run
 python gen_sitemap.py
 ```
+
+---
+
+# ⛔ SESSION 51 UPDATE — May 21, 2026
+
+## Session 51 Confirmed State at Start
+- Articles: **526** live (unchanged)
+- Bible entries: **224** (chorus.html committed after Session 50)
+
+## Session 51 — What Was Built
+
+### reverb.html — New Tier 1 Gold Standard
+
+Built manually (not with the automated writer) as the experimental gold standard for the new 3-tier architecture. 28 sections. 191KB. All S51 mandatory features present. Bugs found in Chrome review and fixed.
+
+**S51 mandatory features (all ✅ in reverb.html):**
+1. Decision Tree — interactive JS branching diagnostic — 16 nodes — 6-problem preview grid
+2. Settings Fingerprint — 5-axis radar chart (decay, diffusion, pre-delay, damping, width) — 8 genres
+3. Producer DNA — 3-card in-body section (Clearmountain, Everett, Finneas)
+4. Common Error Diagnostic — 8 clickable symptoms routing to specific fixes
+5. Annotated Listening Moments — ts-badge timestamps on 7 tracks
+6. Era Translator — 6 eras table (1950s through 2010s-now)
+7. Contrast Listen — HUMBLE. vs Holocene
+
+**Additional features:** Symptom Diagnostic (7-button triage), Psychoacoustics block (6 cards), Mono Compatibility Check, Recall Sheet with .txt download, RT60 Calculator (6 presets), editorial flow guide, Professional Test block.
+
+**Chrome review bugs found and fixed:**
+1. Settings Fingerprint radar chart blank → unescaped apostrophes (don't, haven't) in DT_N JS array broke entire script block → FIXED by escaping to \'
+2. Decision Tree showing only "Start Over" → same JS syntax error → FIXED
+3. Nav pills and sidebar TOC not highlighting → scroll offset 60px/140px instead of 148px → FIXED
+4. History section ~400 words → thin for licensing authority → expanded to ~1,700 words, 7 cards
+5. Decision Tree had no context → added 6-problem preview grid + "Click to begin" label
+6. Editorial flow lacking → added flow guide + Professional Test block (Steve review pending)
+
+**Status:** LOCAL ONLY at C:\Users\swarn\OneDrive\Desktop\mpw-scripts\reverb.html — pending mobile QA on real device then commit to bible/reverb.html
+
+## New NEVER Rules Added Session 51
+
+| Rule | Detail |
+|---|---|
+| NEVER build a manually-coded Bible entry without editorial flow review before delivery | Sections must have logical narrative arc — S51 Chrome review confirmed this was missing |
+| NEVER write JS strings with unescaped apostrophes in single-quoted literals | Kills entire script block — same bug class as LTIPS fix Session 46 — now confirmed recurring — use \' or double quotes |
+| NEVER set entry-nav or sidebar TOC scroll offset below sticky nav height | Must be 148px desktop (40px slim + 50px bible + 40px entry-nav + buffer), 84px mobile — S51 bug |
+| NEVER deliver a History section under 800 words for Tier 1 entries | S51 History was ~400 words — insufficient for licensing-grade authority |
+| NEVER deliver Decision Tree section without explanation and visual problem map | Bare box with Start Over button is unusable — include 6-problem grid preview |
+
+## Current File State on Steve's Machine — End of Session 51
+
+| File | Size | Status |
+|---|---|---|
+| mpw_bible_writer.py | 214,478 bytes | v5.2 s47d — unchanged |
+| mpw_tools_v3.py | confirmed working | Session 46 fixes intact |
+| verify_fixes.py | in mpw-scripts\ | Run any time |
+| quotes.json | 380 quotes | MISSING: Kevin Parker, Robin Guthrie, Andy Summers, Brian Eno, Tony Visconti, Steve Lillywhite |
+| chorus.html | COMMITTED | Live at musicproductionwiki.com/bible/chorus |
+| reverb.html | LOCAL ONLY | 191KB — all S51 bugs fixed — pending mobile QA + commit |
+
+## Session 51 Steve Pending Actions (Highest Priority First)
+
+1. **Mobile QA on reverb.html** — real device before commit (NEVER rule — mandatory)
+2. **Commit reverb.html** — save via Notepad → Save As → All Files → C:\Users\swarn\OneDrive\Desktop\mpw-scripts\reverb.html → commit to bible/reverb.html via GitHub API PUT
+3. **Affiliate applications** — Plugin Boutique, Amazon Associates, Loopmasters, Sweetwater, PluginFox — REVENUE BLOCKER
+4. **Confirm _headers committed** to GitHub repo root (delivered Session 44)
+5. **Confirm quotes.json** in mpw-scripts\ (380 quotes — still missing Kevin Parker et al)
+
+## Session 52 P0 Priority
+
+P0: Troubleshoot remaining reverb.html issues in Chrome after Steve mobile QA
+P1: Commit reverb.html to GitHub (Steve action)
+P2: Back-engineer v5.3 1-pass template writer from reverb.html
+P3: Add missing producer quotes to quotes.json
+P4: Run Tier 1 remaining 33 batch with v5.3 writer
+P5: Affiliate applications (Steve action — REVENUE BLOCKER)
+
+## Session 52 Diagnostic Commands
+
+```powershell
+# Commit reverb.html (single file PUT):
+. .\setenv.ps1
+$content = [System.IO.File]::ReadAllBytes("C:\Users\swarn\OneDrive\Desktop\mpw-scripts\reverb.html")
+$base64 = [System.Convert]::ToBase64String($content)
+$sha_resp = Invoke-RestMethod -Uri "https://api.github.com/repos/musicproductionwiki/musicproductionwiki/contents/bible/reverb.html" -Headers @{Authorization="token $env:GITHUB_TOKEN"} -ErrorAction SilentlyContinue
+$body = @{message="feat: Reverb Bible entry S51 — 28 sections, all S51 features";content=$base64;branch="main"}
+if ($sha_resp.sha) { $body.sha = $sha_resp.sha }
+Invoke-RestMethod -Uri "https://api.github.com/repos/musicproductionwiki/musicproductionwiki/contents/bible/reverb.html" -Method PUT -Headers @{Authorization="token $env:GITHUB_TOKEN";"Content-Type"="application/json"} -Body ($body | ConvertTo-Json)
+
+# After commit — verify live:
+# Open musicproductionwiki.com/bible/reverb
+# Check: radar chart draws, decision tree has questions, nav pills highlight on scroll
+# Check on real iPhone before declaring done
+```

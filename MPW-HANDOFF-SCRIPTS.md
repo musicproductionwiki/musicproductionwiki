@@ -806,3 +806,62 @@ Strips script, style, table, tool section (.t3), DAW tabs, signal chain diagram,
 - API timeout: 600 seconds
 - WORD_FLOOR_T1: 6800 / WORD_CEIL_T1: 7800
 - Read time: 500 wpm (updated Session 47)
+
+---
+
+# SESSION 51 UPDATE — May 21, 2026
+
+## No New Scripts Built in S51
+
+Session 51 focused entirely on manually building reverb.html. No new Python scripts were written.
+
+## Key Technical Lesson — JS String Apostrophe Safety
+
+The same apostrophe bug that hit LTIPS in Session 46 (single-quoted JS strings with contractions) recurred in reverb.html's DT_N array. Now a NEVER rule. When building v5.3 writer, ALL JS string literals containing natural language text must use either escaped apostrophes or double quotes.
+
+Affected patterns to check in v5.3 writer JS output:
+- DT_N array (Decision Tree node text)
+- ED_F object (Error Diagnostic fix text)
+- Any inline JS string with English prose
+
+## reverb.html Commit Command (Steve — run after mobile QA)
+
+```powershell
+. .\setenv.ps1
+
+$filePath = "C:\Users\swarn\OneDrive\Desktop\mpw-scripts\reverb.html"
+$content = [System.IO.File]::ReadAllBytes($filePath)
+$base64 = [System.Convert]::ToBase64String($content)
+
+# Get current SHA (if file exists in repo):
+$sha_resp = Invoke-RestMethod `
+    -Uri "https://api.github.com/repos/musicproductionwiki/musicproductionwiki/contents/bible/reverb.html" `
+    -Headers @{Authorization="token $env:GITHUB_TOKEN"} `
+    -ErrorAction SilentlyContinue
+
+$body = @{
+    message = "feat: Reverb Bible entry S51 — 28 sections, RT60 calculator, radar chart, decision tree, mono check, recall sheet"
+    content  = $base64
+    branch   = "main"
+}
+if ($sha_resp.sha) { $body.sha = $sha_resp.sha }
+
+Invoke-RestMethod `
+    -Uri "https://api.github.com/repos/musicproductionwiki/musicproductionwiki/contents/bible/reverb.html" `
+    -Method PUT `
+    -Headers @{Authorization="token $env:GITHUB_TOKEN"; "Content-Type"="application/json"} `
+    -Body ($body | ConvertTo-Json -Depth 5)
+```
+
+After commit: verify live at musicproductionwiki.com/bible/reverb
+Check: radar chart draws polygons, decision tree shows questions, nav pills highlight on scroll, works on real iPhone.
+
+## Session 52 First Steps
+
+```powershell
+. .\setenv.ps1
+python verify_fixes.py
+python mpw_session_start.py
+```
+
+Then: open musicproductionwiki.com/bible/reverb on real device and report any remaining issues.

@@ -885,3 +885,108 @@ python mpw_bible_cat_pages.py --run
 python gen_sitemap.py
 # Submit sitemap to GSC manually
 ```
+
+---
+
+# SESSION 51 UPDATE — May 21, 2026
+
+## reverb.html S51 — Technical Architecture Notes
+
+### bible-entry-wrap — CSS-only approach (S51 change)
+
+reverb.html does NOT use `display:grid` in the inline style on `bible-entry-wrap`. Grid is handled entirely in CSS:
+```css
+/* In main style block: */
+.bible-entry-wrap{max-width:1100px;margin:0 auto;padding:40px 24px;display:grid;grid-template-columns:1fr 280px;gap:40px;align-items:start}
+/* In CONSOLIDATED OVERRIDES: */
+@media(min-width:769px){
+  .bible-entry-wrap{display:grid!important;grid-template-columns:1fr 280px!important;...}
+  .entry-sidebar{display:block!important;...}
+}
+@media(max-width:768px){
+  .bible-entry-wrap{display:block!important;...}
+  .entry-sidebar{display:none!important}
+}
+```
+The inline style on the element is: `style="max-width:1100px;margin:0 auto"` ONLY.
+This is cleaner than compression.html's nuclear inline approach and avoids mobile override issues.
+
+### Entry Nav + Sidebar TOC Scroll Offset — Critical Values
+
+```javascript
+// Desktop: 148px (40px slim-bar + 50px bible-bar + 40px entry-nav + 18px buffer)
+// Mobile: 84px (40px slim-bar + 44px bible-bar mobile height)
+// S51 bug: offset was 60px (entry nav) and 140px (sidebar TOC) → pills frozen
+// Fixed to 148px for both
+```
+
+### JS String Safety — Apostrophe Rule
+
+All JS string literals containing natural language text MUST use escaped apostrophes or double quotes:
+```javascript
+// WRONG — breaks entire script block:
+{type:'q', text:'Elements don't sound cohesive', answers:[...]}
+
+// CORRECT option 1 — escaped apostrophe:
+{type:'q', text:'Elements don\'t sound cohesive', answers:[...]}
+
+// CORRECT option 2 — double quotes:
+{type:"q", text:"Elements don't sound cohesive", answers:[...]}
+```
+This is the SAME bug class as LTIPS single-quoted strings (Session 46, Root Cause 3). Now a NEVER rule.
+
+### S51 Interactive Features — JS Architecture
+
+**Settings Fingerprint (id="fingerprint"):**
+- IIFE draws with `setTimeout(draw, 0)`
+- Genres object: 8 genres, 5 axes each (decay, diffusion, predelay, damping, width)
+- `activeG = null` shows all polygons; set to genre name highlights one
+- Genre buttons in `fp-controls` div, created by IIFE
+- Legend items in `fp-legend` div, created by IIFE
+
+**Decision Tree (id="decision-tree"):**
+- `DT_S` = current node index (0-15)
+- `DT_N` = array of 16 nodes: type 'q' (question with answers array) or type 'fix' (fix text)
+- `dtRender()` called on load, on `dtAnswer(next)`, on `dtReset()`
+- All text in DT_N uses escaped apostrophes
+
+**Error Diagnostic (in id="mistakes"):**
+- `ED_A` = object tracking selected symptoms
+- `ED_F` = object mapping symptom key → fix text
+- `edToggle(btn, key)` adds/removes from ED_A, calls edUpdate()
+- `edUpdate()` builds combined fix text from all selected symptoms
+- `edClear()` resets all
+
+**Recall Sheet (id="recall-sheet"):**
+- `contenteditable="true"` spans for each field
+- `downloadRecallSheet()` reads all spans by ID, builds .txt, triggers download
+
+### reverb.html S51 Structural Fingerprints
+
+| # | Fingerprint | Value |
+|---|---|---|
+| 1 | Sections | 28 (id: definition through related) |
+| 2 | File size | 191KB |
+| 3 | BTT button | class="btt-btn" id="btt-btn" — present ✅ |
+| 4 | bible-entry-wrap | max-width + margin ONLY in inline style — NO display:grid inline |
+| 5 | Entry nav offset | 148px desktop, 84px mobile — FIXED S51 |
+| 6 | Sidebar TOC offset | 148px — FIXED S51 |
+| 7 | DT_N apostrophes | All escaped with \' — FIXED S51 |
+| 8 | Footer share | X + Reddit ONLY — no Copy Link |
+| 9 | ts-badge | Timestamp class on 7 track examples |
+| 10 | Settings Fingerprint | SVG radar chart, 8 genres, 5 axes |
+| 11 | Decision Tree | 16-node branching JS diagnostic |
+| 12 | Error Diagnostic | 8 symptom buttons, edToggle() |
+| 13 | Recall Sheet | contenteditable spans, downloadRecallSheet() |
+| 14 | Producer DNA | 3 dna-card divs (Clearmountain, Everett, Finneas) |
+| 15 | Psychoacoustics | 6 psy-card divs |
+| 16 | Era Translator | 6-row et-table |
+| 17 | Contrast Listen | 2 cl-card divs + cl-vs separator |
+| 18 | Mono Check | 6 mc-item divs with mc-safe/mc-risk/mc-danger |
+| 19 | Symptom Diagnostic | 7 sd-btn buttons at top of main |
+| 20 | RT60 Calculator | .t3 tool, rtCalc(), rtRoom(), 6 presets |
+
+## File Location
+
+reverb.html: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\reverb.html`
+Commit target: `bible/reverb.html` in GitHub repo

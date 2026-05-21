@@ -191,3 +191,40 @@ Next article batch: Batch 09 (100 breakdowns) — after Bible v5.2 complete and 
 Sessions 43, 44, 45, and 46 focused entirely on Bible infrastructure — tool JS debugging and fixes.
 Article count: **526** — unchanged since Batch 08.
 Next article batch: Batch 09 (100 breakdowns) — after Bible v5.2 tool confirmed working and 70 entries regenerated.
+
+---
+
+# SESSION 51 UPDATE — May 21, 2026
+
+## Bible Entry State — End of Session 51
+
+| Group | Count | Status |
+|---|---|---|
+| reverb.html S51 | 1 | Built locally — all S51 bugs fixed — pending mobile QA + commit |
+| chorus.html v5.2 | 1 | LIVE — committed after Session 50 ✅ |
+| v5.1 original 15 | 15 | Nav working ✅ — tools working ✅ — need regen with v5.3 |
+| compression | 1 | Nav different impl — needs v5.3 regen |
+| v5.1 Session 40 | 54 | Content issues — need regen with v5.3 |
+| v3.0/v4.0 legacy | 153 | Untouched |
+| **Total live** | **224** | (225 after reverb.html committed) |
+
+## reverb.html — Chrome Review Findings and Fixes (S51)
+
+Problems Steve identified in Chrome:
+1. Settings Fingerprint radar chart: blank (no polygons) → JS syntax error from unescaped apostrophes in DT_N array (don't, haven't) → FIXED
+2. Decision Tree: showing only "Start Over" button, no questions → same JS syntax error → FIXED
+3. Entry nav pills and sidebar TOC: not highlighting on scroll → scroll offset too low (60px/140px vs correct 148px) → FIXED
+4. History section: very short, no authority → ~400 words across 3 short cards → expanded to ~1,700 words, 7 cards → FIXED
+5. Decision Tree section: no explanation, just a bare box with a button → added 6-problem preview grid + "Click to begin" label → FIXED
+6. "No editorial flow, no authority, sections thrown in the air" → added editorial flow guide + expanded narrative prose throughout → PARTIALLY FIXED — Steve review of editorial flow pending
+
+## Pending Before reverb.html Commit
+
+1. Mobile QA on real device (NEVER rule — zero exceptions)
+2. Steve editorial review of flow improvements
+3. Steve saves file: Notepad → Save As → All Files → C:\Users\swarn\OneDrive\Desktop\mpw-scripts\reverb.html
+4. Steve commits: GitHub API PUT to bible/reverb.html (PowerShell command in HANDOFF-SCRIPTS.md)
+
+## Article Count Status (Sessions 38-51)
+
+Article count: **526** — unchanged since Batch 08. Next article batch is Batch 09 (100 track breakdowns) — still blocked pending Bible Tier 1 completion.

@@ -1539,3 +1539,60 @@ Maximum contrast. Not a list — always exactly two.
 ---
 
 **THIS IS THE MOST IMPORTANT BIBLE DEVELOPMENT SINCE THE GOLD STANDARD WAS LOCKED. EXECUTE IN SESSION 51.**
+
+---
+
+# SESSION 51 UPDATE — May 21, 2026
+
+## New Gold Standard — reverb.html S51
+
+reverb.html is now the Tier 1 gold standard. 28 sections, 191KB, all S51 features present.
+Status: LOCAL ONLY — pending mobile QA on real device then commit.
+
+**S51 section count by section ID:**
+definition, psychoacoustics, how-it-works, parameters, quick-reference, tools, fingerprint, signal-chain, history, era-translator, how-to-use, decision-tree, genre-table, plugins, before-after, in-the-wild, contrast-listen, producer-dna, signatures, types, mono-check, recall-sheet, verdict, mistakes, flags, progression, faq, related
+
+**S51 bugs found in Chrome and fixed:**
+1. Radar chart blank → unescaped apostrophes in DT_N JS array (don't, haven't) → broke script block → FIXED
+2. Decision Tree showing only "Start Over" → same JS syntax error → FIXED
+3. Nav pills/sidebar TOC not highlighting → scroll offset 60px/140px → should be 148px → FIXED
+4. History ~400 words → expanded to ~1,700 words (7 history cards) → FIXED
+5. Decision Tree no context → added 6-problem preview grid + Click to begin label → FIXED
+6. Editorial flow lacking → added flow guide + professional test block → PARTIAL FIX — Steve review pending
+
+**Outstanding before commit:**
+- Mobile QA on real device (NEVER rule — mandatory)
+- Steve editorial review
+- Commit to bible/reverb.html
+
+## Updated Pre-Commit Checklist (10 checks — was 6)
+
+1. BTT button present — grep btt-btn
+2. bible-entry-wrap inline style: max-width + margin ONLY (no display/grid)
+3. Footer share: X + Reddit only, no Copy Link
+4. Mobile QA on real device — masthead, nav pills, footer share, BTT
+5. All /bible/ links verified live
+6. dateModified matches session date
+7. **NEW S51:** No unescaped apostrophes in single-quoted JS strings — grep for don't haven't won't in script blocks
+8. **NEW S51:** Entry nav scroll offset = 148px desktop, 84px mobile
+9. **NEW S51:** History section minimum 800 words for Tier 1
+10. **NEW S51:** Editorial flow guide present in Tier 1 entries
+
+## Bible Entry State — End of Session 51
+
+| Group | Count | Status |
+|---|---|---|
+| reverb.html S51 | 1 | Built locally — bugs fixed — pending mobile QA + commit |
+| chorus.html v5.2 | 1 | LIVE — committed after Session 50 ✅ |
+| v5.1 original 15 | 15 | Nav working ✅ — tools working ✅ — need regen with v5.3 |
+| compression | 1 | Nav different impl — needs v5.3 regen |
+| v5.1 Session 40 | 54 | Content issues — need regen with v5.3 |
+| v3.0/v4.0 legacy | 153 | Untouched |
+| **Total live** | **224** | (225 after reverb.html committed) |
+
+## Session 52 Priority Items
+
+P0: Mobile QA on reverb.html (Steve) → fix any remaining issues → commit
+P1: Back-engineer v5.3 1-pass template writer from reverb.html
+P2: Add missing producer quotes (Kevin Parker, Robin Guthrie, Andy Summers, Brian Eno, Tony Visconti, Steve Lillywhite)
+P3: Run Tier 1 remaining 33 batch with v5.3 writer
