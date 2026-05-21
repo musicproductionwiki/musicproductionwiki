@@ -1411,3 +1411,131 @@ If a better Bible entry is built next session, extract the writer spec from the 
 4. Lock new output as gold standard, bump writer to v5.3
 5. Run --validate 90/90 before any batch
 Working from confirmed HTML output is more reliable than abstract spec.
+
+---
+
+## ⭐ SESSION 51 VISION — THE INDUSTRY-BEST BIBLE ENTRY + 3-TIER WRITER OVERHAUL
+
+**THIS IS A PRIORITY AGENDA ITEM. DO NOT SKIP. DO NOT SUMMARIZE. READ IN FULL.**
+
+### The Plan
+Build one experimental killer entry together from scratch. Extract the template from the confirmed HTML. Spec the 3-tier writer from it. 1-pass architecture. Lock new gold standard. This replaces the current v5.2 multi-pass writer entirely.
+
+---
+
+### Why the Current Writer Is Fragile
+- 2-3 passes means JSON handoff between passes — malformed specs, mismatched quotes, sections landing wrong
+- Every bug in Sessions 49-50 (BTT missing, inline style breaking mobile, quotes not matching spotlight) happened because structure is generated not templated
+- Template-fill 1-pass: Claude fills variables only, structure is frozen — bugs disappear by design
+- Cost: current ~$0.25/T1 entry → projected ~$0.06-0.08/entry = 70% reduction
+- At 1,500 entries: ~$375 current vs ~$110 template approach
+
+---
+
+### 3-Tier Writer Architecture
+
+**Tier 1 — Foundational (25-35 min read)**
+Terms: Reverb, Compression, EQ, Delay, Limiting, Sidechain, Saturation, Mastering
+- 5+ producer quotes minimum (3 in body, 2 in spotlight — all matched by name)
+- 3+ signature sounds
+- Full DAW tabs (Ableton, Logic, FL, Pro Tools)
+- Interactive tool (calculator or visualizer)
+- Complete genre table
+- 6 history cards
+- Decision Tree interactive diagnostic
+- Settings Fingerprint radar chart
+- Full Producer DNA section
+
+**Tier 2 — Technique (12-18 min read)**
+Terms: Send/Return, Parallel Compression, Mid-Side, Gating, Bus Compression, etc.
+- 3 producer quotes (all name-matched to spotlight)
+- 2 signature sounds
+- Abbreviated history (2 cards)
+- DAW tabs present
+- Settings Fingerprint radar chart
+
+**Tier 3 — Reference (5-8 min read)**
+Terms: Slapback Delay, Bell Curve, Clip Gain, Headroom, True Peak, etc.
+- 1-2 producer quotes
+- Quick answer, parameters, quick ref table only
+- No DAW tabs, no history, no signature sounds
+- Fast lookup — get in, get out
+
+---
+
+### 7 New Features Nobody Has Built — Implement in S51
+
+**1. The Decision Tree (interactive)**
+Embedded flowchart in every T1/T2 entry. Producer clicks symptoms:
+"Is your mix washy? → Is reverb on insert or send? → Is return high-passed?"
+Each path routes to a specific fix. Visual diagnostic, not passive reading.
+Build as inline SVG + vanilla JS. No competitor has this.
+
+**2. The Settings Fingerprint (radar chart)**
+5-axis radar chart (decay, diffusion, pre-delay, damping, width) rendered as a polygon per genre/use case.
+One glance communicates more than a table of numbers.
+Build as inline SVG — no external libraries needed.
+
+**3. Producer DNA Section**
+Replace sidebar spotlight with a dedicated in-body section.
+3 producers, same term, completely different philosophies.
+Clearmountain vs Shawn Everett vs Finneas — same tool, 3 worldviews.
+Quote MUST be FROM that producer and matched by name — no exceptions.
+
+**4. The Common Error Diagnostic (interactive)**
+Self-assessment tool embedded in the Mistakes section.
+"Click the symptoms you're hearing" — washy, lacks punch, sounds thin, etc.
+Each symptom combination routes to a specific named fix.
+Personalized, actionable, useful to a producer mid-session.
+
+**5. Annotated Listening Moments**
+3-5 track examples with specific timestamp callouts.
+"At 0:23, the reverb tail begins — hear the pre-delay gap."
+Producers learn by ear. Timestamps reference tracks they already own/stream.
+No audio playback needed — pure annotation.
+
+**6. Version History Block**
+How the standard for this term has evolved year over year.
+"In 2020, standard pre-delay on vocals was 15ms. By 2026, LUFS normalization pushed this to 20-25ms."
+The Bible as a living document with institutional memory. No competitor has this.
+
+**7. The Contrast Listen**
+Exactly two tracks, same genre, opposite philosophies for the term.
+HUMBLE. vs Holocene for reverb. One line each. Forces ear calibration.
+Maximum contrast. Not a list — always exactly two.
+
+---
+
+### Producer Quotes — Mandatory Fix for ALL Tiers
+- Minimum 3 quotes in body (currently 2 in reverb.html — known gap)
+- Producer Spotlight: every ps-card name MUST match the quote author in that card
+- quotes.json must be filtered by producer name at render time
+- chorus.html is live with mismatched quotes — needs regen after writer is fixed
+
+---
+
+### Session 51 Execution Order
+1. Read this section in full before any other action
+2. Brainstorm the experimental entry topic together
+3. Build the entry manually — do NOT use the writer yet
+4. Confirm on desktop and real mobile device
+5. Extract the template: parameterize every variable, freeze all structure
+6. Spec the 1-pass writer from the template
+7. Run --validate on the new writer (target: 95/95)
+8. Steve visual QA on real iPhone
+9. Lock as gold standard — replaces chorus.html as the reference
+10. Regen all T1 entries with new writer
+
+---
+
+### Cost Projection — 1-Pass Template Writer
+| Tier | Current cost | Projected 1-pass | Savings |
+|---|---|---|---|
+| T1 (300 entries) | $75 | $18-24 | ~70% |
+| T2 (700 entries) | $112 | $28-35 | ~70% |
+| T3 (500 entries) | $37.50 | $10-12 | ~70% |
+| Total (1,500) | ~$225 | ~$56-71 | ~$155-170 |
+
+---
+
+**THIS IS THE MOST IMPORTANT BIBLE DEVELOPMENT SINCE THE GOLD STANDARD WAS LOCKED. EXECUTE IN SESSION 51.**
