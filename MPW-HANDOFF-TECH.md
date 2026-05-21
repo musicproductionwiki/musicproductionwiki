@@ -724,3 +724,55 @@ mpw_tools_v3.py `_wrap()` generates correct structure: `<section class="entry-se
 Fix for compression.html: wrap gr-calculator in `<section class="entry-section" id="tools"><h2>Tools for This Entry</h2>` and remove the separate bottom tools nav card. Fetch file before patching.
 
 Fix for Session 40 entries: regenerate with v5.2 writer (tools position fix).
+
+---
+
+# SESSION 46 UPDATE — KEY TECHNICAL FINDINGS
+
+## Tool JS Root Causes — Solved
+
+Three bugs killed the LFO tool on every Bible entry:
+
+### Bug 1 — "" leak after </script> in mpw_tools_v3.py
+Pattern in every tool body string:
+```python
+    ...calc();\n</script>""
+    """
+    return _wrap(...)
+```
+The `""` between `</script>` and `"""` emitted literally into HTML → JS SyntaxError → all tool JS dead.
+Fixed by `fix_v3_permanent.py`.
+
+### Bug 2 — Duplicate {tools_html} in writer f-string
+Tools were injected twice: once via `TOOLS_PLACEHOLDER` replacement (correct) and once via `{tools_html}` in the final page assembly f-string (duplicate). Result: two `<section id="tools">` blocks, duplicate DOM IDs, lfoCalc fails.
+Fixed by `fix_writer_permanent.py`.
+
+### Bug 3 — Single-quoted LTIPS JS strings with apostrophes
+LTIPS dict values used single-quoted JS strings containing `you've`, `don't` etc. Apostrophes terminated strings early → `Unexpected identifier 've'` SyntaxError.
+Fixed by `fix_v3_permanent.py` — all 7 LTIPS values converted to double-quoted JS strings.
+
+## Fix Scripts (save to mpw-scripts\)
+
+| Script | Purpose | Idempotent |
+|---|---|---|
+| fix_v3_permanent.py | Fixes "" leak + LTIPS quotes in mpw_tools_v3.py | Yes — safe to re-run |
+| fix_writer_permanent.py | Removes duplicate {tools_html} from writer | Yes — safe to re-run |
+| verify_fixes.py | Confirms all 3 fixes applied to both files | Yes — run any time |
+
+## ⚠️ Install Scripts STALE
+
+install_bible_writer_v52_part1/2/3.ps1 write the UNFIXED mpw_bible_writer.py.
+DO NOT RUN. P0b next session: generate new install scripts from fixed file on disk.
+
+## Diagnostic Commands (Session 46)
+
+```powershell
+# Verify fixes:
+python verify_fixes.py
+
+# Check tool section count in HTML (write to .py file, not inline):
+# python count_tools.py
+
+# Generate test entry:
+. .\setenv.ps1; python mpw_bible_writer.py --test --slug chorus --term "Chorus" --category "Time-Based" --tier 1 --no-commit
+```

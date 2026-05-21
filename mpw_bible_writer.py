@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-mpw_bible_writer.py — v5.1
+mpw_bible_writer.py — v5.2
 MusicProductionWiki.com Producer's Bible Entry Generator
 
 Three-tier architecture:
@@ -20,7 +20,7 @@ Run:
 
 import os, sys, json, re, time, datetime, base64, urllib.request, urllib.error, argparse
 import concurrent.futures
-from mpw_tools_v3 import build_tools_section_v3
+import mpw_tools_v3
 
 # ══════════════════════════════════════════════════════════════════════════════
 # CONSTANTS
@@ -160,7 +160,10 @@ def safe_slugs(items):
 # ══════════════════════════════════════════════════════════════════════════════
 
 def count_words_html(html: str) -> int:
-    text = re.sub(r'<[^>]+>', ' ', html)
+    # FIX 27: strip <script> and <style> blocks first to avoid counting JSON-LD/CSS as prose
+    text = re.sub(r'<script[^>]*>.*?</script>', ' ', html, flags=re.DOTALL | re.IGNORECASE)
+    text = re.sub(r'<style[^>]*>.*?</style>', ' ', text, flags=re.DOTALL | re.IGNORECASE)
+    text = re.sub(r'<[^>]+>', ' ', text)
     text = re.sub(r'&[a-z#0-9]+;', ' ', text)
     return len(text.split())
 
@@ -256,7 +259,31 @@ Return a JSON object with ALL of the following fields:
     {{"title": "Mistake title", "explanation": "2 sentences explaining the mistake and correction"}}
   ],
   "producer_quote": "exact quote text",
-  "producer_quote_source": "Person Name, role — Source",
+  "producer_quote_source": "Person Name, role -- Source",
+  "producer_quote_2": "exact second quote text",
+  "producer_quote_2_source": "Person Name, role -- Source",
+  "producer_quote_3": "exact third quote text",
+  "producer_quote_3_source": "Person Name, role -- Source",
+  "producer_spotlight": [
+    {{
+      "name": "Producer Name",
+      "role": "Role (Credits)",
+      "slug": "producer-slug",
+      "signature_move": "One sentence: their specific technique with this term using exact settings or approach"
+    }},
+    {{
+      "name": "Producer Name 2",
+      "role": "Role (Credits)",
+      "slug": "producer-slug-2",
+      "signature_move": "One sentence: their specific technique"
+    }},
+    {{
+      "name": "Producer Name 3",
+      "role": "Role (Credits)",
+      "slug": "producer-slug-3",
+      "signature_move": "One sentence: their specific technique"
+    }}
+  ],
   "wikipedia_slug": "Wikipedia_Article_Title_or_null",
   "wikidata_id": "Q000000_or_null",
 
@@ -307,17 +334,35 @@ Return a JSON object with ALL of the following fields:
   "comparison_terms": [
     {{"term": "Compared Term 1", "slug": "slug-or-null"}},
     {{"term": "Compared Term 2", "slug": "slug-or-null"}}
-  ]
+  ],
+  "genre_columns": ["Genre", "Column2", "Column3", "Column4", "Notes"],
+  "genre_rows_v2": [
+    {{"Genre": "Trap", "Column2": "val", "Column3": "val", "Column4": "val", "Notes": "..."}}
+  ],
+  "signature_sounds": [
+    {{"track": "Artist -- Track Title (Year)", "settings": "Exact settings with specific numbers", "why": "Why this works perceptually -- 1-2 sentences"}},
+    {{"track": "Artist -- Track Title (Year)", "settings": "Exact settings with specific numbers", "why": "Why this works perceptually"}},
+    {{"track": "Artist -- Track Title (Year)", "settings": "Exact settings", "why": "Perceptual result"}},
+    {{"track": "Artist -- Track Title (Year)", "settings": "Exact settings", "why": "Perceptual result"}}
+  ],
+  "session_breakdown": {{
+    "scenario": "One-sentence production scenario description",
+    "steps": ["Step 1 with exact settings", "Step 2", "Step 3", "Step 4", "Step 5"]
+  }}
 }}
 
 Requirements:
-- track_examples: minimum 5, maximum 8 — real tracks only, no invented titles
-- faq: exactly 8 questions — questions producers actually search for
-- All slug fields: validate against CONFIRMED_LIVE_SLUGS — use null if not in the set
+- track_examples: minimum 5, maximum 8 -- real tracks only, no invented titles
+- faq: exactly 8 questions -- questions producers actually search for
+- All slug fields: validate against CONFIRMED_LIVE_SLUGS -- use null if not in the set
 - the_number: a single concrete value that anchors producers' mental model
 - genre_settings_rows: exactly 5 rows matching the genres shown
 - comparison_terms: exactly 2 terms that {term} is most often confused with
 - tool_type: "calculator" only if an interactive calculator makes sense for this term; otherwise null
+- genre_columns: array of column headers specific to {term} (e.g. for EQ: Genre/Target Frequencies/Key Move/Q/Notes)
+- signature_sounds: 4 iconic uses with exact settings and perceptual explanation -- real tracks only
+- session_breakdown: one realistic production scenario with 5 steps using exact settings
+- producer_spotlight: exactly 3 producers known for their use of {term}; include specific signature_move with exact technique
 """
 
 def run_pass1(slug, term, category, tier):
@@ -475,15 +520,23 @@ def build_signal_chain_svg(positions, slug):
         </div>"""
     return svg
 
-def build_genre_table_html(rows, term, slug):
-    if not rows:
+def build_genre_table_html(rows, term, slug, genre_columns=None, genre_rows_v2=None):
+    # FIX 18: use genre_rows_v2 + genre_columns when available (category-aware columns)
+    if genre_rows_v2 and genre_columns:
+        headers = genre_columns
+        th_row  = ''.join(f'<th>{h}</th>' for h in headers)
+        td_rows = ''
+        for r in genre_rows_v2:
+            td_rows += '<tr>' + ''.join(f'<td>{r.get(h,"")}</td>' for h in headers) + '</tr>\n'
+    elif rows:
+        headers = ['Genre', 'Ratio', 'Attack', 'Release', 'Threshold', 'Notes']
+        keys    = ['genre', 'ratio', 'attack', 'release', 'threshold', 'notes']
+        th_row  = ''.join(f'<th>{h}</th>' for h in headers)
+        td_rows = ''
+        for r in rows:
+            td_rows += '<tr>' + ''.join(f'<td>{r.get(k,"")}</td>' for k in keys) + '</tr>\n'
+    else:
         return ''
-    headers = ['Genre', 'Ratio', 'Attack', 'Release', 'Threshold', 'Notes']
-    keys    = ['genre', 'ratio', 'attack', 'release', 'threshold', 'notes']
-    th_row  = ''.join(f'<th>{h}</th>' for h in headers)
-    td_rows = ''
-    for r in rows:
-        td_rows += '<tr>' + ''.join(f'<td>{r.get(k,"")}</td>' for k in keys) + '</tr>\n'
     share_bar = (
         f'        <div class="mpw-share-bar">\n'
         f'        <span class="mpw-share-label">Share</span>\n'
@@ -626,6 +679,7 @@ def build_sidebar_toc_html(slug):
         ('hardware-plugin', 'Hardware vs Plugin'),
         ('before-after',    'Before / After'),
         ('in-the-wild',     'In The Wild'),
+        ('signatures',      'Signatures'),
         ('types',           'Types'),
         ('plugin-recs',     'Plugins'),
         ('mistakes',        'Mistakes'),
@@ -637,18 +691,37 @@ def build_sidebar_toc_html(slug):
     links = ''.join(f'<a href="#{sec_id}">{label}</a>\n' for sec_id, label in sections)
     return f'          <div class="sidebar-toc">\n            <h4>Contents</h4>\n{links}          </div>'
 
-def build_producer_spotlight_html(quotes_filtered):
-    # Derive from track_examples producers or producer_quote_source
+def build_producer_spotlight_html(p1):
+    # FIX 16: Use producer_spotlight array from Pass 1 with ps-move field
+    spotlight = p1.get('producer_spotlight', [])
+    if spotlight:
+        cards = ''
+        for prod in spotlight[:3]:
+            name = prod.get('name', '')
+            role = prod.get('role', 'Producer')
+            move = prod.get('signature_move', '')
+            if not name:
+                continue
+            move_html = f'          <div class="ps-move">{move}</div>\n' if move else ''
+            cards += (
+                '          <div class="ps-card">\n'
+                f'            <div class="ps-name">{name}</div>\n'
+                f'            <div class="ps-role">{role}</div>\n'
+                + move_html +
+                '          </div>\n'
+            )
+        if cards:
+            return f'          <div class="producer-spotlight">\n            <h3>Producer Spotlight</h3>\n{cards}          </div>'
+    # Fallback: derive from track_examples
     names = []
-    for q in (quotes_filtered or [])[:2]:
-        person = q.get('person', '').strip()
-        role   = q.get('role', 'Producer').strip()
-        if person and person not in [n[0] for n in names]:
-            names.append((person, role))
+    for t in (p1.get('track_examples') or [])[:3]:
+        prod = t.get('produced_by', '')
+        if prod and prod not in [n[0] for n in names]:
+            names.append((prod, 'Producer'))
     if not names:
         return ''
     cards = ''
-    for name, role in names[:2]:
+    for name, role in names[:3]:
         cards += f'          <div class="ps-card"><div class="ps-name">{name}</div><div class="ps-role">{role}</div></div>\n'
     return f'          <div class="producer-spotlight">\n            <h3>Producer Spotlight</h3>\n{cards}          </div>'
 
@@ -658,7 +731,7 @@ def build_producer_spotlight_html(quotes_filtered):
 
 def build_css():
     return """  <style>
-    /* Bible page v5.1 — NO main.js — fully self-contained */
+    /* Bible page v5.2 — NO main.js — fully self-contained */
     *{box-sizing:border-box;margin:0;padding:0}
     html{overflow-x:clip}
     body{background:#0d0d1a;color:#e0e0f0;font-family:system-ui,-apple-system,sans-serif;line-height:1.7;overflow-x:clip}
@@ -721,7 +794,7 @@ def build_css():
     /* Entry nav */
     .entry-nav{position:sticky;top:90px;z-index:400;background:#0d0d1a;border-bottom:1px solid #2a2a4a;overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(to right,black 85%,transparent 100%);mask-image:linear-gradient(to right,black 85%,transparent 100%)}
     .entry-nav::-webkit-scrollbar{display:none}
-    .entry-nav-inner{display:flex;justify-content:center;gap:4px;padding:10px 10px;min-width:max-content;margin:0 auto}
+    .entry-nav-inner{display:flex;justify-content:center;gap:4px;padding:10px 10px;min-width:max-content;margin:0}
     .entry-nav-inner a{color:#a0a0c0;text-decoration:none;font-size:10px;text-transform:uppercase;letter-spacing:.05em;padding:6px 10px;border-radius:4px;white-space:nowrap;min-height:32px;display:inline-flex;align-items:center}
     .entry-nav-inner a:hover{color:#f5a623;background:#1a1a3a}
     .entry-nav-inner a.active{color:#f5a623;background:#1a1a3a}
@@ -751,6 +824,7 @@ def build_css():
 
     /* Difficulty badge */
     .difficulty-badge{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:3px 10px;border-radius:20px;margin-bottom:12px}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
     .difficulty-intermediate{background:rgba(245,166,35,.15);color:#f5a623;border:1px solid rgba(245,166,35,.4)}
     .difficulty-beginner{background:rgba(96,192,255,.12);color:#60c0ff;border:1px solid rgba(96,192,255,.35)}
     .difficulty-advanced{background:rgba(204,51,51,.12);color:#ff8888;border:1px solid rgba(204,51,51,.35)}
@@ -993,6 +1067,11 @@ def build_css():
 
     /* History cards */
     .history-card{background:#13132a;border-left:3px solid #3a3a6a;border-radius:0 8px 8px 0;padding:16px 20px;margin:16px 0}
+    .sig-card{background:#13132a;border:1px solid #2a2a4a;border-left:3px solid #f5a623;border-radius:0 8px 8px 0;padding:16px 20px;margin:12px 0}
+    .sig-track{font-size:14px;font-weight:700;color:#f5a623;margin-bottom:6px}
+    .sig-settings{font-size:13px;color:#e0e0f0;margin-bottom:6px;font-family:monospace;background:#0d0d1a;padding:6px 10px;border-radius:4px}
+    .sig-why{font-size:13px;color:#a0a0c0;line-height:1.6}
+    .ps-move{font-size:11px;color:#f5a623;margin-top:4px;font-style:italic}
 
     /* Start here box — in inline style */
 
@@ -1099,7 +1178,7 @@ def build_css():
     .verdict-rule:nth-child(even){border-right:none}
     .vr-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#f5a623}
     .vr-value{font-size:14px;font-weight:700;color:#fff;line-height:1.4}
-    .vr-note{font-size:12px;color:#b0b0c8;line-height:1.6}
+    .vr-note{font-size:13px;color:#b0b0c8;line-height:1.7}
     .verdict-share{display:flex;align-items:center;justify-content:center;gap:12px;padding:16px 24px;background:#0d0d1a;border-top:1px solid #1a1a3a;border-radius:0 0 12px 12px;flex-wrap:wrap}
     .verdict-close{font-size:13px;color:#a0a0c0;line-height:1.8;padding:16px 24px;margin:0;font-style:italic;text-align:center;border-top:1px solid #1a1a3a}
 
@@ -1112,7 +1191,8 @@ def build_css():
   </style>
 
   <style>
-    /* CONSOLIDATED OVERRIDES v5.1 FINAL */
+    /* CONSOLIDATED OVERRIDES v5.2 FINAL */
+    .entry-nav-inner{margin:0!important}
 
     /* Desktop sidebar + grid */
     @media(min-width:769px){
@@ -1161,7 +1241,7 @@ def build_css():
     .verdict-rule:nth-child(even){border-right:none}
     .vr-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#f5a623}
     .vr-value{font-size:14px;font-weight:700;color:#fff;line-height:1.4}
-    .vr-note{font-size:12px;color:#b0b0c8;line-height:1.6}
+    .vr-note{font-size:13px;color:#b0b0c8;line-height:1.7}
     .verdict-close{font-size:13px!important;color:#a0a0c0!important;line-height:1.8!important;padding:16px 24px!important;margin:0!important;font-style:italic;text-align:center;border-top:1px solid #1a1a3a}
 
     /* Mistakes */
@@ -1532,6 +1612,7 @@ ENTRY_NAV_LINKS = [
     ('#hardware-plugin', 'Hardware vs Plugin'),
     ('#before-after',    'Before / After'),
     ('#in-the-wild',     'In The Wild'),
+    ('#signatures',      'Signatures'),
     ('#types',           'Types'),
     ('#verdict',         'Verdict'),
     ('#plugin-recs',     'Plugins'),
@@ -1585,16 +1666,35 @@ function dawTab(btn, daw) {
     enav_js = r"""
 (function(){
   var navLinks = document.querySelectorAll('.entry-nav-inner a');
-  function setNavActive(id) {
+  var sections = Array.from(document.querySelectorAll('.entry-section[id]'));
+  var lastActive = null;
+  function getActiveId() {
+    var offset = 60;
+    var best = null;
+    for (var i = 0; i < sections.length; i++) {
+      var rect = sections[i].getBoundingClientRect();
+      if (rect.top <= offset && rect.bottom > offset) { best = sections[i].id; break; }
+    }
+    if (!best) {
+      for (var j = sections.length - 1; j >= 0; j--) {
+        if (sections[j].getBoundingClientRect().top <= offset) { best = sections[j].id; break; }
+      }
+    }
+    return best || (sections[0] && sections[0].id);
+  }
+  function update() {
+    var id = getActiveId();
+    if (!id || id === lastActive) return;
+    lastActive = id;
     navLinks.forEach(function(a){
       a.classList.toggle('active', a.getAttribute('href') === '#' + id);
     });
+    var activeLink = document.querySelector('.entry-nav-inner a.active');
+    if (activeLink) activeLink.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
   }
-  var sections = document.querySelectorAll('.entry-section[id]');
-  var obs2 = new IntersectionObserver(function(entries){
-    entries.forEach(function(e){ if (e.isIntersecting) setNavActive(e.target.id); });
-  }, {rootMargin: '-100px 0px -70% 0px'});
-  sections.forEach(function(s){ obs2.observe(s); });
+  window.addEventListener('scroll', update, {passive:true});
+  window.addEventListener('touchmove', update, {passive:true});
+  update();
 })();"""
 
     progress_js = r"""
@@ -1759,17 +1859,33 @@ def build_footer(term, slug, today_str):
 
 PASS2_SYSTEM_T1 = (
     "You are writing a Tier 1 Producer's Bible entry for MusicProductionWiki.com.\n"
-    "Return ONLY raw HTML sections \u2014 no markdown, no fences, no explanations, no </body></html>.\n"
-    "Write in producer-language: direct, authoritative, specific. No hedging.\n"
-    "Target: 5,800\u20136,500 words of prose. Long-form professional reference.\n"
+    "Return ONLY raw HTML sections -- no markdown, no fences, no explanations, no </body></html>.\n"
+    "Write in producer-language: direct, authoritative, specific, creative and intuitive, mentoring, demystifying, popularizing, and interesting. No hedging.\n"
+    "Target: 6,700-7,300 words of prose. Long-form professional reference.\n"
     "Every section tag must have the exact ID shown. Use entry-section class on every section.\n"
-    "Leave PLACEHOLDERS exactly as shown \u2014 do not fill them in."
+    "Leave PLACEHOLDERS exactly as shown -- do not fill them in.\n"
+    "Exactly 3 producer quotes from quotes_context -- first in definition, second in history, third in how-to-use. NEVER fabricate quotes.\n"
+    "verdict-lead: 3-4 sentences of real opinion -- biggest mistake producers make, why it happens, correct mental model. Not a summary.\n"
+    "Internal links: /bible/slug only, confirmed slugs only, never self-link.\n"
 )
 
 def build_pass2_prompt_t1(slug, term, category, p1_json_str, track_list_str, quotes_context, pub_date):
+    emotional_hook = ''
+    try:
+        p1_data = json.loads(p1_json_str[:8000])
+        emotional_hook = p1_data.get('emotional_hook', '')
+        producers_verdict = p1_data.get('producers_verdict', '')
+    except Exception:
+        producers_verdict = ''
     return f"""Write the full HTML prose for this Tier 1 Producer's Bible entry.
 
 TERM: {term} | SLUG: {slug} | CATEGORY: {category} | PUB: {pub_date}
+
+EDITORIAL THREAD INSTRUCTION: Before writing, identify the central argument from this producers_verdict: "{producers_verdict}". Write every section in service of that argument. The entry should build toward the verdict, not just describe the term.
+
+EMOTIONAL HOOK (FIX 28): The FIRST SENTENCE of the Definition section must be this exact text verbatim: {emotional_hook}
+
+VERDICT-CLOSE INSTRUCTION: The verdict-close paragraph must echo the opening emotional hook -- use the same image or language, but resolved and transformed. Full circle.
 
 PASS 1 DATA:
 {p1_json_str[:8000]}
@@ -1791,32 +1907,50 @@ Leave these exact strings as placeholders (build_html_t1 replaces them):
   FLAGS_PLACEHOLDER
   BEFORE_AFTER_PLACEHOLDER
   QUICKREF_SHARE_PLACEHOLDER
+  TOOLS_PLACEHOLDER
+  SESSION_BREAKDOWN_PLACEHOLDER
 
 SECTIONS REQUIRED (entry-section class + exact IDs):
-<section class="entry-section" id="definition"> \u2014 4-6 paragraphs, open with emotional_hook in <em class="entry-hook">, 1 producer quote from quotes_context as <div class="producer-quote-block"><blockquote class="producer-quote"><p>"quote"</p></blockquote><cite>\u2014 Name</cite></div>, end with <p class="section-summary">
-<section class="entry-section" id="how-it-works"> \u2014 3-4 paragraphs, technical mechanism, end with section-summary
-<section class="entry-section" id="parameters"> \u2014 intro + <div class="parameters-grid"> with .param-item cards (4-6 params), 2 more paragraphs, section-summary
-<section class="entry-section" id="quick-reference"> \u2014 THE_NUMBER_PLACEHOLDER + brief intro + <div class="qr-table-wrap"><table class="quick-ref-table"> (6-8 rows: Source/Ratio/Attack/Release/Threshold/Notes) + QUICKREF_SHARE_PLACEHOLDER
-<section class="entry-section" id="signal-chain"> \u2014 SIGNAL_CHAIN_PLACEHOLDER + 1 paragraph + interaction-warnings block (<div class="interaction-warnings"><h4>Interaction Warnings</h4><ul><li class="interaction-warning">...</li></ul></div>)
-<section class="entry-section" id="diagram"> \u2014 inline SVG diagram + 2 paragraphs
-<section class="entry-section" id="history"> \u2014 4 <div class="history-card"> sub-sections + optional 2nd producer quote + section-summary
-<section class="entry-section" id="how-to-use"> \u2014 2 paragraphs + DAW_PLACEHOLDER + 2 paragraphs + section-summary
-<section class="entry-section" id="genre-table"> \u2014 1 paragraph + GENRE_PLACEHOLDER + 1 paragraph
-<section class="entry-section" id="hardware-plugin"> \u2014 1 paragraph + <div class="hardware-plugin-wrap"><table class="hardware-plugin-table"> (Aspect/Hardware/Plugin, 5-6 rows) + PLUGIN_PLACEHOLDER + 1 paragraph
-<section class="entry-section" id="before-after"> \u2014 BEFORE_AFTER_PLACEHOLDER + 1 paragraph
-<section class="entry-section" id="in-the-wild"> \u2014 1 paragraph + TRACK_PLACEHOLDER + 1 paragraph
-<section class="entry-section" id="types"> \u2014 COMPARISON_PLACEHOLDER + 1 paragraph + <div class="types-grid"> (.type-card with .type-name + .type-hardware + .type-desc, 4-6 types) + section-summary\n<div class="producers-verdict" id="verdict"> \u2014 standalone div AFTER the types section closing tag. Structure: <div class="verdict-header"><span class="verdict-diamond">&#9670;</span><span class="verdict-label">The Producer's Verdict</span><span class="verdict-diamond">&#9670;</span></div> then <p class="verdict-lead"> italic opener, then <div class="verdict-grid"> with 6 <div class="verdict-rule"> cells each with <span class="vr-label">, <span class="vr-value">, <span class="vr-note">, then mpw-share-bar with Copy Verdict + Share on X + Reddit (centered, justify-content:center), then <p class="verdict-close"> closing italic. Close </div> for producers-verdict.
-<section class="entry-section" id="mistakes"> \u2014 1 paragraph + <div class="mistakes-list"> (.mistake-item with .mistake-title + <p>, 4-6 items) + section-summary
-<section class="entry-section" id="flags"> \u2014 FLAGS_PLACEHOLDER + 1 paragraph
-<section class="entry-section" id="progression"> \u2014 1 paragraph + <div class="progression-path"> (3 .prog-stage divs: .prog-beginner/.prog-intermediate/.prog-advanced each with .prog-label + <p>) + section-summary
+<section class="entry-section" id="definition"> -- 4-6 paragraphs, FIRST SENTENCE must be the emotional_hook verbatim in <em class="entry-hook">, 1 producer quote from quotes_context as <div class="producer-quote-block"><blockquote class="producer-quote"><p>"quote"</p></blockquote><cite>-- Name</cite></div>, end with <p class="section-summary">
+<section class="entry-section" id="how-it-works"> -- 3-4 paragraphs, technical mechanism, end with section-summary
+<section class="entry-section" id="parameters"> -- intro + <div class="parameters-grid"> with .param-item cards (4-6 params), 2 more paragraphs, section-summary
+<section class="entry-section" id="quick-reference"> -- THE_NUMBER_PLACEHOLDER + brief intro + <div class="qr-table-wrap"><table class="quick-ref-table"> (6-8 rows: Source/Ratio/Attack/Release/Threshold/Notes) + QUICKREF_SHARE_PLACEHOLDER
+</section>
+TOOLS_PLACEHOLDER
+<section class="entry-section" id="signal-chain"> -- SIGNAL_CHAIN_PLACEHOLDER + 1 paragraph + interaction-warnings block (<div class="interaction-warnings"><h4>Interaction Warnings</h4><ul><li class="interaction-warning">...</li></ul></div>)
+<section class="entry-section" id="diagram"> -- inline SVG diagram + 2 paragraphs
+<section class="entry-section" id="history"> -- 4 <div class="history-card"> sub-sections + 2nd producer quote (from quotes_context) + section-summary
+<section class="entry-section" id="how-to-use"> -- 2 paragraphs + DAW_PLACEHOLDER + SESSION_BREAKDOWN_PLACEHOLDER + 1 paragraph + 3rd producer quote (from quotes_context) + section-summary
+<section class="entry-section" id="in-the-wild"> -- 1 paragraph + TRACK_PLACEHOLDER + 1 paragraph
+<section class="entry-section" id="signatures"> -- 1 paragraph introducing 4-5 <div class="sig-card"> cards each with <div class="sig-track">, <div class="sig-settings">, <div class="sig-why">
+<section class="entry-section" id="types"> -- COMPARISON_PLACEHOLDER + 1 paragraph + <div class="types-grid"> (.type-card with .type-name + .type-hardware + .type-desc, 4-6 types) + section-summary
+<section class="entry-section" id="verdict">
+  <h2 class="sr-only">The Producer's Verdict</h2>
+  <div class="producers-verdict">
+    <div class="verdict-header"><span class="verdict-diamond">&#9670;</span><span class="verdict-label">The Producer's Verdict</span><span class="verdict-diamond">&#9670;</span></div>
+    <p class="verdict-lead">3-4 sentences: biggest mistake producers make, why it's common, correct mental model. Real MPW opinion -- NOT a summary.</p>
+    <div class="verdict-grid"> with 6 <div class="verdict-rule"> cells each with <span class="vr-label">, <span class="vr-value">, <span class="vr-note"> (2-3 sentences on sonic consequence of going higher vs lower)
+    <div class="mpw-share-bar" style="justify-content:center">Copy Verdict + Share on X + Reddit</div>
+    <p class="verdict-close">1 sentence echoing the opening emotional hook -- same image or language, resolved.</p>
+  </div>
+</section>
+<section class="entry-section" id="mistakes"> -- 1 paragraph + <div class="mistakes-list"> (.mistake-item with .mistake-title + <p>, 4-6 items) + section-summary
+<section class="entry-section" id="hardware-plugin"> -- 1 paragraph + <div class="hardware-plugin-wrap"><table class="hardware-plugin-table"> (Aspect/Hardware/Plugin, 5-6 rows) + PLUGIN_PLACEHOLDER + 1 paragraph
+<section class="entry-section" id="genre-table"> -- 1 paragraph + GENRE_PLACEHOLDER + 1 paragraph
+<section class="entry-section" id="before-after"> -- BEFORE_AFTER_PLACEHOLDER + 1 paragraph
+<section class="entry-section" id="plugin-recs"> -- <h2>Recommended Plugins</h2> + 1 paragraph intro + (plugin cards will be injected via PLUGIN_RECS_PLACEHOLDER -- leave PLUGIN_RECS_PLACEHOLDER on its own line here)
+<section class="entry-section" id="faq"> -- <h2>Frequently Asked Questions</h2> + FAQ_PLACEHOLDER (on its own line, nothing else)
+<section class="entry-section" id="flags"> -- FLAGS_PLACEHOLDER + 1 paragraph
+<section class="entry-section" id="progression"> -- 1 paragraph + <div class="progression-path"> (3 .prog-stage divs: .prog-beginner/.prog-intermediate/.prog-advanced each with .prog-label + <p>) + section-summary
 
 Rules:
-\u2014 ONLY use quotes from the quotes_context above. NEVER fabricate quotes.
-\u2014 ONLY reference the LOCKED TRACK LIST. NEVER substitute tracks.
-\u2014 Leave all PLACEHOLDERS exactly as written.
-\u2014 No </body></html>.
-\u2014 Internal links: /bible/slug only, only CONFIRMED slugs.
-\u2014 5,800\u20136,500 prose words. Updated {pub_date} must appear in content.
+-- ONLY use quotes from the quotes_context above. NEVER fabricate quotes. Use exactly 3 quotes.
+-- ONLY reference the LOCKED TRACK LIST. NEVER substitute tracks.
+-- Leave all PLACEHOLDERS exactly as written on their own line.
+-- TOOLS_PLACEHOLDER must appear on its own line AFTER the closing </section> of quick-reference, NEVER inside another section.
+-- No </body></html>.
+-- Internal links: /bible/slug only, only CONFIRMED slugs.
+-- 6,700-7,300 prose words. Updated {pub_date} must appear in content.
 """
 
 PASS2_SYSTEM_T2 = (
@@ -2114,6 +2248,54 @@ def _chord(slug, term):
     return _wrap(slug, 'Chord and Key Reference', 'Select any root key and scale to see all 7 diatonic chords plus common progressions. Works for all modes.', html, _share(slug, term))
 
 
+def build_signatures_html(signature_sounds):
+    """FIX 19: Build Signature Sounds section cards."""
+    if not signature_sounds:
+        return ''
+    cards = ''
+    for sig in signature_sounds[:5]:
+        track    = sig.get('track', '')
+        settings = sig.get('settings', '')
+        why      = sig.get('why', '')
+        if not track:
+            continue
+        cards += (
+            '        <div class="sig-card">\n'
+            f'          <div class="sig-track">{track}</div>\n'
+            f'          <div class="sig-settings">{settings}</div>\n'
+            f'          <div class="sig-why">{why}</div>\n'
+            '        </div>\n'
+        )
+    return cards
+
+
+def build_session_breakdown_html(session_breakdown):
+    """FIX 20: Build Session File Breakdown block."""
+    if not session_breakdown:
+        return ''
+    scenario = session_breakdown.get('scenario', '')
+    steps    = session_breakdown.get('steps', [])
+    if not steps:
+        return ''
+    steps_html = ''
+    for i, step in enumerate(steps[:5], 1):
+        steps_html += (
+            '          <div class="sfb-step">'
+            f'<span class="sfb-num">{i}</span>'
+            f'<span class="sfb-text">{step}</span>'
+            '</div>\n'
+        )
+    return (
+        '      <div class="session-file-breakdown" style="background:#0d0d1a;border:1px solid #2a2a4a;border-radius:10px;padding:20px;margin:20px 0">\n'
+        '        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#f5a623;margin-bottom:10px">Session File Breakdown</div>\n'
+        f'        <div style="font-size:13px;color:#888;font-style:italic;margin-bottom:14px">{scenario}</div>\n'
+        + steps_html +
+        '      </div>\n'
+    )
+
+
+
+
 def build_tools_section(p1, slug):
     tool_key = TOOL_OVERRIDES.get(slug, '')
     term = p1.get('term', slug.replace('-', ' ').title())
@@ -2149,7 +2331,7 @@ def build_html_t1(slug, term, category, p1, content_html, pub_date, quotes_filte
 
     sc_pos          = p1.get('signal_chain_position', {}).get('positions', [])
     signal_chain    = build_signal_chain_svg(sc_pos, slug) if sc_pos else ''
-    genre_html      = build_genre_table_html(p1.get('genre_settings_rows', []), term, slug)
+    genre_html      = build_genre_table_html(p1.get('genre_settings_rows', []), term, slug, p1.get('genre_columns'), p1.get('genre_rows_v2'))
     plugin_html     = build_plugin_recs_html(p1.get('plugin_recommendations', {}))
     daw_html        = build_daw_tabs_html(p1.get('daw_implementations', {}), slug)
     comparison_html = build_comparison_callouts_html(p1.get('comparison_terms', []), term)
@@ -2160,9 +2342,11 @@ def build_html_t1(slug, term, category, p1, content_html, pub_date, quotes_filte
     ba_html         = build_before_after_html(p1.get('before_after_text', {}))
     number_html     = build_the_number_html(p1.get('the_number',''), p1.get('the_number_label',''), p1.get('the_number_context',''))
     prereq_html     = build_prereq_chain(p1.get('prerequisites', []), p1)
-    tools_html      = build_tools_section_v3(slug, term)
+    tools_html      = mpw_tools_v3.build_tools_section_v3(slug, p1.get("term", slug.replace("-"," ").title()))
+    signatures_html = build_signatures_html(p1.get('signature_sounds', []))
+    session_html    = build_session_breakdown_html(p1.get('session_breakdown', {}))
     sidebar_toc     = build_sidebar_toc_html(slug)
-    spotlight_html  = build_producer_spotlight_html(quotes_filtered)
+    spotlight_html  = build_producer_spotlight_html(p1)
     diff_cls        = difficulty_class(p1.get('difficulty', 'Intermediate'))
 
     html = content_html
@@ -2176,6 +2360,23 @@ def build_html_t1(slug, term, category, p1, content_html, pub_date, quotes_filte
     html = html.replace('FAQ_PLACEHOLDER',           faq_html)
     html = html.replace('FLAGS_PLACEHOLDER',         flags_html)
     html = html.replace('BEFORE_AFTER_PLACEHOLDER',  ba_html)
+    # FIX 22: TOOLS_PLACEHOLDER — inject after quick-reference </section>, never inside it
+    html = html.replace('TOOLS_PLACEHOLDER', tools_html)
+    # FIX 20: SESSION_BREAKDOWN_PLACEHOLDER
+    html = html.replace('SESSION_BREAKDOWN_PLACEHOLDER', session_html)
+    # FIX 19: Signatures — replace placeholder if present, else inject before types section
+    html = html.replace('PLUGIN_RECS_PLACEHOLDER', plugin_html)
+    # P0b: wrap producers-verdict div if Pass 2 wrote it without wrapper
+    if '<div class="verdict-header">' in html and '<div class="producers-verdict">' not in html:
+        html = html.replace(
+            '<div class="verdict-header">',
+            '<div class="producers-verdict">\n    <div class="verdict-header">'
+        )
+        # close the producers-verdict div before </section> of verdict
+        html = html.replace(
+            '</section>\n\n<section class="entry-section" id="mistakes"',
+            '</div>\n</section>\n\n<section class="entry-section" id="mistakes"'
+        )
     html = html.replace('QUICKREF_SHARE_PLACEHOLDER',
         f'\n        <div class="mpw-share-bar">'
         f'<span class="mpw-share-label">Share</span>'
@@ -2254,7 +2455,7 @@ def build_html_t1(slug, term, category, p1, content_html, pub_date, quotes_filte
 {nav}
 {enav}
 <main id="main-content">
-  <div class="bible-entry-wrap">
+  <div class="bible-entry-wrap" style="display:grid!important;grid-template-columns:1fr 280px!important;gap:40px!important;align-items:start!important;max-width:1100px!important;margin:0 auto!important;padding:40px 24px!important">
     <div class="entry-main">
       <nav class="entry-breadcrumb" aria-label="Breadcrumb">
         <a href="/">Home</a><span class="bc-sep">&rsaquo;</span>
@@ -2287,7 +2488,7 @@ def build_html_t1(slug, term, category, p1, content_html, pub_date, quotes_filte
           <span style="color:#555">&#8594;</span>
           <a href="#quick-reference" style="color:#f5a623;text-decoration:none;font-weight:600;border:1px solid rgba(245,166,35,.3);padding:3px 10px;border-radius:4px">Quick Reference</a>
           <span style="color:#555">&#8594;</span>
-          <a href="#mistakes" style="color:#f5a623;text-decoration:none;font-weight:600;border:1px solid rgba(245,166,35,.3);padding:3px 10px;border-radius:4px">Common Mistakes</a>
+          <a href="#in-the-wild" style="color:#f5a623;text-decoration:none;font-weight:600;border:1px solid rgba(245,166,35,.3);padding:3px 10px;border-radius:4px">In The Wild</a>
         </div>
       </div>
       <div style="margin-bottom:24px">
@@ -2307,7 +2508,6 @@ def build_html_t1(slug, term, category, p1, content_html, pub_date, quotes_filte
       </div>
 {misc_html}
 {html}
-{tools_html}
 {helpful_block}
 {also_bible}
     </div>
@@ -2634,6 +2834,17 @@ def run_validate(html_path):
         'helpful-block':                'helpful-block' in c,
         'word count floor 6800':        '6800' in script_src,
         'word count ceil 7800':         '7800' in script_src,
+        # v5.2 checks (FIX S43)
+        '3 producer quotes':            c.count('class="producer-quote-block"') >= 3,
+        'signatures section':           'id="signatures"' in c,
+        'sig-card present':             'sig-card' in c,
+        'ps-move present':              'ps-move' in c,
+        'scroll+touchmove nav':         'touchmove' in c and 'scrollIntoView' in c,
+        'no IntersectionObserver enav': 'obs2' not in c,
+        # v5.2 checks (FIX S44)
+        'sr-only class':                'sr-only' in c,
+        'verdict section element':      'id="verdict"' in c and 'entry-section' in c,
+        'producers-verdict wrapper':    'class="producers-verdict"' in c,
     }
 
     passed   = sum(1 for v in checks.values() if v)

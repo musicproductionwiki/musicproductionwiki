@@ -151,3 +151,27 @@ Next article batch: Batch 09 (100 breakdowns) — queued after Bible Tier 1 comp
 Sessions 38, 39, 40, and 41 focused entirely on Bible infrastructure.
 Article count: 526 — unchanged since Batch 08.
 Next article batch: Batch 09 (100 breakdowns) — after Bible v5.2 complete and 54 entries regenerated.
+
+---
+
+# SESSION 46 UPDATE
+
+Sessions 43, 44, 45, and 46 focused entirely on Bible infrastructure — tool JS debugging and fixes.
+Article count: **526** — unchanged since Batch 08.
+Next article batch: Batch 09 (100 breakdowns) — after Bible v5.2 tool confirmed working and 70 entries regenerated.
+
+## Bible Entry State End of Session 46
+
+| Group | Count | Status |
+|---|---|---|
+| v5.1 original 15 | 15 | Nav working ✅ — tools working ✅ |
+| compression | 1 | Nav different impl — regenerate with v5.2 |
+| v5.1 Session 40 | 54 | Content issues — regenerate with v5.2 |
+| v3.0/v4.0 legacy | 153 | Untouched — will upgrade in future |
+| **Total** | **223** | |
+
+## chorus.html — Status
+
+Generated locally with fixed v5.2 writer. Tool confirmed working (BPM cards populate).
+Commit status: pending Steve confirmation.
+Once committed, run `python mpw_bible_writer.py --batch-file bible-tier1-remaining34.txt --start-date 2026-05-20 --workers 8` to regenerate all 70.

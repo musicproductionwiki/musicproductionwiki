@@ -650,3 +650,63 @@ Pre-build checklist:
 5. Run --test chorus --no-commit
 6. Steve visual QA
 7. THEN regenerate 54 entries
+
+---
+
+# SESSION 46 — Fix Scripts
+
+## fix_v3_permanent.py — NEW
+
+Idempotent fix for mpw_tools_v3.py. Fixes:
+1. "" leak after </script> in all 11 tool body strings
+2. Converts LTIPS values from single-quoted to double-quoted JS strings
+
+```powershell
+python fix_v3_permanent.py
+```
+Safe to run even if already applied — idempotent. Run after any reinstall of mpw_tools_v3.py.
+
+## fix_writer_permanent.py — NEW
+
+Idempotent fix for mpw_bible_writer.py. Fixes:
+1. Removes duplicate {tools_html} from final HTML assembly f-string
+
+```powershell
+python fix_writer_permanent.py
+```
+Safe to run even if already applied — idempotent. Run after any reinstall of mpw_bible_writer.py.
+
+## verify_fixes.py — NEW
+
+Confirms all 3 Session 46 fixes are correctly applied to both files.
+
+```powershell
+python verify_fixes.py
+```
+
+Run after any reinstall of either file. All checks must be green before running --test.
+
+## ⚠️ STALE Scripts — Do NOT Run
+
+| Script | Issue |
+|---|---|
+| install_bible_writer_v52_part1.ps1 | Writes UNFIXED writer — overwrites working version |
+| install_bible_writer_v52_part2.ps1 | Same — DO NOT RUN |
+| install_bible_writer_v52_part3.ps1 | Same — DO NOT RUN |
+
+P0b next session: read fixed writer from disk, encode as new 3-part PS1 scripts.
+
+## Run Order After Any Reinstall
+
+```powershell
+# If mpw_tools_v3.py reinstalled:
+python fix_v3_permanent.py
+python verify_fixes.py
+
+# If mpw_bible_writer.py reinstalled:
+python fix_writer_permanent.py
+python verify_fixes.py
+
+# Then test:
+. .\setenv.ps1; python mpw_bible_writer.py --test --slug chorus --term "Chorus" --category "Time-Based" --tier 1 --no-commit
+```
