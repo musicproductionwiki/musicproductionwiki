@@ -1,5 +1,5 @@
 # MPW-HANDOFF-BIBLE.md
-*Updated: May 22, 2026 (SESSION 53)*
+*Updated: May 22, 2026 (SESSION 55)*
 
 ---
 
@@ -2224,70 +2224,110 @@ Each Genre Production Bible entry links to 20–30 T1/T2 Bible entries. 20 Genre
 
 ---
 
-# SESSION 54 ADDENDUM 2 — BIBLE ENTRIES SUPPORTING MARKETPLACE — May 22, 2026
+# SESSION 55 ADDENDUM — BIBLE — May 22, 2026
 
-## New Bible Category: Music Business (Marketplace Support)
+## reverb.html — Gold Standard Confirmed ✅
 
-The music business articles referenced in the marketplace strategy should eventually be elevated to Bible standard. Key terms that warrant T2/T3 Bible entries:
+reverb.html is now the definitive gold standard for all v5.3 Bible entries.
 
-### Music Business Bible Entries (T2 Standard — 3,800–5,000w)
-These terms have direct search volume AND feed the marketplace revenue streams:
+**Gold standard stats (reverb.html v1.6):**
+- File: 383.4KB — 3,141 lines
+- Sections: 25 (S53 canonical order — beginner-trap at position 3)
+- Nav pills: 25 (scrollIntoView + touchmove — no IntersectionObserver)
+- Schema blocks: 5 (Article, FAQPage, BreadcrumbList, Speakable, HowTo)
+- JS blocks: 4 inline (all pass node --check, no apostrophes, no unicode)
+- Word count: ~16,500 words displayed in schema
+- Beehiiv: form ID a0962c52-4819-4b09-b13d-b26517b76e01 — loader in head, data-beehiiv-form in sidebar and nl-card
 
-| Slug | Term | Feeds |
-|---|---|---|
-| sample-clearance | Sample Clearance | TruClarify brokerage |
-| sync-licensing | Sync Licensing | Sync placement service |
-| music-publishing | Music Publishing | Publishing admin service |
-| mechanical-royalties | Mechanical Royalties | Publishing admin service |
-| performance-royalties | Performance Royalties | Publishing admin service |
-| work-for-hire | Work For Hire | Topliner/vocal marketplace |
-| music-distribution | Music Distribution | Label services referral |
-| record-deal | Record Deal | Contract review service |
-| 360-deal | 360 Deal | Contract review service |
-| music-copyright | Music Copyright | TruClarify + clearance |
-| music-licensing | Music Licensing | Sync placement service |
-| beat-licensing | Beat Licensing | Beat commission marketplace |
+**Key structural additions vs v5.1 compression.html gold standard:**
 
-### Music Business Bible Entries (T3 Reference — 1,500–2,500w)
-Narrower terms, still valuable for marketplace pre-qualification:
-
-| Slug | Term |
+| New in reverb.html | Detail |
 |---|---|
-| pro-affiliation | PRO Affiliation (ASCAP/BMI/SESAC) |
-| isrc-code | ISRC Code |
-| iswc-code | ISWC Code |
-| compulsory-license | Compulsory License |
-| master-rights | Master Rights |
-| publishing-rights | Publishing Rights |
-| neighboring-rights | Neighboring Rights |
-| music-metadata | Music Metadata |
-| upc-barcode | UPC Barcode |
+| 25 sections (vs 20) | beginner-trap, fingerprint, decision-framework, producer-dna, signatures, mix-translation added |
+| ba-cols / ba-param-row classes | Before/after column grids controlled by CSS class not inline style (mobile safe) |
+| Mix Translation Tool (mtt-wrap) | 5-system interactive checklist with symptom diagnosis and export |
+| Arrangement Timeline (atl-svg-wrap) | SVG bar chart of reverb automation across arrangement sections |
+| DNA chain toggle panels | Expandable signal chain details per producer in producer-dna section |
+| cl-grid (1fr auto 1fr) | Contrast Listen two-track comparison with VS separator |
+| Fingerprint radar chart (fp-svg) | SVG radar chart with genre data and filter buttons |
+| Version history block | Above citation block — tracks entry versions |
+| Citation block with {{DOI}} | APA/MLA/Chicago format with DOI placeholder |
+| Embed block on every tool | iframe code + Copy Embed button below each calculator |
 
-## Marketplace CTA Integration in Bible Entries
+## v5.3 Writer — Architecture Confirmed
 
-Once marketplace is live, Bible entries get contextual CTAs added at relevant sections. These are NOT added now — placeholder noted for future session.
+**TRUE 1-PASS architecture:**
+- Python builds the frozen template with {{SLOT}} markers
+- ONE API call (claude-sonnet-4-6, 28,000 tokens) fills all content slots
+- Python substitutes slots, injects tools via mpw_tools_v3.py, calculates word count, builds schema, assembles HTML
+- No intermediate JSON pass. No second API call.
 
-Pattern:
-```html
-<!-- MARKETPLACE CTA — add after marketplace launches -->
-<div class="mpw-marketplace-cta" style="...">
-  <div>Want professional help applying this?</div>
-  <a href="/marketplace/mixing/">Find an MPW-Verified mixing engineer →</a>
-</div>
-```
+**What Claude fills in the single pass:**
+- 25 prose sections (definition through related)
+- Fingerprint genre data (JS object for radar chart)
+- Decision tree nodes (JS array)
+- Error diagnostic fixes (JS object)
+- Mix translation data (5-system JS array with symptoms and fixes per system)
+- Arrangement timeline data (JS array of songs with sections)
+- All tables (genre settings, parameters, quick-reference, plugin recommendations)
+- FAQ items (must match JSON-LD schema exactly)
 
-Which entries get which CTAs:
-- Compression, EQ, Reverb, Limiting → Mixing engineer CTA
-- Mastering, LUFS → Mastering engineer CTA
-- Music Business entries → Contract review / clearance / publishing admin CTA
-- Genre Bible entries → Beat commission + session musician CTA
-- Producer DNA entries → Mentorship CTA (learn from producers in this style)
+**What Python handles (frozen — Claude never touches):**
+- All nav/bar/sidebar/footer HTML
+- CSS (complete frozen block)
+- Schema generation (from filled variables)
+- mpw_tools_v3.py tool injection (slug-routed)
+- Word count calculation
+- JS nav/TOC/BTT/search block (frozen from reverb.html gold standard)
+- Version history block
+- Citation block (with {{DOI}} placeholder)
 
-## MPW-Verified as Bible Quality Standard
+## Gold Standard Bible Entry — UPDATED
 
-The MPW-Verified standard for marketplace professionals is documented in the Bible:
-- A verified mixing engineer demonstrates mastery of: compression, EQ, reverb, gain staging, stereo imaging, limiting, dynamic range (7 T1 entries minimum)
-- A verified mastering engineer demonstrates: limiting, LUFS, dynamic range, mastering, true-peak-limiting (5 T1 entries minimum)
-- A verified session musician: relevant instrument techniques + music theory entries
+**Previous:** bible/compression.html (v5.1)
+**Current:** bible/reverb.html (v1.6) — replaces compression.html as the writer gold standard
 
-This creates a feedback loop: the Bible defines the standard → the marketplace enforces it → professionals study the Bible to get verified → traffic increases → more marketplace applications → better marketplace quality.
+compression.html remains live and correct but reverb.html is now the reference for all v5.3 writer development. reverb.html has 25 sections vs compression.html's 20. All new entries should target the reverb.html structure.
+
+## v5.3 Writer — NEVER Rules
+
+| Rule | Detail |
+|---|---|
+| NEVER have Claude generate tool section HTML | mpw_tools_v3.py is the only source — frozen Python modules only |
+| NEVER build v5.3 writer before mpw_tools_v3.py branding verified | Dependency — must be confirmed first |
+| NEVER use 2 API calls and call it 1-pass | One call only — structure frozen in Python |
+| NEVER allow Claude to write JS for calculators | All calculator JS is frozen in mpw_tools_v3.py |
+| NEVER use obs2 in nav JS | IntersectionObserver confirmed broken on iPhone — scrollIntoView + touchmove only |
+| NEVER write literal </script> in Python strings | Use SC = '</' + 'script>' split form |
+| ALWAYS check ba-cols and ba-param-row — never inline grid | Mobile override only works on class-controlled grids |
+| ALWAYS verify rel="noopener sponsored" on paid links only | Never on free plugins — confirmed Google policy |
+| ALWAYS leave {{DOI}} unfilled in citation block | Filled at Zenodo commit time |
+
+## Bible Entry Count — End of Session 55
+
+| Group | Count | Status |
+|---|---|---|
+| reverb.html v1.6 | 1 | LIVE ✅ — mobile confirmed — gold standard |
+| chorus.html v5.2 | 1 | LIVE ✅ |
+| v5.1 original 15 | 15 | LIVE — need regen with v5.3 |
+| compression | 1 | LIVE — need regen with v5.3 |
+| v5.1 Session 40 | 54 | LIVE — content issues — need regen |
+| v3.0/v4.0 legacy | 153 | LIVE — untouched |
+| **Total live** | **225** | |
+
+## Writer Build Sequence — Updated
+
+| Session | Task | Status |
+|---|---|---|
+| 55 | Build mpw_tools_v4.py (12 new tools) + fix branding | mpw_tools_v3.py branding DONE — v4 queued |
+| 56 | Build v5.3 1-pass writer from reverb.html | READY |
+| 56 | Run remaining 33 T1 entries with v5.3 | After writer confirmed |
+| 57 | Build Type 7 Genre Bible writer template | Trap first |
+| 58 | Run first 5 Genre Bible entries | Trap, Hip-Hop, Lo-Fi, House, Techno |
+| 59 | Build Type 4 Producer DNA writer template | |
+| 60 | Run first 10 Producer DNA entries | |
+| 61 | Build Type 6 Gear/Plugin Reference writer template | |
+| 62 | Run first 25 Gear/Plugin Reference entries | |
+| 63 | Build Type 5 Track Anatomy writer template | |
+| 64 | Run Batch 09 as Track Anatomy entries (100) | |
+
