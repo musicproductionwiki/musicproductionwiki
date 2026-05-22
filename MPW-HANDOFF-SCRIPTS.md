@@ -1111,3 +1111,140 @@ python verify_fixes.py
 ```
 
 Then: confirm reverb.html mobile QA complete → upload to session → "commit reverb.html" → Claude commits → begin v5.3 writer build.
+
+---
+
+# SESSION 54 ADDENDUM — WRITER BUILD SEQUENCE FOR NEW CONTENT TYPES — May 22, 2026
+
+## Writer Build Roadmap (Sessions 55–64)
+
+| Session | Writer | Content Type | Target Count |
+|---|---|---|---|
+| 55 | v5.3 (T1/T2/T3) | Flagship/Standard/Reference | Run 33 remaining T1 |
+| 57 | Genre Bible writer | Type 7 | 20 Genre entries |
+| 59 | Producer DNA writer | Type 4 | 100 Producer entries |
+| 61 | Gear/Plugin Reference writer | Type 6 | 150 Gear entries |
+| 63 | Track Anatomy writer | Type 5 | 200 Track entries (incl. Batch 09) |
+
+Each writer follows the same delivery standard as v5.3:
+- 3-part base64 PS1 scripts if file exceeds 200KB
+- JS triple-check on all output
+- node --check subprocess on all script blocks
+- Model: claude-sonnet-4-6
+- --validate flag with type-specific validation suite
+- --workers flag (default 4, max 8)
+
+## Genre Bible Writer Spec (Session 57 — Type 7)
+
+Batch file format: `slug:Genre Name:7`
+Example: `trap:Trap:7`
+
+Key writer requirements:
+- Genre settings table: BPM range, key preferences, typical compression, typical reverb, loudness target
+- Essential plugins table: 10 tools with genre-specific use case per tool
+- Essential sample packs table: 5 curated packs with affiliate links
+- Reference tracks: 10 essential tracks with timestamps and what to listen for
+- Internal Bible links: minimum 20 links to relevant T1/T2 entries
+- HowTo schema: genre production workflow steps
+- MusicGenre schema type
+- FAQPage: 8 questions specific to making the genre
+- No invented production claims — all technique specs must be verifiable
+
+## Producer DNA Writer Spec (Session 59 — Type 4)
+
+Batch file format: `slug:Producer Name:4`
+Example: `metro-boomin:Metro Boomin:4`
+
+Key writer requirements:
+- All signal chain specs sourced only from verified interviews, confirmed gear lists, direct attribution
+- NEVER invent equipment or settings — leave placeholder if unconfirmed
+- Producer quotes: minimum 2, maximum 4, all with source and date
+- Reference tracks: minimum 3, all with timestamps
+- Internal Bible links: minimum 8 to T1/T2 entries the producer's techniques relate to
+- Person schema type with sameAs Wikipedia link
+- PDF Blueprint variable: `{{BLUEPRINT_URL}}` — filled at Gumroad upload time
+- Validation must check: quote citations present, no invented equipment claims
+
+## Gear/Plugin Reference Writer Spec (Session 61 — Type 6)
+
+Batch file format: `slug:Product Name:Manufacturer:6`
+Example: `valhalla-room:Valhalla Room:Valhalla DSP:6`
+
+Key writer requirements:
+- Product schema type with price and manufacturer
+- Every parameter documented: min/max range, musical interpretation, interaction effects
+- Genre settings table: 6–8 genres with typical settings for this specific plugin
+- Comparison section: where it sits vs 2–3 alternatives
+- Affiliate link: rel="noopener sponsored" — URL filled when affiliate program approved
+- Review schema: editorial rating (Sound Quality, Value, Ease of Use, Versatility)
+- Partner disclosure block if editorial partnership exists
+- Validation must check: price accuracy, manufacturer name accuracy, no invented specs
+
+## Track Anatomy Writer Spec (Session 63 — Type 5)
+
+Batch file format: `slug:Track Title:Artist:Year:5`
+Example: `billie-jean:Billie Jean:Michael Jackson:1983:5`
+
+Key writer requirements:
+- MusicRecording schema with producer, artist, year
+- All production claims must be verifiable — studio documentation or widely confirmed
+- Timestamp guide: minimum 5 specific timestamps with what to listen for
+- Inline SVG spectrogram: characteristic frequency/dynamic signature of the track
+- DAW exercise: 3 specific exercises recreating key elements
+- Internal Bible links: minimum 10 to T1/T2 entries the track's techniques demonstrate
+- Validation must check: track credits accurate, no invented production claims
+
+## Digital Product Generation Script (Future — Session 59+)
+
+```python
+# mpw_blueprint_generator.py
+# Extracts Producer DNA entry data and generates $9 Blueprint PDF
+# Requires: reportlab or weasyprint, Producer DNA entry HTML
+
+def generate_blueprint(slug, entry_html):
+    # Extract: producer name, signal chains, top plugins, reference tracks
+    # Populate PDF template
+    # Save to /outputs/blueprints/{slug}-blueprint.pdf
+    # Upload to Gumroad via API
+    # Return Gumroad product URL
+    pass
+```
+
+Build after Type 4 Producer DNA writer confirmed working.
+
+## Gumroad Setup Checklist (When Ready)
+
+```
+1. Create Gumroad account: gumroad.com
+2. Connect Stripe or PayPal for payouts
+3. Upload first PDF product (Producer Blueprint — test with one entry)
+4. Set price: $9.00
+5. Enable "Pay what you want" minimum $9 (optional — captures more revenue)
+6. Get product URL: gumroad.com/l/[product-id]
+7. Add URL to Bible entry as {{BLUEPRINT_URL}} variable
+8. Test purchase end-to-end before running full batch
+```
+
+## Viral Distribution Scripts (Reusable Templates)
+
+### Twitter/X Thread Template — Three Questions Framework
+```
+Tweet 1: "Most producers think reverb is about how much space you add. It's not. It's about answering three questions, in order, before touching a single parameter. 🧵"
+
+Tweet 2: "Question 1: What is the emotional role of this element in THIS moment? Not throughout the track. Right here. HUMBLE. demands proximity. That single answer eliminates every large hall, every long decay. The question answered itself before the DAW opened."
+
+Tweet 3: "Question 2: What acoustic environment serves that emotional role? Not a reverb type — an environment. A room. A cathedral. An open field. Think in spaces, not plugins. Holocene inhabits a geological space. That answer points directly to shimmer. The space defined the tool."
+
+Tweet 4: "Question 3: What is the minimum amount of reverb that achieves it? This is the question that separates professional reverb use from amateur reverb use. Finneas found it by muting the return until the vocal felt wrong without it. The level defined by its absence."
+
+Tweet 5: "We built the full framework into a free reference entry — with the Clearmountain, Everett, and Finneas signal chains, a live RT60 calculator, and every common mistake fixed with exact parameters. [link to entry]"
+```
+
+### Reddit Post Template — r/WeAreTheMusicMakers
+```
+Title: "I spent months building what I think is the most comprehensive free reverb reference on the internet. Here's the most important thing I learned."
+
+Body: [Beginner Trap section content — 3 mistakes, 3 fixes]
+
+"The full entry has the Three Questions framework, Clearmountain/Everett/Finneas signal chains with exact dB values, a live RT60 calculator, 7 reverb types including a full shimmer deep-dive, and a mix translation test across 5 playback systems. All free. [link]"
+```

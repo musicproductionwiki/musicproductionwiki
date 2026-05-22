@@ -405,3 +405,166 @@ After reverb.html commits:
 ## Next Article Batch
 
 Batch 09 (100 track breakdowns) — after Bible Tier 1 complete. Tier 1 blocked on v5.3 writer build (Session 55 P1).
+
+---
+
+# SESSION 54 ADDENDUM — EXPANDED CONTENT CATALOG STRATEGY — May 22, 2026
+
+## Full Content Catalog (All Types)
+
+| Type | Count Target | URL Pattern | Status |
+|---|---|---|---|
+| T1 Flagship Bible | 250 | /bible/[slug] | 16 live, 33 queued |
+| T2 Standard Bible | 700 | /bible/[slug] | Queued after T1 |
+| T3 Reference Bible | 500 | /bible/[slug] | Future |
+| Producer DNA | 100 | /bible/producers/[slug] | Future — writer S59 |
+| Track Anatomy | 200 | /bible/tracks/[slug] | Future — writer S63 |
+| Gear/Plugin Reference | 150 | /bible/gear/[slug] | Future — writer S61 |
+| Genre Production Bible | 20 | /bible/genres/[slug] | Future — writer S57 |
+| Regular Articles | 526+ | /articles/[slug].html | 526 live |
+| **Total (Bible)** | **~1,920** | | |
+| **Total (All)** | **~2,446+** | | |
+
+## Priority Catalog — First Entries Per New Type
+
+### Genre Bible — First 20 (Priority Order)
+1. trap
+2. hip-hop-boom-bap
+3. lo-fi-hip-hop
+4. house
+5. techno
+6. drum-and-bass
+7. pop-production
+8. rnb-neo-soul
+9. afrobeats
+10. uk-drill
+11. ambient
+12. folk-americana
+13. rock-production
+14. metal-production
+15. reggaeton
+16. gospel-ccm
+17. jazz-production
+18. film-scoring
+19. synthwave
+20. dancehall
+
+### Producer DNA — First 20 (Priority Order)
+1. metro-boomin
+2. finneas-oconnell
+3. mike-will-made-it
+4. pharrell-williams
+5. timbaland
+6. just-blaze
+7. no-id
+8. skrillex
+9. max-martin
+10. dr-dre
+11. j-dilla
+12. madlib
+13. flying-lotus
+14. four-tet
+15. brian-eno
+16. flume
+17. butch-vig
+18. quincy-jones
+19. rick-rubin
+20. steve-albini
+
+### Track Anatomy — First 20 (Priority Order)
+1. billie-jean-michael-jackson
+2. in-the-air-tonight-phil-collins
+3. smells-like-teen-spirit-nirvana
+4. humble-kendrick-lamar
+5. when-the-partys-over-billie-eilish
+6. holocene-bon-iver
+7. teardrop-massive-attack
+8. amen-brother-the-winstons
+9. one-more-time-daft-punk
+10. thriller-michael-jackson
+11. gods-plan-drake
+12. sicko-mode-travis-scott
+13. ultralight-beam-kanye-west
+14. all-falls-down-kanye-west
+15. started-from-the-bottom-drake
+16. blue-lines-massive-attack
+17. born-to-run-springsteen
+18. what-s-going-on-marvin-gaye
+19. take-five-dave-brubeck
+20. dna-kendrick-lamar
+
+### Gear/Plugin Reference — First 25 (Priority Order)
+**Plugins:**
+1. valhalla-room
+2. valhalla-vintage-verb
+3. fabfilter-pro-q-3
+4. fabfilter-pro-c-2
+5. fabfilter-pro-r-2
+6. waves-ssl-g-bus
+7. slate-digital-vbc
+8. izotope-ozone-11
+9. pro-l-2
+10. serum
+11. vital
+12. omnisphere
+13. kontakt-7
+14. arturia-pigments
+15. valhalla-shimmer
+**Hardware/Historical:**
+16. api-2500
+17. ssl-4000-g-bus
+18. neve-8078
+19. lexicon-480l
+20. emt-140-plate
+21. universal-audio-1176
+22. la-2a
+23. api-550
+24. ssl-e-channel
+25. neve-1073
+
+## Duplicate Prevention — New Content Types
+
+Before proposing any new Producer DNA, Track Anatomy, Gear Reference, or Genre Bible entry:
+- Check /bible/producers/ contents via GitHub tree API
+- Check /bible/tracks/ contents via GitHub tree API
+- Check /bible/gear/ contents via GitHub tree API
+- Check /bible/genres/ contents via GitHub tree API
+- NEVER propose without running duplicate check first
+
+## SEO Strategy by Content Type
+
+### Genre Bible SEO
+- Target: "how to make [genre]" head terms (20–50K searches/month each)
+- Title pattern: `How to Make [Genre] Music — The Complete Production Guide | MPW`
+- Meta: lead with the most distinctive production element of that genre
+- Schema: MusicGenre + HowTo + FAQPage
+
+### Producer DNA SEO
+- Target: "[producer name] signal chain", "[producer] production techniques", "how does [producer] make beats"
+- Title pattern: `[Producer Name] — Production Techniques, Signal Chain & Gear | The Producer's Bible`
+- Meta: lead with their most distinctive technique or most famous production
+- Schema: Person + Article + FAQPage
+
+### Gear/Plugin Reference SEO
+- Target: "[plugin name] review", "[plugin] tutorial", "[plugin] settings", "[plugin] vs [plugin]"
+- Title pattern: `[Plugin Name] — Complete Reference Guide | The Producer's Bible`
+- Meta: lead with what makes it distinctive vs alternatives
+- Schema: Product + Article + Review + FAQPage
+
+### Track Anatomy SEO
+- Target: "[track name] production", "[song] how was it made", "[song] signal chain"
+- Title pattern: `[Track Name] — Production Anatomy | The Producer's Bible`
+- Meta: lead with the most surprising or distinctive production fact about the track
+- Schema: MusicRecording + Article + HowTo
+
+## Revenue Per Content Type (Estimated)
+
+| Content Type | Traffic/Entry | Affiliate Conv. | Avg Commission | Monthly/Entry |
+|---|---|---|---|---|
+| T1 Flagship | 200 visitors | 0.15% | $45 | $135 |
+| Genre Bible | 4,000 visitors | 0.20% | $35 | $280 |
+| Gear Reference | 800 visitors | 0.50% | $45 | $180 |
+| Producer DNA | 300 visitors | 0.10% | $40 | $120 |
+| Track Anatomy | 400 visitors | 0.08% | $40 | $128 |
+
+Genre Bible and Gear Reference are highest revenue per entry. Build these after the T1 batch completes.

@@ -1972,3 +1972,252 @@ P1: Build v5.3 1-pass template writer from reverb_v16b.html
 P2: Zenodo DOI setup + DOI on reverb.html after commit
 P3: Add missing producer quotes (Kevin Parker, Robin Guthrie, Andy Summers, Brian Eno, Tony Visconti, Steve Lillywhite)
 P4: Run Tier 1 remaining 33 batch with v5.3 writer
+
+---
+
+# SESSION 54 ADDENDUM — EXPANDED BIBLE ARCHITECTURE — May 22, 2026
+
+## Full Bible Content Type Architecture (CONFIRMED — Steve approved)
+
+The three existing tiers are sufficient for the definitional reference layer but insufficient for the full revenue potential. Four new content types are added to the Bible architecture. Each targets different search intent, different buyers, different revenue mechanisms.
+
+### EXISTING TIERS (Unchanged)
+
+| Tier | Name | Word Range | Count Target | Primary Revenue |
+|---|---|---|---|---|
+| T1 | Flagship | 7,000–8,000w | 250 | Search, affiliate, institutional |
+| T2 | Standard | 3,800–5,000w | 700 | Long-tail search, affiliate |
+| T3 | Reference | 1,500–2,500w | 500 | Completeness, paid tier |
+
+### NEW CONTENT TYPES (Confirmed — build writer templates Sessions 55+)
+
+| Type | Name | Word Range | Count Target | Primary Revenue |
+|---|---|---|---|---|
+| Type 4 | Producer DNA | 3,000–4,000w | 100 | Digital products ($9 Blueprint PDFs), affiliate, partnerships |
+| Type 5 | Track Anatomy | 2,500–3,500w | 200 | Institutional, digital products ($49 compiled), search |
+| Type 6 | Gear/Plugin Reference | 2,000–3,000w | 150 | Affiliate (3–5× conversion rate), editorial partnerships ($1,500/yr each) |
+| Type 7 | Genre Production Bible | 5,000–8,000w | 20 | High-volume search (20–40K/mo per entry), newsletter, digital products |
+| **TOTAL** | | | **~1,920** | |
+
+---
+
+## Type 4 — Producer DNA Entries (FULL SPEC)
+
+### Purpose
+Not biography. Not Wikipedia. The complete production methodology of a working producer — signal chains, specific plugins with settings, arrangement philosophy, characteristic decisions, reference tracks with timestamps.
+
+### Search Intent
+"Metro Boomin signal chain", "Finneas production techniques", "how does [producer] make beats" — high intent, frequently searched, poorly served by existing content.
+
+### Structure (per entry)
+1. Philosophy — how they think about sound (300–400w)
+2. Signature Signal Chains — drums, bass, vocals with specific plugin settings (600–800w)
+3. Characteristic Techniques — named techniques with parameter values (400–500w)
+4. Reference Tracks — 3–5 tracks with timestamps for active listening (300–400w)
+5. Gear and Plugin Stack — confirmed tools with editorial notes (300–400w)
+6. What to Study — 3 tracks for mastering their approach (200w)
+7. Bible entries they use most — internal links to T1/T2 entries (structural)
+
+### Revenue Mechanism
+Each Producer DNA entry has a $9 downloadable "Producer Blueprint" — one-page signal chain PDF formatted as a studio reference card. 100 entries × $9 × 200 sales average = $180,000 in digital product revenue from this content type alone.
+
+### First 20 Confirmed Candidates
+Metro Boomin, Finneas O'Connell, Mike WiLL Made-It, Pharrell Williams, Timbaland, Just Blaze, No I.D., Skrillex, Max Martin, Butch Vig, Dr. Dre, J Dilla, Madlib, Flying Lotus, Four Tet, Brian Eno, Flume, Rick Rubin (executive production philosophy), Quincy Jones (historical), Steve Albini (historical/philosophical)
+
+### Cross-linking Value
+Each Producer DNA entry links to 5–10 T1/T2 Bible entries (the techniques they use). 100 Producer DNA entries = 500–1,000 additional internal links flowing to T1/T2 entries, significantly increasing their authority and rankings.
+
+### Writer Template
+Build after v5.3 T1/T2/T3 writer confirmed. Separate template — NOT the same writer. Requires: confirmed producer quotes with citations, verified gear lists (no invention), specific track examples with timestamps. JS triple-check not required (minimal JS). Target: 95/95 validation checks adapted for this content type.
+
+---
+
+## Type 5 — Track Anatomy Entries (FULL SPEC)
+
+### Purpose
+Single track, fully dissected as permanent production reference. Not a review. Not a breakdown article. A production autopsy with the depth of a T1 Bible entry applied to a specific commercially released record.
+
+### Search Intent
+"Billie Jean production breakdown", "how was [track] produced", "[song] drum machine settings", "[song] reverb settings" — high intent, timestamp-specific, frequently searched.
+
+### Structure (per entry)
+1. Track Context — release, chart position, production team, historical significance (200–300w)
+2. The Signal Chain — full production architecture (drums, bass, keys, vocals) with specific equipment (500–700w)
+3. The Defining Decisions — 3–5 choices that made the record what it is, with technical explanation (400–500w)
+4. Timestamp Guide — specific moments worth studying with what to listen for (300–400w)
+5. Annotated Spectrogram — inline SVG showing frequency/dynamic signature (structural)
+6. Techniques to Learn — links to relevant T1/T2 Bible entries (structural)
+7. What to Try — 3 exercises applying the techniques in a DAW (200–300w)
+
+### Revenue Mechanism
+- Individual entries drive search traffic → affiliate conversions on referenced plugins/gear
+- "100 Essential Track Anatomies" compiled PDF = $49 textbook product
+- Institutional licensing anchor content — professors assign specific track anatomies
+- Basis for Producer Certification Program curriculum
+
+### First 20 Confirmed Candidates
+Billie Jean (MJ), In The Air Tonight (Collins), Smells Like Teen Spirit (Nirvana), HUMBLE. (Kendrick), when the party's over (Billie Eilish), Holocene (Bon Iver), Teardrop (Massive Attack), Amen Brother (The Winstons — breakbeat origin), Blue Lines (Massive Attack — trip-hop origin), One More Time (Daft Punk), Thriller (MJ), God's Plan (Drake), Sicko Mode (Travis Scott), DNA (Kendrick), Started From The Bottom (Drake), Ultralight Beam (Kanye), All Falls Down (Kanye), Take Five (Brubeck — jazz production reference), What's Going On (Marvin Gaye — arrangement reference), Born To Run (Springsteen — wall of sound)
+
+### Relationship to Batch 09
+Batch 09 (100 track breakdowns) maps directly to Type 5 Track Anatomy format. Elevate the batch article spec to Track Anatomy Bible standard. Same content, higher depth, permanent reference rather than article.
+
+---
+
+## Type 6 — Gear and Plugin Reference Entries (FULL SPEC)
+
+### Purpose
+Not reviews (reviews age and score). Permanent technical reference documentation for specific hardware and software. The canonical reference that even the manufacturer links to.
+
+### Search Intent
+"Valhalla Room review", "FabFilter Pro-Q 3 tutorial", "UAD Neve 1073 guide", "1176 compressor settings" — extremely high commercial intent. Producers searching these terms have their credit card ready.
+
+### Structure (per entry)
+1. What It Is — context, history, why it matters (200–300w)
+2. Every Algorithm/Mode Explained — use cases per algorithm with specific settings (400–600w)
+3. Every Parameter — full range, musical interpretation, interaction with other params (400–500w)
+4. Genre-by-Genre Settings Table — structural
+5. What It Does Best / What It Can't Do — honest editorial (200–300w)
+6. What to Pair It With — complementary tools with internal Bible links (200w)
+7. Comparison Context — where it sits vs alternatives (200–300w)
+8. Version History — for actively updated plugins (structural)
+
+### Revenue Mechanism
+- Highest-converting affiliate pages on site (3–5× higher than technique pages)
+- Editorial Partnership: $1,500/year average per plugin developer — 150 entries = $225,000/year potential
+- Manufacturers link to canonical reference documentation = high-authority backlinks
+
+### First 25 Confirmed Candidates
+**Plugins:** Valhalla Room, Valhalla Vintage Verb, Valhalla Shimmer, FabFilter Pro-Q 3, FabFilter Pro-C 2, FabFilter Pro-R 2, Waves SSL G-Bus, Slate Digital VBC, Pro-L 2, iZotope Ozone 11, Serum, Vital, Omnisphere, Kontakt 7, Arturia Pigments
+**Hardware/Historical:** API 2500, SSL 4000 G-Bus, Neve 8078, Lexicon 480L, EMT 140 Plate, Universal Audio 1176, LA-2A, API 550, SSL E-Channel, Neve 1073
+
+### Editorial Partnership Model
+Approach: mid-size plugin developers ($49–199 products) — not Waves (too large), not freeware (no budget)
+Proposition: featured placement in reference entry + dedicated documentation + newsletter feature + "Producer's Bible Reference" badge
+Rate: $500–2,000/year depending on developer size
+NOT advertising: editorial picks remain independent — partnerships disclosed — developers pay for platform access not recommendation
+Target: 50 active partnerships in Year 2 = $50K–100K/year
+
+---
+
+## Type 7 — Genre Production Bible Entries (FULL SPEC)
+
+### Purpose
+The complete production architecture of a genre. Not "here are some tips for making trap beats." The definitive reference for how a genre actually sounds, why it sounds that way, and exactly how to make it. T1-length content targeting some of the highest-volume queries in music production.
+
+### Search Volume (Selected)
+- "how to make trap beats": 40,000+ searches/month
+- "how to make lo-fi music": 35,000+
+- "how to make house music": 30,000+
+- "how to make drill music": 25,000+
+- "how to make hip hop beats": 50,000+
+- Combined 20 genres: estimated 400,000–600,000 monthly searches
+
+**These are the highest-traffic potential entries in the entire Bible.**
+
+### Structure (per entry)
+1. Genre Definition and Historical Context — origin, defining records, key producers (400–500w)
+2. The Sound Architecture — what makes it immediately identifiable (300–400w)
+3. Drum Programming — patterns, sounds, processing with specific settings (400–500w)
+4. Bass and Low End — 808s, bass synths, sub relationships (300–400w)
+5. Melodic and Harmonic Elements — keys, samples, chords (300–400w)
+6. Vocal Production — processing chain, effects, arrangement (300–400w)
+7. The Mix Approach — referencing, loudness targets, stereo image (300–400w)
+8. Essential Plugins — 10 tools with specific genre use cases (structural)
+9. Essential Sample Packs — curated recommendations (affiliate) (structural)
+10. Reference Tracks — 10 essential listens with timestamps (structural)
+11. Genre Settings Tables — BPM ranges, key preferences, processing targets (structural)
+12. Internal Bible Links — 20–30 links to relevant T1/T2 entries (structural)
+13. Common Mistakes — 5 specific mistakes with fixes (200–300w)
+
+### Revenue Mechanism
+- Primary traffic drivers for entire site (40–50K searches/month per entry)
+- 20 entries alone could drive 50,000–100,000 additional monthly visitors
+- Genre-specific affiliate: sample packs, genre-specific plugins, DAW templates
+- "Complete Genre Production Bible" compiled PDF: $29 (highest-volume digital product)
+- Newsletter front door: genre searches drive new subscriber acquisition
+
+### First 20 Confirmed Genres (Priority Order)
+1. Trap (highest search volume)
+2. Hip-Hop / Boom Bap
+3. Lo-Fi Hip-Hop
+4. House
+5. Techno / Industrial Techno
+6. Drum & Bass / Jungle
+7. Pop (contemporary)
+8. R&B / Neo-Soul
+9. Afrobeats / Afropop
+10. UK Drill / Chicago Drill
+11. Ambient / Drone
+12. Folk / Americana (acoustic production)
+13. Rock (modern production)
+14. Metal (modern production)
+15. Reggaeton / Latin Urban
+16. Gospel / Contemporary Christian
+17. Jazz (contemporary production)
+18. Film Scoring / Cinematic
+19. Synthwave / Retrowave
+20. Dancehall
+
+### Internal Linking Power
+Each Genre Production Bible entry links to 20–30 T1/T2 Bible entries. 20 Genre entries = 400–600 additional internal links distributed across the T1/T2 catalog. This is the most powerful internal linking event in the entire Bible build — 20 entries simultaneously boosting every foundational concept entry.
+
+---
+
+## Updated Full Bible Economics
+
+### Traffic Projection with All 7 Content Types
+
+| Content Type | Count | Est. Monthly Visitors |
+|---|---|---|
+| T1 Flagship (250) | 250 | 50,000 |
+| T2 Standard (700) | 700 | 21,000 |
+| T3 Reference (500) | 500 | 10,000 |
+| Producer DNA (100) | 100 | 15,000 |
+| Track Anatomy (200) | 200 | 20,000 |
+| Gear/Plugin Reference (150) | 150 | 30,000 |
+| Genre Bible (20) | 20 | 80,000 |
+| **TOTAL** | **~1,920** | **~226,000/month** |
+
+### Revenue Projection at Full Build (Year 3–5)
+
+| Source | Monthly |
+|---|---|
+| Affiliate commissions | $25,000–50,000 |
+| Display advertising (Mediavine) | $8,000–15,000 |
+| Bible paid tier ($9/mo subscriptions) | $20,000–60,000 |
+| Digital products (PDFs, blueprints, compilations) | $15,000–40,000 |
+| Plugin editorial partnerships (150 × $1,500/yr) | $18,750/mo avg |
+| Newsletter sponsorships | $5,000–15,000 |
+| Institutional licensing | $8,000–25,000 |
+| TruClarify referrals | $5,000–20,000 |
+| Sample pack marketplace | $3,000–10,000 |
+| **Total** | **$107,750–235,000/month** |
+
+---
+
+## Writer Build Sequence (Sessions 55+)
+
+| Session | Task |
+|---|---|
+| 55 | Build v5.3 writer (T1/T2/T3) from reverb_v16b.html |
+| 56 | Run remaining 33 T1 entries with v5.3 |
+| 57 | Build Type 7 Genre Bible writer template |
+| 58 | Run first 5 Genre Bible entries (Trap, Hip-Hop, Lo-Fi, House, Techno) |
+| 59 | Build Type 4 Producer DNA writer template |
+| 60 | Run first 10 Producer DNA entries |
+| 61 | Build Type 6 Gear/Plugin Reference writer template |
+| 62 | Run first 25 Gear/Plugin Reference entries |
+| 63 | Build Type 5 Track Anatomy writer template (elevate Batch 09 to this standard) |
+| 64 | Run Batch 09 as Track Anatomy entries (100 entries) |
+
+---
+
+## NEVER Rules (Content Architecture)
+
+| Rule | Detail |
+|---|---|
+| NEVER invent producer signal chains | All signal chain specs in Producer DNA entries must be sourced from verified interviews, confirmed gear lists, or direct attribution |
+| NEVER invent track production details | All Track Anatomy claims must be verifiable — producer interviews, studio documentation, or widely confirmed production lore |
+| NEVER approach plugin companies as advertorial | Editorial partnership is not advertising — picks remain independent, partnerships are disclosed — frame as editorial documentation not promotion |
+| NEVER build Genre Bible entries without confirming BPM/key data against actual tracks | Genre conventions must reflect real production data, not assumptions |
+| NEVER start new content type writer before current batch is confirmed running | Build sequence is sequential — v5.3 T1/T2/T3 first, then Genre Bible, then Producer DNA, then Plugin Reference, then Track Anatomy |

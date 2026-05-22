@@ -1480,3 +1480,85 @@ Commit message: `feat: reverb.html S54 — definitive reverb reference — v1.6 
 
 File: reverb_v16b.html → rename to reverb.html before uploading to session.
 Size: 383.5KB — fine for single-file API PUT (no size limit).
+
+---
+
+# ⛔ SESSION 54 ADDENDUM — EMPIRE STRATEGY — May 22, 2026
+
+## Vision Confirmed
+
+Steve confirmed the full publishing empire vision: MPW becomes the authoritative reference layer for all of music production — a middleman for almost everything music. Not a blog, not a course platform, not a marketplace. The permanent reference destination that powers all of those things for others while owning the canonical knowledge layer.
+
+## Revenue Architecture — Full Stack
+
+### Tier 1 Revenue (Already In Motion)
+- Affiliate commissions: Plugin Boutique, Sweetwater, Loopmasters, Amazon Associates, PluginFox — REVENUE BLOCKER pending applications
+- Display advertising: Mediavine at 50K sessions threshold — target within 12 months
+- Newsletter sponsorships: The Producer's Briefing at 10K+ subscribers — $500–2,000/placement
+- All affiliate links architecturally ready in Bible entries (rel="noopener sponsored") — URL swap only when programs approved
+
+### Tier 2 Revenue (Publishing Layer)
+- Producer's Bible Paid Tier: $9/month or $79/year — trigger at 25,000 monthly /bible/ visitors
+  - Paid unlocks: downloadable PDFs, complete Quick Reference Card library, offline access, early entry access, private community, licensed print rights for educational use
+- Digital product catalog:
+  - Producer's Bible Complete Reference Pack: $49 (all 1,000 entries compiled PDF)
+  - Domain Deep-Dives: $19–29 each (all entries in one domain compiled — 8 domains = 64 potential SKUs)
+  - Producer's Toolkit Packs: $9–19 each (Mixing Engineer's Quick Reference, Genre Settings Bible, Signal Chain Master Reference, Frequency Map)
+  - Producer Blueprint PDFs: $9 each (one-page signal chain PDF per Producer DNA entry)
+  - Track Anatomy Compiled: $49 (100 essential track anatomies as textbook)
+  - Genre Production Bible Compiled: $29 (all 20 genre entries — highest-volume seller)
+  - Producer Certification Program: $199–499 (12-week structured program with credential)
+
+### Tier 3 Revenue (Middleman Layer)
+- Sample Pack Marketplace: editorially curated packs tied to Bible entries — 30–40% commission
+- Plugin Partnership Program: $500–2,000/year per developer — editorial partnership not advertising — 50 partners = $50K/year
+- Beat Licensing Marketplace: producers list beats for sync, TruClarify handles clearance — percentage of every license
+- Boutique Hardware Affiliate Network: direct relationships at 10–15% vs 3–5% network rates
+
+### Tier 4 Revenue (Institutional and B2B)
+- Institutional Licensing — Music Schools: $299–999/year per institution — target 200 schools = $100K/year
+- DAW Company Content Licensing: Ableton, Logic, FL Studio help systems — $50K–200K/year licensing deal (3–5 year play)
+- Audio Education Platform Partnerships: Coursera, Skillshare, Soundfly, MasterClass — MPW as the textbook publisher
+
+### Tier 5 Revenue (TruClarify Flywheel)
+- Bible develops producers → their music gets good enough to license → TruClarify handles clearance → referral fee to attorney network
+- MPW is not just a revenue source — it's a producer development funnel feeding qualified music-literate TruClarify customers
+- Every sync-ready producer who learned on MPW is a TruClarify customer
+
+## Traffic Projections (250 T1 + 750 T2/T3 entries)
+
+| Timeline | Monthly Visitors | Monthly Revenue (Realistic) |
+|---|---|---|
+| Year 1 | 20,000–50,000 | $10,000–25,000 |
+| Year 2 | 50,000–120,000 | $30,000–76,000 |
+| Year 3 | 100,000–200,000 | $60,000–150,000 |
+| Year 5 (1,000+ entries) | 200,000–400,000 | $100,000–222,000+ |
+
+With Genre Bible entries (20 entries targeting 20–40K monthly searches each): +50,000–100,000 additional monthly visitors from 20 entries alone.
+
+## The Viral Distribution Strategy
+
+Entry itself does not go viral. Framework fragments do. Distribution plan:
+1. Three Questions framework as standalone Twitter/X thread — each question as a tweet with applied example — links to full entry
+2. r/WeAreTheMusicMakers post: "I spent a month building the most comprehensive reverb guide on the internet. Here's what I learned." — Beginner Trap as body, link to entry
+3. Producer's Briefing Issue #13: lead with Three Questions, excerpt Clearmountain signal chain, link to entry
+4. RT60 calculator embed generates organic backlinks from music blogs
+5. Producer DNA entries → producers share their own entry → backlinks from their audiences
+
+## Priority Queue Update (Post-S54 Addendum)
+
+| Priority | Task |
+|---|---|
+| P0 | Mobile QA → commit reverb.html |
+| P1 | Build v5.3 writer (T1/T2/T3) |
+| P2 | Zenodo + Crossref DOI setup |
+| P3 | Affiliate applications (REVENUE BLOCKER) |
+| P4 | Genre Bible writer template (Type 7) — 20 entries × massive search volume |
+| P5 | Producer DNA writer template (Type 4) — 100 entries × digital product revenue |
+| P6 | Gear/Plugin Reference writer template (Type 6) — 150 entries × partnership revenue |
+| P7 | Track Anatomy writer template (Type 5) — 200 entries × institutional revenue |
+| P8 | Run Tier 1 remaining 33 batch |
+| P9 | Batch 09 (100 track breakdowns → Track Anatomy format) |
+| P10 | Plugin Partnership Program outreach (50 developers) |
+| P11 | Institutional licensing outreach (music schools) |
+| P12 | Advisory board recruitment |

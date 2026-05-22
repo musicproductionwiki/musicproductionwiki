@@ -665,3 +665,110 @@ At least 2 of 8 FAQ questions must address content unique to this entry — arra
 | Build v5.3 writer (S55) | Back-engineer from reverb_v16b.html | P1 |
 | Run Tier 1 remaining 33 batch | After v5.3 writer locked | P5 |
 | Advisory board recruitment | 1–2 real named technical reviewers from network | Future |
+
+---
+
+# SESSION 54 ADDENDUM — CONTENT STANDARDS FOR NEW BIBLE TYPES — May 22, 2026
+
+## New Content Type Standards
+
+### Type 4 — Producer DNA Word Count Standards
+| Section | Target |
+|---|---|
+| Philosophy | 300–400w |
+| Signature Signal Chains (drums/bass/vocals) | 600–800w |
+| Characteristic Techniques | 400–500w |
+| Reference Tracks | 300–400w |
+| Gear and Plugin Stack | 300–400w |
+| What to Study | 200w |
+| **Total** | **2,100–2,700w prose + structural** |
+| **With structural components** | **3,000–4,000w** |
+
+Read time: calculate at 500 wpm (same as Bible standard).
+
+### Type 5 — Track Anatomy Word Count Standards
+| Section | Target |
+|---|---|
+| Track Context | 200–300w |
+| The Signal Chain | 500–700w |
+| The Defining Decisions (3–5) | 400–500w |
+| Timestamp Guide | 300–400w |
+| What to Try (exercises) | 200–300w |
+| **Total prose** | **1,600–2,200w** |
+| **With structural components** | **2,500–3,500w** |
+
+### Type 6 — Gear/Plugin Reference Word Count Standards
+| Section | Target |
+|---|---|
+| What It Is | 200–300w |
+| Every Algorithm/Mode | 400–600w |
+| Every Parameter | 400–500w |
+| What It Does Best / Can't Do | 200–300w |
+| What to Pair It With | 200w |
+| Comparison Context | 200–300w |
+| **Total prose** | **1,600–2,200w** |
+| **With structural components** | **2,000–3,000w** |
+
+### Type 7 — Genre Production Bible Word Count Standards
+| Section | Target |
+|---|---|
+| Definition and Historical Context | 400–500w |
+| The Sound Architecture | 300–400w |
+| Drum Programming | 400–500w |
+| Bass and Low End | 300–400w |
+| Melodic and Harmonic Elements | 300–400w |
+| Vocal Production | 300–400w |
+| The Mix Approach | 300–400w |
+| Common Mistakes | 200–300w |
+| **Total prose** | **2,500–3,300w** |
+| **With structural components (tables, settings, track lists)** | **5,000–8,000w** |
+
+## Digital Product Catalog — Content Requirements
+
+### Producer Blueprint PDF ($9 each)
+- One page (A4/Letter)
+- Producer name + dates active
+- Primary signal chain (drums, bass, vocals) in visual flow format
+- Top 5 plugins with typical settings
+- 3 reference tracks
+- 1 signature technique with parameters
+- MPW branding, URL, version date
+- Generated from Producer DNA entry data
+- Requires: InDesign or Canva template — build once, populate per entry
+
+### Domain Deep-Dive PDF ($19–29 each)
+- All entries in one domain compiled
+- Cross-references between entries highlighted
+- Domain-specific quick reference card at front
+- 8 domains: Dynamics, Frequency, Time-Based, Signal Processing, Mixing, Mastering, Synthesis, Music Theory
+- 64 potential SKUs (domain × depth level combinations)
+
+### Genre Production Bible PDF ($29 compiled)
+- All 20 genre entries in one document
+- Genre index at front
+- Cross-genre comparison tables
+- BPM/key/plugin reference appendix
+- The highest-volume digital product on the site
+
+### Complete Reference Pack ($49)
+- All T1/T2/T3 entries compiled
+- Indexed by category, alphabetical, and difficulty
+- Print-quality formatting
+- Licensed for personal educational use
+- Institutional license available separately ($299/institution)
+
+## Batch Pipeline — Updated with New Content Types
+
+| Batch | Content Type | Count | Status | Dependencies |
+|---|---|---|---|---|
+| Tier 1 remaining | T1 Flagship | 33 | BLOCKED | v5.3 writer |
+| Genre Bible batch | Type 7 | 20 | QUEUED | Type 7 writer template |
+| Producer DNA batch | Type 4 | 100 | QUEUED | Type 4 writer template |
+| Plugin Reference batch | Type 6 | 150 | QUEUED | Type 6 writer template |
+| Batch 09 (Track Anatomy) | Type 5 | 100 | QUEUED | Type 5 writer template + breakdowns.html LIVE |
+| Batch 10 (studio-story) | Article | 50 | QUEUED | Batch 09 complete |
+| Batch 11 (recreation) | Article | 60 | QUEUED | recreations.html |
+| Batch 12 (vocal-autopsy) | Article | 35 | QUEUED | vocal-autopsies.html |
+| Batch 13 (budget-recreation) | Article | 60 | QUEUED | Batch 11 complete |
+| T2 batch | T2 Standard | 700 | FUTURE | After Tier 1 complete |
+| T3 batch | T3 Reference | 500 | FUTURE | After T2 starts |
