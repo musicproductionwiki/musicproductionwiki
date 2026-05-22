@@ -1,5 +1,5 @@
 # MPW-HANDOFF-CONTENT.md
-*Updated: May 22, 2026 (SESSION 53)*
+*Updated: May 22, 2026 (SESSION 55)*
 
 ---
 
@@ -775,60 +775,59 @@ Read time: calculate at 500 wpm (same as Bible standard).
 
 ---
 
-# SESSION 54 ADDENDUM 2 — MIDDLEMAN CONTENT REQUIREMENTS — May 22, 2026
+# SESSION 55 ADDENDUM — CONTENT — May 22, 2026
 
-## Content Supporting Marketplace Infrastructure
+## reverb.html — Committed and Live ✅
 
-Each marketplace vertical requires dedicated content to drive qualified traffic and build trust before the transaction layer exists. Build this content as part of the regular article pipeline.
+| Item | Value |
+|---|---|
+| Status | LIVE — https://musicproductionwiki.com/bible/reverb |
+| Commit | 53db8f4e (mobile fix — current live) |
+| Version | v1.6 |
+| Word count | ~16,500 words |
+| Sections | 25 |
+| Mobile QA | PASSED — confirmed on real iPhone |
 
-### Articles Supporting Studio Services Marketplace
-- how-to-find-a-mixing-engineer.html
-- how-to-hire-a-session-musician.html
-- what-does-a-mastering-engineer-do.html
-- how-to-brief-a-producer.html
-- remote-session-recording-guide.html
+**Updated batch pipeline:**
 
-### Articles Supporting Music Business Services
-- how-to-clear-a-sample.html (feeds TruClarify)
-- music-publishing-for-producers.html
-- how-to-read-a-record-deal.html
-- what-is-a-sync-license.html
-- music-royalties-explained.html
-- how-to-register-your-music.html
-- music-distribution-explained.html
+| Batch | Content | Status |
+|---|---|---|
+| reverb.html S55 | T1 Flagship | LIVE ✅ — mobile confirmed |
+| Bible Tier 1 (33 remaining) | T1 Flagship | BLOCKED — v5.3 writer not yet built |
+| Batch 09–13 | Articles | QUEUED — after Tier 1 |
 
-### Articles Supporting Education/Career
-- how-to-build-a-production-portfolio.html
-- music-production-schools-compared.html
-- how-to-get-an-internship-at-a-label.html
-- freelance-music-producer-guide.html
-- how-to-price-your-beats.html
+## Bible Entry Count — End of Session 55
 
-### Articles Supporting Technology/Tools
-- best-daw-templates-for-mixing.html
-- how-to-sell-sample-packs.html
-- ai-music-production-tools-compared.html (already in AI Music category)
+**Total live: 225 entries** (226 per BIBLE handoff counted reverb before it was confirmed live — 225 is the correct reconciled figure as of end of Session 55)
 
-## MPW-Verified Standard — Content Spec
+Breakdown:
+- reverb.html v1.6: 1 (LIVE — this session)
+- chorus.html v5.2: 1 (LIVE — prior session)
+- v5.1 original: 15 (LIVE)
+- compression: 1 (LIVE — different nav impl)
+- v5.1 Session 40: 54 (LIVE — content issues — need regen)
+- v3.0/v4.0 legacy: 153 (LIVE — untouched)
 
-The MPW-Verified badge for marketplace participants requires documented evidence of:
-1. Technical competence — reference to specific Bible entries they demonstrate mastery of
-2. Track record — minimum 3 verifiable commercial credits
-3. Communication standard — response time, revision policy, brief adherence
-4. Quality floor — sample work reviewed against Bible production standards
+## Updated Pending Owner Actions
 
-Build a dedicated `/verified/` page explaining the standard. This page:
-- Drives applications from qualified professionals
-- Builds buyer trust in marketplace quality
-- Creates SEO value for "verified mixing engineers" type queries
-- Feeds the institutional narrative (MPW sets a standard, not just a marketplace)
+| Action | Detail | Priority |
+|---|---|---|
+| Zenodo account setup | 10 min — issues DOI on reverb.html | P3 |
+| Crossref membership | $275/year — apply when ready | P4 |
+| Affiliate applications | Plugin Boutique, Amazon, Sweetwater, Loopmasters, PluginFox | **HIGH — REVENUE BLOCKER** |
+| GSC: Request Indexing | /bible/reverb — 2 min in Search Console | P1 immediate |
+| Add missing producer quotes | Kevin Parker, Robin Guthrie, Andy Summers, Brian Eno, Tony Visconti, Steve Lillywhite | P5 |
+| Advisory board recruitment | 1–2 named technical reviewers | Future |
 
-## Marketplace Content Integration Points
+## Viral Distribution — reverb.html Ready to Execute
 
-Every Bible entry that references a technique should eventually link to relevant marketplace services:
-- Compression entry → "Find an MPW-Verified mixing engineer"
-- Reverb entry → "Get your mix professionally checked" 
-- Mastering entry → "Book an MPW-Verified mastering engineer"
-- Music business entries → "Get your contract reviewed" / "Clear your sample"
+reverb.html is live and production-clean. The viral distribution templates from S54 SCRIPTS addendum are ready to execute:
 
-These CTAs go in after the marketplace is live — NOT before. Placeholder: keep current affiliate/newsletter CTAs in place until marketplace infrastructure exists.
+1. **Twitter/X thread** — Three Questions framework — 5 tweets — ready to post
+2. **r/WeAreTheMusicMakers** — Beginner Trap section as body — ready to post
+3. **Producer's Briefing** — Three Questions as lead story — schedule next issue
+4. **RT60 calculator embed** — embed code live in every tool — share with music blogs
+5. **Producer DNA entries** — when built, producers share their own entry
+
+**Action for Steve:** Post the Twitter/X thread and Reddit post this week while reverb.html is fresh. Templates are in HANDOFF-SCRIPTS.md S54 addendum. Do not wait.
+
