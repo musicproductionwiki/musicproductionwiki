@@ -1,5 +1,5 @@
 # MPW-HANDOFF-BIBLE.md
-*Updated: May 20, 2026 (SESSION 44)**
+*Updated: May 22, 2026 (SESSION 52)*
 
 ---
 
@@ -1596,3 +1596,96 @@ P0: Mobile QA on reverb.html (Steve) → fix any remaining issues → commit
 P1: Back-engineer v5.3 1-pass template writer from reverb.html
 P2: Add missing producer quotes (Kevin Parker, Robin Guthrie, Andy Summers, Brian Eno, Tony Visconti, Steve Lillywhite)
 P3: Run Tier 1 remaining 33 batch with v5.3 writer
+
+---
+
+# SESSION 52 UPDATE — May 22, 2026
+
+## New Gold Standard — reverb_v11.html
+
+reverb_v11.html supersedes compression.html as the T1 gold standard for all new builds.
+
+**reverb_v11.html stats:**
+- File: 299.7KB — 2,593 lines — single-file PUT only
+- Script blocks: 4 — all pass node --check
+- Sections: 23 (three-act arc — down from 28)
+- New features: all 10 S52 world-class additions
+
+**Three-Act Structure (LOCKED for all T1 entries):**
+- Act 1 — Understanding: definition, how-it-works, parameters, quick-reference, tools, fingerprint, signal-chain, history
+- Act 2 — Application: decision-framework, how-to-use, decision-tree, genre-table, plugins, before-after
+- Act 3 — Mastery: in-the-wild, producer-dna, signatures, types, verdict, mistakes, mix-translation, progression, beginner-trap, faq, related
+- Plus above Related: version-history block, citation block
+
+## Bible Vision — Updated S52
+
+Steve confirmed: "Not Britannica. The definitive producer education resource. Something that truly helps and supports Beginning, Intermediate and even advanced producers."
+
+Active teaching, not passive reference. Tools producers use mid-session. The entry should make the producer feel like they went somewhere.
+
+## v5.3 Writer — To Be Built Session 53
+
+1-pass template fill from reverb_v11.html. All structure frozen. Claude fills variables only.
+
+Key requirements:
+- Back-engineer every section from reverb_v11.html — read the file before writing a single function
+- JS triple-check mandatory: apostrophes (word-boundary regex) + unicode + literal newlines
+- node --check subprocess call on all script blocks before output
+- Model: claude-sonnet-4-6
+- Target: 95/95 validation checks
+- All 10 S52 additions as template slots for T1
+
+## Updated Pre-Commit Checklist (15 checks — was 10)
+
+1. BTT button present — grep btt-btn
+2. bible-entry-wrap inline style: max-width + margin ONLY (no display/grid)
+3. IntersectionObserver present in sidebar TOC JS
+4. Entry nav offset = 60px
+5. Mobile QA on real device
+6. All /bible/ links verified live (no invented slugs)
+7. dateModified matches session date
+8. JS Check 1: apostrophes — re.findall(r"(?<!\\)\b\w+'\w+\b", content) returns empty
+9. JS Check 2: unicode — re.findall(r'[^\x00-\x7F]', content) returns empty
+10. JS Check 3: node --check passes all script blocks
+11. History section minimum 800 words (T1 only)
+12. Three-act narrative arc present (T1 only)
+13. All 10 S52 additions present (T1 only)
+14. Version History block updated with current session changes
+15. Citation block present with all 4 formats (T1 only)
+
+## Standard t3 Tool Branding (ALL tools must match exactly — confirmed S52)
+
+Header pattern:
+```html
+<div style="background:#0d0800;border-bottom:2px solid #f5a623;padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+  <div style="width:28px;height:28px;border-radius:7px;background:#00e8a2;...">ICON</div>
+  <div style="flex:1">
+    <div style="font-size:12px;font-weight:800;color:#e8e8e3">MusicProductionWiki.com</div>
+    <div style="font-size:10px;color:#f5a623;font-weight:600;letter-spacing:.08em">◆ The Producer's Bible</div>
+  </div>
+  <span style="...border:1px solid rgba(245,166,35,.35)...">Interactive Tool</span>
+  <div style="font-size:11px;font-weight:700;color:#c8c8c3;text-align:right">[TOOL NAME]</div>
+</div>
+<div style="background:#100c00;border-bottom:1px solid rgba(245,166,35,.15);padding:8px 20px;font-size:12px;color:#888">[SUBTITLE]</div>
+```
+
+Subtitle bar: `background:#100c00;border-bottom:1px solid rgba(245,166,35,.15)` — MUST match across all tools.
+
+## Session 52 Bible Entry State
+
+| Group | Count | Status |
+|---|---|---|
+| reverb.html S52 | 1 | reverb_v11.html — ALL JS CLEAN — pending mobile QA + commit |
+| chorus.html v5.2 | 1 | LIVE ✅ |
+| v5.1 original 15 | 15 | Need regen with v5.3 |
+| compression | 1 | Needs v5.3 regen |
+| v5.1 Session 40 | 54 | Need regen with v5.3 |
+| v3.0/v4.0 legacy | 153 | Untouched |
+| **Total live** | **225** | (224 confirmed + reverb.html pending) |
+
+## Session 53 Priority Items
+
+P0: Mobile QA (Steve) → commit reverb.html → build v5.3 writer
+P1: Add missing producer quotes (Kevin Parker, Robin Guthrie, Andy Summers, Brian Eno, Tony Visconti, Steve Lillywhite)
+P2: Run Tier 1 remaining 33 batch with v5.3 writer
+P3: Affiliate applications (REVENUE BLOCKER)

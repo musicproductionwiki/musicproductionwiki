@@ -1,5 +1,5 @@
 # MusicProductionWiki.com — CORE Handoff
-*Updated: May 21, 2026 (SESSION 50)* · 526 articles + 223 Bible entries live
+*Updated: May 22, 2026 (SESSION 52)* · 526 articles + 223 Bible entries live
 *Modular format — 6 GitHub files replace single monolithic handoff*
 
 ---
@@ -1101,3 +1101,164 @@ Invoke-RestMethod -Uri "https://api.github.com/repos/musicproductionwiki/musicpr
 # Check: radar chart draws, decision tree has questions, nav pills highlight on scroll
 # Check on real iPhone before declaring done
 ```
+
+---
+
+# ⛔ SESSION 52 UPDATE — May 22, 2026
+
+## New NEVER Rules Added Session 52
+
+| Rule | Detail |
+|---|---|
+| NEVER touch existing CSS style blocks containing fingerprint strings in Bible entries | CSS injection must be append-only — add new <style> block before </head> — NEVER modify existing blocks — regex targeting fingerprints destroys the entire block |
+| NEVER invent article slugs | Always verify against GitHub tree API before writing any links — confirmed recurring S52 |
+| NEVER use single-file commit for Bible entries via ZIP | Use GitHub API PUT directly — no 200KB limit on single-file PUT — the 200KB limit ONLY applies to ZIP batches via Notepad → Save As |
+| NEVER put unescaped apostrophes in single-quoted JS strings | Possessives (laptop's, reverb's, party's) AND contractions — scanner must use regex (?<!\\)\b\w+'\w+\b — leading-space scanners miss possessives — confirmed recurring S51 + S52 |
+| NEVER put non-ASCII unicode directly in JS strings | Use \uXXXX escapes — em-dash \u2014, fractions \u215b/\u00bd/\u00bc etc — run re.sub(r'[^\x00-\x7F]', lambda m: '\\u{:04x}'.format(ord(m.group())), js_content) before output |
+| NEVER put literal newlines inside JS single-quoted string values | Replace literal \n with space before output — value.replace('\n', ' ') on all JS string values |
+| NEVER let the multiline string fixer touch regex literals | Regex /pattern/ must be detected and excluded before any newline or unicode substitution — /\n.*/ is a valid regex not a string |
+| NEVER open a stale browser download of a fixed file | Chrome saves multiple versions (filename (2).html, (3).html) — always delete old downloads and open the freshest file specifically |
+| NEVER scan only for leading-space apostrophes in JS | Use re.findall(r"(?<!\\)\b\w+'\w+\b", content) — catches possessives that leading-space scanners miss |
+| NEVER build or commit a Bible entry without running the JS triple-check | (1) word-boundary apostrophe scan, (2) non-ASCII unicode scan, (3) literal newline in string scan — all three mandatory before every output |
+
+## JS Safety Triple-Check — MANDATORY BEFORE EVERY BIBLE ENTRY OUTPUT
+
+```python
+import re, subprocess, tempfile, os
+
+def js_triple_check(html):
+    errors = []
+    scripts = re.findall(r'<script>(.*?)</script>', html, re.DOTALL)
+    for i, content in enumerate(scripts):
+        # Check 1: Apostrophes (word-boundary — catches possessives)
+        apos = re.findall(r"(?<!\\)\b\w+'\w+\b", content)
+        if apos:
+            errors.append(f"Block {i} APOSTROPHE: {apos[:5]}")
+        # Check 2: Non-ASCII unicode
+        non_ascii = re.findall(r'[^\x00-\x7F]', content)
+        if non_ascii:
+            errors.append(f"Block {i} UNICODE: {[hex(ord(c)) for c in set(non_ascii)][:5]}")
+        # Check 3: node --check syntax validation
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.js', delete=False, encoding='utf-8') as f:
+            f.write(content)
+            tmpfile = f.name
+        result = subprocess.run(['node', '--check', tmpfile], capture_output=True, text=True)
+        os.unlink(tmpfile)
+        if result.returncode != 0:
+            errors.append(f"Block {i} SYNTAX: {result.stderr.strip()[:100]}")
+    return errors
+
+def make_js_safe(js_content):
+    # Fix apostrophes in single-quoted strings
+    def fix_sq(m):
+        inner = m.group(1)
+        fixed = re.sub(r"(\w)'(\w)", r"\1\\'\2", inner)
+        return "'" + fixed + "'"
+    js_content = re.sub(r"'((?:[^'\\]|\\.)*)'", fix_sq, js_content)
+    # Fix all non-ASCII unicode
+    js_content = re.sub(r'[^\x00-\x7F]', lambda m: '\\u{:04x}'.format(ord(m.group())), js_content)
+    return js_content
+```
+
+## Session 52 — What Was Built
+
+### reverb.html — World-Class Gold Standard Complete
+
+reverb_v11.html — 299.7KB — 2,593 lines — ALL JS CLEAN
+
+**10 world-class additions built and confirmed working:**
+
+1. **Decision Framework — The Three Questions** (id="decision-framework")
+   - Q1: What is the emotional role? Q2: What acoustic environment? Q3: What is the minimum reverb?
+   - Three numbered panels, applied examples (HUMBLE., Holocene, Billie Eilish)
+   - Quick reference grid: emotional role → environment → minimum level protocol
+
+2. **Tempo-Locked Reverb Calculator** (inside Tools section, second .t3 block)
+   - BPM + time sig + bar multiplier → full subdivision table, click-to-copy
+   - 8 use-case recommendations, 3 genre quick-sets, contextual tip
+   - Standard t3 branding + share bar
+
+3. **Beginner Trap Section** (id="beginner-trap", between Progression and FAQ)
+   - 3 mistakes: channel insert / solo levels / no HPF — each with Why/Fix/Green callout
+   - Three-Step Protocol icon grid
+   - Share bar: "Share with a producer who needs this"
+
+4. **Institutional Citation Block** (above Related)
+   - APA, MLA, Chicago, Harvard — all 120px fixed-width Copy buttons
+   - Last Reviewed date, DOI Pending badge
+   - Email: team@musicproductionwiki.com
+
+5. **Version History / Living Document Block** (above Citation)
+   - v1.0 through v1.3 with color-coded badges and itemized changes
+
+6. **Annotated Spectrograms** (inline SVGs in each of 7 In The Wild track items)
+   - 560×72px per track, unique shape per reverb character
+   - Phil Collins (gated wall), Bon Iver (vast shimmer), Kendrick (tight dark), Radiohead (bloom), Massive Attack (HPF plate), Billie Eilish (differential), Frank Ocean (5:48 bloom)
+
+7. **Mix Translation Test** (id="mix-translation", 5-system interactive tool)
+   - Laptop / Phone (mono) / Earbuds / Headphones / Car — 5 symptoms each
+   - Click symptom → diagnosis + fix → Mark as Fixed → progress bar
+   - Export .txt report — standard t3 branding + share bar
+
+8. **Arrangement Timeline** (interactive SVG above DAW tabs)
+   - 3 reference tracks: Billie Eilish, Radiohead Exit Music, Generic Pop Template
+   - Click section → exact send levels + HPF + rationale
+   - Resize-responsive
+
+9. **Producer Workflow Breakdowns** (expandable on each DNA card)
+   - dnaToggle(pid) — collapses by default
+   - Clearmountain: Lexicon 480L Hall 2.8s, 0ms pre-delay, −22dB, no HPF
+   - Everett: Valhalla Room 1.4s, 18ms pre-delay, HPF 220Hz, full automation curve
+   - Finneas: Lead vocal ZERO send, BV stack 0.8s, 12ms pre-delay, HPF 300Hz, −14dB
+
+10. **Structural Consolidation** (28 → 23 sections — three-act arc)
+    - Removed: Symptom Diagnostic, Start Here box, Red/Green Flags
+    - Folded: Era Translator → History, Contrast Listen → In The Wild, Mono Check → Mistakes, Recall Sheet → Tools, Psychoacoustics → Definition
+    - Three acts: Understanding → Application → Mastery
+
+### JS Bugs Found and Fixed in Session 52
+
+| Bug | Root Cause | Fix |
+|---|---|---|
+| Unescaped apostrophes | Possessives (party's, laptop's, reverb's) missed by leading-space scanner | Word-boundary regex: (?<!\\)\b\w+'\w+\b |
+| Unicode in JS strings | Em-dashes (—), fractions (⅛ ½ ¼) directly in string values | re.sub non-ASCII → \uXXXX escape |
+| Literal newline in string | name: 'Full Band Drop\n(2:47)' — real newline in single-quoted value | Replace \n with space in all string values |
+| Regex literal corrupted | Multiline fixer stripped \n from inside /\n.*/ | Detect and exclude regex literals before substitution |
+| Stale browser download | Steve opening reverb_v11 (3).html — third download, old version | Delete all old downloads, open fresh file |
+
+### Current File State End of Session 52
+
+| File | Size | Status |
+|---|---|---|
+| reverb_v11.html | 299.7KB | ALL JS CLEAN — node --check passes all 4 blocks — pending mobile QA + commit |
+| mpw_bible_writer.py | 214,478 bytes | v5.2 s47d — to be REPLACED by v5.3 |
+| chorus.html | — | LIVE ✅ |
+| quotes.json | 380 quotes | MISSING: Kevin Parker, Robin Guthrie, Andy Summers, Brian Eno, Tony Visconti, Steve Lillywhite |
+
+## Session 52 Steve Pending Actions (Highest Priority First)
+
+1. **Mobile QA on reverb_v11.html** — real iPhone — masthead, nav pills, footer share, BTT, tools usable
+2. **Save file** — Download reverb_v11.html → rename reverb.html → Notepad → Save As → All Files → `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\reverb.html`
+3. **Commit reverb.html**:
+
+```powershell
+. .\setenv.ps1
+$content = [System.IO.File]::ReadAllBytes("C:\Users\swarn\OneDrive\Desktop\mpw-scripts\reverb.html")
+$base64 = [System.Convert]::ToBase64String($content)
+$sha_resp = Invoke-RestMethod -Uri "https://api.github.com/repos/musicproductionwiki/musicproductionwiki/contents/bible/reverb.html" -Headers @{Authorization="token $env:GITHUB_TOKEN"} -ErrorAction SilentlyContinue
+$body = @{message="feat: reverb.html S52 — world-class gold standard — 10 additions — 23 sections";content=$base64;branch="main"}
+if ($sha_resp.sha) { $body.sha = $sha_resp.sha }
+Invoke-RestMethod -Uri "https://api.github.com/repos/musicproductionwiki/musicproductionwiki/contents/bible/reverb.html" -Method PUT -Headers @{Authorization="token $env:GITHUB_TOKEN";"Content-Type"="application/json"} -Body ($body | ConvertTo-Json)
+```
+
+4. **Affiliate applications** — Plugin Boutique, Amazon Associates, Loopmasters, Sweetwater, PluginFox — professional email exists (team@musicproductionwiki.com) — no more blockers
+5. **Confirm _headers committed** to GitHub repo root
+
+## Session 53 P0 Priority
+
+P0: Mobile QA → commit reverb.html → build v5.3 1-pass template writer from reverb_v11.html
+P1: Add missing producer quotes to quotes.json
+P2: Run Tier 1 remaining 33 batch with v5.3 writer
+P3: Affiliate applications (REVENUE BLOCKER)
+P4: GSC title/meta optimization for 4 comparison articles
+P5: Batch 09 (100 track breakdowns) after Tier 1 complete

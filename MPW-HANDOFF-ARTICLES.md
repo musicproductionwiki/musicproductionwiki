@@ -1,5 +1,5 @@
 # MPW-HANDOFF-ARTICLES.md
-*Updated: May 21, 2026 (SESSION 47)*
+*Updated: May 22, 2026 (SESSION 52)*
 
 ---
 
@@ -228,3 +228,57 @@ Problems Steve identified in Chrome:
 ## Article Count Status (Sessions 38-51)
 
 Article count: **526** — unchanged since Batch 08. Next article batch is Batch 09 (100 track breakdowns) — still blocked pending Bible Tier 1 completion.
+
+---
+
+# SESSION 52 UPDATE — May 22, 2026
+
+## Article Count
+526 articles live — unchanged since Batch 08. No article batches ran Sessions 38-52.
+
+## Bible Entry State End of Session 52
+
+| Group | Count | Status |
+|---|---|---|
+| reverb.html S52 | 1 | reverb_v11.html — ALL JS CLEAN — 10 world-class additions — pending mobile QA + commit |
+| chorus.html v5.2 | 1 | LIVE ✅ |
+| v5.1 original 15 | 15 | Need regen with v5.3 |
+| compression | 1 | Needs v5.3 regen |
+| v5.1 Session 40 | 54 | Need regen with v5.3 |
+| v3.0/v4.0 legacy | 153 | Untouched |
+| **Total live** | **225** | (224 + reverb.html pending) |
+
+## reverb.html S52 — Chrome Review History
+
+### Session 51 bugs found and fixed:
+1. Settings Fingerprint blank → unescaped apostrophes in JS (don't, haven't) → FIXED
+2. Decision Tree showing only Start Over → same JS error → FIXED
+3. Entry nav/TOC not highlighting → scroll offset wrong → FIXED
+4. History ~400 words → expanded to ~1,700 words 7 cards → FIXED
+5. Decision Tree no explanation → added 6-problem grid → FIXED
+6. Editorial flow lacking → added narrative prose → FIXED
+
+### Session 52 — 10 world-class additions built:
+1. Decision Framework — The Three Questions
+2. Tempo-Locked Reverb Calculator
+3. Beginner Trap section
+4. Institutional Citation Block (APA/MLA/Chicago/Harvard)
+5. Version History / Living Document block
+6. Annotated Spectrograms (7 inline SVGs)
+7. Mix Translation Test (5-system interactive)
+8. Arrangement Timeline (3 reference tracks, interactive SVG)
+9. DNA Signal Chain Breakdown panels (expandable per producer)
+10. Structural consolidation — 28 → 23 sections — three-act arc
+
+### Session 52 JS bugs found and permanently fixed:
+1. Unescaped possessives (party's, laptop's) — word-boundary scanner added
+2. Em-dash and fraction unicode in JS strings — unicode escape fix added
+3. Literal newline in single-quoted string value — string cleaner added
+4. Multiline fixer corrupted regex literal — regex exclusion added
+5. Stale browser download — NEVER rule added
+
+## Pending Before reverb.html Commit
+
+1. Mobile QA on real iPhone (NEVER rule — zero exceptions)
+2. Save: Download reverb_v11.html → rename reverb.html → Notepad → Save As → All Files → C:\Users\swarn\OneDrive\Desktop\mpw-scripts\reverb.html
+3. Commit via GitHub API PUT (command in HANDOFF-SCRIPTS.md)

@@ -1,5 +1,5 @@
 # MPW-HANDOFF-SCRIPTS.md
-*Updated: May 19, 2026 (SESSION 41)*
+*Updated: May 22, 2026 (SESSION 52)*
 
 All scripts at: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\`
 GitHub API blocked from Claude's environment — all GitHub operations run from Steve's PowerShell.
@@ -865,3 +865,85 @@ python mpw_session_start.py
 ```
 
 Then: open musicproductionwiki.com/bible/reverb on real device and report any remaining issues.
+
+---
+
+# SESSION 52 UPDATE — May 22, 2026
+
+## mpw_bible_writer.py — Status Change
+
+v5.2 writer (s47d) is SUPERSEDED. To be replaced by v5.3 in Session 53.
+v5.3 will be back-engineered from reverb_v11.html. See MPW-HANDOFF-BIBLE.md for full spec.
+Do NOT use v5.2 writer for new T1 entries — it does not contain S52 additions.
+
+## reverb.html Commit Command (Single File PUT — No 200KB Limit)
+
+```powershell
+. .\setenv.ps1
+$content = [System.IO.File]::ReadAllBytes("C:\Users\swarn\OneDrive\Desktop\mpw-scripts\reverb.html")
+$base64 = [System.Convert]::ToBase64String($content)
+$sha_resp = Invoke-RestMethod -Uri "https://api.github.com/repos/musicproductionwiki/musicproductionwiki/contents/bible/reverb.html" -Headers @{Authorization="token $env:GITHUB_TOKEN"} -ErrorAction SilentlyContinue
+$body = @{message="feat: reverb.html S52 — world-class gold standard — 10 additions — 23 sections";content=$base64;branch="main"}
+if ($sha_resp.sha) { $body.sha = $sha_resp.sha }
+Invoke-RestMethod -Uri "https://api.github.com/repos/musicproductionwiki/musicproductionwiki/contents/bible/reverb.html" -Method PUT -Headers @{Authorization="token $env:GITHUB_TOKEN";"Content-Type"="application/json"} -Body ($body | ConvertTo-Json)
+```
+
+NOTE: reverb.html is 299.7KB — this is fine for single-file API PUT. The 200KB limit only applies to ZIP batches via Notepad → Save As.
+
+## Generic Single Bible Entry Commit Template
+
+```powershell
+. .\setenv.ps1
+$SLUG = "reverb"
+$COMMIT_MSG = "feat: $SLUG Bible entry S52"
+$LOCAL_PATH = "C:\Users\swarn\OneDrive\Desktop\mpw-scripts\$SLUG.html"
+$GITHUB_PATH = "bible/$SLUG.html"
+
+$content = [System.IO.File]::ReadAllBytes($LOCAL_PATH)
+$base64 = [System.Convert]::ToBase64String($content)
+$sha_resp = Invoke-RestMethod -Uri "https://api.github.com/repos/musicproductionwiki/musicproductionwiki/contents/$GITHUB_PATH" -Headers @{Authorization="token $env:GITHUB_TOKEN"} -ErrorAction SilentlyContinue
+$body = @{message=$COMMIT_MSG;content=$base64;branch="main"}
+if ($sha_resp.sha) { $body.sha = $sha_resp.sha }
+Invoke-RestMethod -Uri "https://api.github.com/repos/musicproductionwiki/musicproductionwiki/contents/$GITHUB_PATH" -Method PUT -Headers @{Authorization="token $env:GITHUB_TOKEN";"Content-Type"="application/json"} -Body ($body | ConvertTo-Json)
+```
+
+## JS Triple-Check Script (Run Before Every Bible Entry Output)
+
+```python
+import re, subprocess, tempfile, os
+
+def js_triple_check(html):
+    errors = []
+    scripts = re.findall(r'<script>(.*?)</script>', html, re.DOTALL)
+    for i, content in enumerate(scripts):
+        apos = re.findall(r"(?<!\\)\b\w+'\w+\b", content)
+        if apos:
+            errors.append(f"Block {i} APOSTROPHE: {apos[:5]}")
+        non_ascii = re.findall(r'[^\x00-\x7F]', content)
+        if non_ascii:
+            errors.append(f"Block {i} UNICODE: {[hex(ord(c)) for c in set(non_ascii)][:5]}")
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.js', delete=False, encoding='utf-8') as f:
+            f.write(content)
+            tmpfile = f.name
+        result = subprocess.run(['node', '--check', tmpfile], capture_output=True, text=True)
+        os.unlink(tmpfile)
+        if result.returncode != 0:
+            errors.append(f"Block {i} SYNTAX: {result.stderr.strip()[:100]}")
+    return errors
+```
+
+## Session 52 Diagnostic Commands
+
+```powershell
+# Standard session start:
+. .\setenv.ps1
+python mpw_session_start.py
+python verify_fixes.py
+
+# Commit reverb.html (copy command from above)
+
+# After commit — verify live:
+# Open musicproductionwiki.com/bible/reverb
+# Check all 10 additions, nav highlighting, spectrograms, tools
+# Test on real iPhone
+```

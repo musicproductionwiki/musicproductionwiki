@@ -1,5 +1,5 @@
 # MPW-HANDOFF-CONTENT.md
-*Updated: May 21, 2026 (SESSION 47)*
+*Updated: May 22, 2026 (SESSION 52)*
 
 ---
 
@@ -461,3 +461,78 @@ This depth is required for institutional licensing credibility. Thin history (<5
 | Affiliate applications | Plugin Boutique, Amazon Associates, Sweetwater, Loopmasters, PluginFox | HIGH — REVENUE BLOCKER |
 | Add missing producer quotes | Kevin Parker, Robin Guthrie, Andy Summers, Brian Eno, Tony Visconti, Steve Lillywhite | P1 |
 | Run Tier 1 remaining batch | After v5.3 writer locked | P2 |
+
+---
+
+# SESSION 52 UPDATE — May 22, 2026
+
+## Bible Vision Confirmed
+
+Steve confirmed S52: "Not Britannica. The definitive producer education resource. Something that truly helps and supports Beginning, Intermediate and even advanced producers."
+
+Active teaching. Tools producers use mid-session. Producers should feel like they went somewhere after reading an entry.
+
+## New Content Standards — S52
+
+### Institutional Credibility (NEW)
+Every T1 entry must include:
+- Citation Block (APA/MLA/Chicago/Harvard — one-click copy, 120px fixed-width buttons)
+- Version History block (changelog showing what was added and when)
+- Last Reviewed date
+- Email: team@musicproductionwiki.com for institutional licensing contact
+
+These signal that the Bible is a maintained, peer-reviewed reference — not a blog post. This directly enables institutional licensing conversations.
+
+### Three-Act Narrative Arc (LOCKED for T1)
+Sections must serve a coherent story — not exist as independent modules.
+- Act 1 — Understanding (definition → history)
+- Act 2 — Application (decision-framework → before-after)
+- Act 3 — Mastery (in-the-wild → faq)
+
+### Structural Consolidation S52
+- Era Translator → folded into History
+- Contrast Listen → folded into In The Wild
+- Mono Check → folded into Mistakes
+- Recall Sheet → folded into Tools
+- Psychoacoustics → folded into Definition
+- Removed: Symptom Diagnostic, Red/Green Flags, "Start Here" box
+- Result: 28 sections → 23 sections — cleaner narrative
+
+## New Sections Added in S52 (beyond S51 list)
+
+S52 additions (10 total) per entry type:
+
+| Addition | T1 | T2 | T3 |
+|---|---|---|---|
+| Decision Framework (Three Questions) | ✅ mandatory | ✅ | ❌ |
+| Tempo-Locked or entry-appropriate tool | ✅ mandatory | ✅ | ❌ |
+| Beginner Trap section | ✅ mandatory | abbreviated | ❌ |
+| Institutional Citation Block | ✅ mandatory | ✅ mandatory | ✅ mandatory |
+| Version History block | ✅ mandatory | ✅ mandatory | ✅ mandatory |
+| Annotated Spectrograms (In The Wild) | ✅ mandatory | if 3+ tracks | ❌ |
+| Mix Translation Test | ✅ mandatory | optional | ❌ |
+| Arrangement Timeline | ✅ mandatory | ❌ | ❌ |
+| DNA Signal Chain Breakdown panels | ✅ mandatory | ❌ | ❌ |
+| Three-act structural arc | ✅ mandatory | ✅ | ❌ |
+
+## Batch Status End of Session 52
+
+| Batch | Status | Notes |
+|---|---|---|
+| reverb.html S52 | PENDING COMMIT | reverb_v11.html — all JS clean — mobile QA required |
+| Bible Tier 1 (33 remaining) | BLOCKED | v5.3 writer must be built in Session 53 |
+| Batch 09-13 | QUEUED | After Tier 1 complete |
+
+## Updated Pending Owner Actions
+
+| Action | Detail | Priority |
+|---|---|---|
+| Mobile QA on reverb_v11.html | Real iPhone — NEVER rule | P0 NOW |
+| Commit reverb.html | Command in HANDOFF-SCRIPTS | P0 |
+| Affiliate applications | Plugin Boutique, Amazon Associates, Sweetwater, Loopmasters, PluginFox — professional email now available | HIGH — REVENUE BLOCKER |
+| Add missing producer quotes | Kevin Parker, Robin Guthrie, Andy Summers, Brian Eno, Tony Visconti, Steve Lillywhite | P1 |
+| Build v5.3 writer (S53) | Back-engineer from reverb_v11.html | P1 |
+| Run Tier 1 remaining 33 batch | After v5.3 writer locked | P2 |
+| Run mpw_bible_cat_pages.py | After regen | P3 |
+| Retry air entry | P3 |
+| Run Batch 09 | After Tier 1 | P4 |

@@ -1,5 +1,5 @@
 # MPW-HANDOFF-TECH.md
-*Updated: May 19, 2026 (SESSION 41)*
+*Updated: May 22, 2026 (SESSION 52)*
 
 ---
 
@@ -990,3 +990,113 @@ This is the SAME bug class as LTIPS single-quoted strings (Session 46, Root Caus
 
 reverb.html: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\reverb.html`
 Commit target: `bible/reverb.html` in GitHub repo
+
+---
+
+# SESSION 52 UPDATE — May 22, 2026
+
+## New Gold Standard Bible Entry — reverb_v11.html
+
+reverb_v11.html is now the T1 gold standard. File: bible/reverb.html after commit.
+Size: 299.7KB. Lines: 2,593. 4 script blocks — all pass node --check.
+
+## Email Standard
+
+All Bible entries now use: **team@musicproductionwiki.com**
+Legacy: mpwikiofficial@gmail.com (kept as fallback only)
+Updated in reverb_v11.html — 2 instances.
+
+## Upload Method Clarification (CRITICAL)
+
+The 200KB Cloudflare limit applies ONLY to ZIP files via Notepad → Save As → All Files.
+Single-file GitHub API PUT has NO size limit.
+reverb.html at 299.7KB is fine for single-file PUT.
+
+| Method | Size Limit | Use For |
+|---|---|---|
+| GitHub API PUT (single) | None | Single Bible entry, single article fix |
+| GitHub Trees API | None | Multi-file batch (2+ files) |
+| Notepad → Save As → All Files | 200KB (Cloudflare intercepts larger ZIPs) | Local file save only — not the upload method |
+| GitHub web editor | NEVER | Silent corruption |
+
+## Bible Entry CSS Architecture (CRITICAL — ADDED S52)
+
+Main CSS is one large minified <style> block in <head> containing fingerprint comments.
+CSS injection MUST be append-only — add NEW <style> block before </head>.
+NEVER modify the existing block. Regex targeting fingerprints destroys the entire block.
+
+```html
+<!-- CORRECT: append new style block -->
+<style>
+  .new-feature { ... }
+</style>
+</head>
+
+<!-- WRONG: modify existing block — destroys all CSS -->
+```
+
+## Bible Entry JS Architecture (ADDED S52)
+
+IntersectionObserver for sidebar TOC — rootMargin: '-120px 0px -60% 0px'
+Entry nav offset: 60px for getBoundingClientRect highlighting
+Mobile: entry-nav top 84px, sidebar hidden, grid becomes block
+
+```javascript
+// Correct sidebar TOC implementation:
+var tocLinks = document.querySelectorAll('.sidebar-toc a');
+function setTocActive(id){ tocLinks.forEach(function(a){ a.classList.toggle('active', a.getAttribute('href')==='#'+id); }); }
+var sections = document.querySelectorAll('.entry-section[id]');
+var obs = new IntersectionObserver(function(entries){ entries.forEach(function(e){ if(e.isIntersecting) setTocActive(e.target.id); }); }, {rootMargin:'-120px 0px -60% 0px'});
+sections.forEach(function(s){ obs.observe(s); });
+if(sections[0]) setTocActive(sections[0].id);
+```
+
+## JS Safety Protocol (ADDED S52)
+
+All JS in Bible entries must be:
+1. ASCII-safe — no unicode chars directly — use \uXXXX escapes
+2. Apostrophe-safe — possessives + contractions escaped with \'
+3. No literal newlines in string values
+4. No literal newlines in regex literals (scan separately)
+5. All script blocks pass node --check before output
+
+## New CSS Namespaces in reverb_v11.html
+
+| Prefix | Feature |
+|---|---|
+| .mtt-* | Mix Translation Tool |
+| .dna-chain-* | DNA Signal Chain panels |
+| .beginner-protocol-grid | Beginner Trap protocol grid |
+| .framework-qr | Decision Framework quick reference grid |
+| .psy-* | Psychoacoustics block (folded into Definition) |
+| .cl-* | Contrast Listen (folded into In The Wild) |
+| .mc-* | Mono Check (folded into Mistakes) |
+| .et-* | Era Translator (folded into History) |
+| .t3, .tb, .sh, .tr, .rb, .tc, .co, .nt | Standard tool container classes |
+
+## JS Functions in reverb_v11.html Main Script Block
+
+| Function | Purpose |
+|---|---|
+| rtCalc(), rtRoom(r) | RT60 Calculator |
+| fpDraw(), fpBtn(b,g) | Fingerprint radar chart |
+| dawTab(b,d) | DAW tab switcher |
+| faqToggle(i) | FAQ accordion |
+| dtRender(), dtAnswer(n), dtReset() | Decision Tree |
+| edToggle(sym), edClear() | Error Diagnostic |
+| tcCalc() | Tempo-Locked Calculator |
+| mttRender(), mttSelect(idx), mttToggle(si,sym), mttMarkFixed(si,sym), mttMarkDone(si), mttExport() | Mix Translation Test |
+| atlRender(), atlSelect(idx), atlClick(e,...) | Arrangement Timeline |
+| dnaToggle(pid) | DNA Signal Chain panel toggle |
+
+## reverb.html Commit Command
+
+```powershell
+. .\setenv.ps1
+$content = [System.IO.File]::ReadAllBytes("C:\Users\swarn\OneDrive\Desktop\mpw-scripts\reverb.html")
+$base64 = [System.Convert]::ToBase64String($content)
+$sha_resp = Invoke-RestMethod -Uri "https://api.github.com/repos/musicproductionwiki/musicproductionwiki/contents/bible/reverb.html" -Headers @{Authorization="token $env:GITHUB_TOKEN"} -ErrorAction SilentlyContinue
+$body = @{message="feat: reverb.html S52 — world-class gold standard — 10 additions — 23 sections";content=$base64;branch="main"}
+if ($sha_resp.sha) { $body.sha = $sha_resp.sha }
+Invoke-RestMethod -Uri "https://api.github.com/repos/musicproductionwiki/musicproductionwiki/contents/bible/reverb.html" -Method PUT -Headers @{Authorization="token $env:GITHUB_TOKEN";"Content-Type"="application/json"} -Body ($body | ConvertTo-Json)
+```
