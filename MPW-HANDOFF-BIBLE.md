@@ -2331,3 +2331,122 @@ compression.html remains live and correct but reverb.html is now the reference f
 | 63 | Build Type 5 Track Anatomy writer template | |
 | 64 | Run Batch 09 as Track Anatomy entries (100) | |
 
+
+---
+
+# SESSION 56 UPDATE — BIBLE — May 22, 2026
+
+## Session 56 — Bible State Unchanged
+
+- **Bible entries: 225 live** — no new entries committed this session
+- reverb.html v1.6: LIVE ✅ — gold standard — unchanged
+- chorus.html v5.2: LIVE ✅
+
+## mpw_tools_v4.py — Rejected
+
+The 12 new tools built in Session 56 were rejected by Steve on quality grounds. The tools were lookup tables — not real calculators. They lacked canvas visuals, tap tempo, click-to-copy, animated meters, and the depth that characterizes v3 tools.
+
+**Impact on Bible:** The writer cannot be upgraded to v5.3 until mpw_tools_v4.py is rebuilt to world-class standard. mpw_tools_v3.py remains the active tool module. All v3 tool slugs (49) remain mapped and working.
+
+## v4 Tool Quality Bar — Mandatory Reference Before Building
+
+Study these v3 tools before writing any v4 tool. These are the quality targets:
+
+**build_adsr():** Canvas-rendered real-time ADSR envelope. 9 instrument presets. Sliders update canvas in real time. Shape labels (A/D/S/R) positioned on canvas. Contextual tip changes per preset. This is what "visual output" means.
+
+**build_stereo_width():** Canvas vectorscope showing stereo field as a sector. Phase correlation computed and displayed. Color changes red when width causes cancellation. Width label updates as you drag. Per-element width recommendations below.
+
+**build_lfo_sync():** Cards highlight green/grey based on whether each note subdivision falls in the recommended Hz range for the selected application. Rate range warning fires if no notes fall in range. FM crossover callout appears dynamically when rates hit 20Hz+. Waveform table with per-waveform use case detail.
+
+**build_delay():** Tap tempo with tap count display. Click any card to copy ms value — card shows "Copied!" then restores. Pre-delay reference grid below main grid. BPM-specific tip text from curated TIPS dict.
+
+**build_lufs():** Per-platform penalty meters with colored progress bars (green = no penalty, red = over target). Bar width computed from dB penalty. Genre target with contextual tip. All 10 platforms listed.
+
+These are the tools v4 must match or exceed.
+
+## NEVER Rules Added Session 56 — Bible
+
+| Rule | Detail |
+|---|---|
+| NEVER build new tools without studying every v3 tool body in full | Quality gap between v3 and v4 was caused by not internalizing v3 tool depth before writing |
+| NEVER count dropdown-plus-text-output as an "interactive tool" | A tool is interactive when the output changes in real time with visual feedback as the user manipulates inputs |
+| NEVER ship tools that don't compute — tools that only look up | Every tool must do arithmetic — BPM calculations, dB formulas, Hz conversions, room acoustics math |
+
+## Session 56 Priority Queue → Session 57
+
+| Priority | Task | Status |
+|---|---|---|
+| **P0** | **Rebuild mpw_tools_v4.py — world-class — all 12 tools** | READY — full spec in CORE-S56 |
+| **P1** | **Build v5.3 1-pass writer from reverb.html** | After v4 confirmed by Steve |
+| P2 | Run Tier 1 remaining 33 batch | After writer confirmed |
+| P3 | Zenodo DOI setup | Steve action |
+| P4 | Missing producer quotes | PENDING |
+| **P5 (Steve)** | **Affiliate applications** | **REVENUE BLOCKER** |
+
+
+---
+
+# SESSION 57/58 UPDATE — BIBLE — May 22, 2026
+
+## mpw_tools_v4.py — 6 New World-Class Tools (First Batch)
+
+The Producer's Bible now has 18 total interactive tools (12 v3 + 6 v4). All 6 v4 tools are at the v5 quality benchmark — canvas visualizers, tap tempo, animated meters, click-to-copy, famous producer presets, Free/Mid/Pro/Key insight plugin tiers.
+
+### Tool Coverage Map — Complete (All 24 Planned Tools)
+
+**Built in v3 (12 tools, 49 slugs):**
+- GR Calculator, Delay Time Calculator, LUFS Reference, Frequency Band Reference, RT60 Calculator, Note→Frequency, ADSR Visualizer, Gain Staging Reference, Headroom Calculator, Stereo Width & M/S, LFO Rate Calculator, Chord & Key Reference
+
+**Built in v4 first batch (6 tools, 33 slugs):**
+- Attack/Release Calculator (8 slugs), Vocal Chain Builder (5 slugs), EQ Problem Solver (7 slugs), Frequency Conflict Detector (3 slugs), Saturation Reference (4 slugs), Mix Bus Headroom (6 slugs)
+
+**Remaining in v4 second batch (6 tools — Session 59):**
+- Pre-Delay & Reverb Tail Calculator (5 slugs)
+- Stereo Field & Mono Compatibility Checker (6 slugs)
+- Mastering Signal Chain Reference (7 slugs)
+- Sidechain/Ducking Frequency Reference (6 slugs)
+- Synthesis Parameter Reference (9 slugs)
+- Tempo & Key Finder Reference (4 slugs)
+
+### v4 Tool Architecture Standards (All Tools Must Have)
+
+Every v4 tool must implement:
+1. **Real calculation** — computed from inputs, not lookup tables
+2. **Canvas or SVG visual** — redraws in real time with slider/input changes
+3. **Famous producer presets** — load all values in one click
+4. **Source/genre presets** — contextual starting points
+5. **Click-to-copy** — every calculated value copyable with one click
+6. **Tap tempo** (where BPM-relevant)
+7. **Free / Mid / Pro / Key insight** plugin tiers
+8. **Contextual tip text** — changes based on calculated result or preset
+9. **Share bar** — Copy Link + X + Reddit + Embed code
+10. **Zero innerHTML** — all createElement/appendChild
+
+### Plugin Format — Confirmed Standard (Session 58)
+
+The canonical plugin string format for all v4 tools:
+```
+Free: Plugin A, Plugin B | Mid: Plugin C, Plugin D | Pro: Plugin E, Plugin F | Key insight: the engineering truth that changes how you use this
+```
+
+Rendered as color-coded tier cards. All T2 and T3 strings reformatted to this standard in Session 58.
+
+### v4 Tools — Session 59 Build Spec (Tools 7-12)
+
+| Tool | What It Must Do |
+|---|---|
+| Pre-Delay & Reverb Tail Calculator | BPM + time sig → full tap-synced subdivision grid (click-to-copy each value) + room preset decay recommendations + pre-delay visual showing placement relative to transient timeline |
+| Stereo Field & Mono Compatibility Checker | Extend v3 stereo tool: add per-instrument mono safety check, phase correlation estimate, HPF recommendation for bass content, visual stereo field indicator |
+| Mastering Signal Chain Reference | Interactive chain where clicking each step shows exact settings, common mistakes, and plugin recommendations — checkboxes to mark step complete — signal flow animation |
+| Sidechain/Ducking Reference | Visual showing source → target with GR amount as animated canvas meter — attack/release timing diagram showing kick vs bass relationship — BPM-synced ducking rate |
+| Synthesis Parameter Reference | Canvas showing actual wave shape or filter slope for each parameter — not just text — real-time parameter visualization |
+| Tempo & Key Reference | Circle of fifths SVG (clickable), key relationship diagram, tempo subdivision grid with click-to-copy, relative minor/major visual, BPM → musical tempo descriptor |
+
+### Priority Queue Update
+
+| Priority | Task |
+|---|---|
+| P0 | Integrate v4 into mpw_bible_writer.py — try v4 first, fall through to v3 |
+| P1 | Build v4 Tools 7-12 (second batch) |
+| P2 | Build v5.3 1-pass writer from reverb.html gold standard |
+| P3 | Run Tier 1 remaining 33 batch |

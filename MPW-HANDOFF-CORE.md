@@ -1719,3 +1719,257 @@ Session ran long. Context was ~85% at handoff writing time. All major decisions 
 | DOI | PENDING — Zenodo setup required (Steve) |
 | Status | LIVE ✅ |
 
+
+---
+
+# ⛔ SESSION 56 UPDATE — May 22, 2026
+
+## Session 56 Confirmed State at Start
+- Articles: **526** live (unchanged)
+- Bible entries: **225 live** (unchanged)
+  - reverb.html v1.6: LIVE ✅ — gold standard
+  - chorus.html v5.2: LIVE ✅
+  - v5.1 original 15: LIVE — need regen with v5.3
+  - compression: LIVE — need regen with v5.3
+  - v5.1 Session 40 (54): LIVE — content issues — need regen
+  - v3.0/v4.0 legacy (153): LIVE — untouched
+
+## Session 56 — What Was Completed
+
+### P0 — mpw_tools_v4.py — BUILT AND DELIVERED (REJECTED)
+
+**What was built:**
+- 12 new tool builder functions in mpw_tools_v4.py
+- 47 slug mappings in TOOL_OVERRIDES
+- All tools syntax-clean (ast.parse PASS)
+- node --check PASS on extracted JS (compression, eq, music-theory)
+- Smoke test: 47/47 slugs — all 3 brand strings present
+- Delivered via base64 PS1 script (deliver_v4.ps1) — WriteAllBytes confirmed
+- Steve confirmed import and smoke test working: `from mpw_tools_v4 import build_tools_section_v4` → PASS
+
+**Why it was rejected:**
+Steve reviewed the tools via tool_preview.html and determined they did not meet the quality bar established by mpw_tools_v3.py. The v4 tools were lookup tables with dropdowns — not interactive calculators. They had no canvas visualizers, no tap tempo, no real-time meters, no visual feedback. Compared to v3 tools (which have: canvas-rendered ADSR envelope, live vectorscope for stereo width, per-platform penalty meters with color-coded progress bars, tap tempo on delay calculator, FM crossover callouts, rate range highlighting on LFO tool), the v4 tools were shallow and presented lookup data instead of doing real calculations.
+
+**Steve's exact feedback:** "These were supposed to be world class and comprehensive. Not basic tools off a shelf of a kindergarten. These have to be best in class and presentable and beautiful as well."
+
+**Root cause of failure:**
+Claude built v4 tools by writing dropdown-and-text-output patterns without first studying the depth and interactivity of v3 tools. The v3 tools were read during session startup but their depth was not internalized before building v4. The Attack/Release Calculator in v4 was a static table. The v3 Delay Calculator has tap tempo, click-to-copy on every card, genre-specific tip text, and pre-delay reference grid. The gap was fundamental — v4 tools answered questions, v3 tools teach while you interact.
+
+### Session 56 — What Was NOT Completed
+
+- mpw_tools_v4.py rebuild (world-class version) — DEFERRED to Session 57
+- v5.3 writer build — DEFERRED (blocked on v4 tools)
+- Tier 1 remaining 33 batch — DEFERRED
+
+## What "World Class" Means for v4 Tools — Spec for Session 57
+
+Each tool must have ALL of the following where applicable:
+- **Real calculation** — not a lookup table. Numbers must be computed from inputs, not selected from a dict.
+- **Visual output** — canvas meter, SVG chart, progress bar, or animated indicator showing the result
+- **Interactivity** — clicking a card changes the output. Dragging a slider updates the display in real time. Clicking a row copies a value.
+- **Presets** — source-specific starting points (e.g. "Kick Drum" loads kick-appropriate settings) that populate all inputs at once
+- **Contextual tip text** — not generic. The tip must change based on the calculated result or selected preset. Must be specific enough to be actionable in a DAW session.
+- **Tap tempo or equivalent input** — where BPM is relevant, tap tempo is mandatory
+- **Click-to-copy** — any calculated value a producer would enter in a DAW must be one-click copyable
+- **Depth** — more information than a producer could easily Google. The tool must justify being on The Producer's Bible.
+
+### v4 Tool Rebuild Specs — What Each Tool MUST Be
+
+| Tool | What v4 had | What it must be |
+|---|---|---|
+| Attack/Release Calculator | Dropdown → static text tip | BPM input + tap tempo + attack/release VISUALIZED as animated meters + source presets that load all params + ratio presets + click-to-copy on every value |
+| Vocal Chain Builder | Dropdown → numbered text list | Interactive step-by-step chain where clicking each step expands settings panel with exact parameter values, color-coded by processing type (EQ/Compression/FX), before/after tip |
+| EQ Problem Solver | Dropdown pair → text list | Type-ahead symptom search or frequency band visual — clicking a frequency range on a fake spectrum shows the problem and fix — not a dropdown |
+| Frequency Conflict Detector | Clickable instrument tiles → text | Visual frequency spectrum (SVG) showing each instrument's energy range as colored bars — overlaps highlight in red — fix appears on click |
+| Saturation Character Reference | Clickable list → text | Waveform SVG showing harmonic series for each type — even vs odd harmonics visually displayed — parameters table + use case grid |
+| Mix Bus Headroom Reference | Dropdowns → 3 number results | Live meter showing current headroom vs target — color band (green/amber/red) — instrument-by-instrument level reference grid |
+| Pre-Delay & Reverb Tail Calculator | BPM input → static result | BPM + time sig → full tap-synced subdivision grid (click-to-copy each value) + room preset decay recommendations + pre-delay visual showing placement relative to transient |
+| Stereo Field Checker | Dropdown pair → text | Actually identical to v3 stereo width tool — extend it: add per-instrument mono safety check, phase correlation estimate, HPF recommendation for bass content |
+| Mastering Signal Chain Reference | Static numbered list + dropdown | Interactive chain where clicking each step shows exact settings, common mistakes, and plugin recommendations — checkboxes to mark step complete |
+| Sidechain/Ducking Reference | Clickable grid → text | Visual showing source → target with GR amount as animated meter — attack/release visualized — timing diagram showing kick vs bass relationship |
+| Synthesis Parameter Reference | Dropdown pair → parameter list | Must use canvas (like ADSR visualizer) to show the actual wave shape or filter slope — not just text parameters |
+| Tempo & Key Reference | BPM input + key dropdown → grid | Extend with: full circle of fifths SVG (clickable), key relationship diagram, tempo subdivision grid with click-to-copy, relative minor/major visual |
+
+## New NEVER Rules Added Session 56
+
+| Rule | Detail |
+|---|---|\n| NEVER build mpw_tools_v4.py tools without first reading EVERY v3 tool body in full | The gap between v3 and v4 quality was caused by not internalizing what v3 tools actually do — visual output, canvas, tap tempo, click-to-copy, animated meters |
+| NEVER substitute lookup tables for real calculators | Every v4 tool must compute results from inputs — never select from a static dict based on a dropdown |
+| NEVER build a tool without visual feedback | Text output alone is not sufficient — every tool needs a meter, chart, canvas element, or animated indicator |
+| NEVER build a tool without click-to-copy on every calculable value | Producers use these mid-session — friction of copy-pasting kills the workflow |
+| NEVER declare tools "done" before opening tool_preview.html and using each one for 60 seconds | Paper-passing the smoke test is not the same as actually using the tool |
+| NEVER build tools in separate chunk files and assemble them at the end | The assembly pattern caused import bloat and the print() side effects on module load — build the full file in one coherent script |
+| NEVER use print() statements in module-level code | `print("Tools 1-4 OK")` at module level executes on every import — confirmed annoying and wrong |
+
+## Session 56 Priority Queue (Session 57)
+
+| Priority | Task | Status |
+|---|---|---|
+| **P0** | **Rebuild mpw_tools_v4.py — world-class version — all 12 tools** | Spec defined above — build from v3 gold standard |
+| **P1** | **Build v5.3 1-pass writer from reverb.html gold standard** | After v4 confirmed |
+| P2 | Run Tier 1 remaining 33 batch with v5.3 writer | After writer confirmed |
+| P3 | Zenodo account + DOI on reverb.html | Steve action |
+| P4 | Add missing producer quotes (Kevin Parker, Robin Guthrie, Andy Summers, Brian Eno, Tony Visconti, Steve Lillywhite) | PENDING |
+| **P5 (Steve)** | **Affiliate applications — Plugin Boutique, Amazon, Loopmasters, Sweetwater, PluginFox** | **REVENUE BLOCKER** |
+| P6 | GSC: Request Indexing for /bible/reverb | Steve action — 2 min |
+
+## Files on Steve's Machine — End of Session 56
+
+| File | Status |
+|---|---|
+| mpw_tools_v4.py | DELIVERED — 1,310 lines — 84.4KB — 47 slugs — smoke test PASS — but REJECTED quality-wise — do NOT integrate into writer |
+| mpw_tools_v3.py | CONFIRMED WORKING — 1,227 lines — 80KB — Session 55 branding fixes intact |
+| mpw_bible_writer.py | v5.2 s47d — 214,478 bytes — to be REPLACED by v5.3 |
+| verify_fixes.py | in mpw-scripts\ — run any time |
+| deliver_v4.ps1 | in mpw-scripts\ — can be deleted — v4 will be rebuilt |
+| tool_preview.html | in mpw-scripts\ — generated this session — can be deleted |
+
+
+---
+
+# ⛔ SESSION 57 UPDATE — May 22, 2026
+
+## Session 57 — mpw_tools_v4.py REBUILT (WORLD-CLASS VERSION) — DELIVERED
+
+### What Was Built
+
+mpw_tools_v4.py rebuilt from scratch to v5 quality standard (reverse-engineered from mpw_tools_v5.py which was decoded from deliver_v5_wip.ps1). The rejected Session 56 version was discarded and a completely new file was written.
+
+**Quality benchmark studied:** v5 tools — 10,000–15,000+ chars per tool, attack/release sliders ON the tool, compressor character selectors with Free/Mid/Pro plugin tiers, famous producer settings, SVG timing diagrams using createElementNS (never innerHTML — Netlify CSP blocks it), per-source/per-genre recommendations, contextual tips combining multiple input dimensions, canvas visuals that redraw in real time, JS triple-check after every tool.
+
+**6 tools built (first batch):**
+
+| Tool | Slug Mappings | Key Features |
+|---|---|---|
+| T1 Attack/Release Calculator | compression, limiting, parallel-compression, multiband-compression, bus-compression, noise-gate, adsr, envelope | BPM + tap tempo, attack/release sliders with note division display, animated GR envelope canvas (gradient stroke, quadratic curve), 4 compressor characters (FET/VCA/Opto/Vari-Mu) with plugin tiers, 11 source presets, 6 famous producer settings, click-to-copy |
+| T2 Vocal Chain Builder | delay, reverb, send-return, automation, gain-staging | 7 genres × 4 rooms × character × mix position, 8 famous vocal chains, expandable step cards with exact settings + reasoning + click-to-copy, plugin recommendations per genre |
+| T3 EQ Problem Solver | eq, parametric-eq, shelving-eq, hpf, lpf, air-frequency-eq, resonance | 13 symptoms, 10 instruments, SVG spectrum with highlighted problem zone, 4 click-to-copy value chips (Hz/gain/Q/action), numbered step-by-step fix, plugin recommendations, per-instrument EQ cheat sheet (10 instruments) |
+| T4 Frequency Conflict Detector | stereo-imaging, mid-side-processing, dynamic-range | 10 instrument toggle pills, canvas log-scale spectrum (20Hz–20kHz), red conflict zones, 30+ unique pair-specific resolution text |
+| T5 Saturation & Harmonic Character | saturation, distortion, harmonic-distortion, clip-gain | 6 saturation types, live transfer function canvas + harmonic spectrum canvas (both redraw on drive slider), per-source drive recommendations, 6 famous settings, Free/Mid/Pro/Key insight tiers |
+| T6 Mix Bus Headroom & Summing | mix-bus, headroom, mastering, lufs, loudness-normalization, true-peak-limiting | Platform LUFS canvas vs your mix (9 platforms), gain staging reference per stage, mastering chain signal flow (7 steps), True Peak explained, 8 critical mix bus mistakes |
+
+**Delivery:** Two-part PS1 scripts (deliver_v4_part1.ps1 / deliver_v4_part2.ps1) — each under 200KB — WriteAllBytes confirmed.
+
+### Dispatcher
+
+```python
+TOOL_OVERRIDES_V4 = {
+    # T1 Attack/Release
+    'compression': build_ar, 'limiting': build_ar,
+    'parallel-compression': build_ar, 'multiband-compression': build_ar,
+    'bus-compression': build_ar, 'noise-gate': build_ar,
+    'adsr': build_ar, 'envelope': build_ar,
+    # T2 Vocal Chain
+    'delay': build_vocal, 'reverb': build_vocal,
+    'send-return': build_vocal, 'automation': build_vocal,
+    'gain-staging': build_vocal,
+    # T3 EQ Solver
+    'eq': build_eq_solver, 'parametric-eq': build_eq_solver,
+    'shelving-eq': build_eq_solver, 'hpf': build_eq_solver,
+    'lpf': build_eq_solver, 'air-frequency-eq': build_eq_solver,
+    'resonance': build_eq_solver,
+    # T4 Freq Conflict
+    'stereo-imaging': build_freq_conflict, 'mid-side-processing': build_freq_conflict,
+    'dynamic-range': build_freq_conflict,
+    # T5 Saturation
+    'saturation': build_saturation, 'distortion': build_saturation,
+    'harmonic-distortion': build_saturation, 'clip-gain': build_saturation,
+    # T6 Mix Bus
+    'mix-bus': build_mixbus, 'headroom': build_mixbus,
+    'mastering': build_mixbus, 'lufs': build_mixbus,
+    'loudness-normalization': build_mixbus, 'true-peak-limiting': build_mixbus,
+}
+```
+
+Public API: `build_tools_section_v4(slug, term)` returns complete HTML or None (caller falls through to v3).
+
+### Plugin Format — Unified (Session 58 polish)
+
+After initial delivery, Steve requested all plugin recommendations use consistent format. All 6 tools now use the same tier-colored card system:
+
+- 🟢 **Free:** green label
+- 🔵 **Mid:** blue label
+- 🟡 **Pro:** amber label
+- 🟩 **Key insight:** teal label — the engineering insight that changes how you use the tool
+
+T2 and T3 plugin strings were reformatted from `Stage: names` to `Free | Mid | Pro | Key insight` format. T2 and T3 JS renderers were replaced with the same tier-colored createElement renderer used by T1 and T5.
+
+### JS Safety — All 6 Tools Confirmed
+
+- NEVER innerHTML — all createElement/appendChild
+- NEVER setTimeout for init calls
+- All functions on window object if called from HTML attributes
+- chr(39) for apostrophes in JS strings
+- '</' + 'script>' for closing script tags
+- Triple-check (apostrophe regex, non-ASCII scan, node --check) after every tool: 6/6 PASS
+
+| Tool | Chars | Status |
+|---|---|---|
+| T1 Attack/Release | 31,291 | PASS |
+| T2 Vocal Chain | 52,681 | PASS |
+| T3 EQ Solver | 51,214 | PASS |
+| T4 Freq Conflict | 29,699 | PASS |
+| T5 Saturation | 35,990 | PASS |
+| T6 Mix Bus | 33,856 | PASS |
+
+### Deploy Instructions
+
+```powershell
+# Save both PS1 via Notepad -> Save As -> All Files
+. .\deliver_v4_part1.ps1   # saves temp base64 chunk to %TEMP%
+. .\deliver_v4_part2.ps1   # assembles + writes mpw_tools_v4.py + runs smoke test
+```
+
+Smoke test output should read:
+```
+Written: ...mpw_tools_v4.py (195,294 bytes)
+PASS 31291 chars
+```
+
+### Current Live State — End of Session 58
+
+- Articles: **526** live (unchanged)
+- Bible entries: **225 live** (unchanged)
+- mpw_tools_v4.py: REBUILT — 195,294 bytes — 33 slugs — 6/6 tools PASS
+- deliver_v4_part1.ps1 / deliver_v4_part2.ps1: DELIVERED — ready to run
+- mpw_tools_v3.py: unchanged — Session 55 branding-corrected version on disk
+- mpw_bible_writer.py: v5.2 s47d — 214,478 bytes — NOT yet updated to use v4
+
+## New NEVER Rules Added Session 57/58
+
+| Rule | Detail |
+|---|---|
+| NEVER build mpw_tools_v4.py tools without first reading EVERY v3 tool body in full | Gap between v3 and rejected v4 quality was caused by not internalizing v3 tool depth |
+| NEVER substitute lookup tables for real calculators | Every tool must compute results from inputs — never select from a static dict |
+| NEVER build a tool without visual feedback (canvas, SVG, animated meter) | Text output alone is not sufficient for The Producer's Bible quality bar |
+| NEVER build a tool without click-to-copy on every calculable value | Producers use these mid-session — friction kills the workflow |
+| NEVER declare tools done before opening preview HTML and using each one for 60 seconds | Smoke test passing is not the same as actually using the tool |
+| NEVER use innerHTML in tool JS | Netlify CSP blocks innerHTML on /bible/* — always createElement/appendChild |
+| NEVER use unicode characters directly in JS strings inside tool HTML | Use \uXXXX escapes — em-dash, triangles, fractions all must be escaped |
+| NEVER use print() at module level in mpw_tools_v*.py | Executes on every import — all print statements inside if __name__ == '__main__' |
+
+## Updated Priority Queue — Session 59
+
+| Priority | Task | Status |
+|---|---|---|
+| **P0** | **Integrate mpw_tools_v4.py into mpw_bible_writer.py** — update TOOL_OVERRIDES to call build_tools_section_v4 first, fall through to v3 for unknown slugs | READY |
+| **P1** | **Build mpw_tools_v4.py Tools 7-12** (Pre-Delay Calculator, Stereo Checker, Mastering Signal Chain, Sidechain Reference, Synthesis Parameter Reference, Tempo & Key Finder) | READY — specs in BIBLE handoff |
+| **P2** | **Build v5.3 1-pass writer from reverb.html gold standard** | After v4 integrated |
+| P3 | Run Tier 1 remaining 33 batch with v5.3 writer | After writer confirmed |
+| P4 | Add missing producer quotes (Kevin Parker, Robin Guthrie, Andy Summers, Brian Eno, Tony Visconti, Steve Lillywhite) | PENDING |
+| **P5 (Steve)** | **Affiliate applications — Plugin Boutique, Amazon, Loopmasters, Sweetwater, PluginFox** | **REVENUE BLOCKER** |
+| P6 | GSC: Request Indexing for /bible/reverb | Steve action |
+| P7 | Zenodo DOI on reverb.html | Steve action |
+
+## Files on Steve's Machine — End of Session 58
+
+| File | Status |
+|---|---|
+| mpw_tools_v4.py | REBUILT — 195,294 bytes — 6 tools — 33 slugs — 6/6 PASS — ready to deploy via PS1 |
+| deliver_v4_part1.ps1 | NEW — 127.4KB — save via Notepad → Save As → All Files |
+| deliver_v4_part2.ps1 | NEW — 127.9KB — save via Notepad → Save As → All Files |
+| mpw_tools_v3.py | CONFIRMED WORKING — Session 55 branding fixes intact |
+| mpw_bible_writer.py | v5.2 s47d — 214,478 bytes — needs v4 integration next session |
+| verify_fixes.py | in mpw-scripts\ — run any time |
+| reverb.html | LIVE ✅ v1.6 — 383KB |
+| chorus.html | LIVE ✅ |

@@ -1528,3 +1528,133 @@ bible/
 | NEVER write mix-translation share bar buttons with inline style= | Use mpw-share-btn class only — flex:1 1 0 must come from the class |
 | NEVER declare mobile QA done based on desktop DevTools | Only real iPhone confirmation counts — S55 found 2 real bugs DevTools missed |
 
+
+---
+
+# SESSION 56 UPDATE — TECH — May 22, 2026
+
+## mpw_tools_v4.py — Status
+
+**File:** mpw_tools_v4.py — 84.4KB — 1,310 lines — 47 slugs
+**State:** On Steve's machine — REJECTED — do not use
+
+**Technical summary:** All 12 tool builder functions pass syntax check and smoke test. The architecture (TOOL_OVERRIDES router, _wrap() pattern, brand header/share footer) is correct and matches v3. The tools themselves are the problem — they are shallow lookup tables not real calculators. The file can be used as a structural template for the rebuild but the tool body content must be rewritten entirely.
+
+## Tool Architecture — v3 vs v4 Gap Analysis
+
+**v3 build_adsr():**
+- Canvas element: 560×185px
+- 9 presets load all 4 ADSR values simultaneously
+- requestAnimationFrame-free but smooth: canvas redraws on every slider input event
+- ADSR shape filled with rgba amber gradient, stroke amber 2.5px
+- Section labels A/D/S/R positioned dynamically based on computed x positions
+- Contextual tip 50+ chars specific to each preset
+
+**v4 equivalent (Attack/Release Calculator):**
+- Two dropdowns + one number input
+- Three result boxes showing computed numbers
+- Two static progress bars (set to hardcoded width percentages)
+- No canvas. No presets that load values. No click-to-copy.
+
+This gap is the core problem. The rebuild must close it.
+
+## NEVER Rules Added Session 56 — Tech
+
+| Rule | Detail |
+|---|---|
+| NEVER write tool body with static progress bar widths | Bar widths must be computed from inputs — hardcoded percentages are meaningless |
+| NEVER use chunk assembly files for Python modules | Assembling tools_1_4.py + tools_5_8.py + tools_9_12.py + router.py is fragile — write the complete file directly |
+| NEVER call print() at module level in any mpw_tools file | print("Tools 1-4 OK") executes on import — confirmed during session — use if __name__ == '__main__' guard |
+
+## PowerShell Multi-Line Python — CONFIRMED BROKEN
+
+Session 56 confirmed: PowerShell silently mangles multi-line `python -c "..."` strings with backslash-quote sequences. The symptom is a SyntaxError on a line that looks correct. The fix is always a .py file.
+
+```powershell
+# BROKEN — PowerShell corrupts this:
+python -c "
+html = '<html><body style=\"background:#0d0d0d\">'
+"
+
+# CORRECT — always use a .py file:
+# 1. Save make_preview.py to mpw-scripts\
+# 2. python make_preview.py
+```
+
+This has been in the NEVER rules since Session 44. It was violated again in Session 56. It will not be violated again.
+
+
+---
+
+# SESSION 57/58 UPDATE — TECH — May 22, 2026
+
+## mpw_tools_v4.py — Technical Architecture
+
+**File:** mpw_tools_v4.py
+**Size:** 195,294 bytes
+**CSS class prefix:** `.t4` (isolated from `.t3` — no conflicts)
+**Public API:** `build_tools_section_v4(slug, term)` → HTML string or None
+
+### CSS Architecture
+
+All v4 tools share a single `CSS` constant injected once per tool call. Class prefix `.t4` prevents any clash with v3 `.t3` classes.
+
+Key CSS variables:
+- Container: `.t4` — `background:#0d0d0d; border:1.5px solid rgba(245,166,35,.45); border-radius:10px`
+- Result box: `.t4 .rb` — dark bg, amber number (`.rn`), gray label (`.rl`)
+- Tier card: `.t4 .tc` — clickable, hover amber border, `.hl` for selected state
+- Canvas: `.t4 canvas` — `display:block; width:100%; border-radius:6px; border:1px solid #1e1e1e; background:#0a0a0a`
+- Mobile: `@media(max-width:600px)` — `.c3,.c4` collapse to 2 columns
+
+### JS Safety Rules Confirmed S57/58
+
+1. **NEVER innerHTML** — Netlify CSP blocks it on `/bible/*` — all DOM manipulation via createElement/appendChild
+2. **NEVER setTimeout for init** — call init functions directly at script end
+3. **All functions on window** if called from HTML `oninput`/`onclick` attributes
+4. **chr(39)** for apostrophes in JS strings within Python f-strings
+5. **`'</' + 'script>'`** for closing script tags (SC constant)
+6. **No unicode in JS strings** — use `\uXXXX` or ASCII alternatives
+7. **No literal newlines in JS string values**
+
+### Canvas Pattern (Used in T1, T4, T5, T6)
+
+All canvases use `devicePixelRatio` for retina sharpness:
+```javascript
+var dpr = window.devicePixelRatio || 1;
+var W = canvas.offsetWidth || 560;
+canvas.width = W * dpr;
+canvas.height = H * dpr;
+var ctx = canvas.getContext('2d');
+ctx.scale(dpr, dpr);
+```
+
+All canvas functions are called on `window.addEventListener('resize', ...)` for responsive behavior.
+
+### SVG Pattern (Used in T3, T4)
+
+All SVGs use `createElementNS` — never innerHTML:
+```javascript
+var NS = 'http://www.w3.org/2000/svg';
+var el = document.createElementNS(NS, 'rect');
+el.setAttribute('x', x);
+el.setAttribute('fill', col);
+svg.appendChild(el);
+```
+
+### Delivery Method — Two-Part Base64 PS1
+
+mpw_tools_v4.py is 195,294 bytes (260,392 chars base64). Single PS1 would be 255KB — over Cloudflare limit. Split into two parts:
+
+- `deliver_v4_part1.ps1` — 127.4KB — writes base64 Part 1 to `%TEMP%\mpw_v4_b64_part1.txt`
+- `deliver_v4_part2.ps1` — 127.9KB — reads Part 1 from temp, concatenates Part 2, writes final binary via `[System.IO.File]::WriteAllBytes()`
+
+Both files saved via Notepad → Save As → All Files to bypass Cloudflare.
+
+## NEVER Rules Added Session 57/58 — Tech
+
+| Rule | Detail |
+|---|---|
+| NEVER use innerHTML in Bible tool JS | Netlify CSP `/bible/*` blocks it — all DOM via createElement/appendChild |
+| NEVER use Python escape sequences for unicode in JS strings inside f-strings | `\\u25b2` renders as actual unicode char in f-string output — use ASCII alternatives or HTML entities |
+| NEVER omit devicePixelRatio scaling on canvas elements | Retina displays show blurry canvas without DPR scaling — always scale by `window.devicePixelRatio||1` |
+| NEVER put tool preview HTML inside zip for Cloudflare delivery | Cloudflare intercepts — use separate file opens or base64 PS1 delivery |

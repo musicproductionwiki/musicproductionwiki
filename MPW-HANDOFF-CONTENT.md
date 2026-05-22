@@ -831,3 +831,68 @@ reverb.html is live and production-clean. The viral distribution templates from 
 
 **Action for Steve:** Post the Twitter/X thread and Reddit post this week while reverb.html is fresh. Templates are in HANDOFF-SCRIPTS.md S54 addendum. Do not wait.
 
+
+---
+
+# SESSION 56 UPDATE — CONTENT — May 22, 2026
+
+## Session 56 — Content State Unchanged
+
+- Articles: **526** — no batch ran this session
+- Bible entries: **225** — no new entries committed
+- All session work was mpw_tools_v4.py build (rejected) and handoff writing
+
+## Batch Pipeline — Updated
+
+| Batch | Status | Blocker |
+|---|---|---|
+| Bible Tier 1 (33 remaining) | BLOCKED | mpw_tools_v4.py rebuild (Session 57) → v5.3 writer (Session 57) |
+| Genre Bible (20) | QUEUED | After Tier 1 |
+| Producer DNA (100) | QUEUED | Session 59+ |
+| Plugin Reference (150) | QUEUED | Session 61+ |
+| Batch 09 (Track Anatomy 100) | QUEUED | Session 63+ |
+| Batch 10–13 | QUEUED | After Batch 09 |
+
+## Pending Owner Actions (Unchanged)
+
+| Action | Priority |
+|---|---|
+| Affiliate applications: Plugin Boutique, Amazon, Loopmasters, Sweetwater, PluginFox | **REVENUE BLOCKER** |
+| GSC: Request Indexing for /bible/reverb | P1 — 2 min |
+| Zenodo account + DOI on reverb.html | P3 |
+| Add missing producer quotes (Kevin Parker, Robin Guthrie, Andy Summers, Brian Eno, Tony Visconti, Steve Lillywhite) | P4 |
+
+
+---
+
+# SESSION 57/58 UPDATE — CONTENT — May 22, 2026
+
+## Tools — Plugin Recommendation Standard (Confirmed)
+
+As of Session 58, the canonical format for plugin recommendations in all Producer's Bible interactive tools is:
+
+```
+Free: [plugin names] | Mid: [plugin names] | Pro: [plugin names] | Key insight: [the engineering truth]
+```
+
+**Tier definitions:**
+- **Free:** Free plugins that are genuinely professional-grade (not just "free alternatives"). Examples: Chow Tape Model, TDR Nova, SPAN, Klanghelm IVGI, Valhalla Supermassive
+- **Mid:** $20–$200 plugins — the sweet spot for most working producers. Examples: FabFilter Pro-Q 3, Waves CLA-76, Soundtoys Decapitator, Valhalla Room
+- **Pro:** $200+ hardware or flagship software. Examples: UAD hardware, Manley Variable Mu, iZotope Ozone, Antares Auto-Tune Pro
+- **Key insight:** One sentence that reveals something a producer could only learn from experience — not a product name, a truth about using the tool
+
+This format applies to ALL future Bible entries in both automated writer output and manually-coded entries.
+
+## Tool Depth Standard — v4 Benchmark
+
+As of Session 57/58, the minimum quality bar for any new Producer's Bible interactive tool is the v4 standard:
+
+- Minimum 25,000 chars of rendered HTML per tool
+- At least one canvas or SVG visual that responds to user input in real time
+- Famous producer settings that load all parameter values in one click
+- Contextual tip text that changes based on selected source/genre/calculated result
+- Click-to-copy on every value a producer would enter in a DAW
+- Plugin recommendations in Free/Mid/Pro/Key insight format
+- Share bar: Copy Link + X + Reddit + Embed code
+
+No tool below this standard should be added to any Bible entry.

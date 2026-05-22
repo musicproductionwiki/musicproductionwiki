@@ -1348,3 +1348,208 @@ Required for academic DOI issuance (Zenodo DOIs are free but Crossref DOIs have 
 5. Register each entry DOI via Crossref metadata deposit API
 Build this workflow after Zenodo is running smoothly.
 
+
+---
+
+# SESSION 56 ADDENDUM — SCRIPTS — May 22, 2026
+
+## mpw_tools_v4.py — Built, Delivered, Rejected
+
+**Location:** C:\Users\swarn\OneDrive\Desktop\mpw-scripts\mpw_tools_v4.py
+**Status:** DELIVERED but REJECTED — do not integrate into writer
+**Size:** 84.4KB — 1,310 lines — 47 slugs — syntax clean — smoke test 47/47 PASS
+
+The file was successfully written to disk via deliver_v4.ps1 (base64 PowerShell WriteAllBytes).
+Steve confirmed import works. But after reviewing via tool_preview.html, Steve rejected the tools on quality grounds. See CORE-S56 for full explanation and rebuild spec.
+
+**DO NOT** import mpw_tools_v4.py into mpw_bible_writer.py until the world-class rebuild is complete.
+
+## tool_preview.html — How to Generate
+
+After mpw_tools_v4.py is rebuilt (Session 57), generate the preview with a .py file (not python -c):
+
+```python
+# make_preview.py — save to mpw-scripts\ and run: python make_preview.py
+from mpw_tools_v4 import build_tools_section_v4
+
+slugs = [
+    ('compression', 'Compression'),
+    ('eq', 'EQ'),
+    ('reverb', 'Reverb'),
+    ('music-theory', 'Music Theory'),
+    ('saturation', 'Saturation'),
+    ('stereo-imaging', 'Stereo Imaging'),
+    ('mastering', 'Mastering'),
+    ('gain-staging', 'Gain Staging'),
+    ('subtractive-synthesis', 'Subtractive Synthesis'),
+    ('mix-bus', 'Mix Bus'),
+]
+
+html = '<html><body style="background:#0d0d0d;padding:20px;font-family:system-ui">'
+for slug, term in slugs:
+    html += '<h3 style="color:#f5a623;margin:24px 0 8px;font-size:11px;letter-spacing:.1em;text-transform:uppercase">%s</h3>' % slug
+    html += build_tools_section_v4(slug, term)
+    html += '<br>'
+html += '</body></html>'
+
+with open('tool_preview.html', 'w', encoding='utf-8') as f:
+    f.write(html)
+
+print('Done — open tool_preview.html in your browser')
+```
+
+**CRITICAL:** Use make_preview.py (a file), NEVER python -c for multi-line scripts. PowerShell mangles backslash-quote sequences.
+
+## NEVER Rules — Scripts (Session 56)
+
+| Rule | Detail |
+|---|---|
+| NEVER use print() at module level in mpw_tools_v*.py | Executes on every import — confirmed annoying — all print statements must be inside if __name__ == '__main__' |
+| NEVER build tool chunks in separate files and concatenate | Causes scoping issues, import pollution, and assembly errors — write the full file as a single coherent script |
+| NEVER test tools on file:// protocol | Clipboard API and CSP restrictions differ from Netlify — always test on live Netlify or via make_preview.py opened from a local server |
+| NEVER run python -c with multi-line scripts in PowerShell | Use a .py file — PowerShell mangles quotes and backslashes in multi-line -c strings |
+
+## v4 Tool Build Approach — Session 57 (Correct Method)
+
+The correct build method for complex Python files:
+
+1. Read ALL of mpw_tools_v3.py from disk before writing a single line of v4
+2. Read every single tool body in v3 — not just _brand_header() and _share() — every build_gr(), build_delay(), build_adsr() etc.
+3. Write a design spec for each v4 tool FIRST — what inputs, what visual output, what presets, what the computed result is
+4. Build one tool at a time in a temp .py file, test it with make_preview.py, approve it visually before moving to next
+5. Assemble all 12 into one file only after each tool is individually confirmed
+6. NEVER use chunk files (tools_1_4.py, tools_5_8.py etc.) — write the full file directly
+7. Deliver via base64 PS1 (WriteAllBytes) — same method as v3
+
+
+---
+
+# SESSION 57/58 UPDATE — May 22, 2026
+
+## mpw_tools_v4.py — REBUILT (World-Class Version)
+
+**Location:** C:\Users\swarn\OneDrive\Desktop\mpw-scripts\mpw_tools_v4.py
+**Status:** REBUILT — 195,294 bytes — 6 tools — 33 slug mappings — 6/6 JS PASS
+**CSS class prefix:** `.t4` (v3 uses `.t3`) — no conflicts
+
+The Session 56 rejected version was discarded. This is a clean rebuild at v5 quality standard.
+
+### Install via Two-Part PS1
+
+```powershell
+# Save both files via Notepad -> Save As -> All Files (bypass Cloudflare)
+Unblock-File .\deliver_v4_part1.ps1
+Unblock-File .\deliver_v4_part2.ps1
+. .\deliver_v4_part1.ps1   # writes temp base64 chunk to %TEMP%
+. .\deliver_v4_part2.ps1   # assembles mpw_tools_v4.py + runs smoke test
+```
+
+Expected smoke test output:
+```
+Written: C:\Users\swarn\OneDrive\Desktop\mpw-scripts\mpw_tools_v4.py (195294 bytes)
+PASS 31291 chars
+```
+
+### Verify Install
+
+```powershell
+python -c "from mpw_tools_v4 import build_tools_section_v4; r=build_tools_section_v4('compression','Compression'); print('PASS', len(r), 'chars') if r else print('FAIL')"
+# Expected: PASS 31291 chars
+
+python mpw_tools_v4.py
+# Smoke test — all 6 tools + dispatcher verified
+```
+
+### Integration into mpw_bible_writer.py (Session 59 P0)
+
+Add to writer:
+```python
+from mpw_tools_v4 import build_tools_section_v4, TOOL_OVERRIDES_V4
+
+def build_tools_section(slug, term):
+    # Try v4 first (6 new world-class tools)
+    result = build_tools_section_v4(slug, term)
+    if result is not None:
+        return result
+    # Fall through to v3 (12 existing tools)
+    return build_tools_section_v3(slug, term)
+```
+
+The v4 dispatcher returns `None` for slugs not in its map — safe to fall through to v3.
+
+### Tool Map — v4 (33 slugs)
+
+| Tool | Slugs |
+|---|---|
+| T1 Attack/Release Calculator | compression, limiting, parallel-compression, multiband-compression, bus-compression, noise-gate, adsr, envelope |
+| T2 Vocal Chain Builder | delay, reverb, send-return, automation, gain-staging |
+| T3 EQ Problem Solver | eq, parametric-eq, shelving-eq, hpf, lpf, air-frequency-eq, resonance |
+| T4 Frequency Conflict Detector | stereo-imaging, mid-side-processing, dynamic-range |
+| T5 Saturation & Harmonic Character | saturation, distortion, harmonic-distortion, clip-gain |
+| T6 Mix Bus Headroom & Summing | mix-bus, headroom, mastering, lufs, loudness-normalization, true-peak-limiting |
+
+### Plugin Format — Unified (Session 58)
+
+All 6 tools now use the same tier-colored plugin renderer: `Free | Mid | Pro | Key insight` format with color-coded labels. T2 and T3 plugin strings were reformatted from `Stage: names` pattern to tier format. Renderer uses createElement/appendChild — no innerHTML.
+
+## Tool Preview — How to Generate (Session 58 Method)
+
+```python
+# make_v4_preview.py — save to mpw-scripts\ and run: python make_v4_preview.py
+import sys
+sys.path.insert(0, r'C:\Users\swarn\OneDrive\Desktop\mpw-scripts')
+from mpw_tools_v4 import build_tools_section_v4
+
+tests = [
+    ('compression', 'Compression'),
+    ('eq', 'EQ'),
+    ('saturation', 'Saturation'),
+    ('stereo-imaging', 'Stereo Imaging'),
+    ('mix-bus', 'Mix Bus'),
+    ('mastering', 'Mastering'),
+]
+
+html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>*{box-sizing:border-box;margin:0;padding:0}body{background:#080808;color:#e0ddd8;font-family:system-ui;padding:20px}</style></head><body>'
+for slug, term in tests:
+    html += f'<div style="max-width:700px;margin:0 auto 40px"><h3 style="color:#f5a623;font-size:10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px">{slug}</h3>'
+    html += build_tools_section_v4(slug, term) or f'<p style="color:#555">No v4 tool for {slug}</p>'
+    html += '</div>'
+html += '</body></html>'
+
+with open('tool_v4_preview.html', 'w', encoding='utf-8') as f:
+    f.write(html)
+print('Done — open tool_v4_preview.html')
+```
+
+## JS Triple-Check for Tool Development (S57/58 Pattern)
+
+This is the validated check function used in Session 57/58 for every tool:
+
+```python
+import re, subprocess, tempfile, os, sys
+
+def js_check(html, label):
+    errors = []
+    scripts = re.findall(r'<script>(.*?)<\/script>', html, re.DOTALL)
+    for i, content in enumerate(scripts):
+        apos = re.findall(r"(?<!\\)\b\w+'\w+\b", content)
+        if apos: errors.append(f"[{label}] APOSTROPHE: {apos[:5]}")
+        non_ascii = re.findall(r'[^\x00-\x7F]', content)
+        if non_ascii: errors.append(f"[{label}] UNICODE: {[hex(ord(c)) for c in set(non_ascii)][:5]}")
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.js', delete=False, encoding='utf-8') as f:
+            f.write(content); tmp = f.name
+        r = subprocess.run(['node', '--check', tmp], capture_output=True, text=True)
+        os.unlink(tmp)
+        if r.returncode != 0: errors.append(f"[{label}] SYNTAX: {r.stderr.strip()[:300]}")
+    return errors
+```
+
+## NEVER Rules Added Session 57/58 — Scripts
+
+| Rule | Detail |
+|---|---|
+| NEVER use unicode chars directly in JS strings | Run `re.sub(r'[^\x00-\x7F]', lambda m: '\\u{:04x}'.format(ord(m.group())), js)` before output |
+| NEVER use innerHTML anywhere in tool JS | CSP blocks it on /bible/* — always createElement/appendChild |
+| NEVER deliver tools with escape sequences as \\uXXXX that Python renders to actual unicode | Python f-strings render \\u25b2 as actual triangle char — use ASCII alternatives (^ v) for expand/collapse |
+| NEVER embed </script> as literal string in Python tool heredocs | Use SC = '</' + 'script>' — always |
+| NEVER use print() at module level | All diagnostic prints inside if __name__ == '__main__' block |
