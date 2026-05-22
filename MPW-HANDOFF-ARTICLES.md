@@ -1,5 +1,5 @@
 # MPW-HANDOFF-ARTICLES.md
-*Updated: May 22, 2026 (SESSION 53)*
+*Updated: May 22, 2026 (SESSION 55)*
 
 ---
 
@@ -571,92 +571,32 @@ Genre Bible and Gear Reference are highest revenue per entry. Build these after 
 
 ---
 
-# SESSION 54 ADDENDUM 2 — MARKETPLACE SUPPORTING CONTENT — May 22, 2026
+# SESSION 55 UPDATE — May 22, 2026
 
-## Articles Required Before Marketplace Launch
+Article count: **526** — unchanged. No article batches ran Session 55. All session work was Bible infrastructure (reverb.html commit, mobile QA, mpw_tools_v3.py branding, writer architecture).
 
-These articles must exist before each marketplace vertical launches. They drive organic traffic and pre-qualify buyers.
+## Bible Entry State — End of Session 55
 
-### Studio Services Marketplace (Phase 2 launch)
-| Slug | Category | Purpose |
+| Group | Count | Status |
 |---|---|---|
-| how-to-find-a-mixing-engineer.html | Music Business | Drives mixing marketplace traffic |
-| how-to-hire-a-session-musician.html | Music Business | Drives session musician traffic |
-| what-does-a-mastering-engineer-do.html | Techniques | Drives mastering marketplace traffic |
-| how-to-brief-a-producer.html | Music Business | Feeds beat commission marketplace |
-| remote-session-recording-guide.html | Techniques | Feeds session musician marketplace |
-| how-to-build-a-production-portfolio.html | Music Business | Feeds verified application funnel |
+| reverb.html v1.6 | 1 | LIVE ✅ — committed this session — mobile confirmed |
+| chorus.html v5.2 | 1 | LIVE ✅ |
+| v5.1 original 15 | 15 | LIVE — need regen with v5.3 |
+| compression | 1 | LIVE — need regen with v5.3 |
+| v5.1 Session 40 | 54 | LIVE — content issues — need regen |
+| v3.0/v4.0 legacy | 153 | LIVE — untouched |
+| **Total live** | **225** | |
 
-### Music Business Services (Phase 4 launch)
-| Slug | Category | Purpose |
+## Batch Pipeline Status — Session 55
+
+| Batch | Status | Blocker |
 |---|---|---|
-| how-to-clear-a-sample.html | Music Business | Feeds clearance brokerage (TruClarify) |
-| music-publishing-for-producers.html | Music Business | Feeds publishing admin service |
-| how-to-read-a-record-deal.html | Music Business | Feeds contract review service |
-| what-is-a-sync-license.html | Music Business | Feeds sync placement service |
-| music-royalties-explained.html | Music Business | Feeds publishing admin service |
-| how-to-register-your-music.html | Music Business | Feeds publishing admin service |
-| music-distribution-explained.html | Music Business | Feeds label services referral |
-| how-to-price-your-beats.html | Music Business | Feeds beat commission marketplace |
+| Bible Tier 1 (33 remaining) | BLOCKED | v5.3 writer — build Session 56 |
+| Genre Bible (20) | QUEUED | Type 7 writer — Session 57 |
+| Producer DNA (100) | QUEUED | Type 4 writer — Session 59 |
+| Plugin Reference (150) | QUEUED | Type 6 writer — Session 61 |
+| Batch 09 (Track Anatomy 100) | QUEUED | Type 5 writer — Session 63 |
+| Batch 10–13 | QUEUED | After Batch 09 |
 
-### Education and Career (Phase 5 launch)
-| Slug | Category | Purpose |
-|---|---|---|
-| music-production-schools-compared.html | Music Business | Feeds school placement brokerage |
-| how-to-get-an-internship-at-a-label.html | Music Business | Feeds job placement service |
-| freelance-music-producer-guide.html | Music Business | Feeds mentorship + marketplace |
+Next article batch: Batch 09 (100 track breakdowns as Track Anatomy entries) — blocked on v5.3 writer and Type 5 writer. Estimated Session 63+.
 
-### Technology and Tools (Phase 2 launch — quick wins)
-| Slug | Category | Purpose |
-|---|---|---|
-| best-daw-templates-for-mixing.html | Techniques | Feeds DAW template marketplace |
-| how-to-sell-sample-packs.html | Music Business | Attracts sample pack sellers to platform |
-
-## Marketplace Pages (Not Articles — Separate Build)
-
-These are functional pages, not content articles. Build as part of marketplace infrastructure:
-
-| URL | Purpose | Build Phase |
-|---|---|---|
-| /marketplace/ | Hub — all services | Phase 2 |
-| /marketplace/mixing/ | Mixing engineer directory | Phase 2 |
-| /marketplace/mastering/ | Mastering engineer directory | Phase 2 |
-| /marketplace/sessions/ | Session musician directory | Phase 2 |
-| /marketplace/mentorship/ | Mentor directory | Phase 1 |
-| /marketplace/feedback/ | A&R feedback submission | Phase 1 |
-| /marketplace/contracts/ | Contract review submission | Phase 1 |
-| /marketplace/beats/ | Beat commission briefs | Phase 2 |
-| /marketplace/sync/ | Sync pitch submission | Phase 4 |
-| /marketplace/templates/ | DAW template marketplace | Phase 3 |
-| /marketplace/group-buy/ | Plugin group buy current offer | Phase 2 |
-| /verified/ | MPW-Verified standard explanation | Phase 1 |
-| /partners/ | Editorial partnership information | Phase 2 |
-
-## SEO Strategy for Marketplace
-
-### High-Value Queries to Target
-- "hire a mixing engineer online" — 2,400 searches/month — high commercial intent
-- "online mastering service" — 5,400/month — extremely high intent
-- "remote session guitarist" — 1,900/month
-- "music contract review" — 1,600/month
-- "sample clearance service" — 1,300/month
-- "music production mentorship" — 900/month
-- "sync licensing for independent artists" — 1,100/month
-
-These queries are served poorly by existing results. MPW's editorial authority creates immediate credibility advantage.
-
-### Content → Marketplace Funnel
-Article ranks for "how to find a mixing engineer" → reader clicks → lands on /marketplace/mixing/ → books a session → MPW earns commission.
-
-This funnel works because:
-1. Article pre-qualifies the buyer (they're actively looking)
-2. MPW's editorial credibility transfers to marketplace trust
-3. No cold pitch — the article already solved their problem and introduced the marketplace naturally
-
-## Duplicate Prevention for Supporting Articles
-
-Before writing any marketplace support article:
-- Check MPW-CATALOG.md for existing articles on similar topics
-- Music Business category already has entries — check before proposing new ones
-- Run mpw_slugs.py to confirm slug availability
-- NEVER propose without duplicate check
