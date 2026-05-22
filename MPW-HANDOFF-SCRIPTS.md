@@ -1,5 +1,5 @@
 # MPW-HANDOFF-SCRIPTS.md
-*Updated: May 22, 2026 (SESSION 53)*
+*Updated: May 22, 2026 (SESSION 55)*
 
 All scripts at: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\`
 GitHub API blocked from Claude's environment — all GitHub operations run from Steve's PowerShell.
@@ -1251,182 +1251,100 @@ Body: [Beginner Trap section content — 3 mistakes, 3 fixes]
 
 ---
 
-# SESSION 54 ADDENDUM 2 — MARKETPLACE SCRIPTS AND WORKFLOWS — May 22, 2026
+# SESSION 55 ADDENDUM — SCRIPTS — May 22, 2026
 
-## Phase 1 Marketplace Launch — No-Code Workflow Scripts
+## mpw_tools_v3.py — Updated (Session 55)
 
-### A&R Feedback Submission Workflow
+Location: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\mpw_tools_v3.py`
+Version: Session 55 branding-corrected build
+Lines: 1,227 — Size: 80.0KB — Syntax: CLEAN — Tools: 12 — Slugs: 49
+
+**6 branding gaps fixed this session** (see HANDOFF-TECH for full detail).
+
+Install: drop updated file into mpw-scripts\ — no other changes required.
+
+Verify after install:
+```powershell
+python -c "from mpw_tools_v3 import build_tools_section_v3; html=build_tools_section_v3('compression','Compression'); print('MusicProductionWiki.com' in html, 'Embed This Tool' in html, 'letter-spacing:.04em' in html)"
 ```
-1. Producer visits /marketplace/feedback/
-2. Pays $29 via Stripe embedded checkout
-3. Typeform submission: track link, genre, target market, specific questions
-4. Zapier routes to reviewer queue (Notion or Airtable)
-5. Reviewer completes feedback template within 72 hours
-6. Automated email delivers PDF feedback report
-7. MPW logs transaction, issues receipt
+Should print: `True True True`
 
-Tools needed: Stripe, Typeform, Zapier, Notion/Airtable, email delivery (Postmark)
-Setup time: ~2 days
-Monthly cost: ~$150/month in SaaS fees
-Revenue at 500 submissions/month: $14,500
-```
+## reverb.html — GitHub API Commit (Reference)
 
-### Mentorship Booking Workflow
-```
-1. Mentor creates profile on /marketplace/mentorship/[slug]
-2. Sets hourly rate, availability, specialties, Bible entries they teach
-3. Producer books via Cal.com embed on profile page
-4. Stripe Checkout collects payment (mentor rate + 20% MPW commission)
-5. Cal.com sends Zoom link to both parties
-6. After session: automated review request sent to producer
-7. MPW releases funds to mentor (minus 20%) via Stripe Connect
-
-Tools needed: Cal.com, Stripe Connect, Zoom, automated email
-Setup time: ~3 days
-Monthly cost: ~$100/month
-Revenue at 500 hours/month: $10,000
-```
-
-### Plugin Group Buy Workflow
-```
-1. MPW identifies plugin for group buy (based on Bible entry traffic + affiliate data)
-2. Negotiate bulk pricing with developer (target: 30% below retail)
-3. Create group buy page: /marketplace/group-buy/[plugin-slug]/
-4. Collect interest (free registration) — build demand signal
-5. Once threshold reached (e.g. 500 licenses): open payment window (7 days)
-6. Collect payments via Stripe
-7. Developer sends license keys in bulk
-8. Zapier distributes keys via automated email
-9. MPW keeps margin (difference between bulk cost and member price)
-
-Tools needed: Stripe, Zapier, email delivery
-Developer relationship: required — start with Valhalla DSP (relationship established via Bible editorial)
-Setup time: ~1 week per group buy
-Revenue per buy: $3,500–7,000 margin
-```
-
-### Contract Review Workflow
-```
-1. Producer uploads contract PDF via /marketplace/contracts/
-2. Pays $149 via Stripe
-3. Submission routed to MPW review queue
-4. Reviewer completes standardized assessment template:
-   - Royalty rates vs market standard
-   - Territory scope
-   - Term length
-   - Reversion clauses
-   -360 deal elements
-   - Red flags
-5. PDF report delivered within 48 hours
-6. Follow-up: referral to entertainment lawyer if needed (referral fee)
-
-Assessment template built from Music Business Bible entries (publishing, royalties, contracts)
-NOT legal advice — clearly disclosed. Editorial assessment only.
-Tools needed: Stripe, file upload (AWS S3 or Cloudflare R2), PDF generation, email
-Setup time: ~1 week
-Revenue at 200 reviews/month: $29,800
-```
-
-## MPW-Verified Application Script
+Session 55 used direct Python urllib.request commit (no curl — file too large for shell arg limit):
 
 ```python
-# mpw_verify_applicant.py
-# Processes verification applications from professionals
+import json, urllib.request, base64
 
-def verify_applicant(application):
-    score = 0
-    
-    # Check commercial credits (minimum 3)
-    if len(application['credits']) >= 3:
-        score += 30
-    
-    # Check Bible entries demonstrated
-    bible_entries = application['bible_entries_demonstrated']
-    if len(bible_entries) >= 5:
-        score += 25
-    
-    # Check sample work quality (manual review step)
-    # Manual reviewer assigns 0-25 points
-    score += application['manual_review_score']
-    
-    # Check response time commitment
-    if application['response_time_hours'] <= 24:
-        score += 10
-    
-    # Check revision policy
-    if application['revisions_included'] >= 2:
-        score += 10
-    
-    # Assign tier
-    if score >= 85:
-        return 'Elite'
-    elif score >= 70:
-        return 'Professional'
-    elif score >= 55:
-        return 'Associate'
-    else:
-        return 'Not Verified'
+TOKEN = "ghp_..."
+REPO  = "musicproductionwiki/musicproductionwiki"
+FILE  = "bible/reverb.html"
+
+with open('/path/to/reverb_v16b.html', 'rb') as f:
+    content = base64.b64encode(f.read()).decode('ascii')
+
+# Get SHA
+url = f"https://api.github.com/repos/{REPO}/contents/{FILE}"
+req = urllib.request.Request(url)
+req.add_header('Authorization', f'token {TOKEN}')
+with urllib.request.urlopen(req) as r:
+    sha = json.loads(r.read())['sha']
+
+# Commit
+payload = json.dumps({"message": "commit message", "content": content, "sha": sha}).encode()
+req2 = urllib.request.Request(url, data=payload, method='PUT')
+req2.add_header('Authorization', f'token {TOKEN}')
+req2.add_header('Content-Type', 'application/json')
+with urllib.request.urlopen(req2) as r:
+    result = json.loads(r.read())
+    print(result['commit']['sha'])
 ```
 
-## Sync Placement Pitch Script
+**NEVER use curl for large files** — shell argument list too long error above ~400KB base64.
 
-```python
-# mpw_sync_pitcher.py  
-# Manages active sync placement pitching workflow
+## mpw_bible_writer.py — Status (Session 55)
 
-SYNC_TARGETS = {
-    'tv_supervisors': [],      # Build list from IMDb Pro
-    'ad_agencies': [],         # Music departments at major agencies
-    'trailer_houses': [],      # Exclusive trailer music companies
-    'game_studios': [],        # Audio directors at major studios
-    'streaming_editorials': [] # Playlist and content music teams
-}
+The v5.3 writer was NOT built this session — architecture was confirmed and S56 is the build session.
 
-def pitch_catalog(tracks, targets):
-    # Match track metadata to supervisor brief requirements
-    # Generate personalized pitch email per supervisor
-    # Log pitches, track responses, follow up schedule
-    # Record placements, calculate MPW commission (25-30%)
-    pass
-```
+**Architecture confirmed:**
+- TRUE 1-pass: one API call, structure frozen, Claude fills content slots only
+- Tools: injected from mpw_tools_v3.py — Claude never generates tool HTML
+- Gold standard: reverb.html (v1.6) — 25 sections — replaces compression.html as reference
 
-## Stripe Connect Setup Checklist
+**v5.3 writer build checklist for Session 56:**
+1. Read reverb.html gold standard in full before writing a single function
+2. Build frozen template with {{SLOT}} markers for all 25 sections + JS data blocks
+3. One API call (claude-sonnet-4-6, 28,000 tokens) fills all slots
+4. Python substitutes slots, injects tools via `build_tools_section_v3(slug, term)`
+5. Python calculates word count, builds 5 JSON-LD schema blocks, assembles final HTML
+6. node --check on all inline JS blocks before output
+7. Deliver via base64 PS1 script (NEVER .py download direct)
 
-```
-1. Create Stripe account: stripe.com
-2. Enable Stripe Connect (Standard or Express — Express recommended for faster onboarding)
-3. Set commission rate per service type in application config
-4. Build onboarding flow: professionals complete Stripe Connect setup (KYC, bank account)
-5. Test split payment: $100 booking → $80 to professional, $20 to MPW
-6. Enable automatic payouts (weekly to professionals)
-7. Configure 1099 threshold ($600/year) for US professionals
-8. Test international payment flow (GBP, EUR, AUD minimum)
-9. Set up dispute resolution workflow
-10. Legal review of ToS before launch
-```
+**v5.3 validation targets:** 95/95 checks
 
-## Revenue Tracking Script
+## Zenodo DOI Setup — Workflow (P3 for Steve)
 
-```python
-# mpw_revenue_tracker.py
-# Tracks all marketplace revenue streams
+Step-by-step:
+1. Go to zenodo.org → Sign up (free) → Verify email
+2. Click "New Upload" → Upload type: "Publication" → Subtype: "Technical note"
+3. Title: "Reverb — The Producer's Bible | MusicProductionWiki.com"
+4. Authors: MusicProductionWiki (organization)
+5. Description: Paste entry abstract (first 3 sentences of definition section)
+6. License: CC BY-NC
+7. Related identifiers: URL → https://musicproductionwiki.com/bible/reverb → IsIdenticalTo
+8. Submit → Zenodo issues DOI immediately (format: 10.5281/zenodo.XXXXXXX)
+9. Add DOI to reverb.html citation block: replace {{DOI}} with full DOI string
+10. Commit updated reverb.html (single file PUT — no SHA needed if editing locally)
 
-STREAMS = {
-    'studio_services': {'commission': 0.15, 'target_monthly': 27000},
-    'mentorship': {'commission': 0.20, 'target_monthly': 10000},
-    'ar_feedback': {'commission': 1.00, 'target_monthly': 14500},
-    'contract_review': {'commission': 1.00, 'target_monthly': 29800},
-    'beat_commissions': {'commission': 0.15, 'target_monthly': 9000},
-    'sync_placement': {'commission': 0.25, 'target_monthly': 10000},
-    'plugin_group_buys': {'commission': 1.00, 'target_monthly': 14000},
-    'school_referrals': {'commission': 1.00, 'target_monthly': 30000},
-    'publishing_admin': {'commission': 0.175, 'target_monthly': 20833},
-}
+Subsequent entries: repeat steps 2–10 per entry. Zenodo allows unlimited free uploads for open-access content.
 
-def monthly_report():
-    # Pull from Stripe API
-    # Compare actual vs target per stream
-    # Flag underperforming streams
-    # Project annual run rate
-    pass
-```
+## Crossref Membership — Workflow (P3 for Steve — $275/year)
+
+Required for academic DOI issuance (Zenodo DOIs are free but Crossref DOIs have higher academic credibility):
+1. crossref.org/membership → Apply for membership
+2. Organization type: Publisher
+3. Annual fee: $275 (base) — pay annually
+4. After approval: assign DOIs in format 10.XXXXX/mpw-[slug]
+5. Register each entry DOI via Crossref metadata deposit API
+Build this workflow after Zenodo is running smoothly.
+
