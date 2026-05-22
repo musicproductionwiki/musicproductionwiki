@@ -1,5 +1,5 @@
 # MPW-HANDOFF-BIBLE.md
-*Updated: May 22, 2026 (SESSION 52)*
+*Updated: May 22, 2026 (SESSION 53)*
 
 ---
 
@@ -1689,3 +1689,286 @@ P0: Mobile QA (Steve) → commit reverb.html → build v5.3 writer
 P1: Add missing producer quotes (Kevin Parker, Robin Guthrie, Andy Summers, Brian Eno, Tony Visconti, Steve Lillywhite)
 P2: Run Tier 1 remaining 33 batch with v5.3 writer
 P3: Affiliate applications (REVENUE BLOCKER)
+
+---
+
+# SESSION 53 UPDATE — May 22, 2026
+
+## reverb.html — New Gold Standard (v1.4)
+
+reverb_v11.html S53 is the confirmed T1 gold standard after content overhaul. File: 324KB / 2,745 lines.
+Status: LOCAL ONLY — pending mobile QA on real iPhone → commit.
+
+**reverb.html v1.4 stats (post-S53 overhaul):**
+- File: 324KB — 2,745 lines — 4 script blocks — all pass node --check
+- Sections: 25 (beginner-trap repositioned to section 3 — after how-it-works)
+- Nav pills: 25 — correct order
+- Version history: v1.4 logged with 14 itemized changes
+- All dates: May 22, 2026
+
+## S53 Section Order (LOCKED for all new T1 entries)
+
+1. definition
+2. how-it-works
+3. **beginner-trap** ← repositioned from end of entry
+4. parameters
+5. quick-reference
+6. tools
+7. fingerprint
+8. signal-chain
+9. history
+10. decision-framework
+11. how-to-use
+12. decision-tree
+13. genre-table
+14. plugins
+15. before-after
+16. in-the-wild
+17. producer-dna
+18. signatures
+19. types
+20. verdict
+21. mistakes
+22. mix-translation
+23. progression
+24. faq
+25. related
+(Plus above Related: version-history block, citation block)
+
+## Three-Act Structure (UPDATED — beginner-trap now in Act 1)
+
+- **Act 1 — Understanding:** definition, how-it-works, beginner-trap, parameters, quick-reference, tools, fingerprint, signal-chain, history
+- **Act 2 — Application:** decision-framework, how-to-use, decision-tree, genre-table, plugins, before-after
+- **Act 3 — Mastery:** in-the-wild, producer-dna, signatures, types, verdict, mistakes, mix-translation, progression, faq, related
+
+Rationale: Beginner Trap belongs in Act 1 (foundation) because producers need routing/level/EQ-on-return knowledge before parameters make sense. Moving it after How It Works means producers get the "three mistakes" framing before they encounter any parameter numbers.
+
+## S53 Content Standards — New Requirements for T1
+
+### Psychoacoustics Cards
+Each psy-card must include an amber "→ Use this:" application sentence in addition to the definition. Not optional for T1. No vocabulary without mechanism.
+
+### How It Works — Practical Bridge Required
+Section must include a block (inline callout or paragraph) that maps the two-part acoustic model (early reflections + tail) directly to DAW parameters. Producers must leave the section knowing which parameter to reach for when something sounds wrong.
+
+### Decay Time / Tempo-Sync Formula
+Must be stated as a named principle under Decay Time in Parameters:
+> **Musical decay formula:** 60,000 ÷ BPM = one beat in milliseconds. Decay times that subdivide into the tempo feel musical; those that don't fight the groove.
+
+### Signal Chain Interactions — Required Additions (S53)
+All T1 entries must include at minimum:
+- Reverb + Compression warning
+- Primary time-based interaction warning (Reverb+Delay, Delay+Reverb, etc.)
+- **Reverb + Reverb (NEW S53):** competing spatial signatures from multiple reverbs on same source
+- **Sidechain ducking technique (NEW S53):** compressor on reverb return triggered by kick — specs required (attack: 0–5ms, release: one beat, ratio: 4:1–8:1)
+
+### How To Use — Practitioner Techniques Block (NEW S53)
+After the main workflow prose and DAW tabs, include a grid of practitioner techniques:
+- **Listen Before You Load** — play track in a real physical space before opening plugin
+- **Sidechain Ducking on the Reverb Return** — full specs
+- **Reverb on the Mix Bus** — technique and level guidance
+CSS: three-column auto-fill grid, `#0d0d1a` background per card
+
+### Decision Tree Intro
+Must open with producer-empathy framing — acknowledging that reverb problems are genuinely hard to diagnose because symptoms are similar regardless of cause. Not product copy.
+
+### Types Section — Emotional Register Block (NEW S53)
+After mono compatibility check, add Emotional Register of Each Type block:
+- Room: naturalness, cohesion, believability
+- Hall: scale, grandeur, elevation
+- Plate: presence, authority, intimacy at scale
+- Spring: character, era, nostalgia, grit
+- Gated: power, aggression, theatricality
+- Shimmer/Convolution: transcendence/dissolution vs. grounded documentary realism
+Closing line: "Reverb type selection is a statement about what emotional world the track inhabits."
+
+### Mistakes Intro — "What Reverb Reveals" (NEW S53)
+Before listing specific mistakes, include: reverb exposes problems previously hidden by the dry signal — bad intonation, phase issues, inconsistent mic placement. This is why engineers add reverb early in a mix, not at the end.
+
+### Verdict Lead — Must Connect to Entry Content
+The verdict lead must reference specific content the reader has already encountered — not introduce new concepts. If arrangement/dynamic range is mentioned, it must connect back to the producer DNA examples or elsewhere in the entry.
+
+### Progression Advanced Tier — Minimum 2 Paragraphs
+Cannot be 3 sentences. Must describe what arrangement-driven reverb decisions actually look like in practice. Must name sidechain ducking as a specific technique.
+
+### Related Entries — Reasons to Click
+Every related-term-card description must explain why knowing that entry makes you better at this one. Not dictionary definitions. Urgency and specificity required.
+
+### Section Transitions — Mandatory
+Every section must end with a sentence that bridges to the next section. Reader should feel continuous forward momentum, not a collection of independent modules.
+
+## Plugins Section Architecture (NEW S53)
+
+Replacing the old plugin-recs tier grid with a three-card editorial layout:
+
+```html
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:24px">
+  <!-- FREE card: background:#0d1a0d, border:#1a3a1a -->
+  <!-- MID card: background:#1a1000, border:#2a2000 -->
+  <!-- PRO card: background:#0a0a1a, border:#2a2a4a -->
+</div>
+```
+
+Each plugin entry within a card requires:
+- Name + price (right-aligned)
+- Manufacturer + optional editorial badge
+- 2–3 sentence editorial description explaining WHY to choose it, not just WHAT it is
+- "View on [Manufacturer] →" link with `rel="noopener sponsored"` (affiliate-ready)
+
+Transparency note at bottom: affiliate links will be added when programs are live; editorial picks remain independent.
+
+## Sidebar Architecture (UPDATED S53)
+
+**Producer Spotlight is removed from sidebar.** Reason: Producer DNA section in the entry body covers producer depth fully. The sidebar spotlight was redundant and caused a layout breakage (double `</div>` tag causing it to render at page bottom).
+
+**Correct sidebar order (S53):**
+1. sidebar-toc (Contents)
+2. sidebar-nl (Newsletter)
+3. Share This Entry widget
+
+**Share buttons inside sidebar:** Use `flex:none;width:100%` — NOT `width:100%;justify-content:center`. The latter renders as full-width bars.
+
+## Updated Pre-Commit Checklist (17 checks — was 15)
+
+1. BTT button present — grep btt-btn
+2. bible-entry-wrap inline style: max-width + margin ONLY (no display/grid)
+3. IntersectionObserver present in sidebar TOC JS
+4. Entry nav offset = 60px
+5. Mobile QA on real device
+6. All /bible/ links verified live (no invented slugs)
+7. dateModified matches session date
+8. JS Check 1: apostrophes — re.findall(r"(?<!\\)\b\w+'\w+\b", content) returns empty
+9. JS Check 2: unicode — re.findall(r'[^\x00-\x7F]', content) returns empty
+10. JS Check 3: node --check passes all script blocks
+11. History section minimum 800 words (T1 only)
+12. Three-act narrative arc present (T1 only)
+13. All 10 S52 additions present (T1 only)
+14. Version History block updated with current session changes
+15. Citation block present with all 4 formats (T1 only)
+16. **NEW S53:** Producer Spotlight absent from sidebar (use DNA section in body instead)
+17. **NEW S53:** Section transition sentences present throughout (no isolated modules)
+
+## Session 53 Bible Entry State
+
+| Group | Count | Status |
+|---|---|---|
+| reverb.html S53 | 1 | 324KB local — content overhaul complete — pending mobile QA + commit |
+| chorus.html v5.2 | 1 | LIVE ✅ |
+| v5.1 original 15 | 15 | Need regen with v5.3 |
+| compression | 1 | Needs v5.3 regen |
+| v5.1 Session 40 | 54 | Need regen with v5.3 |
+| v3.0/v4.0 legacy | 153 | Untouched |
+| **Total live** | **225** | (224 confirmed + reverb.html pending) |
+
+## Session 54 Priority Items
+
+P0: Mobile QA (Steve — real iPhone) → commit reverb.html (Claude via bash)
+P1: Build v5.3 1-pass template writer from reverb_v11.html
+P2: Add missing producer quotes (Kevin Parker, Robin Guthrie, Andy Summers, Brian Eno, Tony Visconti, Steve Lillywhite)
+P3: Run Tier 1 remaining 33 batch with v5.3 writer
+P4: Affiliate applications (REVENUE BLOCKER)
+
+---
+
+# SESSION 54 UPDATE — May 22, 2026
+
+## reverb.html — New Gold Standard (S54)
+
+reverb_v16b.html is the confirmed T1 gold standard for all future entries. It supersedes the S53 version.
+
+**File state after S54 full pass:**
+- Size: 383.5KB / 3,140 lines
+- Sections: 25 (unchanged — same canonical order)
+- Version: v1.6 (May 22, 2026)
+- JS: 4 script blocks — all pass node --check (5 total including Beehiiv loader in head)
+- Beehiiv: live subscriber capture via v3 loader script
+
+## S54 Section Architecture Updates
+
+### Types Section — Shimmer Added as Standalone Type (S54)
+Shimmer Reverb is now the 7th type card in the types-grid. Previously combined with Convolution in the Emotional Register block only. Now has:
+- Standalone type-card with full technical description (pitch-shift feedback mechanism)
+- Deep-dive block immediately after types-grid summary:
+  - How It Works
+  - 6 parameters with specific values (interval, feedback, decay, diffusion, pre-delay, HPF)
+  - 4 common mistakes with exact diagnosis and fix
+  - Quick settings reference table (5 use cases × 6 parameters)
+  - Plugin recommendations: Valhalla Shimmer ($50), Supermassive (free), Eventide Blackhole ($99)
+  - Reference tracks: Holocene (Bon Iver), Svefn-g-englar (Sigur Rós), An Ending Ascent (Brian Eno)
+  - Professional mute test adapted for shimmer
+- Emotional Register: split into standalone Shimmer entry and standalone Convolution entry
+- Mono compatibility grid: Shimmer and Modulated now separate rows
+
+### Before/After Section — Rebuilt as Three Scenarios (S54)
+Generic two-box format replaced with three numbered real-world scenarios:
+1. Vocal reverb smearing syllables (beginner problem) — broken state + fix with exact parameters
+2. Mix sounds washy and undefined (intermediate problem) — broken state + fix with exact parameters
+3. Reverb present but mix has no depth (advanced problem) — broken state + fix with exact parameters
+Each scenario: broken-state parameter table, fix parameter table, "Why it works" explanation bar.
+Professional Test redesigned as three-column grid (Muting feels wrong / Muting makes it clearer / Muting changes nothing).
+
+### Contrast Listen — Layout Fixed + Content Rebuilt (S54)
+- Layout bug fixed: `cl-grid` CSS changed from `grid-template-columns:1fr 1fr` to `grid-template-columns:1fr auto 1fr` — VS separator was 3rd grid child causing card wrap
+- `cl-vs` CSS updated: `padding:0 20px;flex-shrink:0` — centered properly between cards
+- Content: both cards now have complete signal chain breakdowns + "Why Each Decision Was Made" analysis
+- New block: "What This Comparison Teaches" summary
+
+## Updated Pre-Commit Checklist (19 checks — was 17)
+
+1. BTT button present — grep btt-btn
+2. bible-entry-wrap inline style: max-width + margin ONLY
+3. IntersectionObserver present in sidebar TOC JS
+4. Entry nav offset = 60px
+5. Mobile QA on real device
+6. All /bible/ links verified live
+7. dateModified matches session date
+8. JS Check 1: apostrophes — word-boundary regex returns empty
+9. JS Check 2: unicode — non-ASCII regex returns empty
+10. JS Check 3: node --check passes all script blocks
+11. History section minimum 800 words (T1 only)
+12. Three-act narrative arc present (T1 only)
+13. All 10 S52 additions present (T1 only)
+14. Version History block updated
+15. Citation block present (T1 only)
+16. Producer Spotlight absent from sidebar
+17. Section transition sentences present throughout
+18. **NEW S54:** wordCount schema matches actual prose count (±500w acceptable)
+19. **NEW S54:** Beehiiv loader script present in `<head>` with correct form ID
+
+## v5.3 Writer — Build Spec (Session 55 P1)
+
+Back-engineer from reverb_v16b.html. All structure frozen. Claude fills variables only.
+
+**Key requirements beyond S53 spec:**
+- Shimmer as standalone 7th type in types-grid with deep-dive block
+- Before/After as three numbered scenarios (not two generic boxes)
+- cl-grid CSS: `grid-template-columns:1fr auto 1fr` (not `1fr 1fr`)
+- Beehiiv loader in `<head>`: form ID `a0962c52-4819-4b09-b13d-b26517b76e01`
+- DOI variable in citation block (fill at commit time — `{{DOI}}` → actual DOI)
+- wordCount schema variable: populate from actual word count at generation time
+- Title tag pattern: `{Term}: Settings, Types & Pro Techniques | The Producer's Bible`
+- Meta description pattern: lead with the entry's strongest differentiator, not generic description
+- `rel="noopener sponsored"` on paid affiliate links only — NEVER on free plugins
+- All article cross-links verified against live slug list before output
+- `1fr auto 1fr` for any 3-child separator grid layout
+- FAQ JSON-LD must match visible FAQ exactly
+
+## Session 54 Bible Entry State
+
+| Group | Count | Status |
+|---|---|---|
+| reverb.html S54 | 1 | 383.5KB local — full pass complete — pending mobile QA + commit |
+| chorus.html v5.2 | 1 | LIVE ✅ |
+| v5.1 original 15 | 15 | Need regen with v5.3 |
+| compression | 1 | Needs v5.3 regen |
+| v5.1 Session 40 | 54 | Need regen with v5.3 |
+| v3.0/v4.0 legacy | 153 | Untouched |
+| **Total live** | **225** | (224 confirmed + reverb.html pending) |
+
+## Session 55 Priority Items
+
+P0: Mobile QA (Steve — real iPhone) → commit reverb.html (Claude via bash)
+P1: Build v5.3 1-pass template writer from reverb_v16b.html
+P2: Zenodo DOI setup + DOI on reverb.html after commit
+P3: Add missing producer quotes (Kevin Parker, Robin Guthrie, Andy Summers, Brian Eno, Tony Visconti, Steve Lillywhite)
+P4: Run Tier 1 remaining 33 batch with v5.3 writer

@@ -1,5 +1,5 @@
 # MPW-HANDOFF-ARTICLES.md
-*Updated: May 22, 2026 (SESSION 52)*
+*Updated: May 22, 2026 (SESSION 53)*
 
 ---
 
@@ -282,3 +282,126 @@ Article count: **526** — unchanged since Batch 08. Next article batch is Batch
 1. Mobile QA on real iPhone (NEVER rule — zero exceptions)
 2. Save: Download reverb_v11.html → rename reverb.html → Notepad → Save As → All Files → C:\Users\swarn\OneDrive\Desktop\mpw-scripts\reverb.html
 3. Commit via GitHub API PUT (command in HANDOFF-SCRIPTS.md)
+
+---
+
+# SESSION 53 UPDATE — May 22, 2026
+
+## Article Count
+526 articles live — unchanged since Batch 08. No article batches ran Sessions 38–53.
+
+## Bible Entry State — End of Session 53
+
+| Group | Count | Status |
+|---|---|---|
+| reverb.html S53 | 1 | 324KB local — content overhaul complete — pending mobile QA + commit |
+| chorus.html v5.2 | 1 | LIVE ✅ |
+| v5.1 original 15 | 15 | Need regen with v5.3 |
+| compression | 1 | Needs v5.3 regen |
+| v5.1 Session 40 | 54 | Need regen with v5.3 |
+| v3.0/v4.0 legacy | 153 | Untouched |
+| **Total live** | **225** | (224 confirmed + reverb.html pending) |
+
+## reverb.html S53 — Summary of Changes
+
+Content overhaul — all sections rewritten, restructured, or augmented. Key changes:
+- Beginner Trap repositioned to section 3 (after How It Works, before Parameters)
+- Producer Spotlight removed from sidebar — DNA section handles producer depth
+- Sidebar fixed: TOC close tag repaired, newsletter above share widget, share buttons fixed
+- Plugins section rebuilt as full editorial cards with descriptions and affiliate-ready links
+- 8 new content additions: psychoacoustics application sentences, How It Works practical bridge, tempo-sync formula, Reverb+Reverb warning, sidechain ducking technique, Listen Before You Load, mix bus reverb, emotional register of reverb types
+- Transition sentences added throughout all 25 sections
+- Version history updated to v1.4
+
+## Pending Before reverb.html Commit
+
+1. Mobile QA on real iPhone (NEVER rule — zero exceptions)
+2. Save: download reverb_v11.html from Claude outputs → rename reverb.html → Notepad → Save As → All Files → `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\reverb.html`
+3. Commit: either upload to Claude session ("commit reverb.html") or run PowerShell command in HANDOFF-SCRIPTS.md
+
+## Next Article Batch
+
+Batch 09 (100 track breakdowns) — after Bible Tier 1 complete. Tier 1 blocked on v5.3 writer build (Session 54 P1).
+
+---
+
+# SESSION 54 UPDATE — May 22, 2026
+
+## Article Count
+526 articles live — unchanged since Batch 08. No article batches ran Sessions 38–54.
+
+## Bible Entry State — End of Session 54
+
+| Group | Count | Status |
+|---|---|---|
+| reverb.html S54 | 1 | 383.5KB local — full pass complete — pending mobile QA + commit |
+| chorus.html v5.2 | 1 | LIVE ✅ |
+| v5.1 original 15 | 15 | Need regen with v5.3 |
+| compression | 1 | Needs v5.3 regen |
+| v5.1 Session 40 | 54 | Need regen with v5.3 |
+| v3.0/v4.0 legacy | 153 | Untouched |
+| **Total live** | **225** | (224 confirmed + reverb.html pending) |
+
+## reverb.html S54 — Full Change Summary
+
+Session 54 was a comprehensive editorial, SEO, revenue, and infrastructure pass on reverb.html. The entry went through 16 versions (v11 through v16b) during Sessions 51–54. Final version: reverb_v16b.html (383.5KB, v1.6).
+
+**Session 54 specific changes (beyond S53 content overhaul):**
+- Version badge fixed: v1.3 → v1.4 in version history display
+- Progression Advanced: expanded to 2 full paragraphs
+- Shimmer: standalone type card + deep-dive block added
+- Contrast Listen: layout bug fixed + full content rebuild
+- Before/After: rebuilt as 3 scenario format
+- FAQ: 2 questions replaced (automation + streaming normalization)
+- FAQ JSON-LD schema synced
+- HowTo schema expanded to 6 specific steps
+- wordCount: 11200 → 16500 in schema
+- Read time: 22 min → 33 min displayed
+- Title tag: optimized for search intent
+- Meta/OG/Twitter descriptions: rewritten around entry differentiators
+- 4 H2s keyword-optimized
+- `rel="sponsored"` removed from free Valhalla Supermassive link
+- 5 `/articles/` cross-links added
+- High-Pass Filter added to prerequisite chain
+- "What to Read Next" learning path block added
+- Citation permalink on Three Questions section
+- RT60 calculator embed code added
+- Beehiiv newsletter forms wired (v3 loader script, form ID a0962c52-4819-4b09-b13d-b26517b76e01)
+- Version history: v1.6 logged
+
+## Cross-Link Architecture — reverb.html (Confirmed Live)
+
+### Internal /bible/ links (12 unique — all verified in live repo):
+automation, chorus, convolution-reverb, delay, dynamic-range, eq, gain-staging, high-pass-filter, plate-reverb, room-reverb, send-return, stereo-imaging
+
+### Internal /articles/ links (5 — all verified in live catalog):
+- /articles/valhalla-room-review.html
+- /articles/best-reverb-plugins.html
+- /articles/how-to-use-reverb-in-a-mix.html
+- /articles/how-to-use-reverb-on-drums.html
+- /articles/how-to-use-reverb-on-vocals.html
+- /articles/best-delay-plugins.html
+- /articles/what-is-reverb-music-production.html
+
+### Prerequisite chain:
+EQ → Gain Staging → Send/Return → High-Pass Filter
+
+## Pending Before reverb.html Commit
+
+1. Mobile QA on real iPhone (NEVER rule — zero exceptions)
+2. Save: download reverb_v16b.html from Claude outputs → rename reverb.html → save to `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\reverb.html`
+3. Commit: upload to Claude session and say "commit reverb.html" OR run PowerShell command in HANDOFF-SCRIPTS.md
+
+## SEO Priority Queue (Post-reverb Commit)
+
+After reverb.html commits:
+1. Request Indexing in GSC for `/bible/reverb`
+2. GSC title/meta optimization for 4 comparison articles at position ~16:
+   - serum-2-vs-vital
+   - logic-pro-vs-ableton
+   - ableton-live-vs-logic-pro
+   - rode-nt1-vs-shure-sm7b
+
+## Next Article Batch
+
+Batch 09 (100 track breakdowns) — after Bible Tier 1 complete. Tier 1 blocked on v5.3 writer build (Session 55 P1).

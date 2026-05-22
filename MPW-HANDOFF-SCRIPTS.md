@@ -1,5 +1,5 @@
 # MPW-HANDOFF-SCRIPTS.md
-*Updated: May 22, 2026 (SESSION 52)*
+*Updated: May 22, 2026 (SESSION 53)*
 
 All scripts at: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\`
 GitHub API blocked from Claude's environment — all GitHub operations run from Steve's PowerShell.
@@ -948,11 +948,166 @@ python verify_fixes.py
 # Test on real iPhone
 ```
 
+---
+
+# SESSION 53 UPDATE — May 22, 2026
+
+## reverb.html — S53 Commit Command
+
+reverb.html is now 324KB. Fine for single-file API PUT (no size limit). Steve saves from outputs download, renames to reverb.html, then either:
+
+**Option A — Claude commits from bash (preferred):**
+Steve uploads reverb.html to Claude session and says "commit reverb.html". Claude executes directly via GitHub API PUT.
+
+**Option B — Steve commits via PowerShell:**
+```powershell
+. .\setenv.ps1
+$content = [System.IO.File]::ReadAllBytes("C:\Users\swarn\OneDrive\Desktop\mpw-scripts\reverb.html")
+$base64 = [System.Convert]::ToBase64String($content)
+$sha_resp = Invoke-RestMethod -Uri "https://api.github.com/repos/musicproductionwiki/musicproductionwiki/contents/bible/reverb.html" -Headers @{Authorization="token $env:GITHUB_TOKEN"} -ErrorAction SilentlyContinue
+$body = @{message="feat: reverb.html S53 — content overhaul — 25 sections — affiliate-ready plugins — 324KB";content=$base64;branch="main"}
+if ($sha_resp.sha) { $body.sha = $sha_resp.sha }
+Invoke-RestMethod -Uri "https://api.github.com/repos/musicproductionwiki/musicproductionwiki/contents/bible/reverb.html" -Method PUT -Headers @{Authorization="token $env:GITHUB_TOKEN";"Content-Type"="application/json"} -Body ($body | ConvertTo-Json)
+```
+
+## Session 53 — No New Python Scripts Built
+
+Session 53 focused on reverb.html content overhaul and handoff updates. No new Python scripts were written.
+
+v5.3 writer build is P1 for Session 54. It will be back-engineered from reverb_v11.html S53 version. The gold standard is now confirmed and content-complete.
+
+## v5.3 Writer — Build Spec Summary (Full spec in HANDOFF-BIBLE.md)
+
+1-pass template fill from reverb_v11.html S53. All structure frozen. Claude fills variables only.
+
+Key requirements:
+- Section order: 25 sections per S53 canonical order (beginner-trap at position 3)
+- Sidebar: TOC + Newsletter + Share only — NO Producer Spotlight
+- Plugins: editorial card layout (three-column auto-fill, Free/Mid/Pro cards with descriptions)
+- JS triple-check mandatory before output
+- node --check on all script blocks
+- Model: claude-sonnet-4-6
+- Target: 95/95 validation checks
+
+## Session 54 First Steps
+
+```powershell
+. .\setenv.ps1
+python mpw_session_start.py
+python verify_fixes.py
+```
+
+Then: confirm reverb.html mobile QA complete → commit → begin v5.3 writer build.
+
+## ⚠️ Stale Scripts — Updated List
+
+| Script | Issue |
+|---|---|
+| install_bible_writer_v52_part1/2/3.ps1 | Writes UNFIXED writer — DO NOT RUN |
+| install_writer_v52_s46_part1/2/3.ps1 | Session 46 — superseded by s47d |
+| install_writer_v52_s47_part1/2/3.ps1 | PS1 syntax error — DO NOT RUN |
+| install_writer_v52_s47b_part1/2/3.ps1 | Session 47b — missing fixes — DO NOT RUN |
+
+**CURRENT (v5.2):** install_writer_v52_s47d_part1/2/3.ps1 — but v5.2 is SUPERSEDED by v5.3 (to be built S54). Do not run new v5.2 batches.
 
 ---
 
-# CRITICAL — Claude Has Direct GitHub API Access
+# SESSION 54 UPDATE — May 22, 2026
 
-Claude's bash environment can reach the GitHub API directly via Python urllib.request.
-Do NOT generate PowerShell upload scripts for files that exist in Claude's environment.
-Push directly from Claude. Only use PowerShell for files on Steve's local machine.
+## reverb.html — S54 Commit Command
+
+**Option A — Claude commits from bash (preferred):**
+Steve uploads reverb_v16b.html to Claude session renamed as reverb.html and says "commit reverb.html". Claude executes directly.
+
+**Option B — Steve commits via PowerShell:**
+```powershell
+. .\setenv.ps1
+$content = [System.IO.File]::ReadAllBytes("C:\Users\swarn\OneDrive\Desktop\mpw-scripts\reverb.html")
+$base64 = [System.Convert]::ToBase64String($content)
+$sha_resp = Invoke-RestMethod -Uri "https://api.github.com/repos/musicproductionwiki/musicproductionwiki/contents/bible/reverb.html" -Headers @{Authorization="token $env:GITHUB_TOKEN"} -ErrorAction SilentlyContinue
+$body = @{message="feat: reverb.html S54 — definitive reverb reference — v1.6 — 383KB — SEO + revenue pass";content=$base64;branch="main"}
+if ($sha_resp.sha) { $body.sha = $sha_resp.sha }
+Invoke-RestMethod -Uri "https://api.github.com/repos/musicproductionwiki/musicproductionwiki/contents/bible/reverb.html" -Method PUT -Headers @{Authorization="token $env:GITHUB_TOKEN";"Content-Type"="application/json"} -Body ($body | ConvertTo-Json)
+```
+
+NOTE: reverb.html is 383.5KB — fine for single-file API PUT. 200KB limit applies only to ZIP/Notepad method.
+
+## Zenodo DOI Workflow (NEW S54 — implement after reverb.html commits)
+
+```
+1. Create account: zenodo.org
+2. New upload → Upload Type: Publication → Publication Type: Technical Note
+3. Fill metadata:
+   - Title: Reverb — The Producer's Bible
+   - Authors: MusicProductionWiki Editorial Team
+   - Description: [entry meta description]
+   - License: Creative Commons Attribution-NonCommercial 4.0
+   - Related URL: https://musicproductionwiki.com/bible/reverb
+   - Version: 1.6
+4. Upload PDF export of reverb_v16b.html (print to PDF from browser)
+5. Publish → DOI issued: 10.5281/zenodo.XXXXXXX
+6. Update citation block in reverb.html: replace "Pending" with actual DOI
+7. Commit updated file
+```
+
+## Crossref Membership Application (NEW S54)
+
+Apply at: crossref.org/membership
+Cost: $275/year
+Process: 1–2 week approval
+After approval: register MPW as publisher, get custom DOI prefix (10.XXXXX)
+Future entries: use Crossref DOI prefix instead of Zenodo
+Zenodo entries: add "superseded by" pointer to Crossref DOI
+
+## JS Triple-Check Script (UPDATED S54)
+
+The standard JS triple-check now accounts for 5 script blocks (4 internal + external Beehiiv scripts). Only run node --check on internal `<script>` blocks — skip external src= scripts.
+
+```python
+import re, subprocess, tempfile, os
+
+def js_triple_check(html):
+    errors = []
+    # Only check inline scripts (no src attribute)
+    scripts = re.findall(r'<script(?![^>]*src=)[^>]*>(.*?)</script>', html, re.DOTALL)
+    for i, content in enumerate(scripts):
+        # Skip JSON-LD blocks
+        if '@context' in content or 'application/ld' in content:
+            continue
+        apos = re.findall(r"(?<!\\)\b\w+'\w+\b", content)
+        if apos:
+            errors.append(f"Block {i} APOSTROPHE: {apos[:5]}")
+        non_ascii = re.findall(r'[^\x00-\x7F]', content)
+        if non_ascii:
+            errors.append(f"Block {i} UNICODE: {[hex(ord(c)) for c in set(non_ascii)][:5]}")
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.js', delete=False, encoding='utf-8') as f:
+            f.write(content)
+            tmpfile = f.name
+        result = subprocess.run(['node', '--check', tmpfile], capture_output=True, text=True)
+        os.unlink(tmpfile)
+        if result.returncode != 0:
+            errors.append(f"Block {i} SYNTAX: {result.stderr.strip()[:100]}")
+    return errors
+```
+
+## Stale Scripts — Updated List (S54)
+
+| Script | Issue |
+|---|---|
+| install_bible_writer_v52_part1/2/3.ps1 | Writes UNFIXED writer — DO NOT RUN |
+| install_writer_v52_s46_part1/2/3.ps1 | Session 46 — superseded |
+| install_writer_v52_s47_part1/2/3.ps1 | PS1 syntax error — DO NOT RUN |
+| install_writer_v52_s47b_part1/2/3.ps1 | Session 47b — missing fixes — DO NOT RUN |
+| install_writer_v52_s47d_part1/2/3.ps1 | v5.2 — SUPERSEDED by v5.3 (to be built S55) |
+
+**CURRENT:** v5.3 writer to be built in Session 55 from reverb_v16b.html gold standard.
+
+## Session 55 First Steps
+
+```powershell
+. .\setenv.ps1
+python mpw_session_start.py
+python verify_fixes.py
+```
+
+Then: confirm reverb.html mobile QA complete → upload to session → "commit reverb.html" → Claude commits → begin v5.3 writer build.

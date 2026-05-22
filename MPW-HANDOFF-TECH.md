@@ -1,5 +1,5 @@
 # MPW-HANDOFF-TECH.md
-*Updated: May 22, 2026 (SESSION 52)*
+*Updated: May 22, 2026 (SESSION 53)*
 
 ---
 
@@ -1100,3 +1100,170 @@ $body = @{message="feat: reverb.html S52 — world-class gold standard — 10 ad
 if ($sha_resp.sha) { $body.sha = $sha_resp.sha }
 Invoke-RestMethod -Uri "https://api.github.com/repos/musicproductionwiki/musicproductionwiki/contents/bible/reverb.html" -Method PUT -Headers @{Authorization="token $env:GITHUB_TOKEN";"Content-Type"="application/json"} -Body ($body | ConvertTo-Json)
 ```
+
+---
+
+# SESSION 53 UPDATE — May 22, 2026
+
+## reverb.html S53 — Final Gold Standard Fingerprints
+
+| # | Fingerprint | Value |
+|---|---|---|
+| 1 | File size | 324KB (up from 299.7KB S52) |
+| 2 | Lines | 2,745 |
+| 3 | Script blocks | 4 — all pass node --check |
+| 4 | Sections | 25 (beginner-trap repositioned to section 3) |
+| 5 | Nav pills | 25 — correct order including beginner-trap at position 3 |
+| 6 | Sidebar | TOC + Newsletter + Share — NO Producer Spotlight |
+| 7 | bible-entry-wrap | max-width:1100px;margin:0 auto ONLY (no display:grid inline) |
+| 8 | BTT button | Present ✅ |
+| 9 | Version history | v1.4 May 22, 2026 — 14 itemized changes |
+| 10 | Dates | All May 22, 2026 |
+| 11 | Plugin section | Three editorial cards (Free/Mid/Pro) with descriptions + affiliate links |
+| 12 | Share buttons (sidebar) | flex:none;width:100% — NOT width:100%;justify-content:center |
+
+## Sidebar DOM Architecture (UPDATED S53)
+
+```html
+<aside class="entry-sidebar" style="min-width:280px;width:280px">
+  <div class="sidebar-toc">
+    <h4>Contents</h4>
+    <!-- 25 TOC links — beginner-trap at position 3 -->
+  </div>
+  <div class="sidebar-nl">
+    <!-- Newsletter signup -->
+  </div>
+  <div style="background:#13132a;...">
+    <!-- Share This Entry -->
+    <!-- Buttons use flex:none;width:100% — NOT justify-content:center -->
+  </div>
+</aside>
+```
+
+**Producer Spotlight div is removed entirely from sidebar.** CSS rule `.producer-spotlight` remains in the style block (it is used on other entries) but the HTML element is not present in reverb.html S53 or any future T1 entry.
+
+## GitHub Commit Capability — Confirmed S53
+
+Claude can commit single Bible entries directly from bash environment via GitHub API PUT using the stored token. Confirmed working in Session 53 (commit + revert both successful). This is the correct method for single-file Bible entry commits going forward.
+
+- No size limit on API PUT (only ZIP/Notepad method has 200KB limit)
+- reverb.html at 324KB commits cleanly
+- Steve must explicitly authorize the commit ("go ahead and commit")
+
+## Affiliate Link Architecture (NEW S53)
+
+Plugin links in Bible entries now use `rel="noopener sponsored"` on all paid plugin recommendations.
+
+```html
+<a href="https://[manufacturer-url]" target="_blank" rel="noopener sponsored" style="...">View on [Manufacturer] →</a>
+```
+
+When Plugin Boutique / Sweetwater / Loopmasters affiliate programs are approved:
+1. Swap URL to affiliate tracking URL
+2. No structural HTML changes needed
+3. `rel="sponsored"` is already in place for Google compliance
+
+Transparency note template (already in reverb.html):
+> "Plugin prices listed are standard retail. Links above go directly to manufacturer sites. When Plugin Boutique and Sweetwater affiliate programs are live, discounted links will be added here. All editorial picks remain independent of commercial relationships."
+
+---
+
+# SESSION 54 UPDATE — May 22, 2026
+
+## reverb.html S54 — Final Gold Standard Fingerprints
+
+| # | Fingerprint | Value |
+|---|---|---|
+| 1 | File size | 383.5KB |
+| 2 | Lines | 3,140 |
+| 3 | Script blocks (internal) | 4 — all pass node --check |
+| 4 | Script blocks (external, head) | 2 — Beehiiv loader + attribution |
+| 5 | Sections | 25 — unchanged |
+| 6 | Nav pills | 25 — correct order |
+| 7 | Type cards | 7 — Shimmer added as standalone |
+| 8 | Version | v1.6 (May 22, 2026) |
+| 9 | wordCount schema | 16500 |
+| 10 | Read time displayed | 33 min |
+| 11 | Beehiiv form ID | a0962c52-4819-4b09-b13d-b26517b76e01 |
+| 12 | Title tag | Reverb: Settings, Types & Pro Techniques | The Producer's Bible |
+
+## Beehiiv Newsletter Infrastructure (NEW S54)
+
+**Embed method:** Beehiiv v3 script loader (NOT iframe — confirmed with Beehiiv dashboard)
+
+```html
+<!-- In <head> — both scripts required -->
+<script async src="https://subscribe-forms.beehiiv.com/v3/loader.js" data-beehiiv-form="a0962c52-4819-4b09-b13d-b26517b76e01"></script>
+<script type="text/javascript" async src="https://subscribe-forms.beehiiv.com/attribution.js"></script>
+
+<!-- In body — one div per form location -->
+<div data-beehiiv-form="a0962c52-4819-4b09-b13d-b26517b76e01"></div>
+```
+
+**Form details:**
+- Publication: The Producer's Briefing
+- Form ID: `a0962c52-4819-4b09-b13d-b26517b76e01`
+- From address: `theproducersbriefing@mail.beehiiv.com`
+- Reply-To: `team@musicproductionwiki.com`
+- Plan: Launch (free) — 1/2,500 subscribers
+- Double opt-in: check setting — recommend disabling for music production audience
+
+**All T1 Bible entries going forward must include both Beehiiv scripts in `<head>` and replace any static email input/button newsletter forms with `data-beehiiv-form` divs.**
+
+## CSS Architecture Update — cl-grid (S54)
+
+The Contrast Listen grid was fixed from a broken 2-column layout to a correct 3-column layout.
+
+**CORRECT (S54 standard):**
+```css
+.cl-grid { display:grid; grid-template-columns:1fr auto 1fr; gap:0; align-items:stretch }
+.cl-vs { display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:900; color:#f5a623; padding:0 20px; flex-shrink:0 }
+```
+
+**WRONG (causes card wrap):**
+```css
+.cl-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px }
+```
+
+Rule: whenever a separator element (VS, OR, →) is a direct grid child between two content columns, the grid must be `1fr auto 1fr` — never `1fr 1fr`.
+
+## SEO Standards Update (S54)
+
+### Title Tag Pattern for Bible Entries
+`{Term}: Settings, Types & Pro Techniques | The Producer's Bible`
+
+Adjust secondary terms to match the entry's actual content:
+- For time-based: "Settings, Types & Pro Techniques"
+- For dynamics: "Settings, Types & Signal Chain"
+- For frequency: "Settings, Types & EQ Techniques"
+- For synthesis: "Parameters, Types & Sound Design"
+
+### Meta Description Pattern
+Lead with the entry's strongest differentiator — not generic description.
+Format: `The definitive {term} guide: {tool/feature 1}, {differentiator 2}, {differentiator 3}, and every {common problem} fixed with exact parameters.`
+
+Example (reverb): `The definitive reverb guide: RT60 calculator, producer signal chains (Clearmountain, Everett, Finneas), The Three Questions framework, 7 reverb types, genre settings, and every common mistake fixed with exact parameters.`
+
+## Affiliate Link Policy (CONFIRMED S54)
+
+| Link Type | rel attribute | Example |
+|---|---|---|
+| Paid plugin (affiliate pending) | `rel="noopener sponsored"` | Valhalla Room, FabFilter Pro-R 2 |
+| Free plugin (no affiliate) | `rel="noopener"` | Valhalla Supermassive, Dragonfly Reverb |
+| External reference (no affiliate) | `rel="noopener"` | Wikipedia, Wikidata |
+| Internal | none | /bible/delay, /articles/valhalla-room-review.html |
+
+**NEVER use `rel="sponsored"` on free plugin links — Google policy violation.**
+
+## reverb.html Commit Command (Session 55)
+
+Claude commits directly from bash after Steve uploads reverb_v16b.html renamed as reverb.html.
+
+```bash
+# Claude executes this in bash after file is uploaded to session
+TOKEN="ghp_[REDACTED — stored in setenv.ps1 — expires Aug 2 2026]"
+# Read file, base64 encode, get current SHA, PUT to GitHub
+# Commit message: "feat: reverb.html S54 — definitive reverb reference — v1.6 — 383KB — SEO + revenue pass"
+```
+
+File size 383.5KB — fine for single-file API PUT (no size limit applies to API PUT).

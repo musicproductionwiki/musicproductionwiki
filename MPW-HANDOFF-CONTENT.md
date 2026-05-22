@@ -1,5 +1,5 @@
 # MPW-HANDOFF-CONTENT.md
-*Updated: May 22, 2026 (SESSION 52)*
+*Updated: May 22, 2026 (SESSION 53)*
 
 ---
 
@@ -536,3 +536,132 @@ S52 additions (10 total) per entry type:
 | Run mpw_bible_cat_pages.py | After regen | P3 |
 | Retry air entry | P3 |
 | Run Batch 09 | After Tier 1 | P4 |
+
+---
+
+# SESSION 53 UPDATE — May 22, 2026
+
+## Bible Vision — Reconfirmed S53
+
+"The definitive producer education resource. Something that truly helps and supports Beginning, Intermediate and even advanced producers." — Steve, Session 52
+
+Active teaching. Tools producers use mid-session. Producers should feel like they went somewhere after reading an entry. The reverb entry S53 version is the clearest embodiment of this vision to date.
+
+## New T1 Content Standards (S53)
+
+### Section Architecture
+Beginner Trap is now section 3 in the T1 canonical order — immediately after How It Works, before Parameters. The rationale: producers need the three-mistake foundation (routing, solo levels, no HPF) before parameter numbers mean anything. Every T1 entry going forward places Beginner Trap here.
+
+### Psychoacoustics Cards
+Each psy-card requires an "→ Use this:" application sentence (amber italic, 12px). Vocabulary without mechanism is insufficient for T1.
+
+### Practitioner Techniques Block (How To Use)
+Required in T1. Three techniques minimum:
+- Listen Before You Load
+- Sidechain Ducking on the Reverb Return (with specs: attack 0–5ms, release one beat, ratio 4:1–8:1)
+- Relevant mix-bus or secondary technique per entry type
+
+### Emotional Register Block (Types section)
+Required in T1. Six reverb types covered; adapt per entry topic (e.g., compression types get different emotional register framing).
+
+### Plugins Section
+Old three-column plugin-tier grid replaced by editorial card layout. Each plugin entry requires: name, price, manufacturer, 2–3 sentence editorial description, and affiliate-ready link with `rel="noopener sponsored"`. Transparency note required.
+
+### Revenue / Affiliate Architecture
+Plugin section links now use `rel="noopener sponsored"` on all paid plugin picks. URLs currently point to manufacturer sites. When Plugin Boutique and Sweetwater affiliate programs are approved, swap URLs only — no structural changes needed. Transparency note already in place: "affiliate links will be added when programs are live; editorial picks remain independent."
+
+## Batch Status End of Session 53
+
+| Batch | Status | Notes |
+|---|---|---|
+| reverb.html S53 | PENDING COMMIT | 324KB local — mobile QA required first |
+| Bible Tier 1 (33 remaining) | BLOCKED | v5.3 writer must be built in Session 54 |
+| Batch 09–13 | QUEUED | After Tier 1 complete |
+
+## Updated Pending Owner Actions
+
+| Action | Detail | Priority |
+|---|---|---|
+| Mobile QA on reverb.html | Real iPhone — NEVER rule | **P0 NOW** |
+| Commit reverb.html | Claude can execute via bash API PUT after QA | P0 |
+| Affiliate applications | Plugin Boutique, Amazon Associates, Sweetwater, Loopmasters, PluginFox — professional email now available | **HIGH — REVENUE BLOCKER** |
+| Add missing producer quotes | Kevin Parker, Robin Guthrie, Andy Summers, Brian Eno, Tony Visconti, Steve Lillywhite | P2 |
+| Build v5.3 writer (S54) | Back-engineer from reverb_v11.html S53 version | P1 |
+| Run Tier 1 remaining 33 batch | After v5.3 writer locked | P3 |
+| Run mpw_bible_cat_pages.py | After regen | P4 |
+| Run Batch 09 | After Tier 1 | P5 |
+
+---
+
+# SESSION 54 UPDATE — May 22, 2026
+
+## Bible Vision — Reconfirmed S54
+
+"The definitive producer education resource. Something that truly helps and supports Beginning, Intermediate and even advanced producers." — Steve, Session 52
+
+reverb_v16b.html is the clearest embodiment of this vision to date. Active teaching at every section. Tools producers use mid-session. Producers feel like they went somewhere after reading it.
+
+## New T1 Content Standards (S54)
+
+### Shimmer Reverb — Standalone Type Required
+Every T1 entry covering reverb types must treat Shimmer as a standalone type with its own card and deep-dive block. The combined "Shimmer / Convolution" treatment is insufficient — they are philosophically opposite tools (myth vs documentary) and must be separated in both the types grid and Emotional Register.
+
+### Before/After — Three Scenario Format Required
+The generic two-box before/after format is retired for T1. Required format:
+- Three numbered real-world scenarios (beginner, intermediate, advanced problem)
+- Each scenario: symptom description, broken-state parameter table, fix parameter table, "Why it works" explanation
+- Professional Test as three-column grid (three mute-test outcomes)
+
+### Contrast Listen — Layout Standard
+`cl-grid` must use `grid-template-columns:1fr auto 1fr` — never `1fr 1fr` when VS separator is a grid child. Cards must render side-by-side on desktop.
+
+### FAQ — Differentiation Required
+At least 2 of 8 FAQ questions must address content unique to this entry — arrangement-level use, streaming context, or the entry's specific advanced concepts. No more than 6 of 8 can be generic beginner routing/parameter questions.
+
+### Schema Accuracy (NEW S54)
+- wordCount in Article JSON-LD must reflect actual prose count at time of writing (±500w acceptable)
+- Read time must be calculated at 500 wpm on prose-only word count (non-prose blocks stripped)
+- FAQ JSON-LD must exactly match visible FAQ questions — schema and visible content must be identical
+- HowTo schema steps must include specific parameter values, not generic action names
+
+### Revenue Architecture Standards (NEW S54)
+- `rel="noopener sponsored"` on paid affiliate links ONLY — never on free plugin links
+- Beehiiv v3 loader script in `<head>` on all T1 entries — form ID: `a0962c52-4819-4b09-b13d-b26517b76e01`
+- Attribution script in `<head>`: `https://subscribe-forms.beehiiv.com/attribution.js`
+- No static email input fields — all newsletter forms must use live Beehiiv loader divs
+- Transparency note required in plugin section: affiliate disclosure + editorial independence statement
+
+### DOI Architecture (NEW S54 — implement in v5.3 writer)
+- Citation block DOI field: `{{DOI}}` variable at generation time, filled at commit time
+- Zenodo DOI issued immediately after each T1 entry commits
+- Crossref DOI to be issued once membership approved — supersedes Zenodo DOI
+- License: CC BY-NC on all DOI registrations
+- APA/MLA/Chicago/Harvard citation text must include DOI when issued
+
+### Cross-Links Standard (NEW S54)
+- Minimum 1 `/articles/` link per T1 entry (verified against live slug list)
+- "What to Read Next" structured learning path block required — 5–6 cards before Related entries
+- Internal prereq chain: 3–4 entries maximum (don't overwhelm)
+- Citation permalink button on the entry's most distinctive/citable section
+
+## Batch Status End of Session 54
+
+| Batch | Status | Notes |
+|---|---|---|
+| reverb.html S54 | PENDING COMMIT | 383.5KB local — mobile QA required first |
+| Bible Tier 1 (33 remaining) | BLOCKED | v5.3 writer must be built in Session 55 |
+| Batch 09–13 | QUEUED | After Tier 1 complete |
+
+## Updated Pending Owner Actions
+
+| Action | Detail | Priority |
+|---|---|---|
+| Mobile QA on reverb.html | Real iPhone — NEVER rule | **P0 NOW** |
+| Commit reverb.html | Claude executes via bash after QA | P0 |
+| Zenodo account setup | 10 min — issues DOI on reverb.html after commit | P2 |
+| Crossref membership | $275/year — apply this week | P3 |
+| Affiliate applications | Plugin Boutique, Amazon Associates, Sweetwater, Loopmasters, PluginFox | **HIGH — REVENUE BLOCKER** |
+| Add missing producer quotes | Kevin Parker, Robin Guthrie, Andy Summers, Brian Eno, Tony Visconti, Steve Lillywhite | P4 |
+| Build v5.3 writer (S55) | Back-engineer from reverb_v16b.html | P1 |
+| Run Tier 1 remaining 33 batch | After v5.3 writer locked | P5 |
+| Advisory board recruitment | 1–2 real named technical reviewers from network | Future |
