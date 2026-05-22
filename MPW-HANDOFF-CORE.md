@@ -1262,3 +1262,15 @@ P2: Run Tier 1 remaining 33 batch with v5.3 writer
 P3: Affiliate applications (REVENUE BLOCKER)
 P4: GSC title/meta optimization for 4 comparison articles
 P5: Batch 09 (100 track breakdowns) after Tier 1 complete
+
+
+---
+
+# RULE 5 — GITHUB API ACCESS FROM CLAUDE ENVIRONMENT
+
+Claude's bash environment has direct GitHub API access via Python urllib.request.
+NEVER generate PowerShell upload scripts for files that exist in Claude's environment.
+ALWAYS push directly from Claude using the Trees API pattern.
+
+The only operations Steve must run from PowerShell are those requiring files on his local machine
+(e.g. reverb.html saved at C:\Users\swarn\OneDrive\Desktop\mpw-scripts\).
