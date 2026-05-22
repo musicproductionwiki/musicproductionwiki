@@ -1248,3 +1248,185 @@ Body: [Beginner Trap section content — 3 mistakes, 3 fixes]
 
 "The full entry has the Three Questions framework, Clearmountain/Everett/Finneas signal chains with exact dB values, a live RT60 calculator, 7 reverb types including a full shimmer deep-dive, and a mix translation test across 5 playback systems. All free. [link]"
 ```
+
+---
+
+# SESSION 54 ADDENDUM 2 — MARKETPLACE SCRIPTS AND WORKFLOWS — May 22, 2026
+
+## Phase 1 Marketplace Launch — No-Code Workflow Scripts
+
+### A&R Feedback Submission Workflow
+```
+1. Producer visits /marketplace/feedback/
+2. Pays $29 via Stripe embedded checkout
+3. Typeform submission: track link, genre, target market, specific questions
+4. Zapier routes to reviewer queue (Notion or Airtable)
+5. Reviewer completes feedback template within 72 hours
+6. Automated email delivers PDF feedback report
+7. MPW logs transaction, issues receipt
+
+Tools needed: Stripe, Typeform, Zapier, Notion/Airtable, email delivery (Postmark)
+Setup time: ~2 days
+Monthly cost: ~$150/month in SaaS fees
+Revenue at 500 submissions/month: $14,500
+```
+
+### Mentorship Booking Workflow
+```
+1. Mentor creates profile on /marketplace/mentorship/[slug]
+2. Sets hourly rate, availability, specialties, Bible entries they teach
+3. Producer books via Cal.com embed on profile page
+4. Stripe Checkout collects payment (mentor rate + 20% MPW commission)
+5. Cal.com sends Zoom link to both parties
+6. After session: automated review request sent to producer
+7. MPW releases funds to mentor (minus 20%) via Stripe Connect
+
+Tools needed: Cal.com, Stripe Connect, Zoom, automated email
+Setup time: ~3 days
+Monthly cost: ~$100/month
+Revenue at 500 hours/month: $10,000
+```
+
+### Plugin Group Buy Workflow
+```
+1. MPW identifies plugin for group buy (based on Bible entry traffic + affiliate data)
+2. Negotiate bulk pricing with developer (target: 30% below retail)
+3. Create group buy page: /marketplace/group-buy/[plugin-slug]/
+4. Collect interest (free registration) — build demand signal
+5. Once threshold reached (e.g. 500 licenses): open payment window (7 days)
+6. Collect payments via Stripe
+7. Developer sends license keys in bulk
+8. Zapier distributes keys via automated email
+9. MPW keeps margin (difference between bulk cost and member price)
+
+Tools needed: Stripe, Zapier, email delivery
+Developer relationship: required — start with Valhalla DSP (relationship established via Bible editorial)
+Setup time: ~1 week per group buy
+Revenue per buy: $3,500–7,000 margin
+```
+
+### Contract Review Workflow
+```
+1. Producer uploads contract PDF via /marketplace/contracts/
+2. Pays $149 via Stripe
+3. Submission routed to MPW review queue
+4. Reviewer completes standardized assessment template:
+   - Royalty rates vs market standard
+   - Territory scope
+   - Term length
+   - Reversion clauses
+   -360 deal elements
+   - Red flags
+5. PDF report delivered within 48 hours
+6. Follow-up: referral to entertainment lawyer if needed (referral fee)
+
+Assessment template built from Music Business Bible entries (publishing, royalties, contracts)
+NOT legal advice — clearly disclosed. Editorial assessment only.
+Tools needed: Stripe, file upload (AWS S3 or Cloudflare R2), PDF generation, email
+Setup time: ~1 week
+Revenue at 200 reviews/month: $29,800
+```
+
+## MPW-Verified Application Script
+
+```python
+# mpw_verify_applicant.py
+# Processes verification applications from professionals
+
+def verify_applicant(application):
+    score = 0
+    
+    # Check commercial credits (minimum 3)
+    if len(application['credits']) >= 3:
+        score += 30
+    
+    # Check Bible entries demonstrated
+    bible_entries = application['bible_entries_demonstrated']
+    if len(bible_entries) >= 5:
+        score += 25
+    
+    # Check sample work quality (manual review step)
+    # Manual reviewer assigns 0-25 points
+    score += application['manual_review_score']
+    
+    # Check response time commitment
+    if application['response_time_hours'] <= 24:
+        score += 10
+    
+    # Check revision policy
+    if application['revisions_included'] >= 2:
+        score += 10
+    
+    # Assign tier
+    if score >= 85:
+        return 'Elite'
+    elif score >= 70:
+        return 'Professional'
+    elif score >= 55:
+        return 'Associate'
+    else:
+        return 'Not Verified'
+```
+
+## Sync Placement Pitch Script
+
+```python
+# mpw_sync_pitcher.py  
+# Manages active sync placement pitching workflow
+
+SYNC_TARGETS = {
+    'tv_supervisors': [],      # Build list from IMDb Pro
+    'ad_agencies': [],         # Music departments at major agencies
+    'trailer_houses': [],      # Exclusive trailer music companies
+    'game_studios': [],        # Audio directors at major studios
+    'streaming_editorials': [] # Playlist and content music teams
+}
+
+def pitch_catalog(tracks, targets):
+    # Match track metadata to supervisor brief requirements
+    # Generate personalized pitch email per supervisor
+    # Log pitches, track responses, follow up schedule
+    # Record placements, calculate MPW commission (25-30%)
+    pass
+```
+
+## Stripe Connect Setup Checklist
+
+```
+1. Create Stripe account: stripe.com
+2. Enable Stripe Connect (Standard or Express — Express recommended for faster onboarding)
+3. Set commission rate per service type in application config
+4. Build onboarding flow: professionals complete Stripe Connect setup (KYC, bank account)
+5. Test split payment: $100 booking → $80 to professional, $20 to MPW
+6. Enable automatic payouts (weekly to professionals)
+7. Configure 1099 threshold ($600/year) for US professionals
+8. Test international payment flow (GBP, EUR, AUD minimum)
+9. Set up dispute resolution workflow
+10. Legal review of ToS before launch
+```
+
+## Revenue Tracking Script
+
+```python
+# mpw_revenue_tracker.py
+# Tracks all marketplace revenue streams
+
+STREAMS = {
+    'studio_services': {'commission': 0.15, 'target_monthly': 27000},
+    'mentorship': {'commission': 0.20, 'target_monthly': 10000},
+    'ar_feedback': {'commission': 1.00, 'target_monthly': 14500},
+    'contract_review': {'commission': 1.00, 'target_monthly': 29800},
+    'beat_commissions': {'commission': 0.15, 'target_monthly': 9000},
+    'sync_placement': {'commission': 0.25, 'target_monthly': 10000},
+    'plugin_group_buys': {'commission': 1.00, 'target_monthly': 14000},
+    'school_referrals': {'commission': 1.00, 'target_monthly': 30000},
+    'publishing_admin': {'commission': 0.175, 'target_monthly': 20833},
+}
+
+def monthly_report():
+    # Pull from Stripe API
+    # Compare actual vs target per stream
+    # Flag underperforming streams
+    # Project annual run rate
+    pass
+```

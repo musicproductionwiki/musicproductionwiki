@@ -772,3 +772,63 @@ Read time: calculate at 500 wpm (same as Bible standard).
 | Batch 13 (budget-recreation) | Article | 60 | QUEUED | Batch 11 complete |
 | T2 batch | T2 Standard | 700 | FUTURE | After Tier 1 complete |
 | T3 batch | T3 Reference | 500 | FUTURE | After T2 starts |
+
+---
+
+# SESSION 54 ADDENDUM 2 — MIDDLEMAN CONTENT REQUIREMENTS — May 22, 2026
+
+## Content Supporting Marketplace Infrastructure
+
+Each marketplace vertical requires dedicated content to drive qualified traffic and build trust before the transaction layer exists. Build this content as part of the regular article pipeline.
+
+### Articles Supporting Studio Services Marketplace
+- how-to-find-a-mixing-engineer.html
+- how-to-hire-a-session-musician.html
+- what-does-a-mastering-engineer-do.html
+- how-to-brief-a-producer.html
+- remote-session-recording-guide.html
+
+### Articles Supporting Music Business Services
+- how-to-clear-a-sample.html (feeds TruClarify)
+- music-publishing-for-producers.html
+- how-to-read-a-record-deal.html
+- what-is-a-sync-license.html
+- music-royalties-explained.html
+- how-to-register-your-music.html
+- music-distribution-explained.html
+
+### Articles Supporting Education/Career
+- how-to-build-a-production-portfolio.html
+- music-production-schools-compared.html
+- how-to-get-an-internship-at-a-label.html
+- freelance-music-producer-guide.html
+- how-to-price-your-beats.html
+
+### Articles Supporting Technology/Tools
+- best-daw-templates-for-mixing.html
+- how-to-sell-sample-packs.html
+- ai-music-production-tools-compared.html (already in AI Music category)
+
+## MPW-Verified Standard — Content Spec
+
+The MPW-Verified badge for marketplace participants requires documented evidence of:
+1. Technical competence — reference to specific Bible entries they demonstrate mastery of
+2. Track record — minimum 3 verifiable commercial credits
+3. Communication standard — response time, revision policy, brief adherence
+4. Quality floor — sample work reviewed against Bible production standards
+
+Build a dedicated `/verified/` page explaining the standard. This page:
+- Drives applications from qualified professionals
+- Builds buyer trust in marketplace quality
+- Creates SEO value for "verified mixing engineers" type queries
+- Feeds the institutional narrative (MPW sets a standard, not just a marketplace)
+
+## Marketplace Content Integration Points
+
+Every Bible entry that references a technique should eventually link to relevant marketplace services:
+- Compression entry → "Find an MPW-Verified mixing engineer"
+- Reverb entry → "Get your mix professionally checked" 
+- Mastering entry → "Book an MPW-Verified mastering engineer"
+- Music business entries → "Get your contract reviewed" / "Clear your sample"
+
+These CTAs go in after the marketplace is live — NOT before. Placeholder: keep current affiliate/newsletter CTAs in place until marketplace infrastructure exists.

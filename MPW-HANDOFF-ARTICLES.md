@@ -568,3 +568,95 @@ Before proposing any new Producer DNA, Track Anatomy, Gear Reference, or Genre B
 | Track Anatomy | 400 visitors | 0.08% | $40 | $128 |
 
 Genre Bible and Gear Reference are highest revenue per entry. Build these after the T1 batch completes.
+
+---
+
+# SESSION 54 ADDENDUM 2 — MARKETPLACE SUPPORTING CONTENT — May 22, 2026
+
+## Articles Required Before Marketplace Launch
+
+These articles must exist before each marketplace vertical launches. They drive organic traffic and pre-qualify buyers.
+
+### Studio Services Marketplace (Phase 2 launch)
+| Slug | Category | Purpose |
+|---|---|---|
+| how-to-find-a-mixing-engineer.html | Music Business | Drives mixing marketplace traffic |
+| how-to-hire-a-session-musician.html | Music Business | Drives session musician traffic |
+| what-does-a-mastering-engineer-do.html | Techniques | Drives mastering marketplace traffic |
+| how-to-brief-a-producer.html | Music Business | Feeds beat commission marketplace |
+| remote-session-recording-guide.html | Techniques | Feeds session musician marketplace |
+| how-to-build-a-production-portfolio.html | Music Business | Feeds verified application funnel |
+
+### Music Business Services (Phase 4 launch)
+| Slug | Category | Purpose |
+|---|---|---|
+| how-to-clear-a-sample.html | Music Business | Feeds clearance brokerage (TruClarify) |
+| music-publishing-for-producers.html | Music Business | Feeds publishing admin service |
+| how-to-read-a-record-deal.html | Music Business | Feeds contract review service |
+| what-is-a-sync-license.html | Music Business | Feeds sync placement service |
+| music-royalties-explained.html | Music Business | Feeds publishing admin service |
+| how-to-register-your-music.html | Music Business | Feeds publishing admin service |
+| music-distribution-explained.html | Music Business | Feeds label services referral |
+| how-to-price-your-beats.html | Music Business | Feeds beat commission marketplace |
+
+### Education and Career (Phase 5 launch)
+| Slug | Category | Purpose |
+|---|---|---|
+| music-production-schools-compared.html | Music Business | Feeds school placement brokerage |
+| how-to-get-an-internship-at-a-label.html | Music Business | Feeds job placement service |
+| freelance-music-producer-guide.html | Music Business | Feeds mentorship + marketplace |
+
+### Technology and Tools (Phase 2 launch — quick wins)
+| Slug | Category | Purpose |
+|---|---|---|
+| best-daw-templates-for-mixing.html | Techniques | Feeds DAW template marketplace |
+| how-to-sell-sample-packs.html | Music Business | Attracts sample pack sellers to platform |
+
+## Marketplace Pages (Not Articles — Separate Build)
+
+These are functional pages, not content articles. Build as part of marketplace infrastructure:
+
+| URL | Purpose | Build Phase |
+|---|---|---|
+| /marketplace/ | Hub — all services | Phase 2 |
+| /marketplace/mixing/ | Mixing engineer directory | Phase 2 |
+| /marketplace/mastering/ | Mastering engineer directory | Phase 2 |
+| /marketplace/sessions/ | Session musician directory | Phase 2 |
+| /marketplace/mentorship/ | Mentor directory | Phase 1 |
+| /marketplace/feedback/ | A&R feedback submission | Phase 1 |
+| /marketplace/contracts/ | Contract review submission | Phase 1 |
+| /marketplace/beats/ | Beat commission briefs | Phase 2 |
+| /marketplace/sync/ | Sync pitch submission | Phase 4 |
+| /marketplace/templates/ | DAW template marketplace | Phase 3 |
+| /marketplace/group-buy/ | Plugin group buy current offer | Phase 2 |
+| /verified/ | MPW-Verified standard explanation | Phase 1 |
+| /partners/ | Editorial partnership information | Phase 2 |
+
+## SEO Strategy for Marketplace
+
+### High-Value Queries to Target
+- "hire a mixing engineer online" — 2,400 searches/month — high commercial intent
+- "online mastering service" — 5,400/month — extremely high intent
+- "remote session guitarist" — 1,900/month
+- "music contract review" — 1,600/month
+- "sample clearance service" — 1,300/month
+- "music production mentorship" — 900/month
+- "sync licensing for independent artists" — 1,100/month
+
+These queries are served poorly by existing results. MPW's editorial authority creates immediate credibility advantage.
+
+### Content → Marketplace Funnel
+Article ranks for "how to find a mixing engineer" → reader clicks → lands on /marketplace/mixing/ → books a session → MPW earns commission.
+
+This funnel works because:
+1. Article pre-qualifies the buyer (they're actively looking)
+2. MPW's editorial credibility transfers to marketplace trust
+3. No cold pitch — the article already solved their problem and introduced the marketplace naturally
+
+## Duplicate Prevention for Supporting Articles
+
+Before writing any marketplace support article:
+- Check MPW-CATALOG.md for existing articles on similar topics
+- Music Business category already has entries — check before proposing new ones
+- Run mpw_slugs.py to confirm slug availability
+- NEVER propose without duplicate check

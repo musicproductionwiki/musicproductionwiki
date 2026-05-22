@@ -2221,3 +2221,73 @@ Each Genre Production Bible entry links to 20–30 T1/T2 Bible entries. 20 Genre
 | NEVER approach plugin companies as advertorial | Editorial partnership is not advertising — picks remain independent, partnerships are disclosed — frame as editorial documentation not promotion |
 | NEVER build Genre Bible entries without confirming BPM/key data against actual tracks | Genre conventions must reflect real production data, not assumptions |
 | NEVER start new content type writer before current batch is confirmed running | Build sequence is sequential — v5.3 T1/T2/T3 first, then Genre Bible, then Producer DNA, then Plugin Reference, then Track Anatomy |
+
+---
+
+# SESSION 54 ADDENDUM 2 — BIBLE ENTRIES SUPPORTING MARKETPLACE — May 22, 2026
+
+## New Bible Category: Music Business (Marketplace Support)
+
+The music business articles referenced in the marketplace strategy should eventually be elevated to Bible standard. Key terms that warrant T2/T3 Bible entries:
+
+### Music Business Bible Entries (T2 Standard — 3,800–5,000w)
+These terms have direct search volume AND feed the marketplace revenue streams:
+
+| Slug | Term | Feeds |
+|---|---|---|
+| sample-clearance | Sample Clearance | TruClarify brokerage |
+| sync-licensing | Sync Licensing | Sync placement service |
+| music-publishing | Music Publishing | Publishing admin service |
+| mechanical-royalties | Mechanical Royalties | Publishing admin service |
+| performance-royalties | Performance Royalties | Publishing admin service |
+| work-for-hire | Work For Hire | Topliner/vocal marketplace |
+| music-distribution | Music Distribution | Label services referral |
+| record-deal | Record Deal | Contract review service |
+| 360-deal | 360 Deal | Contract review service |
+| music-copyright | Music Copyright | TruClarify + clearance |
+| music-licensing | Music Licensing | Sync placement service |
+| beat-licensing | Beat Licensing | Beat commission marketplace |
+
+### Music Business Bible Entries (T3 Reference — 1,500–2,500w)
+Narrower terms, still valuable for marketplace pre-qualification:
+
+| Slug | Term |
+|---|---|
+| pro-affiliation | PRO Affiliation (ASCAP/BMI/SESAC) |
+| isrc-code | ISRC Code |
+| iswc-code | ISWC Code |
+| compulsory-license | Compulsory License |
+| master-rights | Master Rights |
+| publishing-rights | Publishing Rights |
+| neighboring-rights | Neighboring Rights |
+| music-metadata | Music Metadata |
+| upc-barcode | UPC Barcode |
+
+## Marketplace CTA Integration in Bible Entries
+
+Once marketplace is live, Bible entries get contextual CTAs added at relevant sections. These are NOT added now — placeholder noted for future session.
+
+Pattern:
+```html
+<!-- MARKETPLACE CTA — add after marketplace launches -->
+<div class="mpw-marketplace-cta" style="...">
+  <div>Want professional help applying this?</div>
+  <a href="/marketplace/mixing/">Find an MPW-Verified mixing engineer →</a>
+</div>
+```
+
+Which entries get which CTAs:
+- Compression, EQ, Reverb, Limiting → Mixing engineer CTA
+- Mastering, LUFS → Mastering engineer CTA
+- Music Business entries → Contract review / clearance / publishing admin CTA
+- Genre Bible entries → Beat commission + session musician CTA
+- Producer DNA entries → Mentorship CTA (learn from producers in this style)
+
+## MPW-Verified as Bible Quality Standard
+
+The MPW-Verified standard for marketplace professionals is documented in the Bible:
+- A verified mixing engineer demonstrates mastery of: compression, EQ, reverb, gain staging, stereo imaging, limiting, dynamic range (7 T1 entries minimum)
+- A verified mastering engineer demonstrates: limiting, LUFS, dynamic range, mastering, true-peak-limiting (5 T1 entries minimum)
+- A verified session musician: relevant instrument techniques + music theory entries
+
+This creates a feedback loop: the Bible defines the standard → the marketplace enforces it → professionals study the Bible to get verified → traffic increases → more marketplace applications → better marketplace quality.

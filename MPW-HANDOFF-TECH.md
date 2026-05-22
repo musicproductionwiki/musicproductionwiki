@@ -1404,3 +1404,112 @@ Payment: Stripe
 File delivery: secure download after payment
 Metadata required: BPM, key, stems available, exclusive/non-exclusive, license tiers
 Build trigger: After TruClarify API is production-ready
+
+---
+
+# SESSION 54 ADDENDUM 2 — MARKETPLACE TECHNICAL ARCHITECTURE — May 22, 2026
+
+## Marketplace Infrastructure — Build Phases
+
+### Phase 1 — No-Code Launch (Year 2)
+Start with zero custom infrastructure. Use existing platforms:
+- **Mentorship**: Cal.com (scheduling) + Stripe (payment) + Zoom (delivery). MPW hosts the directory page, routes bookings, collects commission via Stripe Connect.
+- **A&R Feedback**: Typeform (submission) + Stripe (payment) + email delivery. MPW collects $29, routes to reviewer pool, delivers feedback PDF.
+- **Contract Review**: Same Typeform + Stripe pattern. Manual review by MPW editorial team initially.
+
+These three services can launch within 30 days of decision with zero custom development. Combined conservative revenue: $54,300/month.
+
+### Phase 2 — Lightweight Marketplace (Year 2–3)
+- **Platform**: Sharetribe (marketplace SaaS, $299/month) or Bubble.io (no-code)
+- **Payments**: Stripe Connect (handles split payments, 1099s, international)
+- **Profiles**: Producer/engineer profiles with Bible-verified credentials
+- **Reviews**: Star ratings + written reviews
+- **Messaging**: In-platform messaging before booking confirmation
+- **URL structure**: `/marketplace/` hub → `/marketplace/mixing/`, `/marketplace/mastering/`, `/marketplace/sessions/`
+
+### Phase 3 — Custom Platform (Year 3–5)
+Full custom build when volume justifies. Key features:
+- MPW-Verified algorithm (automated credential checking)
+- Brief templates (pulled from Genre Bible entry data)
+- Escrow payments (funds held until delivery confirmed)
+- Dispute resolution system
+- API integration with TruClarify for clearance workflows
+- Beat licensing with stem delivery infrastructure
+
+## MPW-Verified Badge — Technical Implementation
+
+```html
+<!-- Badge component for marketplace profiles -->
+<div class="mpw-verified-badge">
+  <svg><!-- checkmark icon --></svg>
+  <span>MPW Verified</span>
+  <a href="/verified/" class="verified-info">What is this?</a>
+</div>
+```
+
+Database fields per verified professional:
+- verification_date
+- verification_level (Associate / Professional / Elite)
+- bible_entries_demonstrated (array of slugs)
+- commercial_credits (array)
+- sample_work_urls (array)
+- renewal_due_date (annual)
+
+## Payment Infrastructure
+
+**Stripe Connect** — required for marketplace split payments
+- Standard Connect: MPW collects full payment, pays out minus commission
+- Commission held in MPW account: 15–25% depending on service type
+- Automatic 1099 generation for US professionals earning $600+
+- International: Stripe handles currency conversion
+
+**Pricing tiers by service:**
+| Service | MPW Commission | Rationale |
+|---|---|---|
+| Mixing/Mastering | 15% | Competitive with SoundBetter |
+| Session Musicians | 15% | Industry standard |
+| Mentorship | 20% | Platform provides discoverability |
+| Beat Commissions | 15% | Lower friction needed |
+| Ghost Production | 20% | Higher risk, higher margin |
+| Sync Placement | 25–30% | Active service, relationship value |
+| A&R Feedback | 100% | MPW curates, delivers |
+| Contract Review | 100% | MPW delivers directly |
+| Music School Referral | 100% of referral fee | Zero delivery cost |
+| Plugin Group Buys | 100% of margin | MPW negotiates and distributes |
+
+## TruClarify Integration Points
+
+TruClarify is the clearance infrastructure. MPW is the producer-facing layer. Integration:
+- Sample Clearance Brokerage: MPW intake form → TruClarify assessment → attorney referral if needed → MPW collects fee, splits with TruClarify
+- Publishing Administration: MPW registers works, TruClarify monitors for unauthorized use, flags infringement
+- Beat Licensing Marketplace: every listed beat gets TruClarify clearance status (cleared/uncleared/pending) displayed on listing
+
+## URL Structure — Full Marketplace
+
+```
+/marketplace/                    — hub page
+/marketplace/mixing/             — mixing engineers
+/marketplace/mastering/          — mastering engineers  
+/marketplace/sessions/           — session musicians
+/marketplace/vocals/             — topliners and vocalists
+/marketplace/mentorship/         — production mentors
+/marketplace/beats/              — beat commissions
+/marketplace/clearance/          — sample clearance (TruClarify)
+/marketplace/contracts/          — contract review
+/marketplace/sync/               — sync placement
+/marketplace/templates/          — DAW templates
+/marketplace/presets/            — MPW preset packs
+/verified/                       — MPW-Verified standard
+/partners/                       — editorial partnerships
+```
+
+## Data and Privacy
+
+Marketplace transactions involve PII (payment data, identity). Requirements:
+- Stripe handles all payment data (PCI compliant — MPW never touches card numbers)
+- Privacy policy update required before marketplace launch
+- GDPR compliance for EU producers (right to deletion, data portability)
+- Terms of Service covering: commission structure, dispute resolution, prohibited content, refund policy
+- Separate ToS for service providers vs buyers
+
+Engage entertainment lawyer to draft marketplace ToS before Phase 1 launch. TruClarify attorney network can provide this at reduced rate.
