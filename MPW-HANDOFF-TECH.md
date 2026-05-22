@@ -1,5 +1,5 @@
 # MPW-HANDOFF-TECH.md
-*Updated: May 22, 2026 (SESSION 53)*
+*Updated: May 22, 2026 (SESSION 55)*
 
 ---
 
@@ -1407,109 +1407,124 @@ Build trigger: After TruClarify API is production-ready
 
 ---
 
-# SESSION 54 ADDENDUM 2 — MARKETPLACE TECHNICAL ARCHITECTURE — May 22, 2026
+# SESSION 55 ADDENDUM — TECH — May 22, 2026
 
-## Marketplace Infrastructure — Build Phases
+## reverb.html — Live Structural Fingerprints (v1.6 gold standard)
 
-### Phase 1 — No-Code Launch (Year 2)
-Start with zero custom infrastructure. Use existing platforms:
-- **Mentorship**: Cal.com (scheduling) + Stripe (payment) + Zoom (delivery). MPW hosts the directory page, routes bookings, collects commission via Stripe Connect.
-- **A&R Feedback**: Typeform (submission) + Stripe (payment) + email delivery. MPW collects $29, routes to reviewer pool, delivers feedback PDF.
-- **Contract Review**: Same Typeform + Stripe pattern. Manual review by MPW editorial team initially.
+| # | Fingerprint | Value |
+|---|---|---|
+| 1 | mpw-slim-bar | top:0, z:700, height:40px, bg:#181818 |
+| 2 | bible-bar | top:40px, z:600, height:50px, bg:#0d0800 |
+| 3 | entry-nav | top:90px, z:400 — 25 pill links |
+| 4 | bible-entry-wrap | max-width:1100px — 1fr 280px grid on desktop — display:block on mobile |
+| 5 | 25 entry-section IDs | canonical order: definition, how-it-works, beginner-trap, parameters, quick-reference, tools, fingerprint, signal-chain, history, decision-framework, how-to-use, decision-tree, genre-table, plugins, before-after, in-the-wild, producer-dna, signatures, types, verdict, mistakes, mix-translation, progression, faq, related |
+| 6 | ba-cols class | grid-template-columns:1fr 1fr desktop — collapses to 1fr at 768px — NEVER inline grid |
+| 7 | ba-param-row class | grid-template-columns:110px 1fr desktop — collapses to 1fr at 768px — NEVER inline grid |
+| 8 | scrollIntoView nav | scroll+touchmove listeners — no IntersectionObserver (obs2 = NEVER) |
+| 9 | mtt-wrap | Mix Translation Tool — 5 systems — symptom checklist + diagnosis |
+| 10 | atl-svg-wrap | Arrangement Timeline — SVG bar chart — click section for detail |
+| 11 | fp-svg | Fingerprint radar chart — 8 genres — 5 axes — filter buttons |
+| 12 | cl-grid | 1fr auto 1fr — Contrast Listen two-track comparison |
+| 13 | 5 JSON-LD blocks | Article+sameAs, FAQPage, BreadcrumbList, Speakable, HowTo |
+| 14 | Version history | Above citation block — v1.x versioning system |
+| 15 | Citation block | {{DOI}} placeholder — APA/MLA/Chicago format |
+| 16 | Embed block | On every tool — iframe code + Copy Embed button |
+| 17 | Beehiiv loader | In `<head>` — form ID a0962c52-4819-4b09-b13d-b26517b76e01 |
+| 18 | reading-progress | `display:none` desktop — `display:block` at 768px |
+| 19 | overflow-x:clip | On html and body — NOT overflow:hidden |
+| 20 | rel="noopener sponsored" | On paid affiliate links ONLY — never on free plugins |
 
-These three services can launch within 30 days of decision with zero custom development. Combined conservative revenue: $54,300/month.
+## mpw_tools_v3.py — Current State (Session 55)
 
-### Phase 2 — Lightweight Marketplace (Year 2–3)
-- **Platform**: Sharetribe (marketplace SaaS, $299/month) or Bubble.io (no-code)
-- **Payments**: Stripe Connect (handles split payments, 1099s, international)
-- **Profiles**: Producer/engineer profiles with Bible-verified credentials
-- **Reviews**: Star ratings + written reviews
-- **Messaging**: In-platform messaging before booking confirmation
-- **URL structure**: `/marketplace/` hub → `/marketplace/mixing/`, `/marketplace/mastering/`, `/marketplace/sessions/`
+File: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\mpw_tools_v3.py`
+Lines: 1,227 — Size: 80.0KB — Syntax: CLEAN
+Tools: 12 — Slug mappings: 49
+Branding: CONFIRMED matches reverb.html gold standard (6 gaps fixed Session 55)
 
-### Phase 3 — Custom Platform (Year 3–5)
-Full custom build when volume justifies. Key features:
-- MPW-Verified algorithm (automated credential checking)
-- Brief templates (pulled from Genre Bible entry data)
-- Escrow payments (funds held until delivery confirmed)
-- Dispute resolution system
-- API integration with TruClarify for clearance workflows
-- Beat licensing with stem delivery infrastructure
-
-## MPW-Verified Badge — Technical Implementation
-
+**Share bar — gold standard pattern (all tools):**
 ```html
-<!-- Badge component for marketplace profiles -->
-<div class="mpw-verified-badge">
-  <svg><!-- checkmark icon --></svg>
-  <span>MPW Verified</span>
-  <a href="/verified/" class="verified-info">What is this?</a>
+<div style="display:flex;align-items:center;gap:8px;margin-top:16px;padding-top:12px;border-top:1px solid #1e1e1e;flex-wrap:wrap">
+  <span style="font-size:10px;color:#555;flex:1;font-weight:600;letter-spacing:.04em">◆ The Producer's Bible — MusicProductionWiki.com</span>
+  <button ...>Copy Link</button>
+  <a ... X SVG>Share on X</a>
+  <a ... Reddit SVG>Reddit</a>
+</div>
+<!-- Embed block below -->
+<div style="margin-top:16px;padding-top:14px;border-top:1px solid #1e1e1e">
+  <div ...>◆ Embed This Tool</div>
+  <code>iframe embed code</code>
+  <button>Copy Embed</button>
 </div>
 ```
 
-Database fields per verified professional:
-- verification_date
-- verification_level (Associate / Professional / Elite)
-- bible_entries_demonstrated (array of slugs)
-- commercial_credits (array)
-- sample_work_urls (array)
-- renewal_due_date (annual)
-
-## Payment Infrastructure
-
-**Stripe Connect** — required for marketplace split payments
-- Standard Connect: MPW collects full payment, pays out minus commission
-- Commission held in MPW account: 15–25% depending on service type
-- Automatic 1099 generation for US professionals earning $600+
-- International: Stripe handles currency conversion
-
-**Pricing tiers by service:**
-| Service | MPW Commission | Rationale |
-|---|---|---|
-| Mixing/Mastering | 15% | Competitive with SoundBetter |
-| Session Musicians | 15% | Industry standard |
-| Mentorship | 20% | Platform provides discoverability |
-| Beat Commissions | 15% | Lower friction needed |
-| Ghost Production | 20% | Higher risk, higher margin |
-| Sync Placement | 25–30% | Active service, relationship value |
-| A&R Feedback | 100% | MPW curates, delivers |
-| Contract Review | 100% | MPW delivers directly |
-| Music School Referral | 100% of referral fee | Zero delivery cost |
-| Plugin Group Buys | 100% of margin | MPW negotiates and distributes |
-
-## TruClarify Integration Points
-
-TruClarify is the clearance infrastructure. MPW is the producer-facing layer. Integration:
-- Sample Clearance Brokerage: MPW intake form → TruClarify assessment → attorney referral if needed → MPW collects fee, splits with TruClarify
-- Publishing Administration: MPW registers works, TruClarify monitors for unauthorized use, flags infringement
-- Beat Licensing Marketplace: every listed beat gets TruClarify clearance status (cleared/uncleared/pending) displayed on listing
-
-## URL Structure — Full Marketplace
-
-```
-/marketplace/                    — hub page
-/marketplace/mixing/             — mixing engineers
-/marketplace/mastering/          — mastering engineers  
-/marketplace/sessions/           — session musicians
-/marketplace/vocals/             — topliners and vocalists
-/marketplace/mentorship/         — production mentors
-/marketplace/beats/              — beat commissions
-/marketplace/clearance/          — sample clearance (TruClarify)
-/marketplace/contracts/          — contract review
-/marketplace/sync/               — sync placement
-/marketplace/templates/          — DAW templates
-/marketplace/presets/            — MPW preset packs
-/verified/                       — MPW-Verified standard
-/partners/                       — editorial partnerships
+**Brand header — gold standard pattern:**
+```html
+<div style="background:#0d0800;border-bottom:2px solid #f5a623;padding:12px 20px;display:flex;align-items:center;gap:14px">
+  [MPW teal logo SVG]
+  <div style="flex:1">
+    <div style="font-size:12px;font-weight:800;color:#e8e8e3">MusicProductionWiki.com</div>
+    <div style="font-size:10px;color:#f5a623;font-weight:600;letter-spacing:.08em">◆ The Producer's Bible</div>
+  </div>
+  <span ...>Interactive Tool</span>
+  <div style="font-size:11px;font-weight:700;color:#c8c8c3;text-align:right">[TOOL NAME]</div>
+</div>
 ```
 
-## Data and Privacy
+## mpw_tools_v4.py — Spec (To Build Session 56)
 
-Marketplace transactions involve PII (payment data, identity). Requirements:
-- Stripe handles all payment data (PCI compliant — MPW never touches card numbers)
-- Privacy policy update required before marketplace launch
-- GDPR compliance for EU producers (right to deletion, data portability)
-- Terms of Service covering: commission structure, dispute resolution, prohibited content, refund policy
-- Separate ToS for service providers vs buyers
+12 new tools to add. All must match mpw_tools_v3.py branding exactly. Full specs defined in HANDOFF-BIBLE.md tool inventory section.
 
-Engage entertainment lawyer to draft marketplace ToS before Phase 1 launch. TruClarify attorney network can provide this at reduced rate.
+Priority order:
+1. Attack/Release Time Calculator — covers compression, limiting, parallel-compression, multiband, bus-compression, noise-gate, adsr, envelope
+2. Vocal Chain Builder — covers compression, eq, saturation, limiting, reverb, delay, gain-staging, send-return, automation
+3. EQ Problem Solver (symptom→fix) — covers eq, parametric-eq, shelving-eq, hpf, lpf, air-frequency-eq, resonance
+4. Frequency Conflict Detector — covers eq, parametric-eq, gain-staging, mix-bus, stereo-imaging, dynamic-range
+5. Saturation/Harmonic Character Reference — covers saturation, distortion, harmonic-distortion, clip-gain, limiting
+6. Mix Bus Headroom & Summing Reference — covers mix-bus, bus-compression, headroom, gain-staging, mastering, limiting, lufs
+7. Pre-Delay & Reverb Tail Calculator — covers reverb, plate-reverb, room-reverb, convolution-reverb, send-return
+8. Stereo Field & Mono Compatibility Checker — covers stereo-imaging, mid-side-processing, bus-compression, chorus, reverb, delay
+9. Mastering Signal Chain Reference — covers mastering, limiting, lufs, loudness-normalization, true-peak-limiting, dynamic-range, eq
+10. Sidechain/Ducking Frequency Reference — covers compression, parallel-compression, send-return, bus-compression, noise-gate, limiting
+11. Synthesis Parameter Reference — covers subtractive-synthesis, fm-synthesis, wavetable-synthesis, additive-synthesis, oscillator, lfo, adsr, envelope, resonance
+12. Tempo & Key Finder Reference — covers music-theory (planned), mastering, automation, gain-staging
+
+**NEVER rules for mpw_tools_v4.py:**
+| Rule | Detail |
+|---|---|
+| NEVER use setTimeout for any tool init | Direct calls only — Netlify CSP + DOM readiness confirmed |
+| NEVER use innerHTML for card population | createElement/appendChild only — Netlify CSP blocks innerHTML on /bible/* |
+| NEVER assign lfoCalc-style functions without window.* | HTML attribute onclick cannot access non-window functions |
+| ALWAYS match exact branding from _brand_header() and _share() | No variations — every tool identical header/footer |
+| ALWAYS add new slugs to TOOL_OVERRIDES | Every new tool needs complete slug mapping |
+
+## Email Gate — Deferred Architecture (For Future Reference)
+
+When traffic warrants:
+- Gate position: Between Quick Reference section and Tools section
+- Gate HTML: Beehiiv embed + "Unlock the tools" copy + "Already subscribed" link
+- Unlock mechanism: Beehiiv form submit callback → `localStorage.setItem('mpw_unlocked','1')`
+- Page load check: if `localStorage.getItem('mpw_unlocked') === '1'` → hide gate, show tools
+- Persistence: Indefinite — no expiry ever
+- Scope: Single localStorage key works across all Bible entries
+
+## File Structure Updates (Session 55)
+
+```
+bible/
+  reverb.html (v1.6) — LIVE — gold standard ✅
+  chorus.html (v5.2) — LIVE ✅
+  [15 other v5.1 entries] — LIVE
+  compression.html (v5.1) — LIVE
+  [54 v5.1 Session 40 entries] — LIVE
+  [153 v3.0/v4.0 entries] — LIVE
+  Total: 225 entries
+```
+
+## NEVER Rules Added Session 55
+
+| Rule | Detail |
+|---|---|
+| NEVER write ba-cols or ba-param-row grids as inline styles | Must be CSS class — inline styles override media queries and break mobile |
+| NEVER write mix-translation share bar buttons with inline style= | Use mpw-share-btn class only — flex:1 1 0 must come from the class |
+| NEVER declare mobile QA done based on desktop DevTools | Only real iPhone confirmation counts — S55 found 2 real bugs DevTools missed |
+
