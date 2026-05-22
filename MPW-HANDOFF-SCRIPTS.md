@@ -947,3 +947,12 @@ python verify_fixes.py
 # Check all 10 additions, nav highlighting, spectrograms, tools
 # Test on real iPhone
 ```
+
+
+---
+
+# CRITICAL — Claude Has Direct GitHub API Access
+
+Claude's bash environment can reach the GitHub API directly via Python urllib.request.
+Do NOT generate PowerShell upload scripts for files that exist in Claude's environment.
+Push directly from Claude. Only use PowerShell for files on Steve's local machine.
