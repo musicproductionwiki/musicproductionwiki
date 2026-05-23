@@ -2091,7 +2091,7 @@ repo root/
 ├── bible/             (223 entries)
 ├── tools/             ← NEW — top-level directory — DECIDED Session 60
 │   ├── index.html     ← hub page — 8 categories, search/filter — BUILD Session 61
-│   └── [slug].html    ← 36 standalone tool pages — BUILD Session 61
+│   └── [slug].html    ← 24 standalone tool pages — BUILD Session 61
 ├── css/style.css
 ├── js/main.js
 ├── js/mpw-analytics.js
@@ -2112,7 +2112,7 @@ Asset paths in `/tools/`: `../css/style.css`, `../js/main.js` — identical to `
 | `patch_canvas_mobile.py` | ✅ READY — run after iPhone preview | Patches 3 live Bible entries |
 | `mpw_affiliates.py` | ⏳ BUILD Session 61 | Affiliate link registry |
 | `mpw_tool_manifest.py` | ⏳ BUILD Session 61 | Master tool record — source of truth |
-| `generate_tool_pages.py` | ⏳ BUILD Session 61 | Generates 36 standalone tool pages |
+| `generate_tool_pages.py` | ⏳ BUILD Session 61 | Generates 24 standalone tool pages |
 | `generate_tools_hub.py` | ⏳ BUILD Session 61 | Generates /tools/index.html |
 
 ## Tool Dispatch Architecture — v5
@@ -2190,7 +2190,7 @@ The full slug map lives in `mpw_tools_v5_dispatch.py`. Summary by tool:
 
 After generating all tool pages, add to sitemap.xml:
 - `/tools/` hub page — priority 0.9, changefreq monthly
-- All 36 `/tools/[slug].html` pages — priority 0.8, changefreq monthly
+- All 24 `/tools/[slug].html` pages — priority 0.8, changefreq monthly
 - Total new URLs: 37
 
 Submit to Google Search Console after sitemap update.

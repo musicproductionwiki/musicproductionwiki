@@ -635,7 +635,7 @@ Batch 09 (100 Track Anatomy entries) remains queued. Now behind Session 61 tool 
 
 ## Tool Pages — New URL Type
 
-36 standalone `/tools/[slug].html` pages will be built Session 61. These are not articles (they don't use mpw_writer.py) and are not Bible entries (they don't use mpw_bible_writer.py). They are a new third content type with their own generator (`generate_tool_pages.py`) and their own sitemap entries.
+24 standalone `/tools/[slug].html` pages will be built Session 61. These are not articles (they don't use mpw_writer.py) and are not Bible entries (they don't use mpw_bible_writer.py). They are a new third content type with their own generator (`generate_tool_pages.py`) and their own sitemap entries.
 
 These are distinct from both articles and Bible entries in:
 - URL structure: `/tools/[slug]` (not `/articles/` or `/bible/`)

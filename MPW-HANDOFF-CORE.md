@@ -2367,7 +2367,7 @@ Until confirmed, the working count is **24 tools across 3 files**.
 
 ## Session Summary
 
-Session 60 was the most strategically significant tool session to date. The v3 canvas mobile fix was completed, the v5 tool architecture was fully specced and built across 24 tools, a parallel build strategy executed across 3 Claude sessions simultaneously, all 24 v5 tools passed smoke tests and audit, and a comprehensive tool infrastructure strategy was decided. This session permanently changes the tool architecture from 12 v3 tools to 36 tools across 4 Python files with a unified dispatcher.
+Session 60 was the most strategically significant tool session to date. The v3 canvas mobile fix was completed, the v5 tool architecture was fully specced and built across 24 tools, a parallel build strategy executed across 3 Claude sessions simultaneously, all 24 v5 tools passed smoke tests and audit, and a comprehensive tool infrastructure strategy was decided. This session permanently changes the tool architecture from 12 v3 tools to 36 tools across 5 Python files (12 legacy v3 + 12 legacy v4 + 24 v5 dispatch).
 
 ---
 
@@ -2578,7 +2578,7 @@ Every tool will exist on three surfaces simultaneously:
 
 **CRITICAL:** Plugin recommendations are currently hardcoded plain text in all v5 files. When affiliate programs approve, updating 300+ strings across 3 files is untenable.
 
-**Solution:** Build `mpw_affiliates.py` registry NOW, before applications, so HTML structure is correct. One approval → one file update → all 36 tools update automatically.
+**Solution:** Build `mpw_affiliates.py` registry NOW, before applications, so HTML structure is correct. One approval → one file update → all 24 v5 tools update automatically.
 
 ```python
 # mpw_affiliates.py — structure to build
@@ -2595,14 +2595,14 @@ Plugin cards in tool HTML reference the registry. Structure the links now, swap 
 ### Priority Order — Tool Infrastructure (Session 61)
 
 1. **`mpw_affiliates.py`** — affiliate link registry with placeholder IDs — build before applications — zero build time after approval
-2. **`mpw_tool_manifest.py`** — single source of truth for all 36 tools (slug, name, category, description, related tools, long-tail keywords)
-3. **`generate_tool_pages.py`** — generates all 36 standalone `/tools/[slug].html` pages from manifest
+2. **`mpw_tool_manifest.py`** — single source of truth for all 24 v5 tools (slug, name, category, description, related tools, long-tail keywords)
+3. **`generate_tool_pages.py`** — generates all 24 standalone `/tools/[slug].html` pages from manifest
 4. **`generate_tools_hub.py`** — generates `/tools/index.html` hub with 8 categories, search/filter
 5. **Email capture** on Pre-Delivery Checklist tool — Beehiiv integration — highest-intent touchpoint
 6. **Copy-as-text / spec card** on Checklist tool — producers need to save their settings
 7. **TruClarify CTA** in Pre-Delivery Checklist → "Not sure about samples? TruClarify can assess your clearance risk before you distribute."
 8. **GSC analytics review** — which tools are getting traction — drives build priority going forward
-9. **Sitemap updates** — add `/tools/` hub and all 36 standalone pages — submit to GSC
+9. **Sitemap updates** — add `/tools/` hub and all 24 standalone pages — submit to GSC
 
 ---
 
@@ -2639,7 +2639,7 @@ All scripts save to: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\`
 |--------|--------|
 | Build `mpw_affiliates.py` | Affiliate registry with placeholder IDs — all 5 programs |
 | Build `mpw_tool_manifest.py` | Master record for all 24 v5 tools |
-| Build `generate_tool_pages.py` | Generates all 36 `/tools/[slug].html` standalone pages |
+| Build `generate_tool_pages.py` | Generates all 24 `/tools/[slug].html` standalone pages |
 | Build `generate_tools_hub.py` | Generates `/tools/index.html` with categories and search |
 | Add email capture to Checklist tool | Beehiiv integration on Pre-Delivery Checklist |
 | Add TruClarify CTA to Checklist | Item 8 sync licensing checklist → TruClarify handoff |
