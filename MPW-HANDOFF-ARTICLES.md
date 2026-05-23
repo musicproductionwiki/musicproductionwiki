@@ -620,3 +620,27 @@ Article count: **526** — unchanged. No article batches ran Session 56. Next ba
 ## Next Article Session
 
 Batch 09 (100 track breakdowns) remains queued for after Bible Tier 1 regen completes. No article work this session.
+
+---
+
+# SESSION 60 UPDATE — ARTICLES — May 23, 2026
+
+## Article Count — Unchanged
+
+Articles: **526** live. No article batches this session. All work was tool infrastructure and v5 tool build.
+
+## Next Article Session
+
+Batch 09 (100 Track Anatomy entries) remains queued. Now behind Session 61 tool infrastructure build in priority order. Estimated Session 63+.
+
+## Tool Pages — New URL Type
+
+36 standalone `/tools/[slug].html` pages will be built Session 61. These are not articles (they don't use mpw_writer.py) and are not Bible entries (they don't use mpw_bible_writer.py). They are a new third content type with their own generator (`generate_tool_pages.py`) and their own sitemap entries.
+
+These are distinct from both articles and Bible entries in:
+- URL structure: `/tools/[slug]` (not `/articles/` or `/bible/`)
+- Generator: `generate_tool_pages.py` (new script — Session 61)
+- Word count: 300–400 words of keyword content + tool HTML
+- Schema: SoftwareApplication + FAQPage (not Article schema)
+- Sitemap priority: 0.8 (between homepage 1.0 and articles 0.6)
+

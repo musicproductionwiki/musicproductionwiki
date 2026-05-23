@@ -2077,3 +2077,121 @@ Add this to the session start readout from `mpw_session_start.py` in a future up
 | NEVER observe `document.body` in ResizeObserver | Fires before layout settles — observe the tool's named parent container |
 | NEVER build mobile fixes without testing the fix on a real iPhone | Fix may work in DevTools but fail on iOS Safari — always verify on device |
 
+
+---
+
+# SESSION 60 UPDATE — TECH — May 23, 2026
+
+## File Structure — Updated
+
+```
+repo root/
+├── index.html
+├── articles/          (526 articles)
+├── bible/             (223 entries)
+├── tools/             ← NEW — top-level directory — DECIDED Session 60
+│   ├── index.html     ← hub page — 8 categories, search/filter — BUILD Session 61
+│   └── [slug].html    ← 36 standalone tool pages — BUILD Session 61
+├── css/style.css
+├── js/main.js
+├── js/mpw-analytics.js
+└── [handoff files]
+```
+
+Asset paths in `/tools/`: `../css/style.css`, `../js/main.js` — identical to `/bible/` pattern.
+
+## New Python Files — Tool Infrastructure (All in mpw-scripts\)
+
+| File | Status | Purpose |
+|------|--------|---------|
+| `mpw_tools_v5a.py` | ✅ DELIVERED — PASS 8/8 | Tools 1–8 — v3 rebuilds |
+| `mpw_tools_v5b.py` | ✅ DELIVERED — PASS 8/8 | Tools 9–16 — v3 rebuilds + 4 new |
+| `mpw_tools_v5c.py` | ✅ DELIVERED — PASS 8/8 | Tools 17–24 — 8 new tools |
+| `mpw_tools_v5_dispatch.py` | ✅ DELIVERED — PASS | Unified dispatcher — 145 slugs |
+| `fix_v3_mobile.py` | ✅ CONFIRMED PASS | v3 canvas mobile fix — Steve confirmed 7/7 |
+| `patch_canvas_mobile.py` | ✅ READY — run after iPhone preview | Patches 3 live Bible entries |
+| `mpw_affiliates.py` | ⏳ BUILD Session 61 | Affiliate link registry |
+| `mpw_tool_manifest.py` | ⏳ BUILD Session 61 | Master tool record — source of truth |
+| `generate_tool_pages.py` | ⏳ BUILD Session 61 | Generates 36 standalone tool pages |
+| `generate_tools_hub.py` | ⏳ BUILD Session 61 | Generates /tools/index.html |
+
+## Tool Dispatch Architecture — v5
+
+```python
+# Import pattern for mpw_bible_writer.py integration
+from mpw_tools_v5_dispatch import build_tools_section_v5 as build_tools_section_v3, TOOL_OVERRIDES_V5 as TOOL_OVERRIDES
+```
+
+The dispatcher routes 145 slugs across 3 batch files. All TOOL_OVERRIDES_V5A, V5B, V5C are merged. Later dicts override earlier on collision (C > B > A).
+
+## V5 Canvas Standard — LOCKED
+
+All canvas tools in all v5 files follow this pattern exactly:
+
+**HTML element:**
+```html
+<canvas id="CVID" style="width:100%;height:Xpx;display:block;margin-bottom:10px"></canvas>
+```
+No `width=` or `height=` attributes on the element.
+
+**Draw function:**
+```javascript
+var cv = document.getElementById('CVID');
+var dpr = window.devicePixelRatio || 1;
+var W = cv.offsetWidth || 560; var H = HEIGHT_PX;
+cv.width = W * dpr; cv.height = H * dpr;
+var ctx = cv.getContext('2d'); ctx.scale(dpr, dpr);
+```
+
+**ResizeObserver:**
+```javascript
+if (window.ResizeObserver) {
+  var _ro = new ResizeObserver(function() { draw(); });
+  var _cv = document.getElementById('CVID');
+  if (_cv) _ro.observe(_cv.parentElement || _cv);
+}
+```
+
+## V5 Mobile Standard
+
+- Grid collapse breakpoint: **480px** (not 600px — v3 was 600px, v5 corrects to 480px)
+- Touch targets: minimum 44px height on all interactive elements
+- No hardcoded widths on any container
+- `navigator.clipboard` guard: `navigator.clipboard && navigator.clipboard.writeText(value)` — HTTPS only, iOS Safari 13.4+ safe
+
+## Mobile Status — Updated Session 60
+
+| File | Tools | Mobile Status |
+|------|-------|---------------|
+| `mpw_tools_v3.py` | 12 | ⚠️ Canvas fix applied locally (fix_v3_mobile.py) — 3 live entries pending patch |
+| `mpw_tools_v4.py` | T1-T6 | ❌ Not audited — innerHTML CSP issue blocks /bible/* |
+| `mpw_tools_v4_append.py` | T7-T12 | ✅ Audited Session 59 |
+| `mpw_tools_v5a.py` | Tools 1–8 | ✅ Canvas standard applied — 480px breakpoint |
+| `mpw_tools_v5b.py` | Tools 9–16 | ✅ Canvas standard applied — 480px breakpoint |
+| `mpw_tools_v5c.py` | Tools 17–24 | ✅ Canvas standard applied — 480px breakpoint |
+
+## V4 T1-T6 innerHTML CSP Issue — Unresolved
+
+v4 T1-T6 tools use `innerHTML` in rendering functions (`arRenderPresets()`, `arRenderFamous()`, `arRenderChars()`, `arRenderPlugins()`, `vcBuild()`, `vcRenderFamous()`). Netlify CSP blocks `innerHTML` on `/bible/*` pages. Fix: replace all `el.innerHTML = ''` + string concatenation with `createElement/appendChild` pattern. **Not yet fixed — blocked pending v5 dispatch integration.**
+
+## TOOL_OVERRIDES_V5 — Complete 145-Slug Map
+
+The full slug map lives in `mpw_tools_v5_dispatch.py`. Summary by tool:
+
+**v5a slugs (Tools 1–8):** compression, saturation, distortion, parallel-compression, multiband-compression, noise-gate, bus-compression, dynamic-range, limiting, gain-reduction, delay, plate-reverb, automation, slapback, ping-pong-delay, lufs, mastering, loudness-normalization, true-peak-limiting, streaming-mastering, eq, parametric-eq, high-pass-filter, low-pass-filter, shelving-eq, air-frequency-eq, resonance, harmonic-distortion, air, eq-frequency, frequency-masking, reverb, convolution-reverb, room-reverb, acoustic-treatment, room-acoustics, oscillator, fm-synthesis, wavetable-synthesis, additive-synthesis, vocoder, subtractive-synthesis, note-frequency, midi, tuning, adsr, envelope, envelope-generator, synth-basics, amplitude-envelope, gain-staging, send-return, clip-gain, signal-flow, headroom, mix-bus
+
+**v5b slugs (Tools 9–16):** headroom, mix-bus, true-peak, mastering-delivery, audio-delivery, stereo-imaging, mid-side-processing, stereo-width, mono-compatibility, m-s-eq, lfo, chorus, flanger, phaser, tremolo, vibrato, modulation, chord, key, scale, music-theory, chord-progression, circle-of-fifths, modes, 808-bass, sub-bass, trap-production, bass-design, 808, bass-layering, arrangement, song-structure, intro, verse, chorus, bridge, drop, build-up, outro, saturation, harmonic-distortion, tape-saturation, tube-saturation, distortion, overdrive, clipping, analog-warmth, parallel-compression, parallel-processing, new-york-compression, drum-bus, bus-compression
+
+**v5c slugs (Tools 17–24):** transient-shaper, transient-design, transient, punch, attack-design, sample-rate, bit-depth, digital-audio, recording-settings, dither, aliasing, nyquist, oversampling, sidechain, sidechain-compression, ducking, pumping, kick-sidechain, voiceover-ducking, pitch-correction, auto-tune, melodyne, vocal-tuning, vibrato, intonation, pitch-shifting, reverb, plate-reverb, hall-reverb, room-reverb, spring-reverb, convolution-reverb, algorithmic-reverb, shimmer-reverb, gated-reverb, synthesis, subtractive-synthesis, fm-synthesis, wavetable-synthesis, additive-synthesis, granular-synthesis, sound-design, synthesizer, mix-bus-processing, master-bus, mastering-chain, bus-processing, stem-mastering, mix-bus-compression, mastering-delivery, streaming-delivery, audio-delivery, mixing-checklist, stem-export, pre-release-checklist, sync-delivery
+
+**NOTE:** Some slugs appear in multiple batches (e.g. 'saturation', 'reverb'). The dispatcher resolves collisions: C > B > A priority order.
+
+## Sitemap — Pending Updates Session 61
+
+After generating all tool pages, add to sitemap.xml:
+- `/tools/` hub page — priority 0.9, changefreq monthly
+- All 36 `/tools/[slug].html` pages — priority 0.8, changefreq monthly
+- Total new URLs: 37
+
+Submit to Google Search Console after sitemap update.
+

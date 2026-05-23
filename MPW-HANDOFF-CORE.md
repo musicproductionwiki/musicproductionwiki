@@ -2360,3 +2360,302 @@ Current documented count: **24 tools** (12 v3 + 6 v4 T1-T6 + 6 v4 T7-T12). Steve
 
 Until confirmed, the working count is **24 tools across 3 files**.
 
+
+---
+
+# SESSION 60 UPDATE — May 23, 2026
+
+## Session Summary
+
+Session 60 was the most strategically significant tool session to date. The v3 canvas mobile fix was completed, the v5 tool architecture was fully specced and built across 24 tools, a parallel build strategy executed across 3 Claude sessions simultaneously, all 24 v5 tools passed smoke tests and audit, and a comprehensive tool infrastructure strategy was decided. This session permanently changes the tool architecture from 12 v3 tools to 36 tools across 4 Python files with a unified dispatcher.
+
+---
+
+## Site State — End of Session 60
+
+| Metric | Count | Notes |
+|---|---|---|
+| Articles live | 526 | Unchanged — no article batch this session |
+| Bible entries live | 223 | Unchanged — no new entries this session |
+| Tools (v3) | 12 | SUPERSEDED — replaced by v5a tools 1–8 |
+| Tools (v5a) | 8 | GR, Delay, LUFS, EQ/Freq, RT60, Note→Freq, ADSR, Gain Staging |
+| Tools (v5b) | 8 | Headroom, Stereo Width, LFO, Chord & Key, 808, Arrangement, Saturation, Parallel |
+| Tools (v5c) | 8 | Transient, Sample Rate, Sidechain, Pitch, Reverb Type, Synthesis, Mix Bus, Checklist |
+| Tools total | 36 | Confirmed by Steve — 12 v3 + 12 v4 + 12 new = 36 |
+| Dispatcher | Live | mpw_tools_v5_dispatch.py — 145 slugs — all routing confirmed |
+
+---
+
+## Tool Count Clarification — RESOLVED
+
+Previous sessions documented 24 tools (12 v3 + 12 v4). Steve confirmed the count is **36 tools** this session. The breakdown:
+- 12 tools in mpw_tools_v3.py (original v3)
+- 12 tools in mpw_tools_v4.py + mpw_tools_v4_append.py (v4 T1-T12)
+- 12 new tools in mpw_tools_v5b.py + mpw_tools_v5c.py (tools 13–24 of the v5 rebuild)
+
+The "25th tool" mystery from Session 59 is resolved — there was no 25th tool. Steve had miscounted.
+
+---
+
+## V3 Canvas Mobile Fix — COMPLETED Session 60
+
+Two canvas tools in mpw_tools_v3.py had a critical mobile rendering bug:
+- **ADSR Visualizer** (`canvas id="acv"`, hardcoded `width="560"`)
+- **Stereo Width & M/S** (`canvas id="swcv"`, hardcoded `width="560"`)
+
+**Root cause:** CSS set `width:100%` so canvases displayed at ~375px on mobile, but drawing coordinates computed at 560px (hardcoded attribute) — distorted/squished output on every phone.
+
+**Fix applied by `fix_v3_mobile.py`** (delivered and confirmed PASS 7/7):
+- Removed hardcoded `width="560"` attribute from both canvas elements
+- Changed `cv.width` → `cv.offsetWidth || 560` + reset pixel buffer at draw time
+- Added ResizeObserver on parent container for both tools
+
+**Surgical patch for 3 live Bible entries** — `patch_canvas_mobile.py` delivered (all 6 targets confirmed against live GitHub files before delivery). Patches `bible/adsr.html`, `bible/envelope.html`, `bible/stereo-imaging.html` via Trees API — single Netlify deploy.
+
+**Status:** `fix_v3_mobile.py` confirmed PASS on Steve's machine (all 7 checks). `patch_canvas_mobile.py` ready to run after mobile preview confirmed OK on real iPhone.
+
+**Mobile previews generated:** `preview_adsr.html` and `preview_stereo_width.html` — standalone HTML files for testing on device before live commit.
+
+---
+
+## V5 Tool Architecture — FINAL
+
+### Design Philosophy — "3x Better Than Every Competitor"
+
+Session 60 audited every competitor tool set (bchillmix.com, tools4music.com, peak-studios.de, liminfo.com). Universal competitor weaknesses identified:
+- Tools answer "what" but never "why"
+- No famous producer presets or real song references
+- No compressor character layer
+- No genre context
+- Canvas tools have hardcoded widths, no ResizeObserver
+- Tools isolated from educational articles
+
+**MPW v5 differentiators:**
+1. Every tool teaches (what + why + what to do) via live-updating `div.co` contextual insight
+2. Real songs and named producers in every preset
+3. Canvas standard: `offsetWidth`, `devicePixelRatio`, `ResizeObserver` — mandatory
+4. Mobile-first: 480px breakpoint, 44px touch targets, no fixed widths
+5. Plugin recommendations: Free / Mid / Pro tier for every relevant tool
+6. Famous producer presets load all settings in one click
+
+### Canvas Standard — MANDATORY ALL TOOLS v5
+
+```javascript
+// HTML element — no width/height attributes
+<canvas id="CVID" style="width:100%;height:Xpx;display:block;margin-bottom:10px"></canvas>
+
+// Draw function opening
+var cv = document.getElementById('CVID');
+var dpr = window.devicePixelRatio || 1;
+var W = cv.offsetWidth || 560; var H = HEIGHT_PX;
+cv.width = W * dpr; cv.height = H * dpr;
+var ctx = cv.getContext('2d'); ctx.scale(dpr, dpr);
+
+// ResizeObserver (after initial draw() call, before closing script tag)
+if (window.ResizeObserver) {
+  var _ro = new ResizeObserver(function() { draw(); });
+  var _cv = document.getElementById('CVID');
+  if (_cv) _ro.observe(_cv.parentElement || _cv);
+}
+```
+
+### V5 File Structure
+
+| File | Tools | Slugs | Status |
+|------|-------|-------|--------|
+| `mpw_tools_v5a.py` | Tools 1–8 (v3 rebuilds) | ~55 | ✅ PASS 8/8 smoke tests |
+| `mpw_tools_v5b.py` | Tools 9–16 (v3 rebuilds + 4 new) | ~50 | ✅ PASS 8/8 smoke tests |
+| `mpw_tools_v5c.py` | Tools 17–24 (8 new tools) | ~40 | ✅ PASS 8/8 smoke tests |
+| `mpw_tools_v5_dispatch.py` | Unified dispatcher | 145 total | ✅ PASS — routes all 145 slugs |
+
+### V5 Tool Inventory — Complete
+
+**Batch A (v5a.py) — Tools 1–8 (rebuilt from v3):**
+1. Gain Reduction Calculator — transfer curve canvas, compressor character (FET/VCA/Opto/Vari-Mu), famous settings presets (Thriller, Nevermind, RAM, Back to Black)
+2. Delay Time Calculator — 3 tab modes (Delay/Pre-Delay/Slapback), famous producer presets (The Edge, Gilmour, Andre 3000)
+3. LUFS Target Reference — streaming fate simulator bar chart, True Peak warning, dynamic range context
+4. Frequency/EQ Reference — Problem Solver mode (symptom→fix) + Instrument Reference mode + multi-instrument masking
+5. RT60 Calculator — acoustic treatment recommendations, convolution reverb matching
+6. Note-to-Frequency — 808 tuning guide, harmonic series display, surgical EQ targeting
+7. ADSR Visualizer — Web Audio API preview (Sine/Saw/Square/Triangle), logarithmic scale toggle, 15 presets with teaching cards
+8. Gain Staging Reference — visual signal chain diagram, plugin sweet spot guide, mistake detector
+
+**Batch B (v5b.py) — Tools 9–16:**
+9. Headroom Calculator — True Peak vs Sample Peak toggle, expanded delivery guide
+10. Stereo Width & M/S — M/S encoder display, phase correlation color coding, width-by-frequency guide
+11. LFO Sync Calculator — animated LFO waveform canvas, rate lock button
+12. Chord & Key Reference — Circle of Fifths SVG mini-display, famous track references, MIDI note output
+13. 808 & Sub Bass Tuner — key compatibility canvas, kick/808 frequency separator canvas, harmonic translation guide (BRAND NEW)
+14. Arrangement Timer — genre structure templates, energy arc SVG, streaming length targets (BRAND NEW)
+15. Saturation & Harmonic Distortion — harmonic series canvas showing Tube/Tape/Transistor/Clipper/Bit Crusher (BRAND NEW)
+16. Parallel Processing Blend Calculator — blend calculator, NY drum presets, ghost kick technique, phase warning (BRAND NEW)
+
+**Batch C (v5c.py) — Tools 17–24:**
+17. Transient Shaper Reference — before/after canvas, source presets, vs-compressor comparison table (BRAND NEW)
+18. Sample Rate & Bit Depth Decision Guide — decision wizard, dynamic range bar chart, myths accordion, dither guide (BRAND NEW)
+19. Sidechain Compression Designer — 5 type cards, BPM-synced release calculator, ghost kick technique (BRAND NEW)
+20. Pitch Correction Reference — retune speed visual reference, genre standards, common mistakes (BRAND NEW)
+21. Reverb Type Selector — decision matrix (source + genre + goal → recommendation), reverb type encyclopedia (BRAND NEW)
+22. Synthesis Type Selector — sound type → synthesis method → parameters → plugins (BRAND NEW)
+23. Mix Bus Signal Flow Guide — interactive chain builder with enable/disable, processor order explainer (BRAND NEW)
+24. Pre-Delivery Checklist — delivery type selector, interactive toggle checklist, platform specs quick reference (BRAND NEW)
+
+---
+
+## Tool Infrastructure Strategy — DECIDED Session 60
+
+### Strategic Priority Shift
+
+Steve confirmed: **tools have more leverage than entries right now**. Three reasons:
+1. Search intent is transactional — "ADSR calculator online" captures ready users, not readers
+2. Backlink magnet — tools get embedded, bookmarked, re-visited; articles get shared once
+3. Compounding surface area — one tool at `/tools/adsr-visualizer` + embedded in `/bible/adsr` + `/bible/envelope` = three indexed URLs per asset
+
+### `/tools/` Directory — DECIDED
+
+**Decision:** `/tools/` as its own top-level directory, same level as `/articles/` and `/bible/`.
+
+```
+musicproductionwiki.com/
+├── articles/
+├── bible/
+├── tools/          ← NEW — top-level, permanent
+│   ├── index.html  ← hub page with 8 categories, search/filter
+│   ├── adsr-visualizer.html
+│   ├── gain-reduction-calculator.html
+│   └── [tool-slug].html ...
+├── css/
+├── js/
+└── index.html
+```
+
+Asset paths: `../css/style.css` — identical to `/bible/` pattern. Zero special cases.
+
+**Why top-level is permanent:** URL authority is permanent. `musicproductionwiki.com/tools/adsr-visualizer` accumulates its own backlinks and rankings. Cannot restructure without losing everything. Decided now, never changed.
+
+### Three Surfaces Per Tool
+
+Every tool will exist on three surfaces simultaneously:
+1. `/tools/[slug].html` — standalone page, full SEO, own title/meta/schema
+2. `/tools/index.html` — category hub, browsable by type, filterable
+3. `/bible/[slug]#tools` — embedded in entry, contextual, part of article flow
+
+### Standalone Tool Page Requirements (per tool)
+
+- Tool-specific `<title>`: e.g. `ADSR Envelope Visualizer — Free Online Tool | MusicProductionWiki.com`
+- `<meta description>`: long-tail optimized, 150–160 chars
+- `<link rel="canonical">` pointing to `/tools/[slug]`
+- OG/Twitter meta for social sharing
+- The tool HTML (Python-generated, same as Bible embed)
+- 300–400 words of keyword content below the tool
+- FAQPage schema (3–5 questions per tool)
+- SoftwareApplication schema
+- "Learn more in The Producer's Bible →" link to Bible entry
+- Related tools section (3 tools, same category)
+- Embed code block
+- Breadcrumb: Home → Tools → [Category] → [Tool Name]
+
+### Tool Categories (8 — Confirmed)
+
+| Category | Tools |
+|---|---|
+| Dynamics & Compression | GR Calculator, Parallel Processing, Sidechain Designer, Transient Shaper, Headroom Calculator |
+| Frequency & EQ | Frequency/EQ Reference, Note-to-Frequency, RT60 Calculator, Stereo Width & M/S |
+| Time & Modulation | Delay Calculator, LFO Sync, ADSR Visualizer |
+| Loudness & Delivery | LUFS Reference, Pre-Delivery Checklist |
+| Arrangement & Structure | Arrangement Timer, Chord & Key Reference |
+| Sound Design & Synthesis | Synthesis Selector, 808 & Sub Bass Tuner, Saturation Reference |
+| Mixing & Signal Flow | Gain Staging, Mix Bus Signal Flow, Reverb Type Selector |
+| Pitch & Vocals | Pitch Correction Reference |
+
+### Affiliate Link Registry — Build Before Applications
+
+**CRITICAL:** Plugin recommendations are currently hardcoded plain text in all v5 files. When affiliate programs approve, updating 300+ strings across 3 files is untenable.
+
+**Solution:** Build `mpw_affiliates.py` registry NOW, before applications, so HTML structure is correct. One approval → one file update → all 36 tools update automatically.
+
+```python
+# mpw_affiliates.py — structure to build
+AFFILIATE = {
+    'plugin_boutique': 'https://www.pluginboutique.com/?a_aid=PLACEHOLDER',
+    'sweetwater': 'https://sweetwater.sjv.io/PLACEHOLDER',
+    'amazon': 'https://amzn.to/PLACEHOLDER',
+    'loopmasters': 'https://www.loopmasters.com/?a_aid=PLACEHOLDER',
+}
+```
+
+Plugin cards in tool HTML reference the registry. Structure the links now, swap in real IDs when approved. **Steve applying to all affiliate programs this week** after 200+ Bible entries with all Bible writers live.
+
+### Priority Order — Tool Infrastructure (Session 61)
+
+1. **`mpw_affiliates.py`** — affiliate link registry with placeholder IDs — build before applications — zero build time after approval
+2. **`mpw_tool_manifest.py`** — single source of truth for all 36 tools (slug, name, category, description, related tools, long-tail keywords)
+3. **`generate_tool_pages.py`** — generates all 36 standalone `/tools/[slug].html` pages from manifest
+4. **`generate_tools_hub.py`** — generates `/tools/index.html` hub with 8 categories, search/filter
+5. **Email capture** on Pre-Delivery Checklist tool — Beehiiv integration — highest-intent touchpoint
+6. **Copy-as-text / spec card** on Checklist tool — producers need to save their settings
+7. **TruClarify CTA** in Pre-Delivery Checklist → "Not sure about samples? TruClarify can assess your clearance risk before you distribute."
+8. **GSC analytics review** — which tools are getting traction — drives build priority going forward
+9. **Sitemap updates** — add `/tools/` hub and all 36 standalone pages — submit to GSC
+
+---
+
+## Scripts Delivered — Session 60
+
+| Script | Status | Purpose |
+|--------|--------|---------|
+| `fix_v3_mobile.py` | ✅ CONFIRMED PASS | Patches local mpw_tools_v3.py — 7/7 checks pass |
+| `patch_canvas_mobile.py` | ✅ READY | Patches 3 live Bible entries — run after mobile preview confirmed |
+| `preview_adsr.html` | ✅ DELIVERED | Standalone mobile preview for ADSR tool |
+| `preview_stereo_width.html` | ✅ DELIVERED | Standalone mobile preview for Stereo Width tool |
+| `mpw_tools_v5a.py` | ✅ PASS 8/8 | Tools 1–8 — delivered by parallel Session A |
+| `mpw_tools_v5b.py` | ✅ PASS 8/8 | Tools 9–16 — delivered by parallel Session B |
+| `mpw_tools_v5c.py` | ✅ PASS 8/8 | Tools 17–24 — delivered by parallel Session C |
+| `mpw_tools_v5_dispatch.py` | ✅ PASS | Unified dispatcher — 145 slugs — all routing confirmed |
+
+All scripts save to: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\`
+
+---
+
+## Pending Actions — Session 60 Carryover
+
+### P0 — Must Do Before Session 61 Builds
+
+| Action | Detail |
+|--------|--------|
+| Run `patch_canvas_mobile.py` | After previews confirmed OK on real iPhone — commits 3 Bible entries |
+| Save all v5 files to mpw-scripts\ | v5a, v5b, v5c, dispatch — save via Notepad → Save As → All Files |
+| Confirm mobile previews on iPhone | Open preview_adsr.html and preview_stereo_width.html on real device |
+
+### P1 — Session 61 Primary Build
+
+| Action | Detail |
+|--------|--------|
+| Build `mpw_affiliates.py` | Affiliate registry with placeholder IDs — all 5 programs |
+| Build `mpw_tool_manifest.py` | Master record for all 36 tools |
+| Build `generate_tool_pages.py` | Generates all 36 `/tools/[slug].html` standalone pages |
+| Build `generate_tools_hub.py` | Generates `/tools/index.html` with categories and search |
+| Add email capture to Checklist tool | Beehiiv integration on Pre-Delivery Checklist |
+| Add TruClarify CTA to Checklist | Item 8 sync licensing checklist → TruClarify handoff |
+
+### P2 — This Week (Steve)
+
+| Action | Detail |
+|--------|--------|
+| Apply to all affiliate programs | Plugin Boutique, Amazon Associates, Sweetwater, Loopmasters, PluginFox — after 200+ entries live |
+| GSC analytics review | Check which `/bible/` slugs are getting tool interactions |
+| Request Indexing for /bible/reverb | Already pending from Session 55 |
+
+---
+
+## NEVER Rules Added — Session 60
+
+| Rule | Detail |
+|------|--------|
+| NEVER hardcode canvas width/height attributes in v5 tools | All canvas elements must use CSS `width:100%;height:Xpx` — no inline width/height attributes |
+| NEVER use plain text for affiliate plugin recommendations | All plugin links must reference `mpw_affiliates.py` registry — not hardcoded strings |
+| NEVER build tool pages without the manifest | `mpw_tool_manifest.py` is the single source of truth — all generators read from it |
+| NEVER change tool URL slugs after pages are indexed | `/tools/[slug]` URLs are permanent — backlinks and rankings accumulate on them |
+| NEVER build fake paywalls on tools | Paywall belongs on Bible content tiers, not on calculator functionality |
+| NEVER launch community/leaderboard features before 10K monthly actives | Social proof requires volume — embarrassing below threshold |
+

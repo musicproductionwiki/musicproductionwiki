@@ -1553,3 +1553,216 @@ def js_check(html, label):
 | NEVER deliver tools with escape sequences as \\uXXXX that Python renders to actual unicode | Python f-strings render \\u25b2 as actual triangle char — use ASCII alternatives (^ v) for expand/collapse |
 | NEVER embed </script> as literal string in Python tool heredocs | Use SC = '</' + 'script>' — always |
 | NEVER use print() at module level | All diagnostic prints inside if __name__ == '__main__' block |
+
+---
+
+# SESSION 60 UPDATE — SCRIPTS — May 23, 2026
+
+## New Scripts Delivered
+
+### fix_v3_mobile.py — CONFIRMED PASS
+
+**Purpose:** Patches `mpw_tools_v3.py` — fixes canvas mobile rendering on ADSR and Stereo Width tools.
+
+**Run:**
+```powershell
+cd C:\Users\swarn\OneDrive\Desktop\mpw-scripts
+python fix_v3_mobile.py
+```
+
+**Confirmed output (Steve's machine):**
+```
+Syntax: CLEAN
+[OK] ADSR canvas element (remove hardcoded width)
+[OK] aDraw() -- use offsetWidth at draw time
+[OK] aDraw() -- add ResizeObserver
+[OK] Stereo Width canvas element (remove hardcoded width)
+[OK] swCalc() -- use offsetWidth at draw time
+[OK] swCalc() -- add ResizeObserver
+All checks PASS. Fix complete.
+```
+
+**Status:** ✅ Run and confirmed on Steve's machine. `mpw_tools_v3.py` now has correct canvas standard for ADSR and Stereo Width.
+
+---
+
+### patch_canvas_mobile.py — READY TO RUN
+
+**Purpose:** Surgically patches 3 live Bible entries (adsr.html, envelope.html, stereo-imaging.html) with the same canvas mobile fix. Uses Trees API — single Netlify deploy.
+
+**Run (after mobile previews confirmed OK on real iPhone):**
+```powershell
+. .\setenv.ps1
+python patch_canvas_mobile.py
+```
+
+**All 6 patch targets confirmed against live GitHub files before delivery.**
+
+**Verify after run:**
+- https://musicproductionwiki.com/bible/adsr
+- https://musicproductionwiki.com/bible/envelope
+- https://musicproductionwiki.com/bible/stereo-imaging
+
+---
+
+### mpw_tools_v5a.py — DELIVERED — PASS 8/8
+
+**Purpose:** Tools 1–8 (v3 rebuilds with v5 standard). 119KB, 1,479 lines.
+
+**Smoke test:**
+```powershell
+python mpw_tools_v5a.py
+```
+Expected: `Syntax: CLEAN` + `All tests PASS`
+
+**Import:**
+```python
+from mpw_tools_v5a import build_tools_section_v5a, TOOL_OVERRIDES_V5A
+```
+
+---
+
+### mpw_tools_v5b.py — DELIVERED — PASS 8/8
+
+**Purpose:** Tools 9–16 (v3 rebuilds + 4 new tools). 99KB, 1,675 lines.
+
+**Smoke test:**
+```powershell
+python mpw_tools_v5b.py
+```
+Expected: `Syntax: CLEAN` + `All tests PASS`
+
+---
+
+### mpw_tools_v5c.py — DELIVERED — PASS 8/8
+
+**Purpose:** Tools 17–24 (8 new tools). 87KB, 953 lines.
+
+**Smoke test:**
+```powershell
+python mpw_tools_v5c.py
+```
+Expected: `Syntax: CLEAN` + `All tests PASS`
+
+---
+
+### mpw_tools_v5_dispatch.py — DELIVERED — PASS
+
+**Purpose:** Unified dispatcher for all 36 tools. Routes 145 slugs to the correct batch file.
+
+**Run smoke test:**
+```powershell
+python mpw_tools_v5_dispatch.py
+```
+Expected: `Syntax OK` for all 3 files + `Total slugs: 145` + `Dispatcher smoke test: PASS`
+
+**Integration with mpw_bible_writer.py (one-line swap):**
+```python
+# OLD:
+from mpw_tools_v3 import build_tools_section_v3, TOOL_OVERRIDES
+
+# NEW:
+from mpw_tools_v5_dispatch import build_tools_section_v5 as build_tools_section_v3, TOOL_OVERRIDES_V5 as TOOL_OVERRIDES
+```
+
+---
+
+## Scripts to Build — Session 61
+
+### mpw_affiliates.py — BUILD FIRST
+
+**Purpose:** Affiliate link registry. All plugin recommendations in all v5 tools reference this file. One approval → one file update → all 36 tools update.
+
+**Structure:**
+```python
+AFFILIATE = {
+    'plugin_boutique': 'https://www.pluginboutique.com/?a_aid=PLACEHOLDER',
+    'sweetwater': 'https://sweetwater.sjv.io/PLACEHOLDER',
+    'amazon': 'https://amzn.to/PLACEHOLDER',
+    'loopmasters': 'https://www.loopmasters.com/?a_aid=PLACEHOLDER',
+    'pluginfox': 'https://www.pluginfox.com/?ref=PLACEHOLDER',
+}
+
+# Plugin → affiliate program mapping
+PLUGIN_AFFILIATES = {
+    'Valhalla Room': ('plugin_boutique', 'valhalla-room'),
+    'FabFilter Pro-Q 3': ('plugin_boutique', 'fabfilter-pro-q-3'),
+    'Waves CLA-76': ('plugin_boutique', 'waves-cla-76'),
+    # ... all plugins from all 36 tool plugin recommendations
+}
+
+def aff_link(plugin_name, display_text=None):
+    """Returns affiliate href for a plugin name."""
+    ...
+```
+
+---
+
+### mpw_tool_manifest.py — BUILD SECOND
+
+**Purpose:** Single source of truth for all 36 tools. All generators (tool pages, hub page, sitemap) read from this manifest.
+
+**Structure per tool:**
+```python
+TOOLS = [
+    {
+        'slug': 'adsr-visualizer',
+        'name': 'ADSR Envelope Visualizer',
+        'category': 'Time & Modulation',
+        'bible_slug': 'adsr',  # links to /bible/adsr
+        'description': 'Visualize ADSR envelope shapes with Web Audio preview. 15 presets.',
+        'meta_description': 'Free ADSR visualizer with audio preview. Set attack, decay, sustain, release and hear the result. 15 producer presets for trap, R&B, EDM and more.',
+        'long_tail_keywords': ['adsr calculator online', 'adsr envelope visualizer', 'adsr settings trap'],
+        'related_tools': ['delay-time-calculator', 'lfo-sync-calculator'],
+        'faq': [
+            {'q': 'What is ADSR?', 'a': '...'},
+            ...
+        ],
+    },
+    # ... all 36 tools
+]
+```
+
+---
+
+### generate_tool_pages.py — BUILD THIRD
+
+**Purpose:** Generates all 36 standalone `/tools/[slug].html` pages from the manifest. Each page includes: tool HTML (from v5 dispatch), SEO meta, keyword content, FAQPage schema, SoftwareApplication schema, related tools section, embed code.
+
+**Run:**
+```powershell
+python generate_tool_pages.py
+```
+
+Output: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\tools\` (36 HTML files)
+
+Then commit all to `tools/` directory via Trees API.
+
+---
+
+### generate_tools_hub.py — BUILD FOURTH
+
+**Purpose:** Generates `/tools/index.html` — the category hub page with 8 categories, search/filter, and all 36 tool cards.
+
+**Run:**
+```powershell
+python generate_tools_hub.py
+```
+
+Output: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\tools\index.html`
+
+Then commit to `tools/index.html` via Trees API.
+
+---
+
+## Parallel Build Sessions — Session 60 Record
+
+Session 60 used 3 simultaneous Claude sessions to build 24 tools in parallel. Each session received a self-contained prompt (session_A_tools_1_8.md, session_B_tools_9_16.md, session_C_tools_17_24.md) with complete boilerplate, canvas standard, tool specs, slug mapping, and smoke test.
+
+Results:
+- Session A: 8 tools — PASS 8/8 — 119KB — 1,479 lines
+- Session B: 8 tools — PASS 8/8 — 99KB — 1,675 lines
+- Session C: 8 tools — PASS 8/8 — 87KB — 953 lines
+
+**This parallel approach is reusable** for future tool batches. Session prompt files are stored in mpw-scripts\ as templates.
+

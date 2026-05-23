@@ -896,3 +896,83 @@ As of Session 57/58, the minimum quality bar for any new Producer's Bible intera
 - Share bar: Copy Link + X + Reddit + Embed code
 
 No tool below this standard should be added to any Bible entry.
+
+---
+
+# SESSION 60 UPDATE — CONTENT — May 23, 2026
+
+## Article Count — Unchanged
+
+Articles: **526** live. No article batches this session. All session work was tool infrastructure.
+
+## Bible Entry Count — Unchanged
+
+Bible entries: **223** live. No new entries this session.
+
+## Strategic Shift — Tools Over Entries (Session 60 Decision)
+
+**Steve confirmed: tools have more leverage than entries right now.**
+
+Reasoning:
+1. Search intent is transactional — "ADSR calculator online" captures ready-to-use visitors, not just readers
+2. Tools are backlink magnets — producers embed them, YouTubers link to them, educators reference them. Articles get shared once. Tools get bookmarked and re-visited.
+3. Compounding surface area — one tool at `/tools/adsr-visualizer` + embedded in `/bible/adsr` + `/bible/envelope` = three indexed URLs per asset
+
+**Implication for batch scheduling:** The tool infrastructure build (Session 61) takes priority over Batch 09 (Track Anatomy) and the remaining Tier 1 Bible batch. Once `/tools/` hub and standalone pages are live, affiliate link infrastructure is built, and email capture is in place, then article/entry batches resume.
+
+## Monetisation Update
+
+### Affiliate Timeline
+
+**Steve applying to all affiliate programs this week** — after 200+ Bible entries with all Bible writers live. The 200-entry threshold gives enough content volume to show affiliate programs a legitimate publishing operation.
+
+Target approval timeline: Plugin Boutique (fastest — 2–5 days), Amazon Associates (1–3 days), Sweetwater (1–2 weeks), Loopmasters (3–7 days), PluginFox (3–7 days).
+
+**Critical action before applications:** Build `mpw_affiliates.py` registry first (Session 61 P1). All 36 tools have plugin recommendations as plain text now. When approvals come in, the registry enables a single-file update across all tools.
+
+### Revenue Opportunity — Tool Plugin Recommendations
+
+145 slugs × 3 plugin recommendation tiers × average 2 plugins per tier = ~870 affiliate link opportunities currently sitting as plain text. This is the highest-density affiliate opportunity on the entire site.
+
+### Email Capture — Pre-Delivery Checklist
+
+The Pre-Delivery Checklist tool (Tool 24, v5c) is the highest-intent touchpoint on the site. A producer using this tool is about to release music. Email capture at the end: "Get the complete platform delivery spec card as a PDF — free, no spam." Beehiiv handles delivery.
+
+**Build Session 61 alongside the tool infrastructure.**
+
+### TruClarify Integration — Pre-Delivery Checklist
+
+Item 8 of the Sync Licensing checklist: "No uncleared samples confirmed" → add TruClarify CTA: "Not sure? TruClarify can assess your sample clearance risk before you distribute." This is the highest-value TruClarify lead the site will ever generate — a producer moments before release with a specific clearance question.
+
+## SEO Strategy — Tool Pages
+
+### Long-Tail Tool SEO (High Priority)
+
+Standalone `/tools/[slug].html` pages target zero-competition long-tail queries:
+- "gain reduction calculator for rap vocals" → `/tools/gain-reduction-calculator`
+- "ADSR settings for trap 808" → `/tools/adsr-visualizer`
+- "delay time calculator BPM online" → `/tools/delay-time-calculator`
+- "delivery checklist music streaming" → `/tools/pre-delivery-checklist`
+- "reverb settings for vocals online" → `/tools/reverb-type-selector`
+- "808 tuner key compatibility" → `/tools/808-sub-bass-tuner`
+- "sidechain compression settings EDM" → `/tools/sidechain-compression-designer`
+
+Each standalone page has 300–400 words of keyword content below the tool — not just the tool itself. This is where long-tail queries get answered.
+
+### Tool Hub SEO
+
+`/tools/index.html` targets: "music production tools online", "free music producer tools", "music mixing calculators". Hub page with 36 internal links to tool pages is a strong hub-and-spoke SEO structure passing authority to every tool page.
+
+## Content Pipeline — Revised Priority
+
+| Phase | Work | Priority | Session |
+|-------|------|----------|---------|
+| Tool infrastructure | mpw_affiliates.py + manifest + generators | P0 | Session 61 |
+| Email capture | Pre-Delivery Checklist Beehiiv integration | P0 | Session 61 |
+| Tool pages live | 36 standalone pages + hub committed | P1 | Session 61 |
+| Sitemap update | 37 new URLs added + submitted to GSC | P1 | Session 61 |
+| Affiliate applications | Steve applies this week | P1 | This week |
+| GSC analytics review | Which tools/entries are getting traction | P2 | Session 62 |
+| Bible Tier 1 remaining | 33 entries — writer integration with v5 dispatch | P3 | Session 62+ |
+| Batch 09 (Track Anatomy) | 100 entries — after tool infrastructure live | P4 | Session 63+ |
+

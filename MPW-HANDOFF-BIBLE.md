@@ -2450,3 +2450,71 @@ Rendered as color-coded tier cards. All T2 and T3 strings reformatted to this st
 | P1 | Build v4 Tools 7-12 (second batch) |
 | P2 | Build v5.3 1-pass writer from reverb.html gold standard |
 | P3 | Run Tier 1 remaining 33 batch |
+
+---
+
+# SESSION 60 UPDATE — BIBLE — May 23, 2026
+
+## Bible Entry State — Unchanged
+
+| Group | Count | Status |
+|---|---|---|
+| reverb.html v1.6 | 1 | LIVE ✅ |
+| chorus.html v5.2 | 1 | LIVE ✅ |
+| v5.1 original 15 | 15 | LIVE — need regen with v5 dispatch |
+| compression | 1 | LIVE — need regen with v5 dispatch |
+| v5.1 Session 40 | 54 | LIVE — content issues — need regen |
+| v3.0/v4.0 legacy | 153 | LIVE — untouched |
+| **Total live** | **223** | |
+
+## Tool Integration — Bible Writer Update Required
+
+The `mpw_bible_writer.py` currently imports from `mpw_tools_v3.py`. To use the v5 tool suite, one import line must be swapped after v5 files are saved to `mpw-scripts\`:
+
+```python
+# OLD (current):
+from mpw_tools_v3 import build_tools_section_v3, TOOL_OVERRIDES
+
+# NEW (after v5 files saved):
+from mpw_tools_v5_dispatch import build_tools_section_v5 as build_tools_section_v3, TOOL_OVERRIDES_V5 as TOOL_OVERRIDES
+```
+
+**All function signatures are identical** — the swap requires zero other changes to the writer.
+
+**Do not make this swap until all v5 files are saved to mpw-scripts\ and the dispatcher smoke test passes on Steve's machine.**
+
+## Bible Tools — V5 Coverage Expanded
+
+The v5 dispatch covers 145 slugs vs the v3's 49 slugs. Every Bible entry will now get a more relevant, higher-quality tool. Key improvements per entry type:
+
+- Compression entries → GR Calculator with transfer curve canvas + compressor character selector
+- Reverb entries → Reverb Type Selector with decision matrix (not just RT60)
+- Synthesis entries → Synthesis Type Selector with sound→method→parameters mapping
+- Hip-hop/trap entries → 808 & Sub Bass Tuner with key compatibility canvas
+- Mastering entries → Pre-Delivery Checklist + LUFS tool with streaming fate simulator
+- Vocal entries → Pitch Correction Reference with retune speed guide
+
+## Three Live Bible Entries — Pending Canvas Patch
+
+After mobile previews confirmed on real iPhone, run `patch_canvas_mobile.py`:
+- `bible/adsr.html` — ADSR canvas mobile fix
+- `bible/envelope.html` — ADSR canvas mobile fix
+- `bible/stereo-imaging.html` — Stereo Width canvas mobile fix
+
+All 3 will be committed in a single Trees API call — one Netlify deploy.
+
+## Standalone Tool Pages — Bible Cross-Link
+
+Every Bible entry with a tool embed will get a small callout added:
+"Use this tool standalone → [Tool Name]" linking to `/tools/[tool-slug]`
+
+This gives Google a crawlable link from `/bible/[slug]` to `/tools/[tool-slug]`, passing authority in both directions. Add this during the next bulk Bible regen pass (after Session 61 tool pages are live).
+
+## Writer Integration — Planned Session 62
+
+After Session 61 tool infrastructure is built and tool pages are live:
+1. Swap import in mpw_bible_writer.py (one line)
+2. Run `--validate` — confirm 80/80 checks still pass
+3. Run `--test` on compression slug — confirm GR Calculator v5 renders correctly
+4. Run remaining 33 Tier 1 entries with v5 tools embedded
+
