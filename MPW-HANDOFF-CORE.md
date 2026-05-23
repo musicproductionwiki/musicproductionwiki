@@ -1973,3 +1973,390 @@ PASS 31291 chars
 | verify_fixes.py | in mpw-scripts\ — run any time |
 | reverb.html | LIVE ✅ v1.6 — 383KB |
 | chorus.html | LIVE ✅ |
+
+
+---
+
+# SESSION 59 UPDATE — CORE — May 22, 2026
+
+## State at End of Session 59
+
+- **Articles:** 526 live (unchanged)
+- **Bible entries:** 225 live (unchanged)
+- **mpw_tools_v4_append.py:** BUILT — 109,607 bytes — T7-T12 — 21 new slugs — 14/14 smoke test PASS
+- **deliver_v4_part3.ps1:** NEW — 71.7KB — save via Notepad → Save As → All Files
+- **deliver_v4_part4.ps1:** NEW — 71.9KB — save via Notepad → Save As → All Files
+- **mpw_tools_v4.py (on Steve's machine):** 195,294 bytes — T1-T6 — needs T7-T12 appended
+- **mpw_bible_writer.py:** v5.2 s47d — unchanged — still needs v4 integration
+
+---
+
+## Tools 7-12 — Session 59 Delivery
+
+### What was built
+
+Six new tools in `mpw_tools_v4_append.py` — append-only, no helpers (SC constant + 6 build functions only). File starts with `SC = '</' + 'script>'` then T7-T12 function bodies. Requires `_wrap`, `_share`, `_plug` helpers from the existing `mpw_tools_v4.py`.
+
+| Tool | Function | Slugs covered | Chars | Status |
+|------|----------|---------------|-------|--------|
+| T7 Pre-Delay & Reverb Tail Calculator | `build_predelay` | plate-reverb, room-reverb, convolution-reverb | 24,172 | PASS |
+| T8 Stereo Field & Mono Compatibility | `build_stereo_field` | mid-side-processing | 16,496 | PASS |
+| T9 Mastering Signal Chain Reference | `build_mastering_chain` | mastering | 17,575 | PASS |
+| T10 Sidechain & Ducking Reference | `build_sidechain` | sidechain-compression, automation | 18,864 | PASS |
+| T11 Synthesis Parameter Reference | `build_synthesis` | subtractive-synthesis, wavetable-synthesis, fm-synthesis, additive-synthesis, oscillator, vocoder | 28,725 | PASS |
+| T12 Tempo, Key & Chord Reference | `build_tempo_key` | music-theory, chord-progression, key, scale, mode, interval, harmony | 28,691 | PASS |
+
+**Smoke test: 14/14 PASS** (all slug variants tested)
+
+### TOOL_OVERRIDES_V4 patch — add after appending T7-T12
+
+```python
+TOOL_OVERRIDES_V4.update({
+    # T7 -- Pre-Delay & Reverb Tail Calculator
+    'plate-reverb':           build_predelay,
+    'room-reverb':            build_predelay,
+    'convolution-reverb':     build_predelay,
+    # T8 -- Stereo Field & Mono Compatibility
+    'mid-side-processing':    build_stereo_field,
+    # T9 -- Mastering Signal Chain (overrides T6 mastering slug)
+    'mastering':              build_mastering_chain,
+    # T10 -- Sidechain & Ducking
+    'sidechain-compression':  build_sidechain,
+    'automation':             build_sidechain,
+    # T11 -- Synthesis Parameter Reference
+    'subtractive-synthesis':  build_synthesis,
+    'wavetable-synthesis':    build_synthesis,
+    'fm-synthesis':           build_synthesis,
+    'additive-synthesis':     build_synthesis,
+    'oscillator':             build_synthesis,
+    'vocoder':                build_synthesis,
+    # T12 -- Tempo, Key & Chord Reference
+    'music-theory':           build_tempo_key,
+    'chord-progression':      build_tempo_key,
+    'key':                    build_tempo_key,
+    'scale':                  build_tempo_key,
+    'mode':                   build_tempo_key,
+    'interval':               build_tempo_key,
+    'harmony':                build_tempo_key,
+})
+```
+
+**21 new slugs. Total after Session 59: 54 slugs across T1-T12.**
+
+NOTE: `stereo-imaging` remains T4 (freq conflict). `lufs`, `loudness-normalization`, `true-peak-limiting` remain T6. `adsr`, `envelope` remain T1. `lfo` remains v3.
+
+### Deploy instructions
+
+```powershell
+# Save both scripts via Notepad -> Save As -> All Files
+. .\deliver_v4_part3.ps1   # saves base64 chunk to %TEMP%
+. .\deliver_v4_part4.ps1   # assembles + writes mpw_tools_v4_append.py
+
+# Full smoke test:
+python mpw_tools_v4_append.py
+# Expected: 14/14 tests passed
+
+# Then append T7-T12 into mpw_tools_v4.py:
+# Open both files, copy everything from mpw_tools_v4_append.py
+# (from SC = ... line down to end of build_tempo_key function)
+# Paste at end of mpw_tools_v4.py before the smoke test block
+# Then add TOOL_OVERRIDES_V4.update({...}) block above
+```
+
+---
+
+## Branding Fix — Session 59
+
+All T7-T12 tools now use correct gold-standard branding matching reverb.html:
+
+| Element | Before (wrong) | After (correct) |
+|---------|---------------|-----------------|
+| Outer container | Green `#0d1a0d` bg, green border | `#0d0800` amber header, amber `1.5px` border |
+| Header bg | Green | `#0d0800` dark amber |
+| Header border | Green | `2px solid #f5a623` amber |
+| Logo | 28px MPW SVG | 32px MPW teal SVG `#00e8a2` |
+| Site name | 12px | 14px weight 800 |
+| Bible label | 10px | 11px amber |
+| Tool title | 11px grey | 14px amber weight 800 |
+| "Interactive Tool" badge | Present | **REMOVED** (no SEO value, decorative only) |
+| Share bar label | Amber diamond + site name | `◆ The Producer's Bible — MusicProductionWiki.com` 10px grey flex:1 |
+| Share buttons | Text-only | Copy Link (amber) + X SVG + Reddit SVG |
+| Embed block | Missing | Full iframe code + Copy Embed button below every tool |
+| Plug row | 4-col green/blue/amber | 4-col amber/grey/white/amber-key-insight |
+
+### Mobile fixes — Session 59
+
+17 mobile issues identified from iPhone screenshots and fixed:
+
+| # | Issue | Fix |
+|---|-------|-----|
+| 1 | Tool title wraps 3-4 lines on mobile | `t4-hdr-title` CSS class — 11px max-width 120px at ≤600px |
+| 2 | Plug row 4-col unreadable on mobile | `t4-plug` class — 2×2 grid at ≤600px |
+| 3 | Plug card heights uneven | `display:flex;flex-direction:column;flex:1` on text |
+| 4 | "MID ($50-$200)" wrapping | Shortened to "Mid $50–200" |
+| 5 | T9 hover-only stage reveal broken on touch | Added `ontouchstart` alongside `onmouseenter` |
+| 6 | T12 Circle of Fifths squished in 2-col | `t4-cof-wrap` class — 1-col on mobile |
+| 7-8 | All canvases wrong scale on mobile | `cv.width = cv.offsetWidth` before every draw call |
+| 9 | T8 instrument label text 8px unreadable | Font size `Math.max(8, Math.min(10, W/70))` — scales with canvas |
+| 10 | Share bar label wraps, breaks layout | `t4-share-lbl` — `width:100%` on mobile, buttons own row |
+| 11 | T11 mode tabs may overflow narrow mobile | `flex-wrap:wrap` on tab row |
+| 12 | No resize redraw on any canvas | `ResizeObserver` added to all 6 tools |
+| 13 | T10 sliders 3-col too narrow on mobile | `t4-sliders` class — 1-col at ≤600px |
+| 14 | T12 chord grid 7-col unreadable | `t4-chord-grid` class — 4-col at ≤600px |
+| 15 | Subdivision grid card text too small | Font size responsive to card width |
+| 16-17 | Button contrast | Consistent `rgba(245,166,35,.4)` border throughout |
+
+### Script errors fixed — Session 59
+
+Two "Script error" crashes on mobile Safari caused by:
+
+1. **T11 ResizeObserver** falling back to `document.body` when `sy-cv1` not found at init, and FM canvas (`sy-cv-fm`) inside `display:none` returning `offsetWidth=0`
+   - Fix: Observer now watches `#sy-sub` container div; callback only calls draw for active mode
+
+2. **T12 ResizeObserver** falling back to `document.body`
+   - Fix: Observer now watches CoF canvas parent node — always present and has valid width
+
+---
+
+## Mobile-Responsive CSS — MPW_TOOLS_V4_CSS
+
+A new CSS constant `MPW_TOOLS_V4_CSS` is exported from `mpw_tools_v4_append.py`. The Bible writer must inject this into the page `<style>` block once per page (not once per tool). Contains all responsive breakpoints for T7-T12 tool classes.
+
+Key classes:
+- `.t4-plug` — 4-col plug row, 2×2 on mobile
+- `.t4-sliders` — 3-col sliders, 1-col on mobile
+- `.t4-chord-grid` — 7-col chords, 4-col on mobile
+- `.t4-cof-wrap` — 2-col CoF layout, 1-col on mobile
+- `.t4-share` — share bar, label full-width on mobile
+- `.t4-hdr-title` — tool title, smaller font on mobile
+- `.t4-cv` — canvas, always `width:100%`
+
+---
+
+## NEVER Rules Added — Session 59
+
+| Rule | Detail |
+|------|--------|
+| NEVER put `//` JS comment strings inside Python JS string concatenation | Entire JS is one line; `//` comments out everything after it |
+| NEVER use `\uXXXX` in Python regular string literals for JS content | Python interprets as unicode at parse time; use ASCII equivalents |
+| NEVER trust apostrophe regex check as authoritative for JS validity | `node --check` is authoritative; apostrophes in double-quoted JS strings are valid |
+| NEVER put Python `# comment` lines inside `js = (...)` concatenation blocks | Python ignores them but they break the string when inside quoted sections |
+| NEVER use ResizeObserver with `document.body` fallback | Fires before layout settles and causes "Script error" on mobile Safari |
+| NEVER call canvas draw functions when canvas is inside `display:none` | `offsetWidth` returns 0; guard with mode check before drawing |
+| NEVER build tool preview without opening on real iPhone | Desktop DevTools misses ResizeObserver errors and canvas scale issues |
+
+---
+
+## Updated Priority Queue — Session 60
+
+| Priority | Task |
+|----------|------|
+| **P0** | Append T7-T12 to mpw_tools_v4.py + add TOOL_OVERRIDES_V4.update() block |
+| **P0** | Integrate mpw_tools_v4.py into mpw_bible_writer.py (v4 first, fall through to v3) |
+| **P1** | Build v5.3 1-pass writer from reverb.html gold standard |
+| **P2** | Run Tier 1 remaining 33 batch with v5.3 writer |
+| **P3 (Steve)** | Affiliate applications — Plugin Boutique, Amazon Associates, Loopmasters, Sweetwater, PluginFox (**REVENUE BLOCKER**) |
+| **P4** | **MixMentor — AI mix feedback engine** (see Product Roadmap section below) |
+| **P5** | **ClearCheck — sample clearance risk tool** (see Product Roadmap section below) |
+| P6 | Producer press kit generator |
+| P7 | Add missing producer quotes (Kevin Parker, Robin Guthrie, Andy Summers, Brian Eno, Tony Visconti, Steve Lillywhite) |
+| P8 | GSC: Request Indexing for /bible/reverb |
+
+---
+
+## Product Roadmap — Session 59 Strategic Decision
+
+Steve approved building a suite of standalone producer tools beyond the Bible. These are separate web applications, not Bible entry tools. They will live at dedicated URLs and monetize independently while cross-promoting MPW and TruClarify.
+
+### MixMentor — AI Mix Feedback Engine (P4)
+
+**What it is:** Upload your track, get parameter-level mix feedback in producer language. Not "your low mids are heavy" — instead "Cut 3.5dB at 340Hz, Q 1.2, on your mix bus."
+
+**Architecture:**
+- Frontend: Upload UI, frequency visualizer, dynamic range display, stereo field, LUFS readout, delta comparison view
+- RunPod serverless pod: `essentia` + `librosa` + `pyloudnorm` for feature extraction (~3-8 seconds per track)
+- `demucs` stem separation if only a stereo bounce is uploaded
+- Claude API: receives structured feature JSON + genre context, returns prioritized fix list
+- Zero audio storage — files processed and deleted, only feature JSON retained
+
+**Differentiators vs competitors (RoEx Mix Check Studio, TrackScore.ai, Slapback.io):**
+- Reference-anchored analysis: upload YOUR reference track, get delta vs that specific track (not a generic profile)
+- Parameter-level feedback: exact dB, Hz, Q values — not qualitative descriptions
+- Iterative re-analysis: upload v2, see the before/after delta visually
+- Stem upload: identify WHICH track is causing the problem, not just that the problem exists
+- 50+ genre/subgenre profiles (vs 9 EDM subgenres at TrackScore, generic at RoEx)
+- Arrangement layer: density analysis over time — identifies when a mix problem is actually an arrangement problem
+
+**Revenue model:** Freemium — 2 free analyses/month, $15/month unlimited. Stems and reference matching behind paywall.
+
+**Competitive research (Session 59):**
+- RoEx Mix Check Studio: 5M tracks processed, generic feedback, no parameter values, no reference anchoring
+- TrackScore.ai: EDM-only, 9 subgenres, "hit potential" score producers distrust
+- Slapback.io: Timestamped notes, AI personas (Rick Rubin, Bjork), collaboration layer — uses OpenAI/Google, not proprietary audio model
+- mixanalytic.com: Frequency/dynamics/stereo/clarity — freemium, credits model
+- Gap: Nobody gives actual plugin parameter values. Nobody does reference-anchored delta analysis. Nobody analyzes arrangement density as a cause of mix problems.
+
+**Build sequence:**
+1. Frontend — upload UI + visualizations + Claude feedback panel (can build now, mock RunPod response)
+2. RunPod pod — essentia/librosa analysis endpoint
+3. Connect frontend to RunPod
+4. Genre reference database (50+ profiles)
+5. Stem upload + demucs integration
+
+### ClearCheck — Sample Clearance Risk Tool (P5)
+
+**What it is:** Input a sample or describe source material → get clearance difficulty score (1-10), rights holder identification, estimated cost range for indie/major release, known clearance history, and plain-English risk assessment.
+
+**Revenue model:** Free basic risk assessment → paid detailed report ($9) → referral fees from curated attorney/licensing company network on complex cases.
+
+**Why this wins:** Producers who have a placement offer and a sample in the record will pay immediately to know their risk. Urgency and willingness to pay completely different from mix tools.
+
+**TruClarify connection:** ClearCheck is the top-of-funnel for TruClarify. The attorney referral network IS the product. The tool is lead generation for high-value cases.
+
+**Already in handoff:** ClearCheck was listed in Section 45 as highest-opportunity tool in the MPW tools strategy before Session 59. Now formally prioritized as P5 standalone app.
+
+### Additional Apps Identified — Session 59
+
+| App | Description | Revenue ceiling | Build complexity | Priority |
+|-----|-------------|----------------|------------------|----------|
+| Producer press kit generator | Spotify/Apple Music API + social data → auto-generated press kit PDF + hosted link + bio + cold email subject line | Medium | Low | P6 |
+| Producer royalty tracker | Aggregates PRO + distributor + publisher royalties in one dashboard, flags uncollected and mis-registered publishing shares | Very high | High (API integrations) | Backlog |
+| Beat marketplace + split sheets | Beat sale auto-generates legally binding split sheet both parties sign before file downloads | Massive | Very high | Backlog |
+| A&R feedback engine | Is this record pitchable? Hook strength, arrangement tension, chorus placement — calibrated to what actually gets signed | High | Medium | Backlog |
+| Cleared sample subscription | Sample pack subscription where every sample comes with clearance certificate valid for commercial/sync/distribution | High | High (legal infra) | Backlog |
+
+**Recommended build order:** Press kit generator first (fastest to revenue, viral sharing), ClearCheck second (highest urgency), MixMentor third (flagship but needs RunPod).
+
+---
+
+## Files on Steve's Machine — End of Session 59
+
+| File | Status |
+|------|--------|
+| mpw_tools_v4_append.py | NEW — 109,607 bytes — T7-T12 — 21 slugs — 14/14 PASS |
+| deliver_v4_part3.ps1 | NEW — 71.7KB — save via Notepad → Save As → All Files |
+| deliver_v4_part4.ps1 | NEW — 71.9KB — save via Notepad → Save As → All Files |
+| mpw_tools_v4.py | 195,294 bytes — T1-T6 — needs T7-T12 appended |
+| mpw_tools_v3.py | CONFIRMED WORKING — Session 55 branding fixes intact |
+| mpw_bible_writer.py | v5.2 s47d — 214,478 bytes — needs v4 integration |
+| reverb.html | LIVE ✅ v1.6 — 383KB — commit 53db8f4e |
+| chorus.html | LIVE ✅ v5.2 |
+
+
+---
+
+## Mobile Optimisation Mandate — ALL 25 Tools (Session 59 Decision)
+
+Steve has confirmed: **every tool in the MPW suite must be fully optimised for mobile before any tool goes live on Bible entries.** This applies to all 25 tools across v3 (12 tools), v4 T1-T6 (6 tools), and v4 T7-T12 (6 tools). The 25th tool is yet to be confirmed — current documented count is 24. Steve to confirm the 25th tool identity.
+
+### Current Mobile Status by Tool File
+
+| File | Tools | Mobile Status |
+|------|-------|---------------|
+| mpw_tools_v3.py | 12 tools (T-v3-1 through T-v3-12) | ❌ NOT audited — no mobile QA on record — suspected issues throughout |
+| mpw_tools_v4.py | T1-T6 (6 tools) | ❌ NOT audited — built to desktop standard — no mobile QA |
+| mpw_tools_v4_append.py | T7-T12 (6 tools) | ✅ Mobile-audited Session 59 — 17 issues found and fixed — real iPhone confirmed |
+
+**The gap:** T7-T12 were the only tools tested on a real iPhone. Every other tool has been built and deployed without mobile QA.
+
+### Known Mobile Issues by Pattern (apply to v3 and v4 T1-T6)
+
+Based on what was found in T7-T12, the following classes of issue are expected across all other tools:
+
+| Issue class | Likely tools affected | Fix pattern |
+|-------------|----------------------|-------------|
+| Canvas not reading `offsetWidth` before draw — renders at wrong scale | All tools with canvas (T1, T4, T5, T6, v3 GR Calc, v3 RT60, v3 ADSR, v3 Stereo Width, v3 LFO, v3 Headroom) | `cv.width = cv.offsetWidth \|\| fallback` before every draw call |
+| No ResizeObserver — canvas doesn't redraw on orientation change | All canvas tools | Add `new ResizeObserver(fn).observe(container)` |
+| Multi-col grids too narrow on mobile (3-col, 4-col inputs) | T1 (character selector grid), T2 (step cards), T3 (symptom grid), T6 (mix bus stages) | CSS breakpoint collapse at ≤600px |
+| Plugin tier row 4-col unreadable | All tools with plug row | `t4-plug` / `t3-plug` class — 2×2 grid at ≤600px |
+| Hover-only interactions broken on touch | T9 mastering hover (already fixed), T3 EQ spectrum hover, T6 mastering stages hover | Add `ontouchstart` alongside `onmouseover`/`onmouseenter` |
+| Tool header title wrapping multi-line | All tools with long tool names | `t4-hdr-title` class — smaller font, max-width on mobile |
+| Share bar label wrapping breaks layout | All tools | `t4-share-lbl` — `width:100%` on mobile, buttons own row |
+| Tap targets too small (slider thumbs, preset buttons) | All tools | Minimum 44px tap target height on all interactive elements |
+| Input type="number" too wide or too narrow | T1 BPM, T7 BPM, T10 BPM, T12 BPM | Fixed width 72px with amber border — already correct in T7-T12 |
+| `onmouseenter` tooltip-style panels broken on touch | T3 EQ spectrum hover tooltip, T9 mastering stage panel | Pair with `ontouchstart` or convert to tap/toggle pattern |
+| Text too small in canvas labels | v3 canvases — font sizes hardcoded at 8-9px | Dynamic font: `Math.max(8, Math.min(10, W/70))` |
+| Horizontal scroll on tool body | Any tool with fixed-width inner containers | Ensure all inner grids use `minmax(0, 1fr)` — no fixed widths |
+
+### Mobile Optimisation Priority Order
+
+Audit and fix in this order (highest-impact first):
+
+**Phase 1 — v4 T1-T6 (used on live Tier 1 entries)**
+
+| Tool | Priority | Known risk areas |
+|------|----------|-----------------|
+| T1 Attack/Release Calculator | P0-mobile | Canvas GR envelope — likely offsetWidth issue; 4-col compressor character grid; BPM input row |
+| T3 EQ Problem Solver | P0-mobile | SVG spectrum hover tooltip — touch broken; 13-symptom selector grid too narrow; instrument grid |
+| T2 Vocal Chain Builder | P1-mobile | Step card expand/collapse — tap target size; 8 genre preset buttons wrapping |
+| T4 Frequency Conflict Detector | P1-mobile | Canvas spectrum offsetWidth; 10-instrument toggle pill grid |
+| T5 Saturation Reference | P1-mobile | Two canvases (transfer + harmonic spectrum) — both offsetWidth issues |
+| T6 Mix Bus Headroom | P2-mobile | Platform LUFS canvas; 7-stage signal flow; mastering chain hover panels |
+
+**Phase 2 — v3 tools (12 tools — lower priority but must complete before v3 → v4 migration)**
+
+| Tool | Priority | Known risk areas |
+|------|----------|-----------------|
+| v3 GR Calculator | P2-mobile | Canvas GR meter; input grid collapse |
+| v3 RT60 Calculator | P2-mobile | Canvas reverb tail visualiser |
+| v3 ADSR Visualiser | P2-mobile | Canvas ADSR shape |
+| v3 Stereo Width & M/S | P2-mobile | Canvas stereo field display |
+| v3 LFO Rate | P2-mobile | BPM sync table — multi-col collapse |
+| v3 Delay Time Calculator | P3-mobile | Note division table |
+| v3 LUFS Reference | P3-mobile | Platform comparison table |
+| v3 Frequency Band Reference | P3-mobile | Frequency grid — 9 bands |
+| v3 Headroom Calculator | P3-mobile | Input grid |
+| v3 Gain Staging Reference | P3-mobile | Reference level table |
+| v3 Chord & Key Reference | P3-mobile | Circle display (superseded by T12 — deprioritise) |
+| v3 Note→Frequency | P3-mobile | Frequency table — superseded by T11 — deprioritise |
+
+### Mobile QA Standard — All Tools
+
+Every tool must pass these checks on a real iPhone (not DevTools simulation) before it is considered mobile-ready:
+
+- [ ] Tool header: MPW logo + site name + tool title all visible without wrapping badly
+- [ ] All canvas elements: render at full width of the device screen, not a fixed desktop width
+- [ ] All canvas elements: redraw correctly on orientation change (portrait → landscape → portrait)
+- [ ] All 3-col and 4-col input grids: collapse to 1-col or 2-col on mobile
+- [ ] Plug row (Free/Mid/Pro/Key insight): 2×2 grid, all cards equal height
+- [ ] Share bar: label on own row, buttons below — no horizontal overflow
+- [ ] Preset/famous buttons: tap targets minimum 44px height, text visible
+- [ ] All hover-only interactions: functional via tap on touch devices
+- [ ] No horizontal scroll on the page caused by any tool element
+- [ ] Canvas draw quality: text labels readable (≥9px effective), not blurry on retina
+- [ ] All click-to-copy interactions: work on iOS Safari (navigator.clipboard present)
+- [ ] Embed block: iframe code readable, Copy Embed button tappable
+
+### Mobile Optimisation — Build Method
+
+The audit-and-fix process for each tool:
+
+1. Generate preview HTML for the tool in isolation
+2. Open on real iPhone (not DevTools)
+3. Screenshot every issue — annotate with issue number
+4. Write targeted CSS/JS fixes:
+   - CSS fixes go in the tool's generated `<style>` block via append-only injection
+   - JS fixes go in the tool's script block (canvas sizing, ResizeObserver, touch handlers)
+5. Re-test on real iPhone
+6. Only when all 12 QA checks pass: mark tool mobile-ready
+7. Update this handoff with mobile status
+
+### Shared Mobile CSS — `MPW_TOOLS_MOBILE_CSS`
+
+A single shared CSS constant will be created covering all tool classes across v3 and v4. Injected once per Bible page in the `<style>` block. All tools must use CSS classes (not inline styles) for any property that needs a mobile override.
+
+**The class namespace:**
+- `.t3-*` — v3 tool mobile classes
+- `.t4-*` — v4 tool mobile classes (already defined in `MPW_TOOLS_V4_CSS`)
+
+Both sets will be combined into a single `MPW_TOOLS_MOBILE_CSS` constant delivered with the next tool update.
+
+### Tool Count Clarification
+
+Current documented count: **24 tools** (12 v3 + 6 v4 T1-T6 + 6 v4 T7-T12). Steve believes there are 25. **Steve to confirm the 25th tool identity next session.** Candidates:
+- A standalone ClearCheck tool (not yet built)
+- A tool counted differently (e.g. Chord & Key v3 + Tempo/Key v4 counted as separate)
+- A planned tool not yet in the handoff
+
+Until confirmed, the working count is **24 tools across 3 files**.
+
