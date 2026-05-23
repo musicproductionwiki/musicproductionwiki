@@ -1658,3 +1658,422 @@ Both files saved via Notepad → Save As → All Files to bypass Cloudflare.
 | NEVER use Python escape sequences for unicode in JS strings inside f-strings | `\\u25b2` renders as actual unicode char in f-string output — use ASCII alternatives or HTML entities |
 | NEVER omit devicePixelRatio scaling on canvas elements | Retina displays show blurry canvas without DPR scaling — always scale by `window.devicePixelRatio||1` |
 | NEVER put tool preview HTML inside zip for Cloudflare delivery | Cloudflare intercepts — use separate file opens or base64 PS1 delivery |
+
+
+---
+
+# SESSION 59 UPDATE — TECH — May 22, 2026
+
+## mpw_tools_v4_append.py — Technical Architecture
+
+**File:** mpw_tools_v4_append.py
+**Size:** 109,607 bytes
+**Content:** SC constant + 6 build functions (T7-T12) — NO helpers, NO dispatcher
+**Requires:** `_wrap`, `_share`, `_plug`, `SC` from existing mpw_tools_v4.py scope
+**Public functions:** `build_predelay`, `build_stereo_field`, `build_mastering_chain`, `build_sidechain`, `build_synthesis`, `build_tempo_key`
+
+### Mobile CSS — MPW_TOOLS_V4_CSS
+
+New constant exported from `mpw_tools_v4_append.py`. Bible writer injects once per page into `<style>` block. Never inject per-tool — one injection per page.
+
+```css
+.t4-plug{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid #1e1e1e}
+.t4-plug-card{background:#0a0a0a;border:1px solid #1e1e1e;border-radius:6px;padding:10px;display:flex;flex-direction:column}
+.t4-plug-card.amber{background:#100c00;border-color:rgba(245,166,35,.2)}
+.t4-plug-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.t4-plug-txt{font-size:11px;color:#999;line-height:1.65;flex:1}
+.t4-plug-card.amber .t4-plug-txt{color:#c8a060}
+.t4-share{display:flex;align-items:center;gap:8px;margin-top:16px;padding-top:12px;border-top:1px solid #1e1e1e;flex-wrap:wrap}
+.t4-share-lbl{font-size:10px;color:#555;font-weight:600;letter-spacing:.04em;flex:1;min-width:160px}
+.t4-share-btns{display:flex;gap:6px;flex-wrap:wrap}
+.t4-cv{display:block;width:100%;border-radius:6px;background:#080810}
+.t4-sliders{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px}
+.t4-chord-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:12px}
+.t4-cof-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.t4-hdr-title{font-size:14px;font-weight:800;color:#f5a623;text-align:right;letter-spacing:.01em;max-width:180px}
+@media(max-width:600px){
+  .t4-plug{grid-template-columns:1fr 1fr}
+  .t4-sliders{grid-template-columns:1fr}
+  .t4-chord-grid{grid-template-columns:repeat(4,1fr)}
+  .t4-cof-wrap{grid-template-columns:1fr}
+  .t4-hdr-title{font-size:11px;max-width:120px}
+  .t4-share-lbl{flex:unset;width:100%}
+}
+```
+
+### Canvas Pattern — T7-T12 (Updated from T1-T6)
+
+T7-T12 use a different canvas sizing pattern from T1-T6. Key difference: `offsetWidth` read at draw time (not at init), `ResizeObserver` for live reflow. No `devicePixelRatio` scaling (intentional — simpler, sufficient for these visualisations).
+
+```javascript
+function draw() {
+  var cv = document.getElementById('cv-id');
+  if (!cv) return;
+  var cw = cv.offsetWidth || 640;  // fallback to 640 if hidden or pre-layout
+  cv.width = cw;
+  cv.height = H;  // fixed height
+  var ctx = cv.getContext('2d');
+  // ... draw at cw x H pixels
+}
+
+// ResizeObserver for responsive reflow
+if (window.ResizeObserver) {
+  var ro = new ResizeObserver(function() { draw(); });
+  var container = document.getElementById('container-id');  // parent element, always visible
+  if (container) ro.observe(container);
+}
+```
+
+**CRITICAL:** Never observe a canvas that may be inside `display:none`. Always observe a parent container that is always visible. The ResizeObserver callback must guard against hidden modes (e.g. T11 checks `_syMode` before deciding which canvas to redraw).
+
+### T11 Synthesis — Three-Mode Architecture
+
+Three modes toggled by `syMode(m)`:
+- `sub` — Subtractive: waveform canvas + filter frequency response canvas + ADSR envelope canvas
+- `fm` — FM Synthesis: Bessel-function waveform canvas from FM formula
+- `target` — Sound Target Finder: 8 classic sounds with exact parameters, all click-to-copy
+
+Mode switching: `display:none` / `display:block` on `#sy-sub`, `#sy-fm`, `#sy-tgt` divs.
+
+ResizeObserver watches `#sy-sub` container (always visible on sub mode). Callback checks `_syMode` before drawing — only draws canvases for the active mode to prevent 0-width draws on hidden canvases.
+
+### T12 Circle of Fifths — Touch Support
+
+Click and touch both handled:
+
+```javascript
+document.getElementById('tk-cof').addEventListener('click', tkCofClick);
+document.getElementById('tk-cof').addEventListener('touchend', function(e) {
+  e.preventDefault();  // prevents ghost click
+  tkCofClick(e);
+});
+
+function tkCofClick(ev) {
+  var ex = ev.touches ? ev.touches[0].clientX : ev.clientX;
+  var ey = ev.touches ? ev.touches[0].clientY : ev.clientY;
+  // ... hit test against circle segments
+}
+```
+
+ResizeObserver watches CoF canvas parent node (always visible). Canvas redraws as `offsetWidth` changes — circle always fills available width and height equals width (square canvas, circular border-radius).
+
+### T9 Mastering Chain — Touch + Hover
+
+Stage buttons use both `onmouseenter` (desktop hover) and `ontouchstart` (mobile tap) to show the panel. Previously hover-only — broke entirely on touch devices.
+
+```html
+<button onmouseenter="mcBuildPanel('hpf')" ontouchstart="mcBuildPanel('hpf')" onclick="mcCheck('hpf',this)">
+```
+
+Panel instruction copy updated from "Hover a stage above" to "Tap a stage above to see settings" — mobile-first language.
+
+### Delivery Pattern — Parts 3 and 4
+
+mpw_tools_v4_append.py is 109,607 bytes (146,144 chars base64). Each PS1 is ~72KB — well under Cloudflare 200KB limit.
+
+- `deliver_v4_part3.ps1` — 71.7KB — writes base64 Part 1 to `%TEMP%\mpw_v4_b64_t712.txt`
+- `deliver_v4_part4.ps1` — 71.9KB — reads Part 1 + Part 2, assembles, writes `mpw_tools_v4_append.py` to SRCDIR
+
+After delivery, append content manually into `mpw_tools_v4.py` and add `TOOL_OVERRIDES_V4.update({...})` block.
+
+---
+
+## Competitive Research — AI Mix Tools (Session 59)
+
+Researched for MixMentor product roadmap. Summary of live competitors:
+
+| Tool | Tracks processed | Strengths | Gaps |
+|------|-----------------|-----------|------|
+| RoEx Mix Check Studio | 5M+ | Free, genre selection, established | Generic feedback, no parameter values, no reference anchoring |
+| TrackScore.ai | Unknown | EDM-specific, 9 subgenres, genre scoring | EDM only, "hit potential" score distrusted by pros |
+| Slapback.io | Unknown | Timestamped notes, AI personas, collaboration | Uses OpenAI/Google (not proprietary), no audio model |
+| mixanalytic.com | Unknown | Freemium, multiple modules, Claude Premium tier | Credits model, no reference anchoring |
+| LANDR | Millions | Auto-mastering, distribution | Applies processing, doesn't diagnose |
+
+**The gap nobody has filled:** Reference-anchored delta analysis (your track vs a reference YOU choose), parameter-level feedback (exact dB/Hz/Q values), iterative re-analysis (before/after delta), stem-level problem identification, arrangement density analysis.
+
+---
+
+## MixMentor — Technical Architecture (Planned)
+
+### Frontend Stack
+- Pure HTML/CSS/JS — consistent with MPW stack
+- Web Audio API for client-side FFT preview (fast, no upload needed for initial display)
+- File upload → base64 or FormData → RunPod endpoint
+- Claude API for feedback generation from feature JSON
+
+### RunPod Pod Spec
+- **Runtime:** Python 3.11 + CUDA (for demucs stem separation)
+- **Libraries:** `essentia`, `librosa`, `pyloudnorm`, `aubio`, `demucs`, `numpy`, `scipy`
+- **Endpoint:** Serverless function — POST audio file → JSON feature blob
+- **Analysis modules:**
+  - Perceptual loudness (LUFS integrated, short-term, true peak)
+  - Spectral balance (7-band energy profile)
+  - Dynamic range (crest factor, DR score)
+  - Stereo field (correlation, mid/side energy, width)
+  - Transient detection (attack times, peak density)
+  - Key + tempo detection
+  - Arrangement density (energy over time in 4-bar windows)
+- **Processing time:** ~3-8 seconds per stereo bounce, ~15-30 seconds with demucs stem separation
+
+### Claude API Integration
+- Model: claude-sonnet-4-6 (fast, sufficient for structured feedback)
+- Input: feature JSON + genre selection + reference feature JSON (if uploaded)
+- Output: structured feedback JSON with priority-ranked fix list, each item containing:
+  - Description (plain producer language)
+  - Severity (1-10)
+  - Exact parameter recommendation (e.g. "Cut 3.5dB at 340Hz, Q 1.2")
+  - Which track or bus to apply it to
+  - Before/after expectation
+- System prompt: trained on mix engineering principles, genre-specific targets, producer vocabulary
+
+### Genre Reference Database
+50+ profiles to build (vs 9 at TrackScore):
+- Electronic: House, Techno, Trance, DnB, Dubstep, Trap, Future Bass, Lo-Fi, Hyperpop, Ambient
+- Hip-Hop: Boom Bap, Drill (UK/US), Mumble Rap, Conscious, Chopped & Screwed
+- Pop: Mainstream Pop, Bedroom Pop, Synth-Pop, Dark Pop, K-Pop
+- Rock: Indie Rock, Metal, Post-Rock, Punk, Shoegaze
+- R&B/Soul: Contemporary R&B, Neo-Soul, Afrobeats, Reggaeton
+- Country, Jazz, Classical, Acoustic, Singer-Songwriter
+
+Each profile: median frequency balance (7 bands), LUFS target, DR target, stereo width target, transient density target — derived from 50-200 reference tracks per genre.
+
+### Zero-Storage Architecture
+- Audio never written to disk beyond processing duration
+- Feature JSON retained (no audio content — safe for unreleased tracks)
+- Reference track features cached by track fingerprint (avoid re-processing same reference)
+- GDPR-compliant by design
+
+---
+
+## NEVER Rules Added — Session 59 Tech
+
+| Rule | Detail |
+|------|--------|
+| NEVER use ResizeObserver with `\|\|document.body` fallback | Causes "Script error" on mobile Safari before DOM settles — always observe a named parent container |
+| NEVER call canvas draw when canvas is inside `display:none` | `offsetWidth` returns 0; draw functions must check active mode before executing |
+| NEVER use `onmouseenter` alone on interactive elements | Touch devices cannot hover — always pair with `ontouchstart` |
+| NEVER write tool preview HTML for branding review without real iPhone test | Desktop DevTools misses ResizeObserver and canvas scale failures that appear on real device |
+| NEVER inject MPW_TOOLS_V4_CSS once per tool | Inject once per page in the `<style>` block — multiple injections cause class conflicts |
+
+
+---
+
+## Mobile Optimisation — Technical Spec for All Tools (Session 59 Mandate)
+
+Steve confirmed: all 25 tools must be fully mobile-optimised before any tool is considered production-ready. This section documents the exact technical fixes required for v3 (12 tools) and v4 T1-T6 (6 tools). T7-T12 were already fixed in Session 59.
+
+### Canvas Sizing — Universal Fix Pattern
+
+Every canvas in every tool must use this pattern. No exceptions.
+
+```javascript
+function drawSomething() {
+  var cv = document.getElementById('canvas-id');
+  if (!cv) return;
+  var cw = cv.offsetWidth;
+  if (!cw) cw = 640;  // fallback if hidden or pre-layout — never 0
+  cv.width = cw;
+  cv.height = FIXED_HEIGHT;  // height is always fixed, width is responsive
+  var ctx = cv.getContext('2d');
+  // all drawing at cw x FIXED_HEIGHT pixels
+}
+```
+
+**NOT this (v3/v4 T1-T6 current pattern):**
+```javascript
+// WRONG — uses hardcoded attribute width, canvas never resizes
+<canvas width="640" height="200">
+// WRONG — reads width at init, not at draw time
+var W = canvas.offsetWidth || 640;
+canvas.width = W;
+// ... init only, never redraws on resize
+```
+
+### ResizeObserver — Universal Add Pattern
+
+Add to every tool's script block, after all draw functions are defined:
+
+```javascript
+// Observe a VISIBLE parent container, not the canvas itself
+// Never observe: canvas that may be in display:none, document.body
+if (window.ResizeObserver) {
+  var _ro = new ResizeObserver(function() {
+    drawSomething();  // call all draw functions for this tool
+  });
+  // Observe the tool's outer container — always visible, always has width
+  var _container = document.getElementById('tool-outer-container-id');
+  if (_container) _ro.observe(_container);
+}
+```
+
+**For tools with multiple canvases in multiple display modes (e.g. T11):**
+```javascript
+if (window.ResizeObserver) {
+  var _ro = new ResizeObserver(function() {
+    // Only draw canvases that are currently visible
+    if (currentMode === 'sub') { drawSub(); drawFilt(); drawAdsr(); }
+    else if (currentMode === 'fm') { drawFm(); }
+    // target mode has no canvas
+  });
+  var _container = document.getElementById('mode-container');
+  if (_container) _ro.observe(_container);
+}
+```
+
+### Touch Events — Universal Fix Pattern
+
+Any interactive element that currently uses `onmouseover`, `onmouseenter`, or `onmouseleave` must also have a touch equivalent. Pattern:
+
+```html
+<!-- Desktop hover + mobile touch — both trigger the same handler -->
+<button
+  onmouseenter="showPanel(this)"
+  ontouchstart="showPanel(this)"
+  onclick="toggleCheck(this)">
+  Stage Name
+</button>
+```
+
+For complex hover panels (T3 EQ spectrum tooltip, T9 mastering stages):
+- Desktop: hover shows panel, mouse leave hides it
+- Mobile: tap shows panel, tap same button again hides it (toggle)
+- Implementation: add a `_panelOpen` flag; `ontouchstart` checks flag and toggles
+
+```javascript
+var _panelOpen = false;
+function showPanel(id) {
+  if (_panelOpen && _currentPanel === id) {
+    hidePanel(); _panelOpen = false;
+  } else {
+    renderPanel(id); _panelOpen = true; _currentPanel = id;
+  }
+}
+```
+
+### Responsive Grid — CSS Class Requirements
+
+All multi-column grids in all tools must use CSS classes, never inline `display:grid` with fixed column counts. The breakpoint rules must live in the tool's `<style>` block.
+
+**v3 tools — new classes to add:**
+```css
+/* Add to v3 tool style blocks */
+.t3-grid2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.t3-grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.t3-grid4 { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+.t3-plug  { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:14px; }
+@media(max-width:600px) {
+  .t3-grid3, .t3-grid4 { grid-template-columns:1fr 1fr; }
+  .t3-plug { grid-template-columns:1fr 1fr; }
+  .t3-grid2 { grid-template-columns:1fr; }  /* inputs stack 1-col */
+}
+```
+
+**v4 T1-T6 — existing inline grids to convert to classes:**
+- T1: compressor character 4-col grid — convert to `.t4-char-grid` class
+- T2: step card grid — convert to `.t4-step-grid` class
+- T3: symptom 4-col grid — convert to `.t4-symptom-grid` class
+- T6: mastering stage row — convert to `.t4-stage-row` class
+
+### Tap Target Minimum Size
+
+All buttons, toggle pills, preset buttons, and clickable elements must have:
+```css
+min-height: 44px;   /* iOS HIG minimum tap target */
+padding: 10px 12px; /* ensures content doesn't shrink below 44px */
+touch-action: manipulation; /* prevents 300ms delay on iOS */
+```
+
+For pill/badge style buttons that are shorter by design (10px font, 6px padding):
+```css
+@media(max-width:600px) {
+  .pill-btn { padding: 10px 12px; font-size: 12px; }
+}
+```
+
+### iOS Safari `navigator.clipboard` — Compatibility
+
+`navigator.clipboard.writeText()` works on iOS Safari 13.4+ when the page is served over HTTPS. MPW is always HTTPS via Netlify — this is fine. No polyfill needed. The existing pattern is correct:
+```javascript
+navigator.clipboard && navigator.clipboard.writeText(value);
+```
+
+The `&&` guard is sufficient. Never use `document.execCommand('copy')` as fallback — it's deprecated.
+
+### Mobile Audit Script — `mpw_tools_mobile_audit.py`
+
+To be built next session. Script generates a single `tool_mobile_preview.html` containing all tools in one scrollable page, with a `<meta viewport>` tag, outputting to `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\tool_mobile_preview.html`. Steve opens this URL in Safari on iPhone using local file sharing or a temporary ngrok tunnel.
+
+```python
+# mpw_tools_mobile_audit.py
+# Generates mobile preview of all 24 tools
+# Output: tool_mobile_preview.html in SRCDIR
+import sys
+SRCDIR = r'C:\Users\swarn\OneDrive\Desktop\mpw-scripts'
+sys.path.insert(0, SRCDIR)
+
+from mpw_tools_v3 import build_tools_section_v3
+from mpw_tools_v4 import build_tools_section_v4
+# from mpw_tools_v4_append import build_predelay, build_stereo_field, ...
+
+ALL_TOOLS = [
+    # v3
+    ('compression', 'Compression'),
+    ('eq', 'EQ'),
+    ('limiting', 'Limiting'),
+    ('reverb', 'Reverb'),
+    ('delay', 'Delay'),
+    ('adsr', 'ADSR'),
+    ('gain-staging', 'Gain Staging'),
+    ('headroom', 'Headroom'),
+    ('stereo-imaging', 'Stereo Imaging'),
+    ('lfo', 'LFO'),
+    # v4 T1-T6
+    # v4 T7-T12
+]
+# ... generate preview page with viewport meta ...
+```
+
+### Mobile Status Tracking Table — All 24 Tools
+
+Add this to the session start readout from `mpw_session_start.py` in a future update:
+
+| Tool | File | Mobile status | Last tested |
+|------|------|--------------|-------------|
+| GR Calculator | v3 | ❌ Not audited | Never |
+| Delay Time Calculator | v3 | ❌ Not audited | Never |
+| LUFS Target Reference | v3 | ❌ Not audited | Never |
+| Frequency Band Reference | v3 | ❌ Not audited | Never |
+| RT60 Calculator | v3 | ❌ Not audited | Never |
+| Note→Frequency | v3 | ❌ Not audited | Never |
+| ADSR Visualizer | v3 | ❌ Not audited | Never |
+| Gain Staging Reference | v3 | ❌ Not audited | Never |
+| Headroom Calculator | v3 | ❌ Not audited | Never |
+| Stereo Width & M/S | v3 | ❌ Not audited | Never |
+| LFO Rate Sync | v3 | ❌ Not audited | Never |
+| Chord & Key Reference | v3 | ❌ Not audited | Never (superseded by T12) |
+| T1 Attack/Release | v4 | ❌ Not audited | Never |
+| T2 Vocal Chain | v4 | ❌ Not audited | Never |
+| T3 EQ Problem Solver | v4 | ❌ Not audited | Never |
+| T4 Freq Conflict Detector | v4 | ❌ Not audited | Never |
+| T5 Saturation Reference | v4 | ❌ Not audited | Never |
+| T6 Mix Bus Headroom | v4 | ❌ Not audited | Never |
+| T7 Pre-Delay & Reverb Tail | v4-append | ✅ Audited | Session 59 |
+| T8 Stereo Field & Mono | v4-append | ✅ Audited | Session 59 |
+| T9 Mastering Signal Chain | v4-append | ✅ Audited | Session 59 |
+| T10 Sidechain & Ducking | v4-append | ✅ Audited | Session 59 |
+| T11 Synthesis Reference | v4-append | ✅ Audited | Session 59 |
+| T12 Tempo, Key & Chord | v4-append | ✅ Audited | Session 59 |
+| Tool 25 | TBD | ❌ Not confirmed | — |
+
+### NEVER Rules — Mobile Optimisation (Session 59)
+
+| Rule | Detail |
+|------|--------|
+| NEVER declare a tool mobile-ready without testing on a real iPhone | DevTools emulation misses ResizeObserver timing, canvas scale, and iOS Safari clipboard bugs |
+| NEVER hardcode canvas `width` attribute to a fixed pixel value | Always read `cv.offsetWidth` at draw time — fixed attribute width overrides CSS width:100% |
+| NEVER use `onmouseenter` or `onmouseover` alone on interactive elements | Touch devices cannot hover — always pair with `ontouchstart` |
+| NEVER put grid column counts in inline styles on tool elements | Inline styles override media queries — all grid layouts must use CSS classes |
+| NEVER observe `document.body` in ResizeObserver | Fires before layout settles — observe the tool's named parent container |
+| NEVER build mobile fixes without testing the fix on a real iPhone | Fix may work in DevTools but fail on iOS Safari — always verify on device |
+
