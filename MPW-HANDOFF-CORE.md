@@ -2381,19 +2381,25 @@ Session 60 was the most strategically significant tool session to date. The v3 c
 | Tools (v5a) | 8 | GR, Delay, LUFS, EQ/Freq, RT60, Note→Freq, ADSR, Gain Staging |
 | Tools (v5b) | 8 | Headroom, Stereo Width, LFO, Chord & Key, 808, Arrangement, Saturation, Parallel |
 | Tools (v5c) | 8 | Transient, Sample Rate, Sidechain, Pitch, Reverb Type, Synthesis, Mix Bus, Checklist |
-| Tools total | 36 | Confirmed by Steve — 12 v3 + 12 v4 + 12 new = 36 |
-| Dispatcher | Live | mpw_tools_v5_dispatch.py — 145 slugs — all routing confirmed |
+| Tools (v5 total) | 24 | 8 v5a + 8 v5b + 8 v5c — confirmed by code audit |
+| Dispatcher | Live | mpw_tools_v5_dispatch.py — 145 slugs — routes 24 v5 tools |
 
 ---
 
-## Tool Count Clarification — RESOLVED
+## Tool Count Clarification — RESOLVED (CORRECTED Session 60 post-audit)
 
-Previous sessions documented 24 tools (12 v3 + 12 v4). Steve confirmed the count is **36 tools** this session. The breakdown:
-- 12 tools in mpw_tools_v3.py (original v3)
-- 12 tools in mpw_tools_v4.py + mpw_tools_v4_append.py (v4 T1-T12)
-- 12 new tools in mpw_tools_v5b.py + mpw_tools_v5c.py (tools 13–24 of the v5 rebuild)
+**V5 tools built this session: 24** (8 in v5a + 8 in v5b + 8 in v5c) — confirmed by code audit of unique tool functions.
 
-The "25th tool" mystery from Session 59 is resolved — there was no 25th tool. Steve had miscounted.
+**Total tools across all files: 36** — this is what Steve confirmed:
+- 12 tools in mpw_tools_v3.py (original v3 — superseded but still functional)
+- 12 tools in mpw_tools_v4.py + mpw_tools_v4_append.py (v4 T1-T12 — unintegrated, innerHTML CSP issue)
+- 24 tools in mpw_tools_v5a.py + mpw_tools_v5b.py + mpw_tools_v5c.py (v5 — current standard)
+
+**The v5 dispatch routes 24 tools across 145 slugs.** The 12 legacy v4 tools are NOT in the dispatch — they remain in separate files with known issues (innerHTML CSP on /bible/* pages).
+
+**The manifest in Session 61 covers 24 tools** — the v5 tools only. The legacy v4 tools are a separate migration task.
+
+The "25th tool" mystery from Session 59 is resolved — there was no 25th tool. The 36 total is correct as an all-files count. The 24 v5 tools is correct for the active dispatch.
 
 ---
 
@@ -2632,7 +2638,7 @@ All scripts save to: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\`
 | Action | Detail |
 |--------|--------|
 | Build `mpw_affiliates.py` | Affiliate registry with placeholder IDs — all 5 programs |
-| Build `mpw_tool_manifest.py` | Master record for all 36 tools |
+| Build `mpw_tool_manifest.py` | Master record for all 24 v5 tools |
 | Build `generate_tool_pages.py` | Generates all 36 `/tools/[slug].html` standalone pages |
 | Build `generate_tools_hub.py` | Generates `/tools/index.html` with categories and search |
 | Add email capture to Checklist tool | Beehiiv integration on Pre-Delivery Checklist |

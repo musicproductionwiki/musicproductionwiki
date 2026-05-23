@@ -961,7 +961,7 @@ Each standalone page has 300–400 words of keyword content below the tool — n
 
 ### Tool Hub SEO
 
-`/tools/index.html` targets: "music production tools online", "free music producer tools", "music mixing calculators". Hub page with 36 internal links to tool pages is a strong hub-and-spoke SEO structure passing authority to every tool page.
+`/tools/index.html` targets: "music production tools online", "free music producer tools", "music mixing calculators". Hub page with 24 internal links to tool pages is a strong hub-and-spoke SEO structure passing authority to every tool page.
 
 ## Content Pipeline — Revised Priority
 
@@ -969,8 +969,8 @@ Each standalone page has 300–400 words of keyword content below the tool — n
 |-------|------|----------|---------|
 | Tool infrastructure | mpw_affiliates.py + manifest + generators | P0 | Session 61 |
 | Email capture | Pre-Delivery Checklist Beehiiv integration | P0 | Session 61 |
-| Tool pages live | 36 standalone pages + hub committed | P1 | Session 61 |
-| Sitemap update | 37 new URLs added + submitted to GSC | P1 | Session 61 |
+| Tool pages live | 24 standalone pages + hub committed | P1 | Session 61 |
+| Sitemap update | 25 new URLs added + submitted to GSC | P1 | Session 61 |
 | Affiliate applications | Steve applies this week | P1 | This week |
 | GSC analytics review | Which tools/entries are getting traction | P2 | Session 62 |
 | Bible Tier 1 remaining | 33 entries — writer integration with v5 dispatch | P3 | Session 62+ |

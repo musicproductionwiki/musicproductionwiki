@@ -1727,14 +1727,14 @@ TOOLS = [
 
 ### generate_tool_pages.py — BUILD THIRD
 
-**Purpose:** Generates all 36 standalone `/tools/[slug].html` pages from the manifest. Each page includes: tool HTML (from v5 dispatch), SEO meta, keyword content, FAQPage schema, SoftwareApplication schema, related tools section, embed code.
+**Purpose:** Generates all 24 standalone `/tools/[slug].html` pages from the manifest. Each page includes: tool HTML (from v5 dispatch), SEO meta, keyword content, FAQPage schema, SoftwareApplication schema, related tools section, embed code.
 
 **Run:**
 ```powershell
 python generate_tool_pages.py
 ```
 
-Output: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\tools\` (36 HTML files)
+Output: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\tools\` (24 HTML files)
 
 Then commit all to `tools/` directory via Trees API.
 
