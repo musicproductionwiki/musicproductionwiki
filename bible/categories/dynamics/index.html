@@ -245,8 +245,35 @@ nav.mpw-site-nav .nav-cta{display:inline-block!important}
 .bcb-link-active{color:var(--amber)!important;font-weight:600!important}
 .bcb-link-active:hover{color:var(--amber)!important}
 </style>
+
+<style id="bible-dyn-search-v1">
+.search-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;align-items:flex-start;justify-content:center;padding-top:80px}
+.search-overlay.open{display:flex}
+.search-box{background:var(--bg2);border:1px solid var(--amber-border);border-radius:14px;width:100%;max-width:600px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.7);margin:0 1rem}
+.search-input-wrap{display:flex;align-items:center;padding:14px 18px;gap:12px;border-bottom:1px solid var(--bd)}
+.search-input{flex:1;background:none;border:none;outline:none;font-size:16px;color:var(--t1);font-family:var(--font)}
+.search-input::placeholder{color:var(--t3)}
+.search-results{max-height:400px;overflow-y:auto;padding:8px}
+.search-result{display:flex;flex-direction:column;gap:3px;padding:10px 14px;border-radius:8px;text-decoration:none;transition:background .12s}
+.search-result:hover{background:var(--amber-dim)}
+.sr-cat{font-size:10px;font-family:var(--mono);color:var(--amber);text-transform:uppercase;letter-spacing:.08em}
+.sr-title{font-size:14px;font-weight:500;color:var(--t1)}
+.sr-excerpt{font-size:12px;color:var(--t3);line-height:1.4}
+.sr-empty{padding:24px;text-align:center;color:var(--t3);font-family:var(--mono);font-size:13px}
+</style>
 </head>
 <body>
+
+<div class="search-overlay" id="searchOverlay" role="dialog" aria-label="Search entries">
+  <div class="search-box">
+    <div class="search-input-wrap">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex-shrink:0;stroke:var(--amber)"><circle cx="6.5" cy="6.5" r="4.5" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input class="search-input" id="overlaySearchInput" type="text" placeholder="Search Dynamics entries…" autocomplete="off" spellcheck="false" aria-label="Search">
+      <kbd style="font-size:11px;color:var(--t3);font-family:var(--mono);background:var(--bg3);border:1px solid var(--bd);padding:2px 7px;border-radius:4px;flex-shrink:0">Esc</kbd>
+    </div>
+    <div class="search-results" id="overlayResults"></div>
+  </div>
+</div>
 <nav class="mpw-site-nav" role="navigation" aria-label="Main navigation">
   <div class="nav-inner-bible">
     <a href="https://musicproductionwiki.com" class="nav-logo" aria-label="MusicProductionWiki home">
@@ -496,6 +523,51 @@ nav.mpw-site-nav .nav-cta{display:inline-block!important}
   });
 
   render();
+})();
+</script>
+
+<script>
+(function(){
+  var ENTRIES = [{"slug": "attack", "term": "Attack", "sub": "Compression", "excerpt": "Attack defines how quickly a dynamics processor responds to an incoming signal.", "tier": "", "has_tool": false}, {"slug": "attack-release", "term": "Attack/Release", "sub": "Compression", "excerpt": "The paired timing controls that govern how fast a compressor clamps and releases.", "tier": "", "has_tool": false}, {"slug": "bus-compression", "term": "Bus Compression", "sub": "Compression", "excerpt": "Bus compression unifies grouped tracks or a full mix by gently controlling collective dynamics.", "tier": "", "has_tool": false}, {"slug": "compression", "term": "Compression", "sub": "Compression", "excerpt": "Compression reduces the dynamic range of audio — the primary tool by which raw recordings become finished music.", "tier": "T1", "has_tool": true}, {"slug": "compression-ratio", "term": "Compression Ratio", "sub": "Compression", "excerpt": "The ratio determines how hard a compressor clamps down on signals above the threshold.", "tier": "", "has_tool": false}, {"slug": "de-esser", "term": "De-Esser", "sub": "Gating & Sidechain", "excerpt": "A frequency-selective compressor targeting sibilance in vocals and high-frequency harshness.", "tier": "", "has_tool": false}, {"slug": "dynamic-eq", "term": "Dynamic EQ", "sub": "Compression", "excerpt": "Dynamic EQ applies gain changes only when a frequency crosses a threshold — a compressor and EQ fused.", "tier": "", "has_tool": false}, {"slug": "dynamic-range", "term": "Dynamic Range", "sub": "Dynamic Range", "excerpt": "The dB span between a signal's loudest peak and its noise floor — the core of punch and emotional contrast.", "tier": "", "has_tool": false}, {"slug": "expansion", "term": "Expansion", "sub": "Gating & Sidechain", "excerpt": "Expansion increases dynamic range by attenuating signals below a threshold — the inverse of compression.", "tier": "", "has_tool": false}, {"slug": "fet-compressor", "term": "FET Compressor", "sub": "Compression", "excerpt": "FET compressors use field-effect transistors for near-instant gain control, delivering punchy, aggressive sound.", "tier": "", "has_tool": false}, {"slug": "gain-reduction", "term": "Gain Reduction", "sub": "Compression", "excerpt": "Gain Reduction is the dB attenuation a compressor or limiter applies when a signal crosses the threshold.", "tier": "", "has_tool": false}, {"slug": "knee", "term": "Knee", "sub": "Compression", "excerpt": "Knee shapes how abruptly a compressor engages at the threshold.", "tier": "", "has_tool": false}, {"slug": "limiting", "term": "Limiting", "sub": "Limiting", "excerpt": "Limiting is extreme compression with a very high ratio — the final ceiling in mastering chains.", "tier": "", "has_tool": false}, {"slug": "makeup-gain", "term": "Makeup Gain", "sub": "Compression", "excerpt": "Makeup Gain restores perceived volume lost during gain reduction.", "tier": "", "has_tool": false}, {"slug": "master-limiter", "term": "Master Limiter", "sub": "Limiting", "excerpt": "The final processor in a mastering chain that prevents peaks from exceeding the digital ceiling.", "tier": "", "has_tool": false}, {"slug": "multiband-compression", "term": "Multiband Compression", "sub": "Compression", "excerpt": "Multiband compression splits audio into frequency bands and compresses each independently.", "tier": "", "has_tool": false}, {"slug": "noise-gate", "term": "Noise Gate", "sub": "Gating & Sidechain", "excerpt": "A noise gate silences a signal below a threshold, removing unwanted noise between wanted content.", "tier": "", "has_tool": false}, {"slug": "optical-compressor", "term": "Optical Compressor", "sub": "Compression", "excerpt": "Optical compressors use a light element and photoresistor for smooth, musical gain control.", "tier": "", "has_tool": false}, {"slug": "parallel-compression", "term": "Parallel Compression", "sub": "Compression", "excerpt": "Parallel compression blends a heavily compressed signal with the dry original — body without killing dynamics.", "tier": "", "has_tool": false}, {"slug": "ratio", "term": "Ratio", "sub": "Compression", "excerpt": "The compression ratio determines how hard the compressor clamps down — 2:1 is gentle, ∞:1 is a brick wall.", "tier": "", "has_tool": false}, {"slug": "release", "term": "Release", "sub": "Compression", "excerpt": "Release controls how quickly compression disengages after the signal drops below the threshold.", "tier": "", "has_tool": false}, {"slug": "sidechain", "term": "Sidechain", "sub": "Gating & Sidechain", "excerpt": "Sidechaining lets one signal control the dynamics processing of another — the backbone of pumping and ducking.", "tier": "", "has_tool": true}, {"slug": "sidechain-compression", "term": "Sidechain Compression", "sub": "Gating & Sidechain", "excerpt": "Sidechain compression uses a trigger signal to control compression on a target channel.", "tier": "", "has_tool": false}, {"slug": "threshold", "term": "Threshold", "sub": "Compression", "excerpt": "The threshold sets the level at which compression begins — every dB above it gets compressed.", "tier": "", "has_tool": false}, {"slug": "transient", "term": "Transient", "sub": "Transient Shaping", "excerpt": "Transients are the fast attack spikes at the onset of sounds — the primary determinant of punch and impact.", "tier": "", "has_tool": false}, {"slug": "transient-shaper", "term": "Transient Shaper", "sub": "Transient Shaping", "excerpt": "A transient shaper independently controls the attack and sustain of a signal without affecting frequency content.", "tier": "", "has_tool": false}, {"slug": "transient-shaping", "term": "Transient Shaping", "sub": "Transient Shaping", "excerpt": "Transient shaping sculpts the dynamic envelope of sounds to add punch, control sustain, or tighten timing.", "tier": "", "has_tool": false}, {"slug": "true-peak", "term": "True Peak", "sub": "Limiting", "excerpt": "True peak measures intersample peaks that exceed 0 dBFS — the cause of distortion on streaming platforms.", "tier": "", "has_tool": false}, {"slug": "true-peak-limiting", "term": "True Peak Limiting", "sub": "Limiting", "excerpt": "True peak limiting prevents intersample peaks from exceeding the target ceiling after D/A conversion.", "tier": "", "has_tool": false}, {"slug": "tube-compressor", "term": "Tube Compressor", "sub": "Compression", "excerpt": "Tube compressors use vacuum tubes for warm, harmonically rich gain control with program-dependent behavior.", "tier": "", "has_tool": false}, {"slug": "vca-compressor", "term": "VCA Compressor", "sub": "Compression", "excerpt": "VCA compressors use voltage-controlled amplifiers for precise, fast, and highly controllable gain reduction.", "tier": "", "has_tool": false}, {"slug": "clipping", "term": "Clipping", "sub": "Limiting", "excerpt": "Clipping flattens waveform peaks beyond a system's ceiling — destructive in the wrong context, musical in the right one.", "tier": "", "has_tool": false}];
+  var overlay = document.getElementById('searchOverlay');
+  var input   = document.getElementById('overlaySearchInput');
+  var results = document.getElementById('overlayResults');
+  var btn     = document.getElementById('navSearchBtn');
+
+  function openOverlay(){
+    overlay.classList.add('open');
+    setTimeout(function(){ input.focus(); }, 50);
+  }
+  function closeOverlay(){
+    overlay.classList.remove('open');
+    input.value = '';
+    results.innerHTML = '';
+  }
+  function renderResults(q){
+    if(!q){ results.innerHTML = ''; return; }
+    var filtered = ENTRIES.filter(function(e){
+      return e.term.toLowerCase().indexOf(q) !== -1 || (e.excerpt||'').toLowerCase().indexOf(q) !== -1;
+    });
+    if(!filtered.length){
+      results.innerHTML = '<div class="sr-empty">No results for "'+q+'"</div>';
+      return;
+    }
+    results.innerHTML = filtered.slice(0,12).map(function(e){
+      return '<a class="search-result" href="/bible/'+e.slug+'">'+
+        '<span class="sr-cat">'+e.sub+'</span>'+
+        '<span class="sr-title">'+e.term+'</span>'+
+        (e.excerpt ? '<span class="sr-excerpt">'+e.excerpt.slice(0,100)+'…</span>' : '')+
+      '</a>';
+    }).join('');
+  }
+
+  if(btn) btn.addEventListener('click', openOverlay);
+  if(input) input.addEventListener('input', function(){ renderResults(this.value.trim().toLowerCase()); });
+  document.addEventListener('keydown', function(e){
+    if((e.key==='k'||e.key==='K') && (e.metaKey||e.ctrlKey)){ e.preventDefault(); openOverlay(); }
+    if(e.key==='Escape') closeOverlay();
+  });
+  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeOverlay(); });
 })();
 </script>
 </body>
