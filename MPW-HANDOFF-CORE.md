@@ -2386,20 +2386,27 @@ Session 60 was the most strategically significant tool session to date. The v3 c
 
 ---
 
-## Tool Count Clarification — RESOLVED (CORRECTED Session 60 post-audit)
+## Tool Count Clarification — DEFINITIVE (confirmed by code audit Session 60)
 
-**V5 tools built this session: 24** (8 in v5a + 8 in v5b + 8 in v5c) — confirmed by code audit of unique tool functions.
+**36 active tools total.** Breakdown confirmed by reading all 5 Python files:
 
-**Total tools across all files: 36** — this is what Steve confirmed:
-- 12 tools in mpw_tools_v3.py (original v3 — superseded but still functional)
-- 12 tools in mpw_tools_v4.py + mpw_tools_v4_append.py (v4 T1-T12 — unintegrated, innerHTML CSP issue)
-- 24 tools in mpw_tools_v5a.py + mpw_tools_v5b.py + mpw_tools_v5c.py (v5 — current standard)
+| File | Tools | Count |
+|------|-------|-------|
+| `mpw_tools_v3.py` | 12 original tools | SUPERSEDED by v5 — no longer counted |
+| `mpw_tools_v4.py` | T1–T6: Attack/Release, Vocal Chain, EQ Solver, Freq Conflict, Saturation, Mix Bus | 6 |
+| `mpw_tools_v4_append.py` | T7–T12: Pre-Delay, Stereo Field, Mastering Chain, Sidechain, Synthesis, Tempo/Key | 6 |
+| `mpw_tools_v5a.py` | Tools 1–8: GR, Delay, LUFS, EQ/Freq, RT60, Note→Freq, ADSR, Gain Staging | 8 |
+| `mpw_tools_v5b.py` | Tools 9–16: Headroom, Stereo Width, LFO, Chord & Key, 808, Arrangement, Saturation, Parallel | 8 |
+| `mpw_tools_v5c.py` | Tools 17–24: Transient, Sample Rate, Sidechain, Pitch, Reverb Type, Synthesis, Mix Bus, Checklist | 8 |
+| **Active total** | **V4 (12) + V5 (24)** | **36** |
 
-**The v5 dispatch routes 24 tools across 145 slugs.** The 12 legacy v4 tools are NOT in the dispatch — they remain in separate files with known issues (innerHTML CSP on /bible/* pages).
+**What v5 did:** Rebuilt all 12 v3 tools with the v5 standard (better canvas, teaching content, famous presets, plugin recs) AND added 12 brand new tools that never existed before. V5 did NOT rebuild the v4 tools — those remain separate.
 
-**The manifest in Session 61 covers 24 tools** — the v5 tools only. The legacy v4 tools are a separate migration task.
+**Active dispatchers:**
+- `mpw_tools_v5_dispatch.py` — routes 163 slugs to the 24 v5 tools
+- `mpw_tools_v4.py` + `mpw_tools_v4_append.py` — separate routing for 12 v4 tools (T1–T12)
 
-The "25th tool" mystery from Session 59 is resolved — there was no 25th tool. The 36 total is correct as an all-files count. The 24 v5 tools is correct for the active dispatch.
+**Session 61 manifest covers all 36 tools.** The hub page shows all 36 tool cards. 36 standalone pages are generated. 37 URLs go into the sitemap (1 hub + 36 pages).
 
 ---
 
@@ -2578,7 +2585,7 @@ Every tool will exist on three surfaces simultaneously:
 
 **CRITICAL:** Plugin recommendations are currently hardcoded plain text in all v5 files. When affiliate programs approve, updating 300+ strings across 3 files is untenable.
 
-**Solution:** Build `mpw_affiliates.py` registry NOW, before applications, so HTML structure is correct. One approval → one file update → all 24 v5 tools update automatically.
+**Solution:** Build `mpw_affiliates.py` registry NOW, before applications, so HTML structure is correct. One approval → one file update → all 36 tools update automatically.
 
 ```python
 # mpw_affiliates.py — structure to build
@@ -2595,14 +2602,14 @@ Plugin cards in tool HTML reference the registry. Structure the links now, swap 
 ### Priority Order — Tool Infrastructure (Session 61)
 
 1. **`mpw_affiliates.py`** — affiliate link registry with placeholder IDs — build before applications — zero build time after approval
-2. **`mpw_tool_manifest.py`** — single source of truth for all 24 v5 tools (slug, name, category, description, related tools, long-tail keywords)
-3. **`generate_tool_pages.py`** — generates all 24 standalone `/tools/[slug].html` pages from manifest
+2. **`mpw_tool_manifest.py`** — single source of truth for all 36 tools (slug, name, category, description, related tools, long-tail keywords)
+3. **`generate_tool_pages.py`** — generates all 36 standalone `/tools/[slug].html` pages from manifest
 4. **`generate_tools_hub.py`** — generates `/tools/index.html` hub with 8 categories, search/filter
 5. **Email capture** on Pre-Delivery Checklist tool — Beehiiv integration — highest-intent touchpoint
 6. **Copy-as-text / spec card** on Checklist tool — producers need to save their settings
 7. **TruClarify CTA** in Pre-Delivery Checklist → "Not sure about samples? TruClarify can assess your clearance risk before you distribute."
 8. **GSC analytics review** — which tools are getting traction — drives build priority going forward
-9. **Sitemap updates** — add `/tools/` hub and all 24 standalone pages — submit to GSC
+9. **Sitemap updates** — add `/tools/` hub and all 36 standalone pages — submit to GSC
 
 ---
 
@@ -2638,8 +2645,8 @@ All scripts save to: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\`
 | Action | Detail |
 |--------|--------|
 | Build `mpw_affiliates.py` | Affiliate registry with placeholder IDs — all 5 programs |
-| Build `mpw_tool_manifest.py` | Master record for all 24 v5 tools |
-| Build `generate_tool_pages.py` | Generates all 24 `/tools/[slug].html` standalone pages |
+| Build `mpw_tool_manifest.py` | Master record for all 36 tools (12 v4 + 24 v5) |
+| Build `generate_tool_pages.py` | Generates all 36 `/tools/[slug].html` standalone pages |
 | Build `generate_tools_hub.py` | Generates `/tools/index.html` with categories and search |
 | Add email capture to Checklist tool | Beehiiv integration on Pre-Delivery Checklist |
 | Add TruClarify CTA to Checklist | Item 8 sync licensing checklist → TruClarify handoff |

@@ -928,7 +928,7 @@ Reasoning:
 
 Target approval timeline: Plugin Boutique (fastest — 2–5 days), Amazon Associates (1–3 days), Sweetwater (1–2 weeks), Loopmasters (3–7 days), PluginFox (3–7 days).
 
-**Critical action before applications:** Build `mpw_affiliates.py` registry first (Session 61 P1). All 24 v5 tools have plugin recommendations as plain text now. When approvals come in, the registry enables a single-file update across all tools.
+**Critical action before applications:** Build `mpw_affiliates.py` registry first (Session 61 P1). All 36 tools have plugin recommendations as plain text now. When approvals come in, the registry enables a single-file update across all tools.
 
 ### Revenue Opportunity — Tool Plugin Recommendations
 

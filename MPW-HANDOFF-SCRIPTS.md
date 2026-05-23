@@ -1648,7 +1648,7 @@ Expected: `Syntax: CLEAN` + `All tests PASS`
 
 ### mpw_tools_v5_dispatch.py — DELIVERED — PASS
 
-**Purpose:** Unified dispatcher for all 24 v5 tools. Routes 145 slugs to the correct batch file.
+**Purpose:** Unified dispatcher for all 24 v5 tools. Routes 145 slugs (v5 only — v4 tools have separate dispatcher) to the correct batch file.
 
 **Run smoke test:**
 ```powershell
@@ -1671,7 +1671,7 @@ from mpw_tools_v5_dispatch import build_tools_section_v5 as build_tools_section_
 
 ### mpw_affiliates.py — BUILD FIRST
 
-**Purpose:** Affiliate link registry. All plugin recommendations in all 24 v5 tools reference this file. One approval → one file update → all 24 v5 tools update.
+**Purpose:** Affiliate link registry. All plugin recommendations across all 36 tools reference this file. One approval → one file update → all tools update.
 
 **Structure:**
 ```python
@@ -1688,7 +1688,7 @@ PLUGIN_AFFILIATES = {
     'Valhalla Room': ('plugin_boutique', 'valhalla-room'),
     'FabFilter Pro-Q 3': ('plugin_boutique', 'fabfilter-pro-q-3'),
     'Waves CLA-76': ('plugin_boutique', 'waves-cla-76'),
-    # ... all plugins from all 24 v5 tool plugin recommendations
+    # ... all plugins from all 36 tools (v4 T1-T12 + v5 tools 1-24)
 }
 
 def aff_link(plugin_name, display_text=None):
@@ -1700,7 +1700,7 @@ def aff_link(plugin_name, display_text=None):
 
 ### mpw_tool_manifest.py — BUILD SECOND
 
-**Purpose:** Single source of truth for all 24 v5 tools. All generators (tool pages, hub page, sitemap) read from this manifest.
+**Purpose:** Single source of truth for all 36 tools. All generators (tool pages, hub page, sitemap) read from this manifest.
 
 **Structure per tool:**
 ```python
@@ -1719,7 +1719,7 @@ TOOLS = [
             ...
         ],
     },
-    # ... all 24 v5 tools
+    # ... all 36 tools
 ]
 ```
 
@@ -1742,7 +1742,7 @@ Then commit all to `tools/` directory via Trees API.
 
 ### generate_tools_hub.py — BUILD FOURTH
 
-**Purpose:** Generates `/tools/index.html` — the category hub page with 8 categories, search/filter, and all 24 tool cards.
+**Purpose:** Generates `/tools/index.html` — the category hub page with 8 categories, search/filter, and all 36 tool cards.
 
 **Run:**
 ```powershell
