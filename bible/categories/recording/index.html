@@ -126,6 +126,12 @@ body{background:#0d0d1a;color:#e0e0f0;font-family:system-ui,-apple-system,sans-s
 .bcat-card-arrow{color:#2a2a4a;font-size:11px;flex-shrink:0;transition:color .15s}
 .bcat-card:hover .bcat-card-arrow{color:#f5a623}
 
+/* ── A-Z letter index ── */
+.az-alpha{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:16px}
+.az-alpha-btn{width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;font-family:monospace;color:#555;background:#13132a;border:1px solid #2a2a4a;border-radius:6px;cursor:pointer;transition:all .15s}
+.az-alpha-btn:hover,.az-alpha-btn.active{color:#f5a623;border-color:rgba(245,166,35,.4);background:rgba(245,166,35,.07)}
+.az-alpha-btn.empty{opacity:.2;cursor:default;pointer-events:none}
+.az-letter-header{font-size:11px;font-family:monospace;font-weight:700;color:#f5a623;letter-spacing:.12em;text-transform:uppercase;padding:10px 18px 6px;background:#0d0d1a;border-bottom:1px solid #2a2a4a;grid-column:1/-1}
 /* ── Footer (exact from reverb.html) ── */
 .site-footer{background:#0a0a1a;border-top:1px solid #1a1a3a;padding:28px 24px;text-align:center;margin-top:48px}
 .site-footer p{color:#666;font-size:13px;margin:4px 0}
@@ -260,20 +266,30 @@ body{background:#0d0d1a;color:#e0e0f0;font-family:system-ui,-apple-system,sans-s
   <input class="bcat-search" type="text" id="catSearch"
          placeholder="Filter Recording…" autocomplete="off"
          oninput="filterSearch(this.value)">
+  
   <div class="az-grid" id="catGrid">
-    <a class="az-entry" href="/bible/audio-interface" data-term="audio interface"><span class="az-entry-term">Audio Interface</span><span class="az-entry-cat">Recording</span></a>
+    <div class="az-letter-header" id="az-A">A</div>
+<a class="az-entry" href="/bible/audio-interface" data-term="audio interface"><span class="az-entry-term">Audio Interface</span><span class="az-entry-cat">Recording</span></a>
+<div class="az-letter-header" id="az-B">B</div>
 <a class="az-entry" href="/bible/buffer-size" data-term="buffer size"><span class="az-entry-term">Buffer Size</span><span class="az-entry-cat">Recording</span></a>
+<div class="az-letter-header" id="az-C">C</div>
 <a class="az-entry" href="/bible/clip" data-term="clip"><span class="az-entry-term">Clip</span><span class="az-entry-cat">Recording</span></a>
 <a class="az-entry" href="/bible/condenser-microphone" data-term="condenser microphone"><span class="az-entry-term">Condenser Microphone</span><span class="az-entry-cat">Recording</span></a>
+<div class="az-letter-header" id="az-D">D</div>
 <a class="az-entry" href="/bible/di-box" data-term="di box"><span class="az-entry-term">DI Box</span><span class="az-entry-cat">Recording</span></a>
 <a class="az-entry" href="/bible/dynamic-microphone" data-term="dynamic microphone"><span class="az-entry-term">Dynamic Microphone</span><span class="az-entry-cat">Recording</span></a>
+<div class="az-letter-header" id="az-L">L</div>
 <a class="az-entry" href="/bible/latency" data-term="latency"><span class="az-entry-term">Latency</span><span class="az-entry-cat">Recording</span></a>
+<div class="az-letter-header" id="az-M">M</div>
 <a class="az-entry" href="/bible/microphone-placement" data-term="microphone placement"><span class="az-entry-term">Microphone Placement</span><span class="az-entry-cat">Recording</span></a>
+<div class="az-letter-header" id="az-P">P</div>
 <a class="az-entry" href="/bible/pdc" data-term="pdc"><span class="az-entry-term">PDC</span><span class="az-entry-cat">Recording</span></a>
 <a class="az-entry" href="/bible/phantom-power" data-term="phantom power"><span class="az-entry-term">Phantom Power</span><span class="az-entry-cat">Recording</span></a>
 <a class="az-entry" href="/bible/polar-pattern" data-term="polar pattern"><span class="az-entry-term">Polar Pattern</span><span class="az-entry-cat">Recording</span></a>
 <a class="az-entry" href="/bible/preamp" data-term="preamp"><span class="az-entry-term">Preamp</span><span class="az-entry-cat">Recording</span></a>
+<div class="az-letter-header" id="az-R">R</div>
 <a class="az-entry" href="/bible/recording" data-term="recording"><span class="az-entry-term">Recording</span><span class="az-entry-cat">Recording</span></a>
+<div class="az-letter-header" id="az-V">V</div>
 <a class="az-entry" href="/bible/vocal-production" data-term="vocal production"><span class="az-entry-term">Vocal Production</span><span class="az-entry-cat">Recording</span></a>
   </div>
   <div class="bcat-empty" id="catEmpty">No entries match that filter.</div>
@@ -289,13 +305,22 @@ body{background:#0d0d1a;color:#e0e0f0;font-family:system-ui,-apple-system,sans-s
 </footer>
 
 <script>
-// Mobile nav — exact from reverb.html
+// Mobile nav — close on link tap, no history push
 (function(){
   var mob=document.getElementById('bmnMob'),d=document.getElementById('bmnDrawer');
-  if(mob&&d){
-    mob.addEventListener('click',function(){d.classList.toggle('open');});
-    document.addEventListener('click',function(e){if(!d.contains(e.target)&&e.target!==mob)d.classList.remove('open');});
-  }
+  if(!mob||!d)return;
+  mob.addEventListener('click',function(e){
+    e.stopPropagation();
+    d.classList.toggle('open');
+  });
+  d.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click',function(){d.classList.remove('open');});
+  });
+  document.addEventListener('click',function(e){
+    if(d.classList.contains('open')&&!d.contains(e.target)&&e.target!==mob){
+      d.classList.remove('open');
+    }
+  });
 })();
 
 // Search overlay — exact from reverb.html
