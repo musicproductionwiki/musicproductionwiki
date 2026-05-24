@@ -354,6 +354,29 @@
     <div id="bibleSearchResults" role="listbox"></div>
   </div>
 </div>
+<script>
+(function(){
+  var mob=document.getElementById('bmnMob'),d=document.getElementById('bmnDrawer');
+  if(!mob||!d)return;
+  mob.addEventListener('click',function(e){e.stopPropagation();d.classList.toggle('open');});
+  d.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){d.classList.remove('open');});});
+  document.addEventListener('click',function(e){if(d.classList.contains('open')&&!d.contains(e.target)&&e.target!==mob)d.classList.remove('open');});
+  var sb=document.getElementById('bmnSearchBtn'),ov=document.getElementById('bibleSearchOverlay'),inp=document.getElementById('bibleSearchInput'),res=document.getElementById('bibleSearchResults'),idx=null;
+  if(sb){sb.addEventListener('click',function(){if(ov){ov.style.display='flex';if(inp)inp.focus();}});}
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&ov)ov.style.display='none';});
+  if(ov)ov.addEventListener('click',function(e){if(e.target===ov)ov.style.display='none';});
+  if(inp)inp.addEventListener('input',function(){
+    var q=inp.value.trim().toLowerCase();
+    if(!q){if(res)res.innerHTML='';return;}
+    if(!idx)fetch('/bible-index.json').then(function(r){return r.json();}).then(function(d){idx=d;search(q);}).catch(function(){});
+    else search(q);
+    function search(q){
+      var hits=(idx||[]).filter(function(e){return(e.term||'').toLowerCase().indexOf(q)!==-1;}).slice(0,8);
+      if(res)res.innerHTML=hits.map(function(e){return'<a href="/bible/'+e.slug+'" style="display:block;padding:10px 16px;color:#e0e0f0;text-decoration:none;border-radius:6px;font-size:14px"><strong style="color:#f5a623">'+e.term+'</strong><span style="display:block;font-size:11px;color:#666">'+e.category+'</span></a>';}).join('');
+    }
+  });
+})();
+</script>
 
 <main id="main-content">
   <div class="tool-page-wrap">
@@ -683,16 +706,16 @@ arrLoad('pop');
 </main>
 
 <footer class="site-footer">
-  <a href="/bible/" class="bm-publisher">&#9670; The Producer's Bible</a>
-  <p style="font-size:15px;font-weight:600;color:#e0e0f0;margin:8px 0 4px">MusicProductionWiki.com</p>
-  <p style="font-size:12px;color:#666;margin-bottom:16px">The most comprehensive music production reference on the internet.</p>
+  <a href="/bible/" style="color:#f5a623;text-decoration:none;font-size:12px;font-weight:700;display:block;margin-bottom:8px">&#9670; The Producer&#8217;s Bible</a>
+  <p style="font-size:15px;font-weight:600;color:#e0e0f0;margin-bottom:4px">MusicProductionWiki.com</p>
+  <p style="font-size:13px;color:#666;margin-bottom:16px">The most comprehensive music production reference on the internet.</p>
   <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:16px;flex-wrap:wrap">
     <span style="font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.08em">Share</span>
-    <a href="https://x.com/intent/tweet?text=Arrangement+Timer&url=https%3A%2F%2Fmusicproductionwiki.com%2Ftools%2Farrangement-timer" target="_blank" rel="noopener" style="padding:6px 14px;border-radius:20px;border:1px solid #2a2a4a;color:#a0a0c0;font-size:12px;text-decoration:none">X</a>
-    <a href="https://www.reddit.com/submit?url=https%3A%2F%2Fmusicproductionwiki.com%2Ftools%2Farrangement-timer&title=Arrangement+Timer" target="_blank" rel="noopener" style="padding:6px 14px;border-radius:20px;border:1px solid #2a2a4a;color:#a0a0c0;font-size:12px;text-decoration:none">Reddit</a>
+    <a href="https://x.com/intent/tweet?text=Arrangement Timer+%E2%80%94+Free+Tool&url=https%3A%2F%2Fmusicproductionwiki.com%2Ftools%2Farrangement-timer" target="_blank" rel="noopener" style="background:#000;color:#fff;font-size:12px;font-weight:700;padding:6px 14px;border-radius:6px;text-decoration:none">Share on X</a>
+    <a href="https://reddit.com/submit?url=https%3A%2F%2Fmusicproductionwiki.com%2Ftools%2Farrangement-timer&title=Arrangement Timer+%E2%80%94+MusicProductionWiki" target="_blank" rel="noopener" style="background:#ff4500;color:#fff;font-size:12px;font-weight:700;padding:6px 14px;border-radius:6px;text-decoration:none">Reddit</a>
   </div>
-  <p><a href="/">Home</a> &middot; <a href="/about.html">About</a> &middot; <a href="/bible/">Producer's Bible</a> &middot; <a href="/tools/">All Tools</a></p>
-  <p style="margin-top:8px;font-size:11px;color:#444">&copy; 2026 MusicProductionWiki.com &mdash; Built for producers, by producers.</p>
+  <p style="font-size:13px;color:#555"><a href="/" style="color:#f5a623;text-decoration:none">Home</a> &middot; <a href="/about.html" style="color:#f5a623;text-decoration:none">About</a> &middot; <a href="/bible/" style="color:#f5a623;text-decoration:none">Producer&#8217;s Bible</a> &middot; <a href="/tools/" style="color:#f5a623;text-decoration:none">All Tools</a></p>
+  <p style="margin-top:8px;font-size:11px;color:#444">&copy; 2026 MusicProductionWiki.com &#8212; Built for producers, by producers.</p>
 </footer>
 
 </body>
