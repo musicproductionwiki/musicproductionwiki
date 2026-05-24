@@ -2998,3 +2998,207 @@ Delivered `mpw-logo-final.svg` — exact waveform bar proportions from live site
 | NEVER show parent category name as card label in category pages | Cards must show the subcategory (e.g. "Beat Making") not the parent (e.g. "Production") — use `subcat.title() if subcat else ecat` |
 | NEVER use the old Beehiiv iframe embed method | Current method is v3 loader script in `<head>` + `data-beehiiv-form` div in body — never iframe |
 | NEVER declare a commit successful without Steve visually confirming the live page | Multiple centering commits were declared done but Steve confirmed they were wrong on the live site |
+
+---
+
+# ⛔ SESSION 63/64 UPDATE — CORE — May 24, 2026
+
+## Confirmed State at Session Start
+- Articles: **526** live (unchanged)
+- Bible entries: **223** live (unchanged)
+- Tool pages: **36** live (all `/tools/[slug].html`)
+
+## Session 63/64 — What Was Completed
+
+### P0 — `bible/index.html` Rebuilt ✅
+Full rebuild with reverb.html gold standard nav. Beehiiv newsletter wired. Featured entry changed to Reverb. Read time patched 33→25min (650 wpm). SHA: `7bfb2b6b` → Beehiiv commit SHA: `7bfb2b6b`.
+
+### P1 — All 11 Bible Category Pages Rebuilt ✅
+`mpw_bible_cat_pages_s63f.py` regenerated all 11 pages. Zero-mismatch SUBCAT_MAP (232 slugs). Hero fully centered. 4-col grid. Professional amber card design. Working dataset.subcat filter. See session63_core_append.md for full iteration history.
+
+### P2 — `/tools/index.html` — BUILT AND LIVE ✅
+
+**The Producer's Tools hub page is live at `musicproductionwiki.com/tools/`.**
+
+This was the P0 for Session 64. Built as hand-crafted HTML (same approach as reverb.html and bible/index.html) — no generator script. Full design control.
+
+**Commit history:**
+| SHA | Change |
+|-----|--------|
+| `2582d77f` | Initial commit — tools hub live |
+| `f56ab877` | Eyebrow larger, cards centered, Bible nav amber CSS, search bg transparent, section label static, request link brighter, mobile 2-col |
+| `d16f4961` | Amber card borders 1.5px → 2px, brighter hover glow |
+| `44c8f9b8` | Card amber border thicker (2px) and brighter (0.45 opacity resting, 0.85 hover) |
+| `8c7269d2` | Nav bible-link amber — CSS specificity fix (nav-item>a.nav-bible-link beats nav-item>a rule) |
+
+**Final confirmed state of `/tools/index.html`:**
+- Nav: `mpw-nav-homepage-v1` exact — `Articles ▾ · Gear ▾ · Tools → · The Producer's Bible →` — Tools in teal, Bible in amber
+- Hero: `#0d0d1a` dark, centered. Eyebrow `THE PRODUCER'S TOOLS` 16px/700 teal monospace. H1 `Built for the session.` white bold. Subline `Not the syllabus.` amber. Desc brighter `#a0a0c0`.
+- Search bar: transparent background (`rgba(255,255,255,0.05)`) — blends into hero
+- Category pills: 9 pills (All + 8 categories) — teal active state
+- Grid: 3-col desktop → 2-col at 1024px → 2-col at 768px → 1-col at 420px
+- Cards: centered column layout, `2px solid rgba(245,166,35,0.45)` amber border, amber hover glow, no arrow
+- Section label: static "Tools" — never shows count (grows dynamically, never update manually)
+- Stats row: `Free forever · No signup required · Works on mobile` — no tool count
+- Request link: `15px` brighter `#8888aa` — "Missing a tool? Tell us what you wish existed →"
+- Mobile drawer: `✦ The Producer's Tools` teal pill at top, `● The Producer's Bible` amber pill second
+- All 36 live tool slugs verified present ✅
+
+**Design decisions locked:**
+- Amber card borders match Bible aesthetic — tools feel like part of the same family
+- Teal for Tools identity (MPW green), amber for Bible (always amber)
+- No tool count anywhere — page grows dynamically, count would go stale
+- 2-col mobile grid is correct — cards have name + desc + cat label, enough room
+- `nav.mpw-site-nav .nav-item>a.nav-bible-link` specificity pattern required to beat the general `nav-item>a` rule — use this pattern in any future nav color overrides on this page
+
+### P3 — `index.html` (Homepage) — Tools Added to Nav ✅
+
+Commit SHA: `fe168acb`
+
+- Desktop nav: `Tools →` li added before Bible li — inline style `color:#00e8a2!important;font-weight:600`
+- Mobile drawer: `✦ The Producer's Tools` teal entry added before mob-bible pill — inline style (no mob-tools class on homepage, uses inline style matching existing pattern)
+
+### P4 — Bible Category Pages — Tools Already Present ✅
+
+Verified during session: the slim-bar on all 11 Bible category pages already contains `<li><a href="/tools/">Tools</a></li>` — added by generator in a prior session. No action needed.
+
+### P5 — 650 WPM Read Time Standard Confirmed ✅
+All new Bible entries: `read_time = round(word_count / 650)`. Only reverb.html patched this session. `mpw_bible_writer.py` update still pending before next T1 batch.
+
+### P6 — MPW Logo SVG Delivered
+`mpw-logo-final.svg` — exact waveform bar proportions, teal `#00e8a2` square bg, dark text. For Beehiiv hosted subscribe page.
+
+---
+
+## Updated Priority Queue — Session 64 Onwards
+
+| Priority | Task | Status |
+|----------|------|--------|
+| **P0** | **MPW Article Pages (526) — nav batch** — Add `Tools →` to desktop nav + replace `mobile-drawer` with new `bmn-drawer` grid style + all missing categories — see full scope below | NEXT SESSION |
+| **P1** | **Update `mpw_writer.py`** — new mobile drawer HTML must be in writer so all future articles get correct drawer automatically | BLOCKS FUTURE ARTICLES |
+| **P2** | **Update `mpw_bible_writer.py`** — new Bible mobile drawer categories + slim-bar `Tools →` + all 11 bible-bar categories — must be correct before next T1 batch | BLOCKS BIBLE BATCH |
+| **P3** | **Update `mpw_bible_writer.py` read time to 650 wpm** | BLOCKS BIBLE BATCH |
+| **P4** | **Bible entry pages (222)** — category additions to bmn-drawer (Production, Recording, Tools missing) — grid style already correct on 222 entries? CHECK: 222 entries still on old `mobile-drawer` — need full bmn-drawer replacement | PENDING |
+| **P5** | **Bible Tier 1 remaining 33 entries** — needs v5.2 writer updated first | BLOCKED on P2+P3 |
+| **P6 (Steve)** | **Affiliate applications** — Plugin Boutique, Amazon, Loopmasters, Sweetwater, PluginFox | **REVENUE BLOCKER** |
+| P7 | GSC: Request Indexing for /bible/reverb + /bible/chorus | Steve action |
+| P8 | Sitemap update: add /tools/ (priority 0.9) + all 36 /tools/[slug].html (priority 0.8) | After tools confirmed indexed |
+
+---
+
+## P0 Batch — Full Scope Document (MPW Article Pages 526)
+
+This is the most carefully scoped batch on the MPW side. Read before starting.
+
+### What Changes
+Two changes in one commit (one Netlify deploy):
+
+**1. Desktop nav — add Tools → li**
+
+Target string (confirmed identical across all 526 via audit — smart quote U+2019, arrow U+2192):
+```
+<li class="nav-item"><a href="/bible/" class="nav-bible-link">The Producer\u2019s Bible \u2192</a></li>
+```
+
+Insert before it:
+```html
+<li class="nav-item"><a href="/tools/" class="nav-tools-link">Tools →</a></li>
+```
+
+Note: `.nav-tools-link` is ALREADY defined in the `mpw-nav-homepage-v1` style block on every article page — no CSS changes needed.
+
+**2. Mobile drawer — replace entire drawer with new bmn-drawer grid style**
+
+Current drawer on all 526 articles:
+```html
+<div class="mobile-drawer" id="mobileDrawer">
+  <a href="/bible/" class="mob-bible">● The Producer's Bible — Explore Free</a>
+  <div class="mob-section-label">Articles</div>
+  <a class="mob-link" href="/categories/techniques.html">Techniques</a>
+  ...vertical list...
+</div>
+```
+
+New drawer (matches reverb.html bmn-drawer style, teal tools pill at top):
+```html
+<div class="mobile-drawer" id="mobileDrawer">
+  <a href="/tools/" style="display:flex;align-items:center;gap:8px;padding:12px 16px;border-radius:9px;background:rgba(0,232,162,0.07);border:1px solid rgba(0,232,162,0.22);color:#00e8a2;font-size:14px;font-weight:600;text-decoration:none;margin:4px 0 8px">✦ The Producer's Tools</a>
+  <a href="/bible/" class="mob-bible">● The Producer's Bible — Explore Free</a>
+  <div class="mob-section-label">Articles</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:4px">
+    <a href="/categories/techniques.html" style="display:flex;align-items:center;padding:10px 12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;color:#a0a0b4;background:#111113;border:1px solid #1a1a3a">Techniques</a>
+    <a href="/categories/reviews.html" style="display:flex;align-items:center;padding:10px 12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;color:#a0a0b4;background:#111113;border:1px solid #1a1a3a">Reviews</a>
+    <a href="/categories/comparisons.html" style="display:flex;align-items:center;padding:10px 12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;color:#a0a0b4;background:#111113;border:1px solid #1a1a3a">Comparisons</a>
+    <a href="/categories/breakdowns.html" style="display:flex;align-items:center;padding:10px 12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;color:#a0a0b4;background:#111113;border:1px solid #1a1a3a">Breakdowns</a>
+    <a href="/categories/recreations.html" style="display:flex;align-items:center;padding:10px 12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;color:#a0a0b4;background:#111113;border:1px solid #1a1a3a">Recreations</a>
+    <a href="/genres.html" style="display:flex;align-items:center;padding:10px 12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;color:#a0a0b4;background:#111113;border:1px solid #1a1a3a">Genres</a>
+    <a href="/categories/ai-music.html" style="display:flex;align-items:center;padding:10px 12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;color:#a0a0b4;background:#111113;border:1px solid #1a1a3a">AI Music</a>
+    <a href="/categories/music-business.html" style="display:flex;align-items:center;padding:10px 12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;color:#a0a0b4;background:#111113;border:1px solid #1a1a3a">Music Business</a>
+  </div>
+  <div class="mob-section-label">Gear</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:4px">
+    <a href="/categories/daws.html" style="display:flex;align-items:center;padding:10px 12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;color:#a0a0b4;background:#111113;border:1px solid #1a1a3a">DAWs</a>
+    <a href="/categories/plugins.html" style="display:flex;align-items:center;padding:10px 12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;color:#a0a0b4;background:#111113;border:1px solid #1a1a3a">Plugins</a>
+    <a href="/categories/gear.html" style="display:flex;align-items:center;padding:10px 12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;color:#a0a0b4;background:#111113;border:1px solid #1a1a3a">Hardware</a>
+  </div>
+  <a href="https://theproducersbriefing.beehiiv.com" class="mob-cta">Sound Better →</a>
+</div>
+```
+
+Note: Uses inline styles for grid items (not bmn-drawer-cat class) because the article pages do not have the bmn-drawer CSS — they have mpw-nav-homepage-v1 which defines mob-bible and mob-cta but not the grid card styles. Inline styles avoid adding new CSS to 526 files.
+
+### Batch Process — Session 61 Rules Apply Without Exception
+
+1. Fetch 3 diverse live articles — confirm exact target strings match
+2. Print full before/after diff for each of the 3 — review carefully
+3. Commit 1 article — verify visually on live site (desktop nav + mobile drawer)
+4. Only then run full 526 via Trees API in one commit
+5. Spot-check 3 more live after batch — confirm no corruption
+
+### Audit Results (completed this session)
+- All 526 articles confirmed identical nav structure via sample-every-25th audit (22 articles checked)
+- Target string confirmed: smart quote U+2019 in `Producer\u2019s Bible`, arrow U+2192
+- All 526 have `mpw-nav-homepage-v1` style block — `.nav-tools-link` already defined there
+- All 526 have `mobile-drawer` class (not bmn-drawer) — replacement is safe
+
+---
+
+## Two-Track Nav Plan (Locked)
+
+### Track 1 — MPW Article Pages (526) — P0 Next Session
+Scope documented above. One batch, one commit.
+
+### Track 2 — Bible Side — Separate Session
+- **Bible entry pages (222):** bmn-drawer already attempted and rolled back (Session 61). Safe approach now: fetch 5 representative entries, confirm exact drawer HTML, dry-run diff, commit 1, verify live, batch remainder. The category addition needed (Production, Recording, Tools) goes in the same pass.
+- **Bible slim-bar:** Add `Tools →` link pointing to `/tools/`
+- **Bible-bar:** Still only 8 categories — Production, Recording, Tools missing. Target state documented in TECH handoff.
+- **CRITICAL:** Both Bible-side changes must be baked into `mpw_bible_writer.py` BEFORE the next T1 batch — every new entry must get the correct nav out of the box. The bible writer will be fully rewritten based on reverb.html in an upcoming session.
+
+### Track 3 — Writers (Blocks Future Production)
+- `mpw_writer.py` — new MPW mobile drawer HTML (bmn-style grid) must be updated so every new article gets correct drawer automatically. Update before next article batch.
+- `mpw_bible_writer.py` — new Bible mobile drawer categories + slim-bar Tools link + all 11 bible-bar categories. Update before next T1 batch. Also update read time to 650 wpm in same pass.
+
+---
+
+## Tools Hub — Future Scalability Note
+
+**Handoff note for 100+ tools:** When tool count exceeds ~50, the flat grid becomes hard to navigate on mobile. Consider for a future session: collapsible category sections (click category pill → shows only that category's cards collapsed into an accordion), or a dedicated category landing page per tool category. The category filter pills already work correctly — the UX issue is scrolling through 50+ cards to find what you need. Flag for design review when approaching 50 tools.
+
+---
+
+## NEVER Rules Added — Session 63/64 — Core
+
+| Rule | Detail |
+|------|--------|
+| NEVER show tool count on /tools/index.html | Page grows dynamically — "36 tools" goes stale immediately. Section label is static "Tools". Stats row has no count. |
+| NEVER add nav color overrides with `.nav-bible-link` alone | `nav.mpw-site-nav .nav-item>a` uses `!important` and beats class-only selectors. Always use `nav.mpw-site-nav .nav-item>a.nav-bible-link` (child combinator + class) for specificity |
+| NEVER use CSS inject approach on generator-managed pages | `mpw_bible_cat_pages.py --run` regenerates from scratch — CSS injected into live pages is overwritten. All fixes must go in the generator |
+| NEVER declare hero centering complete without verifying every direct child element | `text-align:center` on parent does not automatically center all children |
+| NEVER increase category page max-width beyond 1100px | Cards become too wide at 1400px — 4-col grid looks blown out |
+| NEVER iterate CSS changes across 8 commits without a mental render walkthrough first | Session 63 had 8 wasted commits on centering alone |
+| NEVER deliver mpw_bible_cat_pages.py without zero-mismatch SUBCAT_MAP verification | 62 mismatches in first S63 version caused wrong filter counts |
+| NEVER read time below 650 wpm for Bible entries | 500 wpm confirmed wrong — 650 wpm is the standard |
+| NEVER show parent category name as card label in category pages | Cards must show subcategory (e.g. "Beat Making") not parent (e.g. "Production") |
+| NEVER use old Beehiiv iframe embed method | Use v3 loader script in head + data-beehiiv-form div in body |
+| NEVER declare a commit successful without Steve visually confirming live page | Multiple centering commits were declared done but wrong on live site |
+| NEVER run the MPW article nav batch without the full dry-run scope confirmed | Smart quote U+2019 and arrow U+2192 in target string — confirm exact bytes before any commit |
