@@ -154,12 +154,17 @@ body{background:#0d0d1a;color:#e0e0f0;font-family:system-ui,-apple-system,sans-s
   .msb-logo{margin-right:auto!important}
   .bb-cats,.bb-all,.bb-divider{display:none!important}
 }
+@media(max-width:1024px){
+  .bcat-hero{padding:40px 24px 36px}
+  .bcat-main{padding:32px 24px 80px}
+}
 @media(max-width:768px){
-  .bcat-hero{padding:32px 16px 28px}
-  .bcat-main{padding:24px 16px 60px}
-  .az-grid{grid-template-columns:repeat(2,1fr)}
+  .bcat-hero{padding:28px 16px 24px}
+  .bcat-main{padding:20px 16px 60px}
+  .az-grid{grid-template-columns:1fr}
   .bcat-tools-grid{grid-template-columns:1fr}
   .bible-bar{top:36px}
+  .bcat-hero h1{font-size:clamp(1.8rem,8vw,3rem)}
 }
 @media(max-width:480px){
   .az-grid{grid-template-columns:1fr}
@@ -376,6 +381,17 @@ function updateGrid(){
     var show=matchQ&&matchS;
     c.style.display=show?'':'none';
     if(show)visible++;
+  });
+  // Hide letter headers that have no visible entries after them
+  var headers=document.querySelectorAll('#catGrid .az-letter-header');
+  headers.forEach(function(h){
+    var next=h.nextElementSibling;
+    var hasVisible=false;
+    while(next&&!next.classList.contains('az-letter-header')){
+      if(next.style.display!=='none'){hasVisible=true;break;}
+      next=next.nextElementSibling;
+    }
+    h.style.display=hasVisible?'':'none';
   });
   var vc=document.getElementById('visCount');
   if(vc)vc.textContent=visible+' '+('entries');
