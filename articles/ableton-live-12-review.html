@@ -1013,8 +1013,13 @@ function mpwFaqToggle(el) {
     var mob=document.getElementById('navMob');
     var drawer=document.getElementById('mobileDrawer');
     if(mob&&drawer){
-      mob.addEventListener('click',function(){var opening=!drawer.classList.contains('open');drawer.classList.toggle('open');if(opening&&window.history&&window.history.replaceState){history.replaceState(null,'',location.href);}});
+      mob.addEventListener('click',function(){
+        var opening=!drawer.classList.contains('open');
+        drawer.classList.toggle('open');
+        if(opening&&window.history&&window.history.pushState){history.pushState({drawerOpen:true},'',location.href);}
+      });
       drawer.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){drawer.classList.remove('open');});});
+      window.addEventListener('popstate',function(e){if(drawer.classList.contains('open')){drawer.classList.remove('open');}});
     }
     // SEARCH OVERLAY
     var overlay=document.getElementById('searchOverlay');
