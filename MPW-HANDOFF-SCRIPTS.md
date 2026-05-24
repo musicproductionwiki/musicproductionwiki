@@ -1766,3 +1766,70 @@ Results:
 
 **This parallel approach is reusable** for future tool batches. Session prompt files are stored in mpw-scripts\ as templates.
 
+
+
+---
+
+# SESSION 62 UPDATE — SCRIPTS — May 24, 2026
+
+## mpw_bible_cat_pages.py — FINAL SESSION 62
+
+Location: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\mpw_bible_cat_pages.py`
+
+Generates all 11 Bible category pages at `bible/categories/[slug]/index.html` via Trees API.
+
+```powershell
+python mpw_bible_cat_pages.py --test   # preview Dynamics page only
+python mpw_bible_cat_pages.py --run    # commit all 11 pages
+```
+
+**Architecture:**
+- Fetches live `bible-index.json` from GitHub (222 entries)
+- Builds exact reverb.html nav (slim bar 36px, bible bar with 11 categories, bmn-drawer grid)
+- A-Z letter index: only rendered when category has ≥ 50 entries — JS hides empty letter headers after filter
+- Subcat filter pills: Tools page only (content pages have no subcategory tags on entries)
+- Tools page uses TOOL_MANIFEST (36 tools from mpw_tool_manifest.py) — links to `/tools/[slug]`
+- Hero max-width 1100px, main max-width 1100px
+- Mobile: single column grid at 768px, fluid H1
+
+**TOOL_MANIFEST:** Exact slugs from `mpw_tool_manifest.py` — verified against live GitHub tree before each run.
+
+**Run after:** Any bible-index.json update, any Bible entry batch, any copy/layout change.
+
+---
+
+## generate_tool_pages_v2.py — FINAL SESSION 62
+
+Location: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\generate_tool_pages_v2.py`
+
+Generates all 36 standalone tool pages at `tools/[slug].html` via Trees API.
+
+```powershell
+python generate_tool_pages_v2.py              # generates + commits all 36
+python generate_tool_pages_v2.py --dry-run    # generates locally only
+```
+
+**Architecture:**
+- Reads tool list from `mpw_tool_manifest.py` (ALL_TOOLS — 36 tools)
+- Dispatches real tool HTML from `mpw_tools_v5_dispatch.py` via `build_tools_section_v5(bible_key, name)`
+- Strips `<h2>Tools for This Entry</h2>` from dispatch output (redundant on standalone pages)
+- TOOL_PAGE_CSS contains full inline nav CSS (slim bar, bible bar, bmn-drawer, search overlay) — no dependency on style.css for nav
+- CSS path: `/css/style.css` (absolute)
+- Footer: inline-styled via `make_footer()` — `.site-footer` CSS in TOOL_PAGE_CSS
+- Slug override: `transient-shaping` → `transient-shaper` in dispatch
+
+**Dispatch coverage:** 35/36 tools covered directly. `transient-shaper-reference` uses `_overrides = {"transient-shaping": "transient-shaper"}`.
+
+**Run after:** Any tool content update, any nav change, any copy change.
+
+---
+
+## NEVER Rules Added — Session 62 — Scripts
+
+| Rule | Detail |
+|------|--------|
+| NEVER commit tool pages without confirming dispatch returns real content (not empty/placeholder) | Check `len(tool_html) > 100` is not sufficient — open the live page |
+| NEVER modify `make_footer()` or any major function without verifying TOOL_PAGE_CSS still exists in file after edit | Accidentally deleted during refactor — caused 36/36 FAIL |
+| NEVER use placeholder tool content as a "Phase 2" deferral without flagging it clearly to Steve | Placeholder was committed and called "working" — it was not |
+| NEVER generate tool pages without TOOL_PAGE_CSS containing all nav class definitions | Classes must be inline — style.css definitions are unreliable at /tools/ depth |
+| NEVER ask Steve to run PowerShell to fetch GitHub files Claude can fetch directly with the token | Token ghp_[REDACTED - stored in setenv.ps1] is always in memory — use it |
