@@ -2322,3 +2322,206 @@ The cat bar duplicate link bug (Production/Recording/Tools appearing twice) was 
 | NEVER declare tool pages live without visual confirmation of rendered content | Placeholder block was committed and declared working — it was not |
 | NEVER change bible/index.html nav without discussing with Steve first | The index uses a different nav architecture — changes need deliberate approval |
 | NEVER execute subcat pill removal or other UI component changes without asking Steve | Discuss before executing on any component that affects user-facing layout |
+
+---
+
+# SESSION 63 UPDATE — TECH — May 24, 2026
+
+## Category Pages Architecture — Final State
+
+### File Structure Update
+
+```
+bible/
+├── index.html           ← REBUILT S62/S63 — slim-bar/bible-bar/bmn-drawer — Beehiiv wired — SHA 7bfb2b6b
+├── reverb.html          ← gold standard — read time patched 33→25min — SHA 8b6dd26d
+├── [222 entries]        ← mobile-drawer still in place — bmn-drawer patch PENDING
+└── categories/
+    ├── dynamics/        ← regenerated S63 from mpw_bible_cat_pages_s63f.py ✅
+    ├── frequency/       ← regenerated S63 ✅
+    ├── time-based/      ← regenerated S63 ✅
+    ├── signal-processing/ ← regenerated S63 ✅
+    ├── mixing/          ← regenerated S63 ✅
+    ├── mastering/       ← regenerated S63 ✅
+    ├── synthesis/       ← regenerated S63 ✅
+    ├── music-theory/    ← regenerated S63 ✅
+    ├── production/      ← regenerated S63 ✅
+    ├── recording/       ← regenerated S63 ✅
+    └── tools/           ← regenerated S63 ✅ — duplicate tagline removed
+```
+
+### Category Page CSS Architecture — LOCKED S63
+
+The following CSS values are confirmed correct for all 11 category pages as of S63. All changes go in `mpw_bible_cat_pages.py` — NEVER inject CSS into generator-managed pages.
+
+**Hero section:**
+```css
+.bcat-hero { background:linear-gradient(135deg,#1a0a00,#0d0d1a); border-bottom:1px solid rgba(245,166,35,.15); padding:56px 24px 48px }
+.bcat-hero-inner { max-width:1100px; margin:0 auto; text-align:center }
+.bcat-breadcrumb { font-size:12px; color:#666; margin-bottom:16px; font-family:monospace; text-align:center }
+.bcat-eyebrow { font-size:10px; font-family:monospace; letter-spacing:.14em; text-transform:uppercase; color:#f5a623; font-weight:700; margin-bottom:12px; display:block; text-align:center }
+.bcat-hero h1 { font-size:clamp(2rem,5vw,3.5rem); font-weight:900; color:#fff; line-height:1.1; margin-bottom:14px; letter-spacing:-0.03em; text-align:center }
+.bcat-hero-desc { font-size:15px; color:#a0a0c0; max-width:720px; line-height:1.75; margin-bottom:20px; margin-left:auto; margin-right:auto }
+.bcat-count { display:inline-flex; align-items:center; gap:6px; background:#1a1a3a; border:1px solid rgba(245,166,35,.25); border-radius:20px; padding:5px 16px; font-size:13px; color:#888; margin-bottom:20px; margin-left:auto; margin-right:auto }
+.bcat-subcats { display:flex; gap:7px; flex-wrap:wrap; margin-top:4px; justify-content:center }
+```
+
+**Main content:**
+```css
+.bcat-main { max-width:1100px; margin:0 auto; padding:40px 24px 80px }
+```
+
+**Bible entry cards:**
+```css
+.az-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px }
+.az-entry { background:#111118; border:1px solid #1e1e2e; border-left:3px solid rgba(245,166,35,.2); border-radius:6px; padding:14px 14px 14px 15px; text-decoration:none; display:flex; flex-direction:row; align-items:center; justify-content:space-between; gap:10px; transition:border-color .1s,border-left-color .1s,background .1s,box-shadow .1s; min-height:56px }
+.az-entry:hover { background:#16130a; border-color:rgba(245,166,35,.25); border-left-color:#f5a623; box-shadow:0 2px 12px rgba(0,0,0,.3) }
+.az-entry:active { background:#1a1500; border-left-color:#f5a623 }
+.az-entry-body { display:flex; flex-direction:column; gap:3px; flex:1; min-width:0 }
+.az-entry-term { font-size:13.5px; font-weight:600; color:#e8e8f0; letter-spacing:-.01em; line-height:1.3 }
+.az-entry-cat { font-size:11px; color:#f5a623; font-weight:600; letter-spacing:.03em; text-transform:uppercase; opacity:.6 }
+.az-entry:hover .az-entry-term { color:#f5a623 }
+.az-entry-arrow { font-size:13px; color:#333; flex-shrink:0; transition:color .1s,transform .1s; line-height:1 }
+.az-entry:hover .az-entry-arrow { color:#f5a623; transform:translateX(3px) }
+.az-letter-header { display:none }
+```
+
+**Tools page cards:**
+```css
+.bcat-tools-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px }
+.bcat-card { background:#111118; border:1px solid #1e1e2e; border-left:3px solid rgba(245,166,35,.2); border-radius:6px; padding:16px 16px 16px 18px; text-decoration:none; display:flex; align-items:center; gap:14px; transition:border-color .1s,border-left-color .1s,background .1s,box-shadow .1s; min-height:64px }
+.bcat-card:hover { background:#16130a; border-color:rgba(245,166,35,.25); border-left-color:#f5a623; box-shadow:0 2px 12px rgba(0,0,0,.3) }
+.bcat-card:active { background:#1a1500; border-left-color:#f5a623 }
+.bcat-card-term { font-size:13.5px; font-weight:600; color:#e8e8f0; display:block; line-height:1.3; letter-spacing:-.01em }
+.bcat-card:hover .bcat-card-term { color:#f5a623 }
+.bcat-card-cat { font-size:11px; color:#f5a623; font-weight:600; text-transform:uppercase; letter-spacing:.03em; display:block; margin-top:3px; opacity:.6 }
+.bcat-card-arrow { font-size:15px; color:#333; flex-shrink:0; transition:color .1s,transform .1s; line-height:1 }
+.bcat-card:hover .bcat-card-arrow { color:#f5a623; transform:translateX(3px) }
+```
+
+**Tools hero extra blocks — centered:**
+```css
+.bcat-tools-why { background:#13132a; border-left:3px solid #f5a623; border-radius:0 8px 8px 0; padding:14px 18px; margin-top:20px; max-width:720px; margin-left:auto; margin-right:auto }
+.bcat-tools-why-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:#f5a623; margin-bottom:6px; text-align:center }
+.bcat-tools-why p { font-size:13px; color:#a0a0c0; line-height:1.65; margin:0; text-align:center }
+.bcat-tools-request { display:block; background:#13132a; border:1px solid #2a2a4a; border-radius:8px; padding:16px 24px; max-width:720px; margin-top:16px; margin-left:auto; margin-right:auto; text-align:center }
+.bcat-tools-request-dot { display:none }
+.bcat-tools-request-text { font-size:13px; color:#707090; line-height:1.65; text-align:center }
+```
+
+**Responsive breakpoints:**
+```css
+@media(max-width:1200px) { .az-grid { grid-template-columns:repeat(3,1fr) } .bcat-tools-grid { grid-template-columns:repeat(3,1fr) } }
+@media(max-width:1024px) { .bcat-hero { padding:40px 24px 36px } .bcat-main { padding:32px 24px 80px } .az-grid { grid-template-columns:repeat(3,1fr) } .bcat-tools-grid { grid-template-columns:repeat(2,1fr) } }
+@media(max-width:768px) { .bcat-hero { padding:28px 16px 24px } .bcat-main { padding:20px 16px 60px } .az-grid { grid-template-columns:repeat(2,1fr) } .bcat-tools-grid { grid-template-columns:1fr } .az-entry { min-height:60px; border-left-color:rgba(245,166,35,.25) } .bcat-card { min-height:68px; border-left-color:rgba(245,166,35,.25) } .az-entry-arrow { display:none } }
+@media(max-width:480px) { .az-grid { grid-template-columns:1fr } }
+```
+
+### Category Page JS Architecture — Filter System
+
+**JS filter (confirmed working S63):**
+```javascript
+var _sub='', _q='';
+function updateGrid() {
+  var sel = '{grid_class}'==='az-grid' ? '.az-entry' : '.bcat-card';
+  var cards = document.querySelectorAll('#catGrid '+sel);
+  var visible = 0;
+  cards.forEach(function(c) {
+    var term = (c.querySelector('.az-entry-term,.bcat-card-term')||{}).textContent||'';
+    var subcat = (c.dataset && c.dataset.subcat) || '';
+    var matchQ = !_q || term.toLowerCase().indexOf(_q) !== -1;
+    var matchS = !_sub || subcat === _sub;
+    var show = matchQ && matchS;
+    c.style.display = show ? 'flex' : 'none';
+    if(show) visible++;
+  });
+}
+function filterSub(btn) {
+  _sub = (btn.dataset.filter||'').toLowerCase();
+  document.querySelectorAll('.bcat-sub').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  updateGrid();
+}
+```
+
+**Critical rules:**
+- `matchS` uses EXACT equality (`subcat === _sub`) — NOT substring search
+- `filterSub()` lowercases the filter value — pill `data-filter` values must be pre-lowercased
+- `data-subcat` values on cards must exactly match pill `data-filter` values
+- `c.style.display = show ? 'flex' : 'none'` — cards use flexbox so must restore to `flex` not `block`
+
+### SUBCAT_MAP — Complete 232-Slug Reference
+
+The authoritative SUBCAT_MAP lives in `mpw_bible_cat_pages.py` (S63f version). Key rules:
+- Every value must exactly match a pill `data-filter` attribute (lowercased)
+- Zero mismatches confirmed against all 222 live entries via cross-check script
+- Slugs that appear in multiple categories get one entry — assigned to their actual category
+
+### Card HTML Structure — az-entry
+
+```html
+<a class="az-entry" href="/bible/{slug}" data-term="{term.lower()}" data-subcat="{subcat}">
+  <div class="az-entry-body">
+    <span class="az-entry-term">{term}{badge}</span>
+    <span class="az-entry-cat">{subcat.title() if subcat else ecat}</span>
+  </div>
+  <span class="az-entry-arrow">→</span>
+</a>
+```
+
+**Critical:** card label shows `subcat.title()` — the specific subcategory — NOT the parent category name.
+
+### Beehiiv Newsletter — bible/index.html
+
+```html
+<!-- In <head> — both scripts required -->
+<script async src="https://subscribe-forms.beehiiv.com/v3/loader.js" data-beehiiv-form="a0962c52-4819-4b09-b13d-b26517b76e01"></script>
+<script type="text/javascript" async src="https://subscribe-forms.beehiiv.com/attribution.js"></script>
+
+<!-- In body — replaces hardcoded input/button form -->
+<div data-beehiiv-form="a0962c52-4819-4b09-b13d-b26517b76e01"></div>
+```
+
+Form ID: `a0962c52-4819-4b09-b13d-b26517b76e01` — confirmed live in bible/index.html (SHA `7bfb2b6b`).
+
+### 650 WPM Read Time Standard — CONFIRMED S63
+
+All Bible entries going forward: `read_time = round(word_count / 650)` — minimum 1 min.
+
+Updated entries this session: reverb.html (33→25min), bible/index.html featured card (~25min).
+Remaining 222 live entries: not yet updated — patch when convenient, not a blocker.
+`mpw_bible_writer.py`: must be updated to use 650 wpm before next batch run.
+
+### Category Page Audit Results — S63 Final
+
+Post-session audit of all 12 pages (11 category + 1 bible/index):
+
+| Page | SHA | Status |
+|------|-----|--------|
+| Bible Index | 7bfb2b6b | ✅ Clean — Beehiiv wired |
+| Dynamics | eb155bdc | ✅ Clean |
+| Frequency | faaf57c1 | ✅ Clean |
+| Time-Based | 97b92634 | ✅ Clean |
+| Signal Processing | 6a11ec2a | ✅ Clean |
+| Mixing | aa530324 | ✅ Clean |
+| Mastering | c968d1e9 | ✅ Clean |
+| Synthesis | 4549a73c | ✅ Clean |
+| Music Theory | 8a99cb4c | ✅ Clean |
+| Production | 4f7d2fd8 | ✅ Clean |
+| Recording | 94ef5432 | ✅ Clean |
+| Tools | dfcac826 | ✅ Clean |
+
+All pages confirmed: slim-bar/bible-bar/bmn-drawer ✅, `/css/style.css` absolute ✅, `max-width:1100px` ✅, `text-align:center` on hero ✅, amber card borders ✅, `data-subcat` on all cards ✅, `dataset.subcat` filter ✅, GA4 ✅, canonical ✅, OG meta ✅, JSON-LD ✅, no 2025 dates ✅, mobile breakpoints ✅
+
+## NEVER Rules Added — Session 63 — Tech
+
+| Rule | Detail |
+|------|--------|
+| NEVER use CSS inject approach on generator-managed pages | `mpw_bible_cat_pages.py --run` regenerates from scratch — any CSS injected into live pages is overwritten on next run. ALL changes go in the generator. |
+| NEVER increase category page max-width beyond 1100px | Tested 1400px — 4-col cards at 1400px become ~340px wide and look blown out. 1100px is the confirmed correct maximum. |
+| NEVER declare hero centering done without verifying every direct child element individually | `text-align:center` on the outer container does NOT automatically center all children. Breadcrumb, eyebrow, h1, desc, count badge, pills, tools-why, tools-request — each needs explicit `text-align:center` or `margin:auto`. |
+| NEVER center hero content by changing max-width | The centering issue was always a text-alignment issue, not a width issue. Increasing max-width made cards wider, not content more centered. |
+| NEVER show parent category name as card label | `az-entry-cat` must show `subcat.title() if subcat else ecat` — never the raw `ecat` parent category. |
+| NEVER write a SUBCAT_MAP without running zero-mismatch verification against live bible-index.json | 62 mismatches in first S63 version caused subcategory filters to show wrong entries across all categories. Always run cross-check before delivery. |
+| NEVER use Beehiiv iframe embed | Current embed method is v3 loader script + `data-beehiiv-form` div — confirmed with Beehiiv dashboard. iframe method is legacy and unreliable. |
+| NEVER deliver a category page script without running it locally with --test first | The --test flag prints the first 600 chars of one generated page — catches template errors before committing all 11 pages. |

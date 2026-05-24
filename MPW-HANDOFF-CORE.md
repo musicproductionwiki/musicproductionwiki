@@ -2792,3 +2792,209 @@ On multiple occasions Claude made design and structural decisions and executed t
 | NEVER remove or add UI components without asking Steve first | Subcat filter pills were removed unilaterally — must discuss before executing |
 | NEVER declare tool pages working until rendered output is visually confirmed on the live site | Placeholder block existed from a prior session and was never wired to dispatch |
 | NEVER modify make_footer or any major function block without verifying TOOL_PAGE_CSS still exists after the edit | Accidentally deleted entire variable during refactor |
+
+---
+
+# ⛔ SESSION 63 UPDATE — CORE — May 24, 2026
+
+## Session 63 Confirmed State at Start
+- Articles: **526** live (unchanged)
+- Bible entries: **223** live (unchanged)
+- Tool pages: **36** live (all `/tools/[slug].html`)
+- `bible/index.html`: rebuilt Session 62 with new nav — period in h1, old newsletter form, Compression as featured entry
+- All 11 category pages: committed Session 62 with S63 CSS inject (`cat-layout-s63`) — centering, grid, card style issues persisted
+
+## Session 63 — What Was Completed
+
+### P1 — `bible/index.html` Rebuilt (COMPLETE) ✅
+
+Full rebuild replacing old `.mpw-site-nav` / `.mobile-drawer` / `.bcb-link` system with reverb.html gold standard nav. Committed SHA: `8b6dd26d`.
+
+**Changes:**
+- Nav: slim-bar (40px, `#181818`) + bible-bar (50px, `#0d0800`, amber border) + `bmn-drawer` grid hamburger
+- `MusicProductionWiki` name: `font-size:11px`, `color:#777`, `opacity:0.7` on logomark — deliberately subordinate to bible bar
+- Bible bar: `justify-content:center` — ◆ The Producer's Bible centered with all 11 category pills
+- `A MusicProductionWiki Publication` — faint italic `#444` italic, auto-margin right
+- Featured entry: **Reverb** (not Compression) with full parameters, hook, footer link to `/bible/reverb`
+- Read time: `~25 min` (650 wpm standard — see below)
+- Period removed from `<h1>The Producer's Bible</h1>` — was `Bible.`
+- Body/card text brightened to `#c0c0d4` — was too faint on sunny screens
+- A-Z browse, hero search, ticker, Publisher's Note, newsletter strip all preserved
+- `createElement/appendChild` throughout JS — no `innerHTML` assignments (Netlify CSP safe)
+- Beehiiv newsletter wired: v3 loader script + `data-beehiiv-form="a0962c52-4819-4b09-b13d-b26517b76e01"` div — committed SHA: `7bfb2b6b`
+
+### P2 — `bible/reverb.html` Read Time Patch (COMPLETE) ✅
+
+Read time patched 33 min → 25 min (650 wpm). Committed in same Trees API call as bible/index.html (SHA `8b6dd26d`).
+
+### P3 — 650 WPM Standard Confirmed
+
+**Confirmed by Steve:** all new Bible entries going forward calculate read time at **650 wpm**, not 500 wpm. This is the correct rate for producers scanning technical reference content (not novel reading). The writer must be updated to use 650 wpm in `count_words_html()` / read time calculation.
+
+Read time formula: `round(word_count / 650)` — minimum 1 min.
+
+Existing live entries: only reverb.html patched this session. All other live entries remain at their original read times — patch in bulk when convenient, not a blocker.
+
+### P4 — `mpw_bible_cat_pages.py` — Major Rewrite (COMPLETE) ✅
+
+**Delivered as:** `mpw_bible_cat_pages_s63f.py` → Steve saves as `mpw_bible_cat_pages.py` and runs `--run`
+
+**Committed:** SHA `d5692989` (first run with subcat fix + card redesign, but centering still wrong) → multiple iterations → final good run SHA from Steve's machine after `s63f.py` was run.
+
+#### What Changed From Session 62 Version
+
+**1. SUBCAT_MAP — Complete Rebuild**
+
+All 222 live Bible entry slugs mapped to their correct subcategory pill label. Zero mismatches confirmed by cross-referencing live `bible-index.json` against each category's pill labels. Previous version had 62 mismatches causing most subcategory filters to show wrong entry counts.
+
+Key mapping rules:
+- Values must EXACTLY match the `data-filter` attribute on the pill button (lowercased)
+- Each slug appears only once — assigned to the category it belongs to (not copied across categories)
+- Slugs like `bus-compression` that appear in multiple categories in old SUBCAT_MAP were disambiguated
+
+**2. `build_cards()` — Letter Headers Removed, `data-subcat` Added**
+
+- `az-letter-header` divs completely removed from HTML output — CSS also sets `display:none` as belt-and-suspenders
+- Each `az-entry` card now has `data-subcat="{subcat}"` attribute
+- Card label (`az-entry-cat`) now shows `subcat.title()` — the specific subcategory name — instead of the parent category name
+- Entries remain sorted A-Z (already handled by `match_entries()`)
+
+**3. JS Filter — `data-subcat` Based**
+
+Old filter read `textContent` of the label span and searched for substring match — this caused entries like "Boom Bap" to NOT appear under "Beat Making" because "beat making" is not a substring of "boom bap".
+
+New filter: `var subcat=(c.dataset&&c.dataset.subcat)||''; var matchS=!_sub||subcat===_sub;`
+
+Exact equality match against `data-subcat` attribute. `filterSub()` lowercases the filter value before setting `_sub`.
+
+**4. Card Design — Professional Rebrand**
+
+Both `az-entry` (Bible entry cards) and `bcat-card` (tool cards) redesigned:
+
+```css
+/* Before */
+.az-entry{background:#13132a;border:1px solid #2a2a4a;border-radius:10px;...}
+
+/* After */
+.az-entry{background:#111118;border:1px solid #1e1e2e;border-left:3px solid rgba(245,166,35,.2);border-radius:6px;min-height:56px;...}
+.az-entry:hover{background:#16130a;border-color:rgba(245,166,35,.25);border-left-color:#f5a623;box-shadow:0 2px 12px rgba(0,0,0,.3)}
+.az-entry:active{background:#1a1500;border-left-color:#f5a623}
+```
+
+- `az-entry-body` wrapper div added — contains term + subcat label
+- `az-entry-arrow` span added — `→` visible on desktop, hidden on mobile
+- Category label in amber not gray
+- Tools grid 3-col desktop (not 2-col)
+- Letter header CSS: `display:none`
+- Mobile: min-height 60px, arrow hidden, `:active` state for touch feedback
+
+**5. Hero — Full Centering**
+
+All hero content centered:
+- `bcat-hero-inner`: `text-align:center; max-width:1100px; margin:0 auto`
+- `bcat-breadcrumb`: `text-align:center`
+- `bcat-eyebrow`: `text-align:center`
+- `bcat-hero h1`: `text-align:center`
+- `bcat-hero-desc`: `margin-left:auto; margin-right:auto`
+- `bcat-count`: `margin-left:auto; margin-right:auto`
+- `bcat-subcats`: `justify-content:center`
+- `bcat-tools-why`: `margin-left:auto; margin-right:auto; text-align:center`
+- `bcat-tools-why p`: `text-align:center`
+- `bcat-tools-why-label`: `text-align:center`
+- `bcat-tools-request`: `display:block; text-align:center; margin-left:auto; margin-right:auto`
+- `bcat-tools-request-dot`: `display:none` (dot looks wrong when text is centered)
+- `bcat-tools-request-text`: `text-align:center`
+
+**6. Tools Page — Duplicate Tagline Removed**
+
+`bcat-tools-tagline` paragraph ("Built for the session. Not the syllabus.") removed from `tools_hero_extra`. The hero desc already says the same thing — having it twice was the "frightening" issue Steve flagged.
+
+**7. Responsive Grid**
+
+```css
+@media(max-width:1200px){.az-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:1024px){.az-grid{grid-template-columns:repeat(3,1fr)};.bcat-tools-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){.az-grid{grid-template-columns:repeat(2,1fr)};.bcat-tools-grid{grid-template-columns:1fr}}
+@media(max-width:480px){.az-grid{grid-template-columns:1fr}}
+```
+
+**8. Hero Padding**
+
+`bcat-hero: padding:56px 24px 48px` — wider vertical breathing room than original `48px 24px 40px`
+
+#### Session 63 Cat Pages Iteration History — LESSONS LEARNED
+
+**⚠️ CRITICAL LESSON: S63 CSS inject approach was wrong from the start.**
+
+The S63 CSS inject (`cat-layout-s63` style block) was committed to all 11 pages as an append-only patch in an earlier iteration. This was overridden when `mpw_bible_cat_pages_s63.py --run` regenerated all pages from scratch. The inject approach only works for one-time patches on pages NOT managed by a generator script. For generator-managed pages, ALL fixes must go in the generator itself.
+
+**Centering iteration failures:**
+1. First attempt: set `max-width:1100px` on hero-inner and main — CSS was correct but content LOOKED left-aligned because all text was left-aligned within the 1100px block. Steve escalated.
+2. Second attempt: increased max-width to 1400px — cards became 25% wider, hero still not visually centered. Steve escalated again — "cards look 25% wider across all categories lol."
+3. Third attempt: reverted to 1100px, added `text-align:center` on hero-inner — h1 centered but breadcrumb/eyebrow also centered which looked wrong. Steve asked to remove eyebrow centering.
+4. Fourth attempt: reverted breadcrumb + eyebrow centering — Steve said "center EVERYTHING I sent in the screenshot" — meaning breadcrumb too.
+5. Fifth attempt: centered breadcrumb and eyebrow — Steve said "I don't want the eyeclass centered in the top right" — meaning he didn't want the orange eyebrow (`◆ THE PRODUCER'S BIBLE — PRODUCTION`) centered, just the breadcrumb.
+6. Sixth attempt: centered breadcrumb only, kept eyebrow left — Steve confirmed this was wrong, everything in the screenshot should be centered. Delivered `s63c`.
+7. Seventh attempt (`s63d`): delivered without eyebrow centered — Steve: "The font on all category pages is left aligned." Delivered `s63e` with eyebrow also centered.
+8. `s63f`: centered tools why/request blocks — FINAL APPROVED VERSION.
+
+**Root cause of all centering confusion:** The instruction "center everything" was clear but execution required iterating because each delivery fixed some but missed others. The correct approach in future: when centering a hero section, apply `text-align:center` to the OUTER wrapper (`bcat-hero-inner`) and then verify EVERY child element renders centered — including breadcrumb, eyebrow, h1, desc, count, pills, and any extra blocks (tools why/request). Do not rely on parent `text-align:center` alone — some block elements need explicit `text-align:center` or `margin:auto` to center.
+
+**Wasted commits this session:** 8 iterations of `mpw_bible_cat_pages` before reaching the correct version. Each iteration was a full `--run` regenerating all 11 pages. Each wasted commit = unnecessary Netlify deploy.
+
+**How to avoid in future:** Before writing any CSS, fetch one live page and render it mentally at 1512px width. For hero centering: apply `text-align:center` to the container AND verify every direct child element. Deliver one full mental walkthrough of the rendered page before committing.
+
+### P5 — Audit of All 12 Pages (COMPLETE) ✅
+
+Post-session audit confirmed:
+- 11 of 12 pages fully clean
+- Bible Index: only issue was placeholder newsletter form — fixed immediately (Beehiiv wired)
+- All pages: slim-bar/bible-bar/bmn-drawer nav ✓, canonical ✓, GA4 ✓, OG meta ✓, JSON-LD ✓, no 2025 dates ✓, mobile breakpoints ✓, 4-col grid ✓, data-subcat ✓, dataset.subcat filter ✓, amber card borders ✓
+
+### P6 — MPW Logo SVG Delivered
+
+Delivered `mpw-logo-final.svg` — exact waveform bar proportions from live site (from reverb.html `msb-logomark` SVG), teal square background `#00e8a2`, dark text `#0a0a0b`. For use on Beehiiv hosted subscribe page.
+
+**Beehiiv hosted page customization (Steve action):**
+- Upload `mpw-logo-final.svg`
+- Background: `#0d0d1a`
+- Text: `#f0f0f0` (not pure white)
+- Button: `#00e8a2` with `#0a0a0b` text
+- Description: "One email a week. Techniques, gear, and insights that actually move your music forward."
+
+## Current File State — End of Session 63
+
+| File | Status |
+|------|--------|
+| `bible/index.html` | REBUILT ✅ — reverb.html nav, Reverb featured, ~25min, Beehiiv wired — SHA `7bfb2b6b` |
+| `bible/reverb.html` | READ TIME PATCHED ✅ — 33min → 25min — SHA `8b6dd26d` |
+| `mpw_bible_cat_pages.py` | REBUILT ✅ — s63f version — 232 subcat mappings, centered hero, pro cards |
+| All 11 category pages | LIVE ✅ — regenerated from s63f — centered, 4-col grid, working subcat filter |
+| `mpw-logo-final.svg` | DELIVERED — for Beehiiv hosted page |
+
+## Updated Priority Queue — Session 64
+
+| Priority | Task | Status |
+|----------|------|--------|
+| **P0** | **Build `/tools/index.html` hub** — standalone hub with 8 categories, search, all 36 tools — see detailed build prompt at end of session | NEXT |
+| **P1** | **Tool page breadcrumbs** — `/tools/` and `/tools/#dynamics-compression` 404 — fix after hub is built | AFTER HUB |
+| **P2** | **222 Bible entry hamburger patch** — still on old `mobile-drawer` — safe batch per Session 61 rules | PENDING |
+| **P3** | **Update `mpw_bible_writer.py` read time to 650 wpm** | NEEDED |
+| **P4** | **Bible Tier 1 remaining 33 entries** — v5.3 writer needed first | BLOCKED |
+| **P5 (Steve)** | **Affiliate applications** — Plugin Boutique, Amazon, Loopmasters, Sweetwater, PluginFox | **REVENUE BLOCKER** |
+| P6 | GSC: Request Indexing for /bible/reverb + /bible/chorus | Steve action |
+| P7 | Zenodo DOI on reverb.html | Steve action |
+
+## New NEVER Rules Added — Session 63
+
+| Rule | Detail |
+|------|--------|
+| NEVER use CSS inject approach on generator-managed pages | `mpw_bible_cat_pages.py --run` regenerates from scratch — CSS injected into live pages is overwritten. All fixes must go in the generator. |
+| NEVER declare hero centering complete without verifying every direct child element | `text-align:center` on parent does not automatically center all children — breadcrumb, eyebrow, h1, desc, count, pills, extra blocks all need explicit centering |
+| NEVER increase max-width of category page content beyond 1100px | Cards become too wide — 4-col grid at 1400px makes each card ~340px which looks blown out |
+| NEVER iterate CSS changes across 8 commits without a mental render walkthrough first | Session 63 had 8 wasted commits on centering alone — render the page mentally at 1512px before every delivery |
+| NEVER deliver mpw_bible_cat_pages.py without running the SUBCAT_MAP zero-mismatch verification | 62 mismatches in first version caused subcategory filters to show wrong entry counts across all categories |
+| NEVER read time below 650 wpm for Bible entries | 500 wpm was too slow for technical reference scanning — confirmed by Steve, 650 wpm is the standard going forward |
+| NEVER show parent category name as card label in category pages | Cards must show the subcategory (e.g. "Beat Making") not the parent (e.g. "Production") — use `subcat.title() if subcat else ecat` |
+| NEVER use the old Beehiiv iframe embed method | Current method is v3 loader script in `<head>` + `data-beehiiv-form` div in body — never iframe |
+| NEVER declare a commit successful without Steve visually confirming the live page | Multiple centering commits were declared done but Steve confirmed they were wrong on the live site |

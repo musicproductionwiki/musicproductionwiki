@@ -1833,3 +1833,146 @@ python generate_tool_pages_v2.py --dry-run    # generates locally only
 | NEVER use placeholder tool content as a "Phase 2" deferral without flagging it clearly to Steve | Placeholder was committed and called "working" — it was not |
 | NEVER generate tool pages without TOOL_PAGE_CSS containing all nav class definitions | Classes must be inline — style.css definitions are unreliable at /tools/ depth |
 | NEVER ask Steve to run PowerShell to fetch GitHub files Claude can fetch directly with the token | Token ghp_[REDACTED - stored in setenv.ps1] is always in memory — use it |
+
+---
+
+# SESSION 63 UPDATE — SCRIPTS — May 24, 2026
+
+## mpw_bible_cat_pages.py — S63f — CURRENT VERSION
+
+**Location:** `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\mpw_bible_cat_pages.py`
+**Delivered as:** `mpw_bible_cat_pages_s63f.py` — Steve saves as `mpw_bible_cat_pages.py`
+**Size:** ~55KB — 944 lines — SYNTAX CLEAN
+**Status:** ✅ CURRENT — zero-mismatch SUBCAT_MAP — hero centered — pro card design
+
+### Run Commands
+
+```powershell
+. .\setenv.ps1
+python mpw_bible_cat_pages.py --test    # prints first generated page, no commit
+python mpw_bible_cat_pages.py --run     # regenerates + commits all 11 category pages
+```
+
+### What Changed From Session 62 Version
+
+1. **SUBCAT_MAP** — complete rebuild — 232 slug entries — zero mismatches against all 222 live bible-index.json entries. Previous version had 62 mismatches causing subcategory filters to show wrong entries.
+
+2. **`build_cards()`** — letter headers entirely removed from HTML output. Each card has `data-subcat` attribute. Card label shows subcategory name via `subcat.title() if subcat else ecat`.
+
+3. **JS filter** — reads `c.dataset.subcat` with exact equality (`subcat === _sub`). No longer reads textContent. `filterSub()` lowercases the filter value. Letter header JS code block removed.
+
+4. **Card design** — professional rebrand: amber left border always visible at 20% opacity, full amber on hover, box-shadow lift, `→` arrow, `:active` state, `az-entry-body` wrapper, min-height 56px.
+
+5. **Hero centering** — ALL hero elements centered: breadcrumb, eyebrow, h1, desc, count, pills, tools-why, tools-request. `bcat-hero-inner` has `text-align:center`. Tools request block converted from flex (with dot) to block (centered text, no dot).
+
+6. **Tools page duplicate tagline removed** — `bcat-tools-tagline` paragraph removed from `tools_hero_extra`. Hero desc already covers "Built for the session. Not the syllabus."
+
+7. **Responsive grid** — 4-col desktop → 3 at 1200px → 3 at 1024px → 2 at 768px → 1 at 480px. Tools grid: 3-col desktop → 2 at 1024px → 1 at 768px.
+
+8. **Mobile card overrides** — permanent faint amber border on mobile (not just hover), min-height 60px for tap targets, arrow hidden on mobile, `:active` state for touch feedback.
+
+### Session 63 Iteration History — CRITICAL LESSONS
+
+**8 wasted commits before reaching s63f.** Every iteration was a full `--run` regenerating all 11 pages and one Netlify deploy. Full history documented in CORE append.
+
+**Root causes of wasted commits:**
+
+1. **CSS inject approach was wrong** — the S63 early inject (`cat-layout-s63`) committed to live pages was overwritten the moment Steve ran `--run` from the script. All fixes must be in the generator.
+
+2. **SUBCAT_MAP built without live verification** — first version had 62 mismatches discovered only after Steve reported wrong filter counts. Always cross-check against live `bible-index.json`.
+
+3. **Centering misunderstood as a width problem** — attempted to fix "looks left-aligned" by increasing max-width to 1400px. This made cards wider, not content more centered. The real fix was `text-align:center` on the container and each child element.
+
+4. **Each delivery fixed some elements but missed others** — breadcrumb, eyebrow, h1, desc, count, pills, tools-why, tools-request all needed explicit centering. Each iteration caught one or two missed elements. Should have listed every single child element before writing any CSS.
+
+5. **Script version confusion** — multiple file names (s63.py, s63b.py, s63c.py, s63d.py, s63e.py, s63f.py) delivered across session. Steve ran the wrong version at least once. Solution: always give the script a clearly incremented name and confirm Steve saves it over the correct path before running.
+
+**How to avoid in future:**
+- Before writing any centering CSS, list every HTML element inside the container that needs centering
+- Run `--test` before `--run` to preview one page
+- Use sequential naming (s63f is current) — never deliver unnamed or ambiguously-named files
+- Run SUBCAT_MAP zero-mismatch check BEFORE delivering the script, not after
+
+### SUBCAT_MAP Zero-Mismatch Verification Script
+
+Run this before delivering any new version of `mpw_bible_cat_pages.py`:
+
+```python
+import urllib.request, json, base64
+
+TOKEN = "ghp_[REDACTED — stored in setenv.ps1]"
+# Fetch bible-index.json
+req = urllib.request.Request(
+    "https://api.github.com/repos/musicproductionwiki/musicproductionwiki/contents/bible-index.json",
+    headers={"Authorization": f"token {TOKEN}"}
+)
+with urllib.request.urlopen(req) as r:
+    data = json.loads(r.read())
+entries = json.loads(base64.b64decode(data['content']).decode('utf-8'))
+
+# Import SUBCAT_MAP from the script
+exec(open('mpw_bible_cat_pages.py').read().split('def fetch_bible_index')[0])
+
+CATEGORIES_SUBCATS = {
+    'Dynamics':          ['compression','limiting','gating','transient shaping','expansion','sidechain'],
+    'Frequency':         ['eq','filters','high-pass','low-pass','shelving','air frequencies'],
+    'Time-Based':        ['reverb','delay','chorus','modulation','pitch shifting'],
+    'Signal Processing': ['saturation','distortion','clipping','harmonic enhancement','bit crushing'],
+    'Mixing':            ['gain staging','stereo imaging','bus processing','routing','mid-side'],
+    'Mastering':         ['loudness','lufs','true peak','limiting','delivery'],
+    'Synthesis':         ['subtractive','fm','wavetable','additive','lfo','envelopes'],
+    'Music Theory':      ['scales & modes','chords','rhythm','harmony','arrangement'],
+    'Production':        ['beat making','midi','sampling','daw workflow','sound design'],
+    'Recording':         ['microphones','preamps','interfaces','acoustics','vocal production','recording settings'],
+}
+
+total_missing = 0
+for cat_name, valid_subcats in CATEGORIES_SUBCATS.items():
+    cat_entries = [e for e in entries if e.get('category','') == cat_name]
+    for e in cat_entries:
+        slug = e.get('slug','')
+        subcat = SUBCAT_MAP.get(slug,'')
+        if not subcat:
+            print(f"MISSING: {cat_name}/{slug}")
+            total_missing += 1
+        elif subcat not in valid_subcats:
+            print(f"WRONG: {cat_name}/{slug} → '{subcat}'")
+            total_missing += 1
+
+if total_missing == 0:
+    print(f"PERFECT — all {len(entries)} slugs correctly mapped")
+else:
+    print(f"{total_missing} mismatches — fix before delivering")
+```
+
+## mpw_bible_writer.py — Read Time Update PENDING
+
+The writer currently calculates read time at 500 wpm (per v5.2 spec). Steve confirmed 650 wpm is the standard going forward in Session 63. The `count_words_html()` function word count is correct — only the wpm divisor needs updating.
+
+**Required change:**
+```python
+# CURRENT (wrong):
+read_time = max(1, round(word_count / 500))
+
+# CORRECT (650 wpm standard):
+read_time = max(1, round(word_count / 650))
+```
+
+This must be applied before running any new T1 batch. Run `--validate` after the change.
+
+## Scripts to Build — Session 64
+
+The tools hub build is the P0 for Session 64. Rather than separate generator scripts (mpw_affiliates.py + mpw_tool_manifest.py + generate_tool_pages.py + generate_tools_hub.py as originally planned), Session 64 will build `/tools/index.html` directly as a hand-crafted HTML page — same approach as reverb.html and bible/index.html. This gives full design control without generator overhead.
+
+See the tools hub build prompt delivered at end of Session 63 for the complete specification.
+
+## NEVER Rules Added — Session 63 — Scripts
+
+| Rule | Detail |
+|------|--------|
+| NEVER deliver mpw_bible_cat_pages.py without running zero-mismatch SUBCAT_MAP verification | 62 mismatches in first S63 version — always cross-check against live bible-index.json before delivery |
+| NEVER commit a new category page generator version without running --test first | `--test` flag prints first generated page without committing — catches template errors cheaply |
+| NEVER fix generator-managed pages with CSS injection | `--run` overwrites all pages from scratch — inject-only patches are lost on every run |
+| NEVER deliver a script with ambiguous naming when multiple versions are in flight | S63 had 6 versions (s63 through s63f) — always use clearly incremented names and confirm Steve is saving to the right path |
+| NEVER use read time below 650 wpm for Bible entries | 500 wpm is confirmed wrong — 650 wpm is the standard — update mpw_bible_writer.py before next T1 batch |
+| NEVER commit all 11 category pages without verifying at least one on the live site first | --run commits all 11 in one Trees API call — if CSS or template is wrong, all 11 are broken at once |
