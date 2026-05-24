@@ -1976,3 +1976,69 @@ See the tools hub build prompt delivered at end of Session 63 for the complete s
 | NEVER deliver a script with ambiguous naming when multiple versions are in flight | S63 had 6 versions (s63 through s63f) — always use clearly incremented names and confirm Steve is saving to the right path |
 | NEVER use read time below 650 wpm for Bible entries | 500 wpm is confirmed wrong — 650 wpm is the standard — update mpw_bible_writer.py before next T1 batch |
 | NEVER commit all 11 category pages without verifying at least one on the live site first | --run commits all 11 in one Trees API call — if CSS or template is wrong, all 11 are broken at once |
+
+---
+
+# SESSION 63/64 UPDATE — SCRIPTS — May 24, 2026
+
+## mpw_bible_cat_pages.py — S63f — CURRENT VERSION
+
+See session63_scripts_append.md for full documentation. Summary:
+- 232-slug SUBCAT_MAP — zero mismatches confirmed
+- Hero centered — all child elements explicitly centered
+- Professional amber card design
+- Working dataset.subcat filter
+- Letter headers removed
+
+**Run commands:**
+```powershell
+. .\setenv.ps1
+python mpw_bible_cat_pages.py --test
+python mpw_bible_cat_pages.py --run
+```
+
+---
+
+## mpw_bible_writer.py — TWO PENDING UPDATES (BLOCKS NEXT T1 BATCH)
+
+Both changes must be applied before running any new Bible entries:
+
+**1. Read time — change 500 wpm → 650 wpm:**
+```python
+# CURRENT (wrong):
+read_time = max(1, round(word_count / 500))
+
+# CORRECT:
+read_time = max(1, round(word_count / 650))
+```
+
+**2. Nav updates — bible writer will be fully rewritten based on reverb.html gold standard in a future session.** Until then, do not run new T1 batches — the current writer nav is stale.
+
+---
+
+## mpw_writer.py — PENDING UPDATE (BLOCKS NEXT ARTICLE BATCH)
+
+The mobile drawer in `mpw_writer.py` currently outputs the old vertical list `mobile-drawer` style. Before the next article batch, the writer must output the new grid-style drawer. The target HTML is documented in full in the CORE append (P0 batch scope section). Update the NAV_HTML or drawer template in the writer to match.
+
+**Do NOT run mpw_writer.py for new article batches until this is updated.**
+
+---
+
+## Scripts to Build — Session 65 (Updated)
+
+The following scripts are still needed (unchanged from Session 61/62 plan):
+
+1. `mpw_affiliates.py` — affiliate link registry
+2. `mpw_tool_manifest.py` — all 36 tools master record
+
+Note: `generate_tools_hub.py` and `generate_tool_pages.py` are no longer needed — the hub was built as hand-crafted HTML (tools/index.html, SHA 8c7269d2) and the 36 tool pages are already live.
+
+---
+
+## NEVER Rules Added — Session 63/64 — Scripts
+
+| Rule | Detail |
+|------|--------|
+| NEVER run mpw_bible_writer.py for new T1 entries before updating read time to 650 wpm | 500 wpm is confirmed wrong — produces inflated read times |
+| NEVER run mpw_writer.py for new article batches before updating mobile drawer HTML | Current writer outputs old vertical list drawer — new grid style must be in writer before next batch |
+| NEVER build generate_tools_hub.py | tools/index.html was hand-crafted — generator not needed and would add unnecessary complexity |
