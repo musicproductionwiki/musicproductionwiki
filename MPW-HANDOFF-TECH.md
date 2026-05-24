@@ -2525,3 +2525,155 @@ All pages confirmed: slim-bar/bible-bar/bmn-drawer ✅, `/css/style.css` absolut
 | NEVER write a SUBCAT_MAP without running zero-mismatch verification against live bible-index.json | 62 mismatches in first S63 version caused subcategory filters to show wrong entries across all categories. Always run cross-check before delivery. |
 | NEVER use Beehiiv iframe embed | Current embed method is v3 loader script + `data-beehiiv-form` div — confirmed with Beehiiv dashboard. iframe method is legacy and unreliable. |
 | NEVER deliver a category page script without running it locally with --test first | The --test flag prints the first 600 chars of one generated page — catches template errors before committing all 11 pages. |
+
+---
+
+# SESSION 63/64 UPDATE — TECH — May 24, 2026
+
+## `/tools/index.html` — Final Architecture
+
+### File Location
+`tools/index.html` in repo root — served at `musicproductionwiki.com/tools/`
+
+### Asset Paths
+`../css/style.css` and `../js/main.js` — identical to `/bible/` pattern (one level deep from root).
+
+### Nav System
+Uses `mpw-nav-homepage-v1` inline style block — same as all article pages. NOT bible-bar/slim-bar system. This is an MPW page, not a Bible page.
+
+**Desktop nav order:** `Articles ▾ · Gear ▾ · Tools → · The Producer's Bible →`
+
+**CSS specificity lesson learned this session:** The general rule `nav.mpw-site-nav .nav-item>a{color:#a0a0b4!important}` uses a child combinator and beats `.nav-bible-link{color:#f5a623!important}` even though both have `!important`, because child combinator increases specificity. The correct override pattern is:
+```css
+nav.mpw-site-nav .nav-item>a.nav-bible-link{color:#f5a623!important;font-weight:600!important}
+nav.mpw-site-nav .nav-item>a.nav-tools-link{color:#00e8a2!important;font-weight:600!important}
+```
+Always use `nav-item>a.classname` pattern for nav color overrides on pages using mpw-nav-homepage-v1.
+
+### Card Design — Locked
+```css
+.tool-card {
+  background: #111118;
+  border: 2px solid rgba(245,166,35,0.45);  /* amber 2px — matches Bible family */
+  border-radius: 8px;
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 80px;
+  transition: border-color .12s, background .12s, box-shadow .12s;
+}
+.tool-card:hover {
+  background: #1a1200;
+  border-color: rgba(245,166,35,0.85);
+  box-shadow: 0 2px 16px rgba(245,166,35,0.12);
+}
+.tool-card:active {
+  background: #1a1200;
+  border-color: #f5a623;
+}
+```
+
+**Design rationale:** Amber borders connect tools to the Bible family. Teal is reserved for the tools identity (eyebrow, active pills, Tools nav link). Hover is amber not teal — reinforces the premium/Bible feel.
+
+### Grid Breakpoints — Locked
+```css
+@media(max-width:1024px) { .tools-grid { grid-template-columns: repeat(2,1fr); } }
+@media(max-width:768px)  { .tools-grid { grid-template-columns: repeat(2,1fr); } }  /* 2-col on mobile — cards have enough content */
+@media(max-width:420px)  { .tools-grid { grid-template-columns: 1fr; } }  /* single col only at very small screens */
+```
+
+### Static Elements — Never Auto-Update
+- Section label: static `"Tools"` — never shows count
+- Stats row: `Free forever · No signup required · Works on mobile` — no count
+- Request link: mailto:mpwikiofficial@gmail.com with subject `Tool%20Request`
+
+### Mobile Drawer — tools/index.html specific
+The tools hub page uses the standard `mpw-nav-homepage-v1` mobile drawer with additional entries:
+```html
+<div class="mobile-drawer" id="mobileDrawer">
+  <a href="/tools/" class="mob-tools">✦ The Producer's Tools</a>
+  <a href="/bible/" class="mob-bible">● The Producer's Bible — Explore Free</a>
+  <div class="mob-section-label">Articles</div>
+  <a class="mob-link" href="/categories/techniques.html">Techniques</a>
+  ...
+  <a href="https://theproducersbriefing.beehiiv.com" class="mob-cta">Sound Better →</a>
+</div>
+```
+Note: `mob-tools` CSS class is defined in the mpw-nav-homepage-v1 style block on this page.
+
+---
+
+## File Structure — Updated
+
+```
+repo root/
+├── bible/
+│   ├── index.html           ← REBUILT S63 — reverb.html nav, Reverb featured, ~25min, Beehiiv wired — SHA 7bfb2b6b
+│   ├── reverb.html          ← gold standard entry — read time patched 33→25min — SHA 8b6dd26d
+│   ├── [222 entries]        ← mobile-drawer still in place — bmn-drawer PENDING (batch approach confirmed safe for S65)
+│   └── categories/
+│       ├── dynamics/        ← regenerated S63 from mpw_bible_cat_pages_s63f.py ✅
+│       ├── frequency/       ← regenerated S63 ✅
+│       ├── time-based/      ← regenerated S63 ✅
+│       ├── signal-processing/ ← regenerated S63 ✅
+│       ├── mixing/          ← regenerated S63 ✅
+│       ├── mastering/       ← regenerated S63 ✅
+│       ├── synthesis/       ← regenerated S63 ✅
+│       ├── music-theory/    ← regenerated S63 ✅
+│       ├── production/      ← regenerated S63 ✅
+│       ├── recording/       ← regenerated S63 ✅
+│       └── tools/           ← regenerated S63 ✅
+├── tools/
+│   ├── index.html           ← BUILT S64 — tools hub — SHA 44c8f9b8 (amber cards) → 8c7269d2 (nav fix) ✅ LIVE
+│   └── [36 slug].html       ← all 36 standalone tool pages — LIVE ✅
+├── index.html               ← Tools → added to nav SHA fe168acb ✅
+├── css/style.css
+├── js/main.js
+└── [handoff files]
+```
+
+---
+
+## MPW Article Nav Audit — Session 64
+
+Audited all 526 article pages (sample every 25th = 22 articles checked). Results:
+
+**All 526 articles are identical nav structure — one pattern, zero variants.**
+
+| Property | Value |
+|----------|-------|
+| Nav system | `mpw-site-nav` with `mpw-nav-homepage-v1` style block |
+| Style IDs present | `mpw-nav-homepage-v1`, `mpw-bible-bar-css` |
+| Drawer type | `mobile-drawer` (NOT bmn-drawer) |
+| Bible link HTML | `<li class="nav-item"><a href="/bible/" class="nav-bible-link">The Producer\u2019s Bible \u2192</a></li>` |
+| Tools link present | ❌ Not yet |
+| `.nav-tools-link` CSS | ✅ Already defined in mpw-nav-homepage-v1 style block |
+| Target string bytes | Smart apostrophe U+2019, rightward arrow U+2192 |
+
+**This confirms the batch is clean to run** — one string replacement, one drawer replacement, 526 identical files.
+
+---
+
+## Homepage (`index.html`) — Nav Updated
+
+SHA: `fe168acb`
+
+Homepage has a different nav pattern from articles — Bible link uses inline style not class. Tools was added matching that pattern:
+```html
+<li class="nav-item"><a href="/tools/" style="color:#00e8a2!important;font-weight:600;text-decoration:none;">Tools →</a></li>
+```
+Mobile drawer also updated with inline-styled teal Tools entry before mob-bible.
+
+---
+
+## NEVER Rules Added — Session 63/64 — Tech
+
+| Rule | Detail |
+|------|--------|
+| NEVER use `.nav-bible-link` or `.nav-tools-link` alone for color overrides on mpw-nav-homepage-v1 pages | `nav.mpw-site-nav .nav-item>a` child combinator beats class-only selectors even with !important. Always use `nav.mpw-site-nav .nav-item>a.classname` pattern |
+| NEVER show tool count on tools/index.html | Static label only — count goes stale as tools are added |
+| NEVER change the tools hub to a generator script | Hand-crafted HTML gives full design control — same approach as reverb.html and bible/index.html |
+| NEVER use bible-bar/slim-bar nav on /tools/ pages | Tools hub is MPW side, not Bible side — uses mpw-site-nav system |
