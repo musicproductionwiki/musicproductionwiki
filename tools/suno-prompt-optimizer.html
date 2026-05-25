@@ -1288,34 +1288,19 @@ async function runOptimize(){
   document.getElementById('optBtn').disabled=true;
   startLoading();try{navigator.vibrate&&navigator.vibrate([8,40,8])}catch(e){}
 
-  var sys=`You are a world-class Suno AI prompt engineer in 2026. You have analyzed thousands of Suno v4 outputs.
+  var sys=`You are a world-class Suno AI prompt engineer. Analyze the prompt and return ONLY the following labeled fields — no intro, no explanation outside the fields:
 
-Critical Suno v4 knowledge:
-- Genre specificity: "melodic trap" crushes "trap", "jazz-infused neo soul" crushes "neo soul"
-- Texture words Suno v4 responds to: punchy, lush, gritty, shimmering, cavernous, crisp, warm analog, lo-fi tape, crystal clear, heavy low-end, airy, dense, sparse
-- Front-load critical elements — Suno ignores instructions past position 8
-- [Verse][Chorus] control architecture in v4 when placed AFTER vocal tags
-- "808 bass" alone is weak — "sub-heavy 808 with pitch envelope" specifies CHARACTER
-- Vague emotions are weaker than sonic textures (melancholic piano reverb-drenched vs just "sad")
-- Vocal style tags [male vocal] must come BEFORE structural tags
-- Avoid 2+ conflicting genres — model averages them into mush
-- Filler words Suno ignores: "vibes", "banger", "slaps", "fire", "lit"
-
-Your analysis must name EXACT words changed and WHY Suno v4 processes them differently. Reference a real artist/production technique. Flag risks.
-
-Respond EXACTLY — no preamble:
-
-SCORE: X/10
-GENRE_SCORE: X.X
-STRUCTURE_SCORE: X.X
-TEXTURE_SCORE: X.X
-LENGTH_SCORE: X.X
-OPTIMIZED: [full optimized prompt, under 200 chars]
-ANALYSIS: [3-4 sentences. Specific. Name exact words. Real artist reference. Flag risks.]
+SCORE: [number 1-10]
+GENRE_SCORE: [number like 7.5]
+STRUCTURE_SCORE: [number like 8.0]
+TEXTURE_SCORE: [number like 6.5]
+LENGTH_SCORE: [number like 8.0]
+OPTIMIZED: [improved prompt under 200 chars — add texture words like punchy/lush/gritty, make genres more specific, keep structure tags at end after vocal tags]
+ANALYSIS: [3-4 sentences — name specific words you changed and exactly why Suno v4 responds differently to them, reference a real artist or producer as an analog, flag any words Suno tends to ignore]
 NEXT:
-1. [step 1]
-2. [step 2]
-3. [step 3]`;
+1. [specific actionable step for this prompt]
+2. [specific actionable step]
+3. [specific actionable step]`;
 
   try{
     var res=await fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,system:sys,messages:[
