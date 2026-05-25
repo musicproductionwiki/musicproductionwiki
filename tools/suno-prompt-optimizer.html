@@ -1318,8 +1318,14 @@ NEXT:
 3. [step 3]`;
 
   try{
-    var res=await fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:750,system:sys,messages:[{role:'user',content:'Original prompt: "'+input+'"\n\nOptimize following your expert Suno v4 knowledge. Return all fields exactly.'}]})});
-    var data=await res.json();var raw=data.content&&data.content[0]?data.content[0].text:'';
+    var res=await fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,system:sys,messages:[
+      {role:'user',content:'Analyze and optimize this Suno prompt: "'+input+'"'},
+      {role:'assistant',content:'SCORE:'}
+    ]})});
+    var data=await res.json();var rawText=data.content&&data.content[0]?data.content[0].text:'';
+    // Prefill means response starts after "SCORE:" — prepend it back
+    var raw='SCORE:'+rawText;
+    console.log('FULL RAW:', raw.substring(0,500));
     // Log raw for debugging
     console.log('RAW RESPONSE:', raw);
 
