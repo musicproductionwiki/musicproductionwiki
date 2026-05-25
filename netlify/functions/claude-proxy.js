@@ -1,64 +1,51 @@
-const https = require('https');
+exports.handler = async (event) => {
+  const cors = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Content-Type': 'application/json'
+  };
 
-exports.handler = function(event, context, callback) {
   if (event.httpMethod === 'OPTIONS') {
-    return callback(null, {
-      statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type'
-      },
-      body: ''
-    });
+    return { statusCode: 204, headers: cors, body: '' };
   }
 
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) {
-    return callback(null, {
-      statusCode: 500,
-      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-      body: JSON.stringify({ error: 'No API key' })
-    });
+    return { statusCode: 500, headers: cors, body: JSON.stringify({ error: 'ANTHROPIC_API_KEY not set' }) };
   }
 
-  const payload = event.body;
-  const options = {
-    hostname: 'api.anthropic.com',
-    port: 443,
-    path: '/v1/messages',
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Content-Length': Buffer.byteLength(payload),
-      'x-api-key': key,
-      'anthropic-version': '2023-06-01'
-    }
-  };
+  const https = require('https');
+  const payload = event.body || '{}';
 
-  const req = https.request(options, function(res) {
-    let body = '';
-    res.on('data', function(chunk) { body += chunk; });
-    res.on('end', function() {
-      callback(null, {
+  return new Promise((resolve) => {
+    const data = Buffer.from(payload);
+    const req = https.request({
+      hostname: 'api.anthropic.com',
+      port: 443,
+      path: '/v1/messages',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': data.length,
+        'x-api-key': key,
+        'anthropic-version': '2023-06-01'
+      }
+    }, (res) => {
+      let body = '';
+      res.on('data', c => body += c);
+      res.on('end', () => resolve({
         statusCode: res.statusCode,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*'
-        },
+        headers: cors,
         body: body
-      });
+      }));
     });
-  });
-
-  req.on('error', function(e) {
-    callback(null, {
-      statusCode: 500,
-      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+    req.on('error', e => resolve({
+      statusCode: 502,
+      headers: cors,
       body: JSON.stringify({ error: e.message })
-    });
+    }));
+    req.write(data);
+    req.end();
   });
-
-  req.write(payload);
-  req.end();
 };
