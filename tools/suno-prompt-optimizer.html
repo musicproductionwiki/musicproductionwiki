@@ -2,186 +2,456 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Suno Prompt Optimizer — Free AI Music Prompt Tool | MusicProductionWiki</title>
-<meta name="description" content="Optimize your Suno AI music prompts instantly. Get genre tags, instrumentation, mood descriptors, and structural metatags that produce better tracks every time. Free.">
-<meta property="og:title" content="Suno Prompt Optimizer — MusicProductionWiki">
-<meta property="og:description" content="Turn weak Suno prompts into optimized, structured prompts that actually work. Free tool from MusicProductionWiki.">
-<meta property="og:url" content="https://www.musicproductionwiki.com/tools/suno-prompt-optimizer.html">
-<meta property="og:type" content="website">
-<meta name="twitter:card" content="summary_large_image">
-<link rel="canonical" href="https://www.musicproductionwiki.com/tools/suno-prompt-optimizer.html">
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-79VB543KCT"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-79VB543KCT');</script>
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What makes a good Suno AI music prompt?","acceptedAnswer":{"@type":"Answer","text":"A strong Suno prompt has four layers in order: specific genre tags (not broad categories), instrumentation details, production descriptors like mixing character and sonic texture, and mood or atmosphere last. Structural metatags like [Verse], [Chorus], and vocal tags like [male vocal] further improve output quality. The entire prompt should stay under 200 characters."}},{"@type":"Question","name":"How do I get Suno to generate better music?","acceptedAnswer":{"@type":"Answer","text":"Use specific subgenre names instead of broad genres, name actual instruments instead of saying 'band', include production texture words like 'lo-fi', 'punchy', or 'warm analog', and add structural metatags. Avoid vague emotional words without context — pair them with sonic descriptors."}},{"@type":"Question","name":"Does prompt length matter in Suno?","acceptedAnswer":{"@type":"Answer","text":"Yes. Prompts over 200 characters often cause Suno to ignore later instructions. The optimal range is 80-180 characters — enough to be specific, short enough for full processing. This tool keeps your optimized prompt within that range automatically."}}]}
-</script>
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.musicproductionwiki.com"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://www.musicproductionwiki.com/tools/"},{"@type":"ListItem","position":3,"name":"Suno Prompt Optimizer","item":"https://www.musicproductionwiki.com/tools/suno-prompt-optimizer.html"}]}
-</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Suno Prompt Optimizer — MusicProductionWiki.com</title>
+<meta name="description" content="Build and optimize Suno AI music prompts with genre, instrumentation, mood, and song structure. Free tool from MusicProductionWiki.com — The Producer's Bible.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,900;1,9..40,400&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#0d0d1a;--bg2:#111120;--bg3:#16162a;--bg4:#1c1c32;
-  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--border3:rgba(255,255,255,0.18);
-  --amber:#f5a623;--amber2:rgba(245,166,35,0.12);--amber3:rgba(245,166,35,0.06);--amberhot:#ffb84d;
-  --teal:#00e8a2;--teal2:rgba(0,232,162,0.10);--teal3:rgba(0,232,162,0.06);
-  --red:#ff3d5a;--purple:#a855f7;--blue:#60a0ff;
-  --text:#f0f0f4;--text2:#a0a0b8;--text3:#5a5a7a;
-  --mono:'DM Mono',monospace;--sans:'DM Sans',sans-serif;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{font-size:16px;-webkit-text-size-adjust:100%}
+body{font-family:'DM Sans',sans-serif;background:#06061a;color:#e8e8ff;min-height:100vh;overflow-x:hidden}
+
+/* ── HERO ─────────────────────────────── */
+.hero{position:relative;height:250px;overflow:hidden}
+@media(min-width:768px){.hero{height:310px}}
+#waveCanvas{position:absolute;inset:0;width:100%;height:100%}
+.hero-fade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,6,26,0) 0%,rgba(6,6,26,0.6) 55%,rgba(6,6,26,1) 100%);pointer-events:none}
+.hero-content{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:flex-end;
+  padding:0 20px 26px;text-align:center;z-index:2;
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;overflow-x:hidden}
+.hero-brand{
+  display:flex;align-items:center;justify-content:center;
+  gap:10px;margin-bottom:12px;
+}
+.hero-logo{
+  width:34px;height:34px;border-radius:8px;
+  background:#00e8a2;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  box-shadow:0 0 24px rgba(0,232,162,0.8), 0 0 48px rgba(0,232,162,0.3);
+}
+.hero-logo svg{display:block}
+.hero-brand-text{
+  display:flex;flex-direction:column;gap:2px;
+}
+.hero-brand-name{
+  font-family:'DM Sans',sans-serif;
+  font-size:14px;font-weight:700;
+  color:#ffffff;letter-spacing:-.01em;line-height:1;
+}
+.hero-brand-sub{
+  font-family:'DM Mono',monospace;
+  font-size:10px;font-weight:500;
+  color:#f5a623;letter-spacing:.04em;line-height:1;
+}
+.hero-h1{
+  font-size:clamp(36px,9vw,60px);font-weight:900;
+  letter-spacing:-.04em;line-height:1.0;
+  color:#ffffff;text-align:center;
+  text-shadow:0 2px 30px rgba(0,0,0,0.7);
+}
+.hero-h1 em{font-style:normal;color:#00e8a2;text-shadow:0 0 50px rgba(0,232,162,0.8)}
+.hero-sub{font-size:14px;color:rgba(255,255,255,0.7);margin-top:7px;font-weight:500;text-align:center}
 
-/* NAV SPECIFICITY */
-nav.mpw-site-nav .nav-item>a.nav-bible-link{color:#f5a623!important;font-weight:600!important}
-nav.mpw-site-nav .nav-item>a.nav-bible-link:hover{background:rgba(245,166,35,.1)!important;color:#f5a623!important}
-nav.mpw-site-nav .nav-item>a.nav-tools-link{color:#00e8a2!important;font-weight:600!important}
-nav.mpw-site-nav .nav-item>a.nav-tools-link:hover{background:rgba(0,232,162,.08)!important;color:#00e8a2!important}
+/* ── STEP NAV ─────────────────────────── */
+.step-nav{
+  background:#0d0d24;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+  display:flex;justify-content:center;
+  overflow-x:auto;scrollbar-width:none;
+  position:sticky;top:0;z-index:100;
+}
+.step-nav::-webkit-scrollbar{display:none}
+.step-tab{
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  padding:15px 18px;
+  font-size:12px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;
+  color:#5050a0;
+  border-bottom:2px solid transparent;
+  cursor:pointer;white-space:nowrap;
+  transition:all .15s;user-select:none;flex-shrink:0;
+}
+.step-tab:hover{color:#9090d0}
+.step-tab.active{color:#00e8a2;border-bottom-color:#00e8a2}
+.step-tab.done{color:#206040}
+.snum{
+  width:20px;height:20px;border-radius:50%;
+  font-size:9px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+  border:1.5px solid currentColor;flex-shrink:0;
+  opacity:0.8;
+}
+.step-tab.active .snum{background:rgba(0,232,162,0.2);border-color:#00e8a2;opacity:1}
 
-/* AMBIENT CANVAS HERO */
-.hero-wrap{position:relative;overflow:hidden;padding:56px 24px 48px;text-align:center;border-bottom:1px solid var(--border)}
-#ambientCanvas{position:absolute;inset:0;width:100%;height:100%;opacity:0.55;pointer-events:none}
-.hero-inner{position:relative;z-index:2;max-width:720px;margin:0 auto}
-.hero-eyebrow{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);margin-bottom:18px;display:block}
-.hero-h1{font-size:clamp(2rem,5.5vw,3.4rem);font-weight:900;letter-spacing:-.04em;line-height:1.05;color:#fff;margin-bottom:12px}
-.hero-h1 span{color:var(--amber)}
-.hero-desc{font-size:15px;color:var(--text2);line-height:1.7;max-width:540px;margin:0 auto 24px}
-.hero-badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-.badge{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;padding:4px 12px;border-radius:20px;border:1px solid}
-.badge-teal{color:var(--teal);border-color:rgba(0,232,162,.3);background:rgba(0,232,162,.06)}
-.badge-amber{color:var(--amber);border-color:rgba(245,166,35,.3);background:rgba(245,166,35,.06)}
-.badge-purple{color:var(--purple);border-color:rgba(168,85,247,.3);background:rgba(168,85,247,.06)}
+/* ── CONTAINER ────────────────────────── */
+.container{max-width:940px;margin:0 auto;padding:24px 16px 70px}
+@media(min-width:768px){.container{padding:32px 40px 90px}}
+.step-panel{display:none}
+.step-panel.active{display:flex;flex-direction:column;gap:18px}
 
-/* TOOL LAYOUT */
-.tool-wrap{max-width:1100px;margin:0 auto;padding:40px 24px 80px;display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
-@media(max-width:820px){.tool-wrap{grid-template-columns:1fr;padding:28px 16px 60px}}
+/* ── SECTION CARD ─────────────────────── */
+.sc{
+  background:#10102a;
+  border:1px solid rgba(255,255,255,0.13);
+  border-radius:16px;overflow:hidden;
+  position:relative;
+}
+.sc::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,232,162,0.5),rgba(245,166,35,0.3),transparent);
+}
+.sc-head{
+  padding:18px 22px 0;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.sc-label{
+  font-family:'DM Mono',monospace;
+  font-size:10px;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:#00e8a2;
+}
+.sc-hint{
+  font-family:'DM Mono',monospace;
+  font-size:9px;font-weight:500;
+  color:#a0a0c0;letter-spacing:.04em;
+}
+.sc-body{padding:14px 22px 22px}
 
-/* PANEL */
-.panel{background:var(--bg2);border:1px solid var(--border2);border-radius:14px;padding:24px;position:relative;overflow:hidden}
-.panel::before{content:'';position:absolute;inset:0;border-radius:14px;padding:1px;background:linear-gradient(135deg,rgba(245,166,35,.15),rgba(0,232,162,.08),transparent);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
-.panel-label{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);margin-bottom:18px;display:flex;align-items:center;gap:8px}
-.panel-label::after{content:'';flex:1;height:1px;background:var(--border)}
+/* ── GENRE GROUPS ─────────────────────── */
+.genre-group{margin-bottom:16px}
+.genre-group:last-child{margin-bottom:0}
+.gg-name{
+  font-family:'DM Mono',monospace;
+  font-size:9px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:#8080b8;margin-bottom:9px;
+}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
 
-/* TAG BUILDER */
-.tag-section{margin-bottom:20px}
-.tag-section-title{font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px;font-family:var(--mono)}
-.tag-grid{display:flex;flex-wrap:wrap;gap:6px}
-.tag-chip{font-size:12px;font-weight:600;padding:6px 14px;border-radius:20px;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);cursor:pointer;transition:all .15s;user-select:none;font-family:var(--sans)}
-.tag-chip:hover{border-color:var(--amber);color:var(--text);background:var(--amber3)}
-.tag-chip.selected{background:var(--amber2);border-color:var(--amber);color:var(--amber)}
-.tag-chip.selected-teal{background:var(--teal2);border-color:var(--teal);color:var(--teal)}
-.tag-chip.selected-purple{background:rgba(168,85,247,.12);border-color:var(--purple);color:var(--purple)}
+/* ── CHIPS ────────────────────────────── */
+.chip{
+  font-family:'DM Sans',sans-serif;
+  font-size:13px;font-weight:600;
+  padding:8px 16px;border-radius:24px;
+  border:1.5px solid rgba(255,255,255,0.18);
+  background:rgba(255,255,255,0.05);
+  color:#c0c0e8;
+  cursor:pointer;transition:all .12s;
+  white-space:nowrap;user-select:none;
+}
+.chip:hover{
+  border-color:rgba(255,255,255,0.4);
+  color:#ffffff;background:rgba(255,255,255,0.1);
+}
+.chip:active{transform:scale(0.95)}
+.chip.sel-g{background:rgba(245,166,35,0.18);border-color:#f5a623;color:#f5a623;font-weight:700;box-shadow:0 0 16px rgba(245,166,35,0.2)}
+.chip.sel-i{background:rgba(0,232,162,0.15);border-color:#00e8a2;color:#00e8a2;font-weight:700;box-shadow:0 0 16px rgba(0,232,162,0.15)}
+.chip.sel-m{background:rgba(180,100,255,0.15);border-color:#b464ff;color:#d090ff;font-weight:700}
+.chip.sel-v{background:rgba(100,160,255,0.15);border-color:#64a0ff;color:#90c0ff;font-weight:700}
 
-/* ASSEMBLED PROMPT */
-.prompt-assembly{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:16px;margin-bottom:20px;min-height:64px;position:relative}
-.prompt-assembly-label{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
-.prompt-text{font-family:var(--mono);font-size:13px;color:var(--text);line-height:1.6;word-break:break-all}
-.prompt-text .pt-genre{color:var(--amber)}
-.prompt-text .pt-inst{color:var(--teal)}
-.prompt-text .pt-mood{color:var(--purple)}
-.prompt-text .pt-struct{color:var(--blue)}
-.prompt-char{font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:8px}
-.prompt-char.warn{color:var(--amber)}
-.prompt-char.over{color:var(--red)}
+/* ── SEQUENCER ────────────────────────── */
+.seq-palette{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.sbl{
+  font-family:'DM Sans',sans-serif;
+  font-size:13px;font-weight:700;
+  padding:9px 16px;border-radius:10px;border:1.5px solid;
+  cursor:pointer;user-select:none;transition:all .12s;
+}
+.sbl:hover{filter:brightness(1.3);transform:translateY(-1px)}
+.sbl:active{transform:scale(0.93)}
+.t-intro{background:rgba(100,160,255,0.12);border-color:rgba(100,160,255,0.5);color:#90c0ff}
+.t-verse{background:rgba(0,232,162,0.1);border-color:rgba(0,232,162,0.45);color:#00e8a2}
+.t-pre{background:rgba(180,100,255,0.12);border-color:rgba(180,100,255,0.45);color:#d090ff}
+.t-chorus{background:rgba(245,166,35,0.14);border-color:rgba(245,166,35,0.55);color:#f5a623}
+.t-bridge{background:rgba(255,110,160,0.12);border-color:rgba(255,110,160,0.45);color:#ff90c8}
+.t-hook{background:rgba(255,185,60,0.12);border-color:rgba(255,185,60,0.45);color:#ffc040}
+.t-break{background:rgba(255,90,90,0.12);border-color:rgba(255,90,90,0.4);color:#ff8080}
+.t-outro{background:rgba(160,160,220,0.12);border-color:rgba(160,160,220,0.4);color:#c0c0f0}
 
-/* FREE TEXT */
-.free-text-wrap{margin-bottom:20px}
-.free-label{font-size:11px;color:var(--text3);font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;display:block}
-.free-textarea{width:100%;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-family:var(--mono);font-size:13px;padding:12px 14px;border-radius:8px;outline:none;resize:vertical;line-height:1.6;min-height:70px;transition:border-color .15s}
-.free-textarea:focus{border-color:var(--amber)}
-.free-textarea::placeholder{color:var(--text3)}
+/* ── RAIL ─────────────────────────────── */
+.seq-rail{
+  min-height:64px;background:rgba(0,0,0,0.45);
+  border:1.5px dashed rgba(255,255,255,0.15);
+  border-radius:12px;padding:10px 12px;
+  display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start;
+  position:relative;margin-bottom:16px;
+  transition:border-color .15s,background .15s;
+}
+.seq-rail.drag-over{border-color:rgba(0,232,162,0.5);background:rgba(0,232,162,0.05)}
+.rail-empty{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:'DM Mono',monospace;font-size:11px;color:#3a3a70;
+  letter-spacing:.06em;white-space:nowrap;pointer-events:none;
+}
+.splaced{
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;
+  padding:8px 12px;border-radius:9px;border:1.5px solid;
+  cursor:grab;display:flex;align-items:center;gap:7px;
+  user-select:none;transition:all .12s;
+}
+.splaced:active{cursor:grabbing}
+.splaced.dragging{opacity:0.25;transform:scale(0.92)}
+.splaced.drag-target{filter:brightness(1.5)}
+.splaced-x{font-size:13px;font-weight:400;opacity:0.5;cursor:pointer;padding:0 2px;transition:opacity .1s}
+.splaced-x:hover{opacity:1}
 
-/* ACTION BUTTON */
-.optimize-btn{width:100%;background:linear-gradient(135deg,var(--amber),#d4880a);color:#000;font-family:var(--sans);font-size:15px;font-weight:800;border:none;cursor:pointer;border-radius:10px;padding:15px 28px;letter-spacing:-.01em;transition:transform .12s,box-shadow .12s;box-shadow:0 0 30px rgba(245,166,35,.25);position:relative;overflow:hidden}
-.optimize-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);pointer-events:none}
-.optimize-btn:hover{transform:translateY(-2px);box-shadow:0 0 50px rgba(245,166,35,.4)}
-.optimize-btn:active{transform:translateY(0)}
-.optimize-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+/* ── LIVE PROMPT ──────────────────────── */
+.prompt-live{
+  background:rgba(0,0,0,0.5);
+  border:1.5px solid rgba(255,255,255,0.12);
+  border-radius:12px;padding:16px 20px;
+}
+.pl-label{
+  font-family:'DM Mono',monospace;font-size:9px;font-weight:700;
+  color:#00a878;letter-spacing:.18em;text-transform:uppercase;margin-bottom:10px;
+}
+.pl-text{
+  font-family:'DM Sans',sans-serif;
+  font-size:16px;font-weight:400;color:#7878b8;
+  line-height:1.75;word-break:break-word;
+}
+.pl-empty{font-style:italic;color:#2e2e60}
+.pl-g{color:#f5a623;font-weight:700}
+.pl-i{color:#00e8a2;font-weight:700}
+.pl-m{color:#d090ff;font-weight:700}
+.pl-v{color:#90c0ff;font-weight:700}
+.pl-s{color:#9090d0;font-weight:600}
+.pl-chars{font-family:'DM Mono',monospace;font-size:9px;color:#4a4a90;margin-top:10px;font-weight:500}
+.pl-chars span{color:#f5a623;font-weight:700}
+.pl-chars.warn span{color:#ff8840}
+.pl-chars.over span{color:#ff5050}
 
-/* OUTPUT PANEL */
-.output-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:400px;gap:12px;opacity:.4}
-.output-empty-icon{font-size:48px;opacity:.3}
-.output-empty-text{font-family:var(--mono);font-size:12px;color:var(--text3);text-align:center;line-height:1.8}
+/* ── STEP ACTIONS ─────────────────────── */
+.step-actions{display:flex;gap:10px;margin-top:4px}
+.btn-next{
+  flex:1;background:linear-gradient(135deg,#00e8a2,#00b87a);
+  color:#000;font-family:'DM Sans',sans-serif;
+  font-size:16px;font-weight:800;
+  border:none;cursor:pointer;border-radius:14px;
+  padding:17px 20px;letter-spacing:-.02em;
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  box-shadow:0 0 32px rgba(0,232,162,0.3),0 4px 20px rgba(0,0,0,0.4);
+  transition:all .15s;position:relative;overflow:hidden;
+}
+.btn-next::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.22),transparent 55%)}
+.btn-next:hover{box-shadow:0 0 50px rgba(0,232,162,0.45),0 6px 28px rgba(0,0,0,0.5);transform:translateY(-1px)}
+.btn-next:active{transform:scale(0.98)}
+.btn-back{
+  background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.15);
+  color:#9090c8;font-family:'DM Sans',sans-serif;
+  font-size:14px;font-weight:600;
+  padding:17px 22px;border-radius:14px;cursor:pointer;transition:all .12s;
+}
+.btn-back:hover{background:rgba(255,255,255,0.12);color:#c0c0e8}
 
-/* LOADING */
-.loading-state{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:300px;gap:16px}
-.loading-bars{display:flex;gap:4px;align-items:flex-end;height:32px}
-.loading-bars span{width:4px;border-radius:2px;background:var(--amber);animation:lbar 1.2s ease-in-out infinite}
-.loading-bars span:nth-child(1){height:12px;animation-delay:0s}
-.loading-bars span:nth-child(2){height:24px;animation-delay:.1s}
-.loading-bars span:nth-child(3){height:18px;animation-delay:.2s}
-.loading-bars span:nth-child(4){height:30px;animation-delay:.3s}
-.loading-bars span:nth-child(5){height:20px;animation-delay:.4s}
-.loading-bars span:nth-child(6){height:14px;animation-delay:.5s}
-@keyframes lbar{0%,100%{opacity:.3;transform:scaleY(.6)}50%{opacity:1;transform:scaleY(1)}}
-.loading-text{font-family:var(--mono);font-size:12px;color:var(--text3);letter-spacing:.08em}
+/* ── PASTE + OPT BTN ──────────────────── */
+.paste-ta{
+  width:100%;background:rgba(0,0,0,0.5);
+  border:1.5px solid rgba(255,255,255,0.15);
+  color:#d8d8f8;font-family:'DM Sans',sans-serif;
+  font-size:15px;padding:15px 20px;border-radius:12px;
+  outline:none;resize:vertical;min-height:90px;
+  line-height:1.65;transition:border-color .15s;
+  margin-bottom:14px;display:block;
+}
+.paste-ta:focus{border-color:rgba(0,232,162,0.4)}
+.paste-ta::placeholder{color:#2e2e60}
+.opt-btn{
+  width:100%;background:linear-gradient(135deg,#00e8a2,#00b87a);
+  color:#000;font-family:'DM Sans',sans-serif;
+  font-size:17px;font-weight:800;
+  border:none;cursor:pointer;border-radius:14px;
+  padding:19px 20px;letter-spacing:-.02em;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  box-shadow:0 0 38px rgba(0,232,162,0.32),0 4px 22px rgba(0,0,0,0.4);
+  transition:all .15s;position:relative;overflow:hidden;
+}
+.opt-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.22),transparent 55%)}
+.opt-btn:hover{box-shadow:0 0 60px rgba(0,232,162,0.5),0 8px 36px rgba(0,0,0,0.5);transform:translateY(-2px)}
+.opt-btn:active{transform:scale(0.98)}
+.opt-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.opt-pulse{width:11px;height:11px;border-radius:50%;background:rgba(0,0,0,0.3);animation:pring 2s infinite;flex-shrink:0}
+@keyframes pring{0%{box-shadow:0 0 0 0 rgba(0,0,0,0.4)}70%{box-shadow:0 0 0 8px rgba(0,0,0,0)}100%{box-shadow:0 0 0 0 rgba(0,0,0,0)}}
 
-/* SCORE GAUGE */
-.gauge-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:24px}
-#gaugeCanvas{display:block}
-.gauge-score-text{font-size:48px;font-weight:900;color:var(--amber);letter-spacing:-.04em;margin-top:-8px;line-height:1}
-.gauge-label-text{font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-top:4px}
+/* ── LOADING ──────────────────────────── */
+.loading-card{
+  background:#10102a;border:1px solid rgba(255,255,255,0.12);
+  border-radius:16px;padding:44px 20px;
+  display:none;flex-direction:column;align-items:center;gap:20px;text-align:center;
+}
+.loading-bars{display:flex;gap:5px;align-items:flex-end;height:36px}
+.lb{width:4px;border-radius:2px;background:#00e8a2;animation:lbar 1.2s ease-in-out infinite}
+.lb:nth-child(1){height:10px;animation-delay:0s}
+.lb:nth-child(2){height:28px;animation-delay:.1s}
+.lb:nth-child(3){height:19px;animation-delay:.2s}
+.lb:nth-child(4){height:34px;animation-delay:.3s}
+.lb:nth-child(5){height:22px;animation-delay:.4s}
+.lb:nth-child(6){height:14px;animation-delay:.5s}
+@keyframes lbar{0%,100%{opacity:.2;transform:scaleY(.4)}50%{opacity:1;transform:scaleY(1)}}
+.loading-txt{font-family:'DM Mono',monospace;font-size:12px;color:#4a8a68;letter-spacing:.08em;font-weight:500}
 
-/* OUTPUT SECTIONS — staggered entrance */
-.out-section{opacity:0;transform:translateY(12px);transition:opacity .4s ease,transform .4s ease}
-.out-section.visible{opacity:1;transform:translateY(0)}
+/* ── OUTPUT ───────────────────────────── */
+.output-area{display:none;flex-direction:column;gap:16px}
+.output-area.show{display:flex}
 
-/* DIFF VIEW */
-.diff-wrap{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:16px}
-.diff-label{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
-.diff-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:500px){.diff-row{grid-template-columns:1fr}}
-.diff-col-label{font-size:10px;font-weight:700;margin-bottom:6px;font-family:var(--mono)}
-.diff-col-label.before{color:var(--red)}
-.diff-col-label.after{color:var(--teal)}
-.diff-text{font-family:var(--mono);font-size:12px;line-height:1.8;word-break:break-all}
-.diff-removed{color:var(--red);text-decoration:line-through;opacity:.7}
-.diff-added{color:var(--teal)}
-.diff-same{color:var(--text2)}
+/* score card */
+.score-card{
+  background:#10102a;border:1px solid rgba(0,232,162,0.25);
+  border-radius:16px;padding:26px 24px;position:relative;overflow:hidden;
+}
+.score-card::before{
+  content:'';position:absolute;top:-100px;right:-100px;
+  width:280px;height:280px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,232,162,0.1) 0%,transparent 70%);pointer-events:none;
+}
+.score-card::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,232,162,0.6),transparent)}
+.score-row{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px}
+.score-big{font-size:90px;font-weight:900;line-height:1;letter-spacing:-.06em;color:#00e8a2;text-shadow:0 0 70px rgba(0,232,162,0.6)}
+.score-big sub{font-size:34px;font-weight:300;color:rgba(0,232,162,0.35);letter-spacing:-.02em}
+.score-meta{text-align:right;padding-top:10px}
+.score-word{font-size:24px;font-weight:800;color:#ffffff;letter-spacing:-.03em;margin-bottom:5px}
+.score-caption{font-family:'DM Mono',monospace;font-size:9px;color:#3a6a50;letter-spacing:.14em;text-transform:uppercase;font-weight:600}
+.meters{display:flex;flex-direction:column;gap:9px}
+.mr{display:flex;align-items:center;gap:12px}
+.mr-lbl{font-family:'DM Mono',monospace;font-size:9px;color:#5a8a72;letter-spacing:.08em;text-transform:uppercase;width:68px;flex-shrink:0;font-weight:600}
+.mr-track{flex:1;height:5px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden}
+.mr-fill{height:100%;border-radius:3px;width:0%;transition:width 1.3s cubic-bezier(.4,0,.2,1)}
+.mf-g{background:linear-gradient(90deg,#005540,#00e8a2)}
+.mf-a{background:linear-gradient(90deg,#664400,#f5a623)}
+.mr-val{font-family:'DM Mono',monospace;font-size:9px;color:#5a8a72;width:24px;text-align:right;font-weight:600}
+.val-pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.vp{font-family:'DM Mono',monospace;font-size:9px;font-weight:700;padding:4px 11px;border-radius:20px;display:flex;align-items:center;gap:5px}
+.vp-ok{background:rgba(0,232,162,0.1);border:1px solid rgba(0,232,162,0.35);color:#00d898}
+.vp-warn{background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.35);color:#f5a623}
+.vp-dot{width:5px;height:5px;border-radius:50%;background:currentColor}
 
-/* STREAMING TEXT */
-.stream-output{font-size:14px;color:var(--text);line-height:1.8}
-.stream-cursor{display:inline-block;width:2px;height:14px;background:var(--amber);margin-left:2px;animation:blink .7s step-end infinite;vertical-align:middle}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+/* output block */
+.ob{background:#10102a;border:1px solid rgba(255,255,255,0.1);border-radius:14px;overflow:hidden}
+.ob-head{
+  padding:14px 22px;border-bottom:1px solid rgba(255,255,255,0.07);
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(255,255,255,0.03);
+}
+.ob-title{font-size:15px;font-weight:700;color:#e0e0ff;letter-spacing:-.01em}
+.ob-copy{
+  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;
+  padding:7px 16px;border-radius:9px;
+  background:rgba(245,166,35,0.12);border:1.5px solid rgba(245,166,35,0.4);
+  color:#f5a623;cursor:pointer;transition:all .12s;
+}
+.ob-copy:hover{background:rgba(245,166,35,0.22);border-color:#f5a623}
+.ob-copy.copied{background:rgba(0,232,162,0.12);border-color:rgba(0,232,162,0.45);color:#00e8a2}
+.ob-body{padding:20px 22px}
 
-/* ACTION CHIPS */
-.action-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
-.action-chip{font-family:var(--mono);font-size:11px;font-weight:600;padding:7px 14px;border-radius:6px;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px}
-.action-chip:hover{border-color:var(--amber);color:var(--amber);background:var(--amber3)}
-.action-chip.copied{border-color:var(--teal);color:var(--teal);background:var(--teal3)}
+/* THE OPTIMIZED PROMPT OUTPUT */
+.opt-result{
+  font-family:'DM Sans',sans-serif;
+  font-size:18px;font-weight:400;
+  line-height:1.8;word-break:break-word;color:#b8b8e0;
+}
+.or-g{color:#f5a623;font-weight:700}
+.or-i{color:#00e8a2;font-weight:700}
+.or-m{color:#d090ff;font-weight:700}
+.or-s{color:#90a8e8;font-weight:600}
+.stream-cur{display:inline-block;width:2px;height:18px;background:#00e8a2;margin-left:2px;vertical-align:middle;animation:cur .7s step-end infinite}
+@keyframes cur{0%,100%{opacity:1}50%{opacity:0}}
 
-/* HISTORY */
-.history-wrap{margin-top:28px;padding-top:22px;border-top:1px solid var(--border)}
-.history-label{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.15em;text-transform:uppercase;margin-bottom:12px}
-.history-item{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:border-color .15s}
-.history-item:hover{border-color:var(--border2)}
-.history-prompt{font-family:var(--mono);font-size:11px;color:var(--teal);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.history-score{font-family:var(--mono);font-size:10px;color:var(--text3)}
+/* diff */
+.diff-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:500px){.diff-grid{grid-template-columns:1fr}}
+.dg-head{font-family:'DM Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:10px}
+.dg-r{color:#ff7070}.dg-a{color:#00e8a2}
+.diff-text{font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.9;word-break:break-word;color:#6060a8}
+.d-r{color:#ff7070;text-decoration:line-through;opacity:.6}
+.d-a{color:#00e8a2;font-weight:600}
+.d-s{color:#303068}
 
-/* RELATED */
-.related-wrap{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}
-.related-label{font-family:var(--mono);font-size:9px;font-weight:700;color:var(--text3);letter-spacing:.15em;margin-bottom:16px}
-.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
-.related-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;text-decoration:none;transition:border-color .15s}
-.related-card:hover{border-color:var(--border2)}
-.related-name{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
-.related-desc{display:block;font-size:12px;color:var(--text3)}
+/* analysis */
+.analysis-body{font-family:'DM Sans',sans-serif;font-size:15px;color:#7878b8;line-height:1.85}
+.a-hl{font-style:italic;color:#a8a8d8}
+.a-name{font-weight:700;color:#c8c8f0}
+.a-warn{
+  display:block;font-size:13px;font-weight:700;color:#f5a623;
+  margin-top:14px;padding:11px 15px;
+  background:rgba(245,166,35,0.09);border:1.5px solid rgba(245,166,35,0.28);
+  border-radius:10px;
+}
 
-/* FOOTER */
-footer{border-top:1px solid var(--border);padding:24px 20px;text-align:center}
-footer p{font-size:12px;color:var(--text3)}
-footer a{text-decoration:none;transition:color .15s}
-</style>
-</head>
-<body>
-<body>
+/* steps */
+.steps-list{display:flex;flex-direction:column;gap:10px}
+.step-item{
+  display:flex;gap:14px;padding:14px 17px;
+  background:rgba(0,232,162,0.05);
+  border:1px solid rgba(0,232,162,0.15);
+  border-radius:11px;align-items:flex-start;
+}
+.si-n{font-family:'DM Mono',monospace;font-size:10px;color:#00a870;font-weight:700;flex-shrink:0;margin-top:2px}
+.si-t{font-family:'DM Sans',sans-serif;font-size:14px;color:#7878b8;line-height:1.65;font-weight:400}
 
-<!-- NAV: mpw-nav-homepage-v1 — exact copy from live article pages -->
-<style id="mpw-nav-homepage-v1">
+/* ── SOCIAL SHARE ─────────────────────── */
+.share-bar{
+  background:#0d0d24;border:1px solid rgba(255,255,255,0.1);
+  border-radius:14px;padding:18px 22px;
+}
+.share-label{
+  font-family:'DM Mono',monospace;font-size:9px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:#00a870;margin-bottom:14px;
+  display:flex;align-items:center;gap:10px;
+}
+.share-label::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.08)}
+.share-btns{display:flex;gap:9px;flex-wrap:wrap}
+.sh-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;
+  padding:10px 18px;border-radius:10px;border:none;cursor:pointer;
+  transition:all .12s;text-decoration:none;white-space:nowrap;letter-spacing:-.01em;
+}
+.sh-btn:active{transform:scale(0.96)}
+.sh-copy{background:rgba(0,232,162,0.12);border:1.5px solid rgba(0,232,162,0.35);color:#00e8a2}
+.sh-copy:hover{background:rgba(0,232,162,0.22);border-color:rgba(0,232,162,0.6)}
+.sh-copy.done{background:rgba(0,232,162,0.22);color:#00e8a2}
+.sh-x{background:#000;border:1.5px solid #444;color:#fff}
+.sh-x:hover{background:#111;border-color:#666}
+.sh-reddit{background:#ff4500;border:1.5px solid #cc3300;color:#fff}
+.sh-reddit:hover{background:#ff5500}
+.sh-icon{width:16px;height:16px;display:block;flex-shrink:0}
+
+/* brand watermark */
+.brand-wm{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+  padding:16px 20px;background:#080820;
+  border:1px solid rgba(0,232,162,0.15);border-radius:14px;
+}
+.bw-l{display:flex;align-items:center;gap:12px}
+.bw-icon{
+  width:28px;height:28px;border-radius:7px;
+  background:#00e8a2;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;box-shadow:0 0 16px rgba(0,232,162,0.5);
+}
+.bw-icon svg{display:block}
+.bw-words{font-family:'DM Sans',sans-serif;font-size:12px;line-height:1.5}
+.bw-name{font-weight:700;color:#e0e0ff}
+.bw-sub{font-family:'DM Mono',monospace;font-size:10px;color:#f5a623;letter-spacing:.03em}
+.bw-url{font-family:'DM Mono',monospace;font-size:10px;color:#3a3a80;letter-spacing:.02em}
+
+/* desktop two-col */
+@media(min-width:768px){
+  .step4-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+  .step4-left,.step4-right{display:flex;flex-direction:column;gap:16px}
+}
+
+/* fade up */
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.fu{animation:fadeUp .45s ease both}
+.fu-1{animation-delay:.04s}.fu-2{animation-delay:.16s}.fu-3{animation-delay:.30s}
+.fu-4{animation-delay:.44s}.fu-5{animation-delay:.58s}.fu-6{animation-delay:.72s}.fu-7{animation-delay:.86s}
+
 nav.mpw-site-nav *,nav.mpw-site-nav *::before,nav.mpw-site-nav *::after{box-sizing:border-box}
 :root{--hp-teal:#00e8a2;--hp-amber:#f5a623;--hp-bg:#0a0a0b;--hp-bg2:#111113;--hp-bg3:#1a1a1d;--hp-bd:rgba(255,255,255,0.09);--hp-bdh:rgba(255,255,255,0.18);--hp-t1:#f0f0f0;--hp-t2:#a0a0b4;--hp-t3:#6a6a7a}
 nav.mpw-site-nav{position:sticky!important;top:0!important;z-index:9000!important;background:rgba(10,10,11,0.97)!important;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(255,255,255,0.09)!important;font-family:'DM Sans',sans-serif!important;width:100%!important}
@@ -242,8 +512,130 @@ nav.mpw-site-nav .nav-mob span{display:block!important;width:22px!important;heig
 .sr-title{font-size:14px;font-weight:500;color:#fff;line-height:1.3}
 .sr-cat{font-size:11px;color:#00e8a2;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
 @media(max-width:1024px){nav.mpw-site-nav .nav-primary,nav.mpw-site-nav .nav-search-btn,nav.mpw-site-nav .nav-cta{display:none!important}nav.mpw-site-nav .nav-mob{display:flex!important}}
-</style>
 
+/* NAV SPECIFICITY — REQUIRED */
+nav.mpw-site-nav .nav-item>a.nav-bible-link{color:#f5a623!important;font-weight:600!important}
+nav.mpw-site-nav .nav-item>a.nav-bible-link:hover{background:rgba(245,166,35,.1)!important;color:#f5a623!important}
+nav.mpw-site-nav .nav-item>a.nav-tools-link{color:#00e8a2!important;font-weight:600!important}
+nav.mpw-site-nav .nav-item>a.nav-tools-link:hover{background:rgba(0,232,162,.08)!important;color:#00e8a2!important}
+
+/* EMBED MODE — hides nav/footer when ?embed=1 */
+body.embed-mode .mpw-nav-wrap,
+body.embed-mode footer.site-footer{display:none!important}
+body.embed-mode .hero{border-radius:12px 12px 0 0}
+
+.site-footer{
+  background:#09090f;
+  border-top:1px solid rgba(255,255,255,0.07);
+  padding:32px 20px;
+  text-align:center;
+}
+
+</style>
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://www.musicproductionwiki.com/tools/suno-prompt-optimizer.html">
+
+<meta property="og:title" content="Suno Prompt Optimizer — Free AI Music Tool | MusicProductionWiki">
+<meta property="og:description" content="Build structured Suno AI prompts with genre, instruments, mood, and song structure. AI-scored and optimized. Free from MusicProductionWiki — The Producer's Bible.">
+<meta property="og:url" content="https://www.musicproductionwiki.com/tools/suno-prompt-optimizer.html">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://www.musicproductionwiki.com/images/suno-prompt-optimizer-og.jpg">
+<meta property="og:site_name" content="MusicProductionWiki.com">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Suno Prompt Optimizer — Free AI Music Tool">
+<meta name="twitter:description" content="Build structured Suno AI prompts with genre, instruments, mood, and song structure. AI-scored and optimized. Free.">
+<meta name="twitter:image" content="https://www.musicproductionwiki.com/images/suno-prompt-optimizer-og.jpg">
+<meta name="twitter:site" content="@MusicProdWiki">
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-79VB543KCT"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-79VB543KCT');</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What makes a good Suno AI music prompt?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A strong Suno prompt layers genre first (specific subgenres beat broad ones), then instrumentation with texture words like punchy or lush, then mood descriptors, then structural metatags like [Verse][Chorus]. Keep it under 200 characters and front-load your most critical elements since Suno v4 deprioritizes instructions past position 8."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I get Suno to generate better music?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use specific subgenre names instead of broad genres, add production texture words that describe character (punchy, lush, gritty, shimmering), include structural metatags like [Verse][Pre-Chorus][Chorus] to control song architecture, and place vocal style tags like [male vocal] before structural tags. Avoid vague filler words like banger or vibes — Suno ignores them."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does prompt length matter in Suno?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Suno v4 often ignores instructions past position 8 in a prompt. Keep prompts under 200 characters and front-load genre and instrumentation. The Suno Prompt Optimizer shows your character count in real time and warns when you approach the limit."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use Suno music commercially?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Commercial rights depend on your Suno subscription tier. Free users cannot use generated music commercially. Pro and Premier subscribers receive commercial rights to tracks they generate. Use the MPW AI Music Rights Navigator tool to check rights for your specific use case."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the best Suno prompt tags for song structure?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Suno v4 responds to structural metatags placed at the end of your prompt: [Intro], [Verse], [Pre-Chorus], [Chorus], [Bridge], [Hook], [Breakdown], and [Outro]. You can repeat them for a full arrangement like [Verse][Pre-Chorus][Chorus][Verse][Pre-Chorus][Chorus][Bridge][Chorus][Outro]. Place vocal style tags like [male vocal] before these structural tags."
+      }
+    }
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.musicproductionwiki.com"},
+    {"@type": "ListItem", "position": 2, "name": "Tools", "item": "https://www.musicproductionwiki.com/tools/"},
+    {"@type": "ListItem", "position": 3, "name": "Suno Prompt Optimizer", "item": "https://www.musicproductionwiki.com/tools/suno-prompt-optimizer.html"}
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Suno Prompt Optimizer",
+  "url": "https://www.musicproductionwiki.com/tools/suno-prompt-optimizer.html",
+  "description": "Build and optimize Suno AI music prompts with genre, instrumentation, mood, and song structure. AI-scored and optimized. Free tool from MusicProductionWiki.com.",
+  "applicationCategory": "MusicApplication",
+  "operatingSystem": "Web Browser",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "publisher": {
+    "@type": "Organization",
+    "name": "MusicProductionWiki.com",
+    "url": "https://www.musicproductionwiki.com"
+  }
+}
+</script>
+
+<script src="../js/main.js" defer></script>
+</head>
+<body>
+
+<!-- NAV WRAPPER — hidden in embed mode -->
+<div class="mpw-nav-wrap">
 <nav class="mpw-site-nav" role="navigation" aria-label="Main navigation">
   <div class="nav-inner">
     <a href="https://musicproductionwiki.com" class="nav-logo" aria-label="MusicProductionWiki home">
@@ -323,768 +715,662 @@ nav.mpw-site-nav .nav-mob span{display:block!important;width:22px!important;heig
 </div>
 
 <!-- HERO -->
+</div>
+
+<script>
+// Embed mode — add ?embed=1 to URL to hide nav/footer for iframe use
+if(window.location.search.indexOf('embed=1')>=0){
+  document.body.classList.add('embed-mode');
+}
+</script>
 
 <!-- HERO -->
-<div class="hero-wrap">
-<canvas id="ambientCanvas"></canvas>
-<div class="hero-inner">
-  <span class="hero-eyebrow">◆ AI Music Tools — MusicProductionWiki</span>
-  <h1 class="hero-h1">Suno Prompt<br><span>Optimizer</span></h1>
-  <p class="hero-desc">Build structured Suno prompts that actually work. Pick your genre, instruments, and mood — watch the optimized prompt assemble live. Then let AI score and refine it.</p>
-  <div class="hero-badges">
-    <span class="badge badge-teal">Free Forever</span>
-    <span class="badge badge-amber">AI-Powered</span>
-    <span class="badge badge-purple">No Signup</span>
+<div class="hero">
+  <canvas id="waveCanvas"></canvas>
+  <div class="hero-fade"></div>
+  <div class="hero-content">
+    <div class="hero-brand">
+      <div class="hero-logo">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <rect x="1.5" y="7" width="2.5" height="9" rx="1.2" fill="#06061a"/>
+          <rect x="6" y="4" width="2.5" height="12" rx="1.2" fill="#06061a"/>
+          <rect x="10.5" y="1" width="2.5" height="16" rx="1.2" fill="#06061a"/>
+          <rect x="15" y="5" width="2.5" height="9" rx="1.2" fill="#06061a"/>
+        </svg>
+      </div>
+      <div class="hero-brand-text">
+        <span class="hero-brand-name">MusicProductionWiki.com</span>
+        <span class="hero-brand-sub">◆ The Producer's Bible</span>
+      </div>
+    </div>
+    <h1 class="hero-h1">Suno Prompt<br><em>Optimizer</em></h1>
+    <p class="hero-sub">AI Music Tools &nbsp;·&nbsp; Free &nbsp;·&nbsp; No account required</p>
   </div>
 </div>
-</div>
 
-<!-- TOOL -->
-<div class="tool-wrap">
+<!-- STEP NAV -->
+<nav class="step-nav">
+  <div class="step-tab active" data-step="0" onclick="goStep(0)"><span class="snum">1</span>Genre</div>
+  <div class="step-tab" data-step="1" onclick="goStep(1)"><span class="snum">2</span>Sounds</div>
+  <div class="step-tab" data-step="2" onclick="goStep(2)"><span class="snum">3</span>Mood</div>
+  <div class="step-tab" data-step="3" onclick="goStep(3)"><span class="snum">4</span>Structure</div>
+  <div class="step-tab" data-step="4" onclick="goStep(4)"><span class="snum">5</span>Optimize</div>
+</nav>
 
-  <!-- LEFT: INPUT PANEL -->
-  <div class="panel" id="inputPanel">
-    <div class="panel-label">Build Your Prompt</div>
+<div class="container">
 
-    <!-- GENRE -->
-    <div class="tag-section">
-      <div class="tag-section-title">① Genre</div>
-      <div class="tag-grid" id="genreGrid">
-        <span class="tag-chip" data-cat="genre" data-val="trap">Trap</span>
-        <span class="tag-chip" data-cat="genre" data-val="melodic drill">Melodic Drill</span>
-        <span class="tag-chip" data-cat="genre" data-val="phonk">Phonk</span>
-        <span class="tag-chip" data-cat="genre" data-val="lo-fi hip hop">Lo-Fi Hip Hop</span>
-        <span class="tag-chip" data-cat="genre" data-val="afrobeats">Afrobeats</span>
-        <span class="tag-chip" data-cat="genre" data-val="house">House</span>
-        <span class="tag-chip" data-cat="genre" data-val="techno">Techno</span>
-        <span class="tag-chip" data-cat="genre" data-val="ambient">Ambient</span>
-        <span class="tag-chip" data-cat="genre" data-val="R&B">R&B</span>
-        <span class="tag-chip" data-cat="genre" data-val="drill">Drill</span>
-        <span class="tag-chip" data-cat="genre" data-val="pop">Pop</span>
-        <span class="tag-chip" data-cat="genre" data-val="indie rock">Indie Rock</span>
-        <span class="tag-chip" data-cat="genre" data-val="hyperpop">Hyperpop</span>
-        <span class="tag-chip" data-cat="genre" data-val="neo soul">Neo Soul</span>
-        <span class="tag-chip" data-cat="genre" data-val="jazz">Jazz</span>
-        <span class="tag-chip" data-cat="genre" data-val="dark wave">Dark Wave</span>
+  <!-- STEP 0: GENRE -->
+  <div class="step-panel active" id="panel0">
+    <div class="sc">
+      <div class="sc-head"><span class="sc-label">Genre</span><span class="sc-hint">Select up to 4</span></div>
+      <div class="sc-body">
+        <div class="genre-group">
+          <div class="gg-name">Hip-Hop & Urban</div>
+          <div class="chips">
+            <span class="chip" data-cat="g" data-val="trap">Trap</span>
+            <span class="chip" data-cat="g" data-val="melodic drill">Melodic Drill</span>
+            <span class="chip" data-cat="g" data-val="phonk">Phonk</span>
+            <span class="chip" data-cat="g" data-val="lo-fi hip hop">Lo-Fi Hip Hop</span>
+            <span class="chip" data-cat="g" data-val="boom bap">Boom Bap</span>
+            <span class="chip" data-cat="g" data-val="afrobeats">Afrobeats</span>
+            <span class="chip" data-cat="g" data-val="jersey club">Jersey Club</span>
+            <span class="chip" data-cat="g" data-val="drill">Drill</span>
+            <span class="chip" data-cat="g" data-val="chopped & screwed">Chopped & Screwed</span>
+            <span class="chip" data-cat="g" data-val="cloud rap">Cloud Rap</span>
+          </div>
+        </div>
+        <div class="genre-group">
+          <div class="gg-name">Electronic</div>
+          <div class="chips">
+            <span class="chip" data-cat="g" data-val="house">House</span>
+            <span class="chip" data-cat="g" data-val="deep house">Deep House</span>
+            <span class="chip" data-cat="g" data-val="techno">Techno</span>
+            <span class="chip" data-cat="g" data-val="ambient">Ambient</span>
+            <span class="chip" data-cat="g" data-val="drum & bass">Drum & Bass</span>
+            <span class="chip" data-cat="g" data-val="synthwave">Synthwave</span>
+            <span class="chip" data-cat="g" data-val="dark wave">Dark Wave</span>
+            <span class="chip" data-cat="g" data-val="hyperpop">Hyperpop</span>
+            <span class="chip" data-cat="g" data-val="trance">Trance</span>
+            <span class="chip" data-cat="g" data-val="dubstep">Dubstep</span>
+            <span class="chip" data-cat="g" data-val="future bass">Future Bass</span>
+            <span class="chip" data-cat="g" data-val="electro">Electro</span>
+          </div>
+        </div>
+        <div class="genre-group">
+          <div class="gg-name">Rock & Guitar</div>
+          <div class="chips">
+            <span class="chip" data-cat="g" data-val="indie rock">Indie Rock</span>
+            <span class="chip" data-cat="g" data-val="alt rock">Alt Rock</span>
+            <span class="chip" data-cat="g" data-val="hard rock">Hard Rock</span>
+            <span class="chip" data-cat="g" data-val="metal">Metal</span>
+            <span class="chip" data-cat="g" data-val="death metal">Death Metal</span>
+            <span class="chip" data-cat="g" data-val="punk">Punk</span>
+            <span class="chip" data-cat="g" data-val="post-punk">Post-Punk</span>
+            <span class="chip" data-cat="g" data-val="shoegaze">Shoegaze</span>
+            <span class="chip" data-cat="g" data-val="post-rock">Post-Rock</span>
+            <span class="chip" data-cat="g" data-val="grunge">Grunge</span>
+            <span class="chip" data-cat="g" data-val="emo">Emo</span>
+          </div>
+        </div>
+        <div class="genre-group">
+          <div class="gg-name">Soul, Jazz & World</div>
+          <div class="chips">
+            <span class="chip" data-cat="g" data-val="neo soul">Neo Soul</span>
+            <span class="chip" data-cat="g" data-val="r&b">R&B</span>
+            <span class="chip" data-cat="g" data-val="jazz">Jazz</span>
+            <span class="chip" data-cat="g" data-val="blues">Blues</span>
+            <span class="chip" data-cat="g" data-val="gospel">Gospel</span>
+            <span class="chip" data-cat="g" data-val="funk">Funk</span>
+            <span class="chip" data-cat="g" data-val="soul">Soul</span>
+            <span class="chip" data-cat="g" data-val="reggae">Reggae</span>
+            <span class="chip" data-cat="g" data-val="afrobeat">Afrobeat</span>
+            <span class="chip" data-cat="g" data-val="latin">Latin</span>
+            <span class="chip" data-cat="g" data-val="bossa nova">Bossa Nova</span>
+          </div>
+        </div>
+        <div class="genre-group">
+          <div class="gg-name">Pop, Folk & Country</div>
+          <div class="chips">
+            <span class="chip" data-cat="g" data-val="pop">Pop</span>
+            <span class="chip" data-cat="g" data-val="bedroom pop">Bedroom Pop</span>
+            <span class="chip" data-cat="g" data-val="dream pop">Dream Pop</span>
+            <span class="chip" data-cat="g" data-val="folk">Folk</span>
+            <span class="chip" data-cat="g" data-val="indie folk">Indie Folk</span>
+            <span class="chip" data-cat="g" data-val="country">Country</span>
+            <span class="chip" data-cat="g" data-val="americana">Americana</span>
+            <span class="chip" data-cat="g" data-val="k-pop">K-Pop</span>
+            <span class="chip" data-cat="g" data-val="classical">Classical</span>
+            <span class="chip" data-cat="g" data-val="cinematic orchestral">Cinematic Orchestral</span>
+          </div>
+        </div>
       </div>
     </div>
+    <div class="step-actions"><button class="btn-next" onclick="goStep(1)">Instrumentation →</button></div>
+  </div>
 
-    <!-- INSTRUMENTS -->
-    <div class="tag-section">
-      <div class="tag-section-title">② Instruments</div>
-      <div class="tag-grid" id="instGrid">
-        <span class="tag-chip" data-cat="inst" data-val="808 bass">808 Bass</span>
-        <span class="tag-chip" data-cat="inst" data-val="piano">Piano</span>
-        <span class="tag-chip" data-cat="inst" data-val="guitar">Guitar</span>
-        <span class="tag-chip" data-cat="inst" data-val="strings">Strings</span>
-        <span class="tag-chip" data-cat="inst" data-val="synth pads">Synth Pads</span>
-        <span class="tag-chip" data-cat="inst" data-val="flute">Flute</span>
-        <span class="tag-chip" data-cat="inst" data-val="trumpet">Trumpet</span>
-        <span class="tag-chip" data-cat="inst" data-val="violin">Violin</span>
-        <span class="tag-chip" data-cat="inst" data-val="acoustic guitar">Acoustic Guitar</span>
-        <span class="tag-chip" data-cat="inst" data-val="bass guitar">Bass Guitar</span>
-        <span class="tag-chip" data-cat="inst" data-val="choir">Choir</span>
-        <span class="tag-chip" data-cat="inst" data-val="rhodes">Rhodes</span>
+  <!-- STEP 1: SOUNDS -->
+  <div class="step-panel" id="panel1">
+    <div class="sc">
+      <div class="sc-head"><span class="sc-label">Instrumentation</span><span class="sc-hint">Select up to 6</span></div>
+      <div class="sc-body">
+        <div class="chips">
+          <span class="chip" data-cat="i" data-val="808 bass">808 Bass</span>
+          <span class="chip" data-cat="i" data-val="piano">Piano</span>
+          <span class="chip" data-cat="i" data-val="electric guitar">Electric Guitar</span>
+          <span class="chip" data-cat="i" data-val="acoustic guitar">Acoustic Guitar</span>
+          <span class="chip" data-cat="i" data-val="bass guitar">Bass Guitar</span>
+          <span class="chip" data-cat="i" data-val="strings">Strings</span>
+          <span class="chip" data-cat="i" data-val="violin">Violin</span>
+          <span class="chip" data-cat="i" data-val="cello">Cello</span>
+          <span class="chip" data-cat="i" data-val="synth pads">Synth Pads</span>
+          <span class="chip" data-cat="i" data-val="lead synth">Lead Synth</span>
+          <span class="chip" data-cat="i" data-val="flute">Flute</span>
+          <span class="chip" data-cat="i" data-val="trumpet">Trumpet</span>
+          <span class="chip" data-cat="i" data-val="saxophone">Saxophone</span>
+          <span class="chip" data-cat="i" data-val="choir">Choir</span>
+          <span class="chip" data-cat="i" data-val="rhodes">Rhodes</span>
+          <span class="chip" data-cat="i" data-val="organ">Organ</span>
+          <span class="chip" data-cat="i" data-val="live drums">Live Drums</span>
+          <span class="chip" data-cat="i" data-val="drum machine">Drum Machine</span>
+          <span class="chip" data-cat="i" data-val="harp">Harp</span>
+          <span class="chip" data-cat="i" data-val="banjo">Banjo</span>
+          <span class="chip" data-cat="i" data-val="harmonica">Harmonica</span>
+          <span class="chip" data-cat="i" data-val="marimba">Marimba</span>
+        </div>
       </div>
     </div>
-
-    <!-- MOOD -->
-    <div class="tag-section">
-      <div class="tag-section-title">③ Mood & Texture</div>
-      <div class="tag-grid" id="moodGrid">
-        <span class="tag-chip" data-cat="mood" data-val="dark">Dark</span>
-        <span class="tag-chip" data-cat="mood" data-val="uplifting">Uplifting</span>
-        <span class="tag-chip" data-cat="mood" data-val="aggressive">Aggressive</span>
-        <span class="tag-chip" data-cat="mood" data-val="melancholic">Melancholic</span>
-        <span class="tag-chip" data-cat="mood" data-val="ethereal">Ethereal</span>
-        <span class="tag-chip" data-cat="mood" data-val="cinematic">Cinematic</span>
-        <span class="tag-chip" data-cat="mood" data-val="groovy">Groovy</span>
-        <span class="tag-chip" data-cat="mood" data-val="dreamy">Dreamy</span>
-        <span class="tag-chip" data-cat="mood" data-val="raw">Raw</span>
-        <span class="tag-chip" data-cat="mood" data-val="hypnotic">Hypnotic</span>
-      </div>
-    </div>
-
-    <!-- STRUCTURE -->
-    <div class="tag-section">
-      <div class="tag-section-title">④ Structure & Vocal</div>
-      <div class="tag-grid" id="structGrid">
-        <span class="tag-chip" data-cat="struct" data-val="[Verse]">[Verse]</span>
-        <span class="tag-chip" data-cat="struct" data-val="[Chorus]">[Chorus]</span>
-        <span class="tag-chip" data-cat="struct" data-val="[Bridge]">[Bridge]</span>
-        <span class="tag-chip" data-cat="struct" data-val="[Hook]">[Hook]</span>
-        <span class="tag-chip" data-cat="struct" data-val="[Intro]">[Intro]</span>
-        <span class="tag-chip" data-cat="struct" data-val="[no vocals]">[no vocals]</span>
-        <span class="tag-chip" data-cat="struct" data-val="[male vocal]">[male vocal]</span>
-        <span class="tag-chip" data-cat="struct" data-val="[female vocal]">[female vocal]</span>
-        <span class="tag-chip" data-cat="struct" data-val="[rap]">[rap]</span>
-      </div>
-    </div>
-
-    <!-- ASSEMBLED PROMPT -->
-    <div class="prompt-assembly">
-      <div class="prompt-assembly-label">Assembled Prompt — Live Preview</div>
-      <div class="prompt-text" id="promptPreview"><span style="color:var(--text3);font-style:italic">Select tags above to build your prompt...</span></div>
-      <div class="prompt-char" id="charCount">0 / 200 characters</div>
-    </div>
-
-    <!-- OR FREE TEXT -->
-    <div class="free-text-wrap">
-      <span class="free-label">Or paste your existing prompt to optimize</span>
-      <textarea class="free-textarea" id="freeText" placeholder="e.g. sad hip hop song with piano and trap beats about heartbreak..."></textarea>
-    </div>
-
-    <button class="optimize-btn" id="optimizeBtn" onclick="runOptimize()">
-      Optimize with AI →
-    </button>
-
-    <!-- HISTORY -->
-    <div class="history-wrap" id="historyWrap" style="display:none">
-      <div class="history-label">Your Recent Sessions</div>
-      <div id="historyList"></div>
+    <div class="step-actions">
+      <button class="btn-back" onclick="goStep(0)">← Back</button>
+      <button class="btn-next" onclick="goStep(2)">Mood →</button>
     </div>
   </div>
 
-  <!-- RIGHT: OUTPUT PANEL -->
-  <div class="panel" id="outputPanel">
-    <div class="panel-label">Optimized Result</div>
-
-    <!-- EMPTY STATE -->
-    <div class="output-empty" id="emptyState">
-      <div class="output-empty-icon">◈</div>
-      <div class="output-empty-text">Select genres, instruments, and mood<br>then hit Optimize to see the magic.<br><br>Or paste any existing prompt<br>to get an instant upgrade.</div>
-    </div>
-
-    <!-- LOADING STATE -->
-    <div class="loading-state" id="loadingState">
-      <div class="loading-bars">
-        <span></span><span></span><span></span><span></span><span></span><span></span>
-      </div>
-      <div class="loading-text" id="loadingText">Analyzing prompt structure...</div>
-    </div>
-
-    <!-- RESULTS -->
-    <div id="resultsWrap" style="display:none">
-
-      <!-- SCORE GAUGE -->
-      <div class="out-section gauge-wrap" id="sec0">
-        <canvas id="gaugeCanvas" width="220" height="130"></canvas>
-        <div class="gauge-score-text" id="scoreDisplay">0</div>
-        <div class="gauge-label-text" id="scoreLabel">Calculating...</div>
-      </div>
-
-      <!-- DIFF -->
-      <div class="out-section diff-wrap" id="sec1">
-        <div class="diff-label">What Changed</div>
-        <div class="diff-row">
-          <div>
-            <div class="diff-col-label before">Before</div>
-            <div class="diff-text" id="diffBefore"></div>
-          </div>
-          <div>
-            <div class="diff-col-label after">After</div>
-            <div class="diff-text" id="diffAfter"></div>
-          </div>
+  <!-- STEP 2: MOOD -->
+  <div class="step-panel" id="panel2">
+    <div class="sc">
+      <div class="sc-head"><span class="sc-label">Mood & Texture</span><span class="sc-hint">Select up to 3</span></div>
+      <div class="sc-body">
+        <div class="chips">
+          <span class="chip" data-cat="m" data-val="dark">Dark</span>
+          <span class="chip" data-cat="m" data-val="melancholic">Melancholic</span>
+          <span class="chip" data-cat="m" data-val="uplifting">Uplifting</span>
+          <span class="chip" data-cat="m" data-val="aggressive">Aggressive</span>
+          <span class="chip" data-cat="m" data-val="ethereal">Ethereal</span>
+          <span class="chip" data-cat="m" data-val="dreamy">Dreamy</span>
+          <span class="chip" data-cat="m" data-val="hypnotic">Hypnotic</span>
+          <span class="chip" data-cat="m" data-val="cinematic">Cinematic</span>
+          <span class="chip" data-cat="m" data-val="raw">Raw</span>
+          <span class="chip" data-cat="m" data-val="warm">Warm</span>
+          <span class="chip" data-cat="m" data-val="groovy">Groovy</span>
+          <span class="chip" data-cat="m" data-val="nostalgic">Nostalgic</span>
+          <span class="chip" data-cat="m" data-val="eerie">Eerie</span>
+          <span class="chip" data-cat="m" data-val="euphoric">Euphoric</span>
+          <span class="chip" data-cat="m" data-val="tense">Tense</span>
+          <span class="chip" data-cat="m" data-val="peaceful">Peaceful</span>
+          <span class="chip" data-cat="m" data-val="gritty">Gritty</span>
+          <span class="chip" data-cat="m" data-val="lush">Lush</span>
+          <span class="chip" data-cat="m" data-val="frenetic">Frenetic</span>
+          <span class="chip" data-cat="m" data-val="romantic">Romantic</span>
         </div>
-      </div>
-
-      <!-- OPTIMIZED PROMPT -->
-      <div class="out-section" id="sec2" style="margin-bottom:16px">
-        <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:16px">
-          <div style="font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px">Optimized Prompt</div>
-          <div class="stream-output" id="optimizedPrompt"></div>
-          <div class="action-chips">
-            <span class="action-chip" id="copyChip" onclick="copyPrompt()">⊕ Copy Prompt</span>
-            <span class="action-chip" onclick="playTone()">♪ Hear Tone</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- AI EXPLANATION (streamed) -->
-      <div class="out-section" id="sec3" style="margin-bottom:16px">
-        <div style="border-left:3px solid var(--amber);background:var(--amber3);border-radius:0 8px 8px 0;padding:16px 18px">
-          <div style="font-family:var(--mono);font-size:9px;color:var(--amber);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px">Why This Works</div>
-          <div class="stream-output" id="explanationText"></div>
-        </div>
-      </div>
-
-      <!-- ACTION ITEMS -->
-      <div class="out-section" id="sec4">
-        <div style="background:var(--teal3);border:1px solid rgba(0,232,162,.2);border-radius:8px;padding:16px">
-          <div style="font-family:var(--mono);font-size:9px;color:var(--teal);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px">Next Steps</div>
-          <div class="stream-output" id="nextSteps"></div>
-        </div>
-      </div>
-
-    </div><!-- /resultsWrap -->
-
-    <!-- RELATED -->
-    <div class="related-wrap">
-      <div class="related-label">Related Tools</div>
-      <div class="related-grid">
-        <a href="/tools/ai-music-rights-navigator.html" class="related-card">
-          <span class="related-name">AI Music Rights Navigator</span>
-          <span class="related-desc">Can you sell what Suno makes?</span>
-        </a>
-        <a href="/tools/ai-music-ddex-checker.html" class="related-card">
-          <span class="related-name">DDEX Disclosure Checker</span>
-          <span class="related-desc">Streaming platform AI disclosure rules</span>
-        </a>
-        <a href="/tools/ai-copyright-strength.html" class="related-card">
-          <span class="related-name">Copyright Strength Calculator</span>
-          <span class="related-desc">Score your AI track's copyright viability</span>
-        </a>
       </div>
     </div>
+    <div class="sc">
+      <div class="sc-head"><span class="sc-label">Vocal Style</span><span class="sc-hint">Select up to 3</span></div>
+      <div class="sc-body">
+        <div class="chips">
+          <span class="chip" data-cat="v" data-val="[male vocal]">[male vocal]</span>
+          <span class="chip" data-cat="v" data-val="[female vocal]">[female vocal]</span>
+          <span class="chip" data-cat="v" data-val="[rap]">[rap]</span>
+          <span class="chip" data-cat="v" data-val="[harmonies]">[harmonies]</span>
+          <span class="chip" data-cat="v" data-val="[falsetto]">[falsetto]</span>
+          <span class="chip" data-cat="v" data-val="[spoken word]">[spoken word]</span>
+          <span class="chip" data-cat="v" data-val="[no vocals]">[no vocals]</span>
+          <span class="chip" data-cat="v" data-val="[choir vocals]">[choir vocals]</span>
+          <span class="chip" data-cat="v" data-val="[whisper]">[whisper]</span>
+        </div>
+      </div>
+    </div>
+    <div class="step-actions">
+      <button class="btn-back" onclick="goStep(1)">← Back</button>
+      <button class="btn-next" onclick="goStep(3)">Structure →</button>
+    </div>
+  </div>
 
-  </div><!-- /outputPanel -->
-</div><!-- /tool-wrap -->
+  <!-- STEP 3: STRUCTURE -->
+  <div class="step-panel" id="panel3">
+    <div class="sc">
+      <div class="sc-head">
+        <span class="sc-label">Song Structure</span>
+        <span class="sc-hint">Tap to add · Drag to reorder · × to remove</span>
+      </div>
+      <div class="sc-body">
+        <div class="seq-palette">
+          <span class="sbl t-intro" onclick="addBlock('Intro','t-intro')">Intro</span>
+          <span class="sbl t-verse" onclick="addBlock('Verse','t-verse')">Verse</span>
+          <span class="sbl t-pre" onclick="addBlock('Pre-Chorus','t-pre')">Pre-Chorus</span>
+          <span class="sbl t-chorus" onclick="addBlock('Chorus','t-chorus')">Chorus</span>
+          <span class="sbl t-bridge" onclick="addBlock('Bridge','t-bridge')">Bridge</span>
+          <span class="sbl t-hook" onclick="addBlock('Hook','t-hook')">Hook</span>
+          <span class="sbl t-break" onclick="addBlock('Breakdown','t-break')">Breakdown</span>
+          <span class="sbl t-outro" onclick="addBlock('Outro','t-outro')">Outro</span>
+        </div>
+        <div class="seq-rail" id="seqRail"
+          ondragover="railDragOver(event)" ondrop="railDrop(event)" ondragleave="railDragLeave(event)">
+          <span class="rail-empty" id="railEmpty">Tap a section above to build your arrangement</span>
+        </div>
+        <div class="prompt-live">
+          <div class="pl-label">Live Prompt Preview</div>
+          <div class="pl-text" id="livePromptText"><span class="pl-empty">Your prompt will appear here as you make selections</span></div>
+          <div class="pl-chars" id="charCount"><span id="charNum">0</span> / 200 characters</div>
+        </div>
+      </div>
+    </div>
+    <div class="step-actions">
+      <button class="btn-back" onclick="goStep(2)">← Back</button>
+      <button class="btn-next" onclick="goStep(4)">Optimize with AI →</button>
+    </div>
+  </div>
 
-<footer>
-  <p>© 2026 <a href="https://www.musicproductionwiki.com" style="color:var(--amber)">MusicProductionWiki.com</a> &nbsp;·&nbsp; <a href="/tools/" style="color:var(--text2)">All Tools</a> &nbsp;·&nbsp; <a href="/bible/" style="color:var(--text2)">Producer's Bible</a> &nbsp;·&nbsp; <a href="https://theproducersbriefing.beehiiv.com" style="color:var(--text2)">Newsletter</a></p>
-</footer>
+  <!-- STEP 4: OPTIMIZE -->
+  <div class="step-panel" id="panel4">
+    <div class="step4-grid">
+      <div class="step4-left">
+        <div class="sc">
+          <div class="sc-head"><span class="sc-label">Your Built Prompt</span></div>
+          <div class="sc-body">
+            <div class="prompt-live" style="margin-bottom:0">
+              <div class="pl-label">Ready to optimize</div>
+              <div class="pl-text" id="finalPromptPreview"><span class="pl-empty">Go back and make selections</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="sc">
+          <div class="sc-head"><span class="sc-label">Or Paste Any Prompt</span><span class="sc-hint">Overrides builder</span></div>
+          <div class="sc-body">
+            <textarea class="paste-ta" id="pasteInput" placeholder="Paste any existing Suno prompt to score and optimize it..."></textarea>
+            <button class="opt-btn" id="optBtn" onclick="runOptimize()">
+              <span class="opt-pulse"></span>
+              Optimize with AI
+            </button>
+          </div>
+        </div>
+        <div class="step-actions">
+          <button class="btn-back" onclick="goStep(3)">← Back to Structure</button>
+        </div>
+      </div>
 
-<script src="../js/main.js"></script>
+      <div class="step4-right">
+        <div class="loading-card" id="loadingCard">
+          <div class="loading-bars">
+            <div class="lb"></div><div class="lb"></div><div class="lb"></div>
+            <div class="lb"></div><div class="lb"></div><div class="lb"></div>
+          </div>
+          <div class="loading-txt" id="loadTxt">Analyzing prompt structure...</div>
+        </div>
+
+        <div class="output-area" id="outputArea">
+
+          <div class="score-card fu fu-1" id="scoreCard">
+            <div class="score-row">
+              <div><div class="score-big" id="scoreNum">0<sub>/10</sub></div></div>
+              <div class="score-meta">
+                <div class="score-word" id="scoreWord">—</div>
+                <div class="score-caption">Prompt Quality</div>
+              </div>
+            </div>
+            <div class="meters">
+              <div class="mr"><span class="mr-lbl">Genre</span><div class="mr-track"><div class="mr-fill mf-g" id="mG"></div></div><span class="mr-val" id="mGv">—</span></div>
+              <div class="mr"><span class="mr-lbl">Structure</span><div class="mr-track"><div class="mr-fill mf-g" id="mS"></div></div><span class="mr-val" id="mSv">—</span></div>
+              <div class="mr"><span class="mr-lbl">Texture</span><div class="mr-track"><div class="mr-fill mf-a" id="mT"></div></div><span class="mr-val" id="mTv">—</span></div>
+              <div class="mr"><span class="mr-lbl">Length</span><div class="mr-track"><div class="mr-fill mf-g" id="mL"></div></div><span class="mr-val" id="mLv">—</span></div>
+            </div>
+            <div class="val-pills" id="valPills"></div>
+          </div>
+
+          <div class="ob fu fu-2">
+            <div class="ob-head">
+              <span class="ob-title">Optimized Prompt</span>
+              <button class="ob-copy" id="copyBtn" onclick="copyResult()">Copy</button>
+            </div>
+            <div class="ob-body"><div class="opt-result" id="optResultText"></div></div>
+          </div>
+
+          <div class="ob fu fu-3">
+            <div class="ob-head"><span class="ob-title">What Changed</span></div>
+            <div class="ob-body">
+              <div class="diff-grid">
+                <div><div class="dg-head dg-r">Before</div><div class="diff-text" id="diffBefore"></div></div>
+                <div><div class="dg-head dg-a">After</div><div class="diff-text" id="diffAfter"></div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ob fu fu-4">
+            <div class="ob-head"><span class="ob-title">Expert Analysis</span></div>
+            <div class="ob-body"><div class="analysis-body" id="analysisText"></div></div>
+          </div>
+
+          <div class="ob fu fu-5">
+            <div class="ob-head"><span class="ob-title">Next Steps</span></div>
+            <div class="ob-body"><div class="steps-list" id="stepsText"></div></div>
+          </div>
+
+          <!-- SOCIAL SHARE -->
+          <div class="share-bar fu fu-6">
+            <div class="share-label">Share This Result</div>
+            <div class="share-btns">
+              <button class="sh-btn sh-copy" id="shareCopyBtn" onclick="shareLink()">
+                <svg class="sh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copy Link
+              </button>
+              <a class="sh-btn sh-x" id="shareXBtn" href="#" target="_blank" rel="noopener">
+                <svg class="sh-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.26 5.632 5.905-5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                Share on X
+              </a>
+              <a class="sh-btn sh-reddit" id="shareRedditBtn" href="#" target="_blank" rel="noopener">
+                <svg class="sh-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
+                Reddit
+              </a>
+            </div>
+          </div>
+
+          <!-- BRAND WATERMARK -->
+          <div class="brand-wm fu fu-7">
+            <div class="bw-l">
+              <div class="bw-icon">
+                <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
+                  <rect x="1.5" y="7" width="2.5" height="9" rx="1.2" fill="#06061a"/>
+                  <rect x="6" y="4" width="2.5" height="12" rx="1.2" fill="#06061a"/>
+                  <rect x="10.5" y="1" width="2.5" height="16" rx="1.2" fill="#06061a"/>
+                  <rect x="15" y="5" width="2.5" height="9" rx="1.2" fill="#06061a"/>
+                </svg>
+              </div>
+              <div>
+                <div class="bw-name">MusicProductionWiki.com</div>
+                <div class="bw-sub">◆ The Producer's Bible &nbsp;·&nbsp; Free AI Music Tools</div>
+              </div>
+            </div>
+            <span class="bw-url">musicproductionwiki.com/tools</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
 <script>
-// ═══════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════
-var state = {genre:[], inst:[], mood:[], struct:[]};
-var currentOriginal = '';
-var currentOptimized = '';
-var animFrame = null;
+var S={g:[],i:[],m:[],v:[]};
+var maxMap={g:4,i:6,m:3,v:3};
+var clsMap={g:'sel-g',i:'sel-i',m:'sel-m',v:'sel-v'};
+var optimizedResult='';
+var shareURL='https://www.musicproductionwiki.com/tools/suno-prompt-optimizer.html';
+var dragSrc=null;
 
-// ═══════════════════════════════════════════
-// AMBIENT CANVAS — generative waveform
-// ═══════════════════════════════════════════
+// ── WAVEFORM ──────────────────────────────────────────────────
 (function(){
-  var cv = document.getElementById('ambientCanvas');
-  if(!cv) return;
-  var ctx = cv.getContext('2d');
-  var t = 0;
-  var freqMod = 1.0;
-  function resize(){
-    cv.width = cv.offsetWidth;
-    cv.height = cv.offsetHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-  window.setAmbientFreq = function(f){ freqMod = f; };
+  var cv=document.getElementById('waveCanvas');if(!cv)return;
+  var ctx=cv.getContext('2d'),t=0,energy=1.0;
+  function resize(){cv.width=cv.offsetWidth;cv.height=cv.offsetHeight}
+  resize();window.addEventListener('resize',resize);
+  window.setWaveEnergy=function(e){energy=e};
   function draw(){
-    var W = cv.width, H = cv.height;
-    ctx.clearRect(0,0,W,H);
-    // Dark radial glow
-    var gr = ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,W*0.6);
-    gr.addColorStop(0,'rgba(245,166,35,0.06)');
-    gr.addColorStop(0.5,'rgba(0,232,162,0.03)');
-    gr.addColorStop(1,'transparent');
-    ctx.fillStyle = gr;
-    ctx.fillRect(0,0,W,H);
-    // Multi-layer waveforms
-    var layers = [
-      {amp:H*0.12, freq:0.008*freqMod, speed:0.008, col:'rgba(245,166,35,0.18)', lw:1.5, yOff:H*0.35},
-      {amp:H*0.08, freq:0.012*freqMod, speed:0.012, col:'rgba(0,232,162,0.14)', lw:1, yOff:H*0.5},
-      {amp:H*0.06, freq:0.018*freqMod, speed:0.006, col:'rgba(168,85,247,0.10)', lw:0.8, yOff:H*0.65},
+    var W=cv.width,H=cv.height;
+    ctx.clearRect(0,0,W,H);ctx.fillStyle='#06061a';ctx.fillRect(0,0,W,H);
+    var gr=ctx.createRadialGradient(W*.45,H*.65,0,W*.45,H*.65,W*.55);
+    gr.addColorStop(0,'rgba(0,232,162,0.1)');gr.addColorStop(1,'transparent');
+    ctx.fillStyle=gr;ctx.fillRect(0,0,W,H);
+    var gr2=ctx.createRadialGradient(W*.8,H*.35,0,W*.8,H*.35,W*.28);
+    gr2.addColorStop(0,'rgba(245,166,35,0.06)');gr2.addColorStop(1,'transparent');
+    ctx.fillStyle=gr2;ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='rgba(255,255,255,0.025)';
+    for(var gx=0;gx<W;gx+=38)for(var gy=0;gy<H;gy+=38)ctx.fillRect(gx,gy,1,1);
+    var layers=[
+      {a:H*.20*energy,f:0.010,s:0.00125,c:'rgba(0,232,162,',lw:2.5,y:H*.48,glow:true},
+      {a:H*.12*energy,f:0.016,s:0.0019,c:'rgba(80,160,255,',lw:1.5,y:H*.53,glow:false},
+      {a:H*.08,f:0.007,s:0.0008,c:'rgba(245,166,35,',lw:1.0,y:H*.57,glow:false},
     ];
     layers.forEach(function(l){
-      ctx.beginPath();
-      ctx.strokeStyle = l.col;
-      ctx.lineWidth = l.lw;
-      for(var x=0; x<=W; x+=2){
-        var y = l.yOff + Math.sin(x*l.freq + t*l.speed*60) * l.amp
-                       + Math.sin(x*l.freq*1.7 + t*l.speed*40) * l.amp*0.4;
-        x===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+      if(l.glow){
+        ctx.save();ctx.shadowColor='rgba(0,232,162,0.7)';ctx.shadowBlur=24;
+        ctx.beginPath();ctx.strokeStyle=l.c+'0.08)';ctx.lineWidth=l.lw*4;
+        for(var x=0;x<=W;x+=5){var y=l.y+Math.sin(x*l.f+t*l.s*60)*l.a+Math.sin(x*l.f*2.1+t*l.s*40)*l.a*.28;x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+        ctx.stroke();ctx.restore();
       }
+      ctx.beginPath();ctx.strokeStyle=l.c+(l.glow?'0.9':'0.45')+')';ctx.lineWidth=l.lw;
+      for(var x2=0;x2<=W;x2+=2){var y2=l.y+Math.sin(x2*l.f+t*l.s*60)*l.a+Math.sin(x2*l.f*2.1+t*l.s*40)*l.a*.28+Math.sin(x2*l.f*.5+t*l.s*22)*l.a*.12;x2===0?ctx.moveTo(x2,y2):ctx.lineTo(x2,y2);}
       ctx.stroke();
     });
-    t++;
-    setTimeout(function(){ requestAnimationFrame(draw); }, 33); // ~30fps
+    var sx=((t*.25)%(W+100))-50;
+    var sg=ctx.createLinearGradient(sx-30,0,sx+30,0);
+    sg.addColorStop(0,'transparent');sg.addColorStop(.5,'rgba(0,232,162,0.09)');sg.addColorStop(1,'transparent');
+    ctx.fillStyle=sg;ctx.fillRect(sx-30,0,60,H);
+    for(var p=0;p<7;p++){var px=((p*179+t*.2)%W),py=((p*109+t*.12)%H),pa=0.3+0.25*Math.sin(t*.04+p);ctx.fillStyle='rgba(0,232,162,'+pa+')';ctx.beginPath();ctx.arc(px,py,1,0,Math.PI*2);ctx.fill();}
+    t++;setTimeout(function(){requestAnimationFrame(draw)},30);
   }
   draw();
 })();
 
-// ═══════════════════════════════════════════
-// TAG CHIP SELECTION
-// ═══════════════════════════════════════════
-var colorMap = {genre:'selected', inst:'selected-teal', mood:'selected-purple', struct:'selected'};
+// ── STEP NAV ──────────────────────────────────────────────────
+function goStep(n){
+  document.querySelectorAll('.step-panel').forEach(function(p){p.classList.remove('active')});
+  document.querySelectorAll('.step-tab').forEach(function(t,i){t.classList.remove('active','done');if(i<n)t.classList.add('done')});
+  document.getElementById('panel'+n).classList.add('active');
+  document.querySelector('[data-step="'+n+'"]').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(n===4)syncFinal();
+}
 
-document.querySelectorAll('.tag-chip').forEach(function(chip){
-  chip.addEventListener('click', function(){
-    var cat = this.dataset.cat;
-    var val = this.dataset.val;
-    var cls = colorMap[cat] || 'selected';
-    var max = (cat==='genre') ? 2 : (cat==='inst') ? 3 : (cat==='mood') ? 2 : 4;
-    if(this.classList.contains(cls)){
-      this.classList.remove(cls);
-      state[cat] = state[cat].filter(function(v){return v!==val;});
-    } else {
-      if(state[cat].length >= max){
-        // Deselect oldest
-        var oldest = state[cat].shift();
-        document.querySelectorAll('[data-cat="'+cat+'"][data-val="'+oldest+'"]').forEach(function(el){
-          el.classList.remove(cls);
-        });
-      }
-      state[cat].push(val);
-      this.classList.add(cls);
-    }
-    updatePromptPreview();
-    // Modulate ambient frequency based on genre energy
-    var energyMap = {trap:1.4,phonk:1.6,techno:1.8,house:1.3,ambient:0.5,'lo-fi hip hop':0.7,jazz:0.8,R:'1.0'};
-    var g = state.genre[0] || '';
-    var freq = energyMap[g] || 1.0;
-    if(window.setAmbientFreq) window.setAmbientFreq(freq);
+// ── CHIPS ─────────────────────────────────────────────────────
+document.querySelectorAll('.chip[data-cat]').forEach(function(chip){
+  chip.addEventListener('click',function(){
+    var cat=this.dataset.cat,val=this.dataset.val,cls=clsMap[cat],max=maxMap[cat];
+    var idx=S[cat].indexOf(val);
+    if(idx>=0){S[cat].splice(idx,1);this.classList.remove(cls);}
+    else{if(S[cat].length>=max){var old=S[cat].shift();var o=document.querySelector('.chip[data-cat="'+cat+'"][data-val="'+old+'"]');if(o)o.classList.remove(cls);}S[cat].push(val);this.classList.add(cls);}
+    updateLive();
+    var em={trap:1.6,phonk:1.9,techno:2.0,dubstep:1.8,'drum & bass':1.7,house:1.3,'deep house':1.1,ambient:0.4,'lo-fi hip hop':0.6,jazz:0.7,'bossa nova':0.55,classical:0.45,folk:0.65,metal:2.2,'hard rock':1.9,grunge:1.6,shoegaze:0.8};
+    if(window.setWaveEnergy)window.setWaveEnergy(em[S.g[0]]||1.0);
   });
 });
 
-function updatePromptPreview(){
-  var parts = [];
-  var html = [];
-  state.genre.forEach(function(v){parts.push(v);html.push('<span class="pt-genre">'+v+'</span>');});
-  state.inst.forEach(function(v){parts.push(v);html.push('<span class="pt-inst">'+v+'</span>');});
-  state.mood.forEach(function(v){parts.push(v);html.push('<span class="pt-mood">'+v+'</span>');});
-  state.struct.forEach(function(v){parts.push(v);html.push('<span class="pt-struct">'+v+'</span>');});
-  var raw = parts.join(', ');
-  var preview = document.getElementById('promptPreview');
-  var charEl = document.getElementById('charCount');
-  if(parts.length === 0){
-    preview.innerHTML = '<span style="color:var(--text3);font-style:italic">Select tags above to build your prompt...</span>';
-    charEl.textContent = '0 / 200 characters';
-    charEl.className = 'prompt-char';
-  } else {
-    preview.innerHTML = html.join('<span style="color:var(--text3)">, </span>');
-    var len = raw.length;
-    charEl.textContent = len + ' / 200 characters';
-    charEl.className = 'prompt-char' + (len>200?' over':len>160?' warn':'');
-  }
-  currentOriginal = raw;
+function buildParts(){
+  var parts=[],html=[];
+  S.g.forEach(function(v){parts.push(v);html.push('<span class="pl-g">'+v+'</span>')});
+  S.i.forEach(function(v){parts.push(v);html.push('<span class="pl-i">'+v+'</span>')});
+  S.m.forEach(function(v){parts.push(v);html.push('<span class="pl-m">'+v+'</span>')});
+  S.v.forEach(function(v){parts.push(v);html.push('<span class="pl-v">'+v+'</span>')});
+  var seq=getSeqText();if(seq){parts.push(seq);html.push('<span class="pl-s">'+seq+'</span>')}
+  return{raw:parts.join(', '),html:html.join('<span style="color:#2e2e68">, </span>')};
+}
+function getSeqText(){
+  var placed=document.querySelectorAll('#seqRail .splaced');if(!placed.length)return'';
+  var p=[];placed.forEach(function(el){var n=el.querySelector('.splaced-name');p.push('['+(n?n.textContent:el.textContent.replace('×','').trim())+']')});return p.join('');
+}
+function updateLive(){
+  var r=buildParts();
+  var tEl=document.getElementById('livePromptText'),cEl=document.getElementById('charCount'),nEl=document.getElementById('charNum');
+  if(!tEl)return;
+  if(!r.raw){tEl.innerHTML='<span class="pl-empty">Your prompt will appear here</span>';if(nEl)nEl.textContent='0';if(cEl)cEl.className='pl-chars';}
+  else{tEl.innerHTML=r.html;var len=r.raw.length;if(nEl)nEl.textContent=len;if(cEl)cEl.className='pl-chars'+(len>200?' over':len>170?' warn':'');}
+}
+function syncFinal(){
+  var r=buildParts();var el=document.getElementById('finalPromptPreview');
+  if(!el)return;el.innerHTML=r.raw?r.html:'<span class="pl-empty">Go back and make selections</span>';
 }
 
-// ═══════════════════════════════════════════
-// GAUGE CANVAS
-// ═══════════════════════════════════════════
-function drawGauge(score, animated){
-  var cv = document.getElementById('gaugeCanvas');
-  if(!cv) return;
-  var ctx = cv.getContext('2d');
-  var W=220, H=130, cx=W/2, cy=H-20, R=90;
-  ctx.clearRect(0,0,W,H);
-  // Track
-  ctx.beginPath();
-  ctx.arc(cx,cy,R,Math.PI,0,false);
-  ctx.strokeStyle='rgba(255,255,255,0.07)';
-  ctx.lineWidth=14;
-  ctx.lineCap='round';
-  ctx.stroke();
-  // Score zones
-  var zones=[
-    {from:0,to:0.4,col:'rgba(255,61,90,0.6)'},
-    {from:0.4,to:0.7,col:'rgba(245,166,35,0.7)'},
-    {from:0.7,to:1.0,col:'rgba(0,232,162,0.8)'}
-  ];
-  zones.forEach(function(z){
-    ctx.beginPath();
-    ctx.arc(cx,cy,R,Math.PI+(z.from*Math.PI),Math.PI+(z.to*Math.PI),false);
-    ctx.strokeStyle=z.col;
-    ctx.lineWidth=14;
-    ctx.lineCap='butt';
-    ctx.stroke();
+// ── SEQUENCER ─────────────────────────────────────────────────
+function addBlock(name,cls){
+  var rail=document.getElementById('seqRail');var empty=document.getElementById('railEmpty');if(empty)empty.style.display='none';
+  var el=document.createElement('div');el.className='splaced '+cls;el.draggable=true;
+  el.innerHTML='<span class="splaced-name">'+name+'</span><span class="splaced-x" onclick="removeBlock(this.parentNode)">×</span>';
+  el.addEventListener('dragstart',function(e){dragSrc=this;this.classList.add('dragging');e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain','')});
+  el.addEventListener('dragend',function(){this.classList.remove('dragging','drag-target');dragSrc=null;document.querySelectorAll('.splaced').forEach(function(b){b.classList.remove('drag-target')})});
+  el.addEventListener('dragover',function(e){e.preventDefault();if(dragSrc&&dragSrc!==this)this.classList.add('drag-target')});
+  el.addEventListener('dragleave',function(){this.classList.remove('drag-target')});
+  el.addEventListener('drop',function(e){
+    e.preventDefault();e.stopPropagation();
+    if(dragSrc&&dragSrc!==this){var rail=document.getElementById('seqRail');var nodes=Array.from(rail.querySelectorAll('.splaced'));if(nodes.indexOf(dragSrc)<nodes.indexOf(this))rail.insertBefore(dragSrc,this.nextSibling);else rail.insertBefore(dragSrc,this);}
+    this.classList.remove('drag-target');updateLive();
   });
-  // Active fill
-  var pct = Math.max(0,Math.min(10,score))/10;
-  var col = score>=7?'#00e8a2':score>=4?'#f5a623':'#ff3d5a';
-  ctx.beginPath();
-  ctx.arc(cx,cy,R,Math.PI,Math.PI+(pct*Math.PI),false);
-  ctx.strokeStyle=col;
-  ctx.lineWidth=14;
-  ctx.lineCap='round';
-  ctx.shadowColor=col;
-  ctx.shadowBlur=16;
-  ctx.stroke();
-  ctx.shadowBlur=0;
-  // Needle
-  var angle = Math.PI + pct*Math.PI;
-  var nx = cx + (R-2)*Math.cos(angle);
-  var ny = cy + (R-2)*Math.sin(angle);
-  ctx.beginPath();
-  ctx.moveTo(cx,cy);
-  ctx.lineTo(nx,ny);
-  ctx.strokeStyle='#fff';
-  ctx.lineWidth=2;
-  ctx.lineCap='round';
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.arc(cx,cy,6,0,Math.PI*2);
-  ctx.fillStyle='#fff';
-  ctx.fill();
+  // touch drag
+  var tOffX=0,tOffY=0,ghost=null;
+  el.addEventListener('touchstart',function(e){var t=e.touches[0],r=this.getBoundingClientRect();tOffX=t.clientX-r.left;tOffY=t.clientY-r.top;ghost=this.cloneNode(true);ghost.style.cssText='position:fixed;opacity:.65;pointer-events:none;z-index:9999;transform:scale(1.06);transition:none;';ghost.style.left=(t.clientX-tOffX)+'px';ghost.style.top=(t.clientY-tOffY)+'px';document.body.appendChild(ghost);dragSrc=this;},{passive:true});
+  el.addEventListener('touchmove',function(e){e.preventDefault();var t=e.touches[0];if(ghost){ghost.style.left=(t.clientX-tOffX)+'px';ghost.style.top=(t.clientY-tOffY)+'px';}var under=document.elementFromPoint(t.clientX,t.clientY);var target=under&&under.closest('.splaced');document.querySelectorAll('.splaced').forEach(function(b){b.classList.remove('drag-target')});if(target&&target!==el)target.classList.add('drag-target');},{passive:false});
+  el.addEventListener('touchend',function(e){if(ghost){ghost.remove();ghost=null;}var t=e.changedTouches[0];var under=document.elementFromPoint(t.clientX,t.clientY);var target=under&&under.closest('.splaced');document.querySelectorAll('.splaced').forEach(function(b){b.classList.remove('drag-target')});if(target&&target!==el){var rail=document.getElementById('seqRail');var nodes=Array.from(rail.querySelectorAll('.splaced'));if(nodes.indexOf(el)<nodes.indexOf(target))rail.insertBefore(el,target.nextSibling);else rail.insertBefore(el,target);updateLive();}dragSrc=null;},{passive:true});
+  rail.appendChild(el);updateLive();
+  el.style.transform='scale(0.6)';el.style.opacity='0';
+  requestAnimationFrame(function(){el.style.transition='transform .22s cubic-bezier(.34,1.56,.64,1),opacity .15s';el.style.transform='scale(1)';el.style.opacity='1';setTimeout(function(){el.style.transition=''},250);});
+}
+function removeBlock(el){
+  el.style.transition='all .15s';el.style.transform='scale(0)';el.style.opacity='0';
+  setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);var rail=document.getElementById('seqRail');var empty=document.getElementById('railEmpty');if(empty&&rail)empty.style.display=rail.querySelectorAll('.splaced').length?'none':'block';updateLive();},160);
+}
+function railDragOver(e){e.preventDefault();e.currentTarget.classList.add('drag-over')}
+function railDragLeave(e){if(!e.currentTarget.contains(e.relatedTarget))e.currentTarget.classList.remove('drag-over')}
+function railDrop(e){e.currentTarget.classList.remove('drag-over');updateLive()}
+
+// ── LOADING ───────────────────────────────────────────────────
+var loadMsgs=['Analyzing prompt structure...','Checking genre specificity...','Evaluating sonic descriptors...','Scoring against Suno v4 patterns...','Identifying weak points...','Assembling optimized prompt...'];
+var lIdx=0,lTimer=null;
+function startLoading(){var el=document.getElementById('loadTxt');lIdx=0;if(el)el.textContent=loadMsgs[0];lTimer=setInterval(function(){lIdx=(lIdx+1)%loadMsgs.length;var el=document.getElementById('loadTxt');if(el)el.textContent=loadMsgs[lIdx];},1100)}
+function stopLoading(){if(lTimer){clearInterval(lTimer);lTimer=null}}
+
+function streamInto(elId,text,delay,cb){
+  var el=document.getElementById(elId);if(!el){if(cb)cb();return;}
+  el.innerHTML='';var cur=document.createElement('span');cur.className='stream-cur';el.appendChild(cur);
+  var i=0,iv=setInterval(function(){if(i>=text.length){clearInterval(iv);cur.remove();if(cb)cb();return;}el.insertBefore(document.createTextNode(text[i]),cur);i++;},delay||13);
 }
 
-function animateGauge(targetScore){
-  var current = 0;
-  var el = document.getElementById('scoreDisplay');
-  var lbl = document.getElementById('scoreLabel');
-  var labels = ['','Weak','Needs Work','Developing','Almost There','Almost There','Decent','Good','Strong','Very Strong','Optimized ✦'];
-  function step(){
-    current += (targetScore - current) * 0.12;
-    if(Math.abs(current-targetScore)<0.05) current=targetScore;
-    drawGauge(current);
-    el.textContent = Math.round(current) + '/10';
-    lbl.textContent = labels[Math.round(current)] || '';
-    el.style.color = current>=7?'var(--teal)':current>=4?'var(--amber)':'var(--red)';
-    if(Math.abs(current-targetScore)>0.05) requestAnimationFrame(step);
-  }
+function animGauge(target){
+  var cur=0;var labels=['','Weak','Poor','Developing','Getting There','Getting There','Decent','Good','Strong','Excellent','Optimized ✦'];
+  function step(){cur+=(target-cur)*.1;if(Math.abs(cur-target)<.05)cur=target;var n=document.getElementById('scoreNum'),w=document.getElementById('scoreWord'),r=Math.round(cur);if(n)n.innerHTML=r+'<sub>/10</sub>';if(w){w.textContent=labels[r]||'';w.style.color=r>=7?'#00e8a2':r>=4?'#f5a623':'#ff6060';}if(Math.abs(cur-target)>.05)requestAnimationFrame(step);}
   requestAnimationFrame(step);
 }
+function animMeter(fId,vId,pct,val){setTimeout(function(){var f=document.getElementById(fId),v=document.getElementById(vId);if(f)f.style.width=pct+'%';if(v)v.textContent=val;},200)}
 
-// ═══════════════════════════════════════════
-// DIFF ENGINE
-// ═══════════════════════════════════════════
-function renderDiff(original, optimized){
-  var oWords = original.toLowerCase().split(/[\s,]+/).filter(Boolean);
-  var nWords = optimized.split(/[\s,]+/).filter(Boolean);
-  var oSet = new Set(oWords);
-  var nLow = nWords.map(function(w){return w.toLowerCase().replace(/[^\w]/g,'');});
-
-  var beforeHtml = oWords.map(function(w){
-    var clean = w.replace(/[^\w]/g,'');
-    var inNew = nLow.indexOf(clean)>=0;
-    return inNew ? '<span class="diff-same">'+w+'</span>' : '<span class="diff-removed">'+w+'</span>';
-  }).join(' ');
-
-  var afterHtml = nWords.map(function(w){
-    var clean = w.toLowerCase().replace(/[^\w]/g,'');
-    var inOld = oSet.has(clean);
-    return inOld ? '<span class="diff-same">'+w+'</span>' : '<span class="diff-added">'+w+'</span>';
-  }).join(' ');
-
-  document.getElementById('diffBefore').innerHTML = beforeHtml || '<span style="color:var(--text3)">—</span>';
-  document.getElementById('diffAfter').innerHTML = afterHtml;
+function renderDiff(orig,opt){
+  var oW=orig.toLowerCase().split(/[\s,\[\]]+/).filter(Boolean);var nW=opt.split(/[\s,\[\]]+/).filter(Boolean);var oSet=new Set(oW);var nL=nW.map(function(w){return w.toLowerCase().replace(/[^\w]/g,'')});
+  var bH=oW.map(function(w){var c=w.replace(/[^\w]/g,'');return nL.indexOf(c)>=0?'<span class="d-s">'+w+'</span>':'<span class="d-r">'+w+'</span>'}).join(' ');
+  var aH=nW.map(function(w){var c=w.toLowerCase().replace(/[^\w]/g,'');return oSet.has(c)?'<span class="d-s">'+w+'</span>':'<span class="d-a">'+w+'</span>'}).join(' ');
+  var b=document.getElementById('diffBefore'),a=document.getElementById('diffAfter');if(b)b.innerHTML=bH||'<span class="d-s">—</span>';if(a)a.innerHTML=aH;
 }
-
-// ═══════════════════════════════════════════
-// STREAM TEXT HELPER
-// ═══════════════════════════════════════════
-function streamText(elId, text, delay, callback){
-  var el = document.getElementById(elId);
-  if(!el) return callback && callback();
-  el.innerHTML = '';
-  var cursor = document.createElement('span');
-  cursor.className = 'stream-cursor';
-  el.appendChild(cursor);
-  var i = 0;
-  var interval = setInterval(function(){
-    if(i >= text.length){
-      clearInterval(interval);
-      cursor.remove();
-      if(callback) callback();
-      return;
-    }
-    var node = document.createTextNode(text[i]);
-    el.insertBefore(node, cursor);
-    i++;
-  }, delay || 18);
+function renderSteps(text){
+  var el=document.getElementById('stepsText');if(!el)return;
+  var lines=text.split(/\n+/).filter(function(l){return l.trim()});
+  el.innerHTML=lines.map(function(l,i){var clean=l.replace(/^\d+[\.\)]\s*/,'').trim();return'<div class="step-item"><span class="si-n">0'+(i+1)+'</span><span class="si-t">'+clean+'</span></div>'}).join('');
 }
-
-// ═══════════════════════════════════════════
-// WEB AUDIO — play genre-tuned tone
-// ═══════════════════════════════════════════
-function playTone(){
-  try {
-    var ctx = new (window.AudioContext || window.webkitAudioContext)();
-    var genreFreqs = {trap:55,phonk:41,house:110,techno:82,ambient:220,'lo-fi hip hop':73,R:164,jazz:146,pop:196,indie:247};
-    var g = state.genre[0] || 'trap';
-    var freq = genreFreqs[g] || 110;
-    // Sub oscillator
-    var osc1 = ctx.createOscillator();
-    var osc2 = ctx.createOscillator();
-    var gain = ctx.createGain();
-    osc1.type = 'sine';
-    osc1.frequency.value = freq;
-    osc2.type = 'sine';
-    osc2.frequency.value = freq * 2;
-    gain.gain.setValueAtTime(0.4, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8);
-    osc1.connect(gain);
-    osc2.connect(gain);
-    gain.connect(ctx.destination);
-    osc1.start();
-    osc2.start();
-    osc1.stop(ctx.currentTime + 0.8);
-    osc2.stop(ctx.currentTime + 0.8);
-  } catch(e){}
+function renderPills(){
+  var el=document.getElementById('valPills');if(!el)return;
+  var pills=[];
+  if(S.g.length>0)pills.push({t:'Genre ✓',ok:true});else pills.push({t:'No genre',ok:false});
+  if(getSeqText())pills.push({t:'Structure ✓',ok:true});else pills.push({t:'No structure',ok:false});
+  if(S.v.length>0)pills.push({t:'Vocal ✓',ok:true});
+  var len=buildParts().raw.length;if(len>0&&len<=200)pills.push({t:'Length OK',ok:true});if(len>200)pills.push({t:'Too long!',ok:false});
+  el.innerHTML=pills.map(function(p){return'<span class="vp '+(p.ok?'vp-ok':'vp-warn')+'"><span class="vp-dot"></span>'+p.t+'</span>'}).join('');
 }
-
-function playSuccessTone(){
-  try {
-    var ctx = new (window.AudioContext || window.webkitAudioContext)();
-    var freqs = [440, 554, 659];
-    freqs.forEach(function(freq, i){
-      var osc = ctx.createOscillator();
-      var gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.value = freq;
-      gain.gain.setValueAtTime(0, ctx.currentTime + i*0.08);
-      gain.gain.linearRampToValueAtTime(0.15, ctx.currentTime + i*0.08 + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i*0.08 + 0.4);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(ctx.currentTime + i*0.08);
-      osc.stop(ctx.currentTime + i*0.08 + 0.4);
-    });
-  } catch(e){}
+function playSuccess(){
+  try{var c=new(window.AudioContext||window.webkitAudioContext)();[[440,0],[554,.08],[659,.18],[880,.30]].forEach(function(pair){var o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=pair[0];g.gain.setValueAtTime(0,c.currentTime+pair[1]);g.gain.linearRampToValueAtTime(.09,c.currentTime+pair[1]+.02);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+pair[1]+.5);o.connect(g);g.connect(c.destination);o.start(c.currentTime+pair[1]);o.stop(c.currentTime+pair[1]+.5);});}catch(e){}
 }
+function copyResult(){if(!optimizedResult)return;try{navigator.clipboard.writeText(optimizedResult)}catch(e){}var btn=document.getElementById('copyBtn');if(btn){btn.textContent='Copied ✓';btn.classList.add('copied');setTimeout(function(){btn.textContent='Copy';btn.classList.remove('copied')},2000)}}
+function buildShareText(){var s=document.getElementById('scoreNum');var sv=s?s.textContent.replace(/[^0-9]/g,''):'?';return'I optimized my Suno prompt and scored '+sv+'/10 using the free Suno Prompt Optimizer from MusicProductionWiki.com — The Producer\'s Bible.';}
+function shareLink(){var btn=document.getElementById('shareCopyBtn');try{navigator.clipboard.writeText(shareURL)}catch(e){}if(btn){btn.textContent='✓ Copied!';btn.classList.add('done');setTimeout(function(){btn.innerHTML='<svg class="sh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy Link';btn.classList.remove('done')},2000)}}
+function updateShareLinks(){var text=buildShareText();var enc=encodeURIComponent;var xBtn=document.getElementById('shareXBtn');var rBtn=document.getElementById('shareRedditBtn');if(xBtn)xBtn.href='https://twitter.com/intent/tweet?url='+enc(shareURL)+'&text='+enc(text);if(rBtn)rBtn.href='https://reddit.com/submit?url='+enc(shareURL)+'&title='+enc(text);}
 
-// ═══════════════════════════════════════════
-// COPY PROMPT
-// ═══════════════════════════════════════════
-function copyPrompt(){
-  var text = currentOptimized;
-  if(!text) return;
-  navigator.clipboard && navigator.clipboard.writeText(text);
-  var chip = document.getElementById('copyChip');
-  if(chip){ chip.textContent = '✓ Copied!'; chip.classList.add('copied');
-    setTimeout(function(){chip.textContent='⊕ Copy Prompt';chip.classList.remove('copied');},2000); }
-}
-
-// ═══════════════════════════════════════════
-// SESSION STORAGE — cross-tool context
-// ═══════════════════════════════════════════
-function saveSession(genre, mood){
-  try {
-    var s = {platform:'suno',genre:genre,mood:mood,ts:Date.now()};
-    sessionStorage.setItem('mpw_session', JSON.stringify(s));
-  } catch(e){}
-}
-
-// ═══════════════════════════════════════════
-// LOCAL STORAGE — history
-// ═══════════════════════════════════════════
-function saveHistory(prompt, score){
-  try {
-    var hist = JSON.parse(localStorage.getItem('mpw_suno_history')||'[]');
-    hist.unshift({prompt:prompt, score:score, ts:Date.now()});
-    hist = hist.slice(0,5);
-    localStorage.setItem('mpw_suno_history', JSON.stringify(hist));
-    renderHistory();
-  } catch(e){}
-}
-
-function renderHistory(){
-  try {
-    var hist = JSON.parse(localStorage.getItem('mpw_suno_history')||'[]');
-    if(hist.length === 0) return;
-    var wrap = document.getElementById('historyWrap');
-    var list = document.getElementById('historyList');
-    wrap.style.display = 'block';
-    list.innerHTML = '';
-    hist.forEach(function(h){
-      var el = document.createElement('div');
-      el.className = 'history-item';
-      el.innerHTML = '<div class="history-prompt">'+h.prompt+'</div><div class="history-score">Score: '+h.score+'/10 · '+new Date(h.ts).toLocaleDateString()+'</div>';
-      el.onclick = function(){
-        document.getElementById('freeText').value = h.prompt;
-      };
-      list.appendChild(el);
-    });
-  } catch(e){}
-}
-
-// ═══════════════════════════════════════════
-// HAPTIC
-// ═══════════════════════════════════════════
-function haptic(pattern){
-  try { navigator.vibrate && navigator.vibrate(pattern||12); } catch(e){}
-}
-
-// ═══════════════════════════════════════════
-// SHOW RESULTS — staggered entrance
-// ═══════════════════════════════════════════
-function showSection(id, delay){
-  setTimeout(function(){
-    var el = document.getElementById(id);
-    if(el) el.classList.add('visible');
-  }, delay);
-}
-
-// ═══════════════════════════════════════════
-// LOADING TEXT ROTATION
-// ═══════════════════════════════════════════
-var loadingMessages = [
-  'Analyzing prompt structure...',
-  'Checking genre specificity...',
-  'Evaluating sonic descriptors...',
-  'Scoring against Suno best practices...',
-  'Assembling optimized tags...'
-];
-var loadingIdx = 0;
-var loadingTimer = null;
-
-function startLoadingRotation(){
-  loadingIdx = 0;
-  document.getElementById('loadingText').textContent = loadingMessages[0];
-  loadingTimer = setInterval(function(){
-    loadingIdx = (loadingIdx+1) % loadingMessages.length;
-    document.getElementById('loadingText').textContent = loadingMessages[loadingIdx];
-  }, 1400);
-}
-function stopLoadingRotation(){
-  if(loadingTimer){ clearInterval(loadingTimer); loadingTimer=null; }
-}
-
-// ═══════════════════════════════════════════
-// MAIN OPTIMIZE FUNCTION — streaming Claude API
-// ═══════════════════════════════════════════
 async function runOptimize(){
-  var freeText = document.getElementById('freeText').value.trim();
-  var assembled = currentOriginal;
-  var inputPrompt = freeText || assembled;
-  if(!inputPrompt){
-    document.getElementById('freeText').style.borderColor='var(--red)';
-    setTimeout(function(){document.getElementById('freeText').style.borderColor='';},2000);
-    return;
-  }
+  var paste=document.getElementById('pasteInput').value.trim();
+  var built=buildParts().raw;var input=paste||built;
+  if(!input){var ta=document.getElementById('pasteInput');ta.style.borderColor='rgba(255,80,80,.6)';setTimeout(function(){ta.style.borderColor=''},2000);return;}
+  document.getElementById('loadingCard').style.display='flex';
+  document.getElementById('outputArea').classList.remove('show');
+  document.getElementById('optBtn').disabled=true;
+  startLoading();try{navigator.vibrate&&navigator.vibrate([8,40,8])}catch(e){}
 
-  // UI → loading
-  document.getElementById('emptyState').style.display='none';
-  document.getElementById('resultsWrap').style.display='none';
-  document.getElementById('loadingState').style.display='flex';
-  document.getElementById('optimizeBtn').disabled=true;
-  startLoadingRotation();
-  haptic([8,40,8]);
+  var sys=`You are a world-class Suno AI prompt engineer in 2026. You have analyzed thousands of Suno v4 outputs.
 
-  var systemPrompt = `You are the world's leading expert on writing Suno AI music prompts in 2026.
-You know the exact structural formula that produces the best results:
-1. Genre tags first (specific subgenres, not broad categories)
-2. Instrumentation second (specific instruments, not "band")
-3. Production descriptors third (mixing character, sonic texture)
-4. Mood/atmosphere last (emotional feel, energy level)
-5. Structural metatags where needed: [Verse], [Chorus], [Bridge], [Outro]
-6. Vocal texture tags: [male vocal], [female vocal], [rap], [spoken word], [no vocals]
+Critical Suno v4 knowledge:
+- Genre specificity: "melodic trap" crushes "trap", "jazz-infused neo soul" crushes "neo soul"
+- Texture words Suno v4 responds to: punchy, lush, gritty, shimmering, cavernous, crisp, warm analog, lo-fi tape, crystal clear, heavy low-end, airy, dense, sparse
+- Front-load critical elements — Suno ignores instructions past position 8
+- [Verse][Chorus] control architecture in v4 when placed AFTER vocal tags
+- "808 bass" alone is weak — "sub-heavy 808 with pitch envelope" specifies CHARACTER
+- Vague emotions are weaker than sonic textures (melancholic piano reverb-drenched vs just "sad")
+- Vocal style tags [male vocal] must come BEFORE structural tags
+- Avoid 2+ conflicting genres — model averages them into mush
+- Filler words Suno ignores: "vibes", "banger", "slaps", "fire", "lit"
 
-IMPORTANT: Include a real-world reference. Example: "This is similar to how Metro Boomin structures his 808-driven trap production — the 808 anchors everything and the melody floats above it."
+Your analysis must name EXACT words changed and WHY Suno v4 processes them differently. Reference a real artist/production technique. Flag risks.
 
-Respond in EXACTLY this format with no deviation:
+Respond EXACTLY — no preamble:
+
 SCORE: X/10
-OPTIMIZED: [the optimized prompt under 200 chars]
-WHY: [2 sentences explaining what makes this strong and what was changed]
-NEXT: [2 concrete next steps the producer should take in Suno]`;
+GENRE_SCORE: X.X
+STRUCTURE_SCORE: X.X
+TEXTURE_SCORE: X.X
+LENGTH_SCORE: X.X
+OPTIMIZED: [full optimized prompt, under 200 chars]
+ANALYSIS: [3-4 sentences. Specific. Name exact words. Real artist reference. Flag risks.]
+NEXT:
+1. [step 1]
+2. [step 2]
+3. [step 3]`;
 
-  var userMessage = 'Original prompt: "' + inputPrompt + '"\n\nOptimize this Suno prompt following your expert formula. Return SCORE, OPTIMIZED, WHY, and NEXT exactly as specified.';
-
-  try {
-    var response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 600,
-        system: systemPrompt,
-        messages: [{role:'user', content:userMessage}]
-      })
-    });
-
-    var data = await response.json();
-    var raw = data.content && data.content[0] ? data.content[0].text : '';
-
-    // Parse response
-    var scoreMatch = raw.match(/SCORE:\s*(\d+)/i);
-    var optimizedMatch = raw.match(/OPTIMIZED:\s*(.+?)(?=\nWHY:|$)/is);
-    var whyMatch = raw.match(/WHY:\s*(.+?)(?=\nNEXT:|$)/is);
-    var nextMatch = raw.match(/NEXT:\s*(.+?)$/is);
-
-    var score = scoreMatch ? parseInt(scoreMatch[1]) : 7;
-    var optimized = optimizedMatch ? optimizedMatch[1].trim() : inputPrompt;
-    var why = whyMatch ? whyMatch[1].trim() : '';
-    var next = nextMatch ? nextMatch[1].trim() : '';
-
-    currentOptimized = optimized;
-
-    // Stop loading
-    stopLoadingRotation();
-    document.getElementById('loadingState').style.display='none';
-    document.getElementById('resultsWrap').style.display='block';
-
-    // Reset sections
-    ['sec0','sec1','sec2','sec3','sec4'].forEach(function(id){
-      var el=document.getElementById(id);
-      if(el){el.classList.remove('visible');}
-    });
-    document.getElementById('scoreDisplay').textContent='0/10';
-    document.getElementById('scoreLabel').textContent='';
-
-    // Staggered reveals
-    // 0 — gauge
-    showSection('sec0', 100);
-    setTimeout(function(){ animateGauge(score); }, 200);
-
-    // 1 — diff (400ms)
-    showSection('sec1', 400);
-    setTimeout(function(){ renderDiff(inputPrompt, optimized); }, 450);
-
-    // 2 — optimized prompt (700ms) — stream it
-    showSection('sec2', 700);
-    setTimeout(function(){
-      streamText('optimizedPrompt', optimized, 20, null);
-    }, 750);
-
-    // 3 — why explanation (1200ms) — stream it
-    showSection('sec3', 1200);
-    setTimeout(function(){
-      streamText('explanationText', why, 15, null);
-    }, 1250);
-
-    // 4 — next steps (1800ms) — stream it
-    showSection('sec4', 1800);
-    setTimeout(function(){
-      streamText('nextSteps', next, 15, function(){
-        // All done
-        playSuccessTone();
-        haptic(12);
-        saveSession(state.genre[0]||'', state.mood[0]||'');
-        saveHistory(optimized, score);
-      });
-    }, 1850);
-
-    document.getElementById('optimizeBtn').disabled=false;
-
-  } catch(err){
-    stopLoadingRotation();
-    document.getElementById('loadingState').style.display='none';
-    document.getElementById('emptyState').style.display='flex';
-    document.getElementById('emptyState').querySelector('.output-empty-text').textContent='Connection error. Please try again.';
-    document.getElementById('optimizeBtn').disabled=false;
+  try{
+    var res=await fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:750,system:sys,messages:[{role:'user',content:'Original prompt: "'+input+'"\n\nOptimize following your expert Suno v4 knowledge. Return all fields exactly.'}]})});
+    var data=await res.json();var raw=data.content&&data.content[0]?data.content[0].text:'';
+    var sM=raw.match(/SCORE:\s*(\d+)/i),gM=raw.match(/GENRE_SCORE:\s*([\d.]+)/i),stM=raw.match(/STRUCTURE_SCORE:\s*([\d.]+)/i),txM=raw.match(/TEXTURE_SCORE:\s*([\d.]+)/i),lM=raw.match(/LENGTH_SCORE:\s*([\d.]+)/i);
+    var oM=raw.match(/OPTIMIZED:\s*(.+?)(?=\nANALYSIS:|$)/is),aM=raw.match(/ANALYSIS:\s*(.+?)(?=\nNEXT:|$)/is),nM=raw.match(/NEXT:\s*(.+?)$/is);
+    var score=sM?parseInt(sM[1]):7,optimized=oM?oM[1].trim():input,analysis=aM?aM[1].trim():'',next=nM?nM[1].trim():'';
+    optimizedResult=optimized;
+    stopLoading();document.getElementById('loadingCard').style.display='none';document.getElementById('outputArea').classList.add('show');
+    animGauge(score);
+    animMeter('mG','mGv',(gM?parseFloat(gM[1]):7)*10,(gM?parseFloat(gM[1]):7).toFixed(1));
+    animMeter('mS','mSv',(stM?parseFloat(stM[1]):7)*10,(stM?parseFloat(stM[1]):7).toFixed(1));
+    animMeter('mT','mTv',(txM?parseFloat(txM[1]):6)*10,(txM?parseFloat(txM[1]):6).toFixed(1));
+    animMeter('mL','mLv',(lM?parseFloat(lM[1]):8)*10,(lM?parseFloat(lM[1]):8).toFixed(1));
+    renderPills();
+    // Color-coded output
+    var optEl=document.getElementById('optResultText');
+    if(optEl){
+      var colored=optimized;
+      colored=colored.replace(/\[[^\]]+\]/g,function(m){return'\x00S\x00'+m+'\x00/S\x00'});
+      S.g.forEach(function(g){colored=colored.replace(new RegExp(g.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),function(m){return'\x00G\x00'+m+'\x00/G\x00'})});
+      S.i.forEach(function(v){colored=colored.replace(new RegExp(v.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),function(m){return'\x00I\x00'+m+'\x00/I\x00'})});
+      S.m.forEach(function(v){colored=colored.replace(new RegExp(v.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),function(m){return'\x00M\x00'+m+'\x00/M\x00'})});
+      colored=colored.replace(/\x00S\x00/g,'<span class="or-s">').replace(/\x00\/S\x00/g,'</span>').replace(/\x00G\x00/g,'<span class="or-g">').replace(/\x00\/G\x00/g,'</span>').replace(/\x00I\x00/g,'<span class="or-i">').replace(/\x00\/I\x00/g,'</span>').replace(/\x00M\x00/g,'<span class="or-m">').replace(/\x00\/M\x00/g,'</span>');
+      optEl.innerHTML=colored;
+    }
+    renderDiff(input,optimized);
+    setTimeout(function(){streamInto('analysisText',analysis,12,null)},300);
+    setTimeout(function(){renderSteps(next)},500);
+    updateShareLinks();
+    setTimeout(function(){var el=document.getElementById('scoreCard');if(el)el.scrollIntoView({behavior:'smooth',block:'start'})},200);
+    playSuccess();try{navigator.vibrate&&navigator.vibrate(12)}catch(e){}
+    try{var hist=JSON.parse(localStorage.getItem('mpw_suno_hist')||'[]');hist.unshift({prompt:optimized,score:score,ts:Date.now()});localStorage.setItem('mpw_suno_hist',JSON.stringify(hist.slice(0,10)));}catch(e){}
+    try{sessionStorage.setItem('mpw_session',JSON.stringify({platform:'suno',genre:S.g[0]||'',mood:S.m[0]||'',ts:Date.now()}))}catch(e){}
+  }catch(err){
+    stopLoading();document.getElementById('loadingCard').style.display='none';document.getElementById('outputArea').classList.add('show');
+    var sc=document.getElementById('scoreCard');if(sc)sc.innerHTML='<div style="padding:22px;font-size:15px;color:#ff8080;font-family:DM Sans,sans-serif;line-height:1.75;font-weight:400">Connection error — please try again. If the issue persists, the API service may be temporarily unavailable.</div>';
   }
+  document.getElementById('optBtn').disabled=false;
 }
 
-// ═══════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════
-drawGauge(0);
-renderHistory();
-
-// pushState back-button fix for mobile drawer
-(function(){
-  var d=document.getElementById('mobileDrawer')||document.getElementById('bmnDrawer');
-  var b=document.getElementById('navMob')||document.getElementById('bmnMob');
-  if(b&&d){
-    b.addEventListener('click',function(){
-      d.classList.toggle('open');
-      if(d.classList.contains('open')){history.pushState({drawerOpen:true},'');}
-    });
-    window.addEventListener('popstate',function(){
-      if(d&&d.classList.contains('open')){d.classList.remove('open');}
-    });
-  }
-})();
-
-// Pre-fill from sessionStorage if coming from another MPW tool
-try {
-  var sess = JSON.parse(sessionStorage.getItem('mpw_session')||'{}');
-  if(sess.genre){
-    var chip = document.querySelector('[data-cat="genre"][data-val="'+sess.genre+'"]');
-    if(chip) chip.click();
-  }
-} catch(e){}
+try{var sess=JSON.parse(sessionStorage.getItem('mpw_session')||'{}');if(sess.genre){var pre=document.querySelector('.chip[data-cat="g"][data-val="'+sess.genre+'"]');if(pre)pre.click()}}catch(e){}
 </script>
+
+<footer class="site-footer">
+  <a href="/bible/" style="color:#f5a623;text-decoration:none;font-size:12px;font-weight:700;display:block;margin-bottom:8px">&#9670; The Producer&#8217;s Bible</a>
+  <p style="font-size:15px;font-weight:600;color:#e0e0f0;margin-bottom:4px">MusicProductionWiki.com</p>
+  <p style="font-size:13px;color:#666;margin-bottom:16px">The most comprehensive music production reference on the internet.</p>
+  <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+    <span style="font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.08em">Share</span>
+    <a href="https://x.com/intent/tweet?text=Suno+Prompt+Optimizer+%E2%80%94+Free+AI+Music+Tool&url=https%3A%2F%2Fmusicproductionwiki.com%2Ftools%2Fsuno-prompt-optimizer.html" target="_blank" rel="noopener" style="background:#000;color:#fff;font-size:12px;font-weight:700;padding:6px 14px;border-radius:6px;text-decoration:none">Share on X</a>
+    <a href="https://reddit.com/submit?url=https%3A%2F%2Fmusicproductionwiki.com%2Ftools%2Fsuno-prompt-optimizer.html&title=Suno+Prompt+Optimizer+%E2%80%94+Free+AI+Music+Tool+%7C+MusicProductionWiki" target="_blank" rel="noopener" style="background:#ff4500;color:#fff;font-size:12px;font-weight:700;padding:6px 14px;border-radius:6px;text-decoration:none">Reddit</a>
+  </div>
+  <p style="font-size:13px;color:#555"><a href="/" style="color:#f5a623;text-decoration:none">Home</a> &middot; <a href="/about.html" style="color:#f5a623;text-decoration:none">About</a> &middot; <a href="/bible/" style="color:#f5a623;text-decoration:none">Producer&#8217;s Bible</a> &middot; <a href="/tools/" style="color:#f5a623;text-decoration:none">All Tools</a></p>
+  <p style="margin-top:8px;font-size:11px;color:#444">&copy; 2026 MusicProductionWiki.com &#8212; Built for producers, by producers.</p>
+</footer>
+
 </body>
 </html>
