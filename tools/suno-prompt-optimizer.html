@@ -1303,19 +1303,9 @@ NEXT:
 3. [specific actionable step]`;
 
   try{
-    // Try function URL directly
-    var functionURL = 'https://classy-haupia-be8e43.netlify.app/.netlify/functions/claude-proxy';
-    var res;
-    try {
-      res = await fetch(functionURL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,system:sys,messages:[
+    var res=await fetch('https://classy-haupia-be8e43.netlify.app/.netlify/functions/claude-proxy',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,system:sys,messages:[
       {role:'user',content:'Analyze and optimize this Suno prompt: "'+input+'"'}
       ]})});
-    } catch(e) {
-      throw new Error('Function unreachable: ' + e.message);
-    }
-    if (!res.ok && res.status === 404) {
-      throw new Error('Function not found - check Netlify deployment');
-    }
     var data=await res.json();var raw=data.content&&data.content[0]?data.content[0].text:'';
     console.log('FULL RAW:', raw.substring(0,500));
     // Log raw for debugging
