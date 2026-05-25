@@ -1,77 +1,64 @@
 const https = require('https');
 
-exports.handler = async function(event) {
-  const allowedOrigins = [
-    'https://www.musicproductionwiki.com',
-    'https://musicproductionwiki.com'
-  ];
-  const origin = event.headers && (event.headers.origin || event.headers.Origin);
-  const corsOrigin = allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
+exports.handler = function(event, context, callback) {
+  if (event.httpMethod === 'OPTIONS') {
+    return callback(null, {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type'
+      },
+      body: ''
+    });
+  }
 
-  const corsHeaders = {
-    'Access-Control-Allow-Origin': corsOrigin,
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Content-Type': 'application/json'
+  const key = process.env.ANTHROPIC_API_KEY;
+  if (!key) {
+    return callback(null, {
+      statusCode: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify({ error: 'No API key' })
+    });
+  }
+
+  const payload = event.body;
+  const options = {
+    hostname: 'api.anthropic.com',
+    port: 443,
+    path: '/v1/messages',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Content-Length': Buffer.byteLength(payload),
+      'x-api-key': key,
+      'anthropic-version': '2023-06-01'
+    }
   };
 
-  if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 200, headers: corsHeaders, body: '' };
-  }
-
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers: corsHeaders, body: JSON.stringify({ error: 'Method not allowed' }) };
-  }
-
-  const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
-  if (!ANTHROPIC_API_KEY) {
-    return { statusCode: 500, headers: corsHeaders, body: JSON.stringify({ error: 'API key not configured' }) };
-  }
-
-  return new Promise((resolve) => {
-    try {
-      const bodyStr = JSON.stringify(JSON.parse(event.body));
-      const options = {
-        hostname: 'api.anthropic.com',
-        path: '/v1/messages',
-        method: 'POST',
+  const req = https.request(options, function(res) {
+    let body = '';
+    res.on('data', function(chunk) { body += chunk; });
+    res.on('end', function() {
+      callback(null, {
+        statusCode: res.statusCode,
         headers: {
           'Content-Type': 'application/json',
-          'Content-Length': Buffer.byteLength(bodyStr),
-          'x-api-key': ANTHROPIC_API_KEY,
-          'anthropic-version': '2023-06-01'
-        }
-      };
-
-      const req = https.request(options, (res) => {
-        let data = '';
-        res.on('data', (chunk) => { data += chunk; });
-        res.on('end', () => {
-          resolve({
-            statusCode: res.statusCode,
-            headers: corsHeaders,
-            body: data
-          });
-        });
+          'Access-Control-Allow-Origin': '*'
+        },
+        body: body
       });
-
-      req.on('error', (err) => {
-        resolve({
-          statusCode: 500,
-          headers: corsHeaders,
-          body: JSON.stringify({ error: err.message })
-        });
-      });
-
-      req.write(bodyStr);
-      req.end();
-
-    } catch (err) {
-      resolve({
-        statusCode: 500,
-        headers: corsHeaders,
-        body: JSON.stringify({ error: err.message })
-      });
-    }
+    });
   });
+
+  req.on('error', function(e) {
+    callback(null, {
+      statusCode: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify({ error: e.message })
+    });
+  });
+
+  req.write(payload);
+  req.end();
 };
