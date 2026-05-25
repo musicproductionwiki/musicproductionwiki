@@ -533,6 +533,354 @@ body.embed-mode .hero{border-radius:12px 12px 0 0}
   text-align:center;
 }
 
+
+/* ═══════════════════════════════════════════════════════════════
+   GLASSMORPHIC REDESIGN — v4 — injected block
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Stagger animation */
+@keyframes gcardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+/* Shimmer sweep */
+@keyframes gShimmer{0%{transform:translateX(-100%) skewX(-12deg);opacity:0}15%{opacity:1}85%{opacity:1}100%{transform:translateX(220%) skewX(-12deg);opacity:0}}
+/* Badge spring */
+@keyframes gBadgeIn{0%{opacity:0;transform:scale(.5) translateY(4px)}60%{transform:scale(1.18) translateY(-1px)}80%{transform:scale(.96)}100%{opacity:1;transform:scale(1) translateY(0)}}
+/* Chip deselect pulse */
+@keyframes gChipDesel{0%{opacity:1;transform:scale(1.04)}40%{opacity:.25;transform:scale(.94)}100%{opacity:1;transform:scale(1)}}
+
+/* ── SECTION CARDS (sc) ────────────────────────────────────── */
+.sc{
+  position:relative;
+  border-radius:20px;
+  overflow:hidden;
+  background:linear-gradient(160deg,rgba(255,255,255,0.07) 0%,rgba(255,255,255,0.02) 45%,rgba(255,255,255,0.04) 100%) !important;
+  backdrop-filter:blur(28px) saturate(1.4) !important;
+  -webkit-backdrop-filter:blur(28px) saturate(1.4) !important;
+  border:1px solid rgba(255,255,255,0.11) !important;
+  border-top:1px solid rgba(255,255,255,0.2) !important;
+  box-shadow:
+    inset 0 1.5px 0 rgba(255,255,255,0.13),
+    inset 0 -1px 0 rgba(0,0,0,0.25),
+    inset 1px 0 0 rgba(255,255,255,0.04),
+    inset -1px 0 0 rgba(255,255,255,0.04),
+    0 2px 4px rgba(0,0,0,0.2),
+    0 10px 24px rgba(0,0,0,0.34),
+    0 28px 56px rgba(0,0,0,0.28) !important;
+  transition:transform .28s cubic-bezier(.2,.85,.2,1),box-shadow .28s,border-color .22s;
+}
+.sc::after{
+  content:'';position:absolute;top:0;left:10%;right:10%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,232,162,0.6) 30%,rgba(245,166,35,0.4) 70%,transparent);
+  opacity:.85;border-radius:0 0 2px 2px;
+  z-index:1;
+}
+.sc:hover{
+  transform:translateY(-3px);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255,255,255,0.17),
+    inset 0 -1px 0 rgba(0,0,0,0.3),
+    inset 1px 0 0 rgba(255,255,255,0.06),
+    inset -1px 0 0 rgba(255,255,255,0.06),
+    0 4px 10px rgba(0,0,0,0.28),
+    0 20px 44px rgba(0,0,0,0.48),
+    0 40px 72px rgba(0,0,0,0.35),
+    0 0 70px rgba(0,232,162,0.07) !important;
+  border-top-color:rgba(0,232,162,0.35) !important;
+}
+
+/* Shimmer sweep on hover */
+.sc::before{
+  content:'';position:absolute;inset:0;border-radius:20px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.055) 50%,transparent);
+  transform:translateX(-100%) skewX(-12deg);
+  opacity:0;pointer-events:none;z-index:1;
+  transition:none;
+}
+.sc:hover::before{animation:gShimmer .7s cubic-bezier(.4,0,.2,1) forwards}
+
+.sc-head{padding:20px 22px 0 !important}
+.sc-label{color:#00e8a2 !important;text-shadow:0 0 16px rgba(0,232,162,0.6)}
+.sc-hint{color:#9090c0 !important;font-size:9px}
+
+/* ── GENRE GROUP LABELS ─────────────────────────────────────── */
+.gg-name{
+  color:#8080b8 !important;
+  text-shadow:none;
+  margin-bottom:11px !important;
+  font-size:8.5px !important;
+}
+
+/* ── CHIPS ──────────────────────────────────────────────────── */
+.chip{
+  position:relative;
+  display:inline-flex;align-items:center;gap:7px;
+  padding:9px 16px !important;
+  border-radius:28px !important;
+  background:rgba(255,255,255,0.052) !important;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.1) !important;
+  border-top:1px solid rgba(255,255,255,0.17) !important;
+  color:#a0a0cc !important;
+  font-size:12.5px !important;font-weight:500 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.1),
+    inset 0 -1px 0 rgba(0,0,0,0.18),
+    0 1px 3px rgba(0,0,0,0.22),
+    0 4px 10px rgba(0,0,0,0.18) !important;
+  transition:transform .2s cubic-bezier(.2,.85,.2,1),box-shadow .2s,border-color .15s,color .14s,background .14s,font-weight .12s !important;
+  overflow:hidden;
+}
+/* chip top sheen */
+.chip::before{
+  content:'';position:absolute;top:0;left:12px;right:12px;height:50%;border-radius:28px 28px 0 0;
+  background:linear-gradient(to bottom,rgba(255,255,255,0.07),transparent);pointer-events:none;
+}
+.chip:hover{
+  transform:translateY(-3px) scale(1.05) !important;
+  background:rgba(255,255,255,0.09) !important;
+  color:#f0f0ff !important;font-weight:600 !important;
+  border-color:rgba(255,255,255,0.28) !important;
+  border-top-color:rgba(255,255,255,0.38) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    inset 0 -1px 0 rgba(0,0,0,0.22),
+    0 2px 6px rgba(0,0,0,0.3),
+    0 8px 24px rgba(0,0,0,0.28),
+    0 0 20px rgba(0,232,162,0.12) !important;
+}
+.chip:active{transform:translateY(0) scale(.97) !important}
+
+/* Genre selected */
+.chip.sel-g{
+  background:rgba(245,166,35,0.12) !important;
+  border:1.5px solid #f5a623 !important;
+  border-top:1.5px solid rgba(245,166,35,0.8) !important;
+  color:#f5a623 !important;font-weight:700 !important;
+  transform:scale(1.04) !important;
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.18),
+    inset 0 -1px 0 rgba(0,0,0,0.15),
+    0 0 0 1px rgba(245,166,35,0.3),
+    0 0 16px rgba(245,166,35,0.3),
+    0 0 32px rgba(245,166,35,0.15),
+    0 4px 14px rgba(0,0,0,0.35) !important;
+}
+.chip.sel-g::after{content:'';position:absolute;top:0;left:15%;right:15%;height:1px;background:rgba(245,166,35,0.9);box-shadow:0 0 8px #f5a623,0 0 16px rgba(245,166,35,0.6);border-radius:0 0 2px 2px}
+
+/* Instrument selected */
+.chip.sel-i{
+  background:rgba(0,232,162,0.1) !important;
+  border:1.5px solid #00e8a2 !important;
+  border-top:1.5px solid rgba(0,232,162,0.8) !important;
+  color:#00e8a2 !important;font-weight:700 !important;
+  transform:scale(1.04) !important;
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.18),
+    inset 0 -1px 0 rgba(0,0,0,0.15),
+    0 0 0 1px rgba(0,232,162,0.28),
+    0 0 16px rgba(0,232,162,0.28),
+    0 0 32px rgba(0,232,162,0.12),
+    0 4px 14px rgba(0,0,0,0.35) !important;
+}
+.chip.sel-i::after{content:'';position:absolute;top:0;left:15%;right:15%;height:1px;background:rgba(0,232,162,0.9);box-shadow:0 0 8px #00e8a2,0 0 16px rgba(0,232,162,0.6);border-radius:0 0 2px 2px}
+
+/* Mood selected */
+.chip.sel-m{
+  background:rgba(168,85,247,0.1) !important;
+  border:1.5px solid #a855f7 !important;
+  border-top:1.5px solid rgba(168,85,247,0.8) !important;
+  color:#c084fc !important;font-weight:700 !important;
+  transform:scale(1.04) !important;
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.18),
+    inset 0 -1px 0 rgba(0,0,0,0.15),
+    0 0 0 1px rgba(168,85,247,0.28),
+    0 0 16px rgba(168,85,247,0.28),
+    0 0 32px rgba(168,85,247,0.12),
+    0 4px 14px rgba(0,0,0,0.35) !important;
+}
+.chip.sel-m::after{content:'';position:absolute;top:0;left:15%;right:15%;height:1px;background:rgba(192,132,252,0.9);box-shadow:0 0 8px #c084fc,0 0 16px rgba(192,132,252,0.6);border-radius:0 0 2px 2px}
+
+/* Vocal selected */
+.chip.sel-v{
+  background:rgba(96,168,255,0.1) !important;
+  border:1.5px solid #60a8ff !important;
+  border-top:1.5px solid rgba(96,168,255,0.8) !important;
+  color:#80c0ff !important;font-weight:700 !important;
+  transform:scale(1.04) !important;
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.18),
+    inset 0 -1px 0 rgba(0,0,0,0.15),
+    0 0 0 1px rgba(96,168,255,0.28),
+    0 0 16px rgba(96,168,255,0.28),
+    0 0 32px rgba(96,168,255,0.12),
+    0 4px 14px rgba(0,0,0,0.35) !important;
+}
+.chip.sel-v::after{content:'';position:absolute;top:0;left:15%;right:15%;height:1px;background:rgba(96,168,255,0.9);box-shadow:0 0 8px #60a8ff,0 0 16px rgba(96,168,255,0.6);border-radius:0 0 2px 2px}
+
+/* ── SEQUENCER PALETTE BLOCKS ───────────────────────────────── */
+.sbl{
+  border-radius:12px !important;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.1),0 2px 8px rgba(0,0,0,0.25),0 6px 16px rgba(0,0,0,0.2) !important;
+  transition:transform .2s cubic-bezier(.2,.85,.2,1),box-shadow .2s,filter .15s !important;
+  font-weight:700 !important;
+}
+.sbl:hover{
+  transform:translateY(-3px) scale(1.06) !important;
+  filter:brightness(1.3) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.15),0 4px 16px rgba(0,0,0,0.35),0 12px 28px rgba(0,0,0,0.3) !important;
+}
+
+/* ── SEQUENCER RAIL ─────────────────────────────────────────── */
+.seq-rail{
+  background:rgba(0,0,0,0.5) !important;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border:1.5px dashed rgba(255,255,255,0.12) !important;
+  border-radius:14px !important;
+  box-shadow:inset 0 2px 12px rgba(0,0,0,0.3) !important;
+}
+.seq-rail.drag-over{
+  border-color:rgba(0,232,162,0.5) !important;
+  background:rgba(0,232,162,0.04) !important;
+  box-shadow:inset 0 2px 12px rgba(0,0,0,0.3),0 0 30px rgba(0,232,162,0.1) !important;
+}
+
+/* Placed blocks */
+.splaced{
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-radius:10px !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.12),0 2px 6px rgba(0,0,0,0.3),0 6px 14px rgba(0,0,0,0.22) !important;
+  font-weight:700 !important;
+  transition:all .15s !important;
+}
+.splaced:hover{box-shadow:inset 0 1px 0 rgba(255,255,255,0.18),0 4px 12px rgba(0,0,0,0.4),0 8px 20px rgba(0,0,0,0.3) !important;filter:brightness(1.2)}
+
+/* ── LIVE PROMPT BOX ────────────────────────────────────────── */
+.prompt-live{
+  background:rgba(0,0,0,0.5) !important;
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,0.09) !important;
+  border-top:1px solid rgba(255,255,255,0.14) !important;
+  border-radius:13px !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.07),inset 0 2px 12px rgba(0,0,0,0.3) !important;
+}
+.pl-label{color:#00a870 !important;text-shadow:0 0 12px rgba(0,200,130,0.4)}
+
+/* ── OUTPUT CARDS (ob) ──────────────────────────────────────── */
+.ob{
+  background:linear-gradient(160deg,rgba(255,255,255,0.06) 0%,rgba(255,255,255,0.02) 50%,rgba(255,255,255,0.035) 100%) !important;
+  backdrop-filter:blur(24px) saturate(1.3);-webkit-backdrop-filter:blur(24px) saturate(1.3);
+  border:1px solid rgba(255,255,255,0.1) !important;
+  border-top:1px solid rgba(255,255,255,0.18) !important;
+  border-radius:16px !important;
+  box-shadow:
+    inset 0 1.5px 0 rgba(255,255,255,0.12),
+    inset 0 -1px 0 rgba(0,0,0,0.22),
+    0 4px 12px rgba(0,0,0,0.28),
+    0 16px 36px rgba(0,0,0,0.32) !important;
+}
+.ob-head{
+  background:rgba(255,255,255,0.03) !important;
+  border-bottom:1px solid rgba(255,255,255,0.07) !important;
+  padding:15px 22px !important;
+}
+.ob-title{color:#e0e0ff !important;font-weight:700 !important}
+
+/* ── SCORE CARD ─────────────────────────────────────────────── */
+.score-card{
+  background:linear-gradient(145deg,rgba(0,232,162,0.08) 0%,rgba(255,255,255,0.03) 50%,rgba(0,232,162,0.04) 100%) !important;
+  backdrop-filter:blur(28px) saturate(1.4);-webkit-backdrop-filter:blur(28px) saturate(1.4);
+  border:1px solid rgba(0,232,162,0.22) !important;
+  border-top:1px solid rgba(0,232,162,0.4) !important;
+  border-radius:18px !important;
+  box-shadow:
+    inset 0 1.5px 0 rgba(255,255,255,0.12),
+    inset 0 -1px 0 rgba(0,0,0,0.2),
+    0 0 0 1px rgba(0,232,162,0.08),
+    0 8px 24px rgba(0,0,0,0.35),
+    0 0 60px rgba(0,232,162,0.06) !important;
+}
+
+/* ── STEP ITEMS (next steps) ────────────────────────────────── */
+.step-item{
+  background:rgba(0,232,162,0.04) !important;
+  border:1px solid rgba(0,232,162,0.12) !important;
+  border-top:1px solid rgba(0,232,162,0.18) !important;
+  border-radius:12px !important;
+  box-shadow:inset 0 1px 0 rgba(0,232,162,0.08),0 2px 8px rgba(0,0,0,0.2) !important;
+}
+
+/* ── SHARE BAR ──────────────────────────────────────────────── */
+.share-bar{
+  background:rgba(0,0,0,0.6) !important;
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.09) !important;
+  border-top:1px solid rgba(255,255,255,0.15) !important;
+  border-radius:16px !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.07),0 8px 28px rgba(0,0,0,0.4) !important;
+}
+
+/* ── BRAND WATERMARK ────────────────────────────────────────── */
+.brand-wm{
+  background:rgba(0,0,0,0.65) !important;
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(0,232,162,0.14) !important;
+  border-top:1px solid rgba(0,232,162,0.22) !important;
+  border-radius:15px !important;
+  box-shadow:inset 0 1px 0 rgba(0,232,162,0.08),0 6px 20px rgba(0,0,0,0.4) !important;
+}
+
+/* ── PASTE TEXTAREA ─────────────────────────────────────────── */
+.paste-ta{
+  background:rgba(0,0,0,0.5) !important;
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.1) !important;
+  border-top:1px solid rgba(255,255,255,0.15) !important;
+  border-radius:13px !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.06),inset 0 2px 12px rgba(0,0,0,0.35) !important;
+}
+.paste-ta:focus{border-color:rgba(0,232,162,0.4) !important;border-top-color:rgba(0,232,162,0.5) !important;box-shadow:inset 0 1px 0 rgba(0,232,162,0.08),inset 0 2px 12px rgba(0,0,0,0.35),0 0 20px rgba(0,232,162,0.08) !important}
+
+/* ── LOADING CARD ───────────────────────────────────────────── */
+.loading-card{
+  background:linear-gradient(160deg,rgba(255,255,255,0.06) 0%,rgba(255,255,255,0.02) 100%) !important;
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(255,255,255,0.1) !important;
+  border-top:1px solid rgba(255,255,255,0.18) !important;
+  border-radius:18px !important;
+  box-shadow:inset 0 1.5px 0 rgba(255,255,255,0.1),0 8px 28px rgba(0,0,0,0.4) !important;
+}
+
+/* ── METER TRACK ────────────────────────────────────────────── */
+.mr-track{
+  background:rgba(255,255,255,0.06) !important;
+  border-radius:3px !important;
+  height:5px !important;
+  box-shadow:inset 0 1px 3px rgba(0,0,0,0.4) !important;
+}
+.mr-fill{border-radius:3px !important}
+
+/* ── VALIDATION PILLS ───────────────────────────────────────── */
+.vp-ok{
+  background:rgba(0,232,162,0.08) !important;
+  border:1px solid rgba(0,232,162,0.28) !important;
+  box-shadow:0 0 10px rgba(0,232,162,0.1),inset 0 1px 0 rgba(255,255,255,0.06) !important;
+}
+.vp-warn{
+  background:rgba(245,166,35,0.08) !important;
+  border:1px solid rgba(245,166,35,0.28) !important;
+  box-shadow:0 0 10px rgba(245,166,35,0.1),inset 0 1px 0 rgba(255,255,255,0.06) !important;
+}
+
+/* ── CHIPS GAP ──────────────────────────────────────────────── */
+.chips{gap:9px !important}
+.genre-group{margin-bottom:20px !important}
+.sc-body{padding:14px 22px 24px !important}
+
+/* ─══════════════════════════════════════════════════════════════
+   END GLASSMORPHIC REDESIGN
+   ═══════════════════════════════════════════════════════════════ */
+
 </style>
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://www.musicproductionwiki.com/tools/suno-prompt-optimizer.html">
