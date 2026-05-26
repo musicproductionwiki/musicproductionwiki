@@ -1,13 +1,15 @@
 # MPW-HANDOFF-BIBLE.md
-*Updated: May 22, 2026 (SESSION 55)*
+*Updated: May 26, 2026 (SESSION 73 — BIBLE MERGE)*
 
 ---
 
 # 11. The Producer's Bible — Strategic Overview
 
 Goal: 1,500 entries — most comprehensive music production reference on the internet.
-Current: 226 entries live (16 v5.1 template + 210 v3.0/v4.0 template)
-Gold standard: compression.html v5.1 — built Session 32 — writer QA complete Session 37
+Current: 223 entries live — confirmed GitHub May 26, 2026
+(2 flagship: reverb.html v1.6 + chorus.html v5.2 | 69 v5.1/v5.2 | 152 v3.0/v4.0 legacy)
+Gold standard: reverb.html v1.6 — built Sessions 51–55 — 383KB — 25 sections — 3-act arc — CONFIRMED LIVE
+Legacy gold standard: compression.html v5.1 — 20 sections — superseded by reverb.html S55
 URL structure: /bible/[term] — NEVER /dictionary/
 Category pages: /bible/categories/[slug] — 8 pages — run mpw_bible_cat_pages.py --run after writer confirmed
 
@@ -2518,3 +2520,82 @@ After Session 61 tool infrastructure is built and tool pages are live:
 3. Run `--test` on compression slug — confirm GR Calculator v5 renders correctly
 4. Run remaining 33 Tier 1 entries with v5 tools embedded
 
+
+---
+
+# SESSION 61 UPDATE — BIBLE — May 23, 2026
+
+## Session 61 State
+- **Bible entries live:** 223 (S61 claimed 231 but GitHub tree audit May 26, 2026 confirms 223 — 8 entries from S61 did not land)
+- **mpw_bible_writer.py:** v5.2 s47d — unchanged this session
+- **mpw_tools_v5c.py:** Updated — Beehiiv capture + TruClarify CTA in build_checklist()
+
+## Bible Bar — Tools Pill (PENDING Session 62)
+
+The Bible bar currently has 8 category pills. "Tools" must be added as the 9th pill pointing to `/tools/`. This requires:
+
+1. Update `SITE_HEADER` in `mpw_bible_writer.py` — add `<a href="/tools/" class="bb-cat">Tools</a>` after Music Theory pill
+2. Patch all 223 live entries via Trees API (`patch_tools_pill_bible.py` — build Session 62)
+
+**Target location in Bible bar HTML:**
+```html
+<!-- ADD THIS LINE after Music Theory, before bb-all link -->
+<a href="/tools/" class="bb-cat">Tools</a>
+```
+
+## mpw_tools_v5c.py — build_checklist() Changes
+
+The Pre-Delivery Checklist tool (Tool 24, slug: `mastering-delivery`, `sync-delivery`, etc.) now has:
+
+**Beehiiv email capture** — below checklist items, amber-bordered card:
+- Title: "Free Delivery Spec Card"
+- Body: "Get the complete platform delivery spec card as a PDF..."
+- Uses Beehiiv v3 script loader, form ID `a0962c52-4819-4b09-b13d-b26517b76e01`
+- Label: "Delivered via The Producer's Briefing. Unsubscribe any time."
+
+**TruClarify CTA** — appears only on Sync Licensing tab, after "No uncleared samples" checklist item:
+- Trigger: `tc:true` flag on the item in `CK_LISTS.sync[]`
+- Rendered by: `ckRender()` — conditional callout
+- Copy: "Not sure? TruClarify can assess your sample clearance risk before you distribute → truclarify.com"
+- Style: amber left border, dark amber background — matches `div.co` callout style
+
+---
+
+# SESSION 73 — BIBLE MERGE AUDIT — May 26, 2026
+
+## Entry Count Audit
+
+GitHub tree API queried May 26, 2026. Confirmed 223 HTML files in `/bible/` (excluding index.html).
+
+**Corrections applied this session:**
+- Header entry count: 226 → 223
+- S61 claimed entry count: 231 → 223 (8 entries from S61 did not land on GitHub)
+- Gold standard reference updated: compression.html v5.1 → reverb.html v1.6
+- Header date updated: May 22, 2026 (S55) → May 26, 2026 (S73)
+
+## Entry State — Confirmed May 26, 2026
+
+| Group | Count | Status |
+|---|---|---|
+| reverb.html v1.6 | 1 | LIVE ✅ — T1 gold standard |
+| chorus.html v5.2 | 1 | LIVE ✅ |
+| v5.1 original (compression + 15) | 16 | LIVE — need regen with v5.3 |
+| v5.1 Session 40 | 54 | LIVE — content issues — need regen |
+| v3.0/v4.0 legacy | 151 | LIVE — untouched |
+| **Total confirmed** | **223** | **GitHub verified** |
+
+## No Appends to Merge
+
+No session append files target MPW-HANDOFF-BIBLE.md. This merge session consisted of:
+1. GitHub audit to confirm live entry count
+2. Header corrections (entry count, gold standard reference, date)
+3. S61 entry count correction
+4. This audit section added
+
+## Blocking Items (Unchanged)
+
+- `mpw_bible_writer.py` read time: update to 650wpm before next T1 batch
+- `mpw_bible_writer.py` nav + v5.3: build from reverb.html v1.6 gold standard
+- 33 remaining T1 entries: blocked on writer update
+- Bible Bar Tools pill: patch all 223 entries after writer confirmed
+- Canvas patch (adsr.html, envelope.html, stereo-imaging.html): pending mobile confirm
