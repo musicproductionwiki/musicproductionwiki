@@ -1,5 +1,5 @@
 # MPW SESSION START CARD
-*Last updated: May 26, 2026 — Session 69*
+*Last updated: May 26, 2026 — Session 72*
 
 ---
 
@@ -7,9 +7,9 @@
 | Item | Value |
 |------|-------|
 | Articles live | 526 |
-| Bible entries live | 223 |
-| Tools live | 40 |
-| Last commit SHA | 4e9bb50a — Session 69 CORE merge complete |
+| Bible entries live | 225 |
+| Tools live | 41 |
+| Last commit SHA | 806ac1bd — Session 71 SCRIPTS merge complete |
 | Model string | `claude-sonnet-4-6` |
 | Proxy URL | `https://classy-haupia-be8e43.netlify.app/.netlify/functions/claude-proxy` |
 | GitHub token | `[GITHUB_TOKEN — regenerate at github.com/settings/tokens if expired]` |
@@ -20,9 +20,9 @@
 ---
 
 ## TOP 3 PRIORITIES
-1. Session 70: MPW-HANDOFF-TECH.md merge (NEXT)
-2. Suno Prompt Optimizer redesign — dedicated session, read MPW-TOOL-BUILD-SPEC.md first
-3. Affiliate applications: Plugin Boutique, Amazon Associates, Loopmasters, Sweetwater, PluginFox
+1. Session 73: MPW-HANDOFF-BIBLE.md merge (NEXT)
+2. Execute mpw_writer.py 4 pending updates — blocks next article batch
+3. Execute mpw_bible_writer.py updates (650wpm + nav + v5.3) — blocks next T1 Bible batch
 
 ---
 
@@ -40,33 +40,46 @@
 | Never touch existing CSS style blocks — append only, new `<style>` block before `</head>` | S65 |
 | Never use assistant prefill in API calls — returns empty response body | S67 |
 | Never call Netlify functions via custom domain — always use `classy-haupia-be8e43.netlify.app` | S67 |
-| Never use model `claude-sonnet-4-5` — correct model is `claude-sonnet-4-6` | S68 |
+| Never use model `claude-sonnet-4-5` or `claude-sonnet-4-20250514` — correct model is `claude-sonnet-4-6` | S68 |
 | Never extract nav block with naive find() — use div-depth tracking to guarantee balance | S68 |
 | Never start tool rebuild without reading MPW-TOOL-BUILD-SPEC.md first | S68 |
 | Never insert HTML cards without verifying position is INSIDE the target div | S67 |
-| Never upload any file to GitHub without scanning for raw tokens first — `grep -rn 'ghp_K'` on every file. Token in merged CORE blocked push via secret scanning. | S69 |
-| Never upload files to GitHub without scanning for raw tokens first — `grep -rn 'ghp_K'` | S69 |
+| Never upload any file to GitHub without scanning for raw tokens first | S69 |
+| Never use class-only nav selectors on mpw-nav-homepage-v1 pages | S65 |
+| Never load style.css on tool pages — use main.js only | S68 |
+| Never create AudioContext before a user gesture in Browser Apps | S65b |
+| Never call direct api.anthropic.com from tool pages — always use Netlify proxy | S67 |
+| Never use `innerHTML` in any tool JS — Netlify CSP blocks it | S57/58 |
+| Never commit a tool without all 5 files in same Trees API commit | S67 |
+| Never run `mpw_bible_writer.py` before updating read time to 650 wpm | S63 |
+| Never run `mpw_writer.py` before applying all 4 pending nav/drawer updates | S63 |
+| Never present files for approval and then commit without waiting — present ALL files, wait for explicit go | S71 |
 
 ---
 
 ## PENDING OWNER ACTIONS
 | Action | Priority | Notes |
 |--------|----------|-------|
-| Submit sitemap to GSC | P0 | 744 URLs |
-| Request indexing — suno-prompt-optimizer | P0 | GSC URL Inspection |
-| Request indexing — ai-music-rights-navigator | P0 | GSC URL Inspection |
-| OG images for both AI tools | P1 | 1200x630px |
+| Submit sitemap to GSC | P0 | 780 URLs (36 tool URLs added S71) |
+| Update MPW-HANDOFF-CONTENT.md in Claude project | P0 | Replace with S72 merged version |
+| Update MPW-HANDOFF-ARTICLES.md in Claude project | P0 | Replace with S72 merged version |
+| Update MPW-HANDOFF-MERGE-PLAN.md in Claude project | P0 | Mark CONTENT + ARTICLES ✅ |
+| Update SESSION-START in Claude project | P0 | This file |
+| Request indexing — /bible/reverb | P1 | GSC URL Inspection |
+| Request indexing — suno-prompt-optimizer | P1 | GSC URL Inspection |
+| Request indexing — ai-music-rights-navigator | P1 | GSC URL Inspection |
+| OG images for both AI tools | P1 | 1200×630px |
 | Affiliate applications | P2 REVENUE BLOCKER | Plugin Boutique, Amazon, Loopmasters, Sweetwater, PluginFox |
 | Google Workspace domain dispute | P3 | Case #70817574 still open |
 
 ---
 
 ## LAST SESSION HANDOVER NOTE
-Session 69 completed CORE merge. MPW-HANDOFF-CORE.md replaced with merged version (238KB, live-verified). Tool count corrected 38→40 — 3 tools built in undocumented parallel sessions (ai-music-ddex-checker SHA 206e2a44, ai-copyright-strength SHA 7f113017, suno-credits-calculator SHA 4d827292). 5 core appends deleted from GitHub. Section 7 of CORE flagged for future restructure session. Next: Session 70 TECH merge — load MPW-HANDOFF-TECH.md + all tech appends.
+Session 72 completed CONTENT + ARTICLES merge. MPW-HANDOFF-CONTENT.md and MPW-HANDOFF-ARTICLES.md replaced with merged versions (S72). All appends from S39 through S60 integrated and resolved. Bible entry count corrected to 225 (reverb.html v1.6 + chorus.html v5.2 both confirmed LIVE). Key items: mpw_writer.py 4 pending updates and bible writer updates flagged URGENT as blocks; producer quotes gap (Kevin Parker et al.) flagged P2; Batch 09 through 13 all queued pending writer fixes. Next: Session 73 BIBLE merge (128KB — largest doc).
 
 ---
 
 ## SESSION START RITUAL
 Steve says: "Read the start card and tell me the current state."
-Claude responds with: article count, tool count, last SHA, top 3 priorities, relevant never rules for today's work.
+Claude responds with: article count, Bible entry count, tool count, last SHA, top 3 priorities, relevant never rules for today's work.
 If anything is wrong, correct before proceeding.
