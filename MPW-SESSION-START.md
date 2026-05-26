@@ -1,5 +1,5 @@
 # MPW SESSION START CARD
-*Last updated: May 26, 2026 — Session 72*
+*Last updated: May 26, 2026 — Session 73*
 
 ---
 
@@ -7,7 +7,7 @@
 | Item | Value |
 |------|-------|
 | Articles live | 526 |
-| Bible entries live | 225 |
+| Bible entries live | 223 |
 | Tools live | 41 |
 | Last commit SHA | 806ac1bd — Session 71 SCRIPTS merge complete |
 | Model string | `claude-sonnet-4-6` |
@@ -20,7 +20,7 @@
 ---
 
 ## TOP 3 PRIORITIES
-1. Session 73: MPW-HANDOFF-BIBLE.md merge (NEXT)
+1. Session 75: Build MPW-NEVER-RULES.md — canonical never rules document (NEXT)
 2. Execute mpw_writer.py 4 pending updates — blocks next article batch
 3. Execute mpw_bible_writer.py updates (650wpm + nav + v5.3) — blocks next T1 Bible batch
 
@@ -61,9 +61,9 @@
 | Action | Priority | Notes |
 |--------|----------|-------|
 | Submit sitemap to GSC | P0 | 780 URLs (36 tool URLs added S71) |
-| Update MPW-HANDOFF-CONTENT.md in Claude project | P0 | Replace with S72 merged version |
-| Update MPW-HANDOFF-ARTICLES.md in Claude project | P0 | Replace with S72 merged version |
-| Update MPW-HANDOFF-MERGE-PLAN.md in Claude project | P0 | Mark CONTENT + ARTICLES ✅ |
+| Update MPW-HANDOFF-BIBLE.md in Claude project | P0 | Replace with S73 merged version |
+| Update MPW-SESSION-START.md in Claude project | P0 | Replace with S74 version (this file) |
+| Update MPW-HANDOFF-MERGE-PLAN.md in Claude project | P0 | Mark BIBLE ✅ |
 | Update SESSION-START in Claude project | P0 | This file |
 | Request indexing — /bible/reverb | P1 | GSC URL Inspection |
 | Request indexing — suno-prompt-optimizer | P1 | GSC URL Inspection |
@@ -75,7 +75,7 @@
 ---
 
 ## LAST SESSION HANDOVER NOTE
-Session 72 completed CONTENT + ARTICLES merge. MPW-HANDOFF-CONTENT.md and MPW-HANDOFF-ARTICLES.md replaced with merged versions (S72). All appends from S39 through S60 integrated and resolved. Bible entry count corrected to 225 (reverb.html v1.6 + chorus.html v5.2 both confirmed LIVE). Key items: mpw_writer.py 4 pending updates and bible writer updates flagged URGENT as blocks; producer quotes gap (Kevin Parker et al.) flagged P2; Batch 09 through 13 all queued pending writer fixes. Next: Session 73 BIBLE merge (128KB — largest doc).
+Session 73 completed BIBLE merge. No session appends targeted this file — merge was a GitHub audit + corrections pass. Bible entry count corrected to 223 (GitHub confirmed — S61 claimed 231, S72 start card said 225, both wrong). Gold standard reference updated to reverb.html v1.6. S61 entry count corrected in file. S73 audit section appended. Merge cycle (S69–S73) is now COMPLETE. Post-merge rules take effect S74+: no more append files, masters updated directly each session. Next: Session 75 — build MPW-NEVER-RULES.md (canonical never rules file, 7th master doc). Sources: CORE, TECH, SCRIPTS, BIBLE, SESSION-START, CONTINUITY-MASTER-PLAN + chat history search for any rules discussed but never documented. After that: mpw_writer.py 4 pending updates, mpw_bible_writer.py v5.3 build.
 
 ---
 
