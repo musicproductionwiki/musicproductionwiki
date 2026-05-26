@@ -11,150 +11,237 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,900;1,9..40,400&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{font-size:16px;-webkit-text-size-adjust:100%}
-body{font-family:'DM Sans',sans-serif;background:#06061a;color:#e8e8ff;min-height:100vh;overflow-x:hidden}
+/* ═══════════════════════════════════════════════════════════════
+   MPW Suno Prompt Optimizer — Complete CSS
+   Glassmorphic v7 — full rewrite with new class namespace
+   ═══════════════════════════════════════════════════════════════ */
 
-/* ── HERO ─────────────────────────────── */
-.hero{position:relative;height:250px;overflow:hidden}
-@media(min-width:768px){.hero{height:310px}}
-#waveCanvas{position:absolute;inset:0;width:100%;height:100%}
-.hero-fade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,6,26,0) 0%,rgba(6,6,26,0.6) 55%,rgba(6,6,26,1) 100%);pointer-events:none}
-.hero-content{
-  position:absolute;inset:0;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:flex-end;
-  padding:0 20px 26px;text-align:center;z-index:2;
+/* ── ANIMATIONS ─────────────────────────────────────────────── */
+@keyframes gShimmer{0%{transform:translateX(-120%) skewX(-15deg);opacity:0}20%{opacity:1}80%{opacity:1}100%{transform:translateX(220%) skewX(-15deg);opacity:0}}
+@keyframes gcardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes badgeSpring{0%{opacity:0;transform:scale(.5) translateY(4px)}60%{transform:scale(1.18) translateY(-1px)}80%{transform:scale(.96)}100%{opacity:1;transform:scale(1)}}
+@keyframes chipDesel{0%{opacity:1;transform:scale(1.05)}40%{opacity:.2;transform:scale(.93)}100%{opacity:1;transform:scale(1)}}
+
+
+/* ── GENRE GROUP CARDS ──────────────────────────────────────── */
+.g-group{
+  position:relative;border-radius:20px;padding:22px 22px 24px;margin-bottom:16px;overflow:hidden;
+  background:linear-gradient(145deg,rgba(255,255,255,0.1) 0%,rgba(255,255,255,0.035) 50%,rgba(255,255,255,0.07) 100%);
+  backdrop-filter:blur(32px) saturate(1.5) brightness(1.06);
+  -webkit-backdrop-filter:blur(32px) saturate(1.5) brightness(1.06);
+  border:1px solid rgba(255,255,255,0.14);
+  border-top:1.5px solid rgba(255,255,255,0.28);
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.18),
+    inset 0 -1px 0 rgba(0,0,0,0.32),
+    inset 1px 0 0 rgba(255,255,255,0.06),
+    inset -1px 0 0 rgba(255,255,255,0.06),
+    0 4px 8px rgba(0,0,0,0.25),
+    0 16px 36px rgba(0,0,0,0.42),
+    0 36px 68px rgba(0,0,0,0.3);
+  transition:transform .3s cubic-bezier(.2,.85,.2,1),box-shadow .3s,border-color .22s;
+  animation:gcardIn .42s cubic-bezier(.2,.85,.2,1) both;
 }
-.hero-brand{
+.g-group:last-of-type{margin-bottom:0}
+
+/* Top shine line */
+.g-group::before{
+  content:'';position:absolute;top:0;left:12%;right:12%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--shine) 30%,var(--shine) 70%,transparent);
+  opacity:.85;border-radius:0 0 2px 2px;
+}
+/* Hover bloom */
+.g-group::after{
+  content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);
+  width:80%;height:150px;
+  background:radial-gradient(ellipse at 50% 0%,var(--bloom) 0%,transparent 70%);
+  opacity:0;pointer-events:none;transition:opacity .32s;
+}
+.g-group:hover{
+  transform:translateY(-5px);
+  border-color:rgba(255,255,255,0.22);
+  border-top-color:var(--ring);
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.22),
+    inset 0 -1px 0 rgba(0,0,0,0.38),
+    inset 1px 0 0 rgba(255,255,255,0.08),
+    inset -1px 0 0 rgba(255,255,255,0.08),
+    0 8px 18px rgba(0,0,0,0.32),
+    0 28px 56px rgba(0,0,0,0.55),
+    0 52px 88px rgba(0,0,0,0.38),
+    0 0 0 1px var(--ring),
+    0 0 90px var(--bloom);
+}
+.g-group:hover::after{opacity:1}
+
+/* Shimmer sweep */
+.g-shimmer{position:absolute;inset:0;border-radius:20px;overflow:hidden;pointer-events:none;z-index:2}
+.g-shimmer::after{content:'';position:absolute;top:0;left:0;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.07) 50%,transparent);transform:translateX(-120%) skewX(-15deg);opacity:0}
+.g-group:hover .g-shimmer::after{animation:gShimmer .85s cubic-bezier(.4,0,.2,1) forwards}
+
+/* Group header */
+.g-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.g-hd-l{display:flex;align-items:center;gap:13px}
+.g-ico{
+  width:40px;height:40px;border-radius:12px;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
-  gap:10px;margin-bottom:12px;
+  background:linear-gradient(145deg,var(--ibg),rgba(0,0,0,0.1));
+  border:1px solid var(--ring);
+  box-shadow:inset 0 1.5px 0 rgba(255,255,255,0.18),0 0 28px var(--bloom),0 4px 14px rgba(0,0,0,0.35);
+  position:relative;overflow:hidden;
+  transition:transform .24s cubic-bezier(.2,.85,.2,1),box-shadow .24s;
 }
-.hero-logo{
-  width:34px;height:34px;border-radius:8px;
-  background:#00e8a2;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-  box-shadow:0 0 24px rgba(0,232,162,0.8), 0 0 48px rgba(0,232,162,0.3);
+.g-ico::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(to bottom,rgba(255,255,255,0.18),transparent);border-radius:12px 12px 0 0}
+.g-group:hover .g-ico{transform:scale(1.09) rotate(-3deg);box-shadow:inset 0 1.5px 0 rgba(255,255,255,0.24),0 0 44px var(--blooms),0 6px 18px rgba(0,0,0,0.4)}
+.g-title{font-family:'DM Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--acc);text-shadow:0 0 18px var(--blooms);line-height:1;margin-bottom:4px}
+.g-sub{font-family:'DM Mono',monospace;font-size:7.5px;font-weight:500;letter-spacing:.08em;color:var(--acc);opacity:.45;line-height:1}
+.g-badge{
+  font-family:'DM Mono',monospace;font-size:8px;font-weight:700;
+  padding:3px 11px;border-radius:20px;
+  background:var(--ibg);border:1px solid var(--ring);color:var(--acc);
+  box-shadow:0 0 12px var(--bloom),inset 0 1px 0 rgba(255,255,255,0.12);
+  display:none;white-space:nowrap;
 }
-.hero-logo svg{display:block}
-.hero-brand-text{
-  display:flex;flex-direction:column;gap:2px;
-}
-.hero-brand-name{
-  font-family:'DM Sans',sans-serif;
-  font-size:14px;font-weight:700;
-  color:#ffffff;letter-spacing:-.01em;line-height:1;
-}
-.hero-brand-sub{
-  font-family:'DM Mono',monospace;
-  font-size:10px;font-weight:500;
-  color:#f5a623;letter-spacing:.04em;line-height:1;
-}
-.hero-h1{
-  font-size:clamp(36px,9vw,60px);font-weight:900;
-  letter-spacing:-.04em;line-height:1.0;
-  color:#ffffff;text-align:center;
-  text-shadow:0 2px 30px rgba(0,0,0,0.7);
-}
-.hero-h1 em{font-style:normal;color:#00e8a2;text-shadow:0 0 50px rgba(0,232,162,0.8)}
-.hero-sub{font-size:14px;color:rgba(255,255,255,0.7);margin-top:7px;font-weight:500;text-align:center}
+.g-badge.vis{display:block;animation:badgeSpring .38s cubic-bezier(.2,.85,.2,1) both}
 
-/* ── STEP NAV ─────────────────────────── */
-.step-nav{
-  background:#0d0d24;
-  border-bottom:1px solid rgba(255,255,255,0.1);
-  display:flex;justify-content:center;
-  overflow-x:auto;scrollbar-width:none;
-  position:sticky;top:0;z-index:100;
+/* ── SECTION CARDS (non-genre) ──────────────────────────────── */
+.p-card{
+  position:relative;border-radius:20px;overflow:hidden;margin-bottom:16px;
+  background:linear-gradient(145deg,rgba(255,255,255,0.1) 0%,rgba(255,255,255,0.035) 50%,rgba(255,255,255,0.065) 100%);
+  backdrop-filter:blur(32px) saturate(1.4);-webkit-backdrop-filter:blur(32px) saturate(1.4);
+  border:1px solid rgba(255,255,255,0.14);
+  border-top:1.5px solid rgba(255,255,255,0.26);
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.16),
+    inset 0 -1px 0 rgba(0,0,0,0.3),
+    0 4px 8px rgba(0,0,0,0.22),
+    0 16px 36px rgba(0,0,0,0.4),
+    0 36px 64px rgba(0,0,0,0.28);
+  transition:transform .28s cubic-bezier(.2,.85,.2,1),box-shadow .28s;
 }
-.step-nav::-webkit-scrollbar{display:none}
-.step-tab{
-  display:flex;align-items:center;justify-content:center;gap:7px;
-  padding:15px 18px;
-  font-size:12px;font-weight:700;
-  letter-spacing:.08em;text-transform:uppercase;
-  color:#5050a0;
-  border-bottom:2px solid transparent;
-  cursor:pointer;white-space:nowrap;
-  transition:all .15s;user-select:none;flex-shrink:0;
+.p-card::before{
+  content:'';position:absolute;top:0;left:10%;right:10%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,232,162,0.7) 35%,rgba(245,166,35,0.45) 65%,transparent);
+  opacity:.85;
 }
-.step-tab:hover{color:#9090d0}
-.step-tab.active{color:#00e8a2;border-bottom-color:#00e8a2}
-.step-tab.done{color:#206040}
-.snum{
-  width:20px;height:20px;border-radius:50%;
-  font-size:9px;font-weight:800;
-  display:flex;align-items:center;justify-content:center;
-  border:1.5px solid currentColor;flex-shrink:0;
-  opacity:0.8;
+.p-card:hover{
+  transform:translateY(-3px);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,0.2),inset 0 -1px 0 rgba(0,0,0,0.35),0 8px 18px rgba(0,0,0,0.3),0 24px 52px rgba(0,0,0,0.52),0 0 0 1px rgba(0,232,162,0.18),0 0 70px rgba(0,232,162,0.08);
+  border-top-color:rgba(0,232,162,0.48);
 }
-.step-tab.active .snum{background:rgba(0,232,162,0.2);border-color:#00e8a2;opacity:1}
+.p-card-hd{display:flex;align-items:center;justify-content:space-between;padding:18px 22px 0}
+.p-label{font-family:'DM Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#00e8a2;text-shadow:0 0 16px rgba(0,232,162,0.55)}
+.p-hint{font-family:'DM Mono',monospace;font-size:8.5px;color:#404070;letter-spacing:.05em}
+.p-card-body{padding:14px 22px 24px}
 
-/* ── CONTAINER ────────────────────────── */
-.container{max-width:940px;margin:0 auto;padding:24px 16px 70px}
-@media(min-width:768px){.container{padding:32px 40px 90px}}
-.step-panel{display:none}
-.step-panel.active{display:flex;flex-direction:column;gap:18px}
+/* ── CHIPS ──────────────────────────────────────────────────── */
+.chips{display:flex;flex-wrap:wrap;gap:9px}
+.chip{
+  position:relative;
+  display:inline-flex;align-items:center;gap:0;
+  padding:9px 17px;border-radius:28px;
+  background:rgba(255,255,255,0.075);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,0.14);
+  border-top:1px solid rgba(255,255,255,0.22);
+  color:#b8b8de;
+  font-family:'DM Sans',sans-serif;font-size:12.5px;font-weight:500;
+  cursor:pointer;user-select:none;white-space:nowrap;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.12),inset 0 -1px 0 rgba(0,0,0,0.2),0 2px 5px rgba(0,0,0,0.24),0 5px 14px rgba(0,0,0,0.2);
+  transition:transform .2s cubic-bezier(.2,.85,.2,1),box-shadow .2s,border-color .15s,color .14s,background .14s,font-weight .12s;
+  overflow:hidden;
+}
+.chip::before{content:'';position:absolute;top:0;left:12px;right:12px;height:50%;border-radius:28px 28px 0 0;background:linear-gradient(to bottom,rgba(255,255,255,0.09),transparent);pointer-events:none}
+.chip:hover{
+  transform:translateY(-3px) scale(1.05);
+  background:rgba(255,255,255,0.13);
+  color:#f0f0ff;font-weight:600;
+  border-color:rgba(255,255,255,0.3);
+  border-top-color:rgba(255,255,255,0.44);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.18),inset 0 -1px 0 rgba(0,0,0,0.22),0 4px 12px rgba(0,0,0,0.32),0 14px 32px rgba(0,0,0,0.3),0 0 26px rgba(0,232,162,0.12);
+}
+.chip:active{transform:translateY(0) scale(.97)}
 
+/* Selected — neon glow states */
+.chip.sel-g{
+  background:rgba(245,166,35,0.16);border:1.5px solid #f5a623;border-top:1.5px solid rgba(255,215,100,0.95);
+  color:#f5a623;font-weight:700;transform:scale(1.05);
+  box-shadow:inset 0 2px 0 rgba(255,230,150,0.22),0 0 0 1px rgba(245,166,35,0.3),0 0 20px rgba(245,166,35,0.48),0 0 44px rgba(245,166,35,0.2),0 5px 16px rgba(0,0,0,0.4);
+}
+.chip.sel-g::after{content:'';position:absolute;top:0;left:12%;right:12%;height:1px;background:rgba(255,210,80,0.98);box-shadow:0 0 10px #f5a623,0 0 28px rgba(245,166,35,0.9);border-radius:0 0 2px 2px;z-index:3}
+.chip.sel-g:hover{transform:scale(1.07) translateY(-2px)}
+
+.chip.sel-i{
+  background:rgba(0,232,162,0.13);border:1.5px solid #00e8a2;border-top:1.5px solid rgba(100,255,210,0.95);
+  color:#00e8a2;font-weight:700;transform:scale(1.05);
+  box-shadow:inset 0 2px 0 rgba(150,255,220,0.2),0 0 0 1px rgba(0,232,162,0.28),0 0 20px rgba(0,232,162,0.46),0 0 44px rgba(0,232,162,0.18),0 5px 16px rgba(0,0,0,0.4);
+}
+.chip.sel-i::after{content:'';position:absolute;top:0;left:12%;right:12%;height:1px;background:rgba(100,255,210,0.98);box-shadow:0 0 10px #00e8a2,0 0 28px rgba(0,232,162,0.9);border-radius:0 0 2px 2px;z-index:3}
+.chip.sel-i:hover{transform:scale(1.07) translateY(-2px)}
+
+.chip.sel-m{
+  background:rgba(192,132,252,0.13);border:1.5px solid #c084fc;border-top:1.5px solid rgba(220,170,255,0.95);
+  color:#c084fc;font-weight:700;transform:scale(1.05);
+  box-shadow:inset 0 2px 0 rgba(220,180,255,0.2),0 0 0 1px rgba(192,132,252,0.28),0 0 20px rgba(192,132,252,0.46),0 0 44px rgba(192,132,252,0.18),0 5px 16px rgba(0,0,0,0.4);
+}
+.chip.sel-m::after{content:'';position:absolute;top:0;left:12%;right:12%;height:1px;background:rgba(220,170,255,0.98);box-shadow:0 0 10px #c084fc,0 0 28px rgba(192,132,252,0.9);border-radius:0 0 2px 2px;z-index:3}
+.chip.sel-m:hover{transform:scale(1.07) translateY(-2px)}
+
+.chip.sel-v{
+  background:rgba(96,168,255,0.13);border:1.5px solid #60a8ff;border-top:1.5px solid rgba(150,200,255,0.95);
+  color:#80c0ff;font-weight:700;transform:scale(1.05);
+  box-shadow:inset 0 2px 0 rgba(180,220,255,0.2),0 0 0 1px rgba(96,168,255,0.28),0 0 20px rgba(96,168,255,0.46),0 0 44px rgba(96,168,255,0.18),0 5px 16px rgba(0,0,0,0.4);
+}
+.chip.sel-v::after{content:'';position:absolute;top:0;left:12%;right:12%;height:1px;background:rgba(150,200,255,0.98);box-shadow:0 0 10px #60a8ff,0 0 28px rgba(96,168,255,0.9);border-radius:0 0 2px 2px;z-index:3}
+.chip.sel-v:hover{transform:scale(1.07) translateY(-2px)}
+
+.chip.dim{opacity:.26;pointer-events:none}
+
+/* ── RESULTS PAGE ───────────────────────────────────────────── */
+.results-page{max-width:880px;margin:0 auto}
+.results-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;padding:0 4px}
+.results-title{font-family:'DM Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#00e8a2;text-shadow:0 0 18px rgba(0,232,162,0.65)}
+.results-back{
+  background:rgba(255,255,255,0.08);backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,0.16);border-top:1px solid rgba(255,255,255,0.24);
+  border-radius:12px;color:#b0b0d8;
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;
+  padding:9px 18px;cursor:pointer;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.1),0 2px 8px rgba(0,0,0,0.2);
+  transition:all .2s;
+}
+.results-back:hover{background:rgba(255,255,255,0.13);color:#fff;border-color:rgba(255,255,255,0.3);transform:translateY(-1px);box-shadow:inset 0 1px 0 rgba(255,255,255,0.15),0 4px 14px rgba(0,0,0,0.3)}
+.results-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+@media(max-width:700px){.results-grid{grid-template-columns:1fr}}
+
+/* Keep all output card, score, share, brand styles from original */
 /* ── SECTION CARD ─────────────────────── */
-.sc{
+.__old_sc_DISABLED{
   background:#10102a;
   border:1px solid rgba(255,255,255,0.13);
   border-radius:16px;overflow:hidden;
   position:relative;
 }
-.sc::after{
+.__old_sc_after_DISABLED{
   content:'';position:absolute;top:0;left:0;right:0;height:1px;
   background:linear-gradient(90deg,transparent,rgba(0,232,162,0.5),rgba(245,166,35,0.3),transparent);
 }
-.sc-head{
+.__old_sc_head_DISABLED{
   padding:18px 22px 0;
   display:flex;align-items:center;justify-content:space-between;
 }
-.sc-label{
+.__old_sc_label_DISABLED{
   font-family:'DM Mono',monospace;
   font-size:10px;font-weight:700;
   letter-spacing:.2em;text-transform:uppercase;
   color:#00e8a2;
 }
-.sc-hint{
+.__old_sc_hint_DISABLED{
   font-family:'DM Mono',monospace;
   font-size:9px;font-weight:500;
   color:#a0a0c0;letter-spacing:.04em;
 }
-.sc-body{padding:14px 22px 22px}
-
-/* ── GENRE GROUPS ─────────────────────── */
-.genre-group{margin-bottom:16px}
-.genre-group:last-child{margin-bottom:0}
-.gg-name{
-  font-family:'DM Mono',monospace;
-  font-size:9px;font-weight:700;
-  letter-spacing:.14em;text-transform:uppercase;
-  color:#8080b8;margin-bottom:9px;
-}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-
-/* ── CHIPS ────────────────────────────── */
-.chip{
-  font-family:'DM Sans',sans-serif;
-  font-size:13px;font-weight:600;
-  padding:8px 16px;border-radius:24px;
-  border:1.5px solid rgba(255,255,255,0.18);
-  background:rgba(255,255,255,0.05);
-  color:#c0c0e8;
-  cursor:pointer;transition:all .12s;
-  white-space:nowrap;user-select:none;
-}
-.chip:hover{
-  border-color:rgba(255,255,255,0.4);
-  color:#ffffff;background:rgba(255,255,255,0.1);
-}
-.chip:active{transform:scale(0.95)}
-.chip.sel-g{background:rgba(245,166,35,0.18);border-color:#f5a623;color:#f5a623;font-weight:700;box-shadow:0 0 16px rgba(245,166,35,0.2)}
-.chip.sel-i{background:rgba(0,232,162,0.15);border-color:#00e8a2;color:#00e8a2;font-weight:700;box-shadow:0 0 16px rgba(0,232,162,0.15)}
-.chip.sel-m{background:rgba(180,100,255,0.15);border-color:#b464ff;color:#d090ff;font-weight:700}
-.chip.sel-v{background:rgba(100,160,255,0.15);border-color:#64a0ff;color:#90c0ff;font-weight:700}
+.__old_sc_body_DISABLED{padding:14px 22px 22px}
 
 /* ── SEQUENCER ────────────────────────── */
 .seq-palette{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
@@ -533,262 +620,7 @@ body.embed-mode .hero{border-radius:12px 12px 0 0}
   text-align:center;
 }
 
-</style>
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://www.musicproductionwiki.com/tools/suno-prompt-optimizer.html">
 
-<meta property="og:title" content="Suno Prompt Optimizer — Free AI Music Tool | MusicProductionWiki">
-<meta property="og:description" content="Build structured Suno AI prompts with genre, instruments, mood, and song structure. AI-scored and optimized. Free from MusicProductionWiki — The Producer's Bible.">
-<meta property="og:url" content="https://www.musicproductionwiki.com/tools/suno-prompt-optimizer.html">
-<meta property="og:type" content="website">
-<meta property="og:image" content="https://www.musicproductionwiki.com/images/suno-prompt-optimizer-og.jpg">
-<meta property="og:site_name" content="MusicProductionWiki.com">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Suno Prompt Optimizer — Free AI Music Tool">
-<meta name="twitter:description" content="Build structured Suno AI prompts with genre, instruments, mood, and song structure. AI-scored and optimized. Free.">
-<meta name="twitter:image" content="https://www.musicproductionwiki.com/images/suno-prompt-optimizer-og.jpg">
-<meta name="twitter:site" content="@MusicProdWiki">
-
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-79VB543KCT"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-79VB543KCT');</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "What makes a good Suno AI music prompt?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "A strong Suno prompt layers genre first (specific subgenres beat broad ones), then instrumentation with texture words like punchy or lush, then mood descriptors, then structural metatags like [Verse][Chorus]. Keep it under 200 characters and front-load your most critical elements since Suno v4 deprioritizes instructions past position 8."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How do I get Suno to generate better music?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Use specific subgenre names instead of broad genres, add production texture words that describe character (punchy, lush, gritty, shimmering), include structural metatags like [Verse][Pre-Chorus][Chorus] to control song architecture, and place vocal style tags like [male vocal] before structural tags. Avoid vague filler words like banger or vibes — Suno ignores them."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Does prompt length matter in Suno?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Suno v4 often ignores instructions past position 8 in a prompt. Keep prompts under 200 characters and front-load genre and instrumentation. The Suno Prompt Optimizer shows your character count in real time and warns when you approach the limit."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can I use Suno music commercially?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Commercial rights depend on your Suno subscription tier. Free users cannot use generated music commercially. Pro and Premier subscribers receive commercial rights to tracks they generate. Use the MPW AI Music Rights Navigator tool to check rights for your specific use case."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What are the best Suno prompt tags for song structure?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Suno v4 responds to structural metatags placed at the end of your prompt: [Intro], [Verse], [Pre-Chorus], [Chorus], [Bridge], [Hook], [Breakdown], and [Outro]. You can repeat them for a full arrangement like [Verse][Pre-Chorus][Chorus][Verse][Pre-Chorus][Chorus][Bridge][Chorus][Outro]. Place vocal style tags like [male vocal] before these structural tags."
-      }
-    }
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.musicproductionwiki.com"},
-    {"@type": "ListItem", "position": 2, "name": "Tools", "item": "https://www.musicproductionwiki.com/tools/"},
-    {"@type": "ListItem", "position": 3, "name": "Suno Prompt Optimizer", "item": "https://www.musicproductionwiki.com/tools/suno-prompt-optimizer.html"}
-  ]
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "Suno Prompt Optimizer",
-  "url": "https://www.musicproductionwiki.com/tools/suno-prompt-optimizer.html",
-  "description": "Build and optimize Suno AI music prompts with genre, instrumentation, mood, and song structure. AI-scored and optimized. Free tool from MusicProductionWiki.com.",
-  "applicationCategory": "MusicApplication",
-  "operatingSystem": "Web Browser",
-  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
-  "publisher": {
-    "@type": "Organization",
-    "name": "MusicProductionWiki.com",
-    "url": "https://www.musicproductionwiki.com"
-  }
-}
-</script>
-
-<script src="../js/main.js" defer></script>
-
-<style>
-/* ═══ MPW GLASSMORPHIC v6 ═══════════════════════════════════════
-   Full rebuild — append-only before </head>
-   ═══════════════════════════════════════════════════════════════ */
-
-@keyframes gShimmer{0%{transform:translateX(-120%) skewX(-15deg);opacity:0}20%{opacity:1}80%{opacity:1}100%{transform:translateX(220%) skewX(-15deg);opacity:0}}
-@keyframes gcardIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-@keyframes gChipDesel{0%{opacity:1;transform:scale(1.05)}40%{opacity:.2;transform:scale(.93)}100%{opacity:1;transform:scale(1)}}
-@keyframes badgeIn{0%{opacity:0;transform:scale(.6) translateY(3px)}65%{transform:scale(1.15)}85%{transform:scale(.97)}100%{opacity:1;transform:scale(1)}}
-
-/* ── GENRE GROUP CARD (per group, replaces flat .genre-group) ── */
-.gg-card{
-  position:relative;border-radius:18px;padding:20px 20px 22px;margin-bottom:14px;overflow:hidden;
-  background:linear-gradient(145deg,rgba(255,255,255,0.09) 0%,rgba(255,255,255,0.03) 55%,rgba(255,255,255,0.06) 100%);
-  backdrop-filter:blur(32px) saturate(1.5);-webkit-backdrop-filter:blur(32px) saturate(1.5);
-  border:1px solid rgba(255,255,255,0.13);
-  border-top:1.5px solid rgba(255,255,255,0.25);
-  box-shadow:inset 0 1.5px 0 rgba(255,255,255,0.16),inset 0 -1px 0 rgba(0,0,0,0.3),inset 1px 0 0 rgba(255,255,255,0.05),inset -1px 0 0 rgba(255,255,255,0.05),0 4px 8px rgba(0,0,0,0.22),0 14px 32px rgba(0,0,0,0.38),0 32px 60px rgba(0,0,0,0.28);
-  transition:transform .28s cubic-bezier(.2,.85,.2,1),box-shadow .28s,border-color .2s;
-  animation:gcardIn .4s cubic-bezier(.2,.85,.2,1) both;
-}
-.gg-card:last-child{margin-bottom:0}
-.gg-card::before{content:'';position:absolute;top:0;left:12%;right:12%;height:1px;background:linear-gradient(90deg,transparent,var(--gc-shine,rgba(255,255,255,0.5)),transparent);opacity:.8}
-.gg-card::after{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:80%;height:140px;background:radial-gradient(ellipse at 50% 0%,var(--gc-bloom,rgba(255,255,255,0.06)) 0%,transparent 70%);opacity:0;pointer-events:none;transition:opacity .3s}
-.gg-card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,0.2);border-top-color:var(--gc-acc,rgba(255,255,255,0.4));box-shadow:inset 0 1.5px 0 rgba(255,255,255,0.2),inset 0 -1px 0 rgba(0,0,0,0.35),0 8px 18px rgba(0,0,0,0.3),0 24px 52px rgba(0,0,0,0.5),0 0 0 1px var(--gc-ring,rgba(255,255,255,0.15)),0 0 80px var(--gc-bloom,rgba(255,255,255,0.05))}
-.gg-card:hover::after{opacity:1}
-
-/* Shimmer on hover */
-.gg-shimmer{position:absolute;inset:0;border-radius:18px;overflow:hidden;pointer-events:none;z-index:2}
-.gg-shimmer::after{content:'';position:absolute;top:0;left:0;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.06) 50%,transparent);transform:translateX(-120%) skewX(-15deg);opacity:0}
-.gg-card:hover .gg-shimmer::after{animation:gShimmer .8s cubic-bezier(.4,0,.2,1) forwards}
-
-/* ── GROUP HEADER ── */
-.gg-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-.gg-head-l{display:flex;align-items:center;gap:12px}
-.gg-icon{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--gc-ibg,rgba(255,255,255,0.08));border:1px solid var(--gc-ring,rgba(255,255,255,0.15));box-shadow:0 0 20px var(--gc-bloom,transparent),inset 0 1px 0 rgba(255,255,255,0.15),0 4px 12px rgba(0,0,0,0.3);transition:transform .22s,box-shadow .22s;position:relative;overflow:hidden}
-.gg-icon::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(to bottom,rgba(255,255,255,0.14),transparent);border-radius:11px 11px 0 0}
-.gg-card:hover .gg-icon{transform:scale(1.07) rotate(-2deg);box-shadow:0 0 32px var(--gc-bloom,transparent),inset 0 1px 0 rgba(255,255,255,0.2),0 6px 16px rgba(0,0,0,0.35)}
-.gg-title{font-family:'DM Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--gc-acc,#e0e0ff);text-shadow:0 0 16px var(--gc-bloom,transparent);line-height:1;margin-bottom:3px}
-.gg-sub{font-family:'DM Mono',monospace;font-size:7.5px;font-weight:500;letter-spacing:.08em;color:var(--gc-acc30,rgba(255,255,255,0.3));line-height:1}
-.gg-badge{font-family:'DM Mono',monospace;font-size:8px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--gc-ibg,rgba(255,255,255,0.06));border:1px solid var(--gc-ring,rgba(255,255,255,0.15));color:var(--gc-acc,#e0e0ff);box-shadow:0 0 10px var(--gc-bloom,transparent);display:none;white-space:nowrap}
-.gg-badge.vis{display:block;animation:badgeIn .38s cubic-bezier(.2,.85,.2,1) both}
-
-/* ── SC CARD (non-genre sections) ── */
-.sc{
-  background:linear-gradient(145deg,rgba(255,255,255,0.09) 0%,rgba(255,255,255,0.03) 55%,rgba(255,255,255,0.06) 100%) !important;
-  backdrop-filter:blur(32px) saturate(1.5) !important;-webkit-backdrop-filter:blur(32px) saturate(1.5) !important;
-  border:1px solid rgba(255,255,255,0.13) !important;
-  border-top:1.5px solid rgba(255,255,255,0.25) !important;
-  border-radius:18px !important;
-  box-shadow:inset 0 1.5px 0 rgba(255,255,255,0.16),inset 0 -1px 0 rgba(0,0,0,0.3),0 4px 8px rgba(0,0,0,0.22),0 14px 32px rgba(0,0,0,0.38),0 32px 60px rgba(0,0,0,0.28) !important;
-  transition:transform .28s cubic-bezier(.2,.85,.2,1),box-shadow .28s !important;
-  position:relative !important;overflow:hidden !important;
-}
-.sc:hover{transform:translateY(-4px) !important;box-shadow:inset 0 1.5px 0 rgba(255,255,255,0.2),inset 0 -1px 0 rgba(0,0,0,0.35),0 8px 18px rgba(0,0,0,0.3),0 24px 52px rgba(0,0,0,0.5),0 0 0 1px rgba(0,232,162,0.15),0 0 70px rgba(0,232,162,0.07) !important}
-.sc::after{content:'' !important;position:absolute !important;top:0 !important;left:10% !important;right:10% !important;height:1px !important;background:linear-gradient(90deg,transparent,rgba(0,232,162,0.7) 35%,rgba(245,166,35,0.45) 65%,transparent) !important;opacity:.85 !important}
-
-/* ── CHIPS ── */
-.chip{
-  background:rgba(255,255,255,0.07) !important;
-  backdrop-filter:blur(14px) !important;-webkit-backdrop-filter:blur(14px) !important;
-  border:1px solid rgba(255,255,255,0.13) !important;
-  border-top:1px solid rgba(255,255,255,0.22) !important;
-  border-radius:28px !important;padding:9px 17px !important;
-  color:#b8b8de !important;font-size:12.5px !important;font-weight:500 !important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.12),inset 0 -1px 0 rgba(0,0,0,0.2),0 2px 4px rgba(0,0,0,0.22),0 5px 12px rgba(0,0,0,0.18) !important;
-  transition:transform .2s cubic-bezier(.2,.85,.2,1),box-shadow .2s,border-color .15s,color .14s,background .14s,font-weight .12s !important;
-  position:relative !important;overflow:hidden !important;
-}
-.chip::before{content:'' !important;position:absolute !important;top:0 !important;left:12px !important;right:12px !important;height:50% !important;border-radius:28px 28px 0 0 !important;background:linear-gradient(to bottom,rgba(255,255,255,0.09),transparent) !important;pointer-events:none !important}
-.chip:hover{transform:translateY(-3px) scale(1.05) !important;background:rgba(255,255,255,0.12) !important;color:#f0f0ff !important;font-weight:600 !important;border-color:rgba(255,255,255,0.28) !important;border-top-color:rgba(255,255,255,0.42) !important;box-shadow:inset 0 1px 0 rgba(255,255,255,0.18),inset 0 -1px 0 rgba(0,0,0,0.22),0 4px 10px rgba(0,0,0,0.3),0 12px 28px rgba(0,0,0,0.28),0 0 24px rgba(0,232,162,0.1) !important}
-.chip:active{transform:translateY(0) scale(.97) !important}
-
-/* Selected neon states */
-.chip.sel-g{background:rgba(245,166,35,0.15) !important;border:1.5px solid #f5a623 !important;border-top:1.5px solid rgba(255,210,100,0.95) !important;color:#f5a623 !important;font-weight:700 !important;transform:scale(1.05) !important;box-shadow:inset 0 2px 0 rgba(255,230,150,0.22),0 0 0 1px rgba(245,166,35,0.28),0 0 18px rgba(245,166,35,0.45),0 0 42px rgba(245,166,35,0.2),0 5px 14px rgba(0,0,0,0.38) !important}
-.chip.sel-g::after{content:'' !important;position:absolute !important;top:0 !important;left:12% !important;right:12% !important;height:1px !important;background:rgba(255,205,80,0.98) !important;box-shadow:0 0 10px #f5a623,0 0 26px rgba(245,166,35,0.85) !important;border-radius:0 0 2px 2px !important;z-index:3 !important}
-
-.chip.sel-i{background:rgba(0,232,162,0.12) !important;border:1.5px solid #00e8a2 !important;border-top:1.5px solid rgba(100,255,210,0.95) !important;color:#00e8a2 !important;font-weight:700 !important;transform:scale(1.05) !important;box-shadow:inset 0 2px 0 rgba(150,255,220,0.18),0 0 0 1px rgba(0,232,162,0.25),0 0 18px rgba(0,232,162,0.42),0 0 42px rgba(0,232,162,0.18),0 5px 14px rgba(0,0,0,0.38) !important}
-.chip.sel-i::after{content:'' !important;position:absolute !important;top:0 !important;left:12% !important;right:12% !important;height:1px !important;background:rgba(100,255,210,0.98) !important;box-shadow:0 0 10px #00e8a2,0 0 26px rgba(0,232,162,0.85) !important;border-radius:0 0 2px 2px !important;z-index:3 !important}
-
-.chip.sel-m{background:rgba(192,132,252,0.12) !important;border:1.5px solid #c084fc !important;border-top:1.5px solid rgba(220,170,255,0.95) !important;color:#c084fc !important;font-weight:700 !important;transform:scale(1.05) !important;box-shadow:inset 0 2px 0 rgba(220,180,255,0.18),0 0 0 1px rgba(192,132,252,0.25),0 0 18px rgba(192,132,252,0.42),0 0 42px rgba(192,132,252,0.18),0 5px 14px rgba(0,0,0,0.38) !important}
-.chip.sel-m::after{content:'' !important;position:absolute !important;top:0 !important;left:12% !important;right:12% !important;height:1px !important;background:rgba(220,170,255,0.98) !important;box-shadow:0 0 10px #c084fc,0 0 26px rgba(192,132,252,0.85) !important;border-radius:0 0 2px 2px !important;z-index:3 !important}
-
-.chip.sel-v{background:rgba(96,168,255,0.12) !important;border:1.5px solid #60a8ff !important;border-top:1.5px solid rgba(150,200,255,0.95) !important;color:#80c0ff !important;font-weight:700 !important;transform:scale(1.05) !important;box-shadow:inset 0 2px 0 rgba(180,220,255,0.18),0 0 0 1px rgba(96,168,255,0.25),0 0 18px rgba(96,168,255,0.42),0 0 42px rgba(96,168,255,0.18),0 5px 14px rgba(0,0,0,0.38) !important}
-.chip.sel-v::after{content:'' !important;position:absolute !important;top:0 !important;left:12% !important;right:12% !important;height:1px !important;background:rgba(150,200,255,0.98) !important;box-shadow:0 0 10px #60a8ff,0 0 26px rgba(96,168,255,0.85) !important;border-radius:0 0 2px 2px !important;z-index:3 !important}
-
-.chip.dim{opacity:.26 !important;pointer-events:none !important}
-
-/* ── SPACING ── */
-.chips{gap:9px !important}
-.sc-body{padding:16px 22px 26px !important}
-
-/* ── SEQUENCER ── */
-.sbl{border-radius:12px !important;box-shadow:inset 0 1px 0 rgba(255,255,255,0.14),0 3px 10px rgba(0,0,0,0.3),0 8px 20px rgba(0,0,0,0.22) !important;transition:transform .2s cubic-bezier(.2,.85,.2,1),box-shadow .2s,filter .15s !important}
-.sbl:hover{transform:translateY(-3px) scale(1.08) !important;filter:brightness(1.38) !important;box-shadow:inset 0 1px 0 rgba(255,255,255,0.2),0 6px 20px rgba(0,0,0,0.4),0 16px 36px rgba(0,0,0,0.32) !important}
-.seq-rail{background:rgba(0,0,0,0.55) !important;backdrop-filter:blur(16px) !important;-webkit-backdrop-filter:blur(16px) !important;border:1.5px dashed rgba(255,255,255,0.13) !important;border-radius:14px !important;box-shadow:inset 0 2px 16px rgba(0,0,0,0.4) !important}
-.seq-rail.drag-over{border-color:rgba(0,232,162,0.5) !important;background:rgba(0,232,162,0.05) !important;box-shadow:inset 0 2px 16px rgba(0,0,0,0.35),0 0 36px rgba(0,232,162,0.12) !important}
-
-/* ── OUTPUT CARDS ── */
-.ob{background:linear-gradient(145deg,rgba(255,255,255,0.09) 0%,rgba(255,255,255,0.03) 55%,rgba(255,255,255,0.06) 100%) !important;backdrop-filter:blur(28px) saturate(1.4) !important;-webkit-backdrop-filter:blur(28px) saturate(1.4) !important;border:1px solid rgba(255,255,255,0.13) !important;border-top:1.5px solid rgba(255,255,255,0.24) !important;border-radius:18px !important;box-shadow:inset 0 1.5px 0 rgba(255,255,255,0.14),inset 0 -1px 0 rgba(0,0,0,0.25),0 6px 16px rgba(0,0,0,0.3),0 20px 44px rgba(0,0,0,0.36) !important}
-.ob-head{background:rgba(255,255,255,0.035) !important;border-bottom:1px solid rgba(255,255,255,0.08) !important;padding:15px 22px !important}
-.ob-title{color:#e0e0ff !important;font-weight:700 !important}
-
-/* ── SCORE CARD ── */
-.score-card{background:linear-gradient(145deg,rgba(0,232,162,0.11) 0%,rgba(255,255,255,0.04) 50%,rgba(0,232,162,0.06) 100%) !important;backdrop-filter:blur(32px) saturate(1.6) !important;-webkit-backdrop-filter:blur(32px) saturate(1.6) !important;border:1px solid rgba(0,232,162,0.25) !important;border-top:1.5px solid rgba(0,232,162,0.5) !important;border-radius:20px !important;box-shadow:inset 0 2px 0 rgba(0,232,162,0.15),inset 0 -1px 0 rgba(0,0,0,0.22),0 0 0 1px rgba(0,232,162,0.07),0 10px 32px rgba(0,0,0,0.42),0 0 72px rgba(0,232,162,0.09) !important}
-
-/* ── STEP ITEMS ── */
-.step-item{background:rgba(0,232,162,0.055) !important;border:1px solid rgba(0,232,162,0.18) !important;border-top:1px solid rgba(0,232,162,0.28) !important;border-radius:13px !important;box-shadow:inset 0 1px 0 rgba(0,232,162,0.1),0 3px 10px rgba(0,0,0,0.22) !important}
-
-/* ── SHARE / BRAND ── */
-.share-bar{background:rgba(0,0,0,0.65) !important;backdrop-filter:blur(24px) !important;-webkit-backdrop-filter:blur(24px) !important;border:1px solid rgba(255,255,255,0.11) !important;border-top:1px solid rgba(255,255,255,0.2) !important;border-radius:16px !important;box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),0 10px 32px rgba(0,0,0,0.45) !important}
-.brand-wm{background:rgba(0,0,0,0.7) !important;backdrop-filter:blur(24px) !important;-webkit-backdrop-filter:blur(24px) !important;border:1px solid rgba(0,232,162,0.16) !important;border-top:1px solid rgba(0,232,162,0.28) !important;border-radius:16px !important;box-shadow:inset 0 1px 0 rgba(0,232,162,0.08),0 8px 26px rgba(0,0,0,0.45) !important}
-
-/* ── PROMPT LIVE + PASTE ── */
-.prompt-live{background:rgba(0,0,0,0.55) !important;backdrop-filter:blur(18px) !important;-webkit-backdrop-filter:blur(18px) !important;border:1px solid rgba(255,255,255,0.11) !important;border-top:1px solid rgba(255,255,255,0.17) !important;border-radius:14px !important;box-shadow:inset 0 1px 0 rgba(255,255,255,0.07),inset 0 2px 16px rgba(0,0,0,0.36) !important}
-.paste-ta{background:rgba(0,0,0,0.55) !important;border:1px solid rgba(255,255,255,0.12) !important;border-top:1px solid rgba(255,255,255,0.19) !important;border-radius:13px !important;box-shadow:inset 0 1px 0 rgba(255,255,255,0.07),inset 0 2px 16px rgba(0,0,0,0.4) !important}
-.paste-ta:focus{border-color:rgba(0,232,162,0.4) !important;border-top-color:rgba(0,232,162,0.56) !important;box-shadow:inset 0 1px 0 rgba(0,232,162,0.08),inset 0 2px 16px rgba(0,0,0,0.36),0 0 26px rgba(0,232,162,0.1) !important}
-
-/* ── METERS + PILLS ── */
-.mr-track{background:rgba(255,255,255,0.07) !important;height:5px !important;border-radius:3px !important;box-shadow:inset 0 1px 3px rgba(0,0,0,0.4) !important}
-.vp-ok{background:rgba(0,232,162,0.1) !important;border:1px solid rgba(0,232,162,0.35) !important;box-shadow:0 0 12px rgba(0,232,162,0.12) !important}
-.vp-warn{background:rgba(245,166,35,0.1) !important;border:1px solid rgba(245,166,35,0.35) !important;box-shadow:0 0 12px rgba(245,166,35,0.12) !important}
-
-/* ── LOADING CARD ── */
-.loading-card{background:linear-gradient(145deg,rgba(255,255,255,0.08) 0%,rgba(255,255,255,0.03) 100%) !important;backdrop-filter:blur(28px) !important;-webkit-backdrop-filter:blur(28px) !important;border:1px solid rgba(255,255,255,0.12) !important;border-top:1.5px solid rgba(255,255,255,0.22) !important;border-radius:18px !important;box-shadow:inset 0 1.5px 0 rgba(255,255,255,0.12),0 8px 28px rgba(0,0,0,0.4) !important}
-
-/* ── OUTPUT PAGE (panel5) ── */
-#panel5{
-  max-width:860px;
-  margin:0 auto;
-}
-.out-page-header{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:28px;padding:0 4px;
-}
-.out-page-title{
-  font-family:'DM Mono',monospace;font-size:11px;font-weight:700;
-  letter-spacing:.2em;text-transform:uppercase;color:#00e8a2;
-  text-shadow:0 0 16px rgba(0,232,162,0.6);
-}
-.out-back-btn{
-  background:rgba(255,255,255,0.07);backdrop-filter:blur(12px);
-  border:1px solid rgba(255,255,255,0.15);border-radius:10px;
-  color:#a0a0c8;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;
-  padding:8px 16px;cursor:pointer;
-  transition:all .2s;
-}
-.out-back-btn:hover{background:rgba(255,255,255,0.12);color:#fff;border-color:rgba(255,255,255,0.28);transform:translateY(-1px)}
-
-/* ── RESULT PAGE TWO-COL ── */
-.out-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
-.out-grid .ob:first-child{grid-column:1 / -1}
-@media(max-width:700px){.out-grid{grid-template-columns:1fr}}
-
-/* ══ END MPW GLASSMORPHIC v6 ══════════════════════════════════ */
 </style>
 </head>
 <body>
@@ -918,383 +750,342 @@ if(window.location.search.indexOf('embed=1')>=0){
 
 <div class="container">
 
-  <!-- STEP 0: GENRE -->
-  <div class="step-panel active" id="panel0">
-    <!-- Hip-Hop & Urban -->
-    <div class="gg-card" style="--gc-acc:#f5a623;--gc-acc30:rgba(245,166,35,0.3);--gc-ring:rgba(245,166,35,0.4);--gc-bloom:rgba(245,166,35,0.16);--gc-ibg:rgba(245,166,35,0.12);--gc-shine:rgba(245,166,35,0.7)">
-      <div class="gg-shimmer"></div>
-      <div class="gg-head">
-        <div class="gg-head-l">
-          <div class="gg-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg></div>
-          <div><div class="gg-title">Hip-Hop &amp; Urban</div><div class="gg-sub">Trap · Drill · Afrobeats</div></div>
-        </div>
-        <span class="gg-badge" id="gb-hh"></span>
+<!-- ═══ STEP 0: GENRE ═══════════════════════════════════════════ -->
+<div class="step-panel active" id="panel0">
+
+  <div class="g-group" style="--acc:#f5a623;--ring:rgba(245,166,35,0.45);--bloom:rgba(245,166,35,0.18);--ibg:rgba(245,166,35,0.13);--shine:rgba(245,166,35,0.75);--blooms:rgba(245,166,35,0.38)">
+    <div class="g-shimmer"></div>
+    <div class="g-hd">
+      <div class="g-hd-l">
+        <div class="g-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f5a623" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="8" y1="22" x2="16" y2="22"/></svg></div>
+        <div><div class="g-title">Hip-Hop &amp; Urban</div><div class="g-sub">Trap · Drill · Afrobeats</div></div>
       </div>
+      <span class="g-badge" id="gb-hh"></span>
+    </div>
+    <div class="chips">
+      <span class="chip" data-cat="g" data-val="trap">Trap</span>
+      <span class="chip" data-cat="g" data-val="melodic drill">Melodic Drill</span>
+      <span class="chip" data-cat="g" data-val="phonk">Phonk</span>
+      <span class="chip" data-cat="g" data-val="lo-fi hip hop">Lo-Fi Hip Hop</span>
+      <span class="chip" data-cat="g" data-val="boom bap">Boom Bap</span>
+      <span class="chip" data-cat="g" data-val="afrobeats">Afrobeats</span>
+      <span class="chip" data-cat="g" data-val="jersey club">Jersey Club</span>
+      <span class="chip" data-cat="g" data-val="drill">Drill</span>
+      <span class="chip" data-cat="g" data-val="cloud rap">Cloud Rap</span>
+      <span class="chip" data-cat="g" data-val="chopped &amp; screwed">Chopped &amp; Screwed</span>
+    </div>
+  </div>
+
+  <div class="g-group" style="--acc:#00e8a2;--ring:rgba(0,232,162,0.45);--bloom:rgba(0,232,162,0.16);--ibg:rgba(0,232,162,0.12);--shine:rgba(0,232,162,0.75);--blooms:rgba(0,232,162,0.36)">
+    <div class="g-shimmer"></div>
+    <div class="g-hd">
+      <div class="g-hd-l">
+        <div class="g-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00e8a2" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12c2-6 4-8 6-8s4 6 6 6 4-8 6-8"/></svg></div>
+        <div><div class="g-title">Electronic</div><div class="g-sub">House · Techno · Ambient</div></div>
+      </div>
+      <span class="g-badge" id="gb-el"></span>
+    </div>
+    <div class="chips">
+      <span class="chip" data-cat="g" data-val="house">House</span>
+      <span class="chip" data-cat="g" data-val="deep house">Deep House</span>
+      <span class="chip" data-cat="g" data-val="techno">Techno</span>
+      <span class="chip" data-cat="g" data-val="ambient">Ambient</span>
+      <span class="chip" data-cat="g" data-val="drum &amp; bass">Drum &amp; Bass</span>
+      <span class="chip" data-cat="g" data-val="synthwave">Synthwave</span>
+      <span class="chip" data-cat="g" data-val="dark wave">Dark Wave</span>
+      <span class="chip" data-cat="g" data-val="hyperpop">Hyperpop</span>
+      <span class="chip" data-cat="g" data-val="trance">Trance</span>
+      <span class="chip" data-cat="g" data-val="dubstep">Dubstep</span>
+      <span class="chip" data-cat="g" data-val="future bass">Future Bass</span>
+      <span class="chip" data-cat="g" data-val="electro">Electro</span>
+    </div>
+  </div>
+
+  <div class="g-group" style="--acc:#ff7aaa;--ring:rgba(255,122,170,0.45);--bloom:rgba(255,122,170,0.16);--ibg:rgba(255,122,170,0.12);--shine:rgba(255,122,170,0.75);--blooms:rgba(255,122,170,0.36)">
+    <div class="g-shimmer"></div>
+    <div class="g-hd">
+      <div class="g-hd-l">
+        <div class="g-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff7aaa" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 4.5l-15 15"/><path d="M14.5 2l7.5 7.5-2 2-3-1-4 4 1 3-2 2L4.5 12l2-2 3 1 4-4-1-3z"/><circle cx="8.5" cy="15.5" r="2.5"/></svg></div>
+        <div><div class="g-title">Rock &amp; Guitar</div><div class="g-sub">Indie · Metal · Shoegaze</div></div>
+      </div>
+      <span class="g-badge" id="gb-rk"></span>
+    </div>
+    <div class="chips">
+      <span class="chip" data-cat="g" data-val="indie rock">Indie Rock</span>
+      <span class="chip" data-cat="g" data-val="alt rock">Alt Rock</span>
+      <span class="chip" data-cat="g" data-val="hard rock">Hard Rock</span>
+      <span class="chip" data-cat="g" data-val="metal">Metal</span>
+      <span class="chip" data-cat="g" data-val="death metal">Death Metal</span>
+      <span class="chip" data-cat="g" data-val="punk">Punk</span>
+      <span class="chip" data-cat="g" data-val="post-punk">Post-Punk</span>
+      <span class="chip" data-cat="g" data-val="shoegaze">Shoegaze</span>
+      <span class="chip" data-cat="g" data-val="post-rock">Post-Rock</span>
+      <span class="chip" data-cat="g" data-val="grunge">Grunge</span>
+      <span class="chip" data-cat="g" data-val="emo">Emo</span>
+    </div>
+  </div>
+
+  <div class="g-group" style="--acc:#c084fc;--ring:rgba(192,132,252,0.45);--bloom:rgba(192,132,252,0.15);--ibg:rgba(192,132,252,0.12);--shine:rgba(192,132,252,0.75);--blooms:rgba(192,132,252,0.34)">
+    <div class="g-shimmer"></div>
+    <div class="g-hd">
+      <div class="g-hd-l">
+        <div class="g-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+        <div><div class="g-title">Soul, Jazz &amp; World</div><div class="g-sub">Neo Soul · Jazz · Reggae</div></div>
+      </div>
+      <span class="g-badge" id="gb-jz"></span>
+    </div>
+    <div class="chips">
+      <span class="chip" data-cat="g" data-val="neo soul">Neo Soul</span>
+      <span class="chip" data-cat="g" data-val="r&amp;b">R&amp;B</span>
+      <span class="chip" data-cat="g" data-val="jazz">Jazz</span>
+      <span class="chip" data-cat="g" data-val="blues">Blues</span>
+      <span class="chip" data-cat="g" data-val="gospel">Gospel</span>
+      <span class="chip" data-cat="g" data-val="funk">Funk</span>
+      <span class="chip" data-cat="g" data-val="soul">Soul</span>
+      <span class="chip" data-cat="g" data-val="reggae">Reggae</span>
+      <span class="chip" data-cat="g" data-val="afrobeat">Afrobeat</span>
+      <span class="chip" data-cat="g" data-val="latin">Latin</span>
+      <span class="chip" data-cat="g" data-val="bossa nova">Bossa Nova</span>
+    </div>
+  </div>
+
+  <div class="g-group" style="--acc:#60a8ff;--ring:rgba(96,168,255,0.45);--bloom:rgba(96,168,255,0.15);--ibg:rgba(96,168,255,0.12);--shine:rgba(96,168,255,0.75);--blooms:rgba(96,168,255,0.34)">
+    <div class="g-shimmer"></div>
+    <div class="g-hd">
+      <div class="g-hd-l">
+        <div class="g-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#60a8ff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/><path d="M19.1 4.9C23 8.8 23 15.1 19.1 19"/></svg></div>
+        <div><div class="g-title">Pop, Folk &amp; Country</div><div class="g-sub">Pop · Folk · Classical</div></div>
+      </div>
+      <span class="g-badge" id="gb-pk"></span>
+    </div>
+    <div class="chips">
+      <span class="chip" data-cat="g" data-val="pop">Pop</span>
+      <span class="chip" data-cat="g" data-val="bedroom pop">Bedroom Pop</span>
+      <span class="chip" data-cat="g" data-val="dream pop">Dream Pop</span>
+      <span class="chip" data-cat="g" data-val="folk">Folk</span>
+      <span class="chip" data-cat="g" data-val="indie folk">Indie Folk</span>
+      <span class="chip" data-cat="g" data-val="country">Country</span>
+      <span class="chip" data-cat="g" data-val="americana">Americana</span>
+      <span class="chip" data-cat="g" data-val="k-pop">K-Pop</span>
+      <span class="chip" data-cat="g" data-val="classical">Classical</span>
+      <span class="chip" data-cat="g" data-val="cinematic orchestral">Cinematic Orchestral</span>
+    </div>
+  </div>
+
+  <div class="step-actions">
+    <button class="btn-next" onclick="goStep(1)">Sounds &#8594;</button>
+  </div>
+</div>
+
+<!-- ═══ STEP 1: SOUNDS ══════════════════════════════════════════ -->
+<div class="step-panel" id="panel1">
+  <div class="p-card">
+    <div class="p-card-hd"><span class="p-label">Instrumentation</span><span class="p-hint">Select up to 6</span></div>
+    <div class="p-card-body">
       <div class="chips">
-        <span class="chip" data-cat="g" data-val="trap">Trap</span>
-        <span class="chip" data-cat="g" data-val="melodic drill">Melodic Drill</span>
-        <span class="chip" data-cat="g" data-val="phonk">Phonk</span>
-        <span class="chip" data-cat="g" data-val="lo-fi hip hop">Lo-Fi Hip Hop</span>
-        <span class="chip" data-cat="g" data-val="boom bap">Boom Bap</span>
-        <span class="chip" data-cat="g" data-val="afrobeats">Afrobeats</span>
-        <span class="chip" data-cat="g" data-val="jersey club">Jersey Club</span>
-        <span class="chip" data-cat="g" data-val="drill">Drill</span>
-        <span class="chip" data-cat="g" data-val="cloud rap">Cloud Rap</span>
-        <span class="chip" data-cat="g" data-val="chopped &amp; screwed">Chopped &amp; Screwed</span>
+        <span class="chip" data-cat="i" data-val="808 bass">808 Bass</span>
+        <span class="chip" data-cat="i" data-val="piano">Piano</span>
+        <span class="chip" data-cat="i" data-val="electric guitar">Electric Guitar</span>
+        <span class="chip" data-cat="i" data-val="acoustic guitar">Acoustic Guitar</span>
+        <span class="chip" data-cat="i" data-val="bass guitar">Bass Guitar</span>
+        <span class="chip" data-cat="i" data-val="strings">Strings</span>
+        <span class="chip" data-cat="i" data-val="violin">Violin</span>
+        <span class="chip" data-cat="i" data-val="cello">Cello</span>
+        <span class="chip" data-cat="i" data-val="synth pads">Synth Pads</span>
+        <span class="chip" data-cat="i" data-val="lead synth">Lead Synth</span>
+        <span class="chip" data-cat="i" data-val="flute">Flute</span>
+        <span class="chip" data-cat="i" data-val="trumpet">Trumpet</span>
+        <span class="chip" data-cat="i" data-val="saxophone">Saxophone</span>
+        <span class="chip" data-cat="i" data-val="choir">Choir</span>
+        <span class="chip" data-cat="i" data-val="rhodes">Rhodes</span>
+        <span class="chip" data-cat="i" data-val="organ">Organ</span>
+        <span class="chip" data-cat="i" data-val="live drums">Live Drums</span>
+        <span class="chip" data-cat="i" data-val="drum machine">Drum Machine</span>
+        <span class="chip" data-cat="i" data-val="harp">Harp</span>
+        <span class="chip" data-cat="i" data-val="banjo">Banjo</span>
+        <span class="chip" data-cat="i" data-val="harmonica">Harmonica</span>
+        <span class="chip" data-cat="i" data-val="marimba">Marimba</span>
       </div>
     </div>
+  </div>
+  <div class="step-actions">
+    <button class="btn-back" onclick="goStep(0)">&#8592; Back</button>
+    <button class="btn-next" onclick="goStep(2)">Mood &#8594;</button>
+  </div>
+</div>
 
-    <!-- Electronic -->
-    <div class="gg-card" style="--gc-acc:#00e8a2;--gc-acc30:rgba(0,232,162,0.3);--gc-ring:rgba(0,232,162,0.4);--gc-bloom:rgba(0,232,162,0.14);--gc-ibg:rgba(0,232,162,0.11);--gc-shine:rgba(0,232,162,0.7)">
-      <div class="gg-shimmer"></div>
-      <div class="gg-head">
-        <div class="gg-head-l">
-          <div class="gg-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00e8a2" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12c2-6 4-8 6-8s4 6 6 6 4-8 6-8"/></svg></div>
-          <div><div class="gg-title">Electronic</div><div class="gg-sub">House · Techno · Ambient</div></div>
-        </div>
-        <span class="gg-badge" id="gb-el"></span>
-      </div>
+<!-- ═══ STEP 2: MOOD ════════════════════════════════════════════ -->
+<div class="step-panel" id="panel2">
+  <div class="p-card">
+    <div class="p-card-hd"><span class="p-label">Mood &amp; Texture</span><span class="p-hint">Select up to 3</span></div>
+    <div class="p-card-body">
       <div class="chips">
-        <span class="chip" data-cat="g" data-val="house">House</span>
-        <span class="chip" data-cat="g" data-val="deep house">Deep House</span>
-        <span class="chip" data-cat="g" data-val="techno">Techno</span>
-        <span class="chip" data-cat="g" data-val="ambient">Ambient</span>
-        <span class="chip" data-cat="g" data-val="drum &amp; bass">Drum &amp; Bass</span>
-        <span class="chip" data-cat="g" data-val="synthwave">Synthwave</span>
-        <span class="chip" data-cat="g" data-val="dark wave">Dark Wave</span>
-        <span class="chip" data-cat="g" data-val="hyperpop">Hyperpop</span>
-        <span class="chip" data-cat="g" data-val="trance">Trance</span>
-        <span class="chip" data-cat="g" data-val="dubstep">Dubstep</span>
-        <span class="chip" data-cat="g" data-val="future bass">Future Bass</span>
-        <span class="chip" data-cat="g" data-val="electro">Electro</span>
+        <span class="chip" data-cat="m" data-val="dark">Dark</span>
+        <span class="chip" data-cat="m" data-val="melancholic">Melancholic</span>
+        <span class="chip" data-cat="m" data-val="uplifting">Uplifting</span>
+        <span class="chip" data-cat="m" data-val="aggressive">Aggressive</span>
+        <span class="chip" data-cat="m" data-val="ethereal">Ethereal</span>
+        <span class="chip" data-cat="m" data-val="dreamy">Dreamy</span>
+        <span class="chip" data-cat="m" data-val="hypnotic">Hypnotic</span>
+        <span class="chip" data-cat="m" data-val="cinematic">Cinematic</span>
+        <span class="chip" data-cat="m" data-val="raw">Raw</span>
+        <span class="chip" data-cat="m" data-val="warm">Warm</span>
+        <span class="chip" data-cat="m" data-val="groovy">Groovy</span>
+        <span class="chip" data-cat="m" data-val="nostalgic">Nostalgic</span>
+        <span class="chip" data-cat="m" data-val="eerie">Eerie</span>
+        <span class="chip" data-cat="m" data-val="euphoric">Euphoric</span>
+        <span class="chip" data-cat="m" data-val="tense">Tense</span>
+        <span class="chip" data-cat="m" data-val="peaceful">Peaceful</span>
+        <span class="chip" data-cat="m" data-val="gritty">Gritty</span>
+        <span class="chip" data-cat="m" data-val="lush">Lush</span>
+        <span class="chip" data-cat="m" data-val="frenetic">Frenetic</span>
+        <span class="chip" data-cat="m" data-val="romantic">Romantic</span>
       </div>
     </div>
-
-    <!-- Rock & Guitar -->
-    <div class="gg-card" style="--gc-acc:#ff7aaa;--gc-acc30:rgba(255,122,170,0.3);--gc-ring:rgba(255,122,170,0.4);--gc-bloom:rgba(255,122,170,0.14);--gc-ibg:rgba(255,122,170,0.1);--gc-shine:rgba(255,122,170,0.7)">
-      <div class="gg-shimmer"></div>
-      <div class="gg-head">
-        <div class="gg-head-l">
-          <div class="gg-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff7aaa" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 4.5l-15 15"/><path d="M14.5 2l7.5 7.5-2 2-3-1-4 4 1 3-2 2L4.5 12l2-2 3 1 4-4-1-3z"/><circle cx="8.5" cy="15.5" r="2.5"/></svg></div>
-          <div><div class="gg-title">Rock &amp; Guitar</div><div class="gg-sub">Indie · Metal · Shoegaze</div></div>
-        </div>
-        <span class="gg-badge" id="gb-rk"></span>
-      </div>
+  </div>
+  <div class="p-card">
+    <div class="p-card-hd"><span class="p-label">Vocal Style</span><span class="p-hint">Select up to 3</span></div>
+    <div class="p-card-body">
       <div class="chips">
-        <span class="chip" data-cat="g" data-val="indie rock">Indie Rock</span>
-        <span class="chip" data-cat="g" data-val="alt rock">Alt Rock</span>
-        <span class="chip" data-cat="g" data-val="hard rock">Hard Rock</span>
-        <span class="chip" data-cat="g" data-val="metal">Metal</span>
-        <span class="chip" data-cat="g" data-val="death metal">Death Metal</span>
-        <span class="chip" data-cat="g" data-val="punk">Punk</span>
-        <span class="chip" data-cat="g" data-val="post-punk">Post-Punk</span>
-        <span class="chip" data-cat="g" data-val="shoegaze">Shoegaze</span>
-        <span class="chip" data-cat="g" data-val="post-rock">Post-Rock</span>
-        <span class="chip" data-cat="g" data-val="grunge">Grunge</span>
-        <span class="chip" data-cat="g" data-val="emo">Emo</span>
+        <span class="chip" data-cat="v" data-val="[male vocal]">[male vocal]</span>
+        <span class="chip" data-cat="v" data-val="[female vocal]">[female vocal]</span>
+        <span class="chip" data-cat="v" data-val="[rap]">[rap]</span>
+        <span class="chip" data-cat="v" data-val="[harmonies]">[harmonies]</span>
+        <span class="chip" data-cat="v" data-val="[falsetto]">[falsetto]</span>
+        <span class="chip" data-cat="v" data-val="[spoken word]">[spoken word]</span>
+        <span class="chip" data-cat="v" data-val="[no vocals]">[no vocals]</span>
+        <span class="chip" data-cat="v" data-val="[choir vocals]">[choir vocals]</span>
+        <span class="chip" data-cat="v" data-val="[whisper]">[whisper]</span>
       </div>
     </div>
+  </div>
+  <div class="step-actions">
+    <button class="btn-back" onclick="goStep(1)">&#8592; Back</button>
+    <button class="btn-next" onclick="goStep(3)">Structure &#8594;</button>
+  </div>
+</div>
 
-    <!-- Soul Jazz World -->
-    <div class="gg-card" style="--gc-acc:#c084fc;--gc-acc30:rgba(192,132,252,0.3);--gc-ring:rgba(192,132,252,0.4);--gc-bloom:rgba(192,132,252,0.13);--gc-ibg:rgba(192,132,252,0.1);--gc-shine:rgba(192,132,252,0.7)">
-      <div class="gg-shimmer"></div>
-      <div class="gg-head">
-        <div class="gg-head-l">
-          <div class="gg-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
-          <div><div class="gg-title">Soul, Jazz &amp; World</div><div class="gg-sub">Neo Soul · Jazz · Reggae</div></div>
-        </div>
-        <span class="gg-badge" id="gb-jz"></span>
+<!-- ═══ STEP 3: STRUCTURE ═══════════════════════════════════════ -->
+<div class="step-panel" id="panel3">
+  <div class="p-card">
+    <div class="p-card-hd"><span class="p-label">Song Structure</span><span class="p-hint">Tap to add &middot; Drag to reorder &middot; &times; to remove</span></div>
+    <div class="p-card-body">
+      <div class="seq-palette">
+        <span class="sbl t-intro" onclick="addBlock('Intro','t-intro')">Intro</span>
+        <span class="sbl t-verse" onclick="addBlock('Verse','t-verse')">Verse</span>
+        <span class="sbl t-pre" onclick="addBlock('Pre-Chorus','t-pre')">Pre-Chorus</span>
+        <span class="sbl t-chorus" onclick="addBlock('Chorus','t-chorus')">Chorus</span>
+        <span class="sbl t-bridge" onclick="addBlock('Bridge','t-bridge')">Bridge</span>
+        <span class="sbl t-hook" onclick="addBlock('Hook','t-hook')">Hook</span>
+        <span class="sbl t-break" onclick="addBlock('Breakdown','t-break')">Breakdown</span>
+        <span class="sbl t-outro" onclick="addBlock('Outro','t-outro')">Outro</span>
       </div>
-      <div class="chips">
-        <span class="chip" data-cat="g" data-val="neo soul">Neo Soul</span>
-        <span class="chip" data-cat="g" data-val="r&amp;b">R&amp;B</span>
-        <span class="chip" data-cat="g" data-val="jazz">Jazz</span>
-        <span class="chip" data-cat="g" data-val="blues">Blues</span>
-        <span class="chip" data-cat="g" data-val="gospel">Gospel</span>
-        <span class="chip" data-cat="g" data-val="funk">Funk</span>
-        <span class="chip" data-cat="g" data-val="soul">Soul</span>
-        <span class="chip" data-cat="g" data-val="reggae">Reggae</span>
-        <span class="chip" data-cat="g" data-val="afrobeat">Afrobeat</span>
-        <span class="chip" data-cat="g" data-val="latin">Latin</span>
-        <span class="chip" data-cat="g" data-val="bossa nova">Bossa Nova</span>
+      <div class="seq-rail" id="seqRail" ondragover="railDragOver(event)" ondrop="railDrop(event)" ondragleave="railDragLeave(event)">
+        <span class="rail-empty" id="railEmpty">Tap a section above to build your arrangement</span>
+      </div>
+      <div class="prompt-live">
+        <div class="pl-label">Live Prompt Preview</div>
+        <div class="pl-text" id="livePromptText"><span class="pl-empty">Your prompt will appear here as you make selections</span></div>
+        <div class="pl-chars" id="charCount"><span id="charNum">0</span> / 200 characters</div>
       </div>
     </div>
+  </div>
+  <div class="step-actions">
+    <button class="btn-back" onclick="goStep(2)">&#8592; Back</button>
+    <button class="btn-next" onclick="goStep(4)">Optimize with AI &#8594;</button>
+  </div>
+</div>
 
-    <!-- Pop Folk Country -->
-    <div class="gg-card" style="--gc-acc:#60a8ff;--gc-acc30:rgba(96,168,255,0.3);--gc-ring:rgba(96,168,255,0.4);--gc-bloom:rgba(96,168,255,0.13);--gc-ibg:rgba(96,168,255,0.1);--gc-shine:rgba(96,168,255,0.7)">
-      <div class="gg-shimmer"></div>
-      <div class="gg-head">
-        <div class="gg-head-l">
-          <div class="gg-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#60a8ff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/><path d="M19.1 4.9C23 8.8 23 15.1 19.1 19"/></svg></div>
-          <div><div class="gg-title">Pop, Folk &amp; Country</div><div class="gg-sub">Pop · Folk · Classical</div></div>
+<!-- ═══ STEP 4: OPTIMIZE ════════════════════════════════════════ -->
+<div class="step-panel" id="panel4">
+  <div style="max-width:620px;margin:0 auto">
+    <div class="p-card" style="margin-bottom:16px">
+      <div class="p-card-hd"><span class="p-label">Your Built Prompt</span></div>
+      <div class="p-card-body">
+        <div class="prompt-live" style="margin-bottom:0">
+          <div class="pl-label">Ready to optimize</div>
+          <div class="pl-text" id="finalPromptPreview"><span class="pl-empty">Go back and make selections</span></div>
         </div>
-        <span class="gg-badge" id="gb-pk"></span>
-      </div>
-      <div class="chips">
-        <span class="chip" data-cat="g" data-val="pop">Pop</span>
-        <span class="chip" data-cat="g" data-val="bedroom pop">Bedroom Pop</span>
-        <span class="chip" data-cat="g" data-val="dream pop">Dream Pop</span>
-        <span class="chip" data-cat="g" data-val="folk">Folk</span>
-        <span class="chip" data-cat="g" data-val="indie folk">Indie Folk</span>
-        <span class="chip" data-cat="g" data-val="country">Country</span>
-        <span class="chip" data-cat="g" data-val="americana">Americana</span>
-        <span class="chip" data-cat="g" data-val="k-pop">K-Pop</span>
-        <span class="chip" data-cat="g" data-val="classical">Classical</span>
-        <span class="chip" data-cat="g" data-val="cinematic orchestral">Cinematic Orchestral</span>
       </div>
     </div>
-
+    <div class="p-card" style="margin-bottom:16px">
+      <div class="p-card-hd"><span class="p-label">Or Paste Any Prompt</span><span class="p-hint">Overrides builder</span></div>
+      <div class="p-card-body">
+        <textarea class="paste-ta" id="pasteInput" placeholder="Paste any existing Suno prompt to score and optimize it..."></textarea>
+        <button class="opt-btn" id="optBtn" onclick="runOptimize()">
+          <span class="opt-pulse"></span>Optimize with AI
+        </button>
+      </div>
+    </div>
+    <div class="loading-card" id="loadingCard">
+      <div class="loading-bars"><div class="lb"></div><div class="lb"></div><div class="lb"></div><div class="lb"></div><div class="lb"></div><div class="lb"></div></div>
+      <div class="loading-txt" id="loadTxt">Analyzing prompt structure...</div>
+    </div>
     <div class="step-actions">
-      <button class="btn-next" onclick="goStep(1)">Sounds &#8594;</button>
+      <button class="btn-back" onclick="goStep(3)">&#8592; Back to Structure</button>
     </div>
   </div>
+</div>
 
-  <!-- STEP 1: SOUNDS -->
-  <div class="step-panel" id="panel1">
-    <div class="sc">
-      <div class="sc-head"><span class="sc-label">Instrumentation</span><span class="sc-hint">Select up to 6</span></div>
-      <div class="sc-body">
-        <div class="chips">
-          <span class="chip" data-cat="i" data-val="808 bass">808 Bass</span>
-          <span class="chip" data-cat="i" data-val="piano">Piano</span>
-          <span class="chip" data-cat="i" data-val="electric guitar">Electric Guitar</span>
-          <span class="chip" data-cat="i" data-val="acoustic guitar">Acoustic Guitar</span>
-          <span class="chip" data-cat="i" data-val="bass guitar">Bass Guitar</span>
-          <span class="chip" data-cat="i" data-val="strings">Strings</span>
-          <span class="chip" data-cat="i" data-val="violin">Violin</span>
-          <span class="chip" data-cat="i" data-val="cello">Cello</span>
-          <span class="chip" data-cat="i" data-val="synth pads">Synth Pads</span>
-          <span class="chip" data-cat="i" data-val="lead synth">Lead Synth</span>
-          <span class="chip" data-cat="i" data-val="flute">Flute</span>
-          <span class="chip" data-cat="i" data-val="trumpet">Trumpet</span>
-          <span class="chip" data-cat="i" data-val="saxophone">Saxophone</span>
-          <span class="chip" data-cat="i" data-val="choir">Choir</span>
-          <span class="chip" data-cat="i" data-val="rhodes">Rhodes</span>
-          <span class="chip" data-cat="i" data-val="organ">Organ</span>
-          <span class="chip" data-cat="i" data-val="live drums">Live Drums</span>
-          <span class="chip" data-cat="i" data-val="drum machine">Drum Machine</span>
-          <span class="chip" data-cat="i" data-val="harp">Harp</span>
-          <span class="chip" data-cat="i" data-val="banjo">Banjo</span>
-          <span class="chip" data-cat="i" data-val="harmonica">Harmonica</span>
-          <span class="chip" data-cat="i" data-val="marimba">Marimba</span>
-        </div>
-      </div>
+<!-- ═══ STEP 5: RESULTS ═════════════════════════════════════════ -->
+<div class="step-panel" id="panel5">
+  <div class="results-page">
+    <div class="results-hd">
+      <span class="results-title">&#9670; Your Results</span>
+      <button class="results-back" onclick="goStep(4)">&#8592; Back to Optimizer</button>
     </div>
-    <div class="step-actions">
-      <button class="btn-back" onclick="goStep(0)">&#8592; Back</button>
-      <button class="btn-next" onclick="goStep(2)">Mood &#8594;</button>
-    </div>
-  </div>
-
-  <!-- STEP 2: MOOD -->
-  <div class="step-panel" id="panel2">
-    <div class="sc">
-      <div class="sc-head"><span class="sc-label">Mood &amp; Texture</span><span class="sc-hint">Select up to 3</span></div>
-      <div class="sc-body">
-        <div class="chips">
-          <span class="chip" data-cat="m" data-val="dark">Dark</span>
-          <span class="chip" data-cat="m" data-val="melancholic">Melancholic</span>
-          <span class="chip" data-cat="m" data-val="uplifting">Uplifting</span>
-          <span class="chip" data-cat="m" data-val="aggressive">Aggressive</span>
-          <span class="chip" data-cat="m" data-val="ethereal">Ethereal</span>
-          <span class="chip" data-cat="m" data-val="dreamy">Dreamy</span>
-          <span class="chip" data-cat="m" data-val="hypnotic">Hypnotic</span>
-          <span class="chip" data-cat="m" data-val="cinematic">Cinematic</span>
-          <span class="chip" data-cat="m" data-val="raw">Raw</span>
-          <span class="chip" data-cat="m" data-val="warm">Warm</span>
-          <span class="chip" data-cat="m" data-val="groovy">Groovy</span>
-          <span class="chip" data-cat="m" data-val="nostalgic">Nostalgic</span>
-          <span class="chip" data-cat="m" data-val="eerie">Eerie</span>
-          <span class="chip" data-cat="m" data-val="euphoric">Euphoric</span>
-          <span class="chip" data-cat="m" data-val="tense">Tense</span>
-          <span class="chip" data-cat="m" data-val="peaceful">Peaceful</span>
-          <span class="chip" data-cat="m" data-val="gritty">Gritty</span>
-          <span class="chip" data-cat="m" data-val="lush">Lush</span>
-          <span class="chip" data-cat="m" data-val="frenetic">Frenetic</span>
-          <span class="chip" data-cat="m" data-val="romantic">Romantic</span>
+    <div class="output-area" id="outputArea">
+      <div class="score-card fu fu-1" id="scoreCard">
+        <div class="score-row">
+          <div><div class="score-big" id="scoreNum">0<sub>/10</sub></div></div>
+          <div class="score-meta"><div class="score-word" id="scoreWord">&mdash;</div><div class="score-caption">Prompt Quality</div></div>
         </div>
-      </div>
-    </div>
-    <div class="sc">
-      <div class="sc-head"><span class="sc-label">Vocal Style</span><span class="sc-hint">Select up to 3</span></div>
-      <div class="sc-body">
-        <div class="chips">
-          <span class="chip" data-cat="v" data-val="[male vocal]">[male vocal]</span>
-          <span class="chip" data-cat="v" data-val="[female vocal]">[female vocal]</span>
-          <span class="chip" data-cat="v" data-val="[rap]">[rap]</span>
-          <span class="chip" data-cat="v" data-val="[harmonies]">[harmonies]</span>
-          <span class="chip" data-cat="v" data-val="[falsetto]">[falsetto]</span>
-          <span class="chip" data-cat="v" data-val="[spoken word]">[spoken word]</span>
-          <span class="chip" data-cat="v" data-val="[no vocals]">[no vocals]</span>
-          <span class="chip" data-cat="v" data-val="[choir vocals]">[choir vocals]</span>
-          <span class="chip" data-cat="v" data-val="[whisper]">[whisper]</span>
+        <div class="meters">
+          <div class="mr"><span class="mr-lbl">Genre</span><div class="mr-track"><div class="mr-fill mf-g" id="mG"></div></div><span class="mr-val" id="mGv">&mdash;</span></div>
+          <div class="mr"><span class="mr-lbl">Structure</span><div class="mr-track"><div class="mr-fill mf-g" id="mS"></div></div><span class="mr-val" id="mSv">&mdash;</span></div>
+          <div class="mr"><span class="mr-lbl">Texture</span><div class="mr-track"><div class="mr-fill mf-a" id="mT"></div></div><span class="mr-val" id="mTv">&mdash;</span></div>
+          <div class="mr"><span class="mr-lbl">Length</span><div class="mr-track"><div class="mr-fill mf-g" id="mL"></div></div><span class="mr-val" id="mLv">&mdash;</span></div>
         </div>
+        <div class="val-pills" id="valPills"></div>
       </div>
-    </div>
-    <div class="step-actions">
-      <button class="btn-back" onclick="goStep(1)">&#8592; Back</button>
-      <button class="btn-next" onclick="goStep(3)">Structure &#8594;</button>
-    </div>
-  </div>
-
-  <!-- STEP 3: STRUCTURE -->
-  <div class="step-panel" id="panel3">
-    <div class="sc">
-      <div class="sc-head">
-        <span class="sc-label">Song Structure</span>
-        <span class="sc-hint">Tap to add &middot; Drag to reorder &middot; &times; to remove</span>
+      <div class="ob fu fu-2">
+        <div class="ob-head"><span class="ob-title">Optimized Prompt</span><button class="ob-copy" id="copyBtn" onclick="copyResult()">Copy</button></div>
+        <div class="ob-body"><div class="opt-result" id="optResultText"></div></div>
       </div>
-      <div class="sc-body">
-        <div class="seq-palette">
-          <span class="sbl t-intro" onclick="addBlock('Intro','t-intro')">Intro</span>
-          <span class="sbl t-verse" onclick="addBlock('Verse','t-verse')">Verse</span>
-          <span class="sbl t-pre" onclick="addBlock('Pre-Chorus','t-pre')">Pre-Chorus</span>
-          <span class="sbl t-chorus" onclick="addBlock('Chorus','t-chorus')">Chorus</span>
-          <span class="sbl t-bridge" onclick="addBlock('Bridge','t-bridge')">Bridge</span>
-          <span class="sbl t-hook" onclick="addBlock('Hook','t-hook')">Hook</span>
-          <span class="sbl t-break" onclick="addBlock('Breakdown','t-break')">Breakdown</span>
-          <span class="sbl t-outro" onclick="addBlock('Outro','t-outro')">Outro</span>
-        </div>
-        <div class="seq-rail" id="seqRail"
-          ondragover="railDragOver(event)" ondrop="railDrop(event)" ondragleave="railDragLeave(event)">
-          <span class="rail-empty" id="railEmpty">Tap a section above to build your arrangement</span>
-        </div>
-        <div class="prompt-live">
-          <div class="pl-label">Live Prompt Preview</div>
-          <div class="pl-text" id="livePromptText"><span class="pl-empty">Your prompt will appear here as you make selections</span></div>
-          <div class="pl-chars" id="charCount"><span id="charNum">0</span> / 200 characters</div>
-        </div>
-      </div>
-    </div>
-    <div class="step-actions">
-      <button class="btn-back" onclick="goStep(2)">&#8592; Back</button>
-      <button class="btn-next" onclick="goStep(4)">Optimize with AI &#8594;</button>
-    </div>
-  </div>
-
-  <!-- STEP 4: OPTIMIZE — clean input page, no output here -->
-  <div class="step-panel" id="panel4">
-    <div style="max-width:640px;margin:0 auto">
-      <div class="sc" style="margin-bottom:16px">
-        <div class="sc-head"><span class="sc-label">Your Built Prompt</span></div>
-        <div class="sc-body">
-          <div class="prompt-live" style="margin-bottom:0">
-            <div class="pl-label">Ready to optimize</div>
-            <div class="pl-text" id="finalPromptPreview"><span class="pl-empty">Go back and make selections</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="sc" style="margin-bottom:16px">
-        <div class="sc-head"><span class="sc-label">Or Paste Any Prompt</span><span class="sc-hint">Overrides builder</span></div>
-        <div class="sc-body">
-          <textarea class="paste-ta" id="pasteInput" placeholder="Paste any existing Suno prompt to score and optimize it..."></textarea>
-          <button class="opt-btn" id="optBtn" onclick="runOptimize()">
-            <span class="opt-pulse"></span>
-            Optimize with AI
-          </button>
-        </div>
-      </div>
-      <div class="loading-card" id="loadingCard">
-        <div class="loading-bars">
-          <div class="lb"></div><div class="lb"></div><div class="lb"></div>
-          <div class="lb"></div><div class="lb"></div><div class="lb"></div>
-        </div>
-        <div class="loading-txt" id="loadTxt">Analyzing prompt structure...</div>
-      </div>
-      <div class="step-actions">
-        <button class="btn-back" onclick="goStep(3)">&#8592; Back to Structure</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- STEP 5: RESULTS — dedicated output page -->
-  <div class="step-panel" id="panel5">
-    <div id="panel5">
-      <div class="out-page-header">
-        <span class="out-page-title">&#9670; Your Results</span>
-        <button class="out-back-btn" onclick="goStep(4)">&#8592; Back to Optimizer</button>
-      </div>
-
-      <div class="output-area" id="outputArea">
-
-        <!-- Score full width -->
-        <div class="score-card fu fu-1" id="scoreCard" style="margin-bottom:16px">
-          <div class="score-row">
-            <div><div class="score-big" id="scoreNum">0<sub>/10</sub></div></div>
-            <div class="score-meta">
-              <div class="score-word" id="scoreWord">&mdash;</div>
-              <div class="score-caption">Prompt Quality</div>
+      <div class="results-grid">
+        <div class="ob fu fu-3">
+          <div class="ob-head"><span class="ob-title">Before &amp; After</span></div>
+          <div class="ob-body">
+            <div class="diff-grid">
+              <div><div class="dg-head dg-r">Before</div><div class="diff-text" id="diffBefore"></div></div>
+              <div><div class="dg-head dg-a">After</div><div class="diff-text" id="diffAfter"></div></div>
             </div>
           </div>
-          <div class="meters">
-            <div class="mr"><span class="mr-lbl">Genre</span><div class="mr-track"><div class="mr-fill mf-g" id="mG"></div></div><span class="mr-val" id="mGv">&mdash;</span></div>
-            <div class="mr"><span class="mr-lbl">Structure</span><div class="mr-track"><div class="mr-fill mf-g" id="mS"></div></div><span class="mr-val" id="mSv">&mdash;</span></div>
-            <div class="mr"><span class="mr-lbl">Texture</span><div class="mr-track"><div class="mr-fill mf-a" id="mT"></div></div><span class="mr-val" id="mTv">&mdash;</span></div>
-            <div class="mr"><span class="mr-lbl">Length</span><div class="mr-track"><div class="mr-fill mf-g" id="mL"></div></div><span class="mr-val" id="mLv">&mdash;</span></div>
-          </div>
-          <div class="val-pills" id="valPills"></div>
         </div>
-
-        <!-- Optimized prompt full width -->
-        <div class="ob fu fu-2" style="margin-bottom:16px">
-          <div class="ob-head">
-            <span class="ob-title">Optimized Prompt</span>
-            <button class="ob-copy" id="copyBtn" onclick="copyResult()">Copy</button>
-          </div>
-          <div class="ob-body"><div class="opt-result" id="optResultText"></div></div>
+        <div class="ob fu fu-4">
+          <div class="ob-head"><span class="ob-title">Expert Analysis</span></div>
+          <div class="ob-body"><div class="analysis-body" id="analysisText"></div></div>
         </div>
-
-        <!-- Before/After + Analysis side by side -->
-        <div class="out-grid">
-          <div class="ob fu fu-3">
-            <div class="ob-head"><span class="ob-title">Before &amp; After</span></div>
-            <div class="ob-body">
-              <div class="diff-grid">
-                <div><div class="dg-head dg-r">Before</div><div class="diff-text" id="diffBefore"></div></div>
-                <div><div class="dg-head dg-a">After</div><div class="diff-text" id="diffAfter"></div></div>
-              </div>
-            </div>
-          </div>
-          <div class="ob fu fu-4">
-            <div class="ob-head"><span class="ob-title">Expert Analysis</span></div>
-            <div class="ob-body"><div class="analysis-body" id="analysisText"></div></div>
-          </div>
+      </div>
+      <div class="ob fu fu-5">
+        <div class="ob-head"><span class="ob-title">Next Steps</span></div>
+        <div class="ob-body"><div class="steps-list" id="stepsText"></div></div>
+      </div>
+      <div class="share-bar fu fu-6">
+        <div class="share-label">Share This Result</div>
+        <div class="share-btns">
+          <button class="sh-btn sh-copy" id="shareCopyBtn" onclick="shareLink()"><svg class="sh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy Link</button>
+          <a class="sh-btn sh-x" id="shareXBtn" href="#" target="_blank" rel="noopener"><svg class="sh-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.26 5.632 5.905-5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>Share on X</a>
+          <a class="sh-btn sh-reddit" id="shareRedditBtn" href="#" target="_blank" rel="noopener"><svg class="sh-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>Reddit</a>
         </div>
-
-        <!-- Next steps full width -->
-        <div class="ob fu fu-5" style="margin-top:16px">
-          <div class="ob-head"><span class="ob-title">Next Steps</span></div>
-          <div class="ob-body"><div class="steps-list" id="stepsText"></div></div>
-        </div>
-
-        <!-- Share -->
-        <div class="share-bar fu fu-6" style="margin-top:16px">
-          <div class="share-label">Share This Result</div>
-          <div class="share-btns">
-            <button class="sh-btn sh-copy" id="shareCopyBtn" onclick="shareLink()">
-              <svg class="sh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-              Copy Link
-            </button>
-            <a class="sh-btn sh-x" id="shareXBtn" href="#" target="_blank" rel="noopener">
-              <svg class="sh-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.26 5.632 5.905-5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-              Share on X
-            </a>
-            <a class="sh-btn sh-reddit" id="shareRedditBtn" href="#" target="_blank" rel="noopener">
-              <svg class="sh-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
-              Reddit
-            </a>
-          </div>
-        </div>
-
-        <!-- Brand watermark -->
-        <div class="brand-wm fu fu-7" style="margin-top:16px">
-          <div class="bw-logo"><svg width="22" height="22" viewBox="0 0 18 18" fill="none"><rect x="1.5" y="7" width="2.5" height="9" rx="1.2" fill="#0a0a0b"/><rect x="6" y="4" width="2.5" height="12" rx="1.2" fill="#0a0a0b"/><rect x="10.5" y="1" width="2.5" height="16" rx="1.2" fill="#0a0a0b"/><rect x="15" y="5" width="2.5" height="9" rx="1.2" fill="#0a0a0b"/></svg></div>
-          <div><div class="bw-name">MusicProductionWiki.com</div><div class="bw-links"><a href="/bible/">&#9670; The Producer's Bible</a><span>&middot;</span><a href="/tools/">Free AI Music Tools</a></div><div class="bw-url">musicproductionwiki.com/tools</div></div>
-        </div>
-
-      </div><!-- /output-area -->
+      </div>
+      <div class="brand-wm fu fu-7">
+        <div class="bw-logo"><div class="bw-mark"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1.5" y="7" width="2.5" height="9" rx="1.2" fill="#0a0a0b"/><rect x="6" y="4" width="2.5" height="12" rx="1.2" fill="#0a0a0b"/><rect x="10.5" y="1" width="2.5" height="16" rx="1.2" fill="#0a0a0b"/><rect x="15" y="5" width="2.5" height="9" rx="1.2" fill="#0a0a0b"/></svg></div></div>
+        <div><div class="bw-name">MusicProductionWiki.com</div><div class="bw-links"><a href="/bible/">&#9670; The Producer's Bible</a><span>&middot;</span><a href="/tools/">Free AI Music Tools</a></div><div class="bw-url">musicproductionwiki.com/tools</div></div>
+      </div>
     </div>
   </div>
+</div>
 
 </div>
 
@@ -1352,6 +1143,12 @@ var dragSrc=null;
 
 // ── STEP NAV ──────────────────────────────────────────────────
 function goStep(n){
+  if(n===5){
+    document.querySelectorAll('.step-panel').forEach(function(p){p.classList.remove('active')});
+    document.getElementById('panel5').classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+    return;
+  }
   if(n===5){
     document.querySelectorAll('.step-panel').forEach(function(p){p.classList.remove('active')});
     document.getElementById('panel5').classList.add('active');
@@ -1554,6 +1351,7 @@ NEXT:
     optimizedResult=optimized;
     stopLoading();document.getElementById('loadingCard').style.display='none';document.getElementById('outputArea').classList.add('show');
   goStep(5);
+  goStep(5);
     animGauge(score);
     animMeter('mG','mGv',(gM?parseFloat(gM[1]):7)*10,(gM?parseFloat(gM[1]):7).toFixed(1));
     animMeter('mS','mSv',(stM?parseFloat(stM[1]):7)*10,(stM?parseFloat(stM[1]):7).toFixed(1));
@@ -1582,6 +1380,7 @@ NEXT:
   }catch(err){
     stopLoading();document.getElementById('loadingCard').style.display='none';document.getElementById('outputArea').classList.add('show');
   goStep(5);
+  goStep(5);
     var sc=document.getElementById('scoreCard');if(sc)sc.innerHTML='<div style="padding:22px;font-size:15px;color:#ff8080;font-family:DM Sans,sans-serif;line-height:1.75;font-weight:400">Connection error — please try again. If the issue persists, the API service may be temporarily unavailable.</div>';
   }
   document.getElementById('optBtn').disabled=false;
@@ -1589,19 +1388,32 @@ NEXT:
 
 try{var sess=JSON.parse(sessionStorage.getItem('mpw_session')||'{}');if(sess.genre){var pre=document.querySelector('.chip[data-cat="g"][data-val="'+sess.genre+'"]');if(pre)pre.click()}}catch(e){}
 </script>
+// Update genre group badges
+function updateGenreBadges(){
+  var groups={
+    'hh':['trap','melodic drill','phonk','lo-fi hip hop','boom bap','afrobeats','jersey club','drill','cloud rap','chopped & screwed'],
+    'el':['house','deep house','techno','ambient','drum & bass','synthwave','dark wave','hyperpop','trance','dubstep','future bass','electro'],
+    'rk':['indie rock','alt rock','hard rock','metal','death metal','punk','post-punk','shoegaze','post-rock','grunge','emo'],
+    'jz':['neo soul','r&b','jazz','blues','gospel','funk','soul','reggae','afrobeat','latin','bossa nova'],
+    'pk':['pop','bedroom pop','dream pop','folk','indie folk','country','americana','k-pop','classical','cinematic orchestral']
+  };
+  Object.keys(groups).forEach(function(id){
+    var count=groups[id].filter(function(v){return S.g.includes(v)}).length;
+    var badge=document.getElementById('gb-'+id);
+    if(!badge)return;
+    if(count>0){badge.textContent=count+' of 4';badge.classList.add('vis');}
+    else{badge.textContent='';badge.classList.remove('vis');}
+  });
+}
+// Hook into existing chip click handler
+var _origChipHandler=document.onclick;
+document.addEventListener('click',function(e){
+  var chip=e.target.closest&&e.target.closest('.chip[data-cat="g"]');
+  if(chip)setTimeout(updateGenreBadges,50);
+});
 
-<footer class="site-footer">
-  <a href="/bible/" style="color:#f5a623;text-decoration:none;font-size:12px;font-weight:700;display:block;margin-bottom:8px">&#9670; The Producer&#8217;s Bible</a>
-  <p style="font-size:15px;font-weight:600;color:#e0e0f0;margin-bottom:4px">MusicProductionWiki.com</p>
-  <p style="font-size:13px;color:#666;margin-bottom:16px">The most comprehensive music production reference on the internet.</p>
-  <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:16px;flex-wrap:wrap">
-    <span style="font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.08em">Share</span>
-    <a href="https://x.com/intent/tweet?text=Suno+Prompt+Optimizer+%E2%80%94+Free+AI+Music+Tool&url=https%3A%2F%2Fmusicproductionwiki.com%2Ftools%2Fsuno-prompt-optimizer.html" target="_blank" rel="noopener" style="background:#000;color:#fff;font-size:12px;font-weight:700;padding:6px 14px;border-radius:6px;text-decoration:none">Share on X</a>
-    <a href="https://reddit.com/submit?url=https%3A%2F%2Fmusicproductionwiki.com%2Ftools%2Fsuno-prompt-optimizer.html&title=Suno+Prompt+Optimizer+%E2%80%94+Free+AI+Music+Tool+%7C+MusicProductionWiki" target="_blank" rel="noopener" style="background:#ff4500;color:#fff;font-size:12px;font-weight:700;padding:6px 14px;border-radius:6px;text-decoration:none">Reddit</a>
-  </div>
-  <p style="font-size:13px;color:#555"><a href="/" style="color:#f5a623;text-decoration:none">Home</a> &middot; <a href="/about.html" style="color:#f5a623;text-decoration:none">About</a> &middot; <a href="/bible/" style="color:#f5a623;text-decoration:none">Producer&#8217;s Bible</a> &middot; <a href="/tools/" style="color:#f5a623;text-decoration:none">All Tools</a></p>
-  <p style="margin-top:8px;font-size:11px;color:#444">&copy; 2026 MusicProductionWiki.com &#8212; Built for producers, by producers.</p>
-</footer>
 
 </body>
+</html>
+
 </html>
