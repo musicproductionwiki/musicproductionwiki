@@ -1,5 +1,5 @@
 # MPW-HANDOFF-TECH.md
-*Updated: May 22, 2026 (SESSION 55)*
+*Updated: May 26, 2026 (SESSION 70 — Full merge: S65 + S65b + S66 + S67 + S68 appends integrated)*
 
 ---
 
@@ -13,13 +13,16 @@
 | Stack | Pure HTML/CSS/vanilla JS — no frameworks, no CMS |
 | Deploy | Auto-deploy from GitHub main branch |
 | Newsletter | Beehiiv — "The Producer's Briefing" |
-| Local files | C:\Users\swarn\OneDrive\Documents\Music Production Wiki\Articles |
 | Scripts dir | C:\Users\swarn\OneDrive\Desktop\mpw-scripts\ |
+| Article storage | C:\Users\swarn\OneDrive\Documents\Music Production Wiki\Articles (⚠️ Steve to confirm if still active path) |
 | Search Console | Google Search Console |
 | Contact | team@musicproductionwiki.com (Fastmail) |
 | Legacy contact | mpwikiofficial@gmail.com (kept as fallback) |
 | Analytics | GA4 — G-79VB543KCT |
 | Pretty URLs | NEVER enable — breaks site |
+| Proxy URL | https://classy-haupia-be8e43.netlify.app/.netlify/functions/claude-proxy |
+| Claude model | claude-sonnet-4-6 (NEVER claude-sonnet-4-5 or claude-sonnet-4-20250514) |
+
 
 ---
 
@@ -31,13 +34,15 @@ repo root/
 ├── about.html
 ├── genres.html
 ├── brands.html (MISSING — in nav but no page)
-├── netlify.toml (updated Session 36 — ssl-2-plus-review redirect added)
+├── netlify.toml (updated Session 67 — /dictionary/* redirect + function build command added)
 ├── css/style.css
 ├── js/main.js
 ├── js/mpw-analytics.js
 ├── search-index.json
-├── sitemap.xml (739 URLs — regenerated Session 35)
-├── bible-index.json (210 entries)
+├── sitemap.xml (744 URLs — submit to GSC pending)
+├── bible-index.json (223 entries)
+├── favicon.svg (teal square with bar chart — committed Session 67)
+├── favicon.ico
 ├── MPW-CATALOG.md (auto-generated)
 ├── MPW-HANDOFF-CORE.md
 ├── MPW-HANDOFF-SCRIPTS.md
@@ -45,38 +50,49 @@ repo root/
 ├── MPW-HANDOFF-BIBLE.md
 ├── MPW-HANDOFF-ARTICLES.md
 ├── MPW-HANDOFF-TECH.md
-├── mpw_session_start.py
-├── handoff_state.json (LOCAL ONLY — never committed — tracks SHA state for handoff runner)
+├── MPW-TOOL-BUILD-SPEC.md (frozen tool design system — do not modify)
+├── netlify/
+│   └── functions/
+│       └── claude-proxy.js (Anthropic API proxy — committed Session 67)
 ├── articles/
-│   ├── [slug].html  (526 articles — unchanged Sessions 38 + 39)
-│   └── ...
+│   └── [slug].html  (526 articles — ALL updated Session 65: Tools→ nav, grid drawer, pushState JS, CSS fix)
 ├── bible/
-│   ├── index.html (LOCKED — commit 29ee26a9)
-│   ├── eq.html (v3.0 gold standard — LOCKED)
-│   ├── compression.html (v5.1 gold standard — writer QA complete Session 37)
-│   ├── [15 other v5.1 entries with correct tools — patched Session 39]
-│   └── [term].html  (210 entries total — v3.0/v4.0 template)
+│   ├── index.html (REBUILT S63 — reverb nav, Beehiiv wired — SHA 7bfb2b6b)
+│   ├── reverb.html (gold standard T1 entry — v1.6 — SHA 8b6dd26d — 324KB)
+│   ├── compression.html (v5.1 gold standard — LOCKED)
+│   ├── [15 other v5.1 entries — tools injected, nav confirmed]
+│   ├── [54 v5.1 Session 40 entries]
+│   ├── [153 v3.0/v4.0 legacy entries]
 │   └── categories/
-│       ├── dynamics/index.html
-│       ├── frequency/index.html
-│       ├── time-based/index.html
-│       ├── signal-processing/index.html
-│       ├── mixing/index.html
-│       ├── mastering/index.html
-│       ├── synthesis/index.html
-│       └── music-theory/index.html
-│       └── tools/index.html (PLANNED — build after /tools/ hub)
-├── tools/ (PLANNED — /tools/ hub page + /tools/[slug]/ individual tools)
+│       ├── dynamics/index.html     ← bmn-drawer ✅ replaceState ✅
+│       ├── frequency/index.html    ← bmn-drawer ✅ replaceState ✅
+│       ├── time-based/index.html   ← bmn-drawer ✅ replaceState ✅
+│       ├── signal-processing/index.html ← bmn-drawer ✅ replaceState ✅
+│       ├── mixing/index.html       ← bmn-drawer ✅ replaceState ✅
+│       ├── mastering/index.html    ← bmn-drawer ✅ replaceState ✅
+│       ├── synthesis/index.html    ← bmn-drawer ✅ replaceState ✅
+│       ├── music-theory/index.html ← bmn-drawer ✅ replaceState ✅
+│       ├── production/index.html   ← bmn-drawer ✅ replaceState ✅
+│       ├── recording/index.html    ← bmn-drawer ✅ replaceState ✅
+│       └── tools/index.html        ← bmn-drawer ✅ replaceState ✅ "The Producer's Tools" ✅
+├── tools/
+│   ├── index.html           ← LIVE — SHA 8c7269d2 (amber cards + nav fix) ✅
+│   ├── browser-daw.html     ← LIVE — SHA 2a0e05c2 ✅
+│   ├── suno-prompt-optimizer.html    ← LIVE — ⚠️ needs UI/function update
+│   ├── ai-music-rights-navigator.html ← LIVE — ⚠️ needs UI/function update
+│   ├── ai-music-ddex-checker.html    ← LIVE — SHA 206e2a44 — ⚠️ needs UI/function update
+│   ├── ai-copyright-strength.html    ← LIVE — SHA 7f113017 — ⚠️ needs UI/function update
+│   ├── suno-credits-calculator.html  ← LIVE — SHA 4d827292 — ⚠️ needs UI/function update
+│   └── [31 other tool pages]        ← LIVE ✅
 └── categories/
     └── [category].html  (90 pages)
 ```
 
 Asset paths in articles: `../css/style.css`, `../js/main.js`
+Asset paths in tools: `../js/main.js` ONLY — NEVER `../css/style.css` (causes 600px blobs)
 Asset paths in bible: self-contained (NO main.js on bible pages)
 Asset paths in bible/categories: self-contained (NO main.js)
 Asset paths in categories: `../css/style.css`, `../js/main.js`
-
----
 
 # 3. Article Gold Standard — FULLY LOCKED
 
@@ -346,40 +362,74 @@ Always include bible-index.json update in same Trees API commit as Bible entry c
 
 # 10. Tools Architecture
 
-## Current State (Session 39)
+---
 
-12 tools live in Bible entries via mpw_tools_v3.py. All 16 Tier 1 entries have working tools confirmed by Steve. Tools section always at id="tools", positioned after id="quick-reference".
+# 10. Tools Architecture
 
-Tool CSS class: `.t3` — self-contained, amber branding, no external dependencies, no setTimeout.
+## Current State (Session 70)
 
-## /tools/ Hub Page (Planned)
+**Total tools live: 40**
 
-Standalone page. Not a category page.
-Grid of tool cards: tool name + one-line description + which Bible entry it belongs to + "Try Free" button.
-Submit to Product Hunt after 5+ tools are live.
+- 12 tools in Bible entries via mpw_tools_v3.py (all 16 Tier 1 entries confirmed working)
+- 24 v5 dispatch tools (mpw_tools_v5_dispatch.py — 145 slugs)
+- 4 tools standalone at /tools/: browser-daw.html + 3 built in parallel sessions (see below)
+
+Tool CSS class: `.t3` (v3), `.t4` (v4), `.t5` (v5) — all self-contained, amber branding, no external dependencies.
+
+**Tools needing UI/function update (built in undocumented parallel sessions):**
+- suno-prompt-optimizer.html — ⚠️ needs UI redesign (dedicated session, read MPW-TOOL-BUILD-SPEC.md first)
+- ai-music-rights-navigator.html — ⚠️ needs UI/function update
+- ai-music-ddex-checker.html — SHA 206e2a44 — ⚠️ needs UI/function update
+- ai-copyright-strength.html — SHA 7f113017 — ⚠️ needs UI/function update
+- suno-credits-calculator.html — SHA 4d827292 — ⚠️ needs UI/function update
+
+## /tools/ Hub Page (Live)
+
 URL: musicproductionwiki.com/tools/
+File: tools/index.html — SHA 8c7269d2
+Hand-crafted HTML — NEVER convert to a generator script (full design control).
+Static label only — NEVER show tool count (goes stale).
+Stats row: `Free forever · No signup required · Works on mobile` — never change.
 
 ## /bible/categories/tools/
 
-9th Bible category. Filter Bible entries that have tool_type != null in bible-index.json.
-Build after /tools/ hub page exists.
-Link from Bible bar as 9th category pill.
+9th Bible category. Filters Bible entries that have tool_type != null in bible-index.json.
+Link from Bible bar as 9th category pill. ✅ Live (regenerated S63).
 
 ## /tools/[slug]/
 
-Individual tool pages when tools graduate from Bible entries.
-GR Calculator → /tools/compression-calculator/ (future)
-Delay Calculator → /tools/delay-calculator/ (future)
+Individual tool pages. All 36+ tool slugs live at this path.
+NEVER use bible-bar/slim-bar nav on /tools/ pages — uses mpw-site-nav system.
 
 ## Tool-in-Entry Pattern (current)
 
 Tools live inside Bible entries. The tools section (id="tools") in every Tier 1 entry:
-- Injected immediately after id="quick-reference" closes — high-intent position for SEO and conversion
+- Injected immediately after id="quick-reference" closes — high-intent position
 - Contains correct interactive tool per slug (per TOOL_OVERRIDES in mpw_tools_v3.py)
 - Email gate on download/save output only — tool itself always free
-- Share bar: Copy Link + X + Reddit
 
----
+## Tool Dispatch Architecture — v5
+
+```python
+# Import pattern for mpw_bible_writer.py integration
+from mpw_tools_v5_dispatch import build_tools_section_v5
+# Dispatcher routes 145 slugs to correct tool function
+# 24 tools across 3 Python files: v5a (T1-T8), v5b (T9-T16), v5c (T17-T24)
+```
+
+## Tool Mapping Checklist — Required After Every Tool Build
+
+Run this check before closing any tool build session:
+
+```
+[ ] tools/[slug].html — committed to GitHub
+[ ] tools/index.html — card added, count updated, same Trees API commit
+[ ] bible/categories/tools/index.html — bcat-card added INSIDE #catGrid div (verify position)
+[ ] sitemap.xml — URL added with priority 0.8
+[ ] search-index.json — entry added with category "Tools"
+[ ] GSC — URL inspection + request indexing (Steve)
+[ ] OG image — /images/[slug]-og.jpg referenced (Steve creates)
+```
 
 # 11. Monetization Technical Notes
 
@@ -2677,3 +2727,713 @@ Mobile drawer also updated with inline-styled teal Tools entry before mob-bible.
 | NEVER show tool count on tools/index.html | Static label only — count goes stale as tools are added |
 | NEVER change the tools hub to a generator script | Hand-crafted HTML gives full design control — same approach as reverb.html and bible/index.html |
 | NEVER use bible-bar/slim-bar nav on /tools/ pages | Tools hub is MPW side, not Bible side — uses mpw-site-nav system |
+
+---
+
+# SESSION 65 UPDATE — TECH — May 24, 2026
+
+## Article Nav — Final Confirmed State (All 526 Articles)
+
+### Desktop Nav — Confirmed
+```html
+<li class="nav-item"><a href="/tools/" class="nav-tools-link">Tools →</a></li>
+<li class="nav-item"><a href="/bible/" class="nav-bible-link">The Producer's Bible →</a></li>
+```
+
+### CSS Specificity — Confirmed Fix
+Old (broken — beaten by child combinator rule):
+```css
+nav.mpw-site-nav .nav-bible-link{color:#f5a623!important;font-weight:600!important}
+nav.mpw-site-nav .nav-bible-link:hover{background:rgba(245,166,35,.1)!important;color:#f5a623!important}
+```
+
+New (correct — matches specificity of the overriding rule):
+```css
+nav.mpw-site-nav .nav-item>a.nav-bible-link{color:#f5a623!important;font-weight:600!important}
+nav.mpw-site-nav .nav-item>a.nav-bible-link:hover{background:rgba(245,166,35,.1)!important;color:#f5a623!important}
+nav.mpw-site-nav .nav-item>a.nav-tools-link{color:#00e8a2!important;font-weight:600!important}
+nav.mpw-site-nav .nav-item>a.nav-tools-link:hover{background:rgba(0,232,162,.08)!important;color:#00e8a2!important}
+```
+
+**Lesson:** On `mpw-nav-homepage-v1` pages, the general rule `nav.mpw-site-nav .nav-item>a{color:#a0a0b4!important}` uses a child combinator and beats any class-only selector. Child combinator (`>`) increases specificity beyond a simple class. Always use `nav-item>a.classname` pattern for nav color overrides.
+
+## CSS Specificity Reference — mpw-nav-homepage-v1 Pages
+
+This rule governs all article pages and tools/index.html:
+
+```css
+/* THE OVERRIDING RULE (already in mpw-nav-homepage-v1 block): */
+nav.mpw-site-nav .nav-item>a{color:#a0a0b4!important}
+/* Child combinator (>) means: specificity = (0,2,1) — beats class-only selectors */
+
+/* WRONG — beaten even with !important: */
+nav.mpw-site-nav .nav-bible-link{color:#f5a623!important}
+/* specificity = (0,2,0) — loses to (0,2,1) despite !important */
+
+/* CORRECT — matches the specificity pattern: */
+nav.mpw-site-nav .nav-item>a.nav-bible-link{color:#f5a623!important}
+/* specificity = (0,3,1) — wins */
+```
+
+**This gotcha has burned us three times** (tools/index.html S63/64, all 526 articles S65, tool pages S66). On any page using `mpw-nav-homepage-v1`, all nav link color overrides MUST use the `nav.mpw-site-nav .nav-item>a.classname` pattern.
+
+### Mobile Drawer — Confirmed Final HTML (All 526 Articles)
+```html
+<div class="mobile-drawer" id="mobileDrawer">
+  <a href="/tools/" style="display:flex;align-items:center;gap:8px;padding:12px 16px;border-radius:9px;background:rgba(0,232,162,0.07);border:1px solid rgba(0,232,162,0.22);color:#00e8a2;font-size:14px;font-weight:600;text-decoration:none;margin:4px 0 8px">✦ The Producer's Tools</a>
+  <a href="/bible/" class="mob-bible">●&nbsp;The Producer's Bible — Explore Free</a>
+  <div class="mob-section-label">Articles</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:4px">
+    <a href="/categories/techniques.html" style="display:flex;align-items:center;padding:10px 12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;color:#a0a0b4;background:#111113;border:1px solid #1a1a3a">Techniques</a>
+    <a href="/categories/reviews.html" style="display:flex;align-items:center;padding:10px 12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;color:#a0a0b4;background:#111113;border:1px solid #1a1a3a">Reviews</a>
+    <a href="/categories/comparisons.html" style="display:flex;align-items:center;padding:10px 12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;color:#a0a0b4;background:#111113;border:1px solid #1a1a3a">Comparisons</a>
+    <a href="/categories/breakdowns.html" style="display:flex;align-items:center;padding:10px 12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;color:#a0a0b4;background:#111113;border:1px solid #1a1a3a">Breakdowns</a>
+    <a href="/categories/recreations.html" style="display:flex;align-items:center;padding:10px 12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;color:#a0a0b4;background:#111113;border:1px solid #1a1a3a">Recreations</a>
+    <a href="/genres.html" style="display:flex;align-items:center;padding:10px 12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;color:#a0a0b4;background:#111113;border:1px solid #1a1a3a">Genres</a>
+    <a href="/categories/ai-music.html" style="display:flex;align-items:center;padding:10px 12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;color:#a0a0b4;background:#111113;border:1px solid #1a1a3a">AI Music</a>
+    <a href="/categories/music-business.html" style="display:flex;align-items:center;padding:10px 12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;color:#a0a0b4;background:#111113;border:1px solid #1a1a3a">Music Business</a>
+  </div>
+  <div class="mob-section-label">Gear</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:4px">
+    <a href="/categories/daws.html" style="display:flex;align-items:center;padding:10px 12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;color:#a0a0b4;background:#111113;border:1px solid #1a1a3a">DAWs</a>
+    <a href="/categories/plugins.html" style="display:flex;align-items:center;padding:10px 12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;color:#a0a0b4;background:#111113;border:1px solid #1a1a3a">Plugins</a>
+    <a href="/categories/gear.html" style="display:flex;align-items:center;padding:10px 12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;color:#a0a0b4;background:#111113;border:1px solid #1a1a3a">Hardware</a>
+  </div>
+  <a href="https://theproducersbriefing.beehiiv.com" class="mob-cta">Sound Better →</a>
+</div>
+```
+
+**Important:** `mob-bible` link contains `\u00a0` (non-breaking space U+00A0) after the bullet character — NOT a regular space. Any future patch script targeting this string must use the exact bytes. Confirmed by fetching live file and printing `repr()`.
+
+### Drawer JS — pushState/popstate Pattern (All 526 Articles)
+```javascript
+var mob=document.getElementById('navMob');
+var drawer=document.getElementById('mobileDrawer');
+if(mob&&drawer){
+  mob.addEventListener('click',function(){
+    var opening=!drawer.classList.contains('open');
+    drawer.classList.toggle('open');
+    if(opening&&window.history&&window.history.pushState){history.pushState({drawerOpen:true},'',location.href);}
+  });
+  drawer.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){drawer.classList.remove('open');});});
+  window.addEventListener('popstate',function(e){if(drawer.classList.contains('open')){drawer.classList.remove('open');}});
+}
+```
+
+**pushState vs replaceState — Why It Matters:**
+- Category pages use `replaceState` — Netlify redirect creates double history entry on load, collapsing it prevents extra back-press
+- Article pages have no redirect — load cleanly. `pushState` on drawer open adds a fake history entry; back button fires `popstate` → closes drawer instead of navigating away
+- NEVER use `replaceState` on article drawer pages
+
+## NEVER Rules Added — Session 65 — Tech
+
+| Rule | Detail |
+|------|--------|
+| NEVER use `replaceState` to fix the drawer back-button on article pages | `replaceState` is for Netlify-redirect double-history-entry (category pages). Article pages need `pushState` on open + `popstate` listener to close — confirmed working, commit f6979227 |
+| NEVER patch mobile drawer HTML without printing exact `repr()` of the live target string | `\u00a0` non-breaking space in `mob-bible` link was only found by inspecting exact bytes — not visible in normal output |
+| NEVER add nav color overrides with class-only selectors on mpw-nav-homepage-v1 pages | Child combinator specificity beats `!important` class-only — must use `nav.mpw-site-nav .nav-item>a.classname` — burned three times, now permanently documented |
+| NEVER run a 500+ file batch without at least 4 iterative fixes confirmed on the test article first | Session 65 ran 4 commits on test article before the full batch — this is correct and prevents corrupting all 526 |
+| NEVER use bmn-drawer-cat CSS class on article pages | Article pages lack bmn-drawer CSS — use inline styles for grid card items only |
+
+
+---
+
+# SESSION 65 UPDATE — TECH (Part 2) — May 24, 2026
+
+## Browser App Technology Reference
+
+### Web Audio API — Capabilities Confirmed Available
+
+The Web Audio API is built into every modern browser. No CDN import needed. All Browser Apps on MPW can use it immediately.
+
+**What Claude can build with Web Audio API alone:**
+- Real oscillators generating sine, square, sawtooth, triangle waves
+- Real-time filter effects (lowpass, highpass, bandpass, notch)
+- Reverb simulation via ConvolverNode
+- Delay effects via DelayNode with feedback loops
+- Distortion/overdrive via WaveShaperNode
+- Gain/volume control via GainNode
+- Real-time frequency spectrum analysis via AnalyserNode (for spectrum visualizer, tuner)
+- Microphone input via getUserMedia → MediaStreamSourceNode
+- Audio recording via MediaRecorder API
+- Panning via StereoPannerNode
+
+**Tone.js additional capabilities (importable via CDN):**
+- Musical note names (C4, Bb3, etc.) mapped to frequencies automatically
+- Tempo-synced scheduling (Transport — plays events on the beat)
+- Pre-built synth voices (Synth, PolySynth, MembraneSynth for kicks, MetalSynth for hi-hats)
+- Musical timing (Tone.Time for note values: "8n" = eighth note, "16n" = sixteenth note)
+- Automatic BPM management
+
+**CDN import:**
+```html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+```
+
+### getUserMedia — Microphone Input Pattern
+
+```javascript
+async function initMicrophone() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
+    const audioContext = new AudioContext();
+    const source = audioContext.createMediaStreamSource(stream);
+    const analyser = audioContext.createAnalyser();
+    analyser.fftSize = 2048;
+    source.connect(analyser);
+    return {audioContext, analyser};
+  } catch (err) {
+    console.warn('Microphone not available:', err);
+    return null;
+  }
+}
+```
+
+Always include graceful fallback when microphone is denied — show a static reference version.
+
+### Audio Context Autoplay Policy — CRITICAL
+
+Every modern browser blocks AudioContext autoplay until a user gesture occurs.
+
+**CORRECT pattern:**
+```javascript
+let audioStarted = false;
+document.getElementById('playButton').addEventListener('click', async () => {
+  if (!audioStarted) {
+    await Tone.start(); // or new AudioContext() and .resume()
+    audioStarted = true;
+  }
+  transport.start();
+});
+```
+
+**WRONG pattern (silently blocked):**
+```javascript
+// Do NOT do this — blocked in all modern browsers
+const synth = new Tone.Synth().toDestination();
+synth.triggerAttack("C4"); // blocked — no user gesture
+```
+
+All Browser Apps must display a visible "Click to Start" or "Tap to Begin" interface element before any audio output.
+
+### Browser DAW — Tone.js Instrument Patterns
+
+```javascript
+// Kick drum
+const kick = new Tone.MembraneSynth({
+  pitchDecay: 0.05, octaves: 5,
+  envelope: {attack: 0.001, decay: 0.4, sustain: 0, release: 1.4}
+}).toDestination();
+
+// Snare
+const snare = new Tone.NoiseSynth({
+  noise: {type: 'white'},
+  envelope: {attack: 0.001, decay: 0.15, sustain: 0, release: 0.05}
+}).toDestination();
+
+// Step sequencer scheduling
+let step = 0;
+const seq = new Tone.Sequence((time) => {
+  if (grid[0][step]) kick.triggerAttackRelease('C1', '8n', time);
+  if (grid[1][step]) snare.triggerAttackRelease('8n', time);
+  Tone.getDraw().schedule(() => { updateStepDisplay(step); }, time);
+  step = (step + 1) % 16;
+}, null, '16n');
+```
+
+### Tools Hub (`/tools/index.html`) — Adding Browser App Cards
+
+```html
+<a class="tool-card" href="/tools/browser-daw.html" data-cat="browser-app" data-name="browser daw">
+  <div class="tool-card-body">
+    <span class="tool-card-name">Browser DAW ⭐</span>
+    <span class="tool-card-desc">Make music in your browser. 16-step sequencer, built-in synth, 5 genre presets. No download.</span>
+    <span class="tool-card-cat">Browser Apps</span>
+  </div>
+</a>
+```
+
+Add category pill:
+```html
+<button class="tools-cat-btn" data-cat="browser-app">Browser Apps</button>
+```
+
+The filter JS handles any `data-cat` value — no JS changes needed, just add the pill button.
+
+### AI Music Tools — No New Infrastructure
+
+All AI Music tools are static HTML at `/tools/[slug].html`. The API-powered variants (Rights Navigator, Prompt Optimizer, DDEX Checker, Copyright Strength) call the Anthropic API via the Netlify proxy. No new backend. No additional hosting cost.
+
+## NEVER Rules Added — Session 65 Part 2 — Tech
+
+| Rule | Detail |
+|------|--------|
+| NEVER create AudioContext before a user gesture in any Browser App | Browsers block all audio autoplay — always create or resume AudioContext inside a click/tap event handler. `await Tone.start()` is the correct pattern with Tone.js |
+| NEVER add a "Browser Apps" category pill to `/tools/index.html` until at least one Browser App is live | Filter pill for a category with zero results is confusing — add pill in same commit as first browser app |
+| NEVER use a Tone.js CDN URL not verified on cdnjs.cloudflare.com | Unverified CDN URLs may be blocked by Netlify or unavailable |
+| NEVER build the Browser DAW with more than 8 tracks in the MVP | 8 tracks, 16 steps, basic effects is the MVP |
+| NEVER commit a Browser App to /tools/ without adding its card to /tools/index.html in the same Trees API commit | An orphaned tool page with no hub card is unfindable |
+
+
+---
+
+# SESSION 66 UPDATE — TECH — May 25, 2026
+
+## MPW-TOOL-BUILD-SPEC.md — The Frozen Tool Template
+
+**Every tool build session MUST read MPW-TOOL-BUILD-SPEC.md first.** It contains the frozen visual system, component library, and quality checklist that ensures all tools look and function identically.
+
+### Frozen CSS Variables (copy verbatim into every tool)
+
+```css
+:root {
+  --bg:        #0d0d1a;
+  --bg2:       #111120;
+  --bg3:       #16162a;
+  --bg4:       #1c1c32;
+  --border:    rgba(255,255,255,0.07);
+  --border2:   rgba(255,255,255,0.12);
+  --border3:   rgba(255,255,255,0.18);
+  --amber:     #f5a623;
+  --amber2:    rgba(245,166,35,0.12);
+  --amber3:    rgba(245,166,35,0.06);
+  --teal:      #00e8a2;
+  --teal2:     rgba(0,232,162,0.1);
+  --red:       #ff3d5a;
+  --green:     #00e8a2;
+  --text:      #f0f0f4;
+  --text2:     #a0a0b8;
+  --text3:     #5a5a7a;
+  --mono:      'DM Mono', monospace;
+  --sans:      'DM Sans', sans-serif;
+}
+```
+
+**Session 67 confirmed actual background:** `#06061a` (overrides `--bg: #0d0d1a` from spec — use `#06061a` as body background on tool pages built S67+).
+
+### Frozen Font Import (copy verbatim into every tool `<head>`)
+
+```html
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+```
+
+### Frozen Tool Header Component
+
+```html
+<div class="tool-header-card">
+  <div class="tool-header-brand">
+    <div class="tool-logo-mark">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <rect x="1.5" y="7" width="2.5" height="9" rx="1.2" fill="#0a0a0b"/>
+        <rect x="6" y="4" width="2.5" height="12" rx="1.2" fill="#0a0a0b"/>
+        <rect x="10.5" y="1" width="2.5" height="16" rx="1.2" fill="#0a0a0b"/>
+        <rect x="15" y="5" width="2.5" height="9" rx="1.2" fill="#0a0a0b"/>
+      </svg>
+    </div>
+    <div class="tool-brand-text">
+      <div class="tool-brand-name">MusicProductionWiki.com</div>
+      <div class="tool-brand-sub">◆ The Producer's Bible</div>
+    </div>
+  </div>
+  <div class="tool-header-right">
+    <span class="tool-badge">INTERACTIVE TOOL</span>
+    <a href="/tools/[RELATED-TOOL]" class="tool-related-link">[Related Tool Name]</a>
+  </div>
+</div>
+```
+
+### Frozen Components — Quick Reference
+
+Full CSS for all frozen components is in MPW-TOOL-BUILD-SPEC.md. Summary:
+
+| Component | CSS Class | Notes |
+|-----------|-----------|-------|
+| Header card | `.tool-header-card` | Required on every tool |
+| Section card | `.tool-section` + `.tool-section-label` | Dark bg, amber label |
+| Insight callout | `.tool-insight` | Amber left-border, amber3 bg |
+| Slider | `.tool-slider` + `.tool-slider-val` | Amber thumb |
+| Select/dropdown | `.tool-select` | SVG chevron, no appearance |
+| Primary button | `.tool-btn` | Amber gradient, hover lift |
+| Click-to-copy chip | `.copy-chip` | Teal on copied state |
+| Canvas container | `<canvas>` | CSS width/height only — JS sets pixel dimensions |
+
+### Tool Page Required Elements Checklist
+
+Every tool page MUST include all of the following before committing:
+
+**Head Section:**
+- [ ] `<meta charset="UTF-8">`
+- [ ] `<meta name="viewport" content="width=device-width, initial-scale=1.0">`
+- [ ] `<title>` — tool name + MPW brand + keyword
+- [ ] `<meta name="description">` — 150–160 chars, keyword-rich
+- [ ] `<link rel="canonical" href="https://www.musicproductionwiki.com/tools/[slug].html">`
+- [ ] OG tags: og:title, og:description, og:url, og:type="website"
+- [ ] Twitter card tags
+- [ ] GA4 script (G-79VB543KCT)
+- [ ] DM Sans + DM Mono font import
+- [ ] ~~`<link rel="stylesheet" href="../css/style.css">`~~ **NEVER — causes 600px blobs** (S68 correction)
+- [ ] Favicon: `<link rel="icon" type="image/svg+xml" href="/favicon.svg">` + `<link rel="alternate icon" href="/favicon.ico">`
+- [ ] FAQPage JSON-LD schema (minimum 3 FAQ pairs)
+- [ ] BreadcrumbList JSON-LD schema
+- [ ] WebPage JSON-LD schema
+
+**Body — Required:**
+- [ ] Full MPW site nav (mpw-nav-homepage-v1 style block + nav HTML)
+- [ ] Nav CSS specificity fix: `nav.mpw-site-nav .nav-item>a.nav-bible-link` + `nav.mpw-site-nav .nav-item>a.nav-tools-link`
+- [ ] Mobile drawer: grid style with Tools teal pill + Bible amber pill + pushState JS
+- [ ] Tool title (H1) + description paragraph
+- [ ] Tool header branded card (MPW logo + Interactive Tool badge)
+- [ ] Interactive tool body — use `.tool-hero` / `.tool-container` NOT `.hero` / `.container`
+- [ ] Related tools section (link to 3 relevant other tools)
+- [ ] Footer with copyright + links to /tools/, /bible/, newsletter
+- [ ] `<script src="../js/main.js"></script>` at end of body — NEVER style.css
+
+**Commit Checklist:**
+- [ ] File committed to `/tools/[slug].html` via GitHub API
+- [ ] Tool card added to `/tools/index.html` in same Trees API commit
+- [ ] Sitemap updated (or flagged for batch update)
+- [ ] Steve visually confirms on live site
+
+### Tool Card HTML Pattern for /tools/index.html
+
+```html
+<a class="tool-card" href="/tools/[slug].html" data-cat="[category]" data-name="[searchable name]">
+  <div class="tool-card-body">
+    <span class="tool-card-name">[Tool Name]</span>
+    <span class="tool-card-desc">[One-sentence description. 12 words max.]</span>
+    <span class="tool-card-cat">[Category Name]</span>
+  </div>
+  <span class="tool-card-arrow">→</span>
+</a>
+```
+
+Category `data-cat` values:
+- AI Music tools: `data-cat="ai-music"`
+- Mix/vocal tools: `data-cat="mixing"`
+- Beat/drum tools: `data-cat="beat-making"`
+- Business tools: `data-cat="business"`
+- Frequency tools: `data-cat="frequency"`
+- Music theory tools: `data-cat="arrangement"`
+- Browser apps: `data-cat="browser-app"`
+
+## NEVER Rules Added — Session 66 — Tech
+
+| Rule | Detail |
+|------|--------|
+| NEVER use class-only nav selectors | Child combinator required: `nav.mpw-site-nav .nav-item>a.classname` — documented repeatedly |
+| NEVER build a tool page without the frozen CSS variables block | Copy from MPW-TOOL-BUILD-SPEC.md — do not re-derive colors |
+| NEVER set canvas width/height via HTML attributes | Use CSS width/height; set canvas.width/canvas.height via JS after offsetWidth check |
+| NEVER commit a tool without adding its card to /tools/index.html | Same Trees API commit — never two separate deploys for one tool |
+| NEVER launch AI Music tools without verifying current platform terms | Suno, Udio, DDEX terms change frequently |
+| NEVER add new category pill to tools hub without at least one tool in that category live | Add the pill in the same commit as the first tool in that category |
+
+
+---
+
+# SESSION 67 UPDATE — TECH — May 25, 2026
+
+## Netlify Function — Final Working Implementation
+
+### `netlify/functions/claude-proxy.js`
+```javascript
+const https = require('https');
+
+exports.handler = async (event) => {
+  const cors = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Content-Type': 'application/json'
+  };
+  if (event.httpMethod === 'OPTIONS') return { statusCode: 204, headers: cors, body: '' };
+  const key = process.env.ANTHROPIC_API_KEY;
+  if (!key) return { statusCode: 500, headers: cors, body: JSON.stringify({ error: 'ANTHROPIC_API_KEY not set' }) };
+  return new Promise((resolve) => {
+    const data = Buffer.from(event.body || '{}');
+    const req = https.request({
+      hostname: 'api.anthropic.com', port: 443, path: '/v1/messages', method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Content-Length': data.length, 'x-api-key': key, 'anthropic-version': '2023-06-01' }
+    }, (res) => {
+      let body = '';
+      res.on('data', c => body += c);
+      res.on('end', () => resolve({ statusCode: res.statusCode, headers: cors, body: body }));
+    });
+    req.on('error', e => resolve({ statusCode: 502, headers: cors, body: JSON.stringify({ error: e.message }) }));
+    req.write(data); req.end();
+  });
+};
+```
+
+### `netlify.toml` — Current State (Session 67)
+```toml
+[build]
+  publish = "."
+  command = "echo 'build complete'"
+
+[functions]
+  directory = "netlify/functions"
+
+[[redirects]]
+  from = "/api/claude"
+  to = "/.netlify/functions/claude-proxy"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/dictionary/*"
+  to = "/bible/:splat"
+  status = 301
+
+[[redirects]]
+  from   = "/ssl-2-plus-review/"
+  to     = "/articles/ssl-2-plus-review.html"
+  status = 301
+
+[[redirects]]
+  from   = "/ssl-2-plus-review"
+  to     = "/articles/ssl-2-plus-review.html"
+  status = 301
+```
+
+**CRITICAL:** `[build] command` is required. Without it Netlify skips function bundling on static sites.
+
+---
+
+## Claude API Call Pattern — Correct for All Future Tools
+
+```javascript
+var res = await fetch('https://classy-haupia-be8e43.netlify.app/.netlify/functions/claude-proxy', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    model: 'claude-sonnet-4-6',
+    max_tokens: 800,
+    system: systemPrompt,
+    messages: [{ role: 'user', content: userMessage }]
+  })
+});
+var data = await res.json();
+var raw = data.content && data.content[0] ? data.content[0].text : '';
+console.log('RAW:', raw.substring(0, 300)); // always log for debugging
+```
+
+**Note:** S66 append showed direct `api.anthropic.com` calls — that pattern is SUPERSEDED. CORS prevents direct API calls from browser tool pages. Always use the proxy.
+
+---
+
+## Favicon
+
+```html
+<!-- In every tool <head> -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="alternate icon" href="/favicon.ico">
+```
+
+```svg
+<!-- /favicon.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="7" fill="#00e8a2"/>
+  <rect x="3" y="13" width="4" height="15" rx="2" fill="#06061a"/>
+  <rect x="10" y="8" width="4" height="20" rx="2" fill="#06061a"/>
+  <rect x="17" y="3" width="4" height="26" rx="2" fill="#06061a"/>
+  <rect x="25" y="10" width="4" height="15" rx="2" fill="#06061a"/>
+</svg>
+```
+
+---
+
+## Tool Design System — Session 67 Confirmed Actual Values
+
+These override the CSS variables spec from MPW-TOOL-BUILD-SPEC.md where they conflict:
+
+| Property | Value |
+|----------|-------|
+| Background | `#06061a` |
+| Body text | `#e8e8ff` |
+| Chip text unselected | `#c0c0e8` |
+| Chip border unselected | `rgba(255,255,255,0.18)` |
+| Section label | `#00e8a2` teal, DM Mono bold, 9-10px |
+| Group labels | `#8080b8` DM Mono bold |
+| Waveform speed — main | `0.00125` |
+| Waveform speed — blue | `0.0019` |
+| Waveform speed — amber | `0.0008` |
+| Output text | DM Sans 16-18px — NEVER monospace |
+| Monospace | DM Mono — labels/counts/hints ONLY |
+
+---
+
+## Robust Response Parsing Pattern
+
+```javascript
+function extract(pattern, text, fallback) {
+  var m = text.match(pattern);
+  return m ? m[1].trim() : fallback;
+}
+var optimized = extract(/OPTIMIZED:\s*([^\n]+)/i, raw, '') || input;
+var analysis  = extract(/ANALYSIS:\s*([\s\S]+?)(?=\nNEXT:|\n\d+\.|$)/i, raw, '');
+var next      = extract(/NEXT:\s*([\s\S]+?)$/i, raw, '');
+
+// Fallback if parsing fails completely
+if (!analysis && !next && raw.length > 50) {
+  var lines = raw.split('\n').filter(l => l.trim());
+  analysis = lines.filter(l => !/^(SCORE|OPTIMIZED|ANALYSIS|NEXT|\d+[\.)])/i.test(l.trim()) && l.length > 20).join(' ');
+  next = lines.filter(l => /^\d+[\.)]\s/.test(l.trim())).join('\n');
+}
+```
+
+---
+
+## NEVER Rules Added — Session 67 — Tech
+
+| Rule | Detail |
+|------|--------|
+| NEVER call Netlify functions via custom domain | `musicproductionwiki.com/.netlify/functions/*` = 404. Always use `classy-haupia-be8e43.netlify.app` |
+| NEVER use `fetch()` inside Netlify Functions | Use `https.request()` + `Buffer.from()` |
+| NEVER omit `[build] command` from netlify.toml | Required for function bundling on static sites |
+| NEVER use `claude-sonnet-4-5` or `claude-sonnet-4-20250514` | Correct model is `claude-sonnet-4-6` |
+| NEVER use assistant prefill in API calls | Returns empty content array |
+| NEVER put output text in monospace | DM Sans everywhere readable — DM Mono for labels/counts/hints ONLY |
+| NEVER insert catGrid cards without position verification | Confirm: grid_open < insert_pos < catEmpty_pos |
+
+
+---
+
+# SESSION 68 UPDATE — TECH — May 26, 2026
+
+## Critical Technical Lessons
+
+### 1. Python-in-JS Causes Silent Syntax Errors
+
+**Root cause:** Writing JS via Python string interpolation in heredocs.
+
+**Example of what broke:**
+```python
+# This looks fine in Python but writes broken JS
+sys_prompt = f"SCORE: [1-10]\nGENRE_SCORE: [0-10]"
+# Writes literal newline into JS string → SyntaxError
+```
+
+**Correct pattern — always:**
+```bash
+# Write JS as pure heredoc
+cat > /home/claude/tool_js.js << 'JSEOF'
+var sys = 'SCORE: [1-10]\nGENRE_SCORE: [0-10]';  // \n is a real escape here
+JSEOF
+# Verify syntax
+node --check /home/claude/tool_js.js && echo "OK"
+# Read into HTML as raw bytes — never as Python string
+```
+
+**The rule:** Python never touches JS content. Write JS → check JS → read as bytes → embed.
+
+---
+
+### 2. Nav Div Balance — Use Depth Tracking
+
+**Root cause:** Extracting nav block with `find('</div>', mob_end)` truncated mid-drawer.
+
+**Broken pattern:**
+```python
+nav_end = html.find('</div>', mob_drawer_end)
+nav_block = html[nav_start:nav_end + 6]  # Wrong — grabs first </div> after drawer
+```
+
+**Correct pattern:**
+```python
+# Track div depth to get perfectly balanced block
+depth = 0
+pos = nav_start
+while pos < len(html):
+    open_m = html.find('<div', pos)
+    close_m = html.find('</div>', pos)
+    if open_m == -1: open_m = len(html)
+    if close_m == -1: close_m = len(html)
+    if open_m < close_m:
+        depth += 1; pos = open_m + 4
+    else:
+        depth -= 1; pos = close_m + 6
+        if depth == 0: break
+nav_block = html[nav_start:pos]
+# Verify: nav_block.count('<div') == nav_block.count('</div>')
+```
+
+---
+
+### 3. style.css Cannot Be Loaded on Tool Pages
+
+**Why:** `style.css` defines `.hero::before` (600px circle) and `.hero::after` (400px circle) as massive black radial-gradient blobs. These render as giant black shapes that push tool content hundreds of pixels down.
+
+**What the working tools do:** They load `main.js` only. The nav renders because `main.js` provides JS behavior (dropdown toggle, mobile drawer). The nav's visual CSS comes from the browser's cached `style.css` from other site pages OR the 4 nav specificity lines in the tool's own `<style>` block.
+
+**Rule:** NEVER add `<link rel="stylesheet" href="/css/style.css">` or `<link rel="stylesheet" href="../css/style.css">` to tool pages.
+
+---
+
+### 4. Class Name Conflicts With Global CSS
+
+Classes to NEVER use in tool pages (defined in `style.css` with conflicting rules):
+- `.hero` — has `::before`/`::after` 600px/400px blobs, `padding: 5rem 0 4rem`
+- `.container` — has `max-width: var(--max-w)`, `overflow-x: hidden`
+- `.newsletter-section` — has 700px blob
+- `.category-header` — has 400px blob
+- `.hero-lines` — has full-viewport background-image
+
+**Safe alternatives:** `.tool-hero`, `.tool-container`, or any unique prefixed class.
+
+---
+
+### 5. File Assembly for Large HTML Tools
+
+**Working pattern (no Python interpolation touching JS):**
+
+```python
+# 1. Write JS as pure heredoc — node --check it
+# 2. Write HTML sections as Python writes (ok for HTML strings)
+# 3. Assemble by reading files as raw bytes
+
+with open('/home/claude/final_tool.html', 'wb') as out:
+    for section in ['head.html', 'css.html', 'body.html']:
+        with open(f'/home/claude/{section}', 'rb') as f:
+            out.write(f.read())
+    # JS file — read as raw bytes, never as Python string
+    with open('/home/claude/tool.js', 'rb') as f:
+        out.write(b'\n<script>\n')
+        out.write(f.read())
+        out.write(b'\n</script>\n</body>\n</html>')
+```
+
+---
+
+### 6. Pre-Commit Verification Checklist for Tool Pages
+
+Run `mpw_precommit_check.py` before every commit. Key checks:
+
+```python
+import re, subprocess
+
+with open('tool.html') as f: html = f.read()
+
+# Div balance
+assert html.count('<div') == html.count('</div>'), "Unbalanced divs"
+
+# No style.css
+assert 'style.css' not in html, "style.css must not be loaded"
+
+# JS syntax check — extract each <script> block and node --check it
+scripts = re.findall(r'<script(?![\s\S]{0,10}(?:async|ld\+json|src=))[^>]*>([\s\S]+?)</script>', html)
+for i, s in enumerate(scripts):
+    with open(f'/tmp/check_{i}.js','w') as f: f.write(s)
+    r = subprocess.run(['node','--check',f'/tmp/check_{i}.js'], capture_output=True, text=True)
+    assert r.returncode == 0, f"Script {i} syntax error: {r.stderr}"
+
+# Model string
+assert 'claude-sonnet-4-6' in html, "Wrong model"
+
+# Proxy URL
+assert 'classy-haupia-be8e43' in html, "Wrong proxy"
+
+print("ALL CHECKS PASSED")
+```
+
