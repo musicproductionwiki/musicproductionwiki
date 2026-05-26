@@ -11,237 +11,150 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,900;1,9..40,400&family=DM+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════════════════════════════
-   MPW Suno Prompt Optimizer — Complete CSS
-   Glassmorphic v7 — full rewrite with new class namespace
-   ═══════════════════════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{font-size:16px;-webkit-text-size-adjust:100%}
+body{font-family:'DM Sans',sans-serif;background:#06061a;color:#e8e8ff;min-height:100vh;overflow-x:hidden}
 
-/* ── ANIMATIONS ─────────────────────────────────────────────── */
-@keyframes gShimmer{0%{transform:translateX(-120%) skewX(-15deg);opacity:0}20%{opacity:1}80%{opacity:1}100%{transform:translateX(220%) skewX(-15deg);opacity:0}}
-@keyframes gcardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-@keyframes badgeSpring{0%{opacity:0;transform:scale(.5) translateY(4px)}60%{transform:scale(1.18) translateY(-1px)}80%{transform:scale(.96)}100%{opacity:1;transform:scale(1)}}
-@keyframes chipDesel{0%{opacity:1;transform:scale(1.05)}40%{opacity:.2;transform:scale(.93)}100%{opacity:1;transform:scale(1)}}
-
-
-/* ── GENRE GROUP CARDS ──────────────────────────────────────── */
-.g-group{
-  position:relative;border-radius:20px;padding:22px 22px 24px;margin-bottom:16px;overflow:hidden;
-  background:linear-gradient(145deg,rgba(255,255,255,0.1) 0%,rgba(255,255,255,0.035) 50%,rgba(255,255,255,0.07) 100%);
-  backdrop-filter:blur(32px) saturate(1.5) brightness(1.06);
-  -webkit-backdrop-filter:blur(32px) saturate(1.5) brightness(1.06);
-  border:1px solid rgba(255,255,255,0.14);
-  border-top:1.5px solid rgba(255,255,255,0.28);
-  box-shadow:
-    inset 0 2px 0 rgba(255,255,255,0.18),
-    inset 0 -1px 0 rgba(0,0,0,0.32),
-    inset 1px 0 0 rgba(255,255,255,0.06),
-    inset -1px 0 0 rgba(255,255,255,0.06),
-    0 4px 8px rgba(0,0,0,0.25),
-    0 16px 36px rgba(0,0,0,0.42),
-    0 36px 68px rgba(0,0,0,0.3);
-  transition:transform .3s cubic-bezier(.2,.85,.2,1),box-shadow .3s,border-color .22s;
-  animation:gcardIn .42s cubic-bezier(.2,.85,.2,1) both;
+/* ── HERO ─────────────────────────────── */
+.hero{position:relative;height:250px;overflow:hidden}
+@media(min-width:768px){.hero{height:310px}}
+#waveCanvas{position:absolute;inset:0;width:100%;height:100%}
+.hero-fade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,6,26,0) 0%,rgba(6,6,26,0.6) 55%,rgba(6,6,26,1) 100%);pointer-events:none}
+.hero-content{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:flex-end;
+  padding:0 20px 26px;text-align:center;z-index:2;
 }
-.g-group:last-of-type{margin-bottom:0}
-
-/* Top shine line */
-.g-group::before{
-  content:'';position:absolute;top:0;left:12%;right:12%;height:1px;
-  background:linear-gradient(90deg,transparent,var(--shine) 30%,var(--shine) 70%,transparent);
-  opacity:.85;border-radius:0 0 2px 2px;
-}
-/* Hover bloom */
-.g-group::after{
-  content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);
-  width:80%;height:150px;
-  background:radial-gradient(ellipse at 50% 0%,var(--bloom) 0%,transparent 70%);
-  opacity:0;pointer-events:none;transition:opacity .32s;
-}
-.g-group:hover{
-  transform:translateY(-5px);
-  border-color:rgba(255,255,255,0.22);
-  border-top-color:var(--ring);
-  box-shadow:
-    inset 0 2px 0 rgba(255,255,255,0.22),
-    inset 0 -1px 0 rgba(0,0,0,0.38),
-    inset 1px 0 0 rgba(255,255,255,0.08),
-    inset -1px 0 0 rgba(255,255,255,0.08),
-    0 8px 18px rgba(0,0,0,0.32),
-    0 28px 56px rgba(0,0,0,0.55),
-    0 52px 88px rgba(0,0,0,0.38),
-    0 0 0 1px var(--ring),
-    0 0 90px var(--bloom);
-}
-.g-group:hover::after{opacity:1}
-
-/* Shimmer sweep */
-.g-shimmer{position:absolute;inset:0;border-radius:20px;overflow:hidden;pointer-events:none;z-index:2}
-.g-shimmer::after{content:'';position:absolute;top:0;left:0;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.07) 50%,transparent);transform:translateX(-120%) skewX(-15deg);opacity:0}
-.g-group:hover .g-shimmer::after{animation:gShimmer .85s cubic-bezier(.4,0,.2,1) forwards}
-
-/* Group header */
-.g-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-.g-hd-l{display:flex;align-items:center;gap:13px}
-.g-ico{
-  width:40px;height:40px;border-radius:12px;flex-shrink:0;
+.hero-brand{
   display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(145deg,var(--ibg),rgba(0,0,0,0.1));
-  border:1px solid var(--ring);
-  box-shadow:inset 0 1.5px 0 rgba(255,255,255,0.18),0 0 28px var(--bloom),0 4px 14px rgba(0,0,0,0.35);
-  position:relative;overflow:hidden;
-  transition:transform .24s cubic-bezier(.2,.85,.2,1),box-shadow .24s;
+  gap:10px;margin-bottom:12px;
 }
-.g-ico::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(to bottom,rgba(255,255,255,0.18),transparent);border-radius:12px 12px 0 0}
-.g-group:hover .g-ico{transform:scale(1.09) rotate(-3deg);box-shadow:inset 0 1.5px 0 rgba(255,255,255,0.24),0 0 44px var(--blooms),0 6px 18px rgba(0,0,0,0.4)}
-.g-title{font-family:'DM Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--acc);text-shadow:0 0 18px var(--blooms);line-height:1;margin-bottom:4px}
-.g-sub{font-family:'DM Mono',monospace;font-size:7.5px;font-weight:500;letter-spacing:.08em;color:var(--acc);opacity:.45;line-height:1}
-.g-badge{
-  font-family:'DM Mono',monospace;font-size:8px;font-weight:700;
-  padding:3px 11px;border-radius:20px;
-  background:var(--ibg);border:1px solid var(--ring);color:var(--acc);
-  box-shadow:0 0 12px var(--bloom),inset 0 1px 0 rgba(255,255,255,0.12);
-  display:none;white-space:nowrap;
+.hero-logo{
+  width:34px;height:34px;border-radius:8px;
+  background:#00e8a2;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  box-shadow:0 0 24px rgba(0,232,162,0.8), 0 0 48px rgba(0,232,162,0.3);
 }
-.g-badge.vis{display:block;animation:badgeSpring .38s cubic-bezier(.2,.85,.2,1) both}
+.hero-logo svg{display:block}
+.hero-brand-text{
+  display:flex;flex-direction:column;gap:2px;
+}
+.hero-brand-name{
+  font-family:'DM Sans',sans-serif;
+  font-size:14px;font-weight:700;
+  color:#ffffff;letter-spacing:-.01em;line-height:1;
+}
+.hero-brand-sub{
+  font-family:'DM Mono',monospace;
+  font-size:10px;font-weight:500;
+  color:#f5a623;letter-spacing:.04em;line-height:1;
+}
+.hero-h1{
+  font-size:clamp(36px,9vw,60px);font-weight:900;
+  letter-spacing:-.04em;line-height:1.0;
+  color:#ffffff;text-align:center;
+  text-shadow:0 2px 30px rgba(0,0,0,0.7);
+}
+.hero-h1 em{font-style:normal;color:#00e8a2;text-shadow:0 0 50px rgba(0,232,162,0.8)}
+.hero-sub{font-size:14px;color:rgba(255,255,255,0.7);margin-top:7px;font-weight:500;text-align:center}
 
-/* ── SECTION CARDS (non-genre) ──────────────────────────────── */
-.p-card{
-  position:relative;border-radius:20px;overflow:hidden;margin-bottom:16px;
-  background:linear-gradient(145deg,rgba(255,255,255,0.1) 0%,rgba(255,255,255,0.035) 50%,rgba(255,255,255,0.065) 100%);
-  backdrop-filter:blur(32px) saturate(1.4);-webkit-backdrop-filter:blur(32px) saturate(1.4);
-  border:1px solid rgba(255,255,255,0.14);
-  border-top:1.5px solid rgba(255,255,255,0.26);
-  box-shadow:
-    inset 0 2px 0 rgba(255,255,255,0.16),
-    inset 0 -1px 0 rgba(0,0,0,0.3),
-    0 4px 8px rgba(0,0,0,0.22),
-    0 16px 36px rgba(0,0,0,0.4),
-    0 36px 64px rgba(0,0,0,0.28);
-  transition:transform .28s cubic-bezier(.2,.85,.2,1),box-shadow .28s;
+/* ── STEP NAV ─────────────────────────── */
+.step-nav{
+  background:#0d0d24;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+  display:flex;justify-content:center;
+  overflow-x:auto;scrollbar-width:none;
+  position:sticky;top:0;z-index:100;
 }
-.p-card::before{
-  content:'';position:absolute;top:0;left:10%;right:10%;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(0,232,162,0.7) 35%,rgba(245,166,35,0.45) 65%,transparent);
-  opacity:.85;
+.step-nav::-webkit-scrollbar{display:none}
+.step-tab{
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  padding:15px 18px;
+  font-size:12px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;
+  color:#5050a0;
+  border-bottom:2px solid transparent;
+  cursor:pointer;white-space:nowrap;
+  transition:all .15s;user-select:none;flex-shrink:0;
 }
-.p-card:hover{
-  transform:translateY(-3px);
-  box-shadow:inset 0 2px 0 rgba(255,255,255,0.2),inset 0 -1px 0 rgba(0,0,0,0.35),0 8px 18px rgba(0,0,0,0.3),0 24px 52px rgba(0,0,0,0.52),0 0 0 1px rgba(0,232,162,0.18),0 0 70px rgba(0,232,162,0.08);
-  border-top-color:rgba(0,232,162,0.48);
+.step-tab:hover{color:#9090d0}
+.step-tab.active{color:#00e8a2;border-bottom-color:#00e8a2}
+.step-tab.done{color:#206040}
+.snum{
+  width:20px;height:20px;border-radius:50%;
+  font-size:9px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;
+  border:1.5px solid currentColor;flex-shrink:0;
+  opacity:0.8;
 }
-.p-card-hd{display:flex;align-items:center;justify-content:space-between;padding:18px 22px 0}
-.p-label{font-family:'DM Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#00e8a2;text-shadow:0 0 16px rgba(0,232,162,0.55)}
-.p-hint{font-family:'DM Mono',monospace;font-size:8.5px;color:#404070;letter-spacing:.05em}
-.p-card-body{padding:14px 22px 24px}
+.step-tab.active .snum{background:rgba(0,232,162,0.2);border-color:#00e8a2;opacity:1}
 
-/* ── CHIPS ──────────────────────────────────────────────────── */
-.chips{display:flex;flex-wrap:wrap;gap:9px}
-.chip{
-  position:relative;
-  display:inline-flex;align-items:center;gap:0;
-  padding:9px 17px;border-radius:28px;
-  background:rgba(255,255,255,0.075);
-  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-  border:1px solid rgba(255,255,255,0.14);
-  border-top:1px solid rgba(255,255,255,0.22);
-  color:#b8b8de;
-  font-family:'DM Sans',sans-serif;font-size:12.5px;font-weight:500;
-  cursor:pointer;user-select:none;white-space:nowrap;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.12),inset 0 -1px 0 rgba(0,0,0,0.2),0 2px 5px rgba(0,0,0,0.24),0 5px 14px rgba(0,0,0,0.2);
-  transition:transform .2s cubic-bezier(.2,.85,.2,1),box-shadow .2s,border-color .15s,color .14s,background .14s,font-weight .12s;
-  overflow:hidden;
-}
-.chip::before{content:'';position:absolute;top:0;left:12px;right:12px;height:50%;border-radius:28px 28px 0 0;background:linear-gradient(to bottom,rgba(255,255,255,0.09),transparent);pointer-events:none}
-.chip:hover{
-  transform:translateY(-3px) scale(1.05);
-  background:rgba(255,255,255,0.13);
-  color:#f0f0ff;font-weight:600;
-  border-color:rgba(255,255,255,0.3);
-  border-top-color:rgba(255,255,255,0.44);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.18),inset 0 -1px 0 rgba(0,0,0,0.22),0 4px 12px rgba(0,0,0,0.32),0 14px 32px rgba(0,0,0,0.3),0 0 26px rgba(0,232,162,0.12);
-}
-.chip:active{transform:translateY(0) scale(.97)}
+/* ── CONTAINER ────────────────────────── */
+.container{max-width:940px;margin:0 auto;padding:24px 16px 70px}
+@media(min-width:768px){.container{padding:32px 40px 90px}}
+.step-panel{display:none}
+.step-panel.active{display:flex;flex-direction:column;gap:18px}
 
-/* Selected — neon glow states */
-.chip.sel-g{
-  background:rgba(245,166,35,0.16);border:1.5px solid #f5a623;border-top:1.5px solid rgba(255,215,100,0.95);
-  color:#f5a623;font-weight:700;transform:scale(1.05);
-  box-shadow:inset 0 2px 0 rgba(255,230,150,0.22),0 0 0 1px rgba(245,166,35,0.3),0 0 20px rgba(245,166,35,0.48),0 0 44px rgba(245,166,35,0.2),0 5px 16px rgba(0,0,0,0.4);
-}
-.chip.sel-g::after{content:'';position:absolute;top:0;left:12%;right:12%;height:1px;background:rgba(255,210,80,0.98);box-shadow:0 0 10px #f5a623,0 0 28px rgba(245,166,35,0.9);border-radius:0 0 2px 2px;z-index:3}
-.chip.sel-g:hover{transform:scale(1.07) translateY(-2px)}
-
-.chip.sel-i{
-  background:rgba(0,232,162,0.13);border:1.5px solid #00e8a2;border-top:1.5px solid rgba(100,255,210,0.95);
-  color:#00e8a2;font-weight:700;transform:scale(1.05);
-  box-shadow:inset 0 2px 0 rgba(150,255,220,0.2),0 0 0 1px rgba(0,232,162,0.28),0 0 20px rgba(0,232,162,0.46),0 0 44px rgba(0,232,162,0.18),0 5px 16px rgba(0,0,0,0.4);
-}
-.chip.sel-i::after{content:'';position:absolute;top:0;left:12%;right:12%;height:1px;background:rgba(100,255,210,0.98);box-shadow:0 0 10px #00e8a2,0 0 28px rgba(0,232,162,0.9);border-radius:0 0 2px 2px;z-index:3}
-.chip.sel-i:hover{transform:scale(1.07) translateY(-2px)}
-
-.chip.sel-m{
-  background:rgba(192,132,252,0.13);border:1.5px solid #c084fc;border-top:1.5px solid rgba(220,170,255,0.95);
-  color:#c084fc;font-weight:700;transform:scale(1.05);
-  box-shadow:inset 0 2px 0 rgba(220,180,255,0.2),0 0 0 1px rgba(192,132,252,0.28),0 0 20px rgba(192,132,252,0.46),0 0 44px rgba(192,132,252,0.18),0 5px 16px rgba(0,0,0,0.4);
-}
-.chip.sel-m::after{content:'';position:absolute;top:0;left:12%;right:12%;height:1px;background:rgba(220,170,255,0.98);box-shadow:0 0 10px #c084fc,0 0 28px rgba(192,132,252,0.9);border-radius:0 0 2px 2px;z-index:3}
-.chip.sel-m:hover{transform:scale(1.07) translateY(-2px)}
-
-.chip.sel-v{
-  background:rgba(96,168,255,0.13);border:1.5px solid #60a8ff;border-top:1.5px solid rgba(150,200,255,0.95);
-  color:#80c0ff;font-weight:700;transform:scale(1.05);
-  box-shadow:inset 0 2px 0 rgba(180,220,255,0.2),0 0 0 1px rgba(96,168,255,0.28),0 0 20px rgba(96,168,255,0.46),0 0 44px rgba(96,168,255,0.18),0 5px 16px rgba(0,0,0,0.4);
-}
-.chip.sel-v::after{content:'';position:absolute;top:0;left:12%;right:12%;height:1px;background:rgba(150,200,255,0.98);box-shadow:0 0 10px #60a8ff,0 0 28px rgba(96,168,255,0.9);border-radius:0 0 2px 2px;z-index:3}
-.chip.sel-v:hover{transform:scale(1.07) translateY(-2px)}
-
-.chip.dim{opacity:.26;pointer-events:none}
-
-/* ── RESULTS PAGE ───────────────────────────────────────────── */
-.results-page{max-width:880px;margin:0 auto}
-.results-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;padding:0 4px}
-.results-title{font-family:'DM Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#00e8a2;text-shadow:0 0 18px rgba(0,232,162,0.65)}
-.results-back{
-  background:rgba(255,255,255,0.08);backdrop-filter:blur(14px);
-  border:1px solid rgba(255,255,255,0.16);border-top:1px solid rgba(255,255,255,0.24);
-  border-radius:12px;color:#b0b0d8;
-  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;
-  padding:9px 18px;cursor:pointer;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.1),0 2px 8px rgba(0,0,0,0.2);
-  transition:all .2s;
-}
-.results-back:hover{background:rgba(255,255,255,0.13);color:#fff;border-color:rgba(255,255,255,0.3);transform:translateY(-1px);box-shadow:inset 0 1px 0 rgba(255,255,255,0.15),0 4px 14px rgba(0,0,0,0.3)}
-.results-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
-@media(max-width:700px){.results-grid{grid-template-columns:1fr}}
-
-/* Keep all output card, score, share, brand styles from original */
 /* ── SECTION CARD ─────────────────────── */
-.__old_sc_DISABLED{
+.sc{
   background:#10102a;
   border:1px solid rgba(255,255,255,0.13);
   border-radius:16px;overflow:hidden;
   position:relative;
 }
-.__old_sc_after_DISABLED{
+.sc::after{
   content:'';position:absolute;top:0;left:0;right:0;height:1px;
   background:linear-gradient(90deg,transparent,rgba(0,232,162,0.5),rgba(245,166,35,0.3),transparent);
 }
-.__old_sc_head_DISABLED{
+.sc-head{
   padding:18px 22px 0;
   display:flex;align-items:center;justify-content:space-between;
 }
-.__old_sc_label_DISABLED{
+.sc-label{
   font-family:'DM Mono',monospace;
   font-size:10px;font-weight:700;
   letter-spacing:.2em;text-transform:uppercase;
   color:#00e8a2;
 }
-.__old_sc_hint_DISABLED{
+.sc-hint{
   font-family:'DM Mono',monospace;
   font-size:9px;font-weight:500;
   color:#a0a0c0;letter-spacing:.04em;
 }
-.__old_sc_body_DISABLED{padding:14px 22px 22px}
+.sc-body{padding:14px 22px 22px}
+
+/* ── GENRE GROUPS ─────────────────────── */
+.genre-group{margin-bottom:16px}
+.genre-group:last-child{margin-bottom:0}
+.gg-name{
+  font-family:'DM Mono',monospace;
+  font-size:9px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:#8080b8;margin-bottom:9px;
+}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+
+/* ── CHIPS ────────────────────────────── */
+.chip{
+  font-family:'DM Sans',sans-serif;
+  font-size:13px;font-weight:600;
+  padding:8px 16px;border-radius:24px;
+  border:1.5px solid rgba(255,255,255,0.18);
+  background:rgba(255,255,255,0.05);
+  color:#c0c0e8;
+  cursor:pointer;transition:all .12s;
+  white-space:nowrap;user-select:none;
+}
+.chip:hover{
+  border-color:rgba(255,255,255,0.4);
+  color:#ffffff;background:rgba(255,255,255,0.1);
+}
+.chip:active{transform:scale(0.95)}
+.chip.sel-g{background:rgba(245,166,35,0.18);border-color:#f5a623;color:#f5a623;font-weight:700;box-shadow:0 0 16px rgba(245,166,35,0.2)}
+.chip.sel-i{background:rgba(0,232,162,0.15);border-color:#00e8a2;color:#00e8a2;font-weight:700;box-shadow:0 0 16px rgba(0,232,162,0.15)}
+.chip.sel-m{background:rgba(180,100,255,0.15);border-color:#b464ff;color:#d090ff;font-weight:700}
+.chip.sel-v{background:rgba(100,160,255,0.15);border-color:#64a0ff;color:#90c0ff;font-weight:700}
 
 /* ── SEQUENCER ────────────────────────── */
 .seq-palette{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
@@ -620,10 +533,233 @@ body.embed-mode .hero{border-radius:12px 12px 0 0}
   text-align:center;
 }
 
-
 </style>
-</head>
-<body>
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://www.musicproductionwiki.com/tools/suno-prompt-optimizer.html">
+
+<meta property="og:title" content="Suno Prompt Optimizer — Free AI Music Tool | MusicProductionWiki">
+<meta property="og:description" content="Build structured Suno AI prompts with genre, instruments, mood, and song structure. AI-scored and optimized. Free from MusicProductionWiki — The Producer's Bible.">
+<meta property="og:url" content="https://www.musicproductionwiki.com/tools/suno-prompt-optimizer.html">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://www.musicproductionwiki.com/images/suno-prompt-optimizer-og.jpg">
+<meta property="og:site_name" content="MusicProductionWiki.com">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Suno Prompt Optimizer — Free AI Music Tool">
+<meta name="twitter:description" content="Build structured Suno AI prompts with genre, instruments, mood, and song structure. AI-scored and optimized. Free.">
+<meta name="twitter:image" content="https://www.musicproductionwiki.com/images/suno-prompt-optimizer-og.jpg">
+<meta name="twitter:site" content="@MusicProdWiki">
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-79VB543KCT"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-79VB543KCT');</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What makes a good Suno AI music prompt?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A strong Suno prompt layers genre first (specific subgenres beat broad ones), then instrumentation with texture words like punchy or lush, then mood descriptors, then structural metatags like [Verse][Chorus]. Keep it under 200 characters and front-load your most critical elements since Suno v4 deprioritizes instructions past position 8."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I get Suno to generate better music?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use specific subgenre names instead of broad genres, add production texture words that describe character (punchy, lush, gritty, shimmering), include structural metatags like [Verse][Pre-Chorus][Chorus] to control song architecture, and place vocal style tags like [male vocal] before structural tags. Avoid vague filler words like banger or vibes — Suno ignores them."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does prompt length matter in Suno?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Suno v4 often ignores instructions past position 8 in a prompt. Keep prompts under 200 characters and front-load genre and instrumentation. The Suno Prompt Optimizer shows your character count in real time and warns when you approach the limit."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use Suno music commercially?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Commercial rights depend on your Suno subscription tier. Free users cannot use generated music commercially. Pro and Premier subscribers receive commercial rights to tracks they generate. Use the MPW AI Music Rights Navigator tool to check rights for your specific use case."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the best Suno prompt tags for song structure?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Suno v4 responds to structural metatags placed at the end of your prompt: [Intro], [Verse], [Pre-Chorus], [Chorus], [Bridge], [Hook], [Breakdown], and [Outro]. You can repeat them for a full arrangement like [Verse][Pre-Chorus][Chorus][Verse][Pre-Chorus][Chorus][Bridge][Chorus][Outro]. Place vocal style tags like [male vocal] before these structural tags."
+      }
+    }
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.musicproductionwiki.com"},
+    {"@type": "ListItem", "position": 2, "name": "Tools", "item": "https://www.musicproductionwiki.com/tools/"},
+    {"@type": "ListItem", "position": 3, "name": "Suno Prompt Optimizer", "item": "https://www.musicproductionwiki.com/tools/suno-prompt-optimizer.html"}
+  ]
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Suno Prompt Optimizer",
+  "url": "https://www.musicproductionwiki.com/tools/suno-prompt-optimizer.html",
+  "description": "Build and optimize Suno AI music prompts with genre, instrumentation, mood, and song structure. AI-scored and optimized. Free tool from MusicProductionWiki.com.",
+  "applicationCategory": "MusicApplication",
+  "operatingSystem": "Web Browser",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "publisher": {
+    "@type": "Organization",
+    "name": "MusicProductionWiki.com",
+    "url": "https://www.musicproductionwiki.com"
+  }
+}
+</script>
+
+<script src="../js/main.js" defer></script>
+
+<style>
+/* ═══ MPW GLASSMORPHIC v6 ═══════════════════════════════════════
+   Full rebuild — append-only before 
+<style>
+/* ═══ MPW Glassmorphic v7 — new class namespace, zero conflicts ═══ */
+
+@keyframes gShimmer{0%{transform:translateX(-120%) skewX(-15deg);opacity:0}20%{opacity:1}80%{opacity:1}100%{transform:translateX(220%) skewX(-15deg);opacity:0}}
+@keyframes gcardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes badgeSpring{0%{opacity:0;transform:scale(.5) translateY(4px)}60%{transform:scale(1.18) translateY(-1px)}80%{transform:scale(.96)}100%{opacity:1;transform:scale(1)}}
+
+/* ── GENRE GROUP GLASS CARDS ── */
+.g-group{
+  position:relative;border-radius:20px;padding:22px 22px 24px;margin-bottom:16px;overflow:hidden;
+  background:linear-gradient(145deg,rgba(255,255,255,0.1) 0%,rgba(255,255,255,0.035) 50%,rgba(255,255,255,0.07) 100%);
+  backdrop-filter:blur(32px) saturate(1.5) brightness(1.06);
+  -webkit-backdrop-filter:blur(32px) saturate(1.5) brightness(1.06);
+  border:1px solid rgba(255,255,255,0.14);
+  border-top:1.5px solid rgba(255,255,255,0.28);
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.18),
+    inset 0 -1px 0 rgba(0,0,0,0.32),
+    inset 1px 0 0 rgba(255,255,255,0.06),
+    inset -1px 0 0 rgba(255,255,255,0.06),
+    0 4px 8px rgba(0,0,0,0.25),0 16px 36px rgba(0,0,0,0.42),0 36px 68px rgba(0,0,0,0.3);
+  transition:transform .3s cubic-bezier(.2,.85,.2,1),box-shadow .3s,border-color .22s;
+  animation:gcardIn .42s cubic-bezier(.2,.85,.2,1) both;
+}
+.g-group:last-of-type{margin-bottom:0}
+.g-group::before{content:'';position:absolute;top:0;left:12%;right:12%;height:1px;background:linear-gradient(90deg,transparent,var(--shine) 30%,var(--shine) 70%,transparent);opacity:.85;border-radius:0 0 2px 2px}
+.g-group::after{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:80%;height:150px;background:radial-gradient(ellipse at 50% 0%,var(--bloom) 0%,transparent 70%);opacity:0;pointer-events:none;transition:opacity .32s}
+.g-group:hover{transform:translateY(-5px);border-color:rgba(255,255,255,0.22);border-top-color:var(--ring);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,0.22),inset 0 -1px 0 rgba(0,0,0,0.38),0 8px 18px rgba(0,0,0,0.32),0 28px 56px rgba(0,0,0,0.55),0 52px 88px rgba(0,0,0,0.38),0 0 0 1px var(--ring),0 0 90px var(--bloom)}
+.g-group:hover::after{opacity:1}
+.g-shimmer{position:absolute;inset:0;border-radius:20px;overflow:hidden;pointer-events:none;z-index:2}
+.g-shimmer::after{content:'';position:absolute;top:0;left:0;width:50%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.07) 50%,transparent);transform:translateX(-120%) skewX(-15deg);opacity:0}
+.g-group:hover .g-shimmer::after{animation:gShimmer .85s cubic-bezier(.4,0,.2,1) forwards}
+.g-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.g-hd-l{display:flex;align-items:center;gap:13px}
+.g-ico{width:40px;height:40px;border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,var(--ibg),rgba(0,0,0,0.1));border:1px solid var(--ring);box-shadow:inset 0 1.5px 0 rgba(255,255,255,0.18),0 0 28px var(--bloom),0 4px 14px rgba(0,0,0,0.35);position:relative;overflow:hidden;transition:transform .24s cubic-bezier(.2,.85,.2,1),box-shadow .24s}
+.g-ico::before{content:'';position:absolute;top:0;left:0;right:0;height:50%;background:linear-gradient(to bottom,rgba(255,255,255,0.18),transparent);border-radius:12px 12px 0 0}
+.g-group:hover .g-ico{transform:scale(1.09) rotate(-3deg);box-shadow:inset 0 1.5px 0 rgba(255,255,255,0.24),0 0 44px var(--blooms),0 6px 18px rgba(0,0,0,0.4)}
+.g-title{font-family:'DM Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--acc);text-shadow:0 0 18px var(--blooms);line-height:1;margin-bottom:4px}
+.g-sub{font-family:'DM Mono',monospace;font-size:7.5px;font-weight:500;letter-spacing:.08em;color:var(--acc);opacity:.45;line-height:1}
+.g-badge{font-family:'DM Mono',monospace;font-size:8px;font-weight:700;padding:3px 11px;border-radius:20px;background:var(--ibg);border:1px solid var(--ring);color:var(--acc);box-shadow:0 0 12px var(--bloom),inset 0 1px 0 rgba(255,255,255,0.12);display:none;white-space:nowrap}
+.g-badge.vis{display:block;animation:badgeSpring .38s cubic-bezier(.2,.85,.2,1) both}
+
+/* ── SECTION CARDS for Sounds/Mood/Structure/Optimize ── */
+.p-card{
+  position:relative;border-radius:20px;overflow:hidden;margin-bottom:16px;
+  background:linear-gradient(145deg,rgba(255,255,255,0.1) 0%,rgba(255,255,255,0.035) 50%,rgba(255,255,255,0.065) 100%);
+  backdrop-filter:blur(32px) saturate(1.4);-webkit-backdrop-filter:blur(32px) saturate(1.4);
+  border:1px solid rgba(255,255,255,0.14);border-top:1.5px solid rgba(255,255,255,0.26);
+  box-shadow:inset 0 2px 0 rgba(255,255,255,0.16),inset 0 -1px 0 rgba(0,0,0,0.3),0 4px 8px rgba(0,0,0,0.22),0 16px 36px rgba(0,0,0,0.4),0 36px 64px rgba(0,0,0,0.28);
+  transition:transform .28s cubic-bezier(.2,.85,.2,1),box-shadow .28s;
+}
+.p-card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,rgba(0,232,162,0.7) 35%,rgba(245,166,35,0.45) 65%,transparent);opacity:.85}
+.p-card:hover{transform:translateY(-3px);box-shadow:inset 0 2px 0 rgba(255,255,255,0.2),inset 0 -1px 0 rgba(0,0,0,0.35),0 8px 18px rgba(0,0,0,0.3),0 24px 52px rgba(0,0,0,0.52),0 0 0 1px rgba(0,232,162,0.18),0 0 70px rgba(0,232,162,0.08);border-top-color:rgba(0,232,162,0.48)}
+.p-card-hd{display:flex;align-items:center;justify-content:space-between;padding:18px 22px 0}
+.p-label{font-family:'DM Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#00e8a2;text-shadow:0 0 16px rgba(0,232,162,0.55)}
+.p-hint{font-family:'DM Mono',monospace;font-size:8.5px;color:#404070;letter-spacing:.05em}
+.p-card-body{padding:14px 22px 24px}
+
+/* ── CHIPS — override original flat style ── */
+.chip{
+  position:relative;
+  display:inline-flex;align-items:center;
+  padding:9px 17px !important;border-radius:28px !important;
+  background:rgba(255,255,255,0.075) !important;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,0.14) !important;
+  border-top:1px solid rgba(255,255,255,0.22) !important;
+  color:#b8b8de !important;
+  font-family:'DM Sans',sans-serif;font-size:12.5px !important;font-weight:500 !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.12),inset 0 -1px 0 rgba(0,0,0,0.2),0 2px 5px rgba(0,0,0,0.24),0 5px 14px rgba(0,0,0,0.2) !important;
+  transition:transform .2s cubic-bezier(.2,.85,.2,1),box-shadow .2s,border-color .15s,color .14s,background .14s,font-weight .12s !important;
+  overflow:hidden;
+}
+.chip::before{content:'';position:absolute;top:0;left:12px;right:12px;height:50%;border-radius:28px 28px 0 0;background:linear-gradient(to bottom,rgba(255,255,255,0.09),transparent);pointer-events:none}
+.chip:hover{transform:translateY(-3px) scale(1.05) !important;background:rgba(255,255,255,0.13) !important;color:#f0f0ff !important;font-weight:600 !important;border-color:rgba(255,255,255,0.3) !important;border-top-color:rgba(255,255,255,0.44) !important;box-shadow:inset 0 1px 0 rgba(255,255,255,0.18),inset 0 -1px 0 rgba(0,0,0,0.22),0 4px 12px rgba(0,0,0,0.32),0 14px 32px rgba(0,0,0,0.3),0 0 26px rgba(0,232,162,0.12) !important}
+.chip:active{transform:translateY(0) scale(.97) !important}
+
+.chip.sel-g{background:rgba(245,166,35,0.16) !important;border:1.5px solid #f5a623 !important;border-top:1.5px solid rgba(255,215,100,0.95) !important;color:#f5a623 !important;font-weight:700 !important;transform:scale(1.05) !important;box-shadow:inset 0 2px 0 rgba(255,230,150,0.22),0 0 0 1px rgba(245,166,35,0.3),0 0 20px rgba(245,166,35,0.48),0 0 44px rgba(245,166,35,0.2),0 5px 16px rgba(0,0,0,0.4) !important}
+.chip.sel-g::after{content:'';position:absolute;top:0;left:12%;right:12%;height:1px;background:rgba(255,210,80,0.98);box-shadow:0 0 10px #f5a623,0 0 28px rgba(245,166,35,0.9);border-radius:0 0 2px 2px;z-index:3}
+.chip.sel-g:hover{transform:scale(1.07) translateY(-2px) !important}
+
+.chip.sel-i{background:rgba(0,232,162,0.13) !important;border:1.5px solid #00e8a2 !important;border-top:1.5px solid rgba(100,255,210,0.95) !important;color:#00e8a2 !important;font-weight:700 !important;transform:scale(1.05) !important;box-shadow:inset 0 2px 0 rgba(150,255,220,0.2),0 0 0 1px rgba(0,232,162,0.28),0 0 20px rgba(0,232,162,0.46),0 0 44px rgba(0,232,162,0.18),0 5px 16px rgba(0,0,0,0.4) !important}
+.chip.sel-i::after{content:'';position:absolute;top:0;left:12%;right:12%;height:1px;background:rgba(100,255,210,0.98);box-shadow:0 0 10px #00e8a2,0 0 28px rgba(0,232,162,0.9);border-radius:0 0 2px 2px;z-index:3}
+.chip.sel-i:hover{transform:scale(1.07) translateY(-2px) !important}
+
+.chip.sel-m{background:rgba(192,132,252,0.13) !important;border:1.5px solid #c084fc !important;border-top:1.5px solid rgba(220,170,255,0.95) !important;color:#c084fc !important;font-weight:700 !important;transform:scale(1.05) !important;box-shadow:inset 0 2px 0 rgba(220,180,255,0.2),0 0 0 1px rgba(192,132,252,0.28),0 0 20px rgba(192,132,252,0.46),0 0 44px rgba(192,132,252,0.18),0 5px 16px rgba(0,0,0,0.4) !important}
+.chip.sel-m::after{content:'';position:absolute;top:0;left:12%;right:12%;height:1px;background:rgba(220,170,255,0.98);box-shadow:0 0 10px #c084fc,0 0 28px rgba(192,132,252,0.9);border-radius:0 0 2px 2px;z-index:3}
+.chip.sel-m:hover{transform:scale(1.07) translateY(-2px) !important}
+
+.chip.sel-v{background:rgba(96,168,255,0.13) !important;border:1.5px solid #60a8ff !important;border-top:1.5px solid rgba(150,200,255,0.95) !important;color:#80c0ff !important;font-weight:700 !important;transform:scale(1.05) !important;box-shadow:inset 0 2px 0 rgba(180,220,255,0.2),0 0 0 1px rgba(96,168,255,0.28),0 0 20px rgba(96,168,255,0.46),0 0 44px rgba(96,168,255,0.18),0 5px 16px rgba(0,0,0,0.4) !important}
+.chip.sel-v::after{content:'';position:absolute;top:0;left:12%;right:12%;height:1px;background:rgba(150,200,255,0.98);box-shadow:0 0 10px #60a8ff,0 0 28px rgba(96,168,255,0.9);border-radius:0 0 2px 2px;z-index:3}
+.chip.sel-v:hover{transform:scale(1.07) translateY(-2px) !important}
+
+.chip.dim{opacity:.26 !important;pointer-events:none !important}
+.chips{gap:9px !important}
+
+/* ── RESULTS PAGE ── */
+.results-page{max-width:880px;margin:0 auto}
+.results-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;padding:0 4px}
+.results-title{font-family:'DM Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#00e8a2;text-shadow:0 0 18px rgba(0,232,162,0.65)}
+.results-back{background:rgba(255,255,255,0.08);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,0.16);border-top:1px solid rgba(255,255,255,0.24);border-radius:12px;color:#b0b0d8;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;padding:9px 18px;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,0.1),0 2px 8px rgba(0,0,0,0.2);transition:all .2s}
+.results-back:hover{background:rgba(255,255,255,0.13);color:#fff;border-color:rgba(255,255,255,0.3);transform:translateY(-1px)}
+.results-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+@media(max-width:700px){.results-grid{grid-template-columns:1fr}}
+
+/* ── OUTPUT CARDS — glass override ── */
+.ob{background:linear-gradient(145deg,rgba(255,255,255,0.09) 0%,rgba(255,255,255,0.03) 55%,rgba(255,255,255,0.06) 100%) !important;backdrop-filter:blur(28px) saturate(1.4) !important;-webkit-backdrop-filter:blur(28px) saturate(1.4) !important;border:1px solid rgba(255,255,255,0.13) !important;border-top:1.5px solid rgba(255,255,255,0.24) !important;border-radius:18px !important;box-shadow:inset 0 1.5px 0 rgba(255,255,255,0.14),inset 0 -1px 0 rgba(0,0,0,0.25),0 6px 16px rgba(0,0,0,0.3),0 20px 44px rgba(0,0,0,0.36) !important}
+.score-card{background:linear-gradient(145deg,rgba(0,232,162,0.11) 0%,rgba(255,255,255,0.04) 50%,rgba(0,232,162,0.06) 100%) !important;backdrop-filter:blur(32px) saturate(1.6) !important;-webkit-backdrop-filter:blur(32px) saturate(1.6) !important;border:1px solid rgba(0,232,162,0.25) !important;border-top:1.5px solid rgba(0,232,162,0.5) !important;border-radius:20px !important;box-shadow:inset 0 2px 0 rgba(0,232,162,0.15),0 10px 32px rgba(0,0,0,0.42),0 0 72px rgba(0,232,162,0.09) !important}
+.share-bar{background:rgba(0,0,0,0.65) !important;backdrop-filter:blur(24px) !important;border:1px solid rgba(255,255,255,0.11) !important;border-top:1px solid rgba(255,255,255,0.2) !important;border-radius:16px !important;box-shadow:inset 0 1px 0 rgba(255,255,255,0.08),0 10px 32px rgba(0,0,0,0.45) !important}
+.brand-wm{background:rgba(0,0,0,0.7) !important;backdrop-filter:blur(24px) !important;border:1px solid rgba(0,232,162,0.16) !important;border-top:1px solid rgba(0,232,162,0.28) !important;border-radius:16px !important;box-shadow:inset 0 1px 0 rgba(0,232,162,0.08),0 8px 26px rgba(0,0,0,0.45) !important}
+.prompt-live{background:rgba(0,0,0,0.55) !important;backdrop-filter:blur(18px) !important;border:1px solid rgba(255,255,255,0.11) !important;border-top:1px solid rgba(255,255,255,0.17) !important;border-radius:14px !important;box-shadow:inset 0 1px 0 rgba(255,255,255,0.07),inset 0 2px 16px rgba(0,0,0,0.36) !important}
+.paste-ta{background:rgba(0,0,0,0.55) !important;border:1px solid rgba(255,255,255,0.12) !important;border-top:1px solid rgba(255,255,255,0.19) !important;border-radius:13px !important;box-shadow:inset 0 1px 0 rgba(255,255,255,0.07),inset 0 2px 16px rgba(0,0,0,0.4) !important}
+.paste-ta:focus{border-color:rgba(0,232,162,0.4) !important;border-top-color:rgba(0,232,162,0.56) !important;box-shadow:inset 0 1px 0 rgba(0,232,162,0.08),inset 0 2px 16px rgba(0,0,0,0.36),0 0 26px rgba(0,232,162,0.1) !important}
+.sbl{box-shadow:inset 0 1px 0 rgba(255,255,255,0.14),0 3px 10px rgba(0,0,0,0.3),0 8px 20px rgba(0,0,0,0.22) !important;transition:transform .2s cubic-bezier(.2,.85,.2,1),box-shadow .2s,filter .15s !important}
+.sbl:hover{transform:translateY(-3px) scale(1.08) !important;filter:brightness(1.38) !important;box-shadow:inset 0 1px 0 rgba(255,255,255,0.2),0 6px 20px rgba(0,0,0,0.4),0 16px 36px rgba(0,0,0,0.32) !important}
+.seq-rail{background:rgba(0,0,0,0.55) !important;backdrop-filter:blur(16px) !important;border:1.5px dashed rgba(255,255,255,0.13) !important;border-radius:14px !important;box-shadow:inset 0 2px 16px rgba(0,0,0,0.4) !important}
+.vp-ok{background:rgba(0,232,162,0.1) !important;border:1px solid rgba(0,232,162,0.35) !important;box-shadow:0 0 12px rgba(0,232,162,0.12) !important}
+.vp-warn{background:rgba(245,166,35,0.1) !important;border:1px solid rgba(245,166,35,0.35) !important;box-shadow:0 0 12px rgba(245,166,35,0.12) !important}
+
+/* ══ END MPW Glassmorphic v7 ══ */
+</style>
+</head><body>
 
 <!-- NAV WRAPPER — hidden in embed mode -->
 <div class="mpw-nav-wrap">
@@ -1413,7 +1549,323 @@ document.addEventListener('click',function(e){
 });
 
 
+
+
+<script>
+var S={g:[],i:[],m:[],v:[]};
+var maxMap={g:4,i:6,m:3,v:3};
+var clsMap={g:'sel-g',i:'sel-i',m:'sel-m',v:'sel-v'};
+var optimizedResult='';
+var shareURL='https://www.musicproductionwiki.com/tools/suno-prompt-optimizer.html';
+var dragSrc=null;
+
+// ── WAVEFORM ──────────────────────────────────────────────────
+(function(){
+  var cv=document.getElementById('waveCanvas');if(!cv)return;
+  var ctx=cv.getContext('2d'),t=0,energy=1.0;
+  function resize(){cv.width=cv.offsetWidth;cv.height=cv.offsetHeight}
+  resize();window.addEventListener('resize',resize);
+  window.setWaveEnergy=function(e){energy=e};
+  function draw(){
+    var W=cv.width,H=cv.height;
+    ctx.clearRect(0,0,W,H);ctx.fillStyle='#06061a';ctx.fillRect(0,0,W,H);
+    var gr=ctx.createRadialGradient(W*.45,H*.65,0,W*.45,H*.65,W*.55);
+    gr.addColorStop(0,'rgba(0,232,162,0.1)');gr.addColorStop(1,'transparent');
+    ctx.fillStyle=gr;ctx.fillRect(0,0,W,H);
+    var gr2=ctx.createRadialGradient(W*.8,H*.35,0,W*.8,H*.35,W*.28);
+    gr2.addColorStop(0,'rgba(245,166,35,0.06)');gr2.addColorStop(1,'transparent');
+    ctx.fillStyle=gr2;ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='rgba(255,255,255,0.025)';
+    for(var gx=0;gx<W;gx+=38)for(var gy=0;gy<H;gy+=38)ctx.fillRect(gx,gy,1,1);
+    var layers=[
+      {a:H*.20*energy,f:0.010,s:0.00125,c:'rgba(0,232,162,',lw:2.5,y:H*.48,glow:true},
+      {a:H*.12*energy,f:0.016,s:0.0019,c:'rgba(80,160,255,',lw:1.5,y:H*.53,glow:false},
+      {a:H*.08,f:0.007,s:0.0008,c:'rgba(245,166,35,',lw:1.0,y:H*.57,glow:false},
+    ];
+    layers.forEach(function(l){
+      if(l.glow){
+        ctx.save();ctx.shadowColor='rgba(0,232,162,0.7)';ctx.shadowBlur=24;
+        ctx.beginPath();ctx.strokeStyle=l.c+'0.08)';ctx.lineWidth=l.lw*4;
+        for(var x=0;x<=W;x+=5){var y=l.y+Math.sin(x*l.f+t*l.s*60)*l.a+Math.sin(x*l.f*2.1+t*l.s*40)*l.a*.28;x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}
+        ctx.stroke();ctx.restore();
+      }
+      ctx.beginPath();ctx.strokeStyle=l.c+(l.glow?'0.9':'0.45')+')';ctx.lineWidth=l.lw;
+      for(var x2=0;x2<=W;x2+=2){var y2=l.y+Math.sin(x2*l.f+t*l.s*60)*l.a+Math.sin(x2*l.f*2.1+t*l.s*40)*l.a*.28+Math.sin(x2*l.f*.5+t*l.s*22)*l.a*.12;x2===0?ctx.moveTo(x2,y2):ctx.lineTo(x2,y2);}
+      ctx.stroke();
+    });
+    var sx=((t*.25)%(W+100))-50;
+    var sg=ctx.createLinearGradient(sx-30,0,sx+30,0);
+    sg.addColorStop(0,'transparent');sg.addColorStop(.5,'rgba(0,232,162,0.09)');sg.addColorStop(1,'transparent');
+    ctx.fillStyle=sg;ctx.fillRect(sx-30,0,60,H);
+    for(var p=0;p<7;p++){var px=((p*179+t*.2)%W),py=((p*109+t*.12)%H),pa=0.3+0.25*Math.sin(t*.04+p);ctx.fillStyle='rgba(0,232,162,'+pa+')';ctx.beginPath();ctx.arc(px,py,1,0,Math.PI*2);ctx.fill();}
+    t++;setTimeout(function(){requestAnimationFrame(draw)},30);
+  }
+  draw();
+})();
+
+// ── STEP NAV ──────────────────────────────────────────────────
+function goStep(n){
+  if(n===5){
+    document.querySelectorAll('.step-panel').forEach(function(p){p.classList.remove('active')});
+    document.getElementById('panel5').classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+    return;
+  }
+  if(n===5){
+    document.querySelectorAll('.step-panel').forEach(function(p){p.classList.remove('active')});
+    document.getElementById('panel5').classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+    return;
+  }
+  document.querySelectorAll('.step-panel').forEach(function(p){p.classList.remove('active')});
+  document.querySelectorAll('.step-tab').forEach(function(t,i){t.classList.remove('active','done');if(i<n)t.classList.add('done')});
+  document.getElementById('panel'+n).classList.add('active');
+  document.querySelector('[data-step="'+n+'"]').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(n===4)syncFinal();
+}
+
+// ── CHIPS ─────────────────────────────────────────────────────
+document.querySelectorAll('.chip[data-cat]').forEach(function(chip){
+  chip.addEventListener('click',function(){
+    var cat=this.dataset.cat,val=this.dataset.val,cls=clsMap[cat],max=maxMap[cat];
+    var idx=S[cat].indexOf(val);
+    if(idx>=0){S[cat].splice(idx,1);this.classList.remove(cls);}
+    else{if(S[cat].length>=max){var old=S[cat].shift();var o=document.querySelector('.chip[data-cat="'+cat+'"][data-val="'+old+'"]');if(o)o.classList.remove(cls);}S[cat].push(val);this.classList.add(cls);}
+    updateLive();
+    var em={trap:1.6,phonk:1.9,techno:2.0,dubstep:1.8,'drum & bass':1.7,house:1.3,'deep house':1.1,ambient:0.4,'lo-fi hip hop':0.6,jazz:0.7,'bossa nova':0.55,classical:0.45,folk:0.65,metal:2.2,'hard rock':1.9,grunge:1.6,shoegaze:0.8};
+    if(window.setWaveEnergy)window.setWaveEnergy(em[S.g[0]]||1.0);
+  });
+});
+
+function buildParts(){
+  var parts=[],html=[];
+  S.g.forEach(function(v){parts.push(v);html.push('<span class="pl-g">'+v+'</span>')});
+  S.i.forEach(function(v){parts.push(v);html.push('<span class="pl-i">'+v+'</span>')});
+  S.m.forEach(function(v){parts.push(v);html.push('<span class="pl-m">'+v+'</span>')});
+  S.v.forEach(function(v){parts.push(v);html.push('<span class="pl-v">'+v+'</span>')});
+  var seq=getSeqText();if(seq){parts.push(seq);html.push('<span class="pl-s">'+seq+'</span>')}
+  return{raw:parts.join(', '),html:html.join('<span style="color:#2e2e68">, </span>')};
+}
+function getSeqText(){
+  var placed=document.querySelectorAll('#seqRail .splaced');if(!placed.length)return'';
+  var p=[];placed.forEach(function(el){var n=el.querySelector('.splaced-name');p.push('['+(n?n.textContent:el.textContent.replace('×','').trim())+']')});return p.join('');
+}
+function updateLive(){
+  var r=buildParts();
+  var tEl=document.getElementById('livePromptText'),cEl=document.getElementById('charCount'),nEl=document.getElementById('charNum');
+  if(!tEl)return;
+  if(!r.raw){tEl.innerHTML='<span class="pl-empty">Your prompt will appear here</span>';if(nEl)nEl.textContent='0';if(cEl)cEl.className='pl-chars';}
+  else{tEl.innerHTML=r.html;var len=r.raw.length;if(nEl)nEl.textContent=len;if(cEl)cEl.className='pl-chars'+(len>200?' over':len>170?' warn':'');}
+}
+function syncFinal(){
+  var r=buildParts();var el=document.getElementById('finalPromptPreview');
+  if(!el)return;el.innerHTML=r.raw?r.html:'<span class="pl-empty">Go back and make selections</span>';
+}
+
+// ── SEQUENCER ─────────────────────────────────────────────────
+function addBlock(name,cls){
+  var rail=document.getElementById('seqRail');var empty=document.getElementById('railEmpty');if(empty)empty.style.display='none';
+  var el=document.createElement('div');el.className='splaced '+cls;el.draggable=true;
+  el.innerHTML='<span class="splaced-name">'+name+'</span><span class="splaced-x" onclick="removeBlock(this.parentNode)">×</span>';
+  el.addEventListener('dragstart',function(e){dragSrc=this;this.classList.add('dragging');e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain','')});
+  el.addEventListener('dragend',function(){this.classList.remove('dragging','drag-target');dragSrc=null;document.querySelectorAll('.splaced').forEach(function(b){b.classList.remove('drag-target')})});
+  el.addEventListener('dragover',function(e){e.preventDefault();if(dragSrc&&dragSrc!==this)this.classList.add('drag-target')});
+  el.addEventListener('dragleave',function(){this.classList.remove('drag-target')});
+  el.addEventListener('drop',function(e){
+    e.preventDefault();e.stopPropagation();
+    if(dragSrc&&dragSrc!==this){var rail=document.getElementById('seqRail');var nodes=Array.from(rail.querySelectorAll('.splaced'));if(nodes.indexOf(dragSrc)<nodes.indexOf(this))rail.insertBefore(dragSrc,this.nextSibling);else rail.insertBefore(dragSrc,this);}
+    this.classList.remove('drag-target');updateLive();
+  });
+  // touch drag
+  var tOffX=0,tOffY=0,ghost=null;
+  el.addEventListener('touchstart',function(e){var t=e.touches[0],r=this.getBoundingClientRect();tOffX=t.clientX-r.left;tOffY=t.clientY-r.top;ghost=this.cloneNode(true);ghost.style.cssText='position:fixed;opacity:.65;pointer-events:none;z-index:9999;transform:scale(1.06);transition:none;';ghost.style.left=(t.clientX-tOffX)+'px';ghost.style.top=(t.clientY-tOffY)+'px';document.body.appendChild(ghost);dragSrc=this;},{passive:true});
+  el.addEventListener('touchmove',function(e){e.preventDefault();var t=e.touches[0];if(ghost){ghost.style.left=(t.clientX-tOffX)+'px';ghost.style.top=(t.clientY-tOffY)+'px';}var under=document.elementFromPoint(t.clientX,t.clientY);var target=under&&under.closest('.splaced');document.querySelectorAll('.splaced').forEach(function(b){b.classList.remove('drag-target')});if(target&&target!==el)target.classList.add('drag-target');},{passive:false});
+  el.addEventListener('touchend',function(e){if(ghost){ghost.remove();ghost=null;}var t=e.changedTouches[0];var under=document.elementFromPoint(t.clientX,t.clientY);var target=under&&under.closest('.splaced');document.querySelectorAll('.splaced').forEach(function(b){b.classList.remove('drag-target')});if(target&&target!==el){var rail=document.getElementById('seqRail');var nodes=Array.from(rail.querySelectorAll('.splaced'));if(nodes.indexOf(el)<nodes.indexOf(target))rail.insertBefore(el,target.nextSibling);else rail.insertBefore(el,target);updateLive();}dragSrc=null;},{passive:true});
+  rail.appendChild(el);updateLive();
+  el.style.transform='scale(0.6)';el.style.opacity='0';
+  requestAnimationFrame(function(){el.style.transition='transform .22s cubic-bezier(.34,1.56,.64,1),opacity .15s';el.style.transform='scale(1)';el.style.opacity='1';setTimeout(function(){el.style.transition=''},250);});
+}
+function removeBlock(el){
+  el.style.transition='all .15s';el.style.transform='scale(0)';el.style.opacity='0';
+  setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);var rail=document.getElementById('seqRail');var empty=document.getElementById('railEmpty');if(empty&&rail)empty.style.display=rail.querySelectorAll('.splaced').length?'none':'block';updateLive();},160);
+}
+function railDragOver(e){e.preventDefault();e.currentTarget.classList.add('drag-over')}
+function railDragLeave(e){if(!e.currentTarget.contains(e.relatedTarget))e.currentTarget.classList.remove('drag-over')}
+function railDrop(e){e.currentTarget.classList.remove('drag-over');updateLive()}
+
+// ── LOADING ───────────────────────────────────────────────────
+var loadMsgs=['Analyzing prompt structure...','Checking genre specificity...','Evaluating sonic descriptors...','Scoring against Suno v4 patterns...','Identifying weak points...','Assembling optimized prompt...'];
+var lIdx=0,lTimer=null;
+function startLoading(){var el=document.getElementById('loadTxt');lIdx=0;if(el)el.textContent=loadMsgs[0];lTimer=setInterval(function(){lIdx=(lIdx+1)%loadMsgs.length;var el=document.getElementById('loadTxt');if(el)el.textContent=loadMsgs[lIdx];},1100)}
+function stopLoading(){if(lTimer){clearInterval(lTimer);lTimer=null}}
+
+function streamInto(elId,text,delay,cb){
+  var el=document.getElementById(elId);if(!el){if(cb)cb();return;}
+  el.innerHTML='';var cur=document.createElement('span');cur.className='stream-cur';el.appendChild(cur);
+  var i=0,iv=setInterval(function(){if(i>=text.length){clearInterval(iv);cur.remove();if(cb)cb();return;}el.insertBefore(document.createTextNode(text[i]),cur);i++;},delay||13);
+}
+
+function animGauge(target){
+  var cur=0;var labels=['','Weak','Poor','Developing','Getting There','Getting There','Decent','Good','Strong','Excellent','Optimized ✦'];
+  function step(){cur+=(target-cur)*.1;if(Math.abs(cur-target)<.05)cur=target;var n=document.getElementById('scoreNum'),w=document.getElementById('scoreWord'),r=Math.round(cur);if(n)n.innerHTML=r+'<sub>/10</sub>';if(w){w.textContent=labels[r]||'';w.style.color=r>=7?'#00e8a2':r>=4?'#f5a623':'#ff6060';}if(Math.abs(cur-target)>.05)requestAnimationFrame(step);}
+  requestAnimationFrame(step);
+}
+function animMeter(fId,vId,pct,val){setTimeout(function(){var f=document.getElementById(fId),v=document.getElementById(vId);if(f)f.style.width=pct+'%';if(v)v.textContent=val;},200)}
+
+function renderDiff(orig,opt){
+  // Show the two prompts directly — clean and readable
+  var b=document.getElementById('diffBefore'),a=document.getElementById('diffAfter');
+  if(b) b.innerHTML='<span style="color:#c0c0e0;font-size:14px;line-height:1.75;word-break:break-word;">'+escHtml(orig)+'</span>';
+  if(a) a.innerHTML='<span style="color:#00e8a2;font-size:14px;line-height:1.75;font-weight:500;word-break:break-word;">'+escHtml(opt)+'</span>';
+}
+function escHtml(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function renderSteps(text){
+  var el=document.getElementById('stepsText');if(!el)return;
+  var lines=text.split(/\n+/).filter(function(l){return l.trim()});
+  el.innerHTML=lines.map(function(l,i){var clean=l.replace(/^\d+[\.\)]\s*/,'').trim();return'<div class="step-item"><span class="si-n">0'+(i+1)+'</span><span class="si-t">'+clean+'</span></div>'}).join('');
+}
+function renderPills(){
+  var el=document.getElementById('valPills');if(!el)return;
+  var pills=[];
+  if(S.g.length>0)pills.push({t:'Genre ✓',ok:true});else pills.push({t:'No genre',ok:false});
+  if(getSeqText())pills.push({t:'Structure ✓',ok:true});else pills.push({t:'No structure',ok:false});
+  if(S.v.length>0)pills.push({t:'Vocal ✓',ok:true});
+  var len=buildParts().raw.length;if(len>0&&len<=200)pills.push({t:'Length OK',ok:true});if(len>200)pills.push({t:'Too long!',ok:false});
+  el.innerHTML=pills.map(function(p){return'<span class="vp '+(p.ok?'vp-ok':'vp-warn')+'"><span class="vp-dot"></span>'+p.t+'</span>'}).join('');
+}
+function playSuccess(){
+  try{var c=new(window.AudioContext||window.webkitAudioContext)();[[440,0],[554,.08],[659,.18],[880,.30]].forEach(function(pair){var o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=pair[0];g.gain.setValueAtTime(0,c.currentTime+pair[1]);g.gain.linearRampToValueAtTime(.09,c.currentTime+pair[1]+.02);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+pair[1]+.5);o.connect(g);g.connect(c.destination);o.start(c.currentTime+pair[1]);o.stop(c.currentTime+pair[1]+.5);});}catch(e){}
+}
+function copyResult(){if(!optimizedResult)return;try{navigator.clipboard.writeText(optimizedResult)}catch(e){}var btn=document.getElementById('copyBtn');if(btn){btn.textContent='Copied ✓';btn.classList.add('copied');setTimeout(function(){btn.textContent='Copy';btn.classList.remove('copied')},2000)}}
+function buildShareText(){var s=document.getElementById('scoreNum');var sv=s?s.textContent.replace(/[^0-9]/g,''):'?';return'I optimized my Suno prompt and scored '+sv+'/10 using the free Suno Prompt Optimizer from MusicProductionWiki.com — The Producer\'s Bible.';}
+function shareLink(){var btn=document.getElementById('shareCopyBtn');try{navigator.clipboard.writeText(shareURL)}catch(e){}if(btn){btn.textContent='✓ Copied!';btn.classList.add('done');setTimeout(function(){btn.innerHTML='<svg class="sh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy Link';btn.classList.remove('done')},2000)}}
+function updateShareLinks(){var text=buildShareText();var enc=encodeURIComponent;var xBtn=document.getElementById('shareXBtn');var rBtn=document.getElementById('shareRedditBtn');if(xBtn)xBtn.href='https://twitter.com/intent/tweet?url='+enc(shareURL)+'&text='+enc(text);if(rBtn)rBtn.href='https://reddit.com/submit?url='+enc(shareURL)+'&title='+enc(text);}
+
+async function runOptimize(){
+  var paste=document.getElementById('pasteInput').value.trim();
+  var built=buildParts().raw;var input=paste||built;
+  if(!input){var ta=document.getElementById('pasteInput');ta.style.borderColor='rgba(255,80,80,.6)';setTimeout(function(){ta.style.borderColor=''},2000);return;}
+  document.getElementById('loadingCard').style.display='flex';
+  document.getElementById('outputArea').classList.remove('show');
+  document.getElementById('optBtn').disabled=true;
+  startLoading();try{navigator.vibrate&&navigator.vibrate([8,40,8])}catch(e){}
+
+  var sys=`You are a world-class Suno AI prompt engineer. Analyze the prompt and return ONLY the following labeled fields — no intro, no explanation outside the fields:
+
+SCORE: [number 1-10]
+GENRE_SCORE: [number like 7.5]
+STRUCTURE_SCORE: [number like 8.0]
+TEXTURE_SCORE: [number like 6.5]
+LENGTH_SCORE: [number like 8.0]
+OPTIMIZED: [improved prompt under 200 chars — add texture words like punchy/lush/gritty, make genres more specific, keep structure tags at end after vocal tags]
+ANALYSIS: [3-4 sentences — name specific words you changed and exactly why Suno v4 responds differently to them, reference a real artist or producer as an analog, flag any words Suno tends to ignore]
+NEXT:
+1. [specific actionable step for this prompt]
+2. [specific actionable step]
+3. [specific actionable step]`;
+
+  try{
+    var res=await fetch('https://classy-haupia-be8e43.netlify.app/.netlify/functions/claude-proxy',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:800,system:sys,messages:[
+      {role:'user',content:'Analyze and optimize this Suno prompt: "'+input+'"'}
+      ]})});
+    var data=await res.json();var raw=data.content&&data.content[0]?data.content[0].text:'';
+    console.log('FULL RAW:', raw.substring(0,500));
+    // Log raw for debugging
+    console.log('RAW RESPONSE:', raw);
+
+    // Robust multi-strategy parsing
+    function extract(pattern, text, fallback) {
+      var m = text.match(pattern);
+      return m ? m[1].trim() : fallback;
+    }
+
+    var sM=raw.match(/SCORE:\s*(\d+)/i);
+    var gM=raw.match(/GENRE_SCORE:\s*([\d.]+)/i);
+    var stM=raw.match(/STRUCTURE_SCORE:\s*([\d.]+)/i);
+    var txM=raw.match(/TEXTURE_SCORE:\s*([\d.]+)/i);
+    var lM=raw.match(/LENGTH_SCORE:\s*([\d.]+)/i);
+
+    // Try multiple patterns for each field — Claude varies its format
+    var optimized = extract(/OPTIMIZED:\s*([^\n]+(?:\n(?!ANALYSIS|SCORE|NEXT)[^\n]+)*)/i, raw, '')
+      || extract(/optimized prompt[:\s]+([^\n]+)/i, raw, '')
+      || input;
+    optimized = optimized.replace(/^["\']+|["\']+$/g,'').trim();
+
+    var analysis = extract(/ANALYSIS:\s*([\s\S]+?)(?=\nNEXT:|\n\d+\.|$)/i, raw, '')
+      || extract(/analysis[:\s]+([\s\S]+?)(?=next steps|\n\d+\.|$)/i, raw, '');
+
+    var next = extract(/NEXT:\s*([\s\S]+?)$/i, raw, '')
+      || extract(/next steps[:\s]*([\s\S]+?)$/i, raw, '');
+
+    // If still empty, use the whole raw response as analysis
+    if(!analysis && !next && raw.length > 50) {
+      // Split raw into analysis and steps intelligently
+      var lines = raw.split('\n').filter(function(l){return l.trim()});
+      var stepLines = lines.filter(function(l){return /^\d+[.)\s]/.test(l.trim())});
+      var textLines = lines.filter(function(l){return !/^(SCORE|GENRE|STRUCTURE|TEXTURE|LENGTH|OPTIMIZED|ANALYSIS|NEXT)/i.test(l) && !/^\d+[.)\s]/.test(l.trim()) && l.trim().length > 20});
+      analysis = textLines.join(' ');
+      next = stepLines.join('\n');
+    }
+
+    var score=sM?parseInt(sM[1]):7;
+    console.log('Parsed — score:', score, 'optimized:', optimized.substring(0,50), 'analysis:', analysis.substring(0,50), 'next:', next.substring(0,50));
+    optimizedResult=optimized;
+    stopLoading();document.getElementById('loadingCard').style.display='none';document.getElementById('outputArea').classList.add('show');
+  goStep(5);
+  goStep(5);
+    animGauge(score);
+    animMeter('mG','mGv',(gM?parseFloat(gM[1]):7)*10,(gM?parseFloat(gM[1]):7).toFixed(1));
+    animMeter('mS','mSv',(stM?parseFloat(stM[1]):7)*10,(stM?parseFloat(stM[1]):7).toFixed(1));
+    animMeter('mT','mTv',(txM?parseFloat(txM[1]):6)*10,(txM?parseFloat(txM[1]):6).toFixed(1));
+    animMeter('mL','mLv',(lM?parseFloat(lM[1]):8)*10,(lM?parseFloat(lM[1]):8).toFixed(1));
+    renderPills();
+    // Color-coded output
+    var optEl=document.getElementById('optResultText');
+    if(optEl){
+      var colored=optimized;
+      colored=colored.replace(/\[[^\]]+\]/g,function(m){return'\x00S\x00'+m+'\x00/S\x00'});
+      S.g.forEach(function(g){colored=colored.replace(new RegExp(g.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),function(m){return'\x00G\x00'+m+'\x00/G\x00'})});
+      S.i.forEach(function(v){colored=colored.replace(new RegExp(v.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),function(m){return'\x00I\x00'+m+'\x00/I\x00'})});
+      S.m.forEach(function(v){colored=colored.replace(new RegExp(v.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),function(m){return'\x00M\x00'+m+'\x00/M\x00'})});
+      colored=colored.replace(/\x00S\x00/g,'<span class="or-s">').replace(/\x00\/S\x00/g,'</span>').replace(/\x00G\x00/g,'<span class="or-g">').replace(/\x00\/G\x00/g,'</span>').replace(/\x00I\x00/g,'<span class="or-i">').replace(/\x00\/I\x00/g,'</span>').replace(/\x00M\x00/g,'<span class="or-m">').replace(/\x00\/M\x00/g,'</span>');
+      optEl.innerHTML=colored;
+    }
+    renderDiff(input,optimized);
+    setTimeout(function(){streamInto('analysisText',analysis,12,null)},300);
+    setTimeout(function(){renderSteps(next)},500);
+    updateShareLinks();
+    setTimeout(function(){var el=document.getElementById('scoreCard');if(el)el.scrollIntoView({behavior:'smooth',block:'start'})},200);
+    playSuccess();try{navigator.vibrate&&navigator.vibrate(12)}catch(e){}
+    try{var hist=JSON.parse(localStorage.getItem('mpw_suno_hist')||'[]');hist.unshift({prompt:optimized,score:score,ts:Date.now()});localStorage.setItem('mpw_suno_hist',JSON.stringify(hist.slice(0,10)));}catch(e){}
+    try{sessionStorage.setItem('mpw_session',JSON.stringify({platform:'suno',genre:S.g[0]||'',mood:S.m[0]||'',ts:Date.now()}))}catch(e){}
+  }catch(err){
+    stopLoading();document.getElementById('loadingCard').style.display='none';document.getElementById('outputArea').classList.add('show');
+  goStep(5);
+  goStep(5);
+    var sc=document.getElementById('scoreCard');if(sc)sc.innerHTML='<div style="padding:22px;font-size:15px;color:#ff8080;font-family:DM Sans,sans-serif;line-height:1.75;font-weight:400">Connection error — please try again. If the issue persists, the API service may be temporarily unavailable.</div>';
+  }
+  document.getElementById('optBtn').disabled=false;
+}
+
+try{var sess=JSON.parse(sessionStorage.getItem('mpw_session')||'{}');if(sess.genre){var pre=document.querySelector('.chip[data-cat="g"][data-val="'+sess.genre+'"]');if(pre)pre.click()}}catch(e){}
+</script>
+
+<footer class="site-footer">
+  <a href="/bible/" style="color:#f5a623;text-decoration:none;font-size:12px;font-weight:700;display:block;margin-bottom:8px">&#9670; The Producer&#8217;s Bible</a>
+  <p style="font-size:15px;font-weight:600;color:#e0e0f0;margin-bottom:4px">MusicProductionWiki.com</p>
+  <p style="font-size:13px;color:#666;margin-bottom:16px">The most comprehensive music production reference on the internet.</p>
+  <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+    <span style="font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.08em">Share</span>
+    <a href="https://x.com/intent/tweet?text=Suno+Prompt+Optimizer+%E2%80%94+Free+AI+Music+Tool&url=https%3A%2F%2Fmusicproductionwiki.com%2Ftools%2Fsuno-prompt-optimizer.html" target="_blank" rel="noopener" style="background:#000;color:#fff;font-size:12px;font-weight:700;padding:6px 14px;border-radius:6px;text-decoration:none">Share on X</a>
+    <a href="https://reddit.com/submit?url=https%3A%2F%2Fmusicproductionwiki.com%2Ftools%2Fsuno-prompt-optimizer.html&title=Suno+Prompt+Optimizer+%E2%80%94+Free+AI+Music+Tool+%7C+MusicProductionWiki" target="_blank" rel="noopener" style="background:#ff4500;color:#fff;font-size:12px;font-weight:700;padding:6px 14px;border-radius:6px;text-decoration:none">Reddit</a>
+  </div>
+  <p style="font-size:13px;color:#555"><a href="/" style="color:#f5a623;text-decoration:none">Home</a> &middot; <a href="/about.html" style="color:#f5a623;text-decoration:none">About</a> &middot; <a href="/bible/" style="color:#f5a623;text-decoration:none">Producer&#8217;s Bible</a> &middot; <a href="/tools/" style="color:#f5a623;text-decoration:none">All Tools</a></p>
+  <p style="margin-top:8px;font-size:11px;color:#444">&copy; 2026 MusicProductionWiki.com &#8212; Built for producers, by producers.</p>
+</footer>
+
 </body>
 </html>
 
+</body>
 </html>
