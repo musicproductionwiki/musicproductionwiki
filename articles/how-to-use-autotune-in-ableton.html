@@ -1135,7 +1135,7 @@ function mpwFaqToggle(el) {
       articleIndex.slice(0,6).forEach(function(a){h+=renderItem(a);});
       results.innerHTML=h;
     }
-    function renderItem(a){return '<a class="search-result" href="/articles/'+a.slug+'.html"><span class="sr-cat">'+(a.category||'')+'</span><span class="sr-title">'+(a.title||'')+'</span></a>';}
+    function renderItem(a){var url=a.slug.startsWith('bible/')||a.slug.startsWith('tools/')?'/'+a.slug+'.html':'/articles/'+a.slug+'.html';return '<a class="search-result" href="'+url+'"><span class="sr-cat">'+(a.category||'')+'</span><span class="sr-title">'+(a.title||'')+'</span></a>';}
     function initFuse(){if(typeof Fuse==='undefined'||!articleIndex||fuseInst)return;fuseInst=new Fuse(articleIndex,{keys:['title','category'],threshold:0.35,includeScore:true});}
     function loadFuse(cb){if(typeof Fuse!=='undefined'){cb();return;}var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.6.2/fuse.min.js';s.onload=cb;document.head.appendChild(s);}
     function renderResults(res){if(!results)return;if(!res||!res.length){results.innerHTML='<div style="padding:20px;color:#666;font-size:13px;text-align:center">No results found</div>';return;}results.innerHTML=res.slice(0,8).map(function(r){return renderItem(r.item||r);}).join('');}
