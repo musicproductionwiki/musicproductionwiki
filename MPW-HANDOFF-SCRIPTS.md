@@ -1,5 +1,6 @@
 # MPW-HANDOFF-SCRIPTS.md
-*Updated: May 22, 2026 (SESSION 55)*
+*Last merged: May 26, 2026 (Session 71 — merged S55 master + S65/S65b/S66/S67/S68 appends)*
+*Previous update: May 22, 2026 (SESSION 55)*
 
 All scripts at: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\`
 GitHub API blocked from Claude's environment — all GitHub operations run from Steve's PowerShell.
@@ -2042,3 +2043,1026 @@ Note: `generate_tools_hub.py` and `generate_tool_pages.py` are no longer needed 
 | NEVER run mpw_bible_writer.py for new T1 entries before updating read time to 650 wpm | 500 wpm is confirmed wrong — produces inflated read times |
 | NEVER run mpw_writer.py for new article batches before updating mobile drawer HTML | Current writer outputs old vertical list drawer — new grid style must be in writer before next batch |
 | NEVER build generate_tools_hub.py | tools/index.html was hand-crafted — generator not needed and would add unnecessary complexity |
+
+
+---
+
+## ⚠️ BLOCKS — Must Fix Before Next Batches
+
+| Blocker | What It Blocks | Status |
+|---------|----------------|--------|
+| `mpw_writer.py` — 4 pending updates (drawer, Tools nav, CSS specificity, pushState) | Next article batch | ⛔ PENDING since S63 |
+| `mpw_bible_writer.py` — read time 650 wpm + nav rewrite | Next T1 Bible batch | ⛔ PENDING since S63 |
+| `mpw_bible_writer.py` — v5.3 build (from reverb.html gold standard) | Full Bible tier quality | ⛔ NOT YET BUILT |
+| Tool page/Bible card nav sync | Consistent UX — /tools/ and /bible/ both broken | ⛔ OPEN ACTION |
+| `mpw_tools_v6_writer.py` | New tool batch generation | ⛔ NOT YET BUILT |
+| `mpw_affiliates.py` | Affiliate link management | ⛔ NOT YET BUILT — pending affiliate approvals |
+
+---
+
+## ⚠️ NEVER Rules — Scripts (Consolidated S71)
+
+| Rule | Added |
+|------|-------|
+| Never embed Python in HTML/JS — write JS as pure heredoc, run `node --check` before embedding | S67 |
+| Never use `innerHTML` in any tool JS — Netlify CSP blocks it on `/tools/` and `/bible/` | S57/58 |
+| Never hardcode plugin names or affiliate links in tool HTML — reference `mpw_affiliates.py` | S65 |
+| Never load `style.css` in tool pages | S68 |
+| Never start a parallel tool session without loading `MPW-TOOL-BUILD-SPEC.md` first | S66 |
+| Never use `replaceState` in mobile drawer JS — use `pushState` + `popstate` | S66 |
+| Never commit a tool without all 5 files in one Trees API commit | S67 |
+| Never insert into catGrid without assertion check (`grid_open < card_pos < empty_pos`) | S67 |
+| Never skip sitemap or search-index.json after tool build | S67 |
+| Never run `mpw_bible_writer.py` for new T1 entries before updating read time to 650 wpm | S63 |
+| Never run `mpw_writer.py` for new article batches before applying all 4 pending updates | S63 |
+| Never use `print()` at module level in `mpw_tools_v*.py` | S56 |
+| Never build tool chunks in separate files and concatenate | S56 |
+| Never test tools on `file://` protocol — test via Netlify or local server | S56 |
+| Never run `python -c` with multi-line scripts in PowerShell — use a .py file | S56 |
+| Never use unicode chars directly in JS strings — use `\uXXXX` escapes | S57/58 |
+| Never use `</script>` as literal string in Python — use `SC = '</' + 'script>'` | S57/58 |
+| Never build `mpw_tools_v6_writer.py` without reading `mpw_tools_master_spec.md` first | S65 |
+| Never autoplay audio on page load in Browser Apps — `await Tone.start()` in click handler only | S65b |
+| Never import Tone.js from unconfirmed version — only cdnjs.cloudflare.com 14.8.49 | S65b |
+| Never add a Browser App to `/tools/index.html` before confirmed live on GitHub | S65b |
+| Never run `mpw_bible_cat_pages.py` without SUBCAT_MAP zero-mismatch verification first | S63 |
+| Never upload any file to GitHub without running token redaction scan first | S68/S69 |
+| Never use model `claude-sonnet-4-5` — correct model is `claude-sonnet-4-6` | S68 |
+| Never use `curl` for files > ~400KB — use Python `urllib.request` | S55 |
+
+---
+
+# SESSION 65 UPDATE — SCRIPTS — May 24, 2026
+
+## Session 65 — No New Scripts Delivered
+
+All work this session was direct GitHub API operations from Claude's bash environment (individual PUTs and Trees API commits). No new Python scripts were written for Steve to run locally.
+
+---
+
+## mpw_writer.py — PENDING UPDATE (STILL BLOCKS NEXT ARTICLE BATCH)
+
+The mobile drawer in `mpw_writer.py` currently outputs the old vertical list `mobile-drawer` style. Before the next article batch, the writer must output the new grid-style drawer confirmed and live on all 526 articles in Session 65.
+
+**Target drawer HTML to freeze into writer:** See SESSION 65 UPDATE — TECH — "Mobile Drawer — Confirmed Final HTML" section. That is the exact HTML the writer must output.
+
+**Also required in writer update:**
+- Desktop nav must include `Tools →` li before Bible li
+- CSS must use `nav.mpw-site-nav .nav-item>a.nav-bible-link` and `nav.mpw-site-nav .nav-item>a.nav-tools-link` specificity pattern (not class-only selectors)
+- Drawer JS must use `pushState`+`popstate` pattern (not `replaceState`)
+
+**Do NOT run mpw_writer.py for new article batches until all four items above are updated.**
+
+---
+
+## mpw_bible_writer.py — PENDING UPDATES (STILL BLOCKS NEXT T1 BATCH)
+
+Two pending updates remain from prior sessions — unchanged:
+
+**1. Read time — change 500 wpm → 650 wpm:**
+```python
+# CURRENT (wrong):
+read_time = max(1, round(word_count / 500))
+
+# CORRECT:
+read_time = max(1, round(word_count / 650))
+```
+
+**2. Nav full rewrite based on reverb.html gold standard** — planned for a future session. Until done, do not run new T1 batches.
+
+---
+
+## mpw_tools_v6_writer.py — NEW — TOP PRIORITY NEXT SESSION
+
+**This is the primary build target for Session 66.**
+
+A batch Python writer for the 98 new tools specified in `mpw_tools_master_spec.md`. Same two-pass architecture as `mpw_bible_writer.py` but optimized for JS-heavy tool output instead of prose.
+
+### Architecture
+
+**Pass 1 — Tool Spec JSON (per tool):**
+Prompt generates a structured JSON object containing:
+- All input fields with types and default values
+- Canvas type and drawing logic specification
+- Genre data arrays (genre → recommended values)
+- Preset definitions (name, values, engineering rationale)
+- Warning threshold logic (what triggers red/amber/green states)
+- Plugin tier recommendations (Free/Mid/Pro/Key — references mpw_affiliates.py)
+- Famous settings (named producers/tracks, exact parameter values, why those values)
+- SEO meta description and FAQ pairs
+
+**Pass 2 — Full HTML/JS (from validated spec):**
+Prompt generates self-contained HTML/JS from the Pass 1 JSON. The system prompt freezes the structural template — the model fills the tool-specific content only.
+
+### Quality Constraints (must be in system prompt)
+- No `innerHTML` anywhere — Netlify CSP blocks it on `/tools/` pages — use `createElement`/`appendChild` only
+- Canvas: `width:100%;height:Xpx` CSS — no inline `width`/`height` attributes on canvas elements
+- `SC = '</' + 'script>'` — never literal `</script>` in Python string literals
+- All plugin recommendations via `mpw_affiliates.py` — never hardcoded strings
+- Live warning logic: red/amber/green states on every output — not just numbers
+- Famous presets: specific parameter values + the engineering rationale behind each value
+
+### Key Constants (to be confirmed when building)
+- Model: `claude-sonnet-4-6`
+- PASS1_TOKENS: 8000 (spec JSON is smaller than Bible prose)
+- PASS2_TOKENS: 16000 (tools are JS-heavy but shorter than T1 Bible entries)
+- API timeout: 600 seconds
+- ThreadPoolExecutor: 8 workers
+- Save path: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\tools\`
+
+### Build Order
+1. Write `mpw_tools_v6_writer.py` with frozen HTML/JS template
+2. Test on Priority 1 tools first (#1–3 from master spec)
+3. Visual QA on test tools — confirm canvas, presets, warnings, plugin cards all work
+4. Run Priority 1–2 batch (tools #1–35) — 35 tools
+5. Commit via Trees API — single deploy
+6. Update `/tools/index.html` to add new tool cards (hand-edit or build a manifest updater)
+
+### Input Format (batch file)
+```
+slug:Tool Name:Category:Priority
+mix-sounds-amateur-diagnostic:Why Does My Mix Sound Amateur? Diagnostic:Mixing & Signal Flow:1
+should-i-sample-this:Should I Sample This? Decision Tree:Business & Legal:1
+spotify-skip-probability-map:Spotify Skip Probability Map:Arrangement & Structure:1
+...
+```
+
+---
+
+## mpw_tools_master_spec.md — DELIVERED
+
+**Location:** Steve's project files (downloaded this session)
+**Content:** 98 tools, priority-ranked 1–98, categories, slugs, unique differentiators, paywall assignments
+**Purpose:** Frozen input for `mpw_tools_v6_writer.py` — the writer reads from this spec, it does not improvise
+
+**Paywall assignments:**
+- Email gate: Royalty Split Calculator, Collaboration Agreement Builder, Release Readiness Scorer, Should I Sample This detailed report
+- Never paywall: calculation tools, session-critical tools, business/legal tools that feed TruClarify leads
+
+---
+
+## Scripts to Build — Session 66
+
+Priority order:
+
+1. **`mpw_tools_v6_writer.py`** — batch tool generator (primary build — see architecture above)
+2. **`mpw_writer.py` update** — freeze new drawer HTML + Tools nav + CSS specificity fix + pushState JS into writer
+3. **`mpw_bible_writer.py` update** — 650 wpm read time + nav rewrite
+
+---
+
+## NEVER Rules Added — Session 65 — Scripts
+
+| Rule | Detail |
+|------|--------|
+| NEVER build mpw_tools_v6_writer.py without reading mpw_tools_master_spec.md first | The spec is the frozen input — slugs, priorities, unique differentiators, paywall assignments all documented |
+| NEVER use innerHTML in any tool generated by mpw_tools_v6_writer.py | Netlify CSP blocks innerHTML on /tools/ pages — all DOM manipulation must use createElement/appendChild |
+| NEVER hardcode plugin names or affiliate links in tool HTML | All plugin recommendations must reference mpw_affiliates.py — one approval, one file update, all tools update |
+| NEVER run mpw_writer.py for new article batches before updating drawer HTML | Current writer outputs old vertical list — new grid-style drawer confirmed on all 526 articles must be frozen into writer first |
+| NEVER run mpw_bible_writer.py for new T1 entries before updating read time | 500 wpm confirmed wrong — 650 wpm is the standard — must be updated before next batch |
+
+
+---
+
+# SESSION 65 UPDATE — SCRIPTS (Part 2) — May 24, 2026
+
+## mpw_tools_v6_writer.py — Architecture Update
+
+Full architecture confirmed in session65_scripts_append.md. Additional detail from this session:
+
+### New Tool Categories Requiring Writer Updates
+
+The v6 writer must handle three distinct tool types that were not in the original spec:
+
+**Type A — Standard Calculator Tools (majority of 148 tools)**
+Same architecture as existing v5 tools: two-pass JSON spec then HTML/JS. Canvas drawing, createElement chains, genre selectors, plugin tier cards, famous presets, live warning logic.
+
+**Type B — AI-Powered Tools (AI Music category and Mix Diagnostic)**
+These tools call the Anthropic API on the client side. The writer generates the tool HTML/JS with the API call baked in. The system prompt for each tool is frozen in the writer. These tools reason, not just calculate.
+
+Key pattern:
+```javascript
+const response = await fetch("https://api.anthropic.com/v1/messages", {
+  method: "POST",
+  headers: {"Content-Type": "application/json"},
+  body: JSON.stringify({
+    model: "claude-sonnet-4-20250514",
+    max_tokens: 1000,
+    messages: [{role: "user", content: userInput}]
+  })
+});
+```
+
+Note: API key is handled by the artifact infrastructure — writer does NOT hardcode API keys.
+
+**Type C — Decision Tree / Rights Tools (AI Music legal tools, Should I Sample This)**
+These are logic-tree tools, not calculators. Input flows through a structured decision tree and outputs a risk level, recommendation, and next steps. Writer generates the JS decision tree from a structured data spec.
+
+### Browser App Scripts — NOT Python Writer
+
+Browser Apps (Priority 0) are built directly in Claude sessions, not via the Python writer. They are:
+- Committed directly to `/tools/[slug].html` via GitHub API
+- Not batch-generated
+- Built interactively with Steve reviewing design in real time
+- Each gets a dedicated session or half-session
+
+**Browser App build checklist (apply to every app):**
+- [ ] No innerHTML anywhere (Netlify CSP)
+- [ ] SC constant for closing script tags if Python is involved (N/A for direct builds)
+- [ ] Mobile-responsive (test at 375px width)
+- [ ] Web Audio API: audio context created on user gesture (not on page load — browsers block autoplay)
+- [ ] getUserMedia: graceful fallback if user denies microphone
+- [ ] Tone.js imported via CDN: `https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js`
+- [ ] Canvas: CSS `width:100%;height:Xpx` not inline width/height attributes
+- [ ] Works on mobile (touch events, not just mouse events)
+- [ ] Verified in Chrome, Firefox, Safari before commit
+- [ ] Added to `/tools/index.html` tool card grid after commit
+
+### Tone.js CDN — Confirmed Available
+
+```html
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+```
+
+This is the version available via cdnjs.cloudflare.com and confirmed importable in Claude's artifact environment. All Browser App builds use this version.
+
+### MIDI Writer JS — For Chord Progression Builder
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/midi-writer-js@2.1.4/build/midi-writer-browser.js"></script>
+```
+
+Enables MIDI file export from the Chord Progression Builder app. Produces standard MIDI files the user can drag directly into any DAW.
+
+---
+
+## Browser DAW — Session 66 Build Plan
+
+### Goal
+A fully functional, playable browser DAW. Opens on page load, no setup, works on mobile. Producers can make actual music immediately.
+
+### Tech Stack
+- **Tone.js** — drum synthesis, melodic synth, transport/scheduling
+- **Canvas API** — step grid visualization, VU meter, waveform display
+- **Web Audio API** — effects chain (reverb, delay)
+- **Pure vanilla JS** — all UI interaction (no frameworks)
+
+### Session 66 Build Order
+1. Start with drum sequencer only — 16 steps, 4 tracks (kick, snare, hi-hat, clap), working playback
+2. Add melodic synth + piano roll (16 steps, 2 octaves)
+3. Add effects (reverb send, delay send) per track
+4. Add preset patterns (trap, house, boom-bap, techno, afrobeats)
+5. Add tempo control + tap tempo
+6. Polish: animations, VU meter, visual pulse on beat 1
+7. Steve visual review → design feedback → final adjustments
+8. Commit to `/tools/browser-daw.html` via GitHub API
+9. Add tool card to `/tools/index.html`
+10. Update sitemap
+
+### What NOT to Build in Session 66
+- Sample/audio file upload (Tier 2 — $2k–$5k developer)
+- MIDI keyboard input (Tier 2)
+- WAV export (Tier 2)
+- Saved projects (Tier 2)
+- More than 8 tracks (keep MVP clean)
+
+### Audio Context Warning
+```javascript
+// CORRECT — create AudioContext on user gesture
+document.getElementById('playBtn').addEventListener('click', async () => {
+  await Tone.start(); // requires user gesture — browsers block autoplay
+  // now safe to play audio
+});
+```
+
+This is the most common mistake in Web Audio API development. The AudioContext must be started (or resumed) in response to a user gesture — click, tap, keypress. Never auto-play on page load. Claude must always include this pattern.
+
+---
+
+## AI Music Tools — Writer Notes
+
+When `mpw_tools_v6_writer.py` generates AI Music tools, the system prompt for each tool's Anthropic API call must be frozen in the Python writer, not improvised at generation time.
+
+**Example for AI #1 — Rights Navigator:**
+```python
+AI_RIGHTS_NAVIGATOR_SYSTEM = """You are the definitive authority on AI music commercial rights in 2026. 
+You know the current terms of service for Suno (free vs Pro vs Premier), Udio, Stable Audio, AIVA, and ElevenLabs.
+You know the DDEX AI disclosure requirements now enforced by Spotify and Apple Music.
+You know the US Copyright Office's position on AI-generated music (Thaler v. Perlmutter).
+You know which distributors accept AI music (DistroKid yes, some others no).
+You know that fully AI-generated audio is not eligible for Content ID as of 2026.
+Given the user's platform, tier, and intended use, output a clear yes/no/risk assessment 
+with the specific reason for each use case. Be specific, not generic. Cite the platform's 
+current terms where relevant. Flag the DDEX disclosure requirement when it applies."""
+```
+
+Every AI music tool that calls the Anthropic API must have its system prompt frozen in the writer at spec time. The system prompt defines the quality ceiling.
+
+---
+
+## Scripts to Build — Session 66 and Beyond
+
+**Session 66 — Browser DAW (direct build, no Python writer):**
+- Build `/tools/browser-daw.html` directly in session with Claude
+- Update `/tools/index.html` to add Browser DAW card
+- Update sitemap.xml
+
+**Session 67 — Browser Apps batch:**
+- Build APP #2–5 (Spectrum Analyzer, Chord Explorer, Ear Trainer, Tuner)
+- Each committed individually as `/tools/[slug].html`
+- `/tools/index.html` updated after each confirmed live
+
+**Session 68 — Writer build:**
+- Build `mpw_tools_v6_writer.py`
+- First batch: Priority 1 tools #1–7 (viral tier)
+- Also update `mpw_writer.py` with new drawer HTML (blocks article batches)
+
+**Session 69+ — Continued writer batches:**
+- AI Music tools AI #1–10 (rights and prompt tools first)
+- Priority 1 completion #8–15
+- Priority 2 batch
+
+---
+
+## NEVER Rules Added — Session 65 Part 2 — Scripts
+
+| Rule | Detail |
+|------|--------|
+| NEVER autoplay audio on page load in Browser Apps | AudioContext must be started in response to a user gesture — `await Tone.start()` inside click/tap handler — browsers block autoplay globally |
+| NEVER hardcode system prompts for AI-powered tools in the generated HTML | System prompts must be frozen in the Python writer at spec time, not generated by the tool's Anthropic API call itself |
+| NEVER build Browser App tools via the Python writer batch system | Browser Apps require interactive design review with Steve — they are direct Claude-in-session builds, not batch output |
+| NEVER import Tone.js from a version not confirmed available on cdnjs.cloudflare.com | Only use `https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js` — other versions or sources may not be available from Netlify |
+| NEVER add a Browser App to /tools/index.html before it is confirmed live on GitHub | Check the live URL before updating the hub page card grid |
+
+
+---
+
+# SESSION 66 UPDATE — SCRIPTS — May 25, 2026
+
+## MPW-TOOL-BUILD-SPEC.md — Parallel Session Protocol
+
+The most important new "script" from Session 66 is not Python — it is the frozen spec
+document that coordinates parallel Claude sessions. Every session building tools loads
+this file first and treats it as ground truth.
+
+### How to Start a Parallel Tool-Build Session
+
+Every parallel session begins with these exact steps:
+
+1. Load `MPW-TOOL-BUILD-SPEC.md` from GitHub
+2. Confirm the tool slug is in the 25-tool queue and not already built
+3. Check `/tools/index.html` to confirm the slug does not already exist as a card
+4. Build the tool using the frozen CSS/component system from the spec
+5. Commit to GitHub via direct PUT API (single file — individual PUT is OK for one file)
+6. In the SAME commit, add the tool card to `/tools/index.html` using Trees API
+7. Report back to Steve: live URL, SHA, tool name confirmed
+
+### GitHub Commit Pattern — Single Tool
+
+For a single tool file commit (use individual PUT, not Trees API):
+
+```python
+import requests, base64
+
+TOKEN = "[GITHUB_TOKEN_FROM_SETENV]"
+HEADERS = {"Authorization": f"token {TOKEN}", "Content-Type": "application/json"}
+BASE = "https://api.github.com/repos/musicproductionwiki/musicproductionwiki"
+
+with open('/home/claude/[tool-slug].html', 'r') as f:
+    content = f.read()
+
+# Check if file exists (to get SHA for update)
+r = requests.get(f"{BASE}/contents/tools/[tool-slug].html", headers=HEADERS)
+sha = r.json().get('sha') if r.status_code == 200 else None
+
+payload = {
+    "message": "tools: add [Tool Name] — [brief description]",
+    "content": base64.b64encode(content.encode('utf-8')).decode('ascii'),
+}
+if sha:
+    payload["sha"] = sha
+
+r2 = requests.put(f"{BASE}/contents/tools/[tool-slug].html", headers=HEADERS, json=payload)
+result = r2.json()
+print(f"SHA: {result['commit']['sha']}")
+print(f"URL: https://www.musicproductionwiki.com/tools/[tool-slug].html")
+```
+
+### GitHub Commit Pattern — Tool + Index Update (Trees API)
+
+When updating `/tools/index.html` at the same time (required for every tool):
+
+```python
+import requests, base64
+
+TOKEN = "[GITHUB_TOKEN_FROM_SETENV]"
+HEADERS = {"Authorization": f"token {TOKEN}", "Content-Type": "application/json"}
+BASE = "https://api.github.com/repos/musicproductionwiki/musicproductionwiki"
+
+# Read both files
+with open('/home/claude/[tool-slug].html', 'r') as f:
+    tool_content = f.read()
+with open('/home/claude/tools-index-updated.html', 'r') as f:
+    index_content = f.read()
+
+# Get current main SHA
+main_sha = requests.get(f"{BASE}/git/refs/heads/main", headers=HEADERS).json()['object']['sha']
+
+# Create blobs
+files = {
+    f"tools/[tool-slug].html": tool_content,
+    "tools/index.html": index_content,
+}
+new_tree = []
+for path, content in files.items():
+    blob = requests.post(f"{BASE}/git/blobs", headers=HEADERS, json={
+        "content": base64.b64encode(content.encode('utf-8')).decode('ascii'),
+        "encoding": "base64"
+    }).json()['sha']
+    new_tree.append({"path": path, "mode": "100644", "type": "blob", "sha": blob})
+
+# Create tree, commit, update ref
+tree_sha = requests.post(f"{BASE}/git/trees", headers=HEADERS, json={
+    "base_tree": main_sha, "tree": new_tree
+}).json()['sha']
+
+commit_sha = requests.post(f"{BASE}/git/commits", headers=HEADERS, json={
+    "message": "tools: add [Tool Name] + update tools hub",
+    "tree": tree_sha, "parents": [main_sha]
+}).json()['sha']
+
+r = requests.patch(f"{BASE}/git/refs/heads/main", headers=HEADERS, json={"sha": commit_sha})
+print(f"✅ SHA: {commit_sha}")
+```
+
+---
+
+## Tool System Prompt Templates — Claude API Tools
+
+These frozen system prompts define the quality ceiling for each Claude-powered tool.
+They are copied verbatim into the tool's JavaScript — not improvised at build time.
+
+### Suno Prompt Optimizer — System Prompt
+
+```
+You are the world's leading expert on writing Suno AI music prompts in 2026.
+You know the exact structural formula that produces the best results:
+1. Genre tags first (specific subgenres, not broad categories)
+2. Instrumentation second (specific instruments, not "band")
+3. Production descriptors third (mixing character, sonic texture)
+4. Mood/atmosphere last (emotional feel, energy level)
+5. Structural metatags where needed: [Verse], [Chorus], [Bridge], [Outro]
+6. Vocal texture tags: [male vocal], [female vocal], [rap], [spoken word], [no vocals]
+
+Output ONLY the optimized prompt, then on a new line: "Quality Score: X/10" and one sentence
+explaining what makes this prompt strong. No preamble. No explanation before the prompt.
+The prompt itself must be under 200 characters for best results.
+```
+
+### AI Music Rights Navigator — System Prompt
+
+```
+You are the definitive authority on AI music commercial rights in 2026.
+You know the current terms of service for: Suno (Free/Pro/Premier tiers),
+Udio (current post-settlement terms), Stable Audio, AIVA, ElevenLabs Music.
+You know: DDEX AI disclosure requirements enforced by Spotify and Apple Music.
+You know: US Copyright Office position on AI music (Thaler v. Perlmutter 2023).
+You know: Which distributors accept AI music and their current policies.
+You know: That fully AI-generated audio cannot receive Content ID as of 2026.
+You know: Apple Music excludes fully AI-generated tracks from curated editorial playlists.
+
+Given the user's platform, tier, and intended use, output a clear assessment with:
+- YES / NO / RISK LEVEL for the specific use case
+- The specific reason (cite the platform's current terms)
+- The DDEX disclosure requirement if it applies
+- One concrete next step
+
+Be specific, current, and honest. Do not hedge everything. Give a real answer.
+```
+
+### AI Track Copyright Strength — System Prompt
+
+```
+You are an expert in US music copyright law as it applies to AI-generated music in 2026.
+You know the Thaler v. Perlmutter ruling, the US Copyright Office's March 2023 guidance,
+the Copyright Office's February 2024 guidance update, and the current registration practices.
+
+Given the human creative contributions the user describes, calculate a Copyright Strength
+score from 0-100 where:
+- 0-20: Fully AI-generated, no copyright protection possible
+- 21-40: Minimal human contribution, registration very unlikely to succeed
+- 41-60: Moderate human contribution, partial protection possible in some jurisdictions
+- 61-80: Strong human contribution, copyright registration likely viable
+- 81-100: Primarily human-created with AI assistance, full copyright protection
+
+Output:
+1. The score as "Copyright Strength: X/100"
+2. Two sentences explaining what the score means practically
+3. The specific additional human contribution that would most increase the score
+4. One sentence on registration: whether to attempt it and with which office
+
+Cite Thaler v. Perlmutter or the Copyright Office guidance where relevant.
+Do not give legal advice — give information about copyright law as it currently stands.
+```
+
+### Mix Sounds Amateur Diagnostic — System Prompt
+
+```
+You are a professional mixing engineer with 20 years of experience across hip-hop,
+pop, R&B, electronic music, and rock. You diagnose mix problems with surgical precision.
+
+Given the symptoms the producer describes, output:
+1. The 3 most probable causes ranked by likelihood (most likely first)
+2. For each cause: ONE specific starting fix with exact parameters where possible
+   (a frequency number, a ratio, a dB amount — not vague advice)
+3. The one thing to check first before anything else
+
+Format as numbered causes with their fixes. Be direct. No preamble.
+Examples of good fixes: "HPF the room mics at 120Hz" not "EQ the low end"
+"Cut 3dB at 350Hz on the guitar" not "reduce the muddy frequencies"
+"Set attack to 30ms to let the transient through" not "adjust the attack"
+```
+
+### Vocal Sitting Wrong Fixer — System Prompt
+
+```
+You are a specialist vocal mixing engineer. You have mixed vocals for major label releases
+across hip-hop, pop, R&B, and singer-songwriter genres.
+
+Given the specific symptom the producer describes about their vocal, diagnose the root cause
+and provide exact fixes. Distinguish clearly between:
+- EQ problems (frequency issues)
+- Dynamics problems (compression, limiting, de-essing)
+- Space problems (reverb, delay, pre-delay)
+- Level problems (volume, automation)
+- Arrangement problems (other elements clashing with the vocal)
+
+Output the 3 most likely causes ranked by probability, with a specific fix for each.
+Include exact parameter values where possible. No vague advice.
+```
+
+---
+
+## mpw_writer.py — Pending Updates
+
+The following changes are REQUIRED in mpw_writer.py before the next article batch.
+These have been pending since Session 65 and are blocking article production.
+
+### Update 1 — Mobile drawer: replace vertical list with grid style
+
+The current writer produces the old vertical mobile drawer. It must produce the new
+grid-style drawer that matches the Session 65 patch applied to all 526 article pages.
+
+Grid drawer HTML to use in writer (inline styles for article compatibility):
+```html
+<div class="mobile-drawer" id="mobileDrawer">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px">
+    <a href="/tools/" style="background:#0d2d2d;border:1px solid rgba(0,232,162,.25);border-radius:8px;padding:12px;text-decoration:none;display:block">
+      <div style="font-size:11px;font-weight:700;color:#00e8a2;letter-spacing:.08em">TOOLS →</div>
+      <div style="font-size:10px;color:#5a5a7a;margin-top:2px">Free production tools</div>
+    </a>
+    <a href="/bible/" style="background:#2d1f00;border:1px solid rgba(245,166,35,.25);border-radius:8px;padding:12px;text-decoration:none;display:block">
+      <div style="font-size:11px;font-weight:700;color:#f5a623;letter-spacing:.08em">BIBLE →</div>
+      <div style="font-size:10px;color:#5a5a7a;margin-top:2px">The Producer's Bible</div>
+    </a>
+  </div>
+  <!-- existing nav links below -->
+</div>
+```
+
+### Update 2 — Desktop nav: Tools → link
+
+Add Tools → before Bible → in the desktop nav list:
+```html
+<li class="nav-item"><a href="/tools/" class="nav-tools-link">Tools →</a></li>
+```
+
+### Update 3 — CSS specificity fix
+
+Replace any `.nav-bible-link` and `.nav-tools-link` class selectors with:
+```css
+nav.mpw-site-nav .nav-item>a.nav-bible-link{color:#f5a623!important;font-weight:600!important}
+nav.mpw-site-nav .nav-item>a.nav-bible-link:hover{background:rgba(245,166,35,.1)!important;color:#f5a623!important}
+nav.mpw-site-nav .nav-item>a.nav-tools-link{color:#00e8a2!important;font-weight:600!important}
+nav.mpw-site-nav .nav-item>a.nav-tools-link:hover{background:rgba(0,232,162,.08)!important;color:#00e8a2!important}
+```
+
+### Update 4 — pushState/popstate back-button fix
+
+Replace replaceState with pushState in the drawer JS:
+```javascript
+// CORRECT
+hamburger.addEventListener('click', function() {
+  drawer.classList.toggle('open');
+  if (drawer.classList.contains('open')) {
+    history.pushState({drawerOpen: true}, '');
+  }
+});
+window.addEventListener('popstate', function(e) {
+  if (drawer.classList.contains('open')) {
+    drawer.classList.remove('open');
+  }
+});
+// WRONG — do not use replaceState here
+```
+
+---
+
+## mpw_bible_writer.py — Pending Updates
+
+### Update 1 — Read time calculation
+
+Change from 500 wpm to 650 wpm for read time calculation.
+Bible entries average 5,000+ words — at 500wpm this shows unrealistically high read times.
+650wpm is the correct rate for scanning/reference reading.
+
+### Update 2 — Nav rewrite
+
+Same four changes as mpw_writer.py above. The Bible writer's nav must match:
+- Grid mobile drawer
+- Tools → in desktop nav
+- CSS specificity fix
+- pushState/popstate
+
+### Update 3 — Bible entry bmn-drawer
+
+The 222 Bible entry pages also need their mobile drawers updated (the bmn-drawer).
+This is a separate batch injection script — NOT the bible writer. Pending after writer fix.
+The bmn-drawer currently lacks the Production, Recording, and Tools categories.
+
+---
+
+## Session Assignment for Parallel Tool Builds
+
+When Steve opens parallel sessions, each session receives this instruction:
+
+```
+You are building MPW tools for MusicProductionWiki.com.
+
+STEP 1: Load the frozen spec by reading MPW-TOOL-BUILD-SPEC.md from:
+https://api.github.com/repos/musicproductionwiki/musicproductionwiki/contents/MPW-TOOL-BUILD-SPEC.md
+Use the GitHub token: [GITHUB_TOKEN_FROM_SETENV]
+
+STEP 2: Build [TOOL NAME] at slug [TOOL SLUG] using the frozen CSS and component system
+from the spec. The tool must match the quality of the live Frequency Conflict Detector
+at musicproductionwiki.com/tools/frequency-conflict-detector.
+
+STEP 3: Commit the tool to GitHub at tools/[slug].html and update tools/index.html
+with the new tool card in the same commit.
+
+STEP 4: Report back: live URL, commit SHA, and confirm it renders correctly.
+
+The 25 tools are listed in MPW-TOOL-BUILD-SPEC.md. Your assigned tools are:
+[Session A: tools 1-3] [Session B: tools 4-7] [Session C: tools 8-11] [Session D: tools 12-14]
+[Session E: tools 15-18] [Session F: tools 19-22] [Session G: tools 23-25]
+```
+
+---
+
+## NEVER Rules Added — Session 66 — Scripts
+
+| Rule | Detail |
+|------|--------|
+| NEVER start a parallel tool session without loading MPW-TOOL-BUILD-SPEC.md first | The spec is what keeps output consistent across sessions |
+| NEVER use replaceState in mobile drawer JS on tool pages | Use pushState + popstate — replaceState was confirmed non-functional for back-button fix |
+| NEVER commit a tool without also updating /tools/index.html | Always Trees API for 2+ files — single Netlify deploy |
+| NEVER run mpw_writer.py for new article batches until the 4 pending updates are applied | Grid drawer + Tools nav + CSS specificity + pushState — all 4 required |
+| NEVER run mpw_bible_writer.py until read time is updated to 650wpm and nav is fixed | Both changes required before next Bible batch |
+
+
+---
+
+# SESSION 67 UPDATE — SCRIPTS — May 25, 2026
+
+## Tool Commit Pattern — Trees API (Required for Every Tool)
+
+```python
+import requests, base64, json
+
+TOKEN = "[GITHUB_TOKEN]"
+HEADERS = {"Authorization": f"token {TOKEN}", "Content-Type": "application/json"}
+BASE = "https://api.github.com/repos/musicproductionwiki/musicproductionwiki"
+
+def get_file(path):
+    r = requests.get(f"{BASE}/contents/{path}", headers=HEADERS).json()
+    return base64.b64decode(r['content']).decode('utf-8')
+
+def commit_files(files_dict, message):
+    main_sha = requests.get(f"{BASE}/git/refs/heads/main", headers=HEADERS).json()['object']['sha']
+    new_tree = []
+    for path, content in files_dict.items():
+        blob = requests.post(f"{BASE}/git/blobs", headers=HEADERS, json={
+            "content": base64.b64encode(content.encode('utf-8')).decode('ascii'),
+            "encoding": "base64"
+        }).json()['sha']
+        new_tree.append({"path": path, "mode": "100644", "type": "blob", "sha": blob})
+    tree_sha = requests.post(f"{BASE}/git/trees", headers=HEADERS, json={
+        "base_tree": main_sha, "tree": new_tree
+    }).json()['sha']
+    commit_sha = requests.post(f"{BASE}/git/commits", headers=HEADERS, json={
+        "message": message, "tree": tree_sha, "parents": [main_sha]
+    }).json()['sha']
+    r = requests.patch(f"{BASE}/git/refs/heads/main", headers=HEADERS, json={"sha": commit_sha})
+    print(f"✅ {r.status_code} — {commit_sha}")
+    return commit_sha
+```
+
+---
+
+## Full Tool Deployment Sequence
+
+For every new tool, in order:
+
+### Step 1 — Build the HTML
+- Follow MPW-TOOL-BUILD-SPEC.md design system
+- Use `claude-sonnet-4-6` model  *(S67 had wrong string — corrected S71)*
+- Call `https://classy-haupia-be8e43.netlify.app/.netlify/functions/claude-proxy`
+- Include favicon, MPW nav, site footer, embed mode, all SEO
+
+### Step 2 — Update tools/index.html
+```python
+idx = get_file('tools/index.html')
+new_card = '''
+    <a class="tool-card" href="/tools/[slug].html" data-cat="ai-music" data-name="[searchable terms]">
+      <div class="tool-card-body">
+        <span class="tool-card-name">[Tool Name]</span>
+        <span class="tool-card-desc">[One sentence, 12 words max]</span>
+        <span class="tool-card-cat">AI Music</span>
+      </div>
+      <span class="tool-card-arrow">&rarr;</span>
+    </a>'''
+# Insert before <!-- no-results placeholder --> or at end of grid
+# Update count: '38 free music production tools' → '39 free...'
+```
+
+### Step 3 — Update bible/categories/tools/index.html
+```python
+btools = get_file('bible/categories/tools/index.html')
+new_card = '<a class="bcat-card" href="/tools/[slug].html"><div class="bcat-card-inner"><span class="bcat-card-term">[Tool Name]</span><span class="bcat-card-cat">AI Music</span></div><span class="bcat-card-arrow">→</span></a>'
+
+# CRITICAL: Insert INSIDE #catGrid, BEFORE closing </div>
+close_pattern = '→</span></a>\n  </div>\n  <div class="bcat-empty"'
+insert_point = btools.rfind(close_pattern) + len('→</span></a>')
+btools = btools[:insert_point] + '\n' + new_card + btools[insert_point:]
+
+# Verify: grid_open < new_card_pos < catEmpty_pos
+grid_open = btools.find('id="catGrid">')
+card_pos = btools.find('/tools/[slug].html')
+empty_pos = btools.find('id="catEmpty"')
+assert grid_open < card_pos < empty_pos, "Card not inside grid!"
+```
+
+### Step 4 — Update sitemap.xml
+```python
+import re
+from datetime import date
+sitemap = get_file('sitemap.xml')
+new_url = f'  <url><loc>https://www.musicproductionwiki.com/tools/[slug].html</loc><lastmod>{date.today().isoformat()}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>'
+sitemap = sitemap.replace('</urlset>', new_url + '\n</urlset>')
+```
+
+### Step 5 — Update search-index.json
+```python
+si = json.loads(get_file('search-index.json'))
+si.append({
+    "slug": "tools/[slug]",
+    "title": "[Tool Name]",
+    "category": "Tools",
+    "description": "[One sentence description for search results]"
+})
+```
+
+### Step 6 — Commit all 5 files in one Trees API commit
+```python
+commit_files({
+    'tools/[slug].html': tool_html,
+    'tools/index.html': idx,
+    'bible/categories/tools/index.html': btools,
+    'sitemap.xml': sitemap,
+    'search-index.json': json.dumps(si, ensure_ascii=False),
+}, "tools: add [Tool Name] — fully mapped to hub, bible, sitemap, search")
+```
+
+---
+
+## Sitemap Pending
+Two URLs added this session — Steve to submit in GSC:
+- `https://www.musicproductionwiki.com/tools/suno-prompt-optimizer.html`
+- `https://www.musicproductionwiki.com/tools/ai-music-rights-navigator.html`
+
+---
+
+## NEVER Rules — Session 67 — Scripts
+
+| Rule | Detail |
+|------|--------|
+| NEVER commit a tool without all 5 files in same commit | Tool + tools/index.html + bible/categories/tools + sitemap.xml + search-index.json |
+| NEVER insert into catGrid without assertion check | grid_open < card_pos < empty_pos — assert it |
+| NEVER skip sitemap after tool build | Tools are not indexable without sitemap entry |
+| NEVER forget search-index.json | Site search won't find the tool without it |
+
+
+---
+
+# SESSION 68 UPDATE — SCRIPTS — May 26, 2026
+
+## Nav Block Extractor (Div-Depth Balanced)
+
+Use this every time you need the nav block from a reference tool. Never use naive `find()`.
+
+```python
+import urllib.request, json, base64
+
+def get_nav_block(slug='ai-music-rights-navigator.html'):
+    TOKEN = '[GITHUB_TOKEN — stored in Netlify env vars, regenerate at github.com/settings/tokens if expired]'
+    headers = {'Authorization':f'token {TOKEN}','User-Agent':'MPW'}
+    req = urllib.request.Request(
+        f'https://api.github.com/repos/musicproductionwiki/musicproductionwiki/contents/tools/{slug}',
+        headers=headers
+    )
+    with urllib.request.urlopen(req) as r: data = json.loads(r.read())
+    html = base64.b64decode(data['content']).decode('utf-8', errors='replace')
+
+    nav_start = html.find('<div class="mpw-nav-wrap">')
+    if nav_start == -1:
+        raise ValueError("mpw-nav-wrap not found")
+
+    # Div-depth tracking — guaranteed balanced
+    depth = 0
+    pos = nav_start
+    end = nav_start
+    while pos < len(html):
+        open_m = html.find('<div', pos)
+        close_m = html.find('</div>', pos)
+        if open_m == -1: open_m = len(html)
+        if close_m == -1: close_m = len(html)
+        if open_m < close_m:
+            depth += 1; pos = open_m + 4
+        else:
+            depth -= 1; pos = close_m + 6; end = pos
+            if depth == 0: break
+
+    nav_block = html[nav_start:end]
+
+    # Validate balance
+    opens = nav_block.count('<div')
+    closes = nav_block.count('</div>')
+    assert opens == closes, f"Nav unbalanced: {opens} opens, {closes} closes"
+    print(f"Nav block: {len(nav_block)} chars, {opens} divs balanced")
+    return nav_block
+```
+
+---
+
+## JS Syntax Checker
+
+Run before embedding any JS in HTML.
+
+```python
+import subprocess
+
+def check_js(filepath):
+    r = subprocess.run(['node', '--check', filepath], capture_output=True, text=True)
+    if r.returncode == 0:
+        print(f"✓ {filepath}: syntax OK")
+        return True
+    else:
+        print(f"✗ {filepath}: SYNTAX ERROR")
+        print(r.stderr[:500])
+        return False
+```
+
+---
+
+## GitHub Restore Script
+
+Restore any file to a previous commit SHA.
+
+```python
+import urllib.request, json, base64
+
+def restore_file(filepath, restore_sha, token):
+    headers = {'Authorization':f'token {token}','User-Agent':'MPW'}
+
+    # Get content at historical commit
+    req = urllib.request.Request(
+        f'https://api.github.com/repos/musicproductionwiki/musicproductionwiki/contents/{filepath}?ref={restore_sha}',
+        headers=headers
+    )
+    with urllib.request.urlopen(req) as r: data = json.loads(r.read())
+    content = data['content']  # already base64
+
+    # Get current SHA
+    req2 = urllib.request.Request(
+        f'https://api.github.com/repos/musicproductionwiki/musicproductionwiki/contents/{filepath}',
+        headers=headers
+    )
+    with urllib.request.urlopen(req2) as r: cur = json.loads(r.read())
+    current_sha = cur['sha']
+
+    # Commit restore
+    body = json.dumps({
+        'message': f'revert: restore {filepath} to {restore_sha}',
+        'content': content,
+        'sha': current_sha
+    }).encode()
+    req3 = urllib.request.Request(
+        f'https://api.github.com/repos/musicproductionwiki/musicproductionwiki/contents/{filepath}',
+        data=body,
+        headers={**headers, 'Content-Type':'application/json'},
+        method='PUT'
+    )
+    with urllib.request.urlopen(req3) as r: result = json.loads(r.read())
+    print(f"Restored: {result['content']['sha']}")
+```
+
+---
+
+## Tool Build Pre-Commit Checklist Script
+
+```python
+import re, subprocess
+
+def verify_tool(filepath):
+    with open(filepath) as f: html = f.read()
+    errors = []
+
+    # Div balance
+    if html.count('<div') != html.count('</div>'):
+        errors.append(f"Unbalanced divs: {html.count('<div')} opens, {html.count('</div>')} closes")
+
+    # No style.css
+    if 'style.css' in html:
+        errors.append("style.css must NOT be loaded in tool pages")
+
+    # Model string
+    if 'claude-sonnet-4-6' not in html:
+        errors.append("Wrong or missing model string — must be claude-sonnet-4-6")
+
+    # Proxy URL
+    if 'classy-haupia-be8e43' not in html:
+        errors.append("Missing proxy URL")
+
+    # GA4
+    if 'G-79VB543KCT' not in html:
+        errors.append("Missing GA4 tag")
+
+    # JS syntax
+    scripts = re.findall(
+        r'<script(?![\s\S]{0,10}(?:async|ld\+json|src=))[^>]*>([\s\S]+?)</script>',
+        html
+    )
+    for i, s in enumerate(scripts):
+        with open(f'/tmp/verify_{i}.js','w') as f2: f2.write(s)
+        r = subprocess.run(['node','--check',f'/tmp/verify_{i}.js'], capture_output=True, text=True)
+        if r.returncode != 0:
+            errors.append(f"Script block {i} syntax error: {r.stderr[:200]}")
+
+    # File size
+    size = len(html.encode())
+    if size > 200000:
+        errors.append(f"File too large: {size:,} bytes (Cloudflare limit: 200KB)")
+
+    if errors:
+        print(f"FAILED — {len(errors)} errors:")
+        for e in errors: print(f"  ✗ {e}")
+        return False
+    else:
+        print(f"ALL CHECKS PASSED — {size:,} bytes ({size/1024:.1f}KB)")
+        return True
+```
+
+
+---
+
+## Pre-Upload Token Redaction Scan
+
+**Run this before uploading ANY file to GitHub — handoffs, scripts, HTML, everything.**
+
+```python
+import re, sys
+
+SENSITIVE_PATTERNS = [
+    r'ghp_[A-Za-z0-9]{36}',           # GitHub personal access token
+    r'sk-ant-[A-Za-z0-9\-]{90,}',     # Anthropic API key
+    r'AKIA[A-Z0-9]{16}',               # AWS access key
+]
+
+def scan_for_secrets(filepath):
+    with open(filepath) as f: content = f.read()
+    found = []
+    for pattern in SENSITIVE_PATTERNS:
+        matches = re.findall(pattern, content)
+        if matches:
+            found.extend(matches)
+    if found:
+        print(f"SECRETS FOUND in {filepath} — DO NOT UPLOAD:")
+        for m in found: print(f"  {m[:12]}... [REDACT BEFORE UPLOADING]")
+        return False
+    print(f"✓ {filepath}: no secrets found")
+    return True
+```
+
+**NEVER rule:** Always run this scan before `gh_put()`. If it finds anything, redact to `[GITHUB_TOKEN]` or `[ANTHROPIC_API_KEY]` first.
+
+
