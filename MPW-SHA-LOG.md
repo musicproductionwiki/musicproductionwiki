@@ -42,3 +42,10 @@
 | 2026-05-26 | 9da0883c | session66_core_append.md | deleted — merged into CORE master S69 |
 | 2026-05-26 | 451260a7 | session67_core_append.md | deleted — merged into CORE master S69 |
 | 2026-05-26 | 2d1bf2e4 | session68_core_append.md | deleted — merged into CORE master S69 |
+| 2026-05-26 | 218d8bda | sitemap.xml | fix: add 36 missing tool URLs — 744→780 total |
+| 2026-05-26 | 806ac1bd | MPW-HANDOFF-SCRIPTS.md | Session 71 SCRIPTS merge — S55 master + S65/S65b/S66/S67/S68 — 126KB |
+| 2026-05-26 | e39c79d1 | session65_scripts_append.md | deleted — merged into SCRIPTS master S71 |
+| 2026-05-26 | 2828326b | session65b_scripts_append.md | deleted — merged into SCRIPTS master S71 |
+| 2026-05-26 | f9891bfa | session66_scripts_append.md | deleted — merged into SCRIPTS master S71 |
+| 2026-05-26 | 2cb6b6ff | session67_scripts_append.md | deleted — merged into SCRIPTS master S71 |
+| 2026-05-26 | 94e97450 | session68_scripts_append.md | deleted — merged into SCRIPTS master S71 |
