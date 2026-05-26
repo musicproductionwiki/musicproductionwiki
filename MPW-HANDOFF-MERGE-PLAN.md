@@ -39,7 +39,7 @@ After this merge project, Claude will have six clean, authoritative, fully curre
 | `MPW-HANDOFF-CONTENT.md` | 49KB | 4 | ✅ MERGED Session 72 |
 | `MPW-HANDOFF-ARTICLES.md` | 24KB | 5 | ✅ MERGED Session 72 |
 | `MPW-HANDOFF-BIBLE.md` | 127KB | 6 — largest, most stable | ✅ MERGED Session 73 |
-| `MPW-NEVER-RULES.md` | NEW | 7 — canonical never rules | ⏳ Session 75 |
+| `MPW-NEVER-RULES.md` | 26KB | 7 — canonical never rules | ✅ BUILT Session 75 |
 
 ### Session Appends to Merge (GitHub root)
 | File | Size | Target Master |
@@ -224,7 +224,10 @@ These two files are smaller and more stable — combining them into one session 
 
 ---
 
-## Session 75 — MPW-NEVER-RULES.md Build ⏳ NEXT
+## Session 75 — MPW-NEVER-RULES.md Build ✅ COMPLETE
+
+**Result:** MPW-NEVER-RULES.md — 26KB — 95 rules — 7 categories — sourced from CORE, TECH, SCRIPTS, BIBLE, SESSION-START, CONTINUITY-MASTER-PLAN, chat history
+**Changes applied:** SESSION-START top 20 summary updated. MERGE-PLAN marked complete.
 
 **Goal:** Create the 7th master document — a single canonical source for every never rule ever added to this project.
 
@@ -246,7 +249,7 @@ These two files are smaller and more stable — combining them into one session 
 - Load order: every session, after SESSION-START, before any other master
 
 **Changes to other documents after S75:**
-- SESSION-START: never rules table becomes short summary only (top 10 most critical) — links to MPW-NEVER-RULES.md
+- SESSION-START: never rules table becomes top 20 summary — links to MPW-NEVER-RULES.md
 - CORE: never rules section replaced with "See MPW-NEVER-RULES.md"
 - TECH/SCRIPTS/BIBLE: never rules sections marked "See MPW-NEVER-RULES.md"
 - SESSION-CONTINUITY-MASTER-PLAN: never rules layer updated to reference new file
