@@ -22,3 +22,4 @@
 | 2026-05-26 | 115f46e1 | MPW-HANDOFF-BIBLE.md | S73 BIBLE merge: entry count 226→223 (GitHub audit), gold standard updated to reverb.html v1.6, S61 count corrected |
 | 2026-05-26 | 92b06d41 | MPW-SESSION-START.md | S74: S75 plan added, priorities updated |
 | 2026-05-26 | 72aea370 | MPW-HANDOFF-MERGE-PLAN.md | S74: MPW-NEVER-RULES.md as 7th master doc, Session 75 section added |
+| 2026-05-26 | e692daf9 | MPW-NEVER-RULES.md + MPW-SESSION-START.md + MPW-HANDOFF-MERGE-PLAN.md | S75: Add MPW-NEVER-RULES.md (7th master doc) — 95 rules — update SESSION-START top 20 + MERGE-PLAN ✅ |
