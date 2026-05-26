@@ -935,6 +935,7 @@ if(window.location.search.indexOf('embed=1')>=0){
     </div>
   </div>
 </main>
+
 <footer class="site-footer">
   <a href="/bible/" style="color:#f5a623;text-decoration:none;font-size:12px;font-weight:700;display:block;margin-bottom:8px">&#9670; The Producer&#8217;s Bible</a>
   <p style="font-size:15px;font-weight:600;color:#e0e0f0;margin-bottom:4px">MusicProductionWiki.com</p>
@@ -947,8 +948,7 @@ if(window.location.search.indexOf('embed=1')>=0){
   <p style="font-size:13px;color:#555"><a href="/" style="color:#f5a623;text-decoration:none">Home</a> &middot; <a href="/about.html" style="color:#f5a623;text-decoration:none">About</a> &middot; <a href="/bible/" style="color:#f5a623;text-decoration:none">Producer&#8217;s Bible</a> &middot; <a href="/tools/" style="color:#f5a623;text-decoration:none">All Tools</a></p>
   <p style="margin-top:8px;font-size:11px;color:#444">&copy; 2026 MusicProductionWiki.com &#8212; Built for producers, by producers.</p>
 </footer>
-
-<!-- PRESERVED ORIGINAL JS — DO NOT MODIFY -->
+<!-- PRESERVED JS -->
 <script>
 var S={g:[],i:[],m:[],v:[]};
 var maxMap={g:4,i:6,m:3,v:3};
@@ -1191,7 +1191,6 @@ NEXT:
 
 try{var sess=JSON.parse(sessionStorage.getItem('mpw_session')||'{}');if(sess.genre){var pre=document.querySelector('.chip[data-cat="g"][data-val="'+sess.genre+'"]');if(pre)pre.click()}}catch(e){}
 </script>
-
 <script>
 /* ── THEME ── */
 (function(){
@@ -1206,14 +1205,19 @@ function toggleTheme(){
   var light=document.body.classList.toggle('light');
   localStorage.setItem('mpw_theme',light?'light':'dark');
   var l=document.getElementById('themeLabel'),i=document.getElementById('themeIcon');
-  if(light){if(l)l.textContent='Dark Mode';if(i)i.innerHTML='<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';}
-  else{if(l)l.textContent='Studio Light';if(i)i.innerHTML='<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';}
+  if(light){
+    if(l)l.textContent='Dark Mode';
+    if(i)i.innerHTML='<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+  } else {
+    if(l)l.textContent='Studio Light';
+    if(i)i.innerHTML='<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+  }
 }
 
 /* ── STATE ── */
 var selectedBPM=120,selectedKey='',selectedDynamics='verse-chorus dynamics',selectedDynamicsDesc='verse-chorus dynamics, punchy drops';
 
-/* ── PATCH goStep FOR 6 PANELS (original only handles panel0-4, we need panel0-5) ── */
+/* ── PATCH goStep FOR 6 PANELS ── */
 var _origGoStep=goStep;
 goStep=function(n){
   document.querySelectorAll('.step-panel').forEach(function(p){p.classList.remove('active')});
@@ -1273,7 +1277,7 @@ function syncNegPreview(){
   if(cn){cn.textContent=len+' / 200';cn.className='char-n'+(len>200?' over':len>170?' warn':'');}
 }
 
-/* ── PATCH buildParts — add BPM/key/dynamics/neg to prompt ── */
+/* ── PATCH buildParts ── */
 var _origBP=buildParts;
 buildParts=function(){
   var r=_origBP(),ex=[],hx=[];
@@ -1286,7 +1290,7 @@ buildParts=function(){
   return r;
 };
 
-/* ── PATCH updateLive — add charBadge, charFill updates ── */
+/* ── PATCH updateLive ── */
 var _origUL=updateLive;
 updateLive=function(){
   _origUL();
@@ -1304,10 +1308,10 @@ syncFinal=function(){
   el.innerHTML=r.raw?r.html:'<span class="pl-empty">Go back and make selections</span>';
 };
 
-/* ── PATCH animGauge — drive SVG ring + color ── */
+/* ── PATCH animGauge — drive SVG ring ── */
 animGauge=function(target){
   var ring=document.getElementById('scoreRing'),C=2*Math.PI*50,cur=0;
-  var labels=['','Weak','Poor','Developing','Getting There','Getting There','Decent','Good','Strong','Excellent','Optimized ❖'];
+  var labels=['','Weak','Poor','Developing','Getting There','Getting There','Decent','Good','Strong','Excellent','Optimized \u2756'];
   function step(){
     cur+=(target-cur)*.1;if(Math.abs(cur-target)<.05)cur=target;
     var pct=cur/10,color=cur>=8?'#22f0c8':cur>=5?'#f59e0b':'#ef4444';
@@ -1321,7 +1325,7 @@ animGauge=function(target){
   if(target>=9)launchConfetti();
 };
 
-/* ── PATCH animMeter — 5 color-coded bars ── */
+/* ── PATCH animMeter — color-coded bars ── */
 animMeter=function(fId,vId,pct,val){
   setTimeout(function(){
     var f=document.getElementById(fId),v=document.getElementById(vId);
@@ -1334,9 +1338,9 @@ animMeter=function(fId,vId,pct,val){
 renderPills=function(){
   var el=document.getElementById('valPills');if(!el)return;
   var pills=[];
-  if(S.g.length)pills.push({t:'Genre ✓',ok:true});else pills.push({t:'No genre',ok:false});
-  if(getSeqText())pills.push({t:'Structure ✓',ok:true});else pills.push({t:'No structure',ok:false});
-  if(S.v.length)pills.push({t:'Vocal ✓',ok:true});
+  if(S.g.length)pills.push({t:'Genre \u2713',ok:true});else pills.push({t:'No genre',ok:false});
+  if(getSeqText())pills.push({t:'Structure \u2713',ok:true});else pills.push({t:'No structure',ok:false});
+  if(S.v.length)pills.push({t:'Vocal \u2713',ok:true});
   if(selectedBPM!==120)pills.push({t:selectedBPM+' BPM',ok:true});
   if(selectedKey)pills.push({t:selectedKey,ok:true});
   var len=buildParts().raw.length;
@@ -1354,32 +1358,18 @@ runOptimize=function(){
   if(outArea)outArea.classList.remove('show');
   if(btn)btn.disabled=true;
   startLoading();
-  var sys='You are a world-class Suno AI prompt engineer. Analyze and return ONLY these labeled fields:
-
-SCORE: [1-10]
-GENRE_SCORE: [0-10]
-STRUCTURE_SCORE: [0-10]
-TEXTURE_SCORE: [0-10]
-VOCAL_SCORE: [0-10]
-CLARITY_SCORE: [0-10]
-OPTIMIZED: [improved prompt under 200 chars]
-ANALYSIS: [3-4 sentences about specific improvements]
-NEXT:
-1. [actionable step]
-2. [actionable step]
-3. [actionable step]';
+  var sys='You are a world-class Suno AI prompt engineer. Analyze and return ONLY these labeled fields:\n\nSCORE: [1-10]\nGENRE_SCORE: [0-10]\nSTRUCTURE_SCORE: [0-10]\nTEXTURE_SCORE: [0-10]\nVOCAL_SCORE: [0-10]\nCLARITY_SCORE: [0-10]\nOPTIMIZED: [improved prompt under 200 chars]\nANALYSIS: [3-4 sentences about specific improvements]\nNEXT:\n1. [actionable step]\n2. [actionable step]\n3. [actionable step]';
   fetch('https://classy-haupia-be8e43.netlify.app/.netlify/functions/claude-proxy',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:800,system:sys,messages:[{role:'user',content:'Analyze and optimize this Suno prompt: "'+input+'"'}]})})
   .then(function(res){return res.json();})
   .then(function(data){
     var raw=data.content&&data.content[0]?data.content[0].text:'';
-    function ex(p,fb){var m=raw.match(p);return m?m[1].trim():fb;}
     var sM=raw.match(/SCORE:\s*(\d+)/i),gM=raw.match(/GENRE_SCORE:\s*([\d.]+)/i),stM=raw.match(/STRUCTURE_SCORE:\s*([\d.]+)/i),txM=raw.match(/TEXTURE_SCORE:\s*([\d.]+)/i),vM=raw.match(/VOCAL_SCORE:\s*([\d.]+)/i),lM=raw.match(/CLARITY_SCORE:\s*([\d.]+)/i);
-    var optimized=ex(/OPTIMIZED:\s*([^
-]+)/i,'')||input;optimized=optimized.replace(/^["']+|["']+$/g,'').trim();
-    var analysis=ex(/ANALYSIS:\s*([\s\S]+?)(?=
-NEXT:|
-\d+\.|\Z)/i,'');
-    var next=ex(/NEXT:\s*([\s\S]+?)$/i,'');
+    var omatch=raw.match(/OPTIMIZED:\s*([^\n]+)/i);
+    var optimized=(omatch?omatch[1].trim():'')||input;optimized=optimized.replace(/^["']+|["']+$/g,'').trim();
+    var amatch=raw.match(/ANALYSIS:\s*([\s\S]+?)(?=\nNEXT:|\n\d+\.)/i);
+    var analysis=amatch?amatch[1].trim():'';
+    var nmatch=raw.match(/NEXT:\s*([\s\S]+?)$/i);
+    var next=nmatch?nmatch[1].trim():'';
     var score=sM?parseInt(sM[1]):7;
     optimizedResult=optimized;
     stopLoading();
@@ -1392,20 +1382,19 @@ NEXT:|
     animMeter('mV','mVv',(vM?parseFloat(vM[1]):7)*10,(vM?parseFloat(vM[1]):7).toFixed(1));
     animMeter('mL','mLv',(lM?parseFloat(lM[1]):8)*10,(lM?parseFloat(lM[1]):8).toFixed(1));
     renderPills();
-    var optEl=document.getElementById('optResultText');
-    if(optEl){optEl.textContent=optimized;}
+    var optEl=document.getElementById('optResultText');if(optEl)optEl.textContent=optimized;
     renderDiff(input,optimized);
-    setTimeout(function(){streamInto('analysisText',analysis,12,null)},300);
-    setTimeout(function(){renderSteps(next)},500);
+    setTimeout(function(){streamInto('analysisText',analysis,12,null);},300);
+    setTimeout(function(){renderSteps(next);},500);
     updateShareLinks();
     var sc=document.getElementById('scoreCard');if(sc)setTimeout(function(){sc.scrollIntoView({behavior:'smooth',block:'start'});},200);
     playSuccess();
     try{var hist=JSON.parse(localStorage.getItem('mpw_suno_hist')||'[]');hist.unshift({prompt:optimized,score:score,ts:Date.now()});localStorage.setItem('mpw_suno_hist',JSON.stringify(hist.slice(0,12)));}catch(e){}
     var sunoLink=document.getElementById('openSunoBtn');if(sunoLink)sunoLink.href='https://suno.com/create?prompt='+encodeURIComponent(optimized);
   })
-  .catch(function(err){
+  .catch(function(){
     stopLoading();if(loadCard)loadCard.style.display='none';if(outArea)outArea.classList.add('show');
-    var sc=document.getElementById('scoreCard');if(sc)sc.innerHTML='<div style="padding:22px;font-size:15px;color:#ef4444;line-height:1.7">Connection error — please try again.</div>';
+    var sc=document.getElementById('scoreCard');if(sc)sc.innerHTML='<div style="padding:22px;font-size:15px;color:#ef4444">Connection error \u2014 please try again.</div>';
   })
   .finally(function(){if(btn)btn.disabled=false;});
 };
@@ -1415,19 +1404,20 @@ function copyForSuno(){
   if(!optimizedResult)return;
   try{navigator.clipboard.writeText(optimizedResult);}catch(e){}
   var btn=document.getElementById('sunoFmtBtn');
-  if(btn){btn.textContent='✓ Copied!';setTimeout(function(){btn.innerHTML='<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy for Suno';},2200);}
+  if(btn){btn.textContent='\u2713 Copied!';setTimeout(function(){btn.textContent='Copy for Suno';},2200);}
 }
 
 /* ── HISTORY ── */
 function loadHistory(){
   var panel=document.getElementById('historyList');if(!panel)return;
   var hist;try{hist=JSON.parse(localStorage.getItem('mpw_suno_hist')||'[]');}catch(e){hist=[];}
-  if(!hist.length){panel.innerHTML='<div class="hist-empty">No prompts yet — optimize to start history</div>';return;}
+  if(!hist.length){panel.innerHTML='<div class="hist-empty">No prompts yet \u2014 optimize to start history</div>';return;}
   panel.innerHTML=hist.slice(0,12).map(function(item){
-    var mins=Math.floor((Date.now()-item.ts)/60000);var ago=mins<1?'just now':mins<60?mins+'m ago':Math.floor(mins/60)+'h ago';
+    var mins=Math.floor((Date.now()-item.ts)/60000);
+    var ago=mins<1?'just now':mins<60?mins+'m ago':Math.floor(mins/60)+'h ago';
     var p=(item.prompt||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     var attr=(item.prompt||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;');
-    return'<div class="hist-item" onclick="loadHI(this)" data-prompt="'+attr+'"><span class="hist-score">'+(item.score||'?')+'/10</span><span class="hist-prompt">'+p+'</span><span class="hist-time">'+ago+'</span></div>';
+    return '<div class="hist-item" onclick="loadHI(this)" data-prompt="'+attr+'"><span class="hist-score">'+(item.score||'?')+'/10</span><span class="hist-prompt">'+p+'</span><span class="hist-time">'+ago+'</span></div>';
   }).join('');
 }
 function loadHI(el){var p=el.dataset.prompt;if(!p)return;var ta=document.getElementById('pasteInput');if(ta)ta.value=p;}
@@ -1437,17 +1427,28 @@ function launchConfetti(){
   var colors=['#22f0c8','#f59e0b','#c026d3','#6366f1','#ef4444'];
   for(var i=0;i<70;i++){(function(ii){setTimeout(function(){
     var el=document.createElement('div');el.className='confetti-piece';
-    el.style.left=Math.random()*100+'vw';el.style.background=colors[Math.floor(Math.random()*colors.length)];
-    el.style.animationDuration=(1.5+Math.random()*2)+'s';el.style.borderRadius=Math.random()>.5?'50%':'2px';
+    el.style.left=Math.random()*100+'vw';
+    el.style.background=colors[Math.floor(Math.random()*colors.length)];
+    el.style.animationDuration=(1.5+Math.random()*2)+'s';
+    el.style.borderRadius=Math.random()>.5?'50%':'2px';
     el.style.width=el.style.height=(6+Math.random()*8)+'px';
     document.body.appendChild(el);setTimeout(function(){el.remove();},3500);
   },ii*35);})(i);}
 }
 
 /* ── SHARE ── */
-function buildShareText(){var s=document.getElementById('scoreNum');return'I scored '+(s?s.textContent:'?')+'/10 on the free Suno Prompt Optimizer from MusicProductionWiki.com';}
-function shareLink(){var btn=document.getElementById('shareCopyBtn');try{navigator.clipboard.writeText(shareURL);}catch(e){}if(btn){btn.textContent='✓ Copied!';setTimeout(function(){btn.textContent='Copy Link';},2000);}}
-function updateShareLinks(){var text=buildShareText(),enc=encodeURIComponent,xBtn=document.getElementById('shareXBtn'),rBtn=document.getElementById('shareRedditBtn');if(xBtn)xBtn.href='https://twitter.com/intent/tweet?url='+enc(shareURL)+'&text='+enc(text);if(rBtn)rBtn.href='https://reddit.com/submit?url='+enc(shareURL)+'&title='+enc(text);}
+function buildShareText(){var s=document.getElementById('scoreNum');return 'I scored '+(s?s.textContent:'?')+'/10 on the free Suno Prompt Optimizer from MusicProductionWiki.com';}
+function shareLink(){
+  var btn=document.getElementById('shareCopyBtn');
+  try{navigator.clipboard.writeText(shareURL);}catch(e){}
+  if(btn){btn.textContent='\u2713 Copied!';setTimeout(function(){btn.textContent='Copy Link';},2000);}
+}
+function updateShareLinks(){
+  var text=buildShareText(),enc=encodeURIComponent;
+  var xBtn=document.getElementById('shareXBtn'),rBtn=document.getElementById('shareRedditBtn');
+  if(xBtn)xBtn.href='https://twitter.com/intent/tweet?url='+enc(shareURL)+'&text='+enc(text);
+  if(rBtn)rBtn.href='https://reddit.com/submit?url='+enc(shareURL)+'&title='+enc(text);
+}
 
 /* ── SURPRISE ME ── */
 function clearSel(cat){S[cat]=[];var cls={g:'sel-g',i:'sel-i',m:'sel-m',v:'sel-v'}[cat];document.querySelectorAll('.chip[data-cat="'+cat+'"]').forEach(function(c){c.classList.remove(cls);});}
@@ -1461,8 +1462,10 @@ function surpriseAll(){
   surpriseBPM();
   var dyns=document.querySelectorAll('.dyn-card');if(dyns.length)dyns[Math.floor(Math.random()*dyns.length)].click();
   var rail=document.getElementById('seqRail');
-  if(rail){rail.querySelectorAll('.splaced').forEach(function(el){removeBlock(el);});
-    [['Intro','t-intro'],['Verse','t-verse'],['Chorus','t-chorus'],['Verse','t-verse'],['Chorus','t-chorus'],['Outro','t-outro']].forEach(function(s){setTimeout(function(){addBlock(s[0],s[1]);},50);});}
+  if(rail){
+    rail.querySelectorAll('.splaced').forEach(function(el){removeBlock(el);});
+    [['Intro','t-intro'],['Verse','t-verse'],['Chorus','t-chorus'],['Verse','t-verse'],['Chorus','t-chorus'],['Outro','t-outro']].forEach(function(s){setTimeout(function(){addBlock(s[0],s[1]);},50);});
+  }
   updateLive();
 }
 function surpriseInstruments(){clearSel('i');pickRC('i',['808 bass','piano','electric guitar','acoustic guitar','strings','synth pads','lead synth','flute','choir','rhodes','organ','live drums'],2+Math.floor(Math.random()*3));}
@@ -1475,6 +1478,7 @@ window.addEventListener('DOMContentLoaded',function(){
   var neg=document.getElementById('negPromptInput');
   if(neg)neg.addEventListener('input',function(){syncNegPreview();updateLive();});
 });
+
 </script>
 </body>
 </html>
