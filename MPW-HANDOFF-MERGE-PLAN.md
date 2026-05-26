@@ -38,7 +38,8 @@ After this merge project, Claude will have six clean, authoritative, fully curre
 | `MPW-HANDOFF-SCRIPTS.md` | 126KB | 3 | ✅ MERGED Session 71 |
 | `MPW-HANDOFF-CONTENT.md` | 49KB | 4 | ✅ MERGED Session 72 |
 | `MPW-HANDOFF-ARTICLES.md` | 24KB | 5 | ✅ MERGED Session 72 |
-| `MPW-HANDOFF-BIBLE.md` | 128KB | 6 — largest, most stable | ⏳ Session 73 |
+| `MPW-HANDOFF-BIBLE.md` | 127KB | 6 — largest, most stable | ✅ MERGED Session 73 |
+| `MPW-NEVER-RULES.md` | NEW | 7 — canonical never rules | ⏳ Session 75 |
 
 ### Session Appends to Merge (GitHub root)
 | File | Size | Target Master |
@@ -206,8 +207,10 @@ These two files are smaller and more stable — combining them into one session 
 
 ---
 
-## Session 73 — BIBLE Merge ⏳ NEXT
+## Session 73 — BIBLE Merge ✅ COMPLETE
 
+**Result:** MPW-HANDOFF-BIBLE.md — 127KB — GitHub audit + corrections pass — no appends existed
+**Corrections:** entry count 226→223 (GitHub confirmed), S61 count 231→223, gold standard updated to reverb.html v1.6
 **Target:** `MPW-HANDOFF-BIBLE.md` (128KB) — largest doc, most stable
 **Sources:** Current BIBLE + S53/S56 snapshots
 
@@ -221,6 +224,39 @@ These two files are smaller and more stable — combining them into one session 
 
 ---
 
+## Session 75 — MPW-NEVER-RULES.md Build ⏳ NEXT
+
+**Goal:** Create the 7th master document — a single canonical source for every never rule ever added to this project.
+
+**Why:** Never rules are currently scattered across CORE, TECH, SCRIPTS, BIBLE, SESSION-START, and session history. Claude must reconcile them mentally every session. One file eliminates that entirely.
+
+**Sources to read (in order):**
+1. `MPW-HANDOFF-CORE.md` — GitHub
+2. `MPW-HANDOFF-TECH.md` — GitHub
+3. `MPW-HANDOFF-SCRIPTS.md` — GitHub
+4. `MPW-HANDOFF-BIBLE.md` — project file
+5. `MPW-SESSION-START.md` — current
+6. `MPW-SESSION-CONTINUITY-MASTER-PLAN.md` — project file
+7. **Chat history search** — `conversation_search` for "never rule", "NEVER", "added rule", "new rule" — catches anything discussed but never documented
+
+**Structure of MPW-NEVER-RULES.md:**
+- Each rule: the rule, session added, reason it exists, enforcement (script vs manual)
+- Grouped by category: CSS/JS | API/Proxy | Commits | Content | Bible | Tools | General
+- `mpw_precommit_check.py` enforcement column — mechanical rules flagged as SCRIPT-ENFORCED
+- Load order: every session, after SESSION-START, before any other master
+
+**Changes to other documents after S75:**
+- SESSION-START: never rules table becomes short summary only (top 10 most critical) — links to MPW-NEVER-RULES.md
+- CORE: never rules section replaced with "See MPW-NEVER-RULES.md"
+- TECH/SCRIPTS/BIBLE: never rules sections marked "See MPW-NEVER-RULES.md"
+- SESSION-CONTINUITY-MASTER-PLAN: never rules layer updated to reference new file
+
+**Session end protocol addition (permanent from S75):**
+If a new never rule is identified this session → update MPW-NEVER-RULES.md before presenting files for approval. SESSION-START summary updated second. Nowhere else.
+
+
+---
+
 ## Post-Merge Rules (Permanent, Starting Session 74)
 
 Once all merges are complete, these rules apply forever:
@@ -229,12 +265,13 @@ Once all merges are complete, these rules apply forever:
 
 2. **State table updated every session.** First thing Claude writes in any session: update the state table in CORE (article count, Bible count, tool count, last commit SHA, model string). Last thing: update it again with session results.
 
-3. **Never rules are maintained in CORE only.** If a never rule is added, it goes into CORE immediately, not into an append file.
+3. **Never rules are maintained in MPW-NEVER-RULES.md only.** If a never rule is added this session, it goes into MPW-NEVER-RULES.md first. SESSION-START summary updated second. Never anywhere else.
 
 4. **Pending actions live in CORE only.** One list, one place, always current.
 
 5. **Session start protocol:**
-   - Read CORE first (state table, never rules, pending actions)
+   - Read CORE first (state table, pending actions)
+   - Read MPW-NEVER-RULES.md (every session — non-negotiable)
    - Read relevant specialist file (TECH for tool work, BIBLE for Bible work, etc.)
    - Confirm state with Steve before beginning work
 
