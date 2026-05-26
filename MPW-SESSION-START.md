@@ -44,6 +44,7 @@
 | Never extract nav block with naive find() — use div-depth tracking to guarantee balance | S68 |
 | Never start tool rebuild without reading MPW-TOOL-BUILD-SPEC.md first | S68 |
 | Never insert HTML cards without verifying position is INSIDE the target div | S67 |
+| Never upload any file to GitHub without scanning for raw tokens first — `grep -rn 'ghp_K'` on every file. Token in merged CORE blocked push via secret scanning. | S69 |
 | Never upload files to GitHub without scanning for raw tokens first — `grep -rn 'ghp_K'` | S69 |
 
 ---
