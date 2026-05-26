@@ -19,5 +19,6 @@
 | 2026-05-25 | 3672b6d4 | tools/suno-prompt-optimizer.html | fix: correct model name to claude-sonnet-4-5 |
 | 2026-05-25 | de45ae2b | favicon.svg + all pages | add: MPW favicon SVG waveform bars |
 | 2026-05-25 | 398e59345 | tools/suno-prompt-optimizer.html + tools/index.html + sitemap + search-index | Session 67: Suno tool + AI rights navigator + infrastructure |
-| 2026-05-26 | PENDING | MPW-HANDOFF-BIBLE.md | S73 BIBLE merge: entry count 226→223 (GitHub audit), gold standard updated, S61 count corrected — awaiting approval |
-| 2026-05-26 | PENDING | MPW-SESSION-START.md + MPW-HANDOFF-MERGE-PLAN.md | S74: added MPW-NEVER-RULES.md as 7th master doc, S75 plan documented — awaiting approval |
+| 2026-05-26 | 115f46e1 | MPW-HANDOFF-BIBLE.md | S73 BIBLE merge: entry count 226→223 (GitHub audit), gold standard updated to reverb.html v1.6, S61 count corrected |
+| 2026-05-26 | 92b06d41 | MPW-SESSION-START.md | S74: S75 plan added, priorities updated |
+| 2026-05-26 | 72aea370 | MPW-HANDOFF-MERGE-PLAN.md | S74: MPW-NEVER-RULES.md as 7th master doc, Session 75 section added |
