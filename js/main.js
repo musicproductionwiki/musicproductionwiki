@@ -578,7 +578,7 @@
       results.forEach((article) => {
         const a = document.createElement('a');
         a.className = 'search-result-item';
-        a.href = article.url;
+        a.href = (article.url.startsWith("/") ? window.location.origin + article.url : article.url);
         a.textContent = article.title;
         a.setAttribute('role', 'option');
         dropdown.appendChild(a);
