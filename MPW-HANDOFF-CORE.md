@@ -1,3 +1,509 @@
+# MPW HANDOFF — CORE
+*Merged: May 26, 2026 — Session 69 (CORE merge session)*
+*Previous version: 208KB, 3,204 lines — merged with sessions 65/65b/66/67/68 appends*
+
+---
+
+## SECTION 1 — CURRENT STATE
+
+| Item | Value |
+|------|-------|
+| Articles live | **526** |
+| Bible entries live | **223** |
+| Tools live | **40** |
+| Last site commit SHA | `f0100b85` — revert suno-prompt-optimizer to pre-S68 working state |
+| Model string | `claude-sonnet-4-6` |
+| Proxy URL | `https://classy-haupia-be8e43.netlify.app/.netlify/functions/claude-proxy` |
+| Local path | `C:\\Users\\swarn\\OneDrive\\Desktop\\mpw-scripts\\` |
+| Site | `musicproductionwiki.com` |
+| Repo | `github.com/musicproductionwiki/musicproductionwiki` |
+| Sitemap URLs | 744 |
+| Search index entries | 528 |
+| GSC impressions (3mo to May 26) | ~1,270 impressions / 1 click / avg position 25.2 |
+
+### Active Tool Count Breakdown
+
+| Tool set | Count |
+|----------|-------|
+| V4 tools (older batch) | 12 |
+| V5 tools (current batch) | 24 |
+| API tools built S67 | 2 (suno-prompt-optimizer, ai-music-rights-navigator) |
+| **Total** | **38** |
+
+---
+
+## SECTION 2 — NEVER RULES (Consolidated — All Sessions)
+
+These rules are absolute. Zero exceptions. The pre-commit script enforces the technical ones mechanically.
+
+### CSS / JS / HTML Safety
+
+| Rule | Session Added | Detail |
+|------|---------------|--------|
+| NEVER embed Python in HTML/JS | S67/S68 | Write JS as pure `cat > file.js << 'JSEOF'` heredoc. Run `node --check file.js` before embedding. Read JS file as raw bytes into HTML — never use Python string operations that touch JS content. |
+| NEVER write JS via Python string interpolation | S68 | Python `\n` escape sequences become literal newlines inside JS string literals and regex patterns. This breaks tools silently. |
+| NEVER load `style.css` or `../css/style.css` in tool pages | S68 | The global stylesheet has `.hero::before` and `.hero::after` pseudo-elements that are 600px and 400px radial-gradient circles. They render as massive black blob shapes on tool pages. No working tool in the repo loads `style.css`. |
+| NEVER use `.hero` or `.container` class names in tool pages | S68 | These classes are defined in `style.css` with conflicting rules (`padding: 5rem`, radial blob pseudo-elements). Use `.tool-hero` and `.tool-container` or exact CSS from the reference tool. |
+| NEVER touch existing CSS style blocks — append only | S65 | Inject CSS as a new `<style>` block before `</head>`. Never modify existing style blocks — they contain fingerprint comments and the entire block will be destroyed by regex. |
+| NEVER use innerHTML in Browser Apps | S65b | Netlify CSP blocks innerHTML on `/bible/` and tool pages. All DOM manipulation via createElement/appendChild. |
+| NEVER use `fetch()` inside Netlify Functions | S67 | Use Node's native `https.request()` with `Buffer.from()`. |
+| NEVER use assistant prefill in API calls | S67 | Returns empty response body. |
+| NEVER use any model except `claude-sonnet-4-6` | S68 | Previously `claude-sonnet-4-5` (S67) — superseded. S68 confirms `claude-sonnet-4-6` is the current correct model. Never use `claude-sonnet-4-5` or `claude-sonnet-4-20250514`. |
+| NEVER call Netlify functions via custom domain | S67 | Always use `https://classy-haupia-be8e43.netlify.app/.netlify/functions/claude-proxy`. `musicproductionwiki.com/.netlify/functions/*` returns 404. |
+| NEVER omit favicon link tags | S67 | `<link rel="icon" type="image/svg+xml" href="/favicon.svg">` in every tool head. |
+
+### Nav / Structure
+
+| Rule | Session Added | Detail |
+|------|---------------|--------|
+| NEVER extract nav block with naive find() or fixed character count | S68 | Use div-depth tracking to extract a perfectly balanced `<div class="mpw-nav-wrap">...</div>` block. Naive extraction truncates mid-mobile-drawer causing unclosed div that collapses the entire page. |
+| NEVER use class-only selector for nav color overrides on mpw-nav-homepage-v1 pages | S65 | `nav.mpw-site-nav .nav-item>a` child combinator with `!important` beats class-only selectors. Always use `nav.mpw-site-nav .nav-item>a.classname` pattern (child combinator + class). |
+| NEVER use `replaceState` to fix back-button on article pages | S65 | `replaceState` is correct for category pages (Netlify redirect creates double history entry). Article pages need `pushState` + `popstate` — the drawer open adds a fake history entry that the back button consumes. |
+| NEVER add nav color overrides with `.nav-bible-link` alone | S63/64 | `nav.mpw-site-nav .nav-item>a` uses `!important` and beats class-only selectors. Always use `nav.mpw-site-nav .nav-item>a.nav-bible-link` (child combinator + class). |
+| NEVER enable Netlify Pretty URLs | S65 | Breaks the site. |
+| NEVER insert HTML cards without verifying position is INSIDE target div | S67/S68 | Confirm insertion position is inside target div — verify `grid_open < insert_pos < grid_close`. |
+
+### Slugs / Commits / Production
+
+| Rule | Session Added | Detail |
+|------|---------------|--------|
+| NEVER invent slugs | S65 | Verify against GitHub tree API before writing any links. Never assume filenames. |
+| NEVER truncate handoff documents | S65 | Always complete. Never summarize or shorten. |
+| NEVER commit without running `mpw_precommit_check.py` first | S68 | The script catches JS errors, div imbalance, wrong model, style.css loading, and more. It would have prevented every broken deployment in S68. |
+| NEVER commit the full batch before test article has all issues resolved | S65 | Session 65 iterated 4 times on test article before batch ran — correct procedure. |
+| NEVER run article nav batches by fetching one article and assuming all match | S65 | The `\u00a0` non-breaking space after the bullet in `mob-bible` was only discovered by printing exact repr() of live file. Always confirm exact bytes. |
+| NEVER skip the full mapping checklist after building a tool | S67 | Every tool needs: tools/index.html card, bible/categories/tools card, sitemap.xml URL, search-index.json entry. |
+| NEVER upload files to GitHub without scanning for raw tokens first | S68 | Run `grep -rn 'ghp_\|sk-ant'` on every file before committing. Redact to `[GITHUB_TOKEN]`. GitHub secret scanning will block the push AND the token may be compromised. |
+
+### Tool Building
+
+| Rule | Session Added | Detail |
+|------|---------------|--------|
+| NEVER build a tool without loading `MPW-TOOL-BUILD-SPEC.md` first | S66/S68 | The frozen spec defines the correct design system, component classes, fonts, colors, and checklist. Not reading it causes full wasted rebuilds with wrong design system (S68 example). |
+| NEVER commit a tool without adding its card to `/tools/index.html` in the same commit | S66 | Orphaned tool pages with no hub entry are unfindable from the site. |
+| NEVER skip the quality checklist before committing any tool | S66 | FAQPage schema, canonical, OG tags, MPW nav, mobile responsive, pushState — all required. |
+| NEVER show tool count on `/tools/index.html` | S63/64 | Page grows dynamically — count goes stale immediately. Section label is static "Tools". |
+| NEVER build the Browser DAW as part of a multi-tool batch session | S65b/S66 | Requires 2–3 dedicated sessions. Mixing it with tool batches kills quality on both. |
+| NEVER propose RunPod products until affiliate revenue is confirmed | S66 | Infrastructure cost must be funded by existing revenue streams first. |
+| NEVER start a tool rebuild without reading `MPW-TOOL-BUILD-SPEC.md` first | S68 | Same as "NEVER build a tool without loading spec" — critical reiteration after S68 failure. |
+| NEVER assume the nav CSS is self-contained | S68 | The nav HTML block requires nav CSS from `style.css`. Since `style.css` cannot be loaded, nav CSS must be verified to work via `main.js`. The 4 nav specificity lines in working tools are sufficient. |
+
+### Bible / Content
+
+| Rule | Session Added | Detail |
+|------|---------------|--------|
+| NEVER use CSS inject approach on generator-managed pages | S63/64 | `mpw_bible_cat_pages.py --run` regenerates from scratch — CSS injected into live pages is overwritten. All fixes must go in the generator. |
+| NEVER deliver `mpw_bible_cat_pages.py` without zero-mismatch SUBCAT_MAP verification | S63/64 | 62 mismatches in first S63 version caused wrong filter counts. |
+| NEVER set read time below 650 wpm for Bible entries | S63/64 | 500 wpm confirmed wrong — 650 wpm is the standard. `read_time = round(word_count / 650)`. |
+| NEVER use old Beehiiv iframe embed method | S63/64 | Use v3 loader script in head + data-beehiiv-form div in body. |
+| NEVER use `mpw_bible_writer.py` until it is updated for 650 wpm + new nav | S65/66 | Blocks Bible batch — update before next T1 batch. |
+| NEVER paywall session-critical calculation tools | S65 | Free forever. Email gate is for exportable documents only. Never on calculators. |
+| NEVER build AI music tools without verifying current DDEX disclosure requirements | S65b | Requirements enforced by Spotify/Apple are changing — verify current policies before tool goes live. |
+
+### Process / Standards
+
+| Rule | Session Added | Detail |
+|------|---------------|--------|
+| NEVER declare hero centering complete without verifying every direct child element | S63/64 | `text-align:center` on parent does not center all children automatically. |
+| NEVER iterate CSS changes across 8+ commits without a mental render walkthrough first | S63/64 | S63 had 8 wasted commits on centering alone. |
+| NEVER increase category page max-width beyond 1100px | S63/64 | Cards become too wide at 1400px — 4-col grid looks blown out. |
+| NEVER declare a commit successful without Steve visually confirming live page | S63/64 | Multiple centering commits were declared done but wrong on live site. |
+| NEVER run the MPW article nav batch without the full dry-run scope confirmed | S63/64 | Smart quote U+2019 and arrow U+2192 in target string — confirm exact bytes before any commit. |
+
+---
+
+## SECTION 3 — TOOLS BUILT (Complete Catalog)
+
+### Tool Architecture Reference (Confirmed Working Pattern — S68)
+
+From `tools/ai-music-rights-navigator.html` — gold standard:
+
+```
+- No <link rel="stylesheet"> for style.css or any external CSS
+- Google Fonts: DM Sans + DM Mono only
+- All CSS self-contained in one <style> block
+- CSS base: *reset + body + embed mode + nav specificity (4 lines) + hero + container
+- Nav: <div class="mpw-nav-wrap"> extracted with div-depth tracking
+- JS: Written as pure heredoc, syntax-checked with node --check before embedding
+- Script load order: main.js (defer) → inline script block
+- Model: claude-sonnet-4-6
+- Proxy: https://classy-haupia-be8e43.netlify.app/.netlify/functions/claude-proxy
+```
+
+### Netlify Function Proxy
+
+**File:** `netlify/functions/claude-proxy.js`
+**Environment variable:** `ANTHROPIC_API_KEY` — set in Netlify → Project configuration → Environment variables
+**Critical URL:** `https://classy-haupia-be8e43.netlify.app/.netlify/functions/claude-proxy`
+Never use `musicproductionwiki.com/.netlify/functions/*` — returns 404.
+
+
+### ⚠️ HANDOFF GAP — Parallel Session Builds
+
+Three tools were built in parallel sessions (Steve running multiple simultaneous Claude conversations) with NO core append documented:
+
+| Tool | SHA | Built |
+|------|-----|-------|
+| ai-music-ddex-checker | `206e2a44` | May 25, 2026 |
+| ai-copyright-strength | `7f113017` | May 25, 2026 |
+| suno-credits-calculator | `4d827292` | May 25, 2026 |
+
+These are tools #3, #4, #5 from the 25-tool queue. All three are fully mapped (hub card, bible/categories/tools card, sitemap entry, search-index entry). The TECH and SCRIPTS appends for these sessions may also be missing. Flag for Sessions 70/71 merge verification.
+
+### AI Music Tools (Built S67)
+
+| # | Tool | URL | Type | SHA | Notes |
+|---|------|-----|------|-----|-------|
+| 37 | Suno Prompt Optimizer | `/tools/suno-prompt-optimizer.html` | Claude API | `3672b6d4` (S67 original); `fd5123eb8c` (last known good); restored `adf4c666` | 5-step tab flow. Redesign reverted in S68. |
+| 38 | AI Music Rights Navigator | `/tools/ai-music-rights-navigator.html` | Claude API | `60848615` | Platform selector, verdict card, DDEX section, legal context. Gold standard tool structure. |
+
+### Tools Built in Earlier Sessions (V4/V5 — 36 tools)
+
+The 36 V4/V5 tools were built in sessions 44–64 and are documented in the pre-S65 CORE master. Key tools:
+
+- `/tools/frequency-conflict-detector` — quality standard reference for all new tools
+- `/tools/browser-daw` — v3 live at `/tools/browser-daw.html` (SHA `2a0e05c2`). Full redesign deferred.
+- `/tools/index.html` — Tools hub, live at `musicproductionwiki.com/tools/`
+
+Tool count progression: V4(12) + V5(24) + S67 AI tools(2) = **38 total**
+
+### 25-Tool Priority Build Queue (Session 66 Decision)
+
+Sessions 67 onward build these in order. 14 AI Music tools first (fastest ranking), then 11 Production tools.
+
+**TIER 1 — AI Music / Suno (build first):**
+
+| # | Tool | Slug | Type | Status |
+|---|------|------|------|--------|
+| 1 | Suno Prompt Optimizer | `/tools/suno-prompt-optimizer.html` | Claude API | ✅ LIVE (S67) |
+| 2 | AI Music Commercial Rights Navigator | `/tools/ai-music-rights-navigator.html` | Claude API | ✅ LIVE (S67) |
+| 3 | AI Music DDEX Disclosure Checker | `/tools/ai-music-ddex-checker.html` | Claude API | ✅ LIVE (parallel S67, SHA `206e2a44`) |
+| 4 | AI Track Copyright Strength Calculator | `/tools/ai-copyright-strength.html` | Claude API | ✅ LIVE (parallel S67, SHA `7f113017`) |
+| 5 | Suno Credits Calculator | `/tools/suno-credits-calculator.html` | Pure JS | ✅ LIVE (parallel S67, SHA `4d827292`) |
+| 6 | AI Music Income Calculator | `/tools/ai-music-income-calculator.html` | Pure JS | QUEUED |
+| 7 | AI Platform Comparison Tool | `/tools/ai-music-platform-comparison.html` | Claude API | QUEUED |
+| 8 | AI Lyrics Optimizer for Suno | `/tools/ai-lyrics-optimizer.html` | Claude API | QUEUED |
+| 9 | AI Music Distribution Roadmap | `/tools/ai-music-distribution-roadmap.html` | Claude API | QUEUED |
+| 10 | AI Music Niche Finder | `/tools/ai-music-niche-finder.html` | Claude API | QUEUED |
+| 11 | AI vs Human Monetization Comparison | `/tools/ai-vs-human-monetization.html` | Claude API | QUEUED |
+| 12 | Suno vs Human Quiz | `/tools/suno-vs-human-quiz.html` | Pure JS | QUEUED |
+| 13 | AI + Human Hybrid Workflow Builder | `/tools/ai-hybrid-workflow-builder.html` | Claude API | QUEUED |
+| 14 | AI Music Genre Accuracy Tester | `/tools/ai-genre-accuracy-tester.html` | Pure JS | QUEUED |
+
+**TIER 2 — Production Viral:**
+
+| # | Tool | Slug | Type | Status |
+|---|------|------|------|--------|
+| 15 | "Why Does My Mix Sound Amateur?" Diagnostic | `/tools/mix-sounds-amateur-diagnostic.html` | Claude API | QUEUED |
+| 16 | "Why Is My Vocal Sitting Wrong?" Fixer | `/tools/vocal-sitting-wrong-fixer.html` | Claude API | QUEUED |
+| 17 | 808 Relationship Analyzer | `/tools/808-relationship-analyzer.html` | Pure JS | QUEUED |
+| 18 | Drum Tuning Reference | `/tools/drum-tuning-reference.html` | Pure JS | QUEUED |
+| 19 | Spotify Skip Probability Map | `/tools/spotify-skip-probability-map.html` | Claude API | QUEUED |
+| 20 | Streaming Income Reality Check | `/tools/streaming-income-reality-check.html` | Pure JS | QUEUED |
+| 21 | Frequency Masking Visualizer | `/tools/frequency-masking-visualizer.html` | Pure JS | QUEUED |
+| 22 | BPM Tap Tempo Pro | `/tools/tap-tempo-pro.html` | Pure JS | QUEUED |
+| 23 | Beat Selling Price Calculator | `/tools/beat-selling-price-calculator.html` | Pure JS | QUEUED |
+| 24 | Chord Progression Emotion Mapper | `/tools/chord-progression-emotion-mapper.html` | Claude API | QUEUED |
+| 25 | AI Music Playlist Placement Scorer | `/tools/ai-playlist-placement-scorer.html` | Claude API | QUEUED |
+
+### Suno Prompt Optimizer — Redesign Vision (Deferred)
+
+Steve's stated requirements for the future dedicated redesign session:
+1. Results full-width on their own page — not two-column layout where right column expands 6x
+2. Much richer AI output: what changed and why, why it works, Suno v4.5 tips, before/after, related MPW links, next prompt suggestion
+3. Tool is a learning moment — every result teaches the producer something
+4. "This tool can be a work of art" — Steve's exact words
+5. **Prerequisites:** Full dedicated session, read `MPW-TOOL-BUILD-SPEC.md` first, write all JS as pure heredoc, test nav div balance, verify no `.hero`/`.container` conflicts
+
+### Future Products (Post-Traffic — Not Being Built Now)
+
+- MPW Stem Splitter — RunPod, ensemble HTDemucs + BS-RoFormer, Free/Standard $7.99/mo/Premium $12.99/mo
+- MPW AI Beat Generator — AudioCraft on RunPod
+- MPW Vocal Cleaner — DeepFilterNet3 on RunPod
+- Browser DAW full rebuild — 2-3 dedicated sessions after 25 tools live
+
+---
+
+## SECTION 4 — PENDING OWNER ACTIONS (Canonical — Updated S68)
+
+| Action | Priority | Notes |
+|--------|----------|-------|
+| Submit sitemap to GSC | P0 | 741 URLs — submit `sitemap.xml` |
+| Request indexing — suno-prompt-optimizer | P0 | Use URL Inspection in GSC |
+| Request indexing — ai-music-rights-navigator | P0 | Use URL Inspection in GSC |
+| OG images for both AI tools | P1 | `/images/suno-prompt-optimizer-og.jpg` and `/images/ai-music-rights-navigator-og.jpg` — 1200×630px |
+| Affiliate applications | P2 REVENUE BLOCKER | Plugin Boutique, Amazon Associates, Loopmasters, Sweetwater, PluginFox |
+| Google Workspace domain dispute | P3 | Case #70817574 still open |
+| Upload `mpw_precommit_check.py` to GitHub root | P0 | Run before every commit — critical safety net |
+| Upload updated `MPW-SESSION-START.md` to project | P0 | Updated end of every session |
+
+### Steve Actions Completed (Reference)
+
+| Action | Completed | Notes |
+|--------|-----------|-------|
+| GSC sitemap submission | Unknown | Carry forward until confirmed |
+| GSC indexing requests for /bible/reverb, /bible/chorus, /tools/ | Unknown | Carry forward until confirmed |
+| Request indexing for /tools/browser-daw.html | Unknown | Browser DAW is v3, live |
+
+---
+
+## SECTION 5 — SITE ARCHITECTURE & INFRASTRUCTURE
+
+### Stack
+
+- **Site:** Pure HTML/CSS/vanilla JS — no frameworks, no CMS
+- **Hosting:** Netlify Pro — auto-deploy from GitHub
+- **Repo:** `github.com/musicproductionwiki/musicproductionwiki`
+- **Domain:** `musicproductionwiki.com`
+- **Functions:** `netlify/functions/claude-proxy.js` — Anthropic API proxy
+
+### Directory Structure
+
+```
+/                          Root
+/articles/                 Article pages (526 live)
+/bible/                    Bible landing + category pages
+/bible/[slug].html         Bible entry pages (223 live)
+/bible/categories/         Bible category index pages (11)
+/tools/                    Tools hub + individual tool pages
+/tools/[slug].html         Individual tool pages (38 live)
+/tools/index.html          Tools hub page
+/css/style.css             Global stylesheet (NEVER load in tool pages)
+/js/main.js                Global JS (nav behavior, provides nav CSS at runtime)
+/favicon.svg               MPW waveform bars, teal background
+/sitemap.xml               741 URLs
+/search-index.json         528 entries
+netlify/functions/         Netlify serverless functions
+```
+
+### File Paths (Steve's machine)
+
+- Scripts: `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\`
+- All handoff files and upload scripts use this as `SRCDIR`
+
+### Critical URL Rules
+
+- Proxy: always `https://classy-haupia-be8e43.netlify.app/.netlify/functions/claude-proxy`
+- Canonical format: `/articles/filename.html` (no trailing slash)
+- Asset paths in articles: `../css/style.css` and `../js/main.js`
+- Asset paths in tools: never load `style.css`
+
+### Cloudflare / Upload Rules
+
+- Files over 200KB: Cloudflare intercepts and saves as HTML during download
+- Steve saves zips via Notepad → Save As All Files to avoid interception
+- GitHub token direct push for bulk uploading (one Netlify deploy regardless of file count)
+- Web uploader for single files only
+
+### Email / Newsletter
+
+- Email: `mpwikiofficial@gmail.com`
+- Google Workspace target: `team@musicproductionwiki.com` (blocked by domain dispute Case #70817574)
+- Newsletter: Beehiiv — "The Producer's Briefing"
+- Beehiiv embed method: v3 loader script in head + `data-beehiiv-form` div in body (NOT old iframe method)
+
+### GitHub Token
+
+`[GITHUB_TOKEN]` — regenerate at github.com/settings/tokens if expired
+
+**NEVER leave raw tokens in any file committed to GitHub.** Run `grep -rn 'ghp_\|sk-ant'` before every commit.
+
+### Design System (MPW Standard)
+
+All tools and Bible pages use:
+- Background: `#0d0d1a`
+- Primary accent (teal): `#00e8a2`
+- Secondary accent (amber): `#f5a623`
+- Font: DM Sans (body), DM Mono (code/labels)
+- Bible identity: amber
+- Tools identity: teal
+- Card borders: `rgba(255,255,255,0.07)`
+- Insight callouts: amber left-border
+
+Reference tool: `musicproductionwiki.com/tools/frequency-conflict-detector`
+
+### Nav Structure (Article Pages — mpw-nav-homepage-v1)
+
+As of S65, all 526 article pages have:
+- Desktop nav: `Articles ▾ · Gear ▾ · Tools → · The Producer's Bible →` (Tools in teal, Bible in amber)
+- Mobile drawer: Grid-style with Tools teal pill (top) + Bible amber pill + 2-col article grid + Gear section
+- `pushState` + `popstate` for back-button fix (confirmed working S65)
+- CSS specificity: `nav.mpw-site-nav .nav-item>a.classname` pattern required
+
+### Tools Hub (`/tools/index.html`)
+
+- Nav: `mpw-nav-homepage-v1` exact
+- 3-col desktop → 2-col at 1024px → 2-col at 768px → 1-col at 420px
+- Card borders: `2px solid rgba(245,166,35,0.45)` amber
+- No tool count anywhere — grows dynamically
+- Mobile drawer: Tools teal pill top, Bible amber pill second
+
+### Bible Architecture
+
+- Hub: `/bible/index.html` — gold standard nav, Beehiiv wired, featured entry: Reverb
+- 11 category pages: generated by `mpw_bible_cat_pages.py` — CSS changes must go in generator not live pages
+- Entry pages: 223 live, all `/bible/[slug].html`
+- Bible slim-bar has 8 categories + Tools → link
+- Read time standard: 650 wpm (`read_time = round(word_count / 650)`)
+
+---
+
+## SECTION 6 — PRIORITY QUEUE (Next Sessions — Updated S68)
+
+### Immediate Queue (Session 69 = CORE merge; Session 70 = TECH merge; etc.)
+
+| Session | Task | Status |
+|---------|------|--------|
+| 69 | CORE handoff merge | IN PROGRESS |
+| 70 | TECH handoff merge | NEXT |
+| 71 | SCRIPTS handoff merge | QUEUED |
+| 72 | CONTENT + ARTICLES merge | QUEUED |
+| 73 | BIBLE merge | QUEUED |
+| 74+ | Tool building (25-tool queue) | BLOCKED on merge sessions |
+
+### Post-Merge Tool Queue (Session 74+)
+
+| # | Task | Priority | Notes |
+|---|------|----------|-------|
+| 1 | Build AI Music Income Calculator (pure JS) | P0 | Tool #6 in 25-tool queue — #3/4/5 already live |
+| 2 | Build AI Platform Comparison Tool | P0 | Tool #7 |
+| 3 | Build AI Lyrics Optimizer for Suno | P0 | Tool #8 |
+| 4 | Build AI Music Distribution Roadmap | P0 | Tool #9 |
+| 5 | Build AI Music Niche Finder | P0 | Tool #10 |
+| 6 | Suno Prompt Optimizer redesign | P1 | Dedicated session — read spec first |
+| 7 | Update `mpw_writer.py` — new grid drawer, nav, pushState | P1 | BLOCKS future article batches |
+| 8 | Update `mpw_bible_writer.py` — 650wpm + new nav | P1 | BLOCKS Bible batches |
+| 9 | Bible entry nav fix (222 pages bmn-drawer replacement) | P2 | Dry-run approach required |
+| 10 | Bible Tier 1 remaining 33 entries | P3 | BLOCKED on bible_writer update |
+
+### Blocking Relationships
+
+```
+mpw_bible_writer.py update → Bible T1 batch (33 entries) → Bible growth
+mpw_writer.py update → future article batches → article growth
+Merge sessions (69–73) → clean handoffs → faster future sessions
+Affiliate applications (Steve) → revenue
+GSC submissions (Steve) → indexing → traffic
+```
+
+### Strategic Roadmap (Locked Decisions)
+
+**Tools Monetization Tiers:**
+- Free forever: all session-critical calculation tools
+- Email gate: exportable documents (Royalty Split Calculator, Collaboration Agreement Builder, etc.)
+- One-time payment $9–$29: reference materials
+- Subscription ~$9/mo or $79/yr: Bible Complete tier
+- Never paywall: business/legal tools that feed TruClarify leads
+
+**AI Music Category:** Priority 1A — highest growth opportunity, near-zero tool competition
+- Suno: 2M paid subscribers, $300M ARR, 12M MAU, 7M tracks/day (Feb 2026)
+- Warner Music settled with Suno Nov 2025 — legitimacy confirmed
+- DDEX AI disclosure enforced by Spotify and Apple Music
+- MPW builds the AI music tool category before any competitor notices
+
+**TruClarify:** Long-term roadmap — not current focus. AI music legal tools serve same audience as free reference.
+
+**Browser DAW:** Deferred. v3 live. Full rebuild is 2-3 dedicated sessions — after 25 tools live and driving traffic.
+
+**Future Premium (after traffic/revenue):** Stem Splitter (RunPod), AI Beat Generator, Vocal Cleaner
+
+---
+
+## SECTION 7 — SESSION HISTORY LOG
+
+⚠️ **RESTRUCTURE NEEDED (Future Session):** This section contains 3,200+ lines of raw session-by-session chronological history from Sessions 39–64 — repeated state tables, stale priority queues, superseded rules. It is preserved verbatim to avoid data loss. A future dedicated session should compress this into a clean log format: date | session | what changed | SHA. Until then, treat Sections 1–6 as authoritative; Section 7 is archival only.
+
+This section preserves the complete session-by-session record from all previous sessions.
+The record runs from Session 39 through Session 64 (the pre-S65 CORE master), 
+followed by Session 65–68 summaries integrated from appends.
+
+---
+
+### Sessions 65–68 Summary (Appended Content)
+
+#### Session 65 — May 24, 2026
+
+**Articles:** 526 → 526 (no change)
+**Bible:** 223 → 223 (no change)
+**Tools:** 36 → 36 (no change)
+
+**P0 Completed:** 526 article pages nav batch — all 4 changes in one Trees API commit (`c308817a`):
+1. Desktop nav: Tools → added (teal, `.nav-tools-link` class)
+2. Mobile drawer: replaced vertical list with grid-style drawer + teal Tools pill
+3. Back-button fix: `replaceState` → `pushState`/`popstate`
+4. CSS specificity fix: `.nav-bible-link` → `nav.mpw-site-nav .nav-item>a.nav-bible-link`
+
+**Strategic:** Full 98-tool spec (`mpw_tools_master_spec.md`) delivered. 6 tools cut, 40 new tools added. Paywall strategy confirmed.
+
+---
+
+#### Session 65b — May 24, 2026
+
+**Strategic expansion:** 148-tool suite across 11 categories confirmed. AI Music category (20 tools, Priority 1A) and Browser Apps category (10 flagship experiences) added.
+
+**Browser DAW path confirmed:** Build directly with Claude in dedicated session using Tone.js + Web Audio API. `/tools/browser-daw.html` target.
+
+**AI Music strategic rationale documented:** Suno 12M MAU, Warner settlement Nov 2025, DDEX disclosure enforcement, zero dedicated competition.
+
+**GSC data shown:** 1,010 impressions / 1 click / avg position 25.2 over 3 months (April 29–May 21, 2026). Sharp indexing spike in last 3 days.
+
+---
+
+#### Session 66 — May 25, 2026
+
+**Articles:** 526, **Bible:** 223, **Tools:** 36 (+ Browser DAW = 37)
+
+**P0 Completed:** Browser DAW v3 live (`2a0e05c2`). Audio engine works. Full redesign deferred.
+
+**Strategic:** 25-tool priority build queue finalized. Parallel session architecture confirmed (Steve runs multiple simultaneous Claude conversations on Max plan). All 25 tools pull from frozen `MPW-TOOL-BUILD-SPEC.md`.
+
+**Quality standard:** Frequency Conflict Detector at `/tools/frequency-conflict-detector` is the reference for all new tools.
+
+**TruClarify:** Confirmed not current focus — long-term roadmap only.
+
+**GSC:** 1,270 impressions / avg position 25.2 / site under 1 month old.
+
+---
+
+#### Session 67 — May 25, 2026
+
+**Articles:** 526, **Bible:** 223, **Tools:** 36 → **38** (+2)
+
+**Tool #37: Suno Prompt Optimizer** LIVE
+- SHA: `3672b6d4` (original). 5-step tab flow, animated waveform hero, drag-and-drop sequencer, live prompt preview, score gauge, streaming expert analysis.
+- URL: `musicproductionwiki.com/tools/suno-prompt-optimizer.html`
+
+**Tool #38: AI Music Rights Navigator** LIVE  
+- SHA: `60848615`. Platform selector, verdict card YES/RISK/NO, DDEX disclosure section, legal context (Thaler v. Perlmutter, RIAA settlement).
+- URL: `musicproductionwiki.com/tools/ai-music-rights-navigator.html`
+
+**Infrastructure built:** `netlify/functions/claude-proxy.js` — Anthropic API proxy. `ANTHROPIC_API_KEY` in Netlify env vars.
+
+**Critical discovery:** Proxy must use `classy-haupia-be8e43.netlify.app` domain, not custom domain. Model confirmed `claude-sonnet-4-5` (later superseded by S68 to `claude-sonnet-4-6`).
+
+**Other pages updated:** `tools/index.html` (2 new cards), `bible/categories/tools/index.html` (2 new cards), `sitemap.xml` (741 total), `search-index.json` (528 total), `favicon.svg` created.
+
+---
+
+#### Session 68 — May 26, 2026
+
+**Articles:** 526, **Bible:** 223, **Tools:** 38 (no change — session was Suno redesign only)
+
+**Session outcome:** FULL REVERT. Suno Prompt Optimizer redesign attempted multiple times, all reverted. Final state: tool restored to pre-session commit `fd5123eb8c`. Restore commit: `adf4c666`.
+
+**Failures documented:**
+- Wrong model string: `claude-sonnet-4-5` → corrected to `claude-sonnet-4-6`
+- Did not read `MPW-TOOL-BUILD-SPEC.md` before building — wrong design system (Inter font, `#05050a` bg)
+- Python string interpolation in JS — syntax errors
+- CSS append-only rule violated — style block replaced, causing `style.css` loading + 600px black blobs
+- Nav block extracted with naive find() — unclosed div collapsed entire page
+
+**New system created:** `MPW-SESSION-CONTINUITY-MASTER-PLAN.md`, `MPW-SESSION-START.md`, `mpw_precommit_check.py`, `MPW-SHA-LOG.md`, `MPW-HANDOFF-MERGE-PLAN.md` — all delivered for Steve upload.
+
+---
+
+### Pre-Session-65 History (Preserved from Original CORE Master)
+
 # MusicProductionWiki.com — CORE Handoff
 *Updated: May 22, 2026 (SESSION 55)* · 526 articles + 223 Bible entries live
 *Modular format — 6 GitHub files replace single monolithic handoff*
