@@ -267,6 +267,7 @@ body{background:#0d0d1a;color:#e0e0f0;font-family:system-ui,-apple-system,sans-s
   </style>
 
 
+
 <style>
 
 nav.mpw-site-nav *,nav.mpw-site-nav *::before,nav.mpw-site-nav *::after{box-sizing:border-box}
@@ -410,7 +411,18 @@ nav.mpw-site-nav .nav-mob span{display:block!important;width:22px!important;heig
     <a href="/categories/plugins.html" style="display:flex;align-items:center;padding:10px 12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;color:#a0a0b4;background:#111113;border:1px solid #1a1a3a">Plugins</a>
     <a href="/categories/gear.html" style="display:flex;align-items:center;padding:10px 12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;color:#a0a0b4;background:#111113;border:1px solid #1a1a3a">Hardware</a>
   </div>
+  <button id="mobSearchBtn" class="mob-link" style="display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;cursor:pointer;font-family:inherit;font-size:14px;color:#a0a0b4;padding:11px 12px;border-radius:9px;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Search articles &amp; Bible</button>
   <a href="https://theproducersbriefing.beehiiv.com" class="mob-cta">Sound Better →</a>
+</div>
+<div class="search-overlay" id="searchOverlay" role="dialog" aria-modal="true">
+  <div class="search-box">
+    <div class="search-input-wrap">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="#666" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="#666" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input class="search-input" id="searchInput" placeholder="Search 526 articles..." autocomplete="off" spellcheck="false"/>
+      <span style="font-size:11px;color:#555;white-space:nowrap;flex-shrink:0">ESC to close</span>
+    </div>
+    <div class="search-results" id="searchResults" role="listbox"></div>
+  </div>
 </div>
 <script id="mpw-search-js">
 (function(){
@@ -480,6 +492,38 @@ nav.mpw-site-nav .nav-mob span{display:block!important;width:22px!important;heig
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}
 })();
 </script>
+<script>
+(function(){
+  function wireMobSearch(){
+    var btn=document.getElementById('mobSearchBtn');
+    var overlay=document.getElementById('searchOverlay');
+    var drawer=document.getElementById('mobileDrawer');
+    if(!btn||!overlay)return;
+    btn.addEventListener('click',function(){
+      if(drawer)drawer.classList.remove('open');
+      overlay.classList.add('open');
+      var inp=document.getElementById('searchInput');
+      if(inp){inp.focus();inp.dispatchEvent(new Event('focus'));}
+      var res=document.getElementById('searchResults');
+      if(res&&res.innerHTML===''){
+        fetch('/search-index.json').then(function(r){return r.json();}).then(function(d){
+          var h='<div style="padding:8px 14px 4px;font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.06em">Recent articles</div>';
+          d.slice(0,6).forEach(function(a){
+            var url=a.slug.startsWith('bible/')||a.slug.startsWith('tools/')?'/'+a.slug+'.html':'/articles/'+a.slug+'.html';
+            h+='<a class="search-result" href="'+url+'"><span class="sr-cat">'+(a.category||'')+'</span><span class="sr-title">'+(a.title||'')+'</span></a>';
+          });
+          res.innerHTML=h;
+        }).catch(function(){});
+      }
+    });
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',wireMobSearch);}else{wireMobSearch();}
+})();
+</script>
+
+
+
+
 
 
 
