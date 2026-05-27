@@ -1,5 +1,6 @@
 # MPW HANDOFF — CORE
 *Merged: May 26, 2026 — Session 69 (CORE merge session)*
+*Last updated: May 27, 2026 — Session 73*
 *Previous version: 208KB, 3,204 lines — merged with sessions 65/65b/66/67/68 appends*
 
 ---
@@ -9,16 +10,16 @@
 | Item | Value |
 |------|-------|
 | Articles live | **526** |
-| Bible entries live | **223** |
-| Tools live | **40** |
-| Last site commit SHA | `f0100b85` — revert suno-prompt-optimizer to pre-S68 working state |
+| Bible entries live | **234** |
+| Tools live | **41** |
+| Last site commit SHA | `0d30f23b` — Fix tool card names — 21 mismatches corrected to match H1 titles (S73) |
 | Model string | `claude-sonnet-4-6` |
 | Proxy URL | `https://classy-haupia-be8e43.netlify.app/.netlify/functions/claude-proxy` |
 | Local path | `C:\\Users\\swarn\\OneDrive\\Desktop\\mpw-scripts\\` |
 | Site | `musicproductionwiki.com` |
 | Repo | `github.com/musicproductionwiki/musicproductionwiki` |
-| Sitemap URLs | 744 |
-| Search index entries | 528 |
+| Sitemap URLs | 780 |
+| Search index entries | 789 |
 | GSC impressions (3mo to May 26) | ~1,270 impressions / 1 click / avg position 25.2 |
 
 ### Active Tool Count Breakdown
@@ -28,7 +29,8 @@
 | V4 tools (older batch) | 12 |
 | V5 tools (current batch) | 24 |
 | API tools built S67 | 2 (suno-prompt-optimizer, ai-music-rights-navigator) |
-| **Total** | **38** |
+| Additional tools built S70 | 3 (ai-copyright-strength, ai-music-ddex-checker, suno-credits-calculator) |
+| **Total** | **41** |
 
 ---
 
@@ -499,6 +501,41 @@ followed by Session 65–68 summaries integrated from appends.
 - Nav block extracted with naive find() — unclosed div collapsed entire page
 
 **New system created:** `MPW-SESSION-CONTINUITY-MASTER-PLAN.md`, `MPW-SESSION-START.md`, `mpw_precommit_check.py`, `MPW-SHA-LOG.md`, `MPW-HANDOFF-MERGE-PLAN.md` — all delivered for Steve upload.
+
+---
+
+#### Session 69–72 — May 26–27, 2026
+
+**Merge sessions + sitewide audit fix sessions.**
+
+S69: CORE merge (208KB, 3204 lines → single master). S70: Sitewide audit — robots.txt, sitemap fixes, favicon batch, search-index updated to 789 entries, 17 orphan drafts deleted. S71: Search renderItem fix across 526 articles + 90 category pages + tools/index. S72: Tool nav injection — all 41 tools got correct MPW nav, mobile eyeglass, hamburger, wireMobSearch. Multiple reverts due to hamburger breakage from wrong media query approach.
+
+**Key SHAs:** `17142bd9` (526 article search fix), `fb32b50e` (35 tools nav), `5a615e07` (mobile eyeglass all tools), `adf7ff2e` (index final fix)
+
+---
+
+#### Session 73 — May 27, 2026
+
+**Articles:** 526, **Bible:** 234, **Tools:** 41
+
+**Full sitewide tool quality fix session.** 5 planned batches + 3 post-QA fixes triggered by live mobile testing.
+
+- Created `og-image.png` (1200×630px glassmorphic brand card) — `967f1cf2`
+- Batch A: og:image added to 36 tools, www. stripped from 5 canonicals, overflow-x added to 5 missing tools — `ab2faf98`
+- Batch B: Share row standardized (Copy/X/Reddit, flex nowrap) across all 3 tool generations — `5e54f584`
+- Batch C: Beehiiv audit — NO-OP. 37 broken iframes expected from S70 audit; live inspection found 0.
+- Batch D: Embed mode (?embed=true) added to 36 tools — `67bc8334`
+- Batch E: Suno drawer 2-col grid, thc-right clip fix, footer www. on 3 Gen2 tools — `e021c66c`
+- Post-QA: backToTop arrow hidden on all 41 tools via appended CSS (main.js injects it globally) — `3d278d0d`
+- Post-QA: Gen 1 footer standardized on 38 tools — clean single line replacing verbose old footer — `3d278d0d`
+- Post-QA: "Interactive Tool" badge removed from card headers on 39 tools — `4d8530e9`
+- Post-QA: 21 wrong tool card names corrected to match H1 titles — `0d30f23b`
+
+**All 41 tools now fully compliant.** See MPW-AUDIT-ACTION-PLAN-S73.md for complete metric table.
+
+**Key lesson:** Batch C was a ghost — planned for 37 tools based on S70 audit data; live inspection showed 0 broken iframes. Always re-audit live state before executing any batch.
+
+**Never rules added (11 new — total now 123):** Full scope before any batch; no assuming/guessing with batches; re-fetch live before executing; og:image must point to existing file; overflow-x:clip is better than hidden; tool card names must match H1; backToTop hidden per-page-type not globally; stale audit data never trusted.
 
 ---
 

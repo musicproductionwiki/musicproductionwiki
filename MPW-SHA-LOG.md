@@ -23,3 +23,24 @@
 | 2026-05-26 | 92b06d41 | MPW-SESSION-START.md | S74: S75 plan added, priorities updated |
 | 2026-05-26 | 72aea370 | MPW-HANDOFF-MERGE-PLAN.md | S74: MPW-NEVER-RULES.md as 7th master doc, Session 75 section added |
 | 2026-05-26 | e692daf9 | MPW-NEVER-RULES.md + MPW-SESSION-START.md + MPW-HANDOFF-MERGE-PLAN.md | S75: Add MPW-NEVER-RULES.md (7th master doc) — 95 rules — update SESSION-START top 20 + MERGE-PLAN ✅ |
+| 2026-05-26 | a565a93f | js/main.js | S71: SEARCH_INDEX +222 Bible +41 Tool entries with correct URLs |
+| 2026-05-26 | c45959b3 | js/main.js | S71: search URL fix attempt (window.location.origin) — superseded |
+| 2026-05-26 | 17142bd9 | articles/*.html (526 files) | S71: fix renderItem() — bible/ and tools/ slugs route correctly — Trees API |
+| 2026-05-27 | ba94b314 | index.html | S71: renderItem fix — bible/ and tools/ slugs route correctly |
+| 2026-05-27 | a47608b0 | tools/index.html | S71: renderItem fix — tools/index search |
+| 2026-05-27 | f162f141 | categories/*.html + about.html (90 files) | S71: renderItem fix — all category pages and about |
+| 2026-05-27 | fb32b50e | tools/*.html (35 files) | S72: Full MPW nav injected on 35 NO_NAV tools |
+| 2026-05-27 | 3831e5a1 | tools/ai-music-ddex-checker.html + ai-music-rights-navigator.html + suno-prompt-optimizer.html + tools/index.html | S72: Manual nav fixes — ddex stub replaced, navigator wired, suno-optimizer overlay added, index style.css removed |
+| 2026-05-27 | a3ee22ff | tools/*.html + tools/index.html (42 files) | S72: MISTAKE — nav-search-btn added to media query show list — broke hamburger on all tools |
+| 2026-05-27 | db467a8b | tools/*.html + tools/index.html (42 files) | S72: Revert — restored correct media query, hamburger working again |
+| 2026-05-27 | f5cb1694 | tools/index.html | S72: Remove duplicate navMob handler, add overflow-x:hidden, restore dark background |
+| 2026-05-27 | 5a615e07 | tools/*.html + tools/index.html (42 files) | S72: Mobile eyeglass override injected after nav CSS </style> close — correct DOM position |
+| 2026-05-27 | adf7ff2e | tools/index.html | S72: Restore correct media query on index + remove stale eyeglass override blocks |
+| 2026-05-27 | 967f1cf2 | og-image.png | S73: Add OG social preview image — 1200x630px glassmorphic brand card |
+| 2026-05-27 | ab2faf98 | tools/*.html (41 files) | S73 Batch A: og:image + www. canonical fix + overflow-x on all 41 tools |
+| 2026-05-27 | 5e54f584 | tools/*.html (41 files) | S73 Batch B: standardize share row — flex nowrap, Copy/X/Reddit on all 41 tools |
+| 2026-05-27 | 67bc8334 | tools/*.html (36 files) | S73 Batch D: add embed mode (?embed=true) to 36 tools missing it |
+| 2026-05-27 | e021c66c | tools/suno-prompt-optimizer.html + ai-copyright-strength.html + ai-music-ddex-checker.html + suno-credits-calculator.html | S73 Batch E: suno drawer 2-col grid, thc-right clip fix, footer www. fix |
+| 2026-05-27 | 3d278d0d | tools/*.html (41 files) | S73: Hide backToTop arrow + standardize footer on all 41 tools |
+| 2026-05-27 | 4d8530e9 | tools/*.html (39 files) | S73: Remove Interactive Tool badge from card headers — all 39 tools with a card |
+| 2026-05-27 | 0d30f23b | tools/*.html (21 files) | S73: Fix tool card names — 21 mismatches corrected to match H1 titles |
