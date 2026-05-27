@@ -1,6 +1,7 @@
 # MPW-NEVER-RULES.md
 ## The Canonical Never Rules — MusicProductionWiki.com
 *Built: May 26, 2026 — Session 75*
+*Updated: May 26, 2026 — Session 71*
 *Author: Claude (Co-CEO, MPW)*
 
 ---
@@ -88,6 +89,7 @@ If a new never rule is added this session → update this file FIRST. SESSION-ST
 | Never commit a tool page without confirming dispatch returns real content. | S68 | `len(tool_html) > 100` is not sufficient — open the live page. Placeholder content was committed and called "working" in S68. | MANUAL |
 | Never present files for approval and then commit without waiting for explicit "go" from Steve. | S71 | Present ALL files, write the approval block, stop completely — no commits, no tool calls, nothing until Steve responds. Committing without approval = session failure. | MANUAL |
 | Never run a nav update script without `--test` on 3 articles first. | S51 | Verify visually before full batch. | MANUAL |
+| Never send >~200 files in a single GitHub Trees API tree call. | S71 | The API times out with a 422 error on large payloads. For batches over 200 files, build the tree incrementally — chunks of 100, each chunk uses the previous chunk's tree SHA as base_tree. Create ONE commit on the final tree SHA. | MANUAL |
 
 ---
 
@@ -197,13 +199,30 @@ If a new never rule is added this session → update this file FIRST. SESSION-ST
 | Never run `mpw_bible_writer.py` before updating read time to 650 wpm + new nav. | S63/S65/S66 | Blocks Bible batch — update before next T1 batch. | MANUAL |
 | Never hardcode GitHub token in any file — store in `setenv.ps1` only. | S26 | Token expires Aug 2, 2026. Hardcoded tokens get caught by GitHub secret scanning. | SCRIPT |
 | Never extract nav block with naive `find()` — use div-depth tracking to guarantee balance. | S68 | Naive find breaks on nested divs — div-depth tracking guarantees balanced extraction. | MANUAL |
+| Never commit Bible entry fixes one file at a time — always Trees API, one commit per batch. | S74 | Multiple single-file commits for reverb share bars caused 7 separate deploys instead of 1. Every multi-file Bible fix must be batched into one Trees API commit. | MANUAL |
+| Never assume a share bar is fixed without auditing ALL share bars in the file — including inline tool card bars that don't use the mpw-share-bar class. | S74 | reverb.html has 6 mpw-share-bar divs AND separate inline flex share bars inside tool cards (RT60, Tempo-Locked, HOW TO USE). Fixing only the mpw-share-bar class misses the tool card bars. Always grep for ALL Copy Link + Reddit combinations before declaring done. | MANUAL |
+| Never assume you know which search system an article page uses without reading the HTML source first. | S71 | MPW has 4 separate search systems. The primary article search is an inline `<script id="mpw-search-js">` that fetches search-index.json — NOT the SEARCH_INDEX array in main.js. Assuming the wrong system caused multiple wasted commits in S71. | MANUAL |
+| Never diagnose a sitewide bug by guessing — fetch and read the actual source HTML of the affected page type before touching any file. | S71 | S71: spent multiple commits debugging main.js SEARCH_INDEX before reading the article HTML and discovering the actual inline mpw-search-js system. Reading first would have saved all of it. | MANUAL |
+| Never show `nav-search-btn` (eyeglass) on mobile by adding it to the media query show list alongside `nav-mob` — it makes the hamburger unclickable. | S72 | Both eyeglass and hamburger render in the 60px nav bar; on narrow screens the eyeglass overlaps/blocks the hamburger tap target. Mobile eyeglass must be shown via a SEPARATE `<style>` block injected AFTER the nav CSS `</style>` close tag — never inside the nav CSS block. | MANUAL |
+| Never inject a CSS override block before the nav CSS block and expect it to win. | S72 | Multiple wasted commits placed `display:flex!important` overrides before the nav CSS block which contained the hide rule. The override must come in a separate `<style>` block AFTER the nav CSS `</style>` close. | MANUAL |
+| Never assume a batch `str.replace()` match will find the target string after multiple prior commits have modified the file. | S72 | Revert script used an `OLD_MQ` string that no longer matched 41/42 files because prior commits had already changed the media query. Always fetch and print the live file before building any replacement string. | MANUAL |
+| Never inject `mpw-search-js` into a page that already has its own `navMob` handler. | S72 | `tools/index.html` had its own JS handling navMob. Injecting `mpw-search-js` added a second listener — drawer opened and closed instantly, appearing unclickable. Always grep for existing `navMob` listeners before injecting nav JS. | MANUAL |
+| Never remove `style.css` from a tool page without first auditing what page-level CSS it was providing. | S72 | `tools/index.html` relied on `style.css` for `html{background:#0a0a0b}`. Removing it without replacement caused white background. Always grep for `body\s*{` and `html\s*{` rules before removing style.css. | MANUAL |
+| Never run a batch revert script without first spot-checking 3 live files to confirm the target string still matches. | S72 | Revert of broken media query matched only 1/42 files — 41 had already been modified by intermediate commits. Always verify on 3 files before any batch replace. | MANUAL |
+| Never deploy tool pages without `overflow-x:hidden` on `html,body`. | S72 | 39/41 tools had horizontal bleed on mobile — content grids overflowed viewport. All tool pages must include `html,body{overflow-x:hidden;max-width:100%}`. | MANUAL |
+| Never use beehiiv iframe embed method on tool pages — use v3 loader script. | S72 | 37/41 tools rendered a broken white beehiiv box. Correct method: `<script src="https://beehiiv.com/v3/loader.js" data-beehiiv-form="[ID]"></script>`. Never `<iframe src="...beehiiv...">`. | MANUAL |
+| Never build or deploy a tool without a standardized share row — Copy Link + Share on X + Reddit in a single `display:flex` row, equal height, consistent sizing. | S72 | 41/41 tools had inconsistent share layouts — wrapping to 2–3 rows on mobile, different sizes and padding across 3 tool generations. Share row must use `display:flex;gap:8px;flex-wrap:nowrap` with each button `flex:1`. | MANUAL |
+| Never deploy a tool without `og:image` meta tag. | S72 | 36/41 tools missing `og:image`. Social shares render with no preview image. All tools must include `<meta property="og:image" content="https://musicproductionwiki.com/og-image.png">`. | MANUAL |
+| Never deploy a tool with a `www.` canonical URL. | S72 | 5/41 tools had `canonical: https://www.musicproductionwiki.com/...`. Correct canonical is always non-www: `https://musicproductionwiki.com/...`. | SCRIPT |
+| Never deploy a tool without embed mode support (`?embed=true` hides nav/footer). | S72 | 39/41 tools had no embed mode. Tools must detect `new URLSearchParams(location.search).get('embed')==='true'` and add `embed-mode` class to body, hiding nav and footer. | MANUAL |
+| Never audit a tool's CSS fix based only on string presence — always verify block ordering (override position vs hide rule position). | S72 | Multiple tools passed string-presence checks but the CSS override was positioned before the hide rule so the fix had no effect. Position in the DOM matters, not just presence. | MANUAL |
 
 ---
 
-## MASTER COUNTS (Session 75)
-Total rules documented: 95
-SCRIPT-ENFORCED: 14
-MANUAL: 81
+## MASTER COUNTS (Session 74)
+Total rules documented: 114
+SCRIPT-ENFORCED: 15
+MANUAL: 99
 
 ---
 
@@ -212,4 +231,3 @@ If a new never rule is identified this session:
 1. Add it to this file in the correct category before presenting any files for approval
 2. Update SESSION-START summary table (top 20) second
 3. Nowhere else
-

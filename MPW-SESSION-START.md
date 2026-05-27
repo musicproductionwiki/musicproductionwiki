@@ -1,5 +1,5 @@
 # MPW SESSION START CARD
-*Last updated: May 27, 2026 — Session 73*
+*Last updated: May 27, 2026 — Session 74*
 
 ---
 
@@ -7,23 +7,23 @@
 | Item | Value |
 |------|-------|
 | Articles live | 526 |
-| Bible entries live | **234** |
-| Tools live | **41** |
-| Last commit SHA | `0d30f23b` — Fix tool card names — 21 mismatches corrected to match H1 titles |
+| Bible entries live | **235** |
+| Tools live | **42** |
+| Last commit SHA | `59350bd7` — reverb HOW TO USE share bar fix |
 | Model string | `claude-sonnet-4-6` |
 | Proxy URL | `https://classy-haupia-be8e43.netlify.app/.netlify/functions/claude-proxy` |
 | GitHub token | `[GITHUB_TOKEN — from setenv.ps1, regenerate at github.com/settings/tokens if expired. Expires Aug 2, 2026]` |
 | Local path | `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\` |
 | Site | `musicproductionwiki.com` |
 | Repo | `github.com/musicproductionwiki/musicproductionwiki` |
-| Never rules count | 123 (15 SCRIPT-enforced, 108 MANUAL) |
+| Never rules count | 125 (15 SCRIPT-enforced, 110 MANUAL) |
 
 ---
 
 ## TOP 3 PRIORITIES
-1. **Category page canonical www. fix** — 89 category pages still have www. in canonical URLs. Single Trees API commit. Full scope first — fetch all 89, read 3, verify pattern, then execute.
-2. **Affiliate applications** — Plugin Boutique, Amazon Associates, Loopmasters, Sweetwater, PluginFox. REVENUE BLOCKER. Owner action only.
-3. **Favicon sitewide** — ~851 files. Articles have data URI emoji favicon — replace with /favicon.svg. Use incremental Trees API chunks of 100.
+1. **Reverb share bars** — remaining inline tool card bars still need fixing (Tempo-Locked calculator bar + any others not yet confirmed). Scope all bars first, one Trees API commit.
+2. **Affiliate applications** — Plugin Boutique, Amazon Associates, Lookmasters, Sweetwater, PluginFox. REVENUE BLOCKER. Owner action only.
+3. **Bible writer v5.3** — save `mpw_bible_writer_06.py` to `C:\Users\swarn\OneDrive\Desktop\mpw-scripts\`. Then run T1 batch.
 
 ---
 
@@ -49,16 +49,16 @@
 | Never deploy tool without og:image pointing to a live file | S72/S73 |
 | Never deploy tool with www. canonical URL | S72 |
 | Never deploy tool without embed mode support (?embed=true) | S72 |
-| Never leave tool card header with wrong tool name — must match H1 | S73 |
-| Never add og:image meta pointing to a non-existent file | S73 |
+| Never commit Bible fixes one file at a time — always Trees API, one commit | S74 |
+| Never assume a share bar is fixed without auditing ALL share bars in the file first including inline tool card bars | S74 |
 | Never hardcode GitHub token — store in setenv.ps1 only | S26 |
 | 2+ files = Trees API always — one commit = one deploy | S39 |
 
 ---
 
-## TOOL STATE — ALL GREEN (End of S73)
+## TOOL STATE — ALL GREEN (End of S73/S74)
 
-All 41 tools now have:
+All 42 tools now have:
 - ✅ Correct MPW nav + mobile eyeglass + hamburger + wireMobSearch
 - ✅ og:image pointing to live og-image.png
 - ✅ Non-www canonical URL
@@ -76,8 +76,8 @@ All 41 tools now have:
 | Action | Priority | Notes |
 |--------|----------|-------|
 | Affiliate applications | P0 REVENUE BLOCKER | Plugin Boutique, Amazon Associates, Loopmasters, Sweetwater, PluginFox |
-| Submit sitemap to GSC | P1 | After category canonical fix |
-| GSC indexing requests — all 41 tools | P1 | Use URL Inspection for each tool |
+| Save mpw_bible_writer_06.py to mpw-scripts\ | P1 | Delivered this session — save before next Bible batch |
+| GSC indexing requests — all 42 tools | P1 | Use URL Inspection for each tool |
 | Google Workspace domain dispute | P3 | Case #70817574 still open |
 
 ---
@@ -85,10 +85,9 @@ All 41 tools now have:
 ## SESSION START RITUAL
 
 1. Run `. .\setenv.ps1` in PowerShell (loads GitHub token)
-2. State back: article count (526), Bible count (234), tool count (41), last SHA (`0d30f23b`)
+2. State back: article count (526), Bible count (235), tool count (42), last SHA (`59350bd7`)
 3. Load `MPW-NEVER-RULES.md` from GitHub
-4. Load `MPW-AUDIT-ACTION-PLAN-S73.md` from GitHub
-5. Proceed with P1 — category canonical www. fix
+4. Proceed with P1 — reverb remaining share bars (scope first, Trees API commit)
 
 ## LAST SESSION HANDOVER NOTE
-Session 73 was a full sitewide tool quality audit and fix session. All 41 tools are now fully compliant — correct nav, og:image, canonical, overflow-x, embed mode, share row, footer, no arrow, correct card names. Key lesson: Batch C was a ghost (37 broken iframes expected, 0 found) — always re-audit live before executing. 11 new never rules added. Next session: category page canonical www. fix (89 pages, one Trees API commit) + affiliate applications (owner action).
+Session 74 was a Bible quality pass. reverb.html patched: 11-pill bible bar (Production/Recording/Tools added), og:image fixed, meta desc trimmed, dates updated. mpw_bible_writer_06.py (v5.3) delivered: 650wpm, 11 bible bar pills, correct og:image, ImageObject schema. Interactive Tool badge removed from 66 Bible entries (Group A — inline style badge). 160 total entries audited — 94 use calc-eyebrow architecture (already correct, no fix needed). reverb.html share bars fixed: 4 main mpw-share-bar divs unified + RT60 tool card bar + HOW TO USE bar. Remaining: Tempo-Locked calculator bar needs fixing next session — scope all bars with Trees API commit. Sitemap submitted to GSC (804 pages). Category canonical www. fix confirmed done. Favicon confirmed done.

@@ -1,6 +1,5 @@
 # MPW HANDOFF — CORE
 *Merged: May 26, 2026 — Session 69 (CORE merge session)*
-*Last updated: May 27, 2026 — Session 73*
 *Previous version: 208KB, 3,204 lines — merged with sessions 65/65b/66/67/68 appends*
 
 ---
@@ -10,15 +9,15 @@
 | Item | Value |
 |------|-------|
 | Articles live | **526** |
-| Bible entries live | **234** |
-| Tools live | **41** |
-| Last site commit SHA | `0d30f23b` — Fix tool card names — 21 mismatches corrected to match H1 titles (S73) |
+| Bible entries live | **235** |
+| Tools live | **42** |
+| Last site commit SHA | `59350bd7` — reverb HOW TO USE share bar fix (S74) |
 | Model string | `claude-sonnet-4-6` |
 | Proxy URL | `https://classy-haupia-be8e43.netlify.app/.netlify/functions/claude-proxy` |
 | Local path | `C:\\Users\\swarn\\OneDrive\\Desktop\\mpw-scripts\\` |
 | Site | `musicproductionwiki.com` |
 | Repo | `github.com/musicproductionwiki/musicproductionwiki` |
-| Sitemap URLs | 780 |
+| Sitemap URLs | 804 (submitted to GSC May 27, 2026 ✅) |
 | Search index entries | 789 |
 | GSC impressions (3mo to May 26) | ~1,270 impressions / 1 click / avg position 25.2 |
 
@@ -30,7 +29,8 @@
 | V5 tools (current batch) | 24 |
 | API tools built S67 | 2 (suno-prompt-optimizer, ai-music-rights-navigator) |
 | Additional tools built S70 | 3 (ai-copyright-strength, ai-music-ddex-checker, suno-credits-calculator) |
-| **Total** | **41** |
+| Additional tool confirmed S74 | 1 |
+| **Total** | **42** |
 
 ---
 
@@ -230,22 +230,20 @@ Steve's stated requirements for the future dedicated redesign session:
 
 | Action | Priority | Notes |
 |--------|----------|-------|
-| Submit sitemap to GSC | P0 | 741 URLs — submit `sitemap.xml` |
-| Request indexing — suno-prompt-optimizer | P0 | Use URL Inspection in GSC |
-| Request indexing — ai-music-rights-navigator | P0 | Use URL Inspection in GSC |
-| OG images for both AI tools | P1 | `/images/suno-prompt-optimizer-og.jpg` and `/images/ai-music-rights-navigator-og.jpg` — 1200×630px |
-| Affiliate applications | P2 REVENUE BLOCKER | Plugin Boutique, Amazon Associates, Loopmasters, Sweetwater, PluginFox |
+| Affiliate applications | P0 REVENUE BLOCKER | Plugin Boutique, Amazon Associates, Lookmasters, Sweetwater, PluginFox |
+| Save mpw_bible_writer_06.py to mpw-scripts\ | P1 | Delivered S74 — save before next Bible batch |
+| GSC indexing requests — all 42 tools | P1 | Use URL Inspection for each tool |
+| Reverb remaining share bars | P1 | Tempo-Locked calculator bar + full Trees API audit next session |
 | Google Workspace domain dispute | P3 | Case #70817574 still open |
-| Upload `mpw_precommit_check.py` to GitHub root | P0 | Run before every commit — critical safety net |
-| Upload updated `MPW-SESSION-START.md` to project | P0 | Updated end of every session |
 
 ### Steve Actions Completed (Reference)
 
 | Action | Completed | Notes |
 |--------|-----------|-------|
-| GSC sitemap submission | Unknown | Carry forward until confirmed |
-| GSC indexing requests for /bible/reverb, /bible/chorus, /tools/ | Unknown | Carry forward until confirmed |
-| Request indexing for /tools/browser-daw.html | Unknown | Browser DAW is v3, live |
+| Submit sitemap to GSC | ✅ May 27, 2026 | 804 pages discovered |
+| Category canonical www. fix | ✅ Confirmed S74 | All 89 category pages clean |
+| Favicon sitewide | ✅ Confirmed S74 | /favicon.svg on all 898 HTML files |
+| GSC sitemap submission | ✅ May 27, 2026 | 804 pages |
 
 ---
 
@@ -350,33 +348,19 @@ As of S65, all 526 article pages have:
 
 ---
 
-## SECTION 6 — PRIORITY QUEUE (Next Sessions — Updated S68)
+## SECTION 6 — PRIORITY QUEUE (Next Sessions — Updated S74)
 
-### Immediate Queue (Session 69 = CORE merge; Session 70 = TECH merge; etc.)
+### Immediate Queue
 
-| Session | Task | Status |
-|---------|------|--------|
-| 69 | CORE handoff merge | IN PROGRESS |
-| 70 | TECH handoff merge | NEXT |
-| 71 | SCRIPTS handoff merge | QUEUED |
-| 72 | CONTENT + ARTICLES merge | QUEUED |
-| 73 | BIBLE merge | QUEUED |
-| 74+ | Tool building (25-tool queue) | BLOCKED on merge sessions |
-
-### Post-Merge Tool Queue (Session 74+)
-
-| # | Task | Priority | Notes |
-|---|------|----------|-------|
-| 1 | Build AI Music Income Calculator (pure JS) | P0 | Tool #6 in 25-tool queue — #3/4/5 already live |
-| 2 | Build AI Platform Comparison Tool | P0 | Tool #7 |
-| 3 | Build AI Lyrics Optimizer for Suno | P0 | Tool #8 |
-| 4 | Build AI Music Distribution Roadmap | P0 | Tool #9 |
-| 5 | Build AI Music Niche Finder | P0 | Tool #10 |
-| 6 | Suno Prompt Optimizer redesign | P1 | Dedicated session — read spec first |
-| 7 | Update `mpw_writer.py` — new grid drawer, nav, pushState | P1 | BLOCKS future article batches |
-| 8 | Update `mpw_bible_writer.py` — 650wpm + new nav | P1 | BLOCKS Bible batches |
-| 9 | Bible entry nav fix (222 pages bmn-drawer replacement) | P2 | Dry-run approach required |
-| 10 | Bible Tier 1 remaining 33 entries | P3 | BLOCKED on bible_writer update |
+| Priority | Task | Status |
+|----------|------|--------|
+| P1 | Reverb remaining share bars — Tempo-Locked + full Trees API audit | NEXT |
+| P1 | Bible writer v5.3 — Steve saves mpw_bible_writer_06.py to mpw-scripts\ | BLOCKED on Steve |
+| P1 | Run Bible T1 batch (33 remaining entries) | BLOCKED on writer save |
+| P2 | Affiliate applications | Owner action |
+| P2 | GSC URL inspection — 42 tools | Owner action |
+| P3 | mpw_writer.py 4 pending updates — blocks next article batch | QUEUED |
+| P3 | Bible entry nav fix (remaining entries with old drawer) | QUEUED |
 
 ### Blocking Relationships
 
@@ -418,6 +402,43 @@ GSC submissions (Steve) → indexing → traffic
 This section preserves the complete session-by-session record from all previous sessions.
 The record runs from Session 39 through Session 64 (the pre-S65 CORE master), 
 followed by Session 65–68 summaries integrated from appends.
+
+---
+
+### Session 74 — May 27, 2026
+
+**Articles:** 526, **Bible:** 235 (+12), **Tools:** 42 (+1)
+
+**Infrastructure confirmed done:**
+- Category canonical www. fix — all 89 category pages confirmed clean
+- Favicon sitewide — confirmed on all 898 HTML files
+- Sitemap submitted to GSC — 804 pages discovered ✅
+
+**reverb.html — 7 commits:**
+- `11a86608` — Bible bar 11 pills (Production/Recording/Tools), og:image → /og-image.png, meta desc 220→164 chars, schema ImageObject, dateModified/lastReviewed → 2026-05-27
+- `6e6f7662` — reverb/eq/chorus: Interactive Tool badge removed, tool name 14px amber, MPW branding shrunk
+- `6d8ed9db` — 66 Bible entries: Interactive Tool badge removed (Group A — inline style variant), name upgraded
+- `42cf062d` — reverb share bar CSS: mpw-share-btn flex bounded
+- `c2bc9639` — reverb: all 4 mpw-share-bar divs unified — 3 buttons centered, no branding in button row
+- `6c07a1eb` — reverb RT60 tool card share bar fixed
+- `59350bd7` — reverb HOW TO USE Automation Timeline bar fixed
+
+**mpw_bible_writer_06.py (v5.3) delivered:**
+- 650wpm read time (all 3 tiers)
+- Bible bar: 11 pills (Production/Recording/Tools added)
+- Mobile drawer: 11 Bible cats + About in Articles
+- CATEGORY_SLUG_MAP: Production + Recording added
+- og:image: /og-image.png (was /images/og-default.jpg)
+- Article schema image: ImageObject with width/height
+- Gold standard updated to reverb.html v1.6
+
+**Bible audit:**
+- 160 entries with Interactive Tool badge audited
+- 66 entries (inline-style badge): fixed
+- 94 entries (calc-eyebrow architecture): correct, no fix needed
+- Remaining: Tempo-Locked calculator bar in reverb — Trees API next session
+
+**New never rules added:** 2 (see MPW-NEVER-RULES.md)
 
 ---
 
@@ -501,41 +522,6 @@ followed by Session 65–68 summaries integrated from appends.
 - Nav block extracted with naive find() — unclosed div collapsed entire page
 
 **New system created:** `MPW-SESSION-CONTINUITY-MASTER-PLAN.md`, `MPW-SESSION-START.md`, `mpw_precommit_check.py`, `MPW-SHA-LOG.md`, `MPW-HANDOFF-MERGE-PLAN.md` — all delivered for Steve upload.
-
----
-
-#### Session 69–72 — May 26–27, 2026
-
-**Merge sessions + sitewide audit fix sessions.**
-
-S69: CORE merge (208KB, 3204 lines → single master). S70: Sitewide audit — robots.txt, sitemap fixes, favicon batch, search-index updated to 789 entries, 17 orphan drafts deleted. S71: Search renderItem fix across 526 articles + 90 category pages + tools/index. S72: Tool nav injection — all 41 tools got correct MPW nav, mobile eyeglass, hamburger, wireMobSearch. Multiple reverts due to hamburger breakage from wrong media query approach.
-
-**Key SHAs:** `17142bd9` (526 article search fix), `fb32b50e` (35 tools nav), `5a615e07` (mobile eyeglass all tools), `adf7ff2e` (index final fix)
-
----
-
-#### Session 73 — May 27, 2026
-
-**Articles:** 526, **Bible:** 234, **Tools:** 41
-
-**Full sitewide tool quality fix session.** 5 planned batches + 3 post-QA fixes triggered by live mobile testing.
-
-- Created `og-image.png` (1200×630px glassmorphic brand card) — `967f1cf2`
-- Batch A: og:image added to 36 tools, www. stripped from 5 canonicals, overflow-x added to 5 missing tools — `ab2faf98`
-- Batch B: Share row standardized (Copy/X/Reddit, flex nowrap) across all 3 tool generations — `5e54f584`
-- Batch C: Beehiiv audit — NO-OP. 37 broken iframes expected from S70 audit; live inspection found 0.
-- Batch D: Embed mode (?embed=true) added to 36 tools — `67bc8334`
-- Batch E: Suno drawer 2-col grid, thc-right clip fix, footer www. on 3 Gen2 tools — `e021c66c`
-- Post-QA: backToTop arrow hidden on all 41 tools via appended CSS (main.js injects it globally) — `3d278d0d`
-- Post-QA: Gen 1 footer standardized on 38 tools — clean single line replacing verbose old footer — `3d278d0d`
-- Post-QA: "Interactive Tool" badge removed from card headers on 39 tools — `4d8530e9`
-- Post-QA: 21 wrong tool card names corrected to match H1 titles — `0d30f23b`
-
-**All 41 tools now fully compliant.** See MPW-AUDIT-ACTION-PLAN-S73.md for complete metric table.
-
-**Key lesson:** Batch C was a ghost — planned for 37 tools based on S70 audit data; live inspection showed 0 broken iframes. Always re-audit live state before executing any batch.
-
-**Never rules added (11 new — total now 123):** Full scope before any batch; no assuming/guessing with batches; re-fetch live before executing; og:image must point to existing file; overflow-x:clip is better than hidden; tool card names must match H1; backToTop hidden per-page-type not globally; stale audit data never trusted.
 
 ---
 
