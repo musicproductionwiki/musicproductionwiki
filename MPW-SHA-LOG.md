@@ -44,3 +44,10 @@
 | 2026-05-27 | 3d278d0d | tools/*.html (41 files) | S73: Hide backToTop arrow + standardize footer on all 41 tools |
 | 2026-05-27 | 4d8530e9 | tools/*.html (39 files) | S73: Remove Interactive Tool badge from card headers — all 39 tools with a card |
 | 2026-05-27 | 0d30f23b | tools/*.html (21 files) | S73: Fix tool card names — 21 mismatches corrected to match H1 titles |
+| 2026-05-27 | 11a86608 | bible/reverb.html | S74: nav 11 pills (Production/Recording/Tools), og:image fix, meta desc trimmed, schema ImageObject, dates updated |
+| 2026-05-27 | 6e6f7662 | bible/reverb.html + eq.html + chorus.html | S74: remove Interactive Tool badge + tool name 14px amber + MPW branding shrunk |
+| 2026-05-27 | 6d8ed9db | bible/*.html (66 files) | S74: remove Interactive Tool badge sitewide Group A — name 14px amber upgrade |
+| 2026-05-27 | 42cf062d | bible/reverb.html | S74: share bar CSS fix — mpw-share-btn flex bounded, branding full-width row |
+| 2026-05-27 | c2bc9639 | bible/reverb.html | S74: all 4 mpw-share-bar divs unified — 3 buttons centered, no label in button row |
+| 2026-05-27 | 6c07a1eb | bible/reverb.html | S74: RT60 tool card share bar — branding own row, buttons equal width centered |
+| 2026-05-27 | 59350bd7 | bible/reverb.html | S74: HOW TO USE Automation Timeline share bar — buttons equal width centered |
