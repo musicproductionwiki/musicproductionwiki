@@ -1,6 +1,6 @@
 # MPW Site Audit & Session Action Plan
 *Audit Date: May 26, 2026 — Session 70*
-*Last Updated: May 27, 2026 — Session 73 (end of session)*
+*Last Updated: May 27, 2026 — Session 73 (post-session audit)*
 
 ---
 
@@ -114,28 +114,42 @@ Rule: any batch of 2+ files MUST use Trees API. One commit = one deploy.
 | Tools with correct footer | 41 ✅ |
 | Tools with backToTop arrow hidden | 41 ✅ |
 | Tools with correct card name matching H1 | 41 ✅ |
-| Category pages with non-www canonical | 0/89 ❌ (separate batch — next priority) |
-| Favicon sitewide fix | NOT STARTED ❌ (~851 files) |
+| Category pages with non-www canonical | 89/89 ✅ (confirmed clean — already done pre-S73) |
+| Favicon sitewide fix | 851/851 ✅ (confirmed clean — all pages have /favicon.svg) |
 
 ---
 
 ## REMAINING AUDIT ISSUES — PRIORITIZED
 
-### 🔴 PRIORITY 1 — Category page canonical URLs use www.
-89 category pages. Single Trees API commit replacing www. canonicals with non-www.
-Detection: `re.search(r'<link rel="canonical" href="https://www\.', c)`
+### ✅ COMPLETE — Category page canonical URLs
+All 89 category pages confirmed non-www canonical. Already done prior to S73.
 
-### 🔴 PRIORITY 2 — Favicon on ~851 Files
-Use incremental Trees API chunks of 100. Articles (526) have data URI emoji favicon — REPLACE with `/favicon.svg`. Others INSERT.
+### ✅ COMPLETE — Favicon sitewide
+All ~851 files confirmed /favicon.svg. Articles, Bible, categories — all clean.
 
-### 🟠 PRIORITY 3 — Sitemap resubmission to GSC
-After category canonical fix deploys. Submit updated sitemap via Google Search Console.
+### 🔴 PRIORITY 1 — Affiliate applications (REVENUE BLOCKER)
+Plugin Boutique, Amazon Associates, Loopmasters, Sweetwater, PluginFox.
+Owner action only — cannot be done by Claude.
 
-### 🟡 PRIORITY 4 — about.html not reachable from nav
-Nav link to About does not function. Low risk once diagnosed.
+### 🔴 PRIORITY 2 — mpw_writer.py 4 pending updates
+Blocks next article batch. Updates needed: new MPW mobile drawer HTML (2-col grid), Tools→ nav link, correct Bible link selector, pushState/popstate.
+Must be done before any new article production.
 
-### 🟡 PRIORITY 5 — Article batch (next content session)
-526 articles. No new articles since S69. Next batch pending mpw_writer.py updates.
+### 🔴 PRIORITY 3 — mpw_bible_writer.py updates
+Blocks next Bible batch. Updates needed: 650wpm read time, new nav, v5.3 build.
+Must be done before next T1 Bible batch.
+
+### 🟠 PRIORITY 4 — Next article batch
+526 articles live, none added since S69. Blocked on mpw_writer.py updates (Priority 2).
+
+### 🟠 PRIORITY 5 — Next Bible batch
+234 entries live. Blocked on mpw_bible_writer.py updates (Priority 3).
+
+### 🟡 PRIORITY 6 — about.html not reachable from tool nav
+About link present in index.html nav but missing from all 41 tool pages. Low impact — investigate and fix when convenient.
+
+### 🟡 PRIORITY 7 — Sitemap resubmission to GSC
+Submit updated sitemap via Google Search Console after any structural changes.
 
 ---
 
