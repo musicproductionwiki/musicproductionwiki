@@ -561,6 +561,34 @@ nav.mpw-site-nav .nav-mob span{display:block!important;width:22px!important;heig
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}
 })();
 </script>
+<script>
+(function(){
+  function wireMobSearch(){
+    var btn=document.getElementById('mobSearchBtn');
+    var overlay=document.getElementById('searchOverlay');
+    var drawer=document.getElementById('mobileDrawer');
+    if(!btn||!overlay)return;
+    btn.addEventListener('click',function(){
+      if(drawer)drawer.classList.remove('open');
+      overlay.classList.add('open');
+      var inp=document.getElementById('searchInput');
+      if(inp){inp.focus();inp.dispatchEvent(new Event('focus'));}
+      var res=document.getElementById('searchResults');
+      if(res&&res.innerHTML===''){
+        fetch('/search-index.json').then(function(r){return r.json();}).then(function(d){
+          var h='<div style="padding:8px 14px 4px;font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.06em">Recent articles</div>';
+          d.slice(0,6).forEach(function(a){
+            var url=a.slug.startsWith('bible/')||a.slug.startsWith('tools/')?'/'+a.slug+'.html':'/articles/'+a.slug+'.html';
+            h+='<a class="search-result" href="'+url+'"><span class="sr-cat">'+(a.category||'')+'</span><span class="sr-title">'+(a.title||'')+'</span></a>';
+          });
+          res.innerHTML=h;
+        }).catch(function(){});
+      }
+    });
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',wireMobSearch);}else{wireMobSearch();}
+})();
+</script>
 
 
 <!-- NAV WRAPPER -->
