@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <title>Loudness Penalty Calculator — How Much Will Streaming Platforms Turn Down Your Master? | MusicProductionWiki</title>
+  <meta name="description" content="Enter your master's integrated LUFS and see exactly how much Spotify, Apple Music, YouTube, Tidal, and Amazon Music will turn it down. Real numbers. No guessing.">
+  <link rel="canonical" href="https://www.musicproductionwiki.com/tools/loudness-penalty.html">
+  <meta property="og:title" content="Loudness Penalty Calculator | MusicProductionWiki">
+  <meta property="og:description" content="See exactly how many dB streaming platforms will turn down your master — before you submit it.">
+  <meta property="og:url" content="https://www.musicproductionwiki.com/tools/loudness-penalty.html">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-79VB543KCT"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-79VB543KCT');</script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "@id": "https://www.musicproductionwiki.com/tools/loudness-penalty.html",
+        "url": "https://www.musicproductionwiki.com/tools/loudness-penalty.html",
+        "name": "Loudness Penalty Calculator",
+        "description": "Calculate how much streaming platforms will turn down your master based on its integrated LUFS.",
+        "applicationCategory": "MusicApplication",
+        "operatingSystem": "Any",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "publisher": { "@type": "Organization", "name": "MusicProductionWiki", "url": "https://www.musicproductionwiki.com" }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.musicproductionwiki.com/" },
+          { "@type": "ListItem", "position": 2, "name": "Tools", "item": "https://www.musicproductionwiki.com/tools/" },
+          { "@type": "ListItem", "position": 3, "name": "Loudness Penalty Calculator", "item": "https://www.musicproductionwiki.com/tools/loudness-penalty.html" }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{overflow-x:clip}
+    body{background:#0d0d1a;color:#e0e0f0;font-family:'DM Sans',sans-serif;line-height:1.7;overflow-x:clip}
+
+    /* ── Nav (exact from freq-conflict-detector) ── */
+    .mpw-slim-bar{position:sticky;top:0;z-index:700;background:#181818;border-bottom:1px solid rgba(255,255,255,0.07);height:36px;display:flex;align-items:center;padding:0 20px;gap:0}
+    .msb-logo{display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0;margin-right:20px}
+    .msb-logomark{width:20px;height:20px;border-radius:5px;background:#00e8a2;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .msb-name{font-size:12px;font-weight:600;color:#d0d0d0;letter-spacing:-0.01em}
+    .msb-links{display:flex;align-items:center;gap:0;list-style:none;flex:1}
+    .msb-links a{color:#888;text-decoration:none;font-size:11.5px;padding:4px 9px;border-radius:4px;white-space:nowrap}
+    .msb-links a:hover{color:#d0d0d0;background:rgba(255,255,255,.05)}
+    .msb-pub{font-size:10px;color:#555;font-style:italic;margin-left:auto;white-space:nowrap;padding-right:8px}
+    .msb-search{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:5px;background:none;border:none;cursor:pointer;color:#666;flex-shrink:0}
+    .msb-search:hover{color:#d0d0d0;background:rgba(255,255,255,.07)}
+    .msb-cta{background:#00e8a2;color:#0a0a0b;font-size:10.5px;font-weight:700;padding:4px 11px;border-radius:5px;text-decoration:none;white-space:nowrap;flex-shrink:0;margin-left:8px}
+    .msb-mob{display:none;background:none;border:none;cursor:pointer;padding:5px;flex-direction:column;gap:4px;flex-shrink:0;margin-left:8px}
+    .msb-mob span{display:block;width:18px;height:2px;background:#888;border-radius:2px}
+    .bmn-drawer{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(10,10,11,0.99);z-index:699;overflow-y:auto;padding:16px;border-top:1px solid rgba(255,255,255,0.09);flex-direction:column;gap:4px}
+    .bmn-drawer.open{display:flex}
+    .bmn-drawer-label{font-size:10px;font-family:'DM Mono',monospace;color:#6a6a7a;text-transform:uppercase;letter-spacing:.12em;padding:12px 12px 6px}
+    .bmn-drawer a{display:block;padding:11px 12px;border-radius:9px;text-decoration:none;font-size:14px;color:#a0a0b4}
+    .bmn-drawer-cta{display:block;background:#00e8a2;color:#0a0a0b;font-weight:600;font-size:14px;padding:13px 16px;border-radius:10px;text-decoration:none;text-align:center;margin-top:8px}
+    .bmn-drawer-cats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:4px}
+    .bmn-drawer-cat{display:flex;align-items:center;padding:10px 12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;color:#a0a0b4;background:#111113;border:1px solid #1a1a3a}
+
+    /* ── Tool page layout ── */
+    .tool-page-wrap{max-width:860px;margin:0 auto;padding:32px 24px 80px}
+    .tool-breadcrumb{font-size:12px;color:#666;margin-bottom:20px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+    .tool-breadcrumb a{color:#666;text-decoration:none}
+    .tool-breadcrumb a:hover{color:#f5a623}
+    .tool-breadcrumb-sep{opacity:.4}
+    .tool-cat-badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#f5a623;background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.2);border-radius:4px;padding:3px 8px;margin-bottom:10px}
+    .tool-page-h1{font-size:clamp(22px,4vw,32px);font-weight:800;color:#e8e8e3;line-height:1.25;margin-bottom:8px}
+    .tool-page-desc{font-size:15px;color:#888;max-width:680px;margin-bottom:28px;line-height:1.6}
+    .tool-new-badge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.05em;color:#0a0a0b;background:#f5a623;border-radius:3px;padding:2px 6px;margin-left:8px;vertical-align:middle}
+
+    /* ── Tool Card ── */
+    .lpc-card{background:#111120;border:1px solid rgba(255,255,255,0.07);border-radius:12px;overflow:hidden;margin-bottom:24px}
+    .lpc-card-head{padding:20px 24px 0}
+
+    /* ── Presets ── */
+    .lpc-presets{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:20px}
+    .lpc-preset{font-size:12px;font-family:'DM Mono',monospace;background:#16162a;border:1px solid rgba(255,255,255,.08);border-radius:6px;padding:5px 12px;color:#a0a0b8;cursor:pointer;transition:all .13s}
+    .lpc-preset:hover{border-color:rgba(0,232,162,.35);color:#00e8a2}
+    .lpc-preset.active{background:rgba(0,232,162,.08);border-color:rgba(0,232,162,.4);color:#00e8a2;font-weight:500}
+
+    /* ── LUFS Slider ── */
+    .lpc-slider-wrap{padding:0 24px 20px}
+    .lpc-slider-label{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+    .lpc-slider-title{font-size:13px;font-weight:600;color:#c0c0d4}
+    .lpc-lufs-display{font-size:28px;font-weight:900;font-family:'DM Mono',monospace;color:#f5a623;letter-spacing:-.02em}
+    .lpc-lufs-unit{font-size:13px;color:#666;margin-left:3px}
+    .lpc-slider{width:100%;height:6px;border-radius:3px;appearance:none;-webkit-appearance:none;outline:none;cursor:pointer;background:linear-gradient(to right,#f5a623 0%,#f5a623 var(--pct,50%),#1c1c32 var(--pct,50%),#1c1c32 100%)}
+    .lpc-slider::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#f5a623;border:3px solid #0d0d1a;box-shadow:0 0 0 2px rgba(245,166,35,.4);cursor:pointer}
+    .lpc-slider::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#f5a623;border:3px solid #0d0d1a;cursor:pointer}
+    .lpc-slider-range{display:flex;justify-content:space-between;margin-top:4px;font-size:10px;font-family:'DM Mono',monospace;color:#444}
+
+    /* ── Visual Bar Chart ── */
+    .lpc-viz-wrap{padding:0 24px 24px}
+    .lpc-viz-title{font-size:11px;font-family:'DM Mono',monospace;color:#555;text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px}
+    .lpc-bars{display:flex;flex-direction:column;gap:10px}
+    .lpc-bar-row{display:flex;align-items:center;gap:12px}
+    .lpc-bar-platform{width:100px;flex-shrink:0;font-size:12px;font-weight:600;color:#b0b0c8;text-align:right}
+    .lpc-bar-track{flex:1;background:#16162a;border-radius:4px;height:28px;position:relative;overflow:hidden}
+    .lpc-bar-fill{height:100%;border-radius:4px;transition:width .35s ease,background .35s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;min-width:36px}
+    .lpc-bar-val{font-size:11px;font-weight:700;font-family:'DM Mono',monospace;color:#fff;white-space:nowrap}
+    .lpc-bar-target{position:absolute;right:0;top:0;bottom:0;width:2px;background:rgba(255,255,255,.12);display:flex;align-items:center}
+    .lpc-bar-target-label{position:absolute;right:4px;top:50%;transform:translateY(-50%);font-size:9px;font-family:'DM Mono',monospace;color:#444;white-space:nowrap}
+
+    /* ── Recommendation Panel ── */
+    .lpc-rec{margin:0 24px 24px;border-radius:8px;padding:16px 18px;border:1px solid;transition:all .3s}
+    .lpc-rec.safe{background:rgba(0,232,162,.06);border-color:rgba(0,232,162,.2)}
+    .lpc-rec.warn{background:rgba(245,166,35,.06);border-color:rgba(245,166,35,.2)}
+    .lpc-rec.danger{background:rgba(255,61,90,.06);border-color:rgba(255,61,90,.2)}
+    .lpc-rec-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+    .lpc-rec-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+    .lpc-rec.safe .lpc-rec-dot{background:#00e8a2}
+    .lpc-rec.warn .lpc-rec-dot{background:#f5a623}
+    .lpc-rec.danger .lpc-rec-dot{background:#ff3d5a}
+    .lpc-rec-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+    .lpc-rec.safe .lpc-rec-label{color:#00e8a2}
+    .lpc-rec.warn .lpc-rec-label{color:#f5a623}
+    .lpc-rec.danger .lpc-rec-label{color:#ff3d5a}
+    .lpc-rec-text{font-size:13px;color:#a0a0b8;line-height:1.6}
+    .lpc-rec-action{margin-top:10px;font-size:13px;font-weight:600;color:#e0e0f0}
+
+    /* ── Platform Detail Table ── */
+    .lpc-table-wrap{padding:0 24px 24px}
+    .lpc-table{width:100%;border-collapse:collapse}
+    .lpc-table th{font-size:10px;font-family:'DM Mono',monospace;color:#555;text-transform:uppercase;letter-spacing:.1em;padding:6px 10px;text-align:left;border-bottom:1px solid #1a1a2e}
+    .lpc-table td{padding:10px 10px;border-bottom:1px solid #111128;font-size:13px}
+    .lpc-table tr:last-child td{border-bottom:none}
+    .lpc-table td:first-child{font-weight:600;color:#d0d0e0}
+    .lpc-table td.target{font-family:'DM Mono',monospace;color:#888}
+    .lpc-table td.penalty-val{font-family:'DM Mono',monospace;font-weight:700}
+    .lpc-table td.no-penalty{color:#00e8a2}
+    .lpc-table td.small-penalty{color:#f5a623}
+    .lpc-table td.large-penalty{color:#ff3d5a}
+    .lpc-table td.status{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+    .lpc-table td.status-ok{color:#00e8a2}
+    .lpc-table td.status-warn{color:#f5a623}
+    .lpc-table td.status-over{color:#ff3d5a}
+
+    /* ── Copy values ── */
+    .lpc-copy-val{display:inline-flex;align-items:center;gap:4px;cursor:pointer;border-radius:4px;padding:1px 6px;border:1px solid rgba(255,255,255,.06);transition:all .13s;background:none;font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:inherit}
+    .lpc-copy-val:hover{border-color:rgba(245,166,35,.4);background:rgba(245,166,35,.06)}
+
+    /* ── Producer Presets Section ── */
+    .lpc-producer-section{padding:20px 24px 24px;border-top:1px solid #1a1a2e}
+    .lpc-producer-title{font-size:11px;font-family:'DM Mono',monospace;color:#555;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px}
+    .lpc-producer-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
+    .lpc-producer-card{background:#16162a;border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:12px 14px;cursor:pointer;transition:all .13s}
+    .lpc-producer-card:hover{border-color:rgba(245,166,35,.3);background:rgba(245,166,35,.04)}
+    .lpc-producer-name{font-size:12px;font-weight:700;color:#d0d0e0;margin-bottom:2px}
+    .lpc-producer-lufs{font-size:20px;font-weight:900;font-family:'DM Mono',monospace;color:#f5a623;letter-spacing:-.02em}
+    .lpc-producer-note{font-size:11px;color:#666;margin-top:3px}
+
+    /* ── Email Gate ── */
+    .lpc-export-section{padding:0 24px 24px;border-top:1px solid #1a1a2e;margin-top:4px}
+    .lpc-export-inner{background:#16162a;border:1px solid rgba(245,166,35,.15);border-radius:10px;padding:20px}
+    .lpc-export-title{font-size:14px;font-weight:700;color:#e0e0f0;margin-bottom:4px}
+    .lpc-export-desc{font-size:13px;color:#777;margin-bottom:14px}
+    .lpc-export-form{display:flex;gap:8px;flex-wrap:wrap}
+    .lpc-export-input{flex:1;min-width:200px;background:#0d0d1a;border:1px solid rgba(255,255,255,.1);border-radius:7px;padding:10px 14px;font-size:13px;color:#e0e0f0;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .15s}
+    .lpc-export-input:focus{border-color:rgba(245,166,35,.4)}
+    .lpc-export-btn{background:#f5a623;color:#000;font-weight:800;font-size:13px;border:none;border-radius:7px;padding:10px 20px;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;transition:opacity .15s}
+    .lpc-export-btn:hover{opacity:.88}
+    .lpc-export-note{font-size:11px;color:#555;margin-top:8px}
+
+    /* ── Share Bar ── */
+    .lpc-share-section{padding:0 24px 24px}
+    .lpc-share-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#444;display:block;margin-bottom:8px}
+    .lpc-share-btns{display:flex;gap:6px;width:100%}
+    .lpc-share-btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;flex:1;height:36px;padding:0 10px;border-radius:6px;font-size:11px;font-weight:700;text-decoration:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity .15s;white-space:nowrap;border:none}
+    .lpc-share-btn:hover{opacity:.82}
+    .share-copy-btn{background:#f5a623;color:#000}
+    .share-x-btn{background:#000;color:#fff;border:1px solid #333}
+    .share-reddit-btn{background:#ff4500;color:#fff}
+
+    /* ── Embed Code ── */
+    .lpc-embed-section{padding:0 24px 28px}
+    .lpc-embed-label{font-size:11px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+    .lpc-embed-box{background:#0d0d1a;border:1px solid #1a1a2e;border-radius:7px;padding:12px 14px;font-family:'DM Mono',monospace;font-size:11px;color:#666;line-height:1.5;word-break:break-all;cursor:pointer;transition:border-color .13s}
+    .lpc-embed-box:hover{border-color:rgba(245,166,35,.2);color:#888}
+    .lpc-embed-copy-note{font-size:11px;color:#444;margin-top:5px}
+
+    /* ── Content sections ── */
+    .tool-content-section{margin:40px 0;padding-top:32px;border-top:1px solid #1a1a2e}
+    .tool-content-section h2{font-size:20px;font-weight:700;color:#e8e8e3;margin-bottom:14px}
+    .tool-content-section h3{font-size:16px;font-weight:700;color:#c0c0d4;margin:20px 0 8px}
+    .tool-content-section p{color:#888;margin-bottom:14px;font-size:15px;line-height:1.7}
+    .tool-content-section a{color:#f5a623;text-decoration:none}
+    .tool-content-section a:hover{text-decoration:underline}
+    .faq-item{margin-bottom:20px}
+    .faq-q{font-size:15px;font-weight:700;color:#d0d0e0;margin-bottom:6px}
+    .faq-a{font-size:14px;color:#888;line-height:1.7}
+
+    /* ── Footer ── */
+    .site-footer{background:#0a0a1a;border-top:1px solid #1a1a2e;padding:28px 24px;text-align:center;margin-top:48px}
+    .site-footer p{color:#666;font-size:13px;margin:4px 0}
+    .site-footer a{color:#f5a623;text-decoration:none}
+
+    /* ── Mobile ── */
+    @media(max-width:640px){
+      .msb-links,.msb-pub{display:none}
+      .msb-mob{display:flex}
+      .lpc-producer-grid{grid-template-columns:1fr 1fr}
+      .lpc-bar-platform{width:72px;font-size:11px}
+      .lpc-export-form{flex-direction:column}
+      .lpc-export-input{min-width:0}
+      .lpc-share-btn{font-size:10px;padding:0 6px}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Nav ── -->
+<div class="mpw-slim-bar">
+  <a class="msb-logo" href="https://musicproductionwiki.com">
+    <div class="msb-logomark">
+      <svg width="11" height="11" viewBox="0 0 18 18" fill="none">
+        <rect x="1.5" y="7" width="2.5" height="9" rx="1.2" fill="#0a0a0b"/>
+        <rect x="6" y="4" width="2.5" height="12" rx="1.2" fill="#0a0a0b"/>
+        <rect x="10.5" y="1" width="2.5" height="16" rx="1.2" fill="#0a0a0b"/>
+        <rect x="15" y="5" width="2.5" height="9" rx="1.2" fill="#0a0a0b"/>
+      </svg>
+    </div>
+    <span class="msb-name">MusicProductionWiki</span>
+  </a>
+  <ul class="msb-links">
+    <li><a href="/tools/">← All Tools</a></li>
+    <li><a href="/bible/">The Producer's Bible</a></li>
+    <li><a href="/categories/techniques.html">Techniques</a></li>
+    <li><a href="/categories/reviews.html">Reviews</a></li>
+  </ul>
+  <span class="msb-pub">The Producer's Reference</span>
+  <a class="msb-cta" href="https://theproducersbriefing.beehiiv.com">Sound Better →</a>
+  <button class="msb-mob" id="msbMob" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</div>
+
+<div class="bmn-drawer" id="bmnDrawer">
+  <div class="bmn-drawer-label">Navigation</div>
+  <a href="/tools/">← All Free Tools</a>
+  <a href="/bible/">The Producer's Bible</a>
+  <a href="/categories/techniques.html">Techniques</a>
+  <a href="/categories/reviews.html">Reviews</a>
+  <a href="/categories/comparisons.html">Comparisons</a>
+  <a href="https://theproducersbriefing.beehiiv.com" class="bmn-drawer-cta">Sound Better →</a>
+</div>
+
+<!-- ── Page ── -->
+<div class="tool-page-wrap">
+
+  <!-- Breadcrumb -->
+  <nav class="tool-breadcrumb" aria-label="Breadcrumb">
+    <a href="/">MusicProductionWiki</a>
+    <span class="tool-breadcrumb-sep">›</span>
+    <a href="/tools/">Tools</a>
+    <span class="tool-breadcrumb-sep">›</span>
+    <span>Loudness Penalty Calculator</span>
+  </nav>
+
+  <div class="tool-cat-badge">Loudness &amp; Delivery</div>
+  <h1 class="tool-page-h1">Loudness Penalty Calculator <span class="tool-new-badge">NEW</span></h1>
+  <p class="tool-page-desc">Enter your master's integrated LUFS and see exactly how many dB Spotify, Apple Music, YouTube, Tidal, and Amazon Music will turn it down. Know before you submit.</p>
+
+  <!-- ══ TOOL CARD ══ -->
+  <div class="lpc-card">
+    <div class="lpc-card-head">
+
+      <!-- Producer Presets -->
+      <div style="margin-bottom:16px">
+        <div style="font-size:11px;font-family:'DM Mono',monospace;color:#555;text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px">Quick load — producer targets</div>
+        <div class="lpc-presets" id="lpcPresets">
+          <button class="lpc-preset" data-lufs="-8" onclick="lpcLoadPreset(this,-8)">Hyperpop –8 LUFS</button>
+          <button class="lpc-preset" data-lufs="-10" onclick="lpcLoadPreset(this,-10)">EDM / Club –10 LUFS</button>
+          <button class="lpc-preset" data-lufs="-14" onclick="lpcLoadPreset(this,-14)">Streaming Sweet Spot –14 LUFS</button>
+          <button class="lpc-preset" data-lufs="-16" onclick="lpcLoadPreset(this,-16)">Radio / Podcast –16 LUFS</button>
+          <button class="lpc-preset" data-lufs="-18" onclick="lpcLoadPreset(this,-18)">Film / TV –18 LUFS</button>
+          <button class="lpc-preset" data-lufs="-23" onclick="lpcLoadPreset(this,-23)">EBU R128 Broadcast –23 LUFS</button>
+        </div>
+      </div>
+
+      <!-- LUFS Slider -->
+      <div class="lpc-slider-wrap" style="padding-left:0;padding-right:0">
+        <div class="lpc-slider-label">
+          <span class="lpc-slider-title">Your master's integrated LUFS</span>
+          <span>
+            <span class="lpc-lufs-display" id="lpcLufsVal">–14</span>
+            <span class="lpc-lufs-unit">LUFS</span>
+          </span>
+        </div>
+        <input type="range" class="lpc-slider" id="lpcSlider" min="-30" max="-5" step="0.5" value="-14"
+          oninput="lpcCalc()" style="--pct:66.67%">
+        <div class="lpc-slider-range">
+          <span>–30 LUFS (very quiet)</span>
+          <span>–5 LUFS (extremely loud)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bar Visualization -->
+    <div class="lpc-viz-wrap">
+      <div class="lpc-viz-title">Penalty per platform — dB of gain reduction applied</div>
+      <div class="lpc-bars" id="lpcBars">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+
+    <!-- Recommendation Panel -->
+    <div class="lpc-rec" id="lpcRec">
+      <div class="lpc-rec-head">
+        <div class="lpc-rec-dot"></div>
+        <span class="lpc-rec-label" id="lpcRecLabel"></span>
+      </div>
+      <div class="lpc-rec-text" id="lpcRecText"></div>
+      <div class="lpc-rec-action" id="lpcRecAction"></div>
+    </div>
+
+    <!-- Platform Detail Table -->
+    <div class="lpc-table-wrap">
+      <div style="font-size:11px;font-family:'DM Mono',monospace;color:#555;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px">Platform breakdown — tap any value to copy</div>
+      <table class="lpc-table" id="lpcTable">
+        <thead>
+          <tr>
+            <th>Platform</th>
+            <th>Target</th>
+            <th>Penalty</th>
+            <th>Status</th>
+            <th>Mode</th>
+          </tr>
+        </thead>
+        <tbody id="lpcTableBody"><!-- Injected by JS --></tbody>
+      </table>
+    </div>
+
+    <!-- Producer Signal Chain / Famous Tracks -->
+    <div class="lpc-producer-section">
+      <div class="lpc-producer-title">Famous master levels — click to load</div>
+      <div class="lpc-producer-grid" id="lpcProducerGrid">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+
+    <!-- Email Gate Export -->
+    <div class="lpc-export-section">
+      <div class="lpc-export-inner">
+        <div class="lpc-export-title">📄 Download your Penalty Report PDF</div>
+        <div class="lpc-export-desc">Full breakdown for all 5 platforms — formatted for client delivery or personal reference. Free.</div>
+        <div class="lpc-export-form">
+          <input type="email" class="lpc-export-input" id="lpcEmail" placeholder="your@email.com">
+          <button class="lpc-export-btn" onclick="lpcExport()">Get PDF →</button>
+        </div>
+        <div class="lpc-export-note">No spam. Joins The Producer's Briefing — unsubscribe any time.</div>
+        <div id="lpcExportMsg" style="font-size:13px;margin-top:10px;color:#00e8a2;display:none"></div>
+      </div>
+    </div>
+
+    <!-- Share Bar -->
+    <div class="lpc-share-section">
+      <span class="lpc-share-label">Share this tool</span>
+      <div class="lpc-share-btns">
+        <button class="lpc-share-btn share-copy-btn" id="lpcShareCopy" onclick="lpcShareCopy()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy Link
+        </button>
+        <a class="lpc-share-btn share-x-btn" id="lpcShareX" href="#" target="_blank" rel="noopener">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.26 5.632 5.905-5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          Share on X
+        </a>
+        <a class="lpc-share-btn share-reddit-btn" id="lpcShareReddit" href="#" target="_blank" rel="noopener">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
+          Reddit
+        </a>
+      </div>
+    </div>
+
+    <!-- Embed Code -->
+    <div class="lpc-embed-section">
+      <div class="lpc-embed-label">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        Embed this tool on your site
+      </div>
+      <div class="lpc-embed-box" id="lpcEmbedBox" onclick="lpcCopyEmbed()">
+        &lt;iframe src="https://www.musicproductionwiki.com/tools/loudness-penalty.html" width="100%" height="720" frameborder="0" style="border-radius:12px;max-width:860px"&gt;&lt;/iframe&gt;
+      </div>
+      <div class="lpc-embed-copy-note">Click to copy embed code</div>
+    </div>
+
+  </div>
+  <!-- end tool card -->
+
+  <!-- ── Content Sections ── -->
+  <div class="tool-content-section">
+    <h2>Why Streaming Loudness Normalization Changes Everything</h2>
+    <p>Every major streaming platform measures your track's loudness and adjusts its playback volume automatically. The target varies by platform — Spotify uses –14 LUFS integrated, YouTube uses –14 LUFS, Apple Music targets –16 LUFS, Tidal targets –14 LUFS, and Amazon Music applies –9 LUFS normalization. If your master is louder than the target, the platform turns it down by exactly the difference. That reduction is called the loudness penalty.</p>
+    <p>The loudness war assumption — "louder = better" — collapses entirely once you understand this. A master at –8 LUFS will be turned down by 6 dB on Spotify. That means your intentionally brick-walled, dynamically crushed master is reaching listeners at the same perceived volume as a well-mastered –14 LUFS track — but with a fraction of the dynamics and headroom.</p>
+
+    <h3>The LUFS sweet spot for streaming</h3>
+    <p>For most modern music, –14 LUFS integrated hits the Spotify and YouTube target with zero penalty. Apple Music applies –2 dB of reduction at this level, which is acceptable. The practical range for streaming-optimized masters is –13 to –16 LUFS, depending on genre and dynamic content. Below –14, you start leaving playback energy on the table. Above –11, the penalty starts compounding across platforms with no perceptual benefit.</p>
+
+    <h3>When louder makes sense</h3>
+    <p>Not all content benefits from hitting the exact normalization target. Club and DJ tools — music destined for a venue system, not a streaming session — may legitimately master hotter because the playback system isn't normalized. Sync placement considerations differ. And certain genres (hyperpop, some EDM subgenres) have aesthetic compression that's part of the sound, not a mistake. This calculator shows you the actual penalty so you can make an informed decision — not a default one.</p>
+  </div>
+
+  <div class="tool-content-section">
+    <h2>How Each Platform Handles Loudness</h2>
+
+    <h3>Spotify — –14 LUFS (Loud normalization on by default)</h3>
+    <p>Spotify applies loudness normalization to all tracks by default. The target is –14 LUFS integrated. On "Quiet" mode, the target drops to –19 LUFS. Tracks quieter than the target are not boosted — Spotify only turns down, never up. If your track measures at –11 LUFS, Spotify applies –3 dB of gain reduction before it reaches the listener's ears.</p>
+
+    <h3>Apple Music — –16 LUFS (Sound Check)</h3>
+    <p>Apple Music's Sound Check feature targets –16 LUFS. Users can disable Sound Check, which means a percentage of Apple Music listeners hear un-normalized audio. For mastering decisions, assume normalization is active. At –14 LUFS, you receive a –2 dB penalty on Apple Music — acceptable. At –10 LUFS, that penalty is –6 dB.</p>
+
+    <h3>YouTube — –14 LUFS</h3>
+    <p>YouTube applies loudness normalization to all uploads. The target is –14 LUFS integrated with a –1 dBTP true peak limit. Critically, YouTube does not boost quiet content — it only attenuates loud content. For music videos and audio-only uploads, –14 LUFS with headroom for true peak compliance is the correct target.</p>
+
+    <h3>Tidal — –14 LUFS</h3>
+    <p>Tidal targets –14 LUFS integrated. Masters for Tidal can be identical to Spotify masters without any additional processing required.</p>
+
+    <h3>Amazon Music — –9 LUFS</h3>
+    <p>Amazon Music applies a more aggressive loudness ceiling at –9 LUFS. This means masters between –14 and –9 LUFS receive no penalty on Amazon. Only masters louder than –9 LUFS are attenuated. For most streaming-optimized masters, Amazon Music will apply no reduction at all — it's the most permissive major platform.</p>
+  </div>
+
+  <div class="tool-content-section">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-item">
+      <div class="faq-q">Does streaming normalization affect dynamics, or just volume?</div>
+      <div class="faq-a">Volume only. Normalization is a linear gain change — it turns the entire track up or down uniformly. It doesn't affect compression, transients, stereo width, or any dynamic characteristic. A master that was brick-walled into –8 LUFS doesn't magically regain dynamics when Spotify turns it down 6 dB. It arrives at the same volume as a dynamic master but sounds squashed.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Should I master differently for different platforms?</div>
+      <div class="faq-a">Generally no. Master for Spotify (–14 LUFS) and you'll be in good shape everywhere. The exception is content going exclusively to Apple Music, where –16 LUFS is the exact target — though the 2 dB difference is rarely audible. Avoid platform-specific masters unless you have a specific, documented reason.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What's the difference between LUFS and dBFS?</div>
+      <div class="faq-a">dBFS (decibels relative to full scale) measures instantaneous peak level — how close you are to digital clipping. LUFS (Loudness Units relative to Full Scale) measures perceived loudness integrated over time, weighted to match how human hearing perceives different frequencies. A track can measure –0.1 dBFS peak while measuring –14 LUFS integrated. Streaming normalization uses LUFS, not dBFS.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What's true peak and why does it matter?</div>
+      <div class="faq-a">True peak (dBTP) measures inter-sample peaks — distortion that occurs during digital-to-analog conversion when samples are reconstructed. The recommended true peak ceiling for streaming is –1 dBTP. Hitting 0 dBFS without headroom for true peak can cause audible distortion on playback, even if the waveform looks clean in your DAW. Always check true peak before delivery.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Can streaming platforms boost quiet masters?</div>
+      <div class="faq-a">Spotify and YouTube do not boost content quieter than the normalization target — they only attenuate loud content. Apple Music's Sound Check can boost quiet tracks. For mastering purposes, never rely on platform boosting to compensate for a quiet master. Master to the target level; never below it.</div>
+    </div>
+  </div>
+
+  <div class="tool-content-section">
+    <p>Go deeper on mastering for streaming: <a href="/bible/lufs.html">LUFS — The Producer's Bible</a> · <a href="/bible/mastering.html">Mastering — The Producer's Bible</a> · <a href="/tools/lufs-target-reference.html">LUFS Target Reference Tool</a> · <a href="/tools/headroom-calculator.html">Headroom Calculator</a></p>
+  </div>
+
+</div>
+<!-- end tool-page-wrap -->
+
+<footer class="site-footer">
+  <p>© 2026 <a href="/">MusicProductionWiki</a> · <a href="/tools/">Free Tools</a> · <a href="/bible/">The Producer's Bible</a> · <a href="https://theproducersbriefing.beehiiv.com">Newsletter</a></p>
+  <p style="margin-top:6px;font-size:11px;color:#444">Free forever. No signup required. Works on mobile.</p>
+</footer>
+
+<script>
+(function() {
+
+  // ── Platform data ──
+  var PLATFORMS = [
+    { id:'spotify',  name:'Spotify',       target:-14, mode:'Loud (default)',  mobeAlt:'Quiet: –19' },
+    { id:'apple',    name:'Apple Music',   target:-16, mode:'Sound Check',     mobeAlt:'Off: no norm' },
+    { id:'youtube',  name:'YouTube',       target:-14, mode:'Content Loudness',mobeAlt:'–1 dBTP TP limit' },
+    { id:'tidal',    name:'Tidal',         target:-14, mode:'Loudness Norm',   mobeAlt:'' },
+    { id:'amazon',   name:'Amazon Music',  target:-9,  mode:'Auto Loudness',   mobeAlt:'Most permissive' }
+  ];
+
+  // ── Producer presets ──
+  var PRODUCERS = [
+    { name:'Metro Boomin', lufs:-8.5,  note:'Rap / trap — intentional loudness' },
+    { name:'SOPHIE',       lufs:-7.0,  note:'Hyperpop — maximalist compression' },
+    { name:'Skrillex',     lufs:-9.0,  note:'EDM drop — venue energy' },
+    { name:'Frank Ocean',  lufs:-14.5, note:'Blond — dynamic, cinematic' },
+    { name:'Brian Eno',    lufs:-18.0, note:'Ambient — maximum dynamics' },
+    { name:'Max Martin',   lufs:-13.0, note:'Pop — streaming optimized' }
+  ];
+
+  // ── Bar colors by penalty severity ──
+  function penaltyColor(penalty) {
+    if (penalty <= 0) return '#00e8a2';
+    if (penalty < 3)  return '#f5a623';
+    if (penalty < 6)  return '#ff8c42';
+    return '#ff3d5a';
+  }
+
+  // ── DOM helpers (no innerHTML — never rule) ──
+  function el(tag, attrs, text) {
+    var e = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(function(k){ e.setAttribute(k, attrs[k]); });
+    if (text !== undefined) e.textContent = text;
+    return e;
+  }
+  function clearEl(node) {
+    while (node.firstChild) node.removeChild(node.firstChild);
+  }
+
+  // ── Main calc ──
+  window.lpcCalc = function() {
+    var slider = document.getElementById('lpcSlider');
+    var lufs = parseFloat(slider.value);
+    var pct = ((lufs - (-30)) / ((-5) - (-30))) * 100;
+    slider.style.setProperty('--pct', pct + '%');
+
+    // Update display
+    document.getElementById('lpcLufsVal').textContent = (lufs < 0 ? '\u2013' : '') + Math.abs(lufs).toFixed(1).replace('.0','');
+
+    // Deactivate presets
+    var presets = document.querySelectorAll('.lpc-preset');
+    for (var i=0; i<presets.length; i++) {
+      presets[i].classList.remove('active');
+      if (parseFloat(presets[i].getAttribute('data-lufs')) === lufs) {
+        presets[i].classList.add('active');
+      }
+    }
+
+    // Compute penalties
+    var results = PLATFORMS.map(function(p) {
+      var penalty = Math.max(0, lufs - p.target); // positive = dB of gain reduction
+      return { platform: p, penalty: penalty };
+    });
+
+    // Max penalty for bar scaling
+    var maxPenalty = Math.max.apply(null, results.map(function(r){ return r.penalty; }));
+    var barMax = Math.max(maxPenalty, 6);
+
+    // ── Render bars (createElement) ──
+    var barsEl = document.getElementById('lpcBars');
+    clearEl(barsEl);
+    results.forEach(function(r) {
+      var fillPct = r.penalty > 0 ? Math.min(100, (r.penalty / barMax) * 100) : 4;
+      var col = penaltyColor(r.penalty);
+      var label = r.penalty <= 0 ? 'No penalty' : ('\u2013' + r.penalty.toFixed(1) + ' dB');
+
+      var row = el('div', {'class':'lpc-bar-row'});
+      var plat = el('div', {'class':'lpc-bar-platform'}, r.platform.name);
+      var track = el('div', {'class':'lpc-bar-track'});
+      var fillEl = el('div', {'class':'lpc-bar-fill'});
+      fillEl.style.width = fillPct + '%';
+      fillEl.style.background = col;
+      var valSpan = el('span', {'class':'lpc-bar-val'}, label);
+      valSpan.style.color = r.penalty <= 0 ? '#000' : '#f0f0f0';
+      fillEl.appendChild(valSpan);
+      track.appendChild(fillEl);
+      row.appendChild(plat);
+      row.appendChild(track);
+      barsEl.appendChild(row);
+    });
+
+    // ── Render table (createElement) ──
+    var tbody = document.getElementById('lpcTableBody');
+    clearEl(tbody);
+    results.forEach(function(r) {
+      var p = r.platform;
+      var penStr = r.penalty <= 0 ? '0 dB' : ('\u2013' + r.penalty.toFixed(1) + ' dB');
+      var penClass = r.penalty <= 0 ? 'no-penalty' : (r.penalty < 3 ? 'small-penalty' : 'large-penalty');
+      var statusText = r.penalty <= 0 ? 'Compliant' : (r.penalty < 3 ? 'Minor penalty' : 'Heavy penalty');
+      var statusClass = r.penalty <= 0 ? 'status-ok' : (r.penalty < 3 ? 'status-warn' : 'status-over');
+
+      var tr = el('tr');
+      var td1 = el('td', {}, p.name);
+      var td2 = el('td', {'class':'target'}, p.target + ' LUFS');
+      var td3 = el('td', {'class':'penalty-val ' + penClass});
+      var copyBtn = el('button', {'class':'lpc-copy-val','title':'Click to copy'}, penStr);
+      (function(btn, val) {
+        btn.addEventListener('click', function(e){ lpcCopyVal(btn, val, e); });
+      })(copyBtn, penStr);
+      td3.appendChild(copyBtn);
+      var td4 = el('td', {'class':'status ' + statusClass}, statusText);
+      var td5 = el('td', {}, p.mode);
+      td5.style.fontSize = '11px';
+      td5.style.color = '#555';
+      tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3);
+      tr.appendChild(td4); tr.appendChild(td5);
+      tbody.appendChild(tr);
+    });
+
+    // ── Recommendation ──
+    var worstPenalty = maxPenalty;
+    var rec = document.getElementById('lpcRec');
+    var recLabel = document.getElementById('lpcRecLabel');
+    var recText = document.getElementById('lpcRecText');
+    var recAction = document.getElementById('lpcRecAction');
+    rec.className = 'lpc-rec';
+
+    if (worstPenalty <= 0) {
+      rec.classList.add('safe');
+      recLabel.textContent = 'Quiet master — no normalization penalty';
+      recText.textContent = 'Your master is quieter than all platform targets. It will not be turned down. Depending on your genre, you may want to push 1–2 dB louder to reach the Spotify/YouTube target of –14 LUFS.';
+      recAction.textContent = lufs < -16 ? 'Consider targeting –14 LUFS for more playback energy.' : 'You\'re in good shape. No changes required.';
+    } else if (worstPenalty < 3) {
+      rec.classList.add('warn');
+      recLabel.textContent = 'Minor penalty — ' + worstPenalty.toFixed(1) + ' dB on loudest platform';
+      recText.textContent = 'Your master is slightly above the most restrictive target (Apple Music at –16 LUFS). Spotify and YouTube see no penalty or a small one. This is within acceptable range for most commercial masters.';
+      recAction.textContent = 'Optional: reduce integrated loudness by ' + worstPenalty.toFixed(1) + ' dB to zero out all penalties. Not required if the sound is intentional.';
+    } else if (worstPenalty < 6) {
+      rec.classList.add('warn');
+      recLabel.textContent = 'Moderate penalty — ' + worstPenalty.toFixed(1) + ' dB reduction applied';
+      recText.textContent = 'Streaming platforms are significantly turning down your master. The dynamic content and headroom you worked for are being negated. Your track reaches listeners at the same volume as a more dynamic master — but with more compression artifacts.';
+      recAction.textContent = 'Recommended: revisit the limiting stage. Reduce master loudness by ' + (worstPenalty - 1).toFixed(1) + '–' + worstPenalty.toFixed(1) + ' dB. The transients and dynamics you recover will be audible.';
+    } else {
+      rec.classList.add('danger');
+      recLabel.textContent = 'Heavy penalty — ' + worstPenalty.toFixed(1) + ' dB turned down';
+      recText.textContent = 'Platforms are applying heavy gain reduction to your master. Listeners are hearing your track significantly quieter than you intended — and with all the compression damage of a loud master, none of the energy benefit. This is the worst-case loudness war outcome.';
+      recAction.textContent = 'Strong recommendation: back off the limiter by at least ' + (worstPenalty - 1).toFixed(1) + ' dB. Let the dynamics breathe. The extra perceived loudness you\'re chasing does not exist on streaming platforms.';
+    }
+
+    // ── Update share URLs ──
+    var shareText = 'My master is at ' + lufs + ' LUFS — see the streaming penalty on this free tool:';
+    var shareUrl = 'https://www.musicproductionwiki.com/tools/loudness-penalty.html';
+    document.getElementById('lpcShareX').href = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(shareText) + '&url=' + encodeURIComponent(shareUrl);
+    document.getElementById('lpcShareReddit').href = 'https://reddit.com/submit?url=' + encodeURIComponent(shareUrl) + '&title=' + encodeURIComponent('Free Loudness Penalty Calculator — see how much Spotify/Apple will turn down your master');
+  };
+
+  // ── Load preset ──
+  window.lpcLoadPreset = function(btn, lufs) {
+    document.getElementById('lpcSlider').value = lufs;
+    lpcCalc();
+  };
+
+  // ── Producer preset click ──
+  window.lpcLoadProducer = function(lufs) {
+    document.getElementById('lpcSlider').value = lufs;
+    lpcCalc();
+    document.getElementById('lpcSlider').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
+  // ── Copy value ──
+  window.lpcCopyVal = function(btn, val, e) {
+    e.stopPropagation();
+    navigator.clipboard.writeText(val).then(function() {
+      var orig = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(function(){ btn.textContent = orig; }, 1500);
+    }).catch(function(){});
+  };
+
+  // ── Share copy ──
+  window.lpcShareCopy = function() {
+    navigator.clipboard.writeText(window.location.href).then(function() {
+      var btn = document.getElementById('lpcShareCopy');
+      var orig = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(function(){ btn.textContent = orig; }, 1800);
+    }).catch(function(){});
+  };
+
+  // ── Embed copy ──
+  window.lpcCopyEmbed = function() {
+    var code = '<iframe src="https://www.musicproductionwiki.com/tools/loudness-penalty.html" width="100%" height="720" frameborder="0" style="border-radius:12px;max-width:860px"></iframe>';
+    navigator.clipboard.writeText(code).then(function() {
+      var box = document.getElementById('lpcEmbedBox');
+      var orig = box.textContent;
+      box.textContent = 'Embed code copied!';
+      setTimeout(function(){ box.textContent = orig; }, 2000);
+    }).catch(function(){});
+  };
+
+  // ── Email export ──
+  window.lpcExport = function() {
+    var email = document.getElementById('lpcEmail').value.trim();
+    var msg = document.getElementById('lpcExportMsg');
+    if (!email || !email.includes('@')) {
+      msg.style.color = '#ff3d5a';
+      msg.style.display = 'block';
+      msg.textContent = 'Please enter a valid email address.';
+      return;
+    }
+    // Beehiiv subscribe (replace with actual form ID when live)
+    msg.style.color = '#00e8a2';
+    msg.style.display = 'block';
+    msg.textContent = '✓ Check your inbox — PDF report on its way. Welcome to The Producer\'s Briefing.';
+    document.getElementById('lpcEmail').value = '';
+  };
+
+  // ── Mobile nav ──
+  document.getElementById('msbMob').addEventListener('click', function() {
+    var drawer = document.getElementById('bmnDrawer');
+    drawer.classList.toggle('open');
+  });
+
+  // ── Render producer cards (createElement) ──
+  var grid = document.getElementById('lpcProducerGrid');
+  PRODUCERS.forEach(function(p) {
+    var lufsStr = (p.lufs < 0 ? '\u2013' : '') + Math.abs(p.lufs).toFixed(1).replace('.0','');
+    var card = el('div', {'class':'lpc-producer-card'});
+    var lufsVal = p.lufs;
+    card.addEventListener('click', function(){ lpcLoadProducer(lufsVal); });
+    var nameDiv = el('div', {'class':'lpc-producer-name'}, p.name);
+    var lufsDiv = el('div', {'class':'lpc-producer-lufs'}, lufsStr + ' LUFS');
+    var noteDiv = el('div', {'class':'lpc-producer-note'}, p.note);
+    card.appendChild(nameDiv);
+    card.appendChild(lufsDiv);
+    card.appendChild(noteDiv);
+    grid.appendChild(card);
+  });
+
+  // ── Init ──
+  lpcCalc();
+
+})();
+</script>
+
+</body>
+</html>

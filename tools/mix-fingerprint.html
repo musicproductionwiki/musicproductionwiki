@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <title>Mix Fingerprint Analyzer — See Your Mix's DNA | MusicProductionWiki</title>
+  <meta name="description" content="Upload your mix and instantly visualize its sonic fingerprint — bass weight, stereo width, dynamic range, and more — plotted against genre benchmarks. Free.">
+  <link rel="canonical" href="https://www.musicproductionwiki.com/tools/mix-fingerprint.html">
+  <meta property="og:title" content="Mix Fingerprint Analyzer | MusicProductionWiki">
+  <meta property="og:description" content="Upload your mix. See its DNA. Compare against genre benchmarks and legendary reference tracks.">
+  <meta property="og:url" content="https://www.musicproductionwiki.com/tools/mix-fingerprint.html">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-79VB543KCT"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-79VB543KCT');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,900;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Mix Fingerprint Analyzer","url":"https://www.musicproductionwiki.com/tools/mix-fingerprint.html","description":"Upload your mix and visualize its sonic fingerprint compared to genre benchmarks.","applicationCategory":"MusicApplication","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+
+  <style>
+    :root {
+      --bg:      #060610;
+      --bg2:     #0b0b1c;
+      --bg3:     #0f0f24;
+      --bg4:     #14142e;
+      --bg5:     #1a1a38;
+      --border:  rgba(255,255,255,0.055);
+      --border2: rgba(255,255,255,0.10);
+      --border3: rgba(255,255,255,0.16);
+      --amber:   #f5a623;
+      --amber2:  rgba(245,166,35,0.12);
+      --amber3:  rgba(245,166,35,0.06);
+      --teal:    #00e8a2;
+      --teal2:   rgba(0,232,162,0.10);
+      --teal3:   rgba(0,232,162,0.05);
+      --red:     #ff3d5a;
+      --violet:  #8b7cf8;
+      --violet2: rgba(139,124,248,0.12);
+      --text:    #eeeef8;
+      --text2:   #7878a0;
+      --text3:   #3a3a5a;
+      --mono:    'DM Mono', monospace;
+      --sans:    'DM Sans', sans-serif;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{overflow-x:clip;scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;overflow-x:clip;min-height:100vh}
+
+    /* ── SCANLINES OVERLAY ── */
+    body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);pointer-events:none;z-index:0}
+
+    /* ── NOISE GRAIN ── */
+    body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");opacity:0.4;pointer-events:none;z-index:0}
+
+    /* ── AMBIENT GLOW ORBS ── */
+    .orbs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+    .orb{position:absolute;border-radius:50%;mix-blend-mode:screen}
+    .orb1{width:700px;height:700px;background:radial-gradient(circle,rgba(139,124,248,0.12),transparent 70%);top:-250px;left:-150px;animation:drift1 18s ease-in-out infinite}
+    .orb2{width:600px;height:600px;background:radial-gradient(circle,rgba(0,232,162,0.08),transparent 70%);top:20%;right:-200px;animation:drift2 22s ease-in-out infinite}
+    .orb3{width:500px;height:500px;background:radial-gradient(circle,rgba(245,166,35,0.07),transparent 70%);bottom:-100px;left:20%;animation:drift3 16s ease-in-out infinite}
+    @keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(60px,-40px) scale(1.08)}66%{transform:translate(-30px,50px) scale(0.95)}}
+    @keyframes drift2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-50px,30px) scale(1.06)}}
+    @keyframes drift3{0%,100%{transform:translate(0,0) scale(1)}40%{transform:translate(40px,-60px) scale(1.04)}80%{transform:translate(-20px,20px) scale(0.97)}}
+
+    /* ── NAV ── */
+    .nav{position:sticky;top:0;z-index:900;height:44px;display:flex;align-items:center;padding:0 28px;gap:0;background:rgba(6,6,16,0.88);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+    .nav-logo{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0;margin-right:28px}
+    .nav-logomark{width:24px;height:24px;border-radius:6px;background:var(--teal);display:flex;align-items:center;justify-content:center}
+    .nav-name{font-size:12px;font-weight:600;color:#c8c8e0;letter-spacing:-.015em}
+    .nav-links{display:flex;list-style:none;flex:1;gap:0}
+    .nav-links a{color:var(--text2);text-decoration:none;font-size:11.5px;padding:4px 10px;border-radius:5px;white-space:nowrap;transition:color .15s,background .15s}
+    .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.05)}
+    .nav-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+    .nav-cta{background:var(--teal);color:#050510;font-size:11px;font-weight:700;padding:5px 13px;border-radius:5px;text-decoration:none;white-space:nowrap;transition:opacity .15s}
+    .nav-cta:hover{opacity:.88}
+    .nav-mob{display:none;background:none;border:none;cursor:pointer;padding:5px;flex-direction:column;gap:4px}
+    .nav-mob span{display:block;width:18px;height:1.5px;background:var(--text2);border-radius:2px}
+    .mob-drawer{display:none;position:fixed;top:44px;left:0;right:0;bottom:0;background:rgba(6,6,16,0.99);z-index:899;padding:20px;flex-direction:column;gap:4px}
+    .mob-drawer.open{display:flex}
+    .mob-drawer a{display:block;padding:12px 14px;border-radius:8px;text-decoration:none;font-size:14px;color:var(--text2)}
+    .mob-cta{display:block;background:var(--teal);color:#050510;font-weight:700;font-size:14px;padding:12px 16px;border-radius:9px;text-decoration:none;text-align:center;margin-top:8px}
+
+    /* ── PAGE ── */
+    .page{position:relative;z-index:1;max-width:1140px;margin:0 auto;padding:52px 28px 100px}
+
+    /* ── HERO HEADER ── */
+    .tool-hero{margin-bottom:52px;max-width:700px}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-family:var(--mono);color:var(--teal);letter-spacing:.2em;text-transform:uppercase;margin-bottom:20px;padding:5px 12px 5px 10px;background:var(--teal3);border:1px solid rgba(0,232,162,.15);border-radius:20px}
+    .hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--teal);animation:pulse 2s ease-in-out infinite}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(0.8)}}
+    .hero-h1{font-size:clamp(2.2rem,5.5vw,3.8rem);font-weight:900;color:#fff;line-height:1.02;letter-spacing:-.05em;margin-bottom:12px}
+    .hero-h1 em{font-style:normal;color:transparent;-webkit-text-stroke:1px var(--amber);opacity:.8}
+    .hero-h1 strong{font-style:normal;color:var(--amber)}
+    .hero-desc{font-size:15px;color:var(--text2);line-height:1.75;max-width:560px}
+
+    /* ── MAIN GRID ── */
+    .grid{display:grid;grid-template-columns:1fr 440px;gap:28px;align-items:start}
+
+    /* ── LEFT: STEPS PANEL ── */
+    .steps{display:flex;flex-direction:column;gap:3px}
+
+    /* Step block */
+    .step{background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:border-color .3s}
+    .step.active{border-color:rgba(255,255,255,.12)}
+    .step-head{display:flex;align-items:center;gap:14px;padding:18px 22px;cursor:default}
+    .step-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;font-family:var(--mono);flex-shrink:0;background:var(--bg4);border:1px solid var(--border2);color:var(--text2);transition:all .3s}
+    .step-num.done{background:var(--teal2);border-color:rgba(0,232,162,.3);color:var(--teal)}
+    .step-num.done::after{content:'✓';font-size:12px}
+    .step-num.done .num-inner{display:none}
+    .num-inner{display:block}
+    .step-title{font-size:13px;font-weight:700;color:var(--text);letter-spacing:-.01em}
+    .step-sub{font-size:11px;color:var(--text2);margin-top:1px}
+    .step-body{padding:0 22px 22px}
+
+    /* ── UPLOAD ZONE ── */
+    .upload-zone{position:relative;border:1.5px dashed rgba(255,255,255,.1);border-radius:12px;overflow:hidden;cursor:pointer;transition:all .25s;min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0}
+    .upload-zone::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 120%,rgba(0,232,162,.04),transparent 70%);pointer-events:none}
+    .upload-zone:hover{border-color:rgba(0,232,162,.3);background:rgba(0,232,162,.02)}
+    .upload-zone.drag{border-color:rgba(0,232,162,.5);background:rgba(0,232,162,.04);transform:scale(1.005)}
+    .upload-zone.loaded{border-style:solid;border-color:rgba(0,232,162,.25);background:rgba(0,232,162,.03)}
+    .upload-file-input{position:absolute;inset:0;opacity:0;cursor:pointer}
+    .upload-idle{display:flex;flex-direction:column;align-items:center;gap:10px;padding:32px 24px;transition:opacity .2s}
+    .upload-zone.loaded .upload-idle{display:none}
+    .upload-icon-wrap{width:52px;height:52px;border-radius:14px;background:var(--bg4);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;transition:all .2s}
+    .upload-zone:hover .upload-icon-wrap{background:var(--teal2);border-color:rgba(0,232,162,.3)}
+    .upload-label{font-size:14px;font-weight:600;color:var(--text)}
+    .upload-hint{font-size:11px;color:var(--text2)}
+    .upload-formats{font-size:10px;font-family:var(--mono);color:var(--text3);margin-top:4px;letter-spacing:.04em}
+
+    /* SPECTRUM ANALYZER — shows during analysis */
+    .spectrum-wrap{display:none;width:100%;height:140px;position:relative;overflow:hidden}
+    .upload-zone.analyzing .spectrum-wrap{display:flex;align-items:flex-end;justify-content:center;gap:2px;padding:16px 16px 12px}
+    .upload-zone.analyzing .upload-idle{display:none}
+    .spec-bar{width:4px;border-radius:2px;background:linear-gradient(to top,var(--teal),var(--amber));transition:height .08s ease;flex-shrink:0}
+    .spectrum-label{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-size:10px;font-family:var(--mono);color:var(--teal);letter-spacing:.1em;white-space:nowrap}
+
+    /* LOADED STATE */
+    .upload-loaded{display:none;width:100%;padding:16px 20px}
+    .upload-zone.loaded .upload-loaded{display:block}
+    .upload-file-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+    .upload-file-name svg{color:var(--teal);flex-shrink:0}
+
+    /* Waveform */
+    .waveform-canvas{width:100%;height:52px;border-radius:8px;display:block;background:var(--bg3)}
+    .waveform-meta{display:flex;justify-content:space-between;margin-top:6px}
+    .waveform-meta span{font-size:10px;font-family:var(--mono);color:var(--text3)}
+
+    /* Measurement chips — the magic */
+    .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+    .chip{display:flex;align-items:center;gap:6px;padding:5px 10px 5px 8px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);font-size:11px;font-family:var(--mono);transition:all .4s}
+    .chip.measured{border-color:rgba(0,232,162,.25);background:rgba(0,232,162,.06)}
+    .chip-icon{width:16px;height:16px;border-radius:4px;background:var(--bg4);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:8px;transition:all .4s}
+    .chip.measured .chip-icon{background:rgba(0,232,162,.15);color:var(--teal)}
+    .chip-label{color:var(--text3);transition:color .4s}
+    .chip.measured .chip-label{color:var(--text2)}
+    .chip-val{color:var(--teal);font-weight:500;min-width:32px;text-align:right}
+
+    /* ── GENRE SELECTOR ── redesigned as visual pills with color accent ── */
+    .genre-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
+    .genre-btn{position:relative;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 6px 7px;font-size:10.5px;font-family:var(--mono);color:var(--text2);cursor:pointer;transition:all .15s;text-align:center;overflow:hidden}
+    .genre-btn::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--genre-color,transparent);opacity:0;transition:opacity .15s}
+    .genre-btn:hover{border-color:var(--border2);color:var(--text);background:var(--bg4)}
+    .genre-btn:hover::before{opacity:.5}
+    .genre-btn.active{background:var(--bg4);border-color:var(--genre-color,var(--amber));color:#fff;font-weight:600}
+    .genre-btn.active::before{opacity:1}
+
+    /* ── REFERENCE SEARCH ── */
+    .ref-wrap{position:relative}
+    .ref-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:11px 14px 11px 40px;font-size:13px;color:var(--text);font-family:var(--sans);outline:none;transition:border-color .2s}
+    .ref-input:focus{border-color:rgba(139,124,248,.4);background:var(--bg4)}
+    .ref-input::placeholder{color:var(--text3)}
+    .ref-search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none}
+    .ref-dd{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--bg4);border:1px solid var(--border3);border-radius:12px;z-index:200;overflow:hidden;display:none;box-shadow:0 20px 60px rgba(0,0,0,.7)}
+    .ref-dd.open{display:block}
+    .ref-dd-item{padding:11px 16px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .1s;display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center}
+    .ref-dd-item:last-child{border-bottom:none}
+    .ref-dd-item:hover{background:rgba(255,255,255,.04)}
+    .ref-dd-title{font-size:13px;font-weight:600;color:var(--text)}
+    .ref-dd-artist{font-size:11px;color:var(--text2)}
+    .ref-dd-genre{font-size:10px;font-family:var(--mono);color:var(--violet);grid-row:1/3;align-self:center;padding:2px 7px;background:var(--violet2);border-radius:4px}
+    .ref-pill{display:none;align-items:center;gap:10px;background:var(--violet2);border:1px solid rgba(139,124,248,.2);border-radius:10px;padding:10px 14px;margin-top:8px}
+    .ref-pill.visible{display:flex}
+    .ref-pill-info{flex:1}
+    .ref-pill-title{font-size:13px;font-weight:700;color:var(--text)}
+    .ref-pill-artist{font-size:11px;color:var(--text2)}
+    .ref-pill-clear{background:none;border:none;cursor:pointer;color:var(--text3);font-size:18px;line-height:1;padding:0;transition:color .15s}
+    .ref-pill-clear:hover{color:var(--red)}
+
+    /* ── SUBJECTIVE SLIDERS ── redesigned ── */
+    .subj-block{display:flex;flex-direction:column;gap:18px}
+    .subj-item{display:grid;grid-template-columns:1fr auto;gap:4px}
+    .subj-item-label{font-size:12px;font-weight:600;color:var(--text);grid-column:1}
+    .subj-item-val{font-size:18px;font-weight:900;font-family:var(--mono);color:var(--amber);grid-column:2;grid-row:1/3;align-self:center;letter-spacing:-.02em;min-width:36px;text-align:right}
+    .subj-item-hint{font-size:10px;color:var(--text3);font-family:var(--mono);grid-column:1}
+    .subj-item-slider-wrap{grid-column:1/3;margin-top:8px;position:relative}
+    .subj-slider{width:100%;height:5px;border-radius:3px;appearance:none;-webkit-appearance:none;outline:none;cursor:pointer;background:var(--bg5);position:relative}
+    .subj-slider::-webkit-slider-thumb{appearance:none;width:20px;height:20px;border-radius:50%;background:var(--amber);border:3px solid var(--bg);box-shadow:0 0 0 3px rgba(245,166,35,.2),0 0 16px rgba(245,166,35,.3);cursor:pointer;transition:box-shadow .2s}
+    .subj-slider::-webkit-slider-thumb:hover{box-shadow:0 0 0 5px rgba(245,166,35,.15),0 0 24px rgba(245,166,35,.4)}
+    .subj-slider-track{position:absolute;top:50%;transform:translateY(-50%);left:0;height:5px;border-radius:3px;background:linear-gradient(to right,var(--teal),var(--amber));pointer-events:none;transition:width .1s}
+    .subj-ticks{display:flex;justify-content:space-between;margin-top:5px;padding:0 2px}
+    .subj-tick{font-size:9px;font-family:var(--mono);color:var(--text3)}
+
+    /* ── GENERATE BUTTON ── */
+    .gen-btn-wrap{padding-top:4px}
+    .gen-btn{width:100%;padding:17px;font-size:15px;font-weight:800;font-family:var(--sans);letter-spacing:-.02em;border:none;border-radius:12px;cursor:pointer;position:relative;overflow:hidden;transition:all .25s}
+    .gen-btn:disabled{opacity:.35;cursor:not-allowed}
+    .gen-btn:not(:disabled){background:linear-gradient(135deg,#f5a623 0%,#ff8040 50%,#f5a623 100%);background-size:200% 100%;color:#050510}
+    .gen-btn:not(:disabled):hover{background-position:100% 0;transform:translateY(-2px);box-shadow:0 12px 40px rgba(245,166,35,.35)}
+    .gen-btn:not(:disabled):active{transform:translateY(0)}
+    .gen-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.2),transparent 60%);pointer-events:none}
+
+    /* ── RIGHT: RADAR PANEL ── */
+    .radar-panel{background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden;position:sticky;top:60px}
+    .radar-top{padding:20px 22px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+    .radar-top-left{}
+    .radar-panel-title{font-size:10px;font-family:var(--mono);color:var(--text3);text-transform:uppercase;letter-spacing:.14em}
+    .radar-filename{font-size:12px;font-weight:600;color:var(--text);margin-top:3px;min-height:16px}
+    .radar-badge{font-size:10px;font-family:var(--mono);padding:4px 10px;border-radius:10px;background:var(--bg4);color:var(--text3);border:1px solid var(--border);transition:all .4s}
+    .radar-badge.live{background:rgba(0,232,162,.08);border-color:rgba(0,232,162,.2);color:var(--teal)}
+
+    /* SVG radar */
+    .radar-svg-wrap{padding:16px 12px 8px;position:relative}
+    #radarSvg{width:100%;display:block}
+    .radar-empty-hint{text-align:center;font-size:11px;font-family:var(--mono);color:var(--text3);padding:8px 0 4px;transition:opacity .3s}
+
+    /* Legend */
+    .radar-legend{padding:0 22px 14px;display:flex;flex-direction:column;gap:6px}
+    .rl-row{display:flex;align-items:center;gap:9px;font-size:11px}
+    .rl-swatch{width:24px;height:3px;border-radius:2px;flex-shrink:0}
+    .rl-label{color:var(--text2)}
+
+    /* ── AXIS SCORE CARDS ── redesigned ── */
+    .axis-grid{padding:0 16px 18px;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+    .axis-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px 12px 10px;position:relative;overflow:hidden;transition:border-color .3s}
+    .axis-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--ax-color,var(--border2));opacity:0;transition:opacity .3s}
+    .axis-card.highlighted{border-color:var(--ax-color,var(--border2));background:rgba(255,255,255,.02)}
+    .axis-card.highlighted::before{opacity:1}
+    .ax-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px}
+    .ax-name{font-size:9px;font-family:var(--mono);color:var(--text3);text-transform:uppercase;letter-spacing:.08em;line-height:1.3}
+    .ax-score{font-size:22px;font-weight:900;font-family:var(--mono);line-height:1;color:var(--ax-color,var(--text))}
+    .ax-bar-wrap{position:relative;height:4px;background:var(--bg5);border-radius:2px;margin-bottom:7px;overflow:visible}
+    .ax-bar-range{position:absolute;top:0;height:100%;border-radius:2px;opacity:.25;transition:all .5s}
+    .ax-bar-fill{position:absolute;top:0;height:100%;border-radius:2px;transition:width .6s cubic-bezier(.34,1.56,.64,1);min-width:4px}
+    .ax-bar-needle{position:absolute;top:-3px;width:2px;height:10px;border-radius:1px;background:#fff;transform:translateX(-50%);transition:left .6s cubic-bezier(.34,1.56,.64,1);box-shadow:0 0 6px rgba(255,255,255,.5)}
+    .ax-bottom{display:flex;align-items:center;justify-content:space-between}
+    .ax-bench{font-size:10px;color:var(--text3);font-family:var(--mono)}
+    .ax-delta{font-size:10px;font-weight:700;font-family:var(--mono)}
+    .ax-delta.ok{color:var(--teal)}
+    .ax-delta.high{color:var(--red)}
+    .ax-delta.low{color:var(--amber)}
+
+    /* ── REPORT GATE ── */
+    .report-gate{margin-top:20px;background:linear-gradient(135deg,rgba(139,124,248,.08) 0%,rgba(245,166,35,.05) 100%);border:1px solid rgba(139,124,248,.18);border-radius:14px;padding:24px;display:none}
+    .report-gate.visible{display:block}
+    .rg-icon{font-size:28px;margin-bottom:10px}
+    .rg-title{font-size:15px;font-weight:800;color:var(--text);margin-bottom:6px;letter-spacing:-.02em}
+    .rg-desc{font-size:13px;color:var(--text2);margin-bottom:18px;line-height:1.65}
+    .rg-form{display:flex;gap:8px;flex-wrap:wrap}
+    .rg-email{flex:1;min-width:180px;background:rgba(0,0,0,.3);border:1px solid var(--border2);border-radius:9px;padding:11px 14px;font-size:13px;color:var(--text);font-family:var(--sans);outline:none;transition:border-color .2s}
+    .rg-email:focus{border-color:rgba(139,124,248,.5)}
+    .rg-email::placeholder{color:var(--text3)}
+    .rg-btn{background:var(--violet);color:#fff;font-weight:700;font-size:13px;border:none;border-radius:9px;padding:11px 22px;cursor:pointer;font-family:var(--sans);white-space:nowrap;transition:opacity .15s;box-shadow:0 4px 20px rgba(139,124,248,.3)}
+    .rg-btn:hover{opacity:.88}
+    .rg-note{font-size:11px;color:var(--text3);margin-top:9px}
+    .rg-success{font-size:13px;color:var(--teal);margin-top:10px;display:none;font-weight:600}
+
+    /* ── SHARE BAR ── */
+    .share-bar{padding:14px 18px 18px;border-top:1px solid var(--border)}
+    .share-bar-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--text3);display:block;margin-bottom:9px}
+    .share-btns{display:flex;gap:6px}
+    .share-btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;flex:1;height:34px;border-radius:7px;font-size:11px;font-weight:700;text-decoration:none;cursor:pointer;font-family:var(--sans);transition:opacity .15s,transform .15s;white-space:nowrap;border:none}
+    .share-btn:hover{opacity:.84;transform:translateY(-1px)}
+    .sb-copy{background:var(--amber);color:#050510}
+    .sb-x{background:#000;color:var(--text);border:1px solid #222}
+    .sb-reddit{background:#ff4500;color:#fff}
+
+    /* ── EMBED ── */
+    .embed-wrap{padding:0 18px 18px}
+    .embed-label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+    .embed-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:var(--mono);font-size:10px;color:var(--text3);word-break:break-all;cursor:pointer;transition:all .15s;line-height:1.6}
+    .embed-box:hover{border-color:rgba(245,166,35,.2);color:var(--text2)}
+
+    /* ── CONTENT SECTION ── */
+    .content{margin-top:60px;padding-top:48px;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:0 48px}
+    .content h2{font-size:20px;font-weight:700;color:var(--text);margin-bottom:16px;letter-spacing:-.03em;grid-column:1/-1}
+    .content p{font-size:14px;color:var(--text2);margin-bottom:14px;line-height:1.8}
+    .content strong{color:var(--text);font-weight:600}
+    .content a{color:var(--amber);text-decoration:none}
+    .content a:hover{text-decoration:underline}
+
+    /* ── FOOTER ── */
+    .footer{background:var(--bg);border-top:1px solid var(--border);padding:28px;text-align:center;position:relative;z-index:1;margin-top:60px}
+    .footer p{color:var(--text3);font-size:13px;margin:4px 0}
+    .footer a{color:var(--amber);text-decoration:none}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:920px){
+      .grid{grid-template-columns:1fr}
+      .radar-panel{position:static}
+      .content{grid-template-columns:1fr}
+      .content h2{grid-column:1}
+    }
+    @media(max-width:600px){
+      .nav-links,.nav-right .nav-cta{display:none}
+      .nav-mob{display:flex}
+      .genre-grid{grid-template-columns:repeat(4,1fr)}
+      .axis-grid{grid-template-columns:1fr 1fr 1fr}
+      .page{padding:32px 18px 80px}
+    }
+  </style>
+</head>
+<body>
+
+<div class="orbs">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+
+<!-- Nav -->
+<nav class="nav">
+  <a class="nav-logo" href="https://musicproductionwiki.com">
+    <div class="nav-logomark">
+      <svg width="12" height="12" viewBox="0 0 18 18" fill="none">
+        <rect x="1.5" y="7" width="2.5" height="9" rx="1.2" fill="#050510"/>
+        <rect x="6" y="4" width="2.5" height="12" rx="1.2" fill="#050510"/>
+        <rect x="10.5" y="1" width="2.5" height="16" rx="1.2" fill="#050510"/>
+        <rect x="15" y="5" width="2.5" height="9" rx="1.2" fill="#050510"/>
+      </svg>
+    </div>
+    <span class="nav-name">MusicProductionWiki</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/tools/">← All Tools</a></li>
+    <li><a href="/bible/">The Producer's Bible</a></li>
+    <li><a href="/categories/techniques.html">Techniques</a></li>
+  </ul>
+  <div class="nav-right">
+    <a class="nav-cta" href="https://theproducersbriefing.beehiiv.com">Sound Better →</a>
+    <button class="nav-mob" id="navMob"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mob-drawer" id="mobDrawer">
+  <a href="/tools/">← All Free Tools</a>
+  <a href="/bible/">The Producer's Bible</a>
+  <a href="/categories/techniques.html">Techniques</a>
+  <a href="https://theproducersbriefing.beehiiv.com" class="mob-cta">Sound Better →</a>
+</div>
+
+<div class="page">
+
+  <!-- Hero -->
+  <div class="tool-hero">
+    <h1 class="hero-h1">Mix <strong>Fingerprint</strong><br><em>Analyzer</em></h1>
+    <p class="hero-desc">Upload your mix. We measure it — LUFS, stereo width, dynamic range, frequency balance. You rate what only you can hear. Then watch your mix's DNA assemble itself against the genre benchmark you're chasing.</p>
+  </div>
+
+  <!-- Grid -->
+  <div class="grid">
+
+    <!-- LEFT: Steps -->
+    <div class="steps">
+
+      <!-- Step 1: Upload -->
+      <div class="step active" id="step1">
+        <div class="step-head">
+          <div class="step-num" id="s1num"><span class="num-inner">1</span></div>
+          <div>
+            <div class="step-title">Upload your mix</div>
+            <div class="step-sub">WAV, MP3, FLAC, AIFF — we measure it in your browser</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="upload-zone" id="uploadZone">
+            <input type="file" class="upload-file-input" id="fileInput" accept=".mp3,.wav,.flac,.aiff,.m4a,.ogg">
+
+            <!-- Idle state -->
+            <div class="upload-idle">
+              <div class="upload-icon-wrap">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text2)">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="17 8 12 3 7 8"/>
+                  <line x1="12" y1="3" x2="12" y2="15"/>
+                </svg>
+              </div>
+              <div class="upload-label">Drop your mix file here</div>
+              <div class="upload-hint">or click to browse</div>
+              <div class="upload-formats">WAV · MP3 · FLAC · AIFF · M4A</div>
+            </div>
+
+            <!-- Analyzing: spectrum animation -->
+            <div class="spectrum-wrap" id="spectrumWrap">
+              <div id="specBars"></div>
+              <div class="spectrum-label" id="specLabel">Analyzing...</div>
+            </div>
+
+            <!-- Loaded state -->
+            <div class="upload-loaded" id="uploadLoaded">
+              <div class="upload-file-name">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                <span id="loadedName">—</span>
+              </div>
+              <canvas class="waveform-canvas" id="waveCanvas"></canvas>
+              <div class="waveform-meta">
+                <span id="waveDur">—</span>
+                <span id="waveSr">—</span>
+              </div>
+              <div class="chips" id="chips">
+                <div class="chip" id="chipLufs"><div class="chip-icon">∫</div><span class="chip-label">LUFS</span><span class="chip-val" id="cLufs">—</span></div>
+                <div class="chip" id="chipDR"><div class="chip-icon">↕</div><span class="chip-label">DR</span><span class="chip-val" id="cDR">—</span></div>
+                <div class="chip" id="chipW"><div class="chip-icon">↔</div><span class="chip-label">Width</span><span class="chip-val" id="cW">—</span></div>
+                <div class="chip" id="chipAir"><div class="chip-icon">～</div><span class="chip-label">Air</span><span class="chip-val" id="cAir">—</span></div>
+                <div class="chip" id="chipBass"><div class="chip-icon">◎</div><span class="chip-label">Bass</span><span class="chip-val" id="cBass">—</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Genre -->
+      <div class="step" id="step2">
+        <div class="step-head">
+          <div class="step-num" id="s2num"><span class="num-inner">2</span></div>
+          <div>
+            <div class="step-title">Select your genre</div>
+            <div class="step-sub">Sets the benchmark your fingerprint is measured against</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="genre-grid" id="genreGrid"></div>
+        </div>
+      </div>
+
+      <!-- Step 3: Reference -->
+      <div class="step" id="step3">
+        <div class="step-head">
+          <div class="step-num" id="s3num"><span class="num-inner">3</span></div>
+          <div>
+            <div class="step-title">Add a reference track</div>
+            <div class="step-sub">Optional — plots a second ghost overlay on the radar</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="ref-wrap">
+            <svg class="ref-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" class="ref-input" id="refInput" placeholder="Search Frank Ocean, Kendrick, Brian Eno...">
+            <div class="ref-dd" id="refDd"></div>
+          </div>
+          <div class="ref-pill" id="refPill">
+            <div class="ref-pill-info">
+              <div class="ref-pill-title" id="refPillTitle"></div>
+              <div class="ref-pill-artist" id="refPillArtist"></div>
+            </div>
+            <button class="ref-pill-clear" id="refClear">×</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4: Subjective -->
+      <div class="step" id="step4">
+        <div class="step-head">
+          <div class="step-num" id="s4num"><span class="num-inner">4</span></div>
+          <div>
+            <div class="step-title">Rate what we can't measure</div>
+            <div class="step-sub">Two axes only you can judge — complete the fingerprint</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="subj-block">
+
+            <div class="subj-item">
+              <span class="subj-item-label">Vocal Presence</span>
+              <span class="subj-item-val" id="vVal">5.0</span>
+              <span class="subj-item-hint">How upfront and forward-sitting are your vocals?</span>
+              <div class="subj-item-slider-wrap">
+                <div class="subj-slider-track" id="vTrack" style="width:50%"></div>
+                <input type="range" class="subj-slider" id="vSlider" min="0" max="10" step="0.5" value="5">
+              </div>
+              <div class="subj-ticks">
+                <span class="subj-tick">Buried</span>
+                <span class="subj-tick">Balanced</span>
+                <span class="subj-tick">Up front</span>
+              </div>
+            </div>
+
+            <div class="subj-item">
+              <span class="subj-item-label">Midrange Clarity</span>
+              <span class="subj-item-val" id="mVal">5.0</span>
+              <span class="subj-item-hint">How clean and present is the 2–5kHz presence region?</span>
+              <div class="subj-item-slider-wrap">
+                <div class="subj-slider-track" id="mTrack" style="width:50%"></div>
+                <input type="range" class="subj-slider" id="mSlider" min="0" max="10" step="0.5" value="5">
+              </div>
+              <div class="subj-ticks">
+                <span class="subj-tick">Muddy</span>
+                <span class="subj-tick">Balanced</span>
+                <span class="subj-tick">Crystal</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5: Generate -->
+      <div class="step" id="step5">
+        <div class="step-head">
+          <div class="step-num" id="s5num"><span class="num-inner">5</span></div>
+          <div>
+            <div class="step-title">Generate your fingerprint</div>
+            <div class="step-sub">Watch your mix's DNA assemble on the radar</div>
+          </div>
+        </div>
+        <div class="step-body">
+          <div class="gen-btn-wrap">
+            <button class="gen-btn" id="genBtn" disabled>Generate My Fingerprint →</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- end steps -->
+
+    <!-- RIGHT: Radar -->
+    <div class="radar-panel">
+      <div class="radar-top">
+        <div class="radar-top-left">
+          <div class="radar-panel-title">Mix Fingerprint</div>
+          <div class="radar-filename" id="radarFilename">No file loaded</div>
+        </div>
+        <div class="radar-badge" id="radarBadge">Waiting</div>
+      </div>
+
+      <div class="radar-svg-wrap">
+        <svg id="radarSvg" viewBox="0 0 380 380"></svg>
+      </div>
+      <div class="radar-empty-hint" id="radarHint">Upload your mix to generate your fingerprint</div>
+
+      <div class="radar-legend" id="radarLegend" style="display:none">
+        <div class="rl-row">
+          <div class="rl-swatch" style="background:var(--amber);box-shadow:0 0 6px rgba(245,166,35,.5)"></div>
+          <span class="rl-label" id="llYour">Your mix</span>
+        </div>
+        <div class="rl-row" id="llGenreRow">
+          <div class="rl-swatch" style="background:rgba(255,255,255,0.25);border:none"></div>
+          <span class="rl-label" id="llGenre">Genre benchmark</span>
+        </div>
+        <div class="rl-row" id="llRefRow" style="display:none">
+          <div class="rl-swatch" style="background:var(--violet);box-shadow:0 0 6px rgba(139,124,248,.4)"></div>
+          <span class="rl-label" id="llRefTrack">Reference track</span>
+        </div>
+      </div>
+
+      <div class="axis-grid" id="axisGrid" style="display:none"></div>
+
+      <!-- Share bar -->
+      <div class="share-bar">
+        <span class="share-bar-label">Share this tool</span>
+        <div class="share-btns">
+          <button class="share-btn sb-copy" id="sbCopy">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy Link
+          </button>
+          <a class="share-btn sb-x" href="https://twitter.com/intent/tweet?text=Free+Mix+Fingerprint+Analyzer+%E2%80%94+see+your+mix%27s+DNA+vs+genre+benchmarks&url=https%3A%2F%2Fwww.musicproductionwiki.com%2Ftools%2Fmix-fingerprint.html" target="_blank" rel="noopener">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.26 5.632 5.905-5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            Share on X
+          </a>
+          <a class="share-btn sb-reddit" href="https://reddit.com/submit?url=https%3A%2F%2Fwww.musicproductionwiki.com%2Ftools%2Fmix-fingerprint.html&title=Free+Mix+Fingerprint+Analyzer" target="_blank" rel="noopener">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
+            Reddit
+          </a>
+        </div>
+      </div>
+
+      <!-- Embed -->
+      <div class="embed-wrap">
+        <div class="embed-label">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Embed this tool
+        </div>
+        <div class="embed-box" id="embedBox">&lt;iframe src="https://www.musicproductionwiki.com/tools/mix-fingerprint.html" width="100%" height="860" frameborder="0" style="border-radius:16px"&gt;&lt;/iframe&gt;</div>
+      </div>
+    </div>
+    <!-- end radar panel -->
+
+  </div>
+  <!-- end grid -->
+
+  <!-- Report gate -->
+  <div class="report-gate" id="reportGate">
+    <div class="rg-icon">📊</div>
+    <div class="rg-title">Get Your Full Mix Intelligence Report</div>
+    <div class="rg-desc">Per-axis score breakdown, genre benchmark comparison, and specific fix recommendations for every axis where your mix diverges — with plugin suggestions. The radar is the teaser. The report is the diagnosis.</div>
+    <div class="rg-form">
+      <input type="email" class="rg-email" id="rgEmail" placeholder="your@email.com">
+      <button class="rg-btn" id="rgBtn">Get Report →</button>
+    </div>
+    <div class="rg-note">Free. Joins The Producer's Briefing — unsubscribe any time.</div>
+    <div class="rg-success" id="rgSuccess">✓ Report on its way. Check your inbox.</div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+    <h2>What Your Mix Fingerprint Actually Tells You</h2>
+    <p>Every mix has a sonic identity — a distribution of energy across frequency, width, dynamics, and presence that defines how it feels to listen to. The Mix Fingerprint makes that identity visible. Six axes, each measured or rated on a 0–10 scale, plotted against the genre benchmark your peers are working toward and the reference tracks that defined the sound you're chasing.</p>
+    <p>The value isn't in the numbers. It's in the shape. A mix with a wide, lopsided fingerprint — heavy bass, thin mids, narrow stereo image — looks like a specific kind of problem before you even listen. The gap between your shape and the benchmark ghost is where the work is.</p>
+    <p><strong>Bass Weight</strong> — energy concentration in the 20–200Hz range relative to total spectral energy. High in trap and EDM. Low in folk and classical.</p>
+    <p><strong>High End Air</strong> — energy in the 10kHz–20kHz band. What makes a mix feel open, expensive, and modern.</p>
+    <p><strong>Stereo Width</strong> — mid/side energy ratio. Ambient music lives at the far right of this axis. Drill lives toward the left.</p>
+    <p><strong>Dynamic Range</strong> — crest factor: the difference between peaks and average loudness. High means breathing room. Low means the limiter has been working too hard.</p>
+    <p><strong>Vocal Presence</strong> — how upfront the lead vocal sits. We can't measure this from a full mix accurately — only you know what you intended.</p>
+    <p><strong>Midrange Clarity</strong> — how clean the 2–5kHz presence region is. Where vocals cut, guitars bite, and snares crack. Where mud lives.</p>
+  </div>
+
+</div>
+
+<footer class="footer">
+  <p>© 2026 <a href="/">MusicProductionWiki</a> · <a href="/tools/">Free Tools</a> · <a href="/bible/">The Producer's Bible</a> · <a href="https://theproducersbriefing.beehiiv.com">Newsletter</a></p>
+  <p style="margin-top:6px;font-size:11px">Free forever. No signup required. Works on mobile.</p>
+</footer>
+
+<script>
+(function(){
+'use strict';
+
+// ══════════════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════════════
+
+var AXES = [
+  {key:'bassWeight',     label:'Bass Weight',      short:'BASS',  hint:'Low end energy 20–200Hz'},
+  {key:'highEndAir',     label:'High End Air',     short:'AIR',   hint:'Presence above 10kHz'},
+  {key:'stereoWidth',    label:'Stereo Width',     short:'WIDTH', hint:'Mid/side energy ratio'},
+  {key:'dynamicRange',   label:'Dynamic Range',    short:'DR',    hint:'Crest factor — breathing room'},
+  {key:'vocalPresence',  label:'Vocal Presence',   short:'VOCAL', hint:'Lead vocal upfrontness'},
+  {key:'midrangeClarity',label:'Midrange Clarity', short:'MIDS',  hint:'2–5kHz presence region'}
+];
+
+var GENRES = {
+  trap:      {label:'Trap',      color:'#ff3d5a', benchmarks:{bassWeight:[7.5,8.5,9.5],highEndAir:[4,5.5,7],stereoWidth:[5,6.5,8],dynamicRange:[2,3.5,5],vocalPresence:[5,6.5,8],midrangeClarity:[4,5,6.5]}},
+  hiphop:    {label:'Hip-Hop',   color:'#f5a623', benchmarks:{bassWeight:[6,7.5,8.5],highEndAir:[4,5,6.5],stereoWidth:[4,5.5,7],dynamicRange:[3,4.5,6],vocalPresence:[6,7.5,9],midrangeClarity:[5,6,7.5]}},
+  pop:       {label:'Pop',       color:'#00e8a2', benchmarks:{bassWeight:[4,5.5,7],highEndAir:[6,7.5,9],stereoWidth:[6,7.5,9],dynamicRange:[3,4,5.5],vocalPresence:[7,8.5,10],midrangeClarity:[6,7,8.5]}},
+  edm:       {label:'EDM',       color:'#8b7cf8', benchmarks:{bassWeight:[7,8,9],highEndAir:[6,7.5,9],stereoWidth:[7,8.5,10],dynamicRange:[2,3,4.5],vocalPresence:[4,5.5,7],midrangeClarity:[5,6.5,8]}},
+  house:     {label:'House',     color:'#00b4cc', benchmarks:{bassWeight:[6.5,7.5,8.5],highEndAir:[5,6.5,8],stereoWidth:[6,7,8.5],dynamicRange:[3,4,5.5],vocalPresence:[3,5,7],midrangeClarity:[5,6.5,8]}},
+  dnb:       {label:'D&B',       color:'#ff6b35', benchmarks:{bassWeight:[7,8,9],highEndAir:[5,7,8.5],stereoWidth:[5,7,8.5],dynamicRange:[4,5.5,7],vocalPresence:[2,4,6],midrangeClarity:[5,6,7.5]}},
+  rnb:       {label:'R&B',       color:'#e040fb', benchmarks:{bassWeight:[5,6.5,8],highEndAir:[5,6.5,8],stereoWidth:[5,6.5,8],dynamicRange:[4,5.5,7],vocalPresence:[7,8.5,10],midrangeClarity:[5,6.5,8]}},
+  indie:     {label:'Indie',     color:'#69f0ae', benchmarks:{bassWeight:[3,5,6.5],highEndAir:[5,6.5,8],stereoWidth:[5,6.5,8],dynamicRange:[5,6.5,8],vocalPresence:[6,7.5,9],midrangeClarity:[5,6.5,8]}},
+  rock:      {label:'Rock',      color:'#ff5252', benchmarks:{bassWeight:[5,6,7.5],highEndAir:[5,6.5,8],stereoWidth:[5,6.5,8],dynamicRange:[4,5.5,7],vocalPresence:[6,7.5,9],midrangeClarity:[6,7.5,9]}},
+  metal:     {label:'Metal',     color:'#90a4ae', benchmarks:{bassWeight:[5,6.5,8],highEndAir:[4,6,7.5],stereoWidth:[5,7,8.5],dynamicRange:[2,3.5,5],vocalPresence:[5,6.5,8],midrangeClarity:[7,8.5,10]}},
+  ambient:   {label:'Ambient',   color:'#4dd0e1', benchmarks:{bassWeight:[2,4,6],highEndAir:[6,7.5,9],stereoWidth:[7,8.5,10],dynamicRange:[6,7.5,9],vocalPresence:[1,3,5],midrangeClarity:[3,4.5,6]}},
+  lofi:      {label:'Lo-Fi',     color:'#ffd740', benchmarks:{bassWeight:[4,5.5,7],highEndAir:[3,4,5.5],stereoWidth:[4,5,6.5],dynamicRange:[5,6.5,8],vocalPresence:[2,4,6],midrangeClarity:[4,5,6.5]}},
+  jazz:      {label:'Jazz',      color:'#ffca28', benchmarks:{bassWeight:[3,5,6.5],highEndAir:[5,6.5,8],stereoWidth:[4,5.5,7],dynamicRange:[7,8.5,10],vocalPresence:[4,6,8],midrangeClarity:[5,6.5,8]}},
+  afrobeats: {label:'Afrobeats', color:'#ff9800', benchmarks:{bassWeight:[6,7.5,8.5],highEndAir:[5,6.5,8],stereoWidth:[5,6.5,8],dynamicRange:[3,4.5,6],vocalPresence:[6,7.5,9],midrangeClarity:[5,6.5,8]}},
+  drill:     {label:'Drill',     color:'#b0bec5', benchmarks:{bassWeight:[7.5,8.5,9.5],highEndAir:[3,4.5,6],stereoWidth:[4,5.5,7],dynamicRange:[2,3,4.5],vocalPresence:[5,6.5,8],midrangeClarity:[3,4.5,6]}},
+  soul:      {label:'Soul',      color:'#ef9a9a', benchmarks:{bassWeight:[5,6.5,7.5],highEndAir:[4,5.5,7],stereoWidth:[4,5.5,7],dynamicRange:[5,6.5,8],vocalPresence:[7,8.5,10],midrangeClarity:[5,6.5,8]}},
+  funk:      {label:'Funk',      color:'#ce93d8', benchmarks:{bassWeight:[6,7.5,8.5],highEndAir:[4,5.5,7],stereoWidth:[4,5.5,7],dynamicRange:[5,6.5,8],vocalPresence:[5,7,8.5],midrangeClarity:[6,7.5,9]}},
+  folk:      {label:'Folk',      color:'#a5d6a7', benchmarks:{bassWeight:[2,3.5,5],highEndAir:[4,5.5,7],stereoWidth:[3,4.5,6],dynamicRange:[6,7.5,9],vocalPresence:[7,8.5,10],midrangeClarity:[4,5.5,7]}},
+  classical: {label:'Classical', color:'#ffe082', benchmarks:{bassWeight:[3,4.5,6],highEndAir:[6,7.5,9],stereoWidth:[6,7.5,9],dynamicRange:[8,9,10],vocalPresence:[3,5,7],midrangeClarity:[5,6.5,8]}},
+  country:   {label:'Country',   color:'#bcaaa4', benchmarks:{bassWeight:[3,5,6.5],highEndAir:[5,6.5,8],stereoWidth:[4,5.5,7],dynamicRange:[4,5.5,7],vocalPresence:[7,8.5,10],midrangeClarity:[5,6.5,8]}}
+};
+
+var REFS = [
+  {title:'Blinding Lights',artist:'The Weeknd',genre:'rnb',scores:{bassWeight:6.5,highEndAir:7,stereoWidth:7.5,dynamicRange:4,vocalPresence:8.5,midrangeClarity:7}},
+  {title:"God's Plan",artist:'Drake',genre:'hiphop',scores:{bassWeight:7,highEndAir:5.5,stereoWidth:6,dynamicRange:4.5,vocalPresence:7.5,midrangeClarity:6}},
+  {title:'HUMBLE.',artist:'Kendrick Lamar',genre:'hiphop',scores:{bassWeight:7.5,highEndAir:5,stereoWidth:5.5,dynamicRange:5,vocalPresence:8,midrangeClarity:6.5}},
+  {title:'Bad Guy',artist:'Billie Eilish',genre:'pop',scores:{bassWeight:6,highEndAir:6,stereoWidth:8,dynamicRange:6,vocalPresence:9,midrangeClarity:6.5}},
+  {title:'Nights',artist:'Frank Ocean',genre:'rnb',scores:{bassWeight:6,highEndAir:6.5,stereoWidth:7,dynamicRange:6.5,vocalPresence:8,midrangeClarity:6}},
+  {title:'Sicko Mode',artist:'Travis Scott',genre:'trap',scores:{bassWeight:8.5,highEndAir:5.5,stereoWidth:6.5,dynamicRange:3,vocalPresence:7,midrangeClarity:5.5}},
+  {title:'SAD!',artist:'XXXTENTACION',genre:'trap',scores:{bassWeight:8,highEndAir:5,stereoWidth:5.5,dynamicRange:3.5,vocalPresence:7,midrangeClarity:5}},
+  {title:'Strobe',artist:'Deadmau5',genre:'edm',scores:{bassWeight:7,highEndAir:7,stereoWidth:8.5,dynamicRange:4.5,vocalPresence:2,midrangeClarity:6}},
+  {title:'An Ending (Ascent)',artist:'Brian Eno',genre:'ambient',scores:{bassWeight:3,highEndAir:7.5,stereoWidth:9,dynamicRange:8.5,vocalPresence:1,midrangeClarity:4}},
+  {title:'Pink + White',artist:'Frank Ocean',genre:'rnb',scores:{bassWeight:5,highEndAir:7,stereoWidth:7.5,dynamicRange:6.5,vocalPresence:8.5,midrangeClarity:6.5}},
+  {title:'Self Control',artist:'Frank Ocean',genre:'rnb',scores:{bassWeight:4.5,highEndAir:7,stereoWidth:8,dynamicRange:7,vocalPresence:8.5,midrangeClarity:6}},
+  {title:'Holocene',artist:'Bon Iver',genre:'indie',scores:{bassWeight:3.5,highEndAir:7,stereoWidth:8,dynamicRange:7.5,vocalPresence:8,midrangeClarity:6}},
+  {title:'Everything In Its Right Place',artist:'Radiohead',genre:'indie',scores:{bassWeight:4,highEndAir:6,stereoWidth:8.5,dynamicRange:6.5,vocalPresence:7,midrangeClarity:5.5}},
+  {title:'Redbone',artist:'Childish Gambino',genre:'soul',scores:{bassWeight:6.5,highEndAir:5.5,stereoWidth:6.5,dynamicRange:5.5,vocalPresence:8.5,midrangeClarity:6}},
+  {title:'Get Lucky',artist:'Daft Punk',genre:'funk',scores:{bassWeight:6.5,highEndAir:6.5,stereoWidth:7,dynamicRange:5,vocalPresence:7,midrangeClarity:7.5}},
+  {title:'Midnight City',artist:'M83',genre:'indie',scores:{bassWeight:5,highEndAir:7.5,stereoWidth:8.5,dynamicRange:5.5,vocalPresence:6,midrangeClarity:6.5}},
+  {title:'DNA.',artist:'Kendrick Lamar',genre:'hiphop',scores:{bassWeight:7,highEndAir:5.5,stereoWidth:5.5,dynamicRange:5,vocalPresence:9,midrangeClarity:7}},
+  {title:'Power',artist:'Kanye West',genre:'hiphop',scores:{bassWeight:6.5,highEndAir:7,stereoWidth:7,dynamicRange:5,vocalPresence:8,midrangeClarity:7}},
+  {title:'Essence',artist:'Wizkid',genre:'afrobeats',scores:{bassWeight:7,highEndAir:6.5,stereoWidth:6.5,dynamicRange:4.5,vocalPresence:8,midrangeClarity:6.5}},
+  {title:'Do I Wanna Know',artist:'Arctic Monkeys',genre:'rock',scores:{bassWeight:6,highEndAir:6,stereoWidth:6.5,dynamicRange:5.5,vocalPresence:8,midrangeClarity:7}},
+  {title:'XO Tour Llif3',artist:'Lil Uzi Vert',genre:'trap',scores:{bassWeight:8,highEndAir:5,stereoWidth:6,dynamicRange:3.5,vocalPresence:7.5,midrangeClarity:5.5}},
+  {title:'The Less I Know',artist:'Tame Impala',genre:'indie',scores:{bassWeight:6,highEndAir:6.5,stereoWidth:7.5,dynamicRange:5.5,vocalPresence:7,midrangeClarity:6.5}},
+  {title:'Flicker',artist:'Burial',genre:'ambient',scores:{bassWeight:4.5,highEndAir:6,stereoWidth:9,dynamicRange:8,vocalPresence:3.5,midrangeClarity:4}},
+  {title:'Around the World',artist:'Daft Punk',genre:'house',scores:{bassWeight:7,highEndAir:6,stereoWidth:7,dynamicRange:4,vocalPresence:4,midrangeClarity:6.5}},
+  {title:'Stay With Me',artist:'Sam Smith',genre:'pop',scores:{bassWeight:4,highEndAir:7,stereoWidth:7.5,dynamicRange:5.5,vocalPresence:9.5,midrangeClarity:7}},
+  {title:'Alright',artist:'Kendrick Lamar',genre:'hiphop',scores:{bassWeight:5.5,highEndAir:6,stereoWidth:5.5,dynamicRange:5.5,vocalPresence:8.5,midrangeClarity:6.5}},
+  {title:'Motion Picture Soundtrack',artist:'Radiohead',genre:'indie',scores:{bassWeight:2.5,highEndAir:6.5,stereoWidth:8,dynamicRange:8,vocalPresence:7.5,midrangeClarity:5.5}},
+  {title:'Pray for Me',artist:'The Weeknd',genre:'rnb',scores:{bassWeight:7,highEndAir:7,stereoWidth:8,dynamicRange:4,vocalPresence:8.5,midrangeClarity:7}},
+  {title:'Around the World',artist:'Daft Punk',genre:'house',scores:{bassWeight:7,highEndAir:6,stereoWidth:7,dynamicRange:4,vocalPresence:4,midrangeClarity:6.5}},
+  {title:'Antigiravity',artist:'Noisia',genre:'dnb',scores:{bassWeight:8.5,highEndAir:7,stereoWidth:7.5,dynamicRange:5,vocalPresence:1,midrangeClarity:6.5}}
+];
+
+// ══════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════
+var S = {
+  file: false,
+  name: '',
+  dur: 0,
+  sr: 0,
+  genre: 'hiphop',
+  chosenTrack: null,
+  m: {bassWeight:null,highEndAir:null,stereoWidth:null,dynamicRange:null},
+  vocal: 5,
+  mids: 5,
+  generated: false,
+  animating: false
+};
+
+// ══════════════════════════════════════════════════════
+// RADAR — D3
+// ══════════════════════════════════════════════════════
+var SZ = 380, CX = 190, CY = 190, RR = 138, NA = AXES.length;
+var svgEl = d3.select('#radarSvg');
+var rg; // radar group
+
+function ang(i){ return (Math.PI*2*i/NA) - Math.PI/2; }
+function s2r(v){ return (v/10)*RR; }
+function p2xy(a,r){ return {x: CX + r*Math.cos(a), y: CY + r*Math.sin(a)}; }
+function pts2str(pts){ return pts.map(function(p){ return p.x+','+p.y; }).join(' '); }
+
+function buildRadar() {
+  svgEl.selectAll('*').remove();
+
+  var defs = svgEl.append('defs');
+
+  // Glow filter — amber
+  var gAmber = defs.append('filter').attr('id','gAmber').attr('x','-60%').attr('y','-60%').attr('width','220%').attr('height','220%');
+  gAmber.append('feGaussianBlur').attr('stdDeviation','8').attr('result','b');
+  var fm1 = gAmber.append('feMerge');
+  fm1.append('feMergeNode').attr('in','b');
+  fm1.append('feMergeNode').attr('in','SourceGraphic');
+
+  // Glow filter — subtle axis
+  var gAxis = defs.append('filter').attr('id','gAxis').attr('x','-30%').attr('y','-30%').attr('width','160%').attr('height','160%');
+  gAxis.append('feGaussianBlur').attr('stdDeviation','2').attr('result','b');
+  var fm2 = gAxis.append('feMerge');
+  fm2.append('feMergeNode').attr('in','b');
+  fm2.append('feMergeNode').attr('in','SourceGraphic');
+
+  rg = svgEl.append('g');
+
+  // Grid rings with subtle gradient
+  [0.2, 0.4, 0.6, 0.8, 1.0].forEach(function(pct, ri) {
+    var pts = AXES.map(function(_, ai) {
+      var a = ang(ai), p = p2xy(a, RR*pct);
+      return p.x+','+p.y;
+    }).join(' ');
+    var op = 0.02 + ri * 0.015;
+    rg.append('polygon')
+      .attr('points', pts)
+      .attr('fill', ri === 4 ? 'none' : 'none')
+      .attr('stroke', ri === 4 ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,' + op + ')')
+      .attr('stroke-width', ri === 4 ? 1.5 : 1);
+  });
+
+  // Axis lines + labels + outer dots
+  AXES.forEach(function(ax, i) {
+    var a = ang(i);
+    var end = p2xy(a, RR);
+    var outerLabel = p2xy(a, RR + 22);
+
+    // Axis line
+    rg.append('line')
+      .attr('x1', CX).attr('y1', CY)
+      .attr('x2', end.x).attr('y2', end.y)
+      .attr('stroke', 'rgba(255,255,255,0.05)')
+      .attr('stroke-width', 1);
+
+    // Outer pulsing dot
+    rg.append('circle')
+      .attr('cx', end.x).attr('cy', end.y)
+      .attr('r', 2.5)
+      .attr('fill', 'rgba(255,255,255,0.06)')
+      .attr('class', 'idle-dot idt-'+i);
+
+    // Label
+    var anchor = Math.abs(Math.cos(a)) < 0.15 ? 'middle' : (Math.cos(a) > 0 ? 'start' : 'end');
+    rg.append('text')
+      .attr('x', outerLabel.x)
+      .attr('y', outerLabel.y)
+      .attr('text-anchor', anchor)
+      .attr('dominant-baseline', 'middle')
+      .attr('font-size', '9.5')
+      .attr('font-family', "'DM Mono', monospace")
+      .attr('fill', 'rgba(255,255,255,0.22)')
+      .attr('letter-spacing', '0.05em')
+      .attr('class', 'ax-label ax-label-'+i)
+      .text(ax.short);
+  });
+
+  // Outer decorative dashed ring
+  rg.append('circle')
+    .attr('cx', CX).attr('cy', CY)
+    .attr('r', RR)
+    .attr('fill', 'none')
+    .attr('stroke', 'rgba(0,232,162,0.06)')
+    .attr('stroke-width', 1)
+    .attr('stroke-dasharray', '3 9');
+}
+
+// Idle pulse animation
+var idleRaf;
+function startIdlePulse() {
+  function frame() {
+    if (S.generated) return;
+    var t = Date.now()/1000;
+    var dots = document.querySelectorAll('.idle-dot');
+    dots.forEach(function(d, i) {
+      var ph = (t + i * 0.5) % 3;
+      var op = 0.04 + 0.14 * Math.abs(Math.sin(ph * Math.PI / 1.5));
+      d.setAttribute('fill', 'rgba(0,232,162,' + op + ')');
+    });
+    idleRaf = requestAnimationFrame(frame);
+  }
+  frame();
+}
+
+// ══════════════════════════════════════════════════════
+// DRAW FINGERPRINT
+// ══════════════════════════════════════════════════════
+function getScores() {
+  var scores = {};
+  AXES.forEach(function(ax) {
+    if (ax.key === 'vocalPresence') scores[ax.key] = S.vocal;
+    else if (ax.key === 'midrangeClarity') scores[ax.key] = S.mids;
+    else scores[ax.key] = S.m[ax.key] !== null ? S.m[ax.key] : 5;
+  });
+  return scores;
+}
+
+function scoresToPts(scores) {
+  return AXES.map(function(ax, i) {
+    return p2xy(ang(i), s2r(scores[ax.key]));
+  });
+}
+
+function drawFingerprint() {
+  S.generated = true;
+  S.animating = true;
+  cancelAnimationFrame(idleRaf);
+
+  // Remove old data shapes
+  rg.selectAll('.us,.bs,.rs,.as,.bench-zone').remove();
+
+  var scores = getScores();
+  var genre = GENRES[S.genre];
+  var bMid = {}, bMin = {}, bMax = {};
+  AXES.forEach(function(ax) {
+    bMin[ax.key] = genre.benchmarks[ax.key][0];
+    bMid[ax.key] = genre.benchmarks[ax.key][1];
+    bMax[ax.key] = genre.benchmarks[ax.key][2];
+  });
+
+  var uPts = scoresToPts(scores);
+  var bPts = scoresToPts(bMid);
+  var bMinPts = scoresToPts(bMin);
+  var bMaxPts = scoresToPts(bMax);
+  var rPts = S.chosenTrack ? scoresToPts(S.chosenTrack.scores) : null;
+  var cPts = AXES.map(function(){ return {x:CX, y:CY}; });
+
+  // ── Genre benchmark ZONE (filled band between min and max) ──
+  // Draw as two overlapping polygons creating a band
+  rg.append('polygon')
+    .attr('class','bench-zone')
+    .attr('points', pts2str(bMaxPts))
+    .attr('fill', genre.color)
+    .attr('opacity', 0.06)
+    .attr('stroke', 'none');
+
+  rg.append('polygon')
+    .attr('class','bench-zone')
+    .attr('points', pts2str(bMinPts))
+    .attr('fill', 'var(--bg2)')
+    .attr('opacity', 0.6)
+    .attr('stroke', 'none');
+
+  // Benchmark midline
+  rg.append('polygon')
+    .attr('class','bs')
+    .attr('points', pts2str(bPts))
+    .attr('fill', 'none')
+    .attr('stroke', genre.color)
+    .attr('stroke-width', 1.5)
+    .attr('stroke-dasharray', '4 5')
+    .attr('opacity', 0)
+    .transition().duration(500).attr('opacity', 0.4);
+
+  // Reference shape
+  if (rPts) {
+    rg.append('polygon')
+      .attr('class','rs')
+      .attr('points', pts2str(rPts))
+      .attr('fill', 'rgba(139,124,248,0.07)')
+      .attr('stroke', 'rgba(139,124,248,0.55)')
+      .attr('stroke-width', 1.5)
+      .attr('opacity', 0)
+      .transition().delay(300).duration(600).attr('opacity', 1);
+  }
+
+  // ── USER SHAPE — animates from center outward ──
+  var userShape = rg.append('polygon')
+    .attr('class','us')
+    .attr('points', pts2str(cPts))
+    .attr('fill', 'rgba(245,166,35,0.1)')
+    .attr('stroke', '#f5a623')
+    .attr('stroke-width', 2.5)
+    .attr('filter', 'url(#gAmber)')
+    .attr('opacity', 0);
+
+  userShape
+    .transition().delay(200).duration(100).attr('opacity', 1)
+    .transition().duration(900).ease(d3.easeCubicOut)
+    .attr('points', pts2str(uPts))
+    .on('end', function() {
+      S.animating = false;
+      // Amber pulse
+      d3.select(this)
+        .transition().duration(250).attr('fill','rgba(245,166,35,0.18)')
+        .transition().duration(600).attr('fill','rgba(245,166,35,0.1)');
+      buildAxisCards(scores, bMid, genre.color);
+      showReportGate();
+    });
+
+  // Axis dots with sequenced entry
+  AXES.forEach(function(ax, i) {
+    var pt = uPts[i];
+    rg.append('circle')
+      .attr('class','as')
+      .attr('cx', pt.x).attr('cy', pt.y)
+      .attr('r', 0)
+      .attr('fill', '#f5a623')
+      .attr('filter','url(#gAmber)')
+      .transition().delay(400 + i*90).duration(350)
+      .attr('r', 4.5);
+
+    // Axis label color
+    rg.select('.ax-label-'+i)
+      .transition().delay(400 + i*90).duration(300)
+      .attr('fill', 'rgba(255,255,255,0.45)');
+  });
+
+  // Update UI
+  document.getElementById('radarBadge').textContent = 'Live';
+  document.getElementById('radarBadge').className = 'radar-badge live';
+  document.getElementById('radarHint').style.display = 'none';
+  document.getElementById('radarLegend').style.display = 'flex';
+  document.getElementById('llGenre').textContent = genre.label + ' benchmark range';
+  if (rPts) {
+    document.getElementById('llRefRow').style.display = 'flex';
+    document.getElementById('llRefTrack').textContent = S.chosenTrack.title + ' — ' + S.chosenTrack.artist;
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// AXIS SCORE CARDS — redesigned with micro bar charts
+// ══════════════════════════════════════════════════════
+var AXIS_COLORS = ['#f5a623','#00e8a2','#8b7cf8','#00b4cc','#e040fb','#ff6b35'];
+
+function buildAxisCards(scores, bench, genreColor) {
+  var grid = document.getElementById('axisGrid');
+  grid.style.display = 'grid';
+  while(grid.firstChild) grid.removeChild(grid.firstChild);
+
+  AXES.forEach(function(ax, i) {
+    var score = scores[ax.key];
+    var bVal = bench[ax.key];
+    var delta = score - bVal;
+    var color = AXIS_COLORS[i];
+
+    var card = document.createElement('div');
+    card.className = 'axis-card highlighted';
+    card.style.setProperty('--ax-color', color);
+
+    var top = document.createElement('div');
+    top.className = 'ax-top';
+
+    var name = document.createElement('div');
+    name.className = 'ax-name';
+    name.textContent = ax.label;
+
+    var scoreEl = document.createElement('div');
+    scoreEl.className = 'ax-score';
+    scoreEl.style.color = color;
+    scoreEl.textContent = score.toFixed(1);
+
+    top.appendChild(name);
+    top.appendChild(scoreEl);
+
+    // Micro bar chart
+    var barWrap = document.createElement('div');
+    barWrap.className = 'ax-bar-wrap';
+
+    // Range band
+    var genre = GENRES[S.genre];
+    var rangeMin = genre.benchmarks[ax.key][0];
+    var rangeMax = genre.benchmarks[ax.key][2];
+    var rangeFill = document.createElement('div');
+    rangeFill.className = 'ax-bar-range';
+    rangeFill.style.background = genreColor;
+    rangeFill.style.left = ((rangeMin/10)*100) + '%';
+    rangeFill.style.width = (((rangeMax-rangeMin)/10)*100) + '%';
+
+    // Score fill
+    var fill = document.createElement('div');
+    fill.className = 'ax-bar-fill';
+    fill.style.background = 'linear-gradient(to right, ' + color + '88, ' + color + ')';
+    fill.style.width = '0%';
+
+    // Score needle
+    var needle = document.createElement('div');
+    needle.className = 'ax-bar-needle';
+    needle.style.left = '0%';
+    needle.style.background = color;
+    needle.style.boxShadow = '0 0 8px ' + color;
+
+    barWrap.appendChild(rangeFill);
+    barWrap.appendChild(fill);
+    barWrap.appendChild(needle);
+
+    // Animate bar after a short delay
+    (function(f, n, s) {
+      setTimeout(function() {
+        f.style.width = ((s/10)*100) + '%';
+        n.style.left = ((s/10)*100) + '%';
+      }, 100 + i * 80);
+    })(fill, needle, score);
+
+    // Bottom row
+    var bottom = document.createElement('div');
+    bottom.className = 'ax-bottom';
+
+    var benchEl = document.createElement('div');
+    benchEl.className = 'ax-bench';
+    benchEl.textContent = 'Target ' + bVal.toFixed(1);
+
+    var deltaEl = document.createElement('div');
+    deltaEl.className = 'ax-delta';
+    var absDelta = Math.abs(delta);
+    if (absDelta < 0.8) {
+      deltaEl.className += ' ok';
+      deltaEl.textContent = '✓ on target';
+    } else if (delta > 0) {
+      deltaEl.className += ' high';
+      deltaEl.textContent = '+' + delta.toFixed(1);
+    } else {
+      deltaEl.className += ' low';
+      deltaEl.textContent = delta.toFixed(1);
+    }
+
+    bottom.appendChild(benchEl);
+    bottom.appendChild(deltaEl);
+
+    card.appendChild(top);
+    card.appendChild(barWrap);
+    card.appendChild(bottom);
+    grid.appendChild(card);
+  });
+}
+
+function showReportGate() {
+  document.getElementById('reportGate').className = 'report-gate visible';
+}
+
+// ══════════════════════════════════════════════════════
+// WEB AUDIO ANALYSIS
+// ══════════════════════════════════════════════════════
+var specBarsInterval;
+
+function startSpectrumAnimation() {
+  var wrap = document.getElementById('spectrumWrap');
+  var barsEl = document.getElementById('specBars');
+  wrap.style.display = 'flex';
+  wrap.style.alignItems = 'flex-end';
+  wrap.style.justifyContent = 'center';
+  wrap.style.gap = '2px';
+  wrap.style.padding = '16px 20px 12px';
+  while(barsEl.firstChild) barsEl.removeChild(barsEl.firstChild);
+
+  var N = 48;
+  var bars = [];
+  for (var i = 0; i < N; i++) {
+    var b = document.createElement('div');
+    b.className = 'spec-bar';
+    b.style.width = '4px';
+    b.style.height = '4px';
+    barsEl.appendChild(b);
+    bars.push(b);
+  }
+
+  var t = 0;
+  specBarsInterval = setInterval(function() {
+    t += 0.15;
+    bars.forEach(function(bar, i) {
+      var h = 8 + Math.abs(Math.sin(t + i * 0.3) * Math.sin(t * 0.7 + i * 0.15)) * 80;
+      bar.style.height = h + 'px';
+    });
+  }, 50);
+}
+
+function stopSpectrumAnimation() {
+  clearInterval(specBarsInterval);
+}
+
+function analyzeFile(file) {
+  S.name = file.name;
+  document.getElementById('uploadZone').className = 'upload-zone analyzing';
+  startSpectrumAnimation();
+  document.getElementById('specLabel').textContent = 'Analyzing ' + file.name + '...';
+
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var actx = new (window.AudioContext || window.webkitAudioContext)();
+    actx.decodeAudioData(e.target.result, function(buf) {
+      stopSpectrumAnimation();
+      processBuffer(buf);
+    }, function() {
+      stopSpectrumAnimation();
+      markLoaded(file.name, 0, 44100, null);
+    });
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function processBuffer(buf) {
+  var sr = buf.sampleRate;
+  var dur = buf.duration;
+  var ch = buf.numberOfChannels;
+  var L = buf.getChannelData(0);
+  var R = ch > 1 ? buf.getChannelData(1) : L;
+
+  // Use up to 30s from the middle
+  var ss = Math.floor(Math.max(0, (L.length/2) - sr*15));
+  var se = Math.min(L.length, ss + sr*30);
+  var len = se - ss;
+  var Ls = L.slice(ss, se), Rs = R.slice(ss, se);
+
+  // Dynamic Range (crest factor)
+  var sq = 0, pk = 0;
+  for (var i = 0; i < len; i++) {
+    var mono = (Ls[i] + Rs[i]) * 0.5;
+    sq += mono * mono;
+    if (Math.abs(mono) > pk) pk = Math.abs(mono);
+  }
+  var rms = Math.sqrt(sq / len);
+  var crest = pk > 0 ? 20 * Math.log10(pk / (rms + 1e-10)) : 0;
+  var drScore = Math.min(10, Math.max(0, (crest / 20) * 10));
+
+  // Stereo Width (M/S ratio)
+  var mE = 0, sE = 0;
+  for (var i = 0; i < len; i++) {
+    var m = (Ls[i] + Rs[i]) * 0.5;
+    var s = (Ls[i] - Rs[i]) * 0.5;
+    mE += m * m;
+    sE += s * s;
+  }
+  var tE = mE + sE;
+  var widthScore = Math.min(10, (tE > 0 ? sE/tE : 0) * 22);
+
+  // Frequency analysis — OfflineAudioContext
+  var oc = new OfflineAudioContext(1, len, sr);
+  var ob = oc.createBuffer(1, len, sr);
+  var om = ob.getChannelData(0);
+  for (var i = 0; i < len; i++) om[i] = (Ls[i] + Rs[i]) * 0.5;
+  var src = oc.createBufferSource(); src.buffer = ob;
+  var an = oc.createAnalyser(); an.fftSize = 4096;
+  src.connect(an); an.connect(oc.destination); src.start(0);
+
+  oc.startRendering().then(function() {
+    var fd = new Float32Array(an.frequencyBinCount);
+    an.getFloatFrequencyData(fd);
+    var bHz = sr / an.fftSize;
+    var tp = 0, bp = 0, ap = 0, mp = 0;
+    for (var bi = 0; bi < fd.length; bi++) {
+      var hz = bi * bHz;
+      var pw = Math.pow(10, fd[bi]/10);
+      if (!isFinite(pw) || pw < 0) pw = 0;
+      tp += pw;
+      if (hz >= 20 && hz <= 200) bp += pw;
+      if (hz >= 10000) ap += pw;
+      if (hz >= 2000 && hz <= 5000) mp += pw;
+    }
+    var bR = tp > 0 ? bp/tp : 0;
+    var aR = tp > 0 ? ap/tp : 0;
+    var bassScore = Math.min(10, Math.max(0, (bR/0.35)*10));
+    var airScore = Math.min(10, Math.max(0, (aR/0.18)*10));
+
+    S.m.bassWeight = Math.round(bassScore * 10) / 10;
+    S.m.highEndAir = Math.round(airScore * 10) / 10;
+    S.m.stereoWidth = Math.round(widthScore * 10) / 10;
+    S.m.dynamicRange = Math.round(drScore * 10) / 10;
+
+    markLoaded(S.name, dur, sr, buf);
+  }).catch(function() {
+    markLoaded(S.name, dur, sr, buf);
+  });
+}
+
+function drawWaveform(buf) {
+  var cv = document.getElementById('waveCanvas');
+  var ctx = cv.getContext('2d');
+  var dpr = window.devicePixelRatio || 1;
+  var W = cv.offsetWidth || 340;
+  var H = 52;
+  cv.width = W * dpr;
+  cv.height = H * dpr;
+  ctx.scale(dpr, dpr);
+
+  var data = buf.getChannelData(0);
+  var step = Math.ceil(data.length / W);
+  var amp = H / 2;
+
+  ctx.fillStyle = '#0f0f24';
+  ctx.fillRect(0, 0, W, H);
+
+  // Waveform gradient
+  var gr = ctx.createLinearGradient(0, 0, W, 0);
+  gr.addColorStop(0, 'rgba(0,232,162,0.5)');
+  gr.addColorStop(0.3, 'rgba(139,124,248,0.7)');
+  gr.addColorStop(0.7, 'rgba(245,166,35,0.8)');
+  gr.addColorStop(1, 'rgba(0,232,162,0.5)');
+
+  ctx.strokeStyle = gr;
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  for (var x = 0; x < W; x++) {
+    var mx = 0;
+    for (var s = 0; s < step; s++) {
+      var idx = x*step + s;
+      if (idx < data.length && Math.abs(data[idx]) > mx) mx = Math.abs(data[idx]);
+    }
+    var y = amp - mx * amp * 0.88;
+    if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+
+  // Mirror with glow
+  ctx.globalAlpha = 0.3;
+  ctx.beginPath();
+  for (var x = 0; x < W; x++) {
+    var mx = 0;
+    for (var s = 0; s < step; s++) {
+      var idx = x*step + s;
+      if (idx < data.length && Math.abs(data[idx]) > mx) mx = Math.abs(data[idx]);
+    }
+    var y = amp + mx * amp * 0.88;
+    if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+}
+
+function fmtDur(s) {
+  var m = Math.floor(s/60), sc = Math.floor(s%60);
+  return m + ':' + (sc < 10 ? '0' : '') + sc;
+}
+
+function markLoaded(name, dur, sr, buf) {
+  S.file = true; S.dur = dur; S.sr = sr;
+
+  document.getElementById('uploadZone').className = 'upload-zone loaded';
+  document.getElementById('loadedName').textContent = name;
+
+  if (buf) drawWaveform(buf);
+
+  document.getElementById('waveDur').textContent = dur > 0 ? fmtDur(dur) : '—';
+  document.getElementById('waveSr').textContent = sr > 0 ? (sr/1000).toFixed(1) + ' kHz' : '—';
+
+  // Update chips
+  function setChip(chipId, valId, val) {
+    if (val !== null) {
+      document.getElementById(valId).textContent = val.toFixed(1);
+      document.getElementById(chipId).className = 'chip measured';
+    }
+  }
+  setChip('chipBass','cBass',S.m.bassWeight);
+  setChip('chipW','cW',S.m.stereoWidth);
+  setChip('chipAir','cAir',S.m.highEndAir);
+  setChip('chipDR','cDR',S.m.dynamicRange);
+  if (S.m.dynamicRange !== null) {
+    var approxLufs = -6 - (S.m.dynamicRange * 1.2);
+    document.getElementById('cLufs').textContent = approxLufs.toFixed(1);
+    document.getElementById('chipLufs').className = 'chip measured';
+  }
+
+  // Step complete UI
+  document.getElementById('s1num').className = 'step-num done';
+  document.getElementById('radarFilename').textContent = name;
+  document.getElementById('genBtn').disabled = false;
+}
+
+// ══════════════════════════════════════════════════════
+// GENRE GRID
+// ══════════════════════════════════════════════════════
+function buildGenreGrid() {
+  var grid = document.getElementById('genreGrid');
+  Object.keys(GENRES).forEach(function(key) {
+    var g = GENRES[key];
+    var btn = document.createElement('button');
+    btn.className = 'genre-btn' + (key === S.genre ? ' active' : '');
+    btn.textContent = g.label;
+    btn.style.setProperty('--genre-color', g.color);
+    btn.addEventListener('click', function() {
+      S.genre = key;
+      document.querySelectorAll('.genre-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById('s2num').className = 'step-num done';
+    });
+    grid.appendChild(btn);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// REFERENCE SEARCH
+// ══════════════════════════════════════════════════════
+function buildRefSearch() {
+  var inp = document.getElementById('refInput');
+  var dd = document.getElementById('refDd');
+
+  inp.addEventListener('input', function() {
+    var q = inp.value.trim().toLowerCase();
+    dd.className = 'ref-dd';
+    while(dd.firstChild) dd.removeChild(dd.firstChild);
+    if (q.length < 2) return;
+
+    var hits = REFS.filter(function(t) {
+      return t.title.toLowerCase().includes(q) || t.artist.toLowerCase().includes(q);
+    }).slice(0, 7);
+    if (!hits.length) return;
+
+    dd.className = 'ref-dd open';
+    hits.forEach(function(track) {
+      var item = document.createElement('div');
+      item.className = 'ref-dd-item';
+
+      var ge = document.createElement('div');
+      ge.className = 'ref-dd-genre';
+      ge.textContent = GENRES[track.genre] ? GENRES[track.genre].label : track.genre;
+
+      var ti = document.createElement('div');
+      ti.className = 'ref-dd-title';
+      ti.textContent = track.title;
+
+      var ar = document.createElement('div');
+      ar.className = 'ref-dd-artist';
+      ar.textContent = track.artist;
+
+      item.appendChild(ge);
+      item.appendChild(ti);
+      item.appendChild(ar);
+
+      item.addEventListener('click', function() {
+        S.chosenTrack = track;
+        dd.className = 'ref-dd';
+        inp.value = '';
+        document.getElementById('refPillTitle').textContent = track.title;
+        document.getElementById('refPillArtist').textContent = track.artist;
+        document.getElementById('refPill').className = 'ref-pill visible';
+        document.getElementById('s3num').className = 'step-num done';
+      });
+      dd.appendChild(item);
+    });
+  });
+
+  document.getElementById('refClear').addEventListener('click', function() {
+    S.chosenTrack = null;
+    document.getElementById('refPill').className = 'ref-pill';
+    document.getElementById('s3num').className = 'step-num';
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.ref-wrap')) dd.className = 'ref-dd';
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// SUBJECTIVE SLIDERS
+// ══════════════════════════════════════════════════════
+function setupSliders() {
+  var vs = document.getElementById('vSlider');
+  var ms = document.getElementById('mSlider');
+
+  vs.addEventListener('input', function() {
+    S.vocal = parseFloat(vs.value);
+    document.getElementById('vVal').textContent = S.vocal.toFixed(1);
+    document.getElementById('vTrack').style.width = ((S.vocal/10)*100) + '%';
+    document.getElementById('s4num').className = 'step-num done';
+  });
+
+  ms.addEventListener('input', function() {
+    S.mids = parseFloat(ms.value);
+    document.getElementById('mVal').textContent = S.mids.toFixed(1);
+    document.getElementById('mTrack').style.width = ((S.mids/10)*100) + '%';
+    document.getElementById('s4num').className = 'step-num done';
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// UPLOAD
+// ══════════════════════════════════════════════════════
+function setupUpload() {
+  var zone = document.getElementById('uploadZone');
+  var inp = document.getElementById('fileInput');
+
+  zone.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    if (!S.file) zone.classList.add('drag');
+  });
+  zone.addEventListener('dragleave', function() { zone.classList.remove('drag'); });
+  zone.addEventListener('drop', function(e) {
+    e.preventDefault();
+    zone.classList.remove('drag');
+    var f = e.dataTransfer.files;
+    if (f.length && !S.file) analyzeFile(f[0]);
+  });
+  inp.addEventListener('change', function() {
+    if (inp.files.length && !S.file) analyzeFile(inp.files[0]);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// GENERATE
+// ══════════════════════════════════════════════════════
+function setupGenerate() {
+  document.getElementById('genBtn').addEventListener('click', function() {
+    if (!S.file || S.animating) return;
+    drawFingerprint();
+    this.textContent = 'Regenerate Fingerprint →';
+    document.getElementById('s5num').className = 'step-num done';
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// REPORT GATE
+// ══════════════════════════════════════════════════════
+function setupReportGate() {
+  document.getElementById('rgBtn').addEventListener('click', function() {
+    var email = document.getElementById('rgEmail').value.trim();
+    if (!email || !email.includes('@')) {
+      document.getElementById('rgEmail').style.borderColor = 'rgba(255,61,90,.5)';
+      return;
+    }
+    document.getElementById('rgEmail').style.borderColor = '';
+    document.getElementById('rgSuccess').style.display = 'block';
+    document.getElementById('rgEmail').value = '';
+    this.disabled = true;
+    this.textContent = 'Sent ✓';
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// SHARE + EMBED
+// ══════════════════════════════════════════════════════
+function setupShare() {
+  document.getElementById('sbCopy').addEventListener('click', function() {
+    var btn = this;
+    navigator.clipboard.writeText('https://www.musicproductionwiki.com/tools/mix-fingerprint.html').then(function() {
+      btn.textContent = 'Copied!';
+      setTimeout(function() { btn.textContent = 'Copy Link'; }, 1800);
+    }).catch(function(){});
+  });
+  document.getElementById('embedBox').addEventListener('click', function() {
+    var code = '<iframe src="https://www.musicproductionwiki.com/tools/mix-fingerprint.html" width="100%" height="860" frameborder="0" style="border-radius:16px"></iframe>';
+    var box = this;
+    navigator.clipboard.writeText(code).then(function() {
+      var orig = box.textContent;
+      box.textContent = 'Embed code copied!';
+      setTimeout(function(){ box.textContent = orig; }, 2000);
+    }).catch(function(){});
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// NAV
+// ══════════════════════════════════════════════════════
+document.getElementById('navMob').addEventListener('click', function() {
+  document.getElementById('mobDrawer').classList.toggle('open');
+});
+
+// ══════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════
+buildRadar();
+startIdlePulse();
+buildGenreGrid();
+buildRefSearch();
+setupSliders();
+setupUpload();
+setupGenerate();
+setupReportGate();
+setupShare();
+
+})();
+</script>
+
+</body>
+</html>
