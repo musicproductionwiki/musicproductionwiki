@@ -713,3 +713,46 @@ Prerequisite chain: EQ → Gain Staging → Send/Return → High-Pass Filter
 4. Multiline fixer corrupted regex literal — regex exclusion added
 5. Stale browser download — NEVER rule added
 
+
+---
+
+# ⛔ SESSION 78 UPDATE — May 27, 2026
+
+## State at End of Session 78
+- Articles: **526** live (unchanged — no article batch this session)
+- Bible entries: **223+** live
+- No new articles written this session
+
+## Bible Writing — Now P0 Priority
+
+Bible flagship entry writing is now the top priority for content production. Steve hand-writes all 40 flagship entries. The mpw_bible_writer.py is NOT used for these. 
+
+### Three-Level Reader Standard (ALL Flagship Entries)
+Every flagship entry must simultaneously serve:
+1. **Mid-session fix** — producer has a problem RIGHT NOW, needs the answer in 30 seconds. Fix-It diagnostic is the mechanism.
+2. **Deep learning** — full picture, theory, history, philosophy. Parameters section + How It Works + History are the mechanism.
+3. **Institutional licensing** — Berklee, Full Sail, Icon Collective reading as curriculum. Citation block + editorial standards footer are the mechanism.
+
+### Writing Standard
+- Phenomenal prose — not reference writing, not help text
+- Philosophical depth — the "why" behind every technical decision
+- Specific producer examples with named gear, settings, and songs
+- No hedging, no qualification, no "it depends" without specifics
+- Every section earns its place — if it doesn't teach something useful, cut it
+
+### Content Sections That Must Appear in Every Flagship Entry
+- **New Producers / Beginner Trap** — 3 specific mistakes with fixes + green callout. This is the most shareable section.
+- **Fix-It Diagnostic** — 8 symptoms, accordion pattern, result drops under clicked symptom
+- **In The Wild** — minimum 8 real track analyses with timestamps + one comparison showcase (e.g. Daft Punk vs Radiohead for compression)
+- **Producer DNA** — 3 producers, each with collapsible signal chain and signature technique
+- **Mix Translation Test** — 5 systems, compression-specific or term-specific symptoms
+- **Citation Block** — APA, MLA, Chicago, Harvard — institutional credibility
+- **Version Changelog** — shows living document, builds trust with repeat visitors
+
+## S78 Article Production: 0 Articles
+No articles written this session. All content effort went to compression.html flagship build.
+
+## Pending Content Queue (unchanged)
+- Batch 09: 100 track breakdowns — QUEUED (after Bible Tier 1)
+- Batch 11: 60 recreations — QUEUED (after Batch 09)
+- Genre Bible (20 entries × massive search volume) — QUEUED (after tools milestone)

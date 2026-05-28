@@ -3066,3 +3066,108 @@ def scan_for_secrets(filepath):
 **NEVER rule:** Always run this scan before `gh_put()`. If it finds anything, redact to `[GITHUB_TOKEN]` or `[ANTHROPIC_API_KEY]` first.
 
 
+
+---
+
+# ⛔ SESSION 78 UPDATE — May 27, 2026
+
+## State at End of Session 78
+- No new Python scripts written this session
+- All session work was direct HTML/CSS/JS editing of bible/compression.html via GitHub Trees API
+
+## New Canonical Script Patterns (S78)
+
+### Trees API Single-File Bible Entry Commit Pattern
+Used every time a Bible entry is updated:
+```python
+import json, base64, urllib.request
+
+TOKEN = '[GITHUB_TOKEN]'
+OWNER = 'musicproductionwiki'
+REPO  = 'musicproductionwiki'
+BRANCH = 'main'
+
+with open('local_file.html', 'r', encoding='utf-8') as f:
+    content = f.read()
+
+def gh(path, method='GET', body=None):
+    url = f'https://api.github.com/repos/{OWNER}/{REPO}/{path}'
+    data = json.dumps(body).encode() if body else None
+    req = urllib.request.Request(url, data=data, method=method, headers={
+        'Authorization': f'token {TOKEN}',
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json',
+        'User-Agent': 'mpw-fix',
+    })
+    with urllib.request.urlopen(req, timeout=60) as r:
+        return json.loads(r.read())
+
+ref    = gh(f'git/ref/heads/{BRANCH}')
+head   = ref['object']['sha']
+base_t = gh(f'git/commits/{head}')['tree']['sha']
+
+b64  = base64.b64encode(content.encode('utf-8')).decode('ascii')
+blob = gh('git/blobs', 'POST', {'content': b64, 'encoding': 'base64'})
+tree = gh('git/trees', 'POST', {
+    'base_tree': base_t,
+    'tree': [{'path': 'bible/compression.html', 'mode': '100644', 'type': 'blob', 'sha': blob['sha']}]
+})
+commit = gh('git/commits', 'POST', {
+    'message': 'commit message here',
+    'tree': tree['sha'],
+    'parents': [head]
+})
+gh(f'git/refs/heads/{BRANCH}', 'PATCH', {'sha': commit['sha']})
+print(f'Done — SHA: {commit["sha"]}')
+```
+
+### Share Bar Python Builder Pattern
+Used when injecting share bars into Bible HTML via Python:
+```python
+X_SVG = '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.26 5.632 5.905-5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>'
+R_SVG = '<svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor">...</svg>'
+
+def make_share(anchor, label, tweet, copy_label='Copy Link'):
+    url = f'https://musicproductionwiki.com/bible/compression#{anchor}'
+    ue = url.replace(':', '%3A').replace('/', '%2F').replace('#', '%23')
+    te = tweet.replace(' ', '+').replace("'", '%27').replace('—', '%E2%80%94')
+    cjs = f"(function(b){{navigator.clipboard.writeText('{url}').then(function(){{b.textContent='Copied!';setTimeout(function(){{b.textContent='{copy_label}'}},2000);}})}})(this)"
+    return (f'<div class="mpw-share-bar" style="margin-top:20px">'
+            f'<span class="mpw-share-label">{label}</span>'
+            f'<div class="mpw-share-btns">'
+            f'<button class="mpw-share-btn share-copy" onclick="{cjs}">{copy_label}</button>'
+            f'<a href="https://x.com/intent/tweet?text={te}&url={ue}" target="_blank" rel="noopener" class="mpw-share-btn share-x">{X_SVG}Share on X</a>'
+            f'<a href="https://www.reddit.com/submit?url={ue}&title={te}" target="_blank" rel="noopener" class="mpw-share-btn share-reddit">{R_SVG}Reddit</a>'
+            f'</div>'
+            f'</div>')
+```
+
+### div-depth Share Bar Finder Pattern
+Used to find and replace existing share bars by anchor URL:
+```python
+def replace_share_bar_by_anchor(content, find_anchor, new_bar):
+    idx = content.find(f'compression{find_anchor}')
+    if idx == -1:
+        return content, False
+    bar_start = content.rfind('<div class="mpw-share-bar', 0, idx)
+    if bar_start == -1:
+        return content, False
+    depth = 0
+    i = bar_start
+    while i < len(content):
+        if content[i:i+4] == '<div':
+            depth += 1
+        elif content[i:i+6] == '</div>':
+            depth -= 1
+            if depth == 0:
+                bar_end = i + 6
+                break
+        i += 1
+    return content[:bar_start] + new_bar + content[bar_end:], True
+```
+
+## S78 Scripts Used
+All S78 work was done via inline Python in Claude's bash environment — no standalone .py scripts delivered. Patterns above are the canonical reference for future sessions.
+
+## Script File State — End of Session 78
+All scripts on Steve's machine unchanged from end of Session 77. No new PS1 scripts delivered this session.

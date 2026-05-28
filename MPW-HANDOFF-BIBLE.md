@@ -6,10 +6,11 @@
 # 11. The Producer's Bible — Strategic Overview
 
 Goal: 1,500 entries — most comprehensive music production reference on the internet.
-Current: 223 entries live — confirmed GitHub May 26, 2026
+Current: 223+ entries live — confirmed GitHub May 27, 2026
 (2 flagship: reverb.html v1.6 + chorus.html v5.2 | 69 v5.1/v5.2 | 152 v3.0/v4.0 legacy)
-Gold standard: reverb.html v1.6 — built Sessions 51–55 — 383KB — 25 sections — 3-act arc — CONFIRMED LIVE
-Legacy gold standard: compression.html v5.1 — 20 sections — superseded by reverb.html S55
+Gold standard (structure + SEO): compression.html v1.2 — built Sessions 77/78 — 278KB — 25 sections — 8 share bars — embed code — CONFIRMED LIVE
+Gold standard (prose + content depth): reverb.html v1.6 — built Sessions 51–55 — 383KB — 25 sections — 3-act arc — CONFIRMED LIVE
+Both must be studied before writing any new flagship entry. Never use one without the other.
 URL structure: /bible/[term] — NEVER /dictionary/
 Category pages: /bible/categories/[slug] — 8 pages — run mpw_bible_cat_pages.py --run after writer confirmed
 
@@ -2599,3 +2600,248 @@ No session append files target MPW-HANDOFF-BIBLE.md. This merge session consiste
 - 33 remaining T1 entries: blocked on writer update
 - Bible Bar Tools pill: patch all 223 entries after writer confirmed
 - Canvas patch (adsr.html, envelope.html, stereo-imaging.html): pending mobile confirm
+
+---
+
+# SESSION 77/78 UPDATE — COMPRESSION FLAGSHIP + 40-ENTRY BIBLE STRATEGY
+
+## State at End of Session 78
+- Articles: **526** live (unchanged)
+- Bible entries: **223+** live
+- compression.html: LIVE ✅ — flagship entry v1.2 — gold standard locked
+- reverb.html: LIVE ✅ — v1.6 — prose depth gold standard
+
+---
+
+## GOLD STANDARD UPDATE — DUAL STANDARD (LOCKED S78)
+
+**Structure gold standard: bible/compression.html v1.2**
+- 25 sections, 278KB, 8 strategic share bars, embed code, CSS grid genre table, Fix-It accordion, citation block, changelog
+- SEO: perfect — 5 JSON-LD, all OG tags, canonical, no gaps
+
+**Prose + content gold standard: bible/reverb.html v1.6**
+- 383KB, 25 sections, Three Questions framework, RT60 calculator, producer signal chains, version changelog
+- Confirmed "work of art on iPhone" by Steve
+
+Both must be studied before writing any new flagship entry. Never use one without the other.
+
+---
+
+## THE 40 FLAGSHIP ENTRIES
+
+Steve is hand-writing all 40 to institutional quality. mpw_bible_writer.py is NOT used for these. The 40 are the permanent anchor entries that will drive institutional licensing, citations, and the bulk of search authority.
+
+### Wave 1 — Universal 10 (write first — these terms are searched by every producer)
+| Slug | Status |
+|------|--------|
+| compression | ✅ LIVE — v1.2 — gold standard |
+| eq | QUEUED |
+| gain-staging | QUEUED |
+| reverb | ✅ LIVE — v1.6 |
+| delay | QUEUED |
+| limiting | QUEUED |
+| saturation | QUEUED |
+| sidechain-compression | QUEUED |
+| lufs | QUEUED |
+| mastering | QUEUED |
+
+### Wave 2 — Intermediate 15
+parallel-compression | bus-compression | stereo-imaging | mid-side-processing | automation | high-pass-filter | parametric-eq | multiband-compression | noise-gate | dynamic-range | headroom | subtractive-synthesis | lfo | adsr | mix-translation
+
+### Wave 3 — Advanced 15
+transient-shaping | fm-synthesis | wavetable-synthesis | oscillator | true-peak-limiting | loudness-normalization | send-return | harmonic-distortion | resonance | sidechain-ducking | modulation | chorus | low-pass-filter | arrangement | reference-mixing
+
+### Writing Standard — Three-Level Reader Model
+Every flagship entry must speak to three simultaneous readers:
+1. **Mid-session fix** — producer has a specific problem RIGHT NOW, needs the answer in 30 seconds
+2. **Deep learning** — producer wants to understand the full picture, theory, history, philosophy
+3. **Institutional licensing** — Berklee Online, Full Sail, Icon Collective reading this as curriculum material. Must hold up to editorial scrutiny.
+
+Target licensees: Berklee Online, Full Sail, Icon Collective, Point Blank, SAE, Ableton, Image-Line, Waves, iZotope, FabFilter, Native Instruments. Pricing: $1,500–$12,000/year schools, $25,000/year DAW companies. Every entry must be citable, properly attributed, technically accurate, phenomenally written.
+
+The 2026 Edition marker on every entry is the institutional hook for annual renewal licensing.
+
+---
+
+## COMPRESSION.HTML — COMPLETE ARCHITECTURE (LOCKED TEMPLATE)
+
+### Sections (25 in canonical order)
+1. **definition** — What compression is, psychoacoustics, the three-level reader hook
+2. **how-it-works** — Physics of gain reduction, threshold math, the envelope follower
+3. **new-producers** — Three beginner mistakes + fixes (the "share with a producer who needs this" section)
+4. **parameters** — Threshold, Ratio, Attack, Release, Knee, Makeup Gain — six cards, 75-90w each
+5. **quick-reference** — Single-table cheat sheet + share bar
+6. **tools** — GR Calculator (custom, not mpw_tools_v3) + share bar + embed code
+7. **signal-chain** — SVG diagram (desktop) + mobile stack — compression position in chain
+8. **fix-it** — Diagnostic accordion: 8 symptoms → result drops under clicked symptom, no page jump
+9. **history** — Cards from 1930s through streaming era
+10. **how-to-use** — Professional workflow, DAW tabs (Ableton/Logic/FL/Pro Tools), step-by-step
+11. **genre-table** — CSS grid (NOT HTML table) — 8 genres, 6 columns desktop, card layout mobile + share bar
+12. **topology** — VCA/FET/Optical/Variable-Mu — 4 cards with color-coded top borders
+13. **hardware-plugin** — Classic hardware vs plugin equivalents table
+14. **before-after** — Three numbered real-world scenarios with parameter tables
+15. **in-the-wild** — 8 track analyses with timestamp badges + Daft Punk vs Radiohead comparison + share bar
+16. **producer-dna** — Dr. Dre (gravity), Tchad Blake (texture), CLA (energy) — collapsible signal chains
+17. **signatures** — 4-5 iconic uses decoded with actual settings in monospace
+18. **types** — Compressor characters: Hard Knee, Soft Knee, Limiting, Parallel, Multiband, Sidechain
+19. **verdict** — The Producer's Verdict block + share bar ("Copy Verdict")
+20. **plugin-recs** — Free/Mid/Pro tier grid
+21. **mistakes** — 5 common mistakes with orange left-border cards
+22. **mix-translation** — 5-system checklist (Laptop/Phone/Earbuds/Headphones/Car) + share bar
+23. **flags** — Red/Green flags grid
+24. **progression** — Beginner/Intermediate/Advanced learning path
+25. **faq** — 8 entry-specific technical questions
+
+### Share Bars — 8 Strategic Locations
+ALL share bars use this pattern (MANDATORY):
+```html
+<div class="mpw-share-bar" style="margin-top:20px">
+  <span class="mpw-share-label">LABEL TEXT</span>
+  <div class="mpw-share-btns">
+    <button class="mpw-share-btn share-copy" onclick="...">Copy Link</button>
+    <a href="https://x.com/intent/tweet?..." class="mpw-share-btn share-x">[X SVG]Share on X</a>
+    <a href="https://www.reddit.com/submit?..." class="mpw-share-btn share-reddit">[Reddit SVG]Reddit</a>
+  </div>
+</div>
+```
+
+Share bar CSS (global, in main style block):
+```css
+.mpw-share-bar{display:flex;flex-direction:column;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid #2a2a4a}
+.mpw-share-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#666;display:block}
+.mpw-share-btns{display:flex;gap:6px;width:100%}
+.mpw-share-btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;flex:1;height:36px;padding:0 10px;border-radius:6px;font-size:11px;font-weight:700;text-decoration:none;cursor:pointer;font-family:inherit;transition:opacity .15s;white-space:nowrap;border:none}
+.share-copy{background:#f5a623;color:#000}
+.share-x{background:#000;color:#fff!important}
+.share-reddit{background:#ff4500;color:#fff}
+```
+
+### Fix-It Accordion — Architecture
+8 symptoms. Each symptom button has its own `.fixit-result` div directly beneath it. Clicking opens/closes in place. Chevron `id="fic-{key}"` rotates on open. No page jump. No separate result panel.
+
+```javascript
+window.fixitSelect = function(btn, key){
+  var panel = document.getElementById('fix-'+key);
+  var chevron = document.getElementById('fic-'+key);
+  var isOpen = panel && panel.style.display !== 'none';
+  // close all
+  document.querySelectorAll('.fixit-symptom').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('.fixit-result').forEach(function(p){ if(p) p.style.display='none'; });
+  document.querySelectorAll('.fixit-chevron').forEach(function(c){ if(c) c.style.transform=''; });
+  if(!isOpen && panel){
+    btn.classList.add('active');
+    panel.style.display='block';
+    if(chevron) chevron.style.transform='rotate(180deg)';
+  }
+};
+```
+
+### Entry Nav — IntersectionObserver Pattern
+```javascript
+(function(){
+  var nl=document.querySelectorAll('.entry-nav-inner a');
+  var s=Array.from(document.querySelectorAll('.entry-section[id]'));
+  var last=null;
+  function getId(){
+    var o=148,b=null;
+    for(var i=0;i<s.length;i++){var r=s[i].getBoundingClientRect();if(r.top<=o&&r.bottom>o){b=s[i].id;break;}}
+    if(!b){for(var j=s.length-1;j>=0;j--){if(s[j].getBoundingClientRect().top<=o){b=s[j].id;break;}}}
+    return b||(s[0]&&s[0].id);
+  }
+  function update(){
+    var id=getId();if(!id||id===last)return;last=id;
+    nl.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+id);});
+    var al=document.querySelector('.entry-nav-inner a.active');
+    if(al)al.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  }
+  window.addEventListener('scroll',update,{passive:true});
+  window.addEventListener('touchmove',update,{passive:true});
+  update();
+})();
+```
+
+### Embed Code Block — Template
+After the share bar for any tool:
+```html
+<div style="background:#0d0d0d;border:1px solid rgba(245,166,35,.3);border-radius:10px;padding:16px 20px;margin-top:16px">
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;flex-wrap:wrap">
+    <div>
+      <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:#f5a623;margin-bottom:2px">◆ Embed This Tool</div>
+      <div style="font-size:12px;color:#555">Paste this snippet to embed the calculator on your site.</div>
+    </div>
+    <button data-embed-btn data-code="[IFRAME_HTML]" onclick="[copy JS]" style="background:#f5a623;border:none;color:#000;...">Copy Embed Code</button>
+  </div>
+  <code style="display:block;background:#111;...">
+    &lt;iframe src="https://musicproductionwiki.com/bible/[slug]#tools" width="100%" height="520" ...&gt;&lt;/iframe&gt;
+  </code>
+</div>
+```
+
+### Citation Block — Template
+Below version changelog, above What to Read Next:
+- Header: "Cite This Entry" + Last Reviewed date + DOI Pending badge
+- 4 format rows: APA 7th / MLA 9th / Chicago 17th / Harvard
+- Each row: dark header with format name + Copy button | text in Georgia serif font
+- Footer: Institutional Licensing email | Editorial Standards paragraph
+- Date: always current (May 27, 2026)
+
+### Genre Table — CSS Grid (NOT HTML table)
+```html
+<div class="genre-grid-wrap">
+  <div class="gthead"><div>Genre</div><div>Ratio</div>...</div>
+  <div class="gtrow">
+    <div class="gtcell gtgenre">Trap / Hip-Hop</div>
+    <div class="gtcell"><span class="gtlbl">Ratio</span>4:1–6:1</div>
+    ...
+    <div class="gtnote">Note text...</div>
+  </div>
+</div>
+```
+
+CSS:
+```css
+.genre-grid-wrap{margin:16px 0;background:#13132a;border:1px solid #2a2a4a;border-radius:10px;overflow:hidden}
+.gthead{display:grid;grid-template-columns:1.4fr 0.8fr 0.8fr 1fr 0.8fr 1fr;background:#1a0800;...}
+.gtrow{border-bottom:1px solid #1a1a3a;display:grid;grid-template-columns:1.4fr 0.8fr 0.8fr 1fr 0.8fr 1fr;align-items:start}
+.gtnote{grid-column:1/-1;font-size:11px;color:#666;font-style:italic;background:#0f0f22}
+.gtlbl{display:none}
+@media(max-width:768px){
+  .gthead{display:none}
+  .gtrow{display:flex;flex-direction:column;padding:12px;gap:4px}
+  .gtgenre{font-size:14px;font-weight:800;color:#f5a623;margin-bottom:4px}
+  .gtlbl{display:inline;font-size:10px;font-weight:700;text-transform:uppercase;color:#555;margin-right:6px}
+  .gtnote{border-top:1px solid #1a1a3a;margin-top:6px;background:none}
+}
+```
+
+---
+
+## SESSION 77/78 COMMITS (chronological)
+
+| SHA | Description |
+|-----|-------------|
+| `3c638d11` | Bible tools count/URL fix (dynamic JS, .html hrefs) |
+| `4735c584` | All 41 tool hrefs .html fix |
+| `4b9d1685` | Genre table mobile row height (initial attempt) |
+| `e251e703` | Fix-It scroll removed (scrollIntoView) |
+| `ba6aa61f` | GR calculator 4-column → 2×2 on mobile |
+| `f0600018` | compression.html v1.0 — full flagship entry (25 sections, 241KB) |
+| `7bcc86f7` | 8 strategic share bars, Fix-It accordion, entry nav IntersectionObserver, citation block (APA/MLA/Chicago/Harvard), version changelog, What to Read Next, footer upgrade |
+| `991b5205` | Genre table mobile fix (min-width+table-layout), embedded calculator share, mix translation share, share button colors |
+| `d1314123` | Remove redundant calculator share, share-x white text !important, genre table fixed layout, embed code snippet |
+| `9de422e2` | Share bars full-width row layout globally, genre table CSS grid (mobile card layout), all 6 share bars rebuilt with mpw-share-btns wrapper |
+
+---
+
+## BIBLE WRITING — NEXT SESSION PRIORITIES
+
+P0: EQ flagship entry (eq.html) — second in Wave 1 — highest search volume after compression
+P1: Gain-staging flagship (gain-staging.html)
+P2: Delay flagship (delay.html)
+
+Each entry should follow compression.html structure exactly. Before writing any new flagship entry:
+1. Read compression.html architecture section above
+2. Read reverb.html Three Questions framework + producer DNA approach
+3. Both gold standards must inform every entry — not just one
+
+**Tool milestone:** When first 200 Bible entries are live + Batch 09 (100 breakdowns) + Batch 11 (60 recreations) → build the Tools suite (Frequency Conflict Detector, Arrangement Blueprint Generator, Mix Fingerprint radar chart, Loudness Penalty Calculator, ClearCheck)

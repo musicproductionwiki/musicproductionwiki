@@ -410,3 +410,18 @@ Distinct from articles and Bible entries in:
 
 Genre Bible and Gear Reference are highest revenue per entry. Build these after the T1 batch completes.
 
+
+---
+
+# ⛔ SESSION 78 UPDATE — May 27, 2026
+
+## State at End of Session 78
+- Articles live: **526** (unchanged — no article batch this session)
+- No new articles committed
+- No article slugs added or removed
+
+## Next Article Session
+Article production is blocked on mpw_writer.py update (new mobile drawer HTML). Do not run any article batch until writer is updated with:
+1. New bmn-drawer grid style matching the 526 articles patched in S65
+2. Correct Tools → nav link
+3. All 8 article categories in mobile drawer

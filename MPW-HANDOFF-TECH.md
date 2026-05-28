@@ -3437,3 +3437,110 @@ assert 'classy-haupia-be8e43' in html, "Wrong proxy"
 print("ALL CHECKS PASSED")
 ```
 
+
+---
+
+# ⛔ SESSION 78 UPDATE — May 27, 2026
+
+## State at End of Session 78
+- Articles: **526** live (unchanged)
+- Bible entries: **223+** live
+- Tools: **41** live (unchanged)
+
+## New Canonical CSS Patterns — Bible Flagship Entries
+
+### Share Bar (mandatory for all flagship entries)
+```css
+.mpw-share-bar{display:flex;flex-direction:column;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid #2a2a4a}
+.mpw-share-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#666;display:block}
+.mpw-share-btns{display:flex;gap:6px;width:100%}
+.mpw-share-btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;flex:1;height:36px;padding:0 10px;border-radius:6px;font-size:11px;font-weight:700;text-decoration:none;cursor:pointer;font-family:inherit;transition:opacity .15s;white-space:nowrap;border:none;min-width:0}
+.share-copy{background:#f5a623;color:#000}
+.share-x{background:#000;color:#fff!important}
+.share-reddit{background:#ff4500;color:#fff}
+```
+
+HTML structure (label must be own row, buttons in .mpw-share-btns):
+```html
+<div class="mpw-share-bar" style="margin-top:20px">
+  <span class="mpw-share-label">LABEL</span>
+  <div class="mpw-share-btns">
+    <button class="mpw-share-btn share-copy" onclick="...">Copy Link</button>
+    <a href="https://x.com/intent/tweet?..." class="mpw-share-btn share-x">[X SVG]Share on X</a>
+    <a href="https://www.reddit.com/submit?..." class="mpw-share-btn share-reddit">[Reddit SVG]Reddit</a>
+  </div>
+</div>
+```
+
+### Genre Table — CSS Grid (replaces HTML table permanently)
+HTML tables produce uncontrollable row heights on mobile regardless of `table-layout:fixed`. CSS grid with card layout on mobile is the only reliable pattern. See BIBLE handoff for full CSS.
+
+```css
+.genre-grid-wrap{margin:16px 0;background:#13132a;border:1px solid #2a2a4a;border-radius:10px;overflow:hidden}
+.gthead{display:grid;grid-template-columns:1.4fr 0.8fr 0.8fr 1fr 0.8fr 1fr;background:#1a0800}
+.gtrow{border-bottom:1px solid #1a1a3a;display:grid;grid-template-columns:1.4fr 0.8fr 0.8fr 1fr 0.8fr 1fr;align-items:start}
+.gtnote{grid-column:1/-1;font-size:11px;color:#666;font-style:italic;background:#0f0f22}
+.gtlbl{display:none}
+@media(max-width:768px){
+  .gthead{display:none}
+  .gtrow{display:flex;flex-direction:column;padding:12px;gap:4px;border-bottom:1px solid #2a2a4a}
+  .gtgenre{font-size:14px;font-weight:800;color:#f5a623;margin-bottom:4px}
+  .gtlbl{display:inline;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#555;margin-right:6px}
+  .gtnote{border-top:1px solid #1a1a3a;margin-top:6px;background:none}
+}
+```
+
+### Fix-It Accordion Pattern
+8 symptoms. Each symptom button has its own `.fixit-result` div directly beneath it. Result drops in place — no page jump. Chevron `id="fic-{key}"` rotates on open.
+
+```javascript
+window.fixitSelect = function(btn, key){
+  var panel = document.getElementById('fix-'+key);
+  var chevron = document.getElementById('fic-'+key);
+  var isOpen = panel && panel.style.display !== 'none';
+  document.querySelectorAll('.fixit-symptom').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('.fixit-result').forEach(function(p){ if(p) p.style.display='none'; });
+  document.querySelectorAll('.fixit-chevron').forEach(function(c){ if(c) c.style.transform=''; });
+  if(!isOpen && panel){
+    btn.classList.add('active');
+    panel.style.display='block';
+    if(chevron) chevron.style.transform='rotate(180deg)';
+  }
+};
+```
+
+### Entry Nav — IntersectionObserver (Bible flagship standard)
+```javascript
+(function(){
+  var nl=document.querySelectorAll('.entry-nav-inner a');
+  var s=Array.from(document.querySelectorAll('.entry-section[id]'));
+  var last=null;
+  function getId(){
+    var o=148,b=null;
+    for(var i=0;i<s.length;i++){var r=s[i].getBoundingClientRect();if(r.top<=o&&r.bottom>o){b=s[i].id;break;}}
+    if(!b){for(var j=s.length-1;j>=0;j--){if(s[j].getBoundingClientRect().top<=o){b=s[j].id;break;}}}
+    return b||(s[0]&&s[0].id);
+  }
+  function update(){
+    var id=getId();if(!id||id===last)return;last=id;
+    nl.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+id);});
+    var al=document.querySelector('.entry-nav-inner a.active');
+    if(al)al.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  }
+  window.addEventListener('scroll',update,{passive:true});
+  window.addEventListener('touchmove',update,{passive:true});
+  update();
+})();
+```
+
+## Gold Standard Update
+- **Structure + SEO gold standard:** `bible/compression.html` v1.2 — LOCKED S78
+- **Prose + content gold standard:** `bible/reverb.html` v1.6 — LOCKED S55
+- Both must be studied before writing any new flagship entry
+
+## Session 78 Commits Affecting Tech
+| SHA | Change |
+|-----|--------|
+| `7bcc86f7` | Share bar CSS + Fix-It accordion + entry nav IntersectionObserver pattern established |
+| `9de422e2` | `.mpw-share-bar` flex-direction:column + `.mpw-share-btns` full-width row — global pattern locked |
+| `d1314123` | Genre table replaced with CSS grid — HTML table pattern deprecated for Bible entries |

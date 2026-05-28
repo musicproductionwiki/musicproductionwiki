@@ -1,7 +1,7 @@
 # MPW-NEVER-RULES.md
 ## The Canonical Never Rules — MusicProductionWiki.com
 *Built: May 26, 2026 — Session 75*
-*Updated: May 26, 2026 — Session 71*
+*Updated: May 27, 2026 — Session 78*
 *Author: Claude (Co-CEO, MPW)*
 
 ---
@@ -53,6 +53,10 @@ If a new never rule is added this session → update this file FIRST. SESSION-ST
 | Never use bible-bar/slim-bar nav on `/tools/` pages. | S65 | `/tools/` uses mpw-site-nav system, not Bible nav. | MANUAL |
 | Never include `<div class="bible-mobile-bar">` in any page template. | S68 | Renders as raw white text — remove from all generators. | MANUAL |
 | Never load `style.css` on tool pages — use `main.js` only. | S68 | Duplicate of style.css blob rule. Belt and suspenders. | SCRIPT |
+| Never hardcode tool counts — use dynamic JS to count cards at runtime. | S77 | Hardcoded counts go stale immediately. Always count `.tool-card` elements via JS or omit the count entirely. | MANUAL |
+| Never use HTML `<table>` for the Bible genre settings table on entries — use CSS grid. | S78 | HTML tables produce uncontrollable row heights on mobile regardless of `table-layout:fixed`. CSS grid with card layout on mobile is the only reliable pattern. | MANUAL |
+| Never structure share bar buttons inline with the label — label must be its own row, buttons on a full-width flex row below using `.mpw-share-btns` wrapper. | S78 | Inline label+buttons squish on any screen narrower than ~400px. The column layout (label then buttons) is mandatory. `.mpw-share-bar` must use `flex-direction:column`. `.mpw-share-btns` must use `display:flex;gap:6px;width:100%`. | MANUAL |
+| Never commit a Bible flagship entry without auditing all share bar placements against the reverb.html template. | S78 | Compression was missing share bars at 5 strategic locations that reverb had. Missing shares = lost viral potential. | MANUAL |
 
 ---
 
@@ -90,6 +94,8 @@ If a new never rule is added this session → update this file FIRST. SESSION-ST
 | Never present files for approval and then commit without waiting for explicit "go" from Steve. | S71 | Present ALL files, write the approval block, stop completely — no commits, no tool calls, nothing until Steve responds. Committing without approval = session failure. | MANUAL |
 | Never run a nav update script without `--test` on 3 articles first. | S51 | Verify visually before full batch. | MANUAL |
 | Never send >~200 files in a single GitHub Trees API tree call. | S71 | The API times out with a 422 error on large payloads. For batches over 200 files, build the tree incrementally — chunks of 100, each chunk uses the previous chunk's tree SHA as base_tree. Create ONE commit on the final tree SHA. | MANUAL |
+| Never commit Bible fixes one file at a time — always Trees API, one commit. | S77 | Multiple single-file commits for iterative Bible fixes create unnecessary Netlify deploys and make the SHA log unreadable. All Bible page fixes for a session go in one Trees API commit. | MANUAL |
+| Never assume a share bar is fixed without auditing ALL share bars on the page. | S77 | Compression session: fixed one share bar, three others still had wrong structure. Audit every bar every time. | MANUAL |
 
 ---
 
@@ -143,6 +149,10 @@ If a new never rule is added this session → update this file FIRST. SESSION-ST
 | Never add `display:block!important` to the Bible `aside` inline style. | S51 | Mobile CSS cannot override inline `!important`. | MANUAL |
 | Never use main.js on Bible pages. | S51 | Article pages use `main.js`. Bible pages do NOT. Never mix. | MANUAL |
 | Never restore `mpw_bible_writer.py` from GitHub. | S51 | The repo contains an old v4.0 version. Always use the local `mpw-scripts\` copy. | MANUAL |
+| Never write a Bible flagship entry without all 6 SEO elements: canonical, og:title, og:description, og:image, og:url, twitter:card. | S78 | Compression.html SEO audit confirmed all 6 present + 5 JSON-LD schema blocks. This standard is locked for all flagship entries. | SCRIPT |
+| Never use the mpw_bible_writer.py for the 40 flagship entries — Steve writes these by hand. | S78 | The 40 flagship entries (compression, eq, reverb, delay, etc.) are hand-written to institutional quality. The writer is for batch production of standard entries only. | MANUAL |
+| Never build a Bible flagship entry without all 8 strategic share bar locations: New Producers section, Quick Reference, GR Calculator (or equivalent tool), Genre Table, In The Wild, Verdict, Sidebar, Footer. | S78 | Compression.html final architecture has 8 strategic shares. Every flagship entry must match this coverage. Share bars are placed at moments of maximum shareability — not arbitrarily. | MANUAL |
+| Never treat compression.html as gold standard without checking reverb.html. Compression IS the gold standard for structure and SEO, reverb IS the gold standard for content depth and version architecture. | S78 | Compression has the superior tool, share bar pattern, citation block, and embed code. Reverb has the superior prose, section structure, and changelog architecture. Both must be studied before writing any new flagship entry. | MANUAL |
 
 ---
 
@@ -171,6 +181,7 @@ If a new never rule is added this session → update this file FIRST. SESSION-ST
 | Never modify `make_footer()` or major tool functions without verifying `TOOL_PAGE_CSS` still exists in the file after edit. | S68 | Accidentally deleted during refactor — caused 36/36 FAIL. | MANUAL |
 | Never build `mpw_tools_v6_writer.py` without reading `mpw_tools_master_spec.md` first. | S65 | Spec defines the full tool architecture. Starting without it causes full rebuilds. | MANUAL |
 | Never use `replaceState` in mobile drawer JS. | S66 | Use `pushState` + `popstate` — `replaceState` breaks back-button behavior. | MANUAL |
+| Never build a Bible tool (GR calculator, etc.) without including an embed code block below the share bar. | S78 | Embed code = backlink generation. Every tool that can be embedded should have a one-click iframe snippet. Tool at `/bible/compression#tools` confirmed this pattern. | MANUAL |
 
 ---
 
@@ -199,8 +210,6 @@ If a new never rule is added this session → update this file FIRST. SESSION-ST
 | Never run `mpw_bible_writer.py` before updating read time to 650 wpm + new nav. | S63/S65/S66 | Blocks Bible batch — update before next T1 batch. | MANUAL |
 | Never hardcode GitHub token in any file — store in `setenv.ps1` only. | S26 | Token expires Aug 2, 2026. Hardcoded tokens get caught by GitHub secret scanning. | SCRIPT |
 | Never extract nav block with naive `find()` — use div-depth tracking to guarantee balance. | S68 | Naive find breaks on nested divs — div-depth tracking guarantees balanced extraction. | MANUAL |
-| Never commit Bible entry fixes one file at a time — always Trees API, one commit per batch. | S74 | Multiple single-file commits for reverb share bars caused 7 separate deploys instead of 1. Every multi-file Bible fix must be batched into one Trees API commit. | MANUAL |
-| Never assume a share bar is fixed without auditing ALL share bars in the file — including inline tool card bars that don't use the mpw-share-bar class. | S74 | reverb.html has 6 mpw-share-bar divs AND separate inline flex share bars inside tool cards (RT60, Tempo-Locked, HOW TO USE). Fixing only the mpw-share-bar class misses the tool card bars. Always grep for ALL Copy Link + Reddit combinations before declaring done. | MANUAL |
 | Never assume you know which search system an article page uses without reading the HTML source first. | S71 | MPW has 4 separate search systems. The primary article search is an inline `<script id="mpw-search-js">` that fetches search-index.json — NOT the SEARCH_INDEX array in main.js. Assuming the wrong system caused multiple wasted commits in S71. | MANUAL |
 | Never diagnose a sitewide bug by guessing — fetch and read the actual source HTML of the affected page type before touching any file. | S71 | S71: spent multiple commits debugging main.js SEARCH_INDEX before reading the article HTML and discovering the actual inline mpw-search-js system. Reading first would have saved all of it. | MANUAL |
 | Never show `nav-search-btn` (eyeglass) on mobile by adding it to the media query show list alongside `nav-mob` — it makes the hamburger unclickable. | S72 | Both eyeglass and hamburger render in the 60px nav bar; on narrow screens the eyeglass overlaps/blocks the hamburger tap target. Mobile eyeglass must be shown via a SEPARATE `<style>` block injected AFTER the nav CSS `</style>` close tag — never inside the nav CSS block. | MANUAL |
@@ -219,10 +228,10 @@ If a new never rule is added this session → update this file FIRST. SESSION-ST
 
 ---
 
-## MASTER COUNTS (Session 74)
-Total rules documented: 114
-SCRIPT-ENFORCED: 15
-MANUAL: 99
+## MASTER COUNTS (Session 78)
+Total rules documented: 125
+SCRIPT-ENFORCED: 17
+MANUAL: 108
 
 ---
 

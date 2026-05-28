@@ -9,16 +9,16 @@
 | Item | Value |
 |------|-------|
 | Articles live | **526** |
-| Bible entries live | **235** |
-| Tools live | **42** |
-| Last site commit SHA | `59350bd7` — reverb HOW TO USE share bar fix (S74) |
+| Bible entries live | **223** |
+| Tools live | **40** |
+| Last site commit SHA | `f0100b85` — revert suno-prompt-optimizer to pre-S68 working state |
 | Model string | `claude-sonnet-4-6` |
 | Proxy URL | `https://classy-haupia-be8e43.netlify.app/.netlify/functions/claude-proxy` |
 | Local path | `C:\\Users\\swarn\\OneDrive\\Desktop\\mpw-scripts\\` |
 | Site | `musicproductionwiki.com` |
 | Repo | `github.com/musicproductionwiki/musicproductionwiki` |
-| Sitemap URLs | 804 (submitted to GSC May 27, 2026 ✅) |
-| Search index entries | 789 |
+| Sitemap URLs | 744 |
+| Search index entries | 528 |
 | GSC impressions (3mo to May 26) | ~1,270 impressions / 1 click / avg position 25.2 |
 
 ### Active Tool Count Breakdown
@@ -28,9 +28,7 @@
 | V4 tools (older batch) | 12 |
 | V5 tools (current batch) | 24 |
 | API tools built S67 | 2 (suno-prompt-optimizer, ai-music-rights-navigator) |
-| Additional tools built S70 | 3 (ai-copyright-strength, ai-music-ddex-checker, suno-credits-calculator) |
-| Additional tool confirmed S74 | 1 |
-| **Total** | **42** |
+| **Total** | **38** |
 
 ---
 
@@ -230,20 +228,22 @@ Steve's stated requirements for the future dedicated redesign session:
 
 | Action | Priority | Notes |
 |--------|----------|-------|
-| Affiliate applications | P0 REVENUE BLOCKER | Plugin Boutique, Amazon Associates, Lookmasters, Sweetwater, PluginFox |
-| Save mpw_bible_writer_06.py to mpw-scripts\ | P1 | Delivered S74 — save before next Bible batch |
-| GSC indexing requests — all 42 tools | P1 | Use URL Inspection for each tool |
-| Reverb remaining share bars | P1 | Tempo-Locked calculator bar + full Trees API audit next session |
+| Submit sitemap to GSC | P0 | 741 URLs — submit `sitemap.xml` |
+| Request indexing — suno-prompt-optimizer | P0 | Use URL Inspection in GSC |
+| Request indexing — ai-music-rights-navigator | P0 | Use URL Inspection in GSC |
+| OG images for both AI tools | P1 | `/images/suno-prompt-optimizer-og.jpg` and `/images/ai-music-rights-navigator-og.jpg` — 1200×630px |
+| Affiliate applications | P2 REVENUE BLOCKER | Plugin Boutique, Amazon Associates, Loopmasters, Sweetwater, PluginFox |
 | Google Workspace domain dispute | P3 | Case #70817574 still open |
+| Upload `mpw_precommit_check.py` to GitHub root | P0 | Run before every commit — critical safety net |
+| Upload updated `MPW-SESSION-START.md` to project | P0 | Updated end of every session |
 
 ### Steve Actions Completed (Reference)
 
 | Action | Completed | Notes |
 |--------|-----------|-------|
-| Submit sitemap to GSC | ✅ May 27, 2026 | 804 pages discovered |
-| Category canonical www. fix | ✅ Confirmed S74 | All 89 category pages clean |
-| Favicon sitewide | ✅ Confirmed S74 | /favicon.svg on all 898 HTML files |
-| GSC sitemap submission | ✅ May 27, 2026 | 804 pages |
+| GSC sitemap submission | Unknown | Carry forward until confirmed |
+| GSC indexing requests for /bible/reverb, /bible/chorus, /tools/ | Unknown | Carry forward until confirmed |
+| Request indexing for /tools/browser-daw.html | Unknown | Browser DAW is v3, live |
 
 ---
 
@@ -348,19 +348,33 @@ As of S65, all 526 article pages have:
 
 ---
 
-## SECTION 6 — PRIORITY QUEUE (Next Sessions — Updated S74)
+## SECTION 6 — PRIORITY QUEUE (Next Sessions — Updated S68)
 
-### Immediate Queue
+### Immediate Queue (Session 69 = CORE merge; Session 70 = TECH merge; etc.)
 
-| Priority | Task | Status |
-|----------|------|--------|
-| P1 | Reverb remaining share bars — Tempo-Locked + full Trees API audit | NEXT |
-| P1 | Bible writer v5.3 — Steve saves mpw_bible_writer_06.py to mpw-scripts\ | BLOCKED on Steve |
-| P1 | Run Bible T1 batch (33 remaining entries) | BLOCKED on writer save |
-| P2 | Affiliate applications | Owner action |
-| P2 | GSC URL inspection — 42 tools | Owner action |
-| P3 | mpw_writer.py 4 pending updates — blocks next article batch | QUEUED |
-| P3 | Bible entry nav fix (remaining entries with old drawer) | QUEUED |
+| Session | Task | Status |
+|---------|------|--------|
+| 69 | CORE handoff merge | IN PROGRESS |
+| 70 | TECH handoff merge | NEXT |
+| 71 | SCRIPTS handoff merge | QUEUED |
+| 72 | CONTENT + ARTICLES merge | QUEUED |
+| 73 | BIBLE merge | QUEUED |
+| 74+ | Tool building (25-tool queue) | BLOCKED on merge sessions |
+
+### Post-Merge Tool Queue (Session 74+)
+
+| # | Task | Priority | Notes |
+|---|------|----------|-------|
+| 1 | Build AI Music Income Calculator (pure JS) | P0 | Tool #6 in 25-tool queue — #3/4/5 already live |
+| 2 | Build AI Platform Comparison Tool | P0 | Tool #7 |
+| 3 | Build AI Lyrics Optimizer for Suno | P0 | Tool #8 |
+| 4 | Build AI Music Distribution Roadmap | P0 | Tool #9 |
+| 5 | Build AI Music Niche Finder | P0 | Tool #10 |
+| 6 | Suno Prompt Optimizer redesign | P1 | Dedicated session — read spec first |
+| 7 | Update `mpw_writer.py` — new grid drawer, nav, pushState | P1 | BLOCKS future article batches |
+| 8 | Update `mpw_bible_writer.py` — 650wpm + new nav | P1 | BLOCKS Bible batches |
+| 9 | Bible entry nav fix (222 pages bmn-drawer replacement) | P2 | Dry-run approach required |
+| 10 | Bible Tier 1 remaining 33 entries | P3 | BLOCKED on bible_writer update |
 
 ### Blocking Relationships
 
@@ -402,43 +416,6 @@ GSC submissions (Steve) → indexing → traffic
 This section preserves the complete session-by-session record from all previous sessions.
 The record runs from Session 39 through Session 64 (the pre-S65 CORE master), 
 followed by Session 65–68 summaries integrated from appends.
-
----
-
-### Session 74 — May 27, 2026
-
-**Articles:** 526, **Bible:** 235 (+12), **Tools:** 42 (+1)
-
-**Infrastructure confirmed done:**
-- Category canonical www. fix — all 89 category pages confirmed clean
-- Favicon sitewide — confirmed on all 898 HTML files
-- Sitemap submitted to GSC — 804 pages discovered ✅
-
-**reverb.html — 7 commits:**
-- `11a86608` — Bible bar 11 pills (Production/Recording/Tools), og:image → /og-image.png, meta desc 220→164 chars, schema ImageObject, dateModified/lastReviewed → 2026-05-27
-- `6e6f7662` — reverb/eq/chorus: Interactive Tool badge removed, tool name 14px amber, MPW branding shrunk
-- `6d8ed9db` — 66 Bible entries: Interactive Tool badge removed (Group A — inline style variant), name upgraded
-- `42cf062d` — reverb share bar CSS: mpw-share-btn flex bounded
-- `c2bc9639` — reverb: all 4 mpw-share-bar divs unified — 3 buttons centered, no branding in button row
-- `6c07a1eb` — reverb RT60 tool card share bar fixed
-- `59350bd7` — reverb HOW TO USE Automation Timeline bar fixed
-
-**mpw_bible_writer_06.py (v5.3) delivered:**
-- 650wpm read time (all 3 tiers)
-- Bible bar: 11 pills (Production/Recording/Tools added)
-- Mobile drawer: 11 Bible cats + About in Articles
-- CATEGORY_SLUG_MAP: Production + Recording added
-- og:image: /og-image.png (was /images/og-default.jpg)
-- Article schema image: ImageObject with width/height
-- Gold standard updated to reverb.html v1.6
-
-**Bible audit:**
-- 160 entries with Interactive Tool badge audited
-- 66 entries (inline-style badge): fixed
-- 94 entries (calc-eyebrow architecture): correct, no fix needed
-- Remaining: Tempo-Locked calculator bar in reverb — Trees API next session
-
-**New never rules added:** 2 (see MPW-NEVER-RULES.md)
 
 ---
 
@@ -3731,3 +3708,98 @@ Scope documented above. One batch, one commit.
 | NEVER use old Beehiiv iframe embed method | Use v3 loader script in head + data-beehiiv-form div in body |
 | NEVER declare a commit successful without Steve visually confirming live page | Multiple centering commits were declared done but wrong on live site |
 | NEVER run the MPW article nav batch without the full dry-run scope confirmed | Smart quote U+2019 and arrow U+2192 in target string — confirm exact bytes before any commit |
+
+
+---
+
+# ⛔ SESSION 78 UPDATE — May 27, 2026
+
+## State at End of Session 78
+
+| Item | Value |
+|------|-------|
+| Articles live | **526** (unchanged) |
+| Bible entries live | **223+** |
+| Tools live | **41** (unchanged) |
+| Last commit SHA | `9de422e2` — S78: compression.html share bars full-width row layout, genre table CSS grid, all 6 share bars rebuilt with mpw-share-btns wrapper |
+| Model string | `claude-sonnet-4-6` |
+
+## Session 78 — What Was Completed
+
+### P0 — compression.html Flagship Entry — COMPLETE ✅
+
+bible/compression.html built from scratch as the first of 40 hand-written flagship entries. Full build across Sessions 77/78.
+
+**Final state:**
+- Version: v1.2 (May 27, 2026)
+- Size: ~278KB
+- Sections: 25 (canonical order locked)
+- SEO: perfect — 5 JSON-LD schema blocks (Article, FAQPage, BreadcrumbList, HowTo, Speakable), all 6 OG tags, correct canonical
+- Share bars: 8 strategic locations — all with label-on-top + buttons-in-.mpw-share-btns full-width row
+- Tools: custom GR Calculator with embed code snippet
+- Genre table: CSS grid (NOT HTML table) — desktop 6-column, mobile card layout
+- Fix-It accordion: 8 symptoms, result drops under clicked symptom, no page jump
+- Entry nav: IntersectionObserver + scrollIntoView active pill auto-centering
+- Citation block: APA, MLA, Chicago, Harvard — Institutional Licensing footer
+- Version changelog: amber dot timeline
+- What to Read Next: 6 learning path cards
+- Producer quotes: 3 formal blocks (Dave Pensado, Bob Katz, Tchad Blake) + 3 DNA quotes
+
+**S78 Commits:**
+| SHA | Description |
+|-----|-------------|
+| `3c638d11` | Bible tools count/URL fix |
+| `4735c584` | All 41 tool hrefs .html fix |
+| `4b9d1685` | Genre table mobile (initial) |
+| `e251e703` | Fix-It scroll removed |
+| `ba6aa61f` | GR calculator 2×2 mobile |
+| `f0600018` | compression.html v1.0 — full build |
+| `7bcc86f7` | Share bars, Fix-It accordion, entry nav, citation block, changelog, What to Read Next |
+| `991b5205` | Genre table mobile fix, mix translation share, share colors |
+| `d1314123` | Remove redundant share, share-x white, genre fixed layout, embed code |
+| `9de422e2` | Share bars full-width global, genre CSS grid, all 6 bars rebuilt |
+
+## Priority Queue — Session 79
+
+| Priority | Task | Status |
+|----------|------|--------|
+| **P0** | **EQ flagship entry (eq.html)** — Wave 1, entry #2 | READY |
+| **P0** | **Affiliate applications** — Plugin Boutique, Amazon Associates, Loopmasters, Sweetwater, PluginFox | **REVENUE BLOCKER** |
+| **P1** | **GSC indexing requests** — reverb + compression + all 42 tools | Steve action |
+| **P1** | Replace quotes.json with quotes_merged_v2.json | Steve action |
+| **P1** | Save mpw_bible_writer_06.py to mpw-scripts\ | Steve action |
+| P2 | Gain-staging flagship (gain-staging.html) | After EQ |
+| P2 | Delay flagship (delay.html) | After EQ |
+| P3 | Google Workspace domain dispute Case #70817574 | Open |
+
+## Gold Standard — Updated S78
+
+### Dual Gold Standard (LOCKED)
+- **Structure + SEO:** `bible/compression.html` v1.2 — 278KB — 25 sections — 8 share bars — embed code
+- **Prose + content depth:** `bible/reverb.html` v1.6 — 383KB — 25 sections — Three Questions framework
+
+Both must be studied before writing any new flagship entry. Compression has the superior tool/share/embed architecture. Reverb has the superior prose depth and section content architecture. Every future flagship entry inherits from both.
+
+## Strategic Context — Bible Writing Priority
+
+Bible flagship entry writing is now P0. The 40 flagship entries are the permanent anchor content driving:
+- Institutional licensing ($1,500–$12,000/year schools, $25,000/year DAW companies)
+- Organic search authority (compression, eq, reverb = highest-volume music production queries)
+- Citation credibility (APA/MLA/Chicago/Harvard citation blocks on every entry)
+- The 2026 Edition marker on every entry is the institutional hook for annual licensing renewal
+
+**Writing standard:** phenomenal prose, philosophical depth, three-level reader (mid-session fix / deep learning / institutional licensing). Don't put it down quality.
+
+## New Never Rules — Session 77/78
+
+| Rule | Detail |
+|------|--------|
+| Never hardcode tool counts — use dynamic JS | S77 |
+| Never use HTML `<table>` for Bible genre settings table — use CSS grid | S78 |
+| Never structure share bar buttons inline with label — label own row, buttons in `.mpw-share-btns` | S78 |
+| Never commit flagship without auditing all share bars against reverb.html | S78 |
+| Never build Bible flagship without 8 strategic share bars | S78 |
+| Never build Bible tool without embed code block below share bar | S78 |
+| Never use mpw_bible_writer.py for the 40 flagship entries | S78 |
+| Never commit Bible fixes one file at a time — Trees API always | S77 |
+| Never assume share bar is fixed without auditing ALL share bars on page | S77 |
