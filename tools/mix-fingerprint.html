@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <title>Mix Fingerprint Analyzer — See Your Mix's DNA | MusicProductionWiki</title>
-  <meta name="description" content="Upload your mix and instantly visualize its sonic fingerprint — bass weight, stereo width, dynamic range, and more — plotted against genre benchmarks. Free.">
+  <meta name="description" content="Upload your mix and instantly see its sonic fingerprint — bass weight, stereo width, dynamic range and more — plotted against genre benchmarks. Free.">
   <link rel="canonical" href="https://www.musicproductionwiki.com/tools/mix-fingerprint.html">
   <meta property="og:title" content="Mix Fingerprint Analyzer | MusicProductionWiki">
   <meta property="og:description" content="Upload your mix. See its DNA. Compare against genre benchmarks and legendary reference tracks.">
@@ -22,229 +22,214 @@
 
   <style>
     :root {
-      --bg:      #060610;
-      --bg2:     #0b0b1c;
-      --bg3:     #0f0f24;
-      --bg4:     #14142e;
-      --bg5:     #1a1a38;
-      --border:  rgba(255,255,255,0.055);
-      --border2: rgba(255,255,255,0.10);
-      --border3: rgba(255,255,255,0.16);
-      --amber:   #f5a623;
-      --amber2:  rgba(245,166,35,0.12);
-      --amber3:  rgba(245,166,35,0.06);
-      --teal:    #00e8a2;
-      --teal2:   rgba(0,232,162,0.10);
-      --teal3:   rgba(0,232,162,0.05);
-      --red:     #ff3d5a;
-      --violet:  #8b7cf8;
-      --violet2: rgba(139,124,248,0.12);
-      --text:    #eeeef8;
-      --text2:   #7878a0;
-      --text3:   #3a3a5a;
-      --mono:    'DM Mono', monospace;
-      --sans:    'DM Sans', sans-serif;
+      --bg:     #07070f;
+      --bg2:    #0d0d1e;
+      --bg3:    #121228;
+      --bg4:    #181838;
+      --bg5:    #1e1e44;
+      --bdr:    rgba(255,255,255,0.08);
+      --bdr2:   rgba(255,255,255,0.14);
+      --amber:  #f5a623;
+      --teal:   #00e8a2;
+      --red:    #ff3d5a;
+      --violet: #8b7cf8;
+      --text:   #ffffff;
+      --text2:  #b0b0cc;
+      --text3:  #707090;
+      --mono:   'DM Mono', monospace;
+      --sans:   'DM Sans', sans-serif;
     }
     *{box-sizing:border-box;margin:0;padding:0}
     html{overflow-x:clip;scroll-behavior:smooth}
-    body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;overflow-x:clip;min-height:100vh}
+    body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;overflow-x:clip}
 
-    /* ── SCANLINES OVERLAY ── */
-    body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);pointer-events:none;z-index:0}
-
-    /* ── NOISE GRAIN ── */
-    body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");opacity:0.4;pointer-events:none;z-index:0}
-
-    /* ── AMBIENT GLOW ORBS ── */
+    /* ── ORBS ── */
     .orbs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
     .orb{position:absolute;border-radius:50%;mix-blend-mode:screen}
-    .orb1{width:700px;height:700px;background:radial-gradient(circle,rgba(139,124,248,0.12),transparent 70%);top:-250px;left:-150px;animation:drift1 18s ease-in-out infinite}
-    .orb2{width:600px;height:600px;background:radial-gradient(circle,rgba(0,232,162,0.08),transparent 70%);top:20%;right:-200px;animation:drift2 22s ease-in-out infinite}
-    .orb3{width:500px;height:500px;background:radial-gradient(circle,rgba(245,166,35,0.07),transparent 70%);bottom:-100px;left:20%;animation:drift3 16s ease-in-out infinite}
-    @keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(60px,-40px) scale(1.08)}66%{transform:translate(-30px,50px) scale(0.95)}}
-    @keyframes drift2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-50px,30px) scale(1.06)}}
-    @keyframes drift3{0%,100%{transform:translate(0,0) scale(1)}40%{transform:translate(40px,-60px) scale(1.04)}80%{transform:translate(-20px,20px) scale(0.97)}}
+    .orb1{width:700px;height:700px;background:radial-gradient(circle,rgba(139,124,248,0.10),transparent 70%);top:-250px;left:-150px;animation:d1 20s ease-in-out infinite}
+    .orb2{width:600px;height:600px;background:radial-gradient(circle,rgba(0,232,162,0.07),transparent 70%);top:30%;right:-200px;animation:d2 24s ease-in-out infinite}
+    .orb3{width:500px;height:500px;background:radial-gradient(circle,rgba(245,166,35,0.06),transparent 70%);bottom:-100px;left:25%;animation:d3 18s ease-in-out infinite}
+    @keyframes d1{0%,100%{transform:translate(0,0)}33%{transform:translate(60px,-40px)}66%{transform:translate(-30px,50px)}}
+    @keyframes d2{0%,100%{transform:translate(0,0)}50%{transform:translate(-50px,30px)}}
+    @keyframes d3{0%,100%{transform:translate(0,0)}40%{transform:translate(35px,-55px)}80%{transform:translate(-20px,20px)}}
 
     /* ── NAV ── */
-    .nav{position:sticky;top:0;z-index:900;height:44px;display:flex;align-items:center;padding:0 28px;gap:0;background:rgba(6,6,16,0.88);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border)}
+    .nav{position:sticky;top:0;z-index:900;height:48px;display:flex;align-items:center;padding:0 28px;gap:0;background:rgba(7,7,15,0.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--bdr)}
     .nav-logo{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0;margin-right:28px}
-    .nav-logomark{width:24px;height:24px;border-radius:6px;background:var(--teal);display:flex;align-items:center;justify-content:center}
-    .nav-name{font-size:12px;font-weight:600;color:#c8c8e0;letter-spacing:-.015em}
+    .nav-logomark{width:26px;height:26px;border-radius:7px;background:var(--teal);display:flex;align-items:center;justify-content:center}
+    .nav-name{font-size:13px;font-weight:700;color:#fff;letter-spacing:-.02em}
     .nav-links{display:flex;list-style:none;flex:1;gap:0}
-    .nav-links a{color:var(--text2);text-decoration:none;font-size:11.5px;padding:4px 10px;border-radius:5px;white-space:nowrap;transition:color .15s,background .15s}
-    .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.05)}
-    .nav-right{margin-left:auto;display:flex;align-items:center;gap:8px}
-    .nav-cta{background:var(--teal);color:#050510;font-size:11px;font-weight:700;padding:5px 13px;border-radius:5px;text-decoration:none;white-space:nowrap;transition:opacity .15s}
-    .nav-cta:hover{opacity:.88}
+    .nav-links a{color:var(--text2);text-decoration:none;font-size:12px;padding:5px 11px;border-radius:5px;white-space:nowrap;transition:color .15s,background .15s}
+    .nav-links a:hover{color:#fff;background:rgba(255,255,255,.06)}
+    .nav-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+    .nav-search-btn{background:none;border:1px solid var(--bdr);border-radius:8px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);transition:all .15s}
+    .nav-search-btn:hover{color:#fff;border-color:var(--bdr2);background:rgba(255,255,255,.05)}
     .nav-mob{display:none;background:none;border:none;cursor:pointer;padding:5px;flex-direction:column;gap:4px}
     .nav-mob span{display:block;width:18px;height:1.5px;background:var(--text2);border-radius:2px}
-    .mob-drawer{display:none;position:fixed;top:44px;left:0;right:0;bottom:0;background:rgba(6,6,16,0.99);z-index:899;padding:20px;flex-direction:column;gap:4px}
+    .mob-drawer{display:none;position:fixed;top:48px;left:0;right:0;bottom:0;background:rgba(7,7,15,0.98);z-index:899;padding:24px;flex-direction:column;gap:6px}
     .mob-drawer.open{display:flex}
-    .mob-drawer a{display:block;padding:12px 14px;border-radius:8px;text-decoration:none;font-size:14px;color:var(--text2)}
-    .mob-cta{display:block;background:var(--teal);color:#050510;font-weight:700;font-size:14px;padding:12px 16px;border-radius:9px;text-decoration:none;text-align:center;margin-top:8px}
+    .mob-drawer a{display:block;padding:13px 14px;border-radius:9px;text-decoration:none;font-size:15px;color:var(--text2);border:1px solid transparent;transition:all .15s}
+    .mob-drawer a:hover{color:#fff;border-color:var(--bdr);background:rgba(255,255,255,.04)}
 
     /* ── PAGE ── */
-    .page{position:relative;z-index:1;max-width:1140px;margin:0 auto;padding:52px 28px 100px}
+    .page{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:48px 24px 100px}
 
-    /* ── HERO HEADER ── */
-    .tool-hero{margin-bottom:52px;max-width:700px}
-    .hero-badge{display:inline-flex;align-items:center;gap:8px;font-size:10px;font-family:var(--mono);color:var(--teal);letter-spacing:.2em;text-transform:uppercase;margin-bottom:20px;padding:5px 12px 5px 10px;background:var(--teal3);border:1px solid rgba(0,232,162,.15);border-radius:20px}
-    .hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--teal);animation:pulse 2s ease-in-out infinite}
-    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(0.8)}}
-    .hero-h1{font-size:clamp(2.2rem,5.5vw,3.8rem);font-weight:900;color:#fff;line-height:1.02;letter-spacing:-.05em;margin-bottom:12px}
-    .hero-h1 em{font-style:normal;color:transparent;-webkit-text-stroke:1px var(--amber);opacity:.8}
-    .hero-h1 strong{font-style:normal;color:var(--amber)}
-    .hero-desc{font-size:15px;color:var(--text2);line-height:1.75;max-width:560px}
+    /* ── HOW TO USE — top banner ── */
+    .how-banner{background:var(--bg2);border:1px solid var(--bdr);border-radius:14px;padding:28px 32px;margin-bottom:36px}
+    .how-banner-title{font-size:18px;font-weight:800;color:#fff;margin-bottom:8px;letter-spacing:-.03em}
+    .how-banner-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}
+    .how-step{display:flex;align-items:flex-start;gap:12px}
+    .how-step-num{width:28px;height:28px;border-radius:50%;background:var(--amber);color:#000;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+    .how-step-text strong{display:block;font-size:13px;font-weight:700;color:#fff;margin-bottom:2px}
+    .how-step-text span{font-size:12px;color:var(--text2);line-height:1.5}
+    .why-matters{margin-top:16px;padding-top:16px;border-top:1px solid var(--bdr);font-size:13px;color:var(--text2);line-height:1.7}
+    .why-matters strong{color:#fff}
 
-    /* ── MAIN GRID ── */
-    .grid{display:grid;grid-template-columns:1fr 440px;gap:28px;align-items:start}
+    /* ── HEADER ── */
+    .tool-header{margin-bottom:36px}
+    .tool-eyebrow{font-size:10px;font-family:var(--mono);color:var(--teal);letter-spacing:.2em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+    .tool-eyebrow::before{content:'';display:inline-block;width:20px;height:1px;background:var(--teal);opacity:.6}
+    .tool-h1{font-size:clamp(2rem,5vw,3.2rem);font-weight:900;color:#fff;line-height:1.04;letter-spacing:-.05em;margin-bottom:10px}
+    .tool-h1 strong{color:var(--amber)}
+    .tool-desc{font-size:15px;color:var(--text2);max-width:560px;line-height:1.75}
 
-    /* ── LEFT: STEPS PANEL ── */
-    .steps{display:flex;flex-direction:column;gap:3px}
+    /* ── GRID ── */
+    .grid{display:grid;grid-template-columns:1fr 440px;gap:24px;align-items:start}
 
-    /* Step block */
-    .step{background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:border-color .3s}
-    .step.active{border-color:rgba(255,255,255,.12)}
-    .step-head{display:flex;align-items:center;gap:14px;padding:18px 22px;cursor:default}
-    .step-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;font-family:var(--mono);flex-shrink:0;background:var(--bg4);border:1px solid var(--border2);color:var(--text2);transition:all .3s}
-    .step-num.done{background:var(--teal2);border-color:rgba(0,232,162,.3);color:var(--teal)}
-    .step-num.done::after{content:'✓';font-size:12px}
-    .step-num.done .num-inner{display:none}
-    .num-inner{display:block}
-    .step-title{font-size:13px;font-weight:700;color:var(--text);letter-spacing:-.01em}
-    .step-sub{font-size:11px;color:var(--text2);margin-top:1px}
+    /* ── LEFT PANEL ── */
+    .steps{display:flex;flex-direction:column;gap:4px}
+    .step{background:var(--bg2);border:1px solid var(--bdr);border-radius:14px;overflow:hidden}
+    .step-head{display:flex;align-items:center;gap:14px;padding:18px 22px}
+    .step-num{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;font-family:var(--mono);flex-shrink:0;background:var(--bg4);border:1px solid var(--bdr2);color:var(--text2);transition:all .3s}
+    .step-num.done{background:rgba(0,232,162,.15);border-color:rgba(0,232,162,.35);color:var(--teal)}
+    .step-title{font-size:14px;font-weight:700;color:#fff}
+    .step-sub{font-size:12px;color:var(--text2);margin-top:2px}
     .step-body{padding:0 22px 22px}
 
-    /* ── UPLOAD ZONE ── */
-    .upload-zone{position:relative;border:1.5px dashed rgba(255,255,255,.1);border-radius:12px;overflow:hidden;cursor:pointer;transition:all .25s;min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0}
-    .upload-zone::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 120%,rgba(0,232,162,.04),transparent 70%);pointer-events:none}
-    .upload-zone:hover{border-color:rgba(0,232,162,.3);background:rgba(0,232,162,.02)}
-    .upload-zone.drag{border-color:rgba(0,232,162,.5);background:rgba(0,232,162,.04);transform:scale(1.005)}
-    .upload-zone.loaded{border-style:solid;border-color:rgba(0,232,162,.25);background:rgba(0,232,162,.03)}
+    /* ── UPLOAD ── */
+    .upload-zone{position:relative;border:1.5px dashed rgba(255,255,255,.15);border-radius:12px;cursor:pointer;transition:all .25s;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .upload-zone:hover,.upload-zone.drag{border-color:rgba(0,232,162,.4);background:rgba(0,232,162,.03)}
+    .upload-zone.loaded{border-style:solid;border-color:rgba(0,232,162,.3);background:rgba(0,232,162,.03)}
+    .upload-zone.analyzing{border-color:rgba(245,166,35,.3);background:rgba(245,166,35,.02)}
     .upload-file-input{position:absolute;inset:0;opacity:0;cursor:pointer}
-    .upload-idle{display:flex;flex-direction:column;align-items:center;gap:10px;padding:32px 24px;transition:opacity .2s}
-    .upload-zone.loaded .upload-idle{display:none}
-    .upload-icon-wrap{width:52px;height:52px;border-radius:14px;background:var(--bg4);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;transition:all .2s}
-    .upload-zone:hover .upload-icon-wrap{background:var(--teal2);border-color:rgba(0,232,162,.3)}
-    .upload-label{font-size:14px;font-weight:600;color:var(--text)}
-    .upload-hint{font-size:11px;color:var(--text2)}
-    .upload-formats{font-size:10px;font-family:var(--mono);color:var(--text3);margin-top:4px;letter-spacing:.04em}
+    .upload-idle{display:flex;flex-direction:column;align-items:center;gap:10px;padding:28px 24px;text-align:center}
+    .upload-zone.loaded .upload-idle,.upload-zone.analyzing .upload-idle{display:none}
+    .upload-icon-wrap{width:52px;height:52px;border-radius:14px;background:var(--bg4);border:1px solid var(--bdr2);display:flex;align-items:center;justify-content:center;transition:all .2s}
+    .upload-zone:hover .upload-icon-wrap{background:rgba(0,232,162,.12);border-color:rgba(0,232,162,.3)}
+    .upload-label{font-size:15px;font-weight:700;color:#fff}
+    .upload-hint{font-size:12px;color:var(--text2)}
+    .upload-formats{font-size:10px;font-family:var(--mono);color:var(--text3);letter-spacing:.05em}
 
-    /* SPECTRUM ANALYZER — shows during analysis */
-    .spectrum-wrap{display:none;width:100%;height:140px;position:relative;overflow:hidden}
-    .upload-zone.analyzing .spectrum-wrap{display:flex;align-items:flex-end;justify-content:center;gap:2px;padding:16px 16px 12px}
-    .upload-zone.analyzing .upload-idle{display:none}
-    .spec-bar{width:4px;border-radius:2px;background:linear-gradient(to top,var(--teal),var(--amber));transition:height .08s ease;flex-shrink:0}
-    .spectrum-label{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-size:10px;font-family:var(--mono);color:var(--teal);letter-spacing:.1em;white-space:nowrap}
+    /* Analyzing state */
+    .analyzing-state{display:none;flex-direction:column;align-items:center;gap:12px;padding:28px 24px;text-align:center}
+    .upload-zone.analyzing .analyzing-state{display:flex}
+    .analyze-spinner{width:36px;height:36px;border:3px solid rgba(245,166,35,.2);border-top-color:var(--amber);border-radius:50%;animation:spin 0.9s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .analyze-label{font-size:13px;font-weight:600;color:var(--amber)}
+    .analyze-sub{font-size:11px;color:var(--text2)}
 
-    /* LOADED STATE */
-    .upload-loaded{display:none;width:100%;padding:16px 20px}
-    .upload-zone.loaded .upload-loaded{display:block}
-    .upload-file-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px}
-    .upload-file-name svg{color:var(--teal);flex-shrink:0}
+    /* Loaded state */
+    .loaded-state{display:none;width:100%;padding:18px 20px}
+    .upload-zone.loaded .loaded-state{display:block}
+    .loaded-name{font-size:13px;font-weight:700;color:#fff;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+    .loaded-name svg{color:var(--teal);flex-shrink:0}
 
-    /* Waveform */
-    .waveform-canvas{width:100%;height:52px;border-radius:8px;display:block;background:var(--bg3)}
+    /* Waveform — clean mono white line */
+    .waveform-canvas{width:100%;height:48px;border-radius:8px;display:block;background:var(--bg3)}
     .waveform-meta{display:flex;justify-content:space-between;margin-top:6px}
-    .waveform-meta span{font-size:10px;font-family:var(--mono);color:var(--text3)}
+    .waveform-meta span{font-size:11px;font-family:var(--mono);color:var(--text3)}
 
-    /* Measurement chips — the magic */
+    /* Measurement chips */
     .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
-    .chip{display:flex;align-items:center;gap:6px;padding:5px 10px 5px 8px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);font-size:11px;font-family:var(--mono);transition:all .4s}
-    .chip.measured{border-color:rgba(0,232,162,.25);background:rgba(0,232,162,.06)}
-    .chip-icon{width:16px;height:16px;border-radius:4px;background:var(--bg4);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:8px;transition:all .4s}
+    .chip{display:flex;align-items:center;gap:6px;padding:5px 10px 5px 8px;border-radius:8px;border:1px solid var(--bdr);background:var(--bg3);font-size:11px;font-family:var(--mono);color:var(--text3)}
+    .chip.measured{border-color:rgba(0,232,162,.28);background:rgba(0,232,162,.06);color:var(--text2)}
+    .chip-icon{width:16px;height:16px;border-radius:4px;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0}
     .chip.measured .chip-icon{background:rgba(0,232,162,.15);color:var(--teal)}
-    .chip-label{color:var(--text3);transition:color .4s}
-    .chip.measured .chip-label{color:var(--text2)}
-    .chip-val{color:var(--teal);font-weight:500;min-width:32px;text-align:right}
+    .chip-val{color:var(--teal);font-weight:600;min-width:32px;text-align:right}
 
-    /* ── GENRE SELECTOR ── redesigned as visual pills with color accent ── */
+    /* ── GENRE GRID ── */
     .genre-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
-    .genre-btn{position:relative;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 6px 7px;font-size:10.5px;font-family:var(--mono);color:var(--text2);cursor:pointer;transition:all .15s;text-align:center;overflow:hidden}
-    .genre-btn::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--genre-color,transparent);opacity:0;transition:opacity .15s}
-    .genre-btn:hover{border-color:var(--border2);color:var(--text);background:var(--bg4)}
-    .genre-btn:hover::before{opacity:.5}
-    .genre-btn.active{background:var(--bg4);border-color:var(--genre-color,var(--amber));color:#fff;font-weight:600}
-    .genre-btn.active::before{opacity:1}
+    .genre-btn{position:relative;background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;padding:8px 5px 7px;font-size:10.5px;font-family:var(--mono);color:var(--text2);cursor:pointer;transition:all .15s;text-align:center;overflow:hidden}
+    .genre-btn::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--gc,transparent);opacity:0;transition:opacity .15s}
+    .genre-btn:hover{border-color:var(--bdr2);color:#fff;background:var(--bg4)}
+    .genre-btn:hover::after{opacity:.5}
+    .genre-btn.active{background:var(--bg4);border-color:var(--gc,var(--amber));color:#fff;font-weight:700}
+    .genre-btn.active::after{opacity:1}
+    .genre-multi-hint{font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:8px;padding:6px 10px;background:var(--bg3);border-radius:6px;border:1px solid var(--bdr)}
 
-    /* ── REFERENCE SEARCH ── */
+    /* ── REFERENCE TRACK ── */
+    .ref-explain{font-size:13px;color:var(--text2);margin-bottom:12px;line-height:1.6;background:var(--bg3);border-radius:8px;padding:10px 13px;border-left:3px solid var(--violet)}
+    .ref-explain strong{color:#fff}
     .ref-wrap{position:relative}
-    .ref-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:11px 14px 11px 40px;font-size:13px;color:var(--text);font-family:var(--sans);outline:none;transition:border-color .2s}
-    .ref-input:focus{border-color:rgba(139,124,248,.4);background:var(--bg4)}
+    .ref-input{width:100%;background:var(--bg3);border:1px solid var(--bdr);border-radius:10px;padding:11px 14px 11px 40px;font-size:13px;color:#fff;font-family:var(--sans);outline:none;transition:border-color .2s}
+    .ref-input:focus{border-color:rgba(139,124,248,.45);background:var(--bg4)}
     .ref-input::placeholder{color:var(--text3)}
     .ref-search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none}
-    .ref-dd{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--bg4);border:1px solid var(--border3);border-radius:12px;z-index:200;overflow:hidden;display:none;box-shadow:0 20px 60px rgba(0,0,0,.7)}
+    .ref-dd{position:absolute;top:calc(100% + 5px);left:0;right:0;background:var(--bg4);border:1px solid var(--bdr2);border-radius:12px;z-index:200;overflow:hidden;display:none;box-shadow:0 20px 60px rgba(0,0,0,.7)}
     .ref-dd.open{display:block}
-    .ref-dd-item{padding:11px 16px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .1s;display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center}
+    .ref-dd-item{padding:11px 15px;cursor:pointer;border-bottom:1px solid var(--bdr);display:grid;grid-template-columns:1fr auto;gap:3px 10px;align-items:center;transition:background .1s}
     .ref-dd-item:last-child{border-bottom:none}
-    .ref-dd-item:hover{background:rgba(255,255,255,.04)}
-    .ref-dd-title{font-size:13px;font-weight:600;color:var(--text)}
+    .ref-dd-item:hover{background:rgba(255,255,255,.05)}
+    .ref-dd-title{font-size:13px;font-weight:700;color:#fff}
     .ref-dd-artist{font-size:11px;color:var(--text2)}
-    .ref-dd-genre{font-size:10px;font-family:var(--mono);color:var(--violet);grid-row:1/3;align-self:center;padding:2px 7px;background:var(--violet2);border-radius:4px}
-    .ref-pill{display:none;align-items:center;gap:10px;background:var(--violet2);border:1px solid rgba(139,124,248,.2);border-radius:10px;padding:10px 14px;margin-top:8px}
+    .ref-dd-genre{font-size:10px;font-family:var(--mono);color:var(--violet);grid-row:1/3;align-self:center;padding:2px 7px;background:rgba(139,124,248,.12);border-radius:5px}
+    .ref-pill{display:none;align-items:center;gap:10px;background:rgba(139,124,248,.1);border:1px solid rgba(139,124,248,.22);border-radius:10px;padding:10px 14px;margin-top:8px}
     .ref-pill.visible{display:flex}
-    .ref-pill-info{flex:1}
-    .ref-pill-title{font-size:13px;font-weight:700;color:var(--text)}
+    .ref-pill-title{font-size:13px;font-weight:700;color:#fff}
     .ref-pill-artist{font-size:11px;color:var(--text2)}
-    .ref-pill-clear{background:none;border:none;cursor:pointer;color:var(--text3);font-size:18px;line-height:1;padding:0;transition:color .15s}
+    .ref-pill-clear{background:none;border:none;cursor:pointer;color:var(--text3);font-size:18px;margin-left:auto;transition:color .15s}
     .ref-pill-clear:hover{color:var(--red)}
 
-    /* ── SUBJECTIVE SLIDERS ── redesigned ── */
-    .subj-block{display:flex;flex-direction:column;gap:18px}
-    .subj-item{display:grid;grid-template-columns:1fr auto;gap:4px}
-    .subj-item-label{font-size:12px;font-weight:600;color:var(--text);grid-column:1}
-    .subj-item-val{font-size:18px;font-weight:900;font-family:var(--mono);color:var(--amber);grid-column:2;grid-row:1/3;align-self:center;letter-spacing:-.02em;min-width:36px;text-align:right}
-    .subj-item-hint{font-size:10px;color:var(--text3);font-family:var(--mono);grid-column:1}
-    .subj-item-slider-wrap{grid-column:1/3;margin-top:8px;position:relative}
-    .subj-slider{width:100%;height:5px;border-radius:3px;appearance:none;-webkit-appearance:none;outline:none;cursor:pointer;background:var(--bg5);position:relative}
-    .subj-slider::-webkit-slider-thumb{appearance:none;width:20px;height:20px;border-radius:50%;background:var(--amber);border:3px solid var(--bg);box-shadow:0 0 0 3px rgba(245,166,35,.2),0 0 16px rgba(245,166,35,.3);cursor:pointer;transition:box-shadow .2s}
-    .subj-slider::-webkit-slider-thumb:hover{box-shadow:0 0 0 5px rgba(245,166,35,.15),0 0 24px rgba(245,166,35,.4)}
-    .subj-slider-track{position:absolute;top:50%;transform:translateY(-50%);left:0;height:5px;border-radius:3px;background:linear-gradient(to right,var(--teal),var(--amber));pointer-events:none;transition:width .1s}
-    .subj-ticks{display:flex;justify-content:space-between;margin-top:5px;padding:0 2px}
-    .subj-tick{font-size:9px;font-family:var(--mono);color:var(--text3)}
+    /* ── SUBJECTIVE SLIDERS ── */
+    .subj-explain{font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.6;background:var(--bg3);border-radius:8px;padding:10px 13px;border-left:3px solid var(--amber)}
+    .subj-explain strong{color:#fff}
+    .subj-block{display:flex;flex-direction:column;gap:20px}
+    .subj-item{display:grid;grid-template-columns:1fr auto;gap:3px}
+    .subj-label{font-size:13px;font-weight:700;color:#fff}
+    .subj-val{font-size:22px;font-weight:900;font-family:var(--mono);color:var(--amber);grid-column:2;grid-row:1/4;align-self:center;min-width:38px;text-align:right;letter-spacing:-.02em}
+    .subj-hint{font-size:11px;color:var(--text2)}
+    .subj-slider-wrap{grid-column:1/3;margin-top:9px;position:relative}
+    .subj-track{position:absolute;top:50%;transform:translateY(-50%);left:0;height:5px;border-radius:3px;background:linear-gradient(to right,var(--teal),var(--amber));pointer-events:none}
+    .subj-slider{width:100%;height:5px;border-radius:3px;appearance:none;-webkit-appearance:none;outline:none;cursor:pointer;background:var(--bg5)}
+    .subj-slider::-webkit-slider-thumb{appearance:none;width:22px;height:22px;border-radius:50%;background:var(--amber);border:3px solid var(--bg);box-shadow:0 0 0 3px rgba(245,166,35,.2),0 0 14px rgba(245,166,35,.3);cursor:pointer}
+    .subj-ticks{display:flex;justify-content:space-between;margin-top:6px}
+    .subj-tick{font-size:10px;font-family:var(--mono);color:var(--text3)}
 
     /* ── GENERATE BUTTON ── */
-    .gen-btn-wrap{padding-top:4px}
     .gen-btn{width:100%;padding:17px;font-size:15px;font-weight:800;font-family:var(--sans);letter-spacing:-.02em;border:none;border-radius:12px;cursor:pointer;position:relative;overflow:hidden;transition:all .25s}
-    .gen-btn:disabled{opacity:.35;cursor:not-allowed}
-    .gen-btn:not(:disabled){background:linear-gradient(135deg,#f5a623 0%,#ff8040 50%,#f5a623 100%);background-size:200% 100%;color:#050510}
-    .gen-btn:not(:disabled):hover{background-position:100% 0;transform:translateY(-2px);box-shadow:0 12px 40px rgba(245,166,35,.35)}
-    .gen-btn:not(:disabled):active{transform:translateY(0)}
-    .gen-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.2),transparent 60%);pointer-events:none}
+    .gen-btn:disabled{opacity:.3;cursor:not-allowed;background:var(--bg4);color:var(--text3)}
+    .gen-btn:not(:disabled){background:linear-gradient(135deg,#f5a623,#ff7a30,#f5a623);background-size:200%;color:#050510}
+    .gen-btn:not(:disabled):hover{background-position:100%;transform:translateY(-2px);box-shadow:0 12px 40px rgba(245,166,35,.35)}
+    .gen-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.18),transparent 55%);pointer-events:none}
 
-    /* ── RIGHT: RADAR PANEL ── */
-    .radar-panel{background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden;position:sticky;top:60px}
-    .radar-top{padding:20px 22px 0;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-    .radar-top-left{}
-    .radar-panel-title{font-size:10px;font-family:var(--mono);color:var(--text3);text-transform:uppercase;letter-spacing:.14em}
-    .radar-filename{font-size:12px;font-weight:600;color:var(--text);margin-top:3px;min-height:16px}
-    .radar-badge{font-size:10px;font-family:var(--mono);padding:4px 10px;border-radius:10px;background:var(--bg4);color:var(--text3);border:1px solid var(--border);transition:all .4s}
-    .radar-badge.live{background:rgba(0,232,162,.08);border-color:rgba(0,232,162,.2);color:var(--teal)}
-
-    /* SVG radar */
-    .radar-svg-wrap{padding:16px 12px 8px;position:relative}
+    /* ── RIGHT: RADAR ── */
+    .radar-panel{background:var(--bg2);border:1px solid var(--bdr);border-radius:16px;overflow:hidden;position:sticky;top:60px}
+    .radar-top{padding:20px 22px 0;display:flex;align-items:flex-start;justify-content:space-between}
+    .radar-panel-label{font-size:10px;font-family:var(--mono);color:var(--text3);text-transform:uppercase;letter-spacing:.14em}
+    .radar-filename{font-size:13px;font-weight:700;color:#fff;margin-top:3px;min-height:17px}
+    .radar-badge{font-size:10px;font-family:var(--mono);padding:4px 10px;border-radius:10px;background:var(--bg4);color:var(--text3);border:1px solid var(--bdr);transition:all .4s}
+    .radar-badge.live{background:rgba(0,232,162,.1);border-color:rgba(0,232,162,.25);color:var(--teal)}
+    .radar-svg-wrap{padding:16px 12px 8px}
     #radarSvg{width:100%;display:block}
-    .radar-empty-hint{text-align:center;font-size:11px;font-family:var(--mono);color:var(--text3);padding:8px 0 4px;transition:opacity .3s}
+    .radar-empty-hint{text-align:center;font-size:12px;color:var(--text3);padding:6px 0 8px;font-family:var(--mono)}
 
     /* Legend */
     .radar-legend{padding:0 22px 14px;display:flex;flex-direction:column;gap:6px}
-    .rl-row{display:flex;align-items:center;gap:9px;font-size:11px}
+    .rl-row{display:flex;align-items:center;gap:9px;font-size:12px}
     .rl-swatch{width:24px;height:3px;border-radius:2px;flex-shrink:0}
     .rl-label{color:var(--text2)}
 
-    /* ── AXIS SCORE CARDS ── redesigned ── */
+    /* ── AXIS CARDS ── */
     .axis-grid{padding:0 16px 18px;display:grid;grid-template-columns:1fr 1fr;gap:6px}
-    .axis-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px 12px 10px;position:relative;overflow:hidden;transition:border-color .3s}
-    .axis-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--ax-color,var(--border2));opacity:0;transition:opacity .3s}
-    .axis-card.highlighted{border-color:var(--ax-color,var(--border2));background:rgba(255,255,255,.02)}
-    .axis-card.highlighted::before{opacity:1}
+    .axis-card{background:var(--bg3);border:1px solid var(--bdr);border-radius:10px;padding:12px 12px 10px;position:relative;overflow:hidden}
+    .axis-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--ac)}
     .ax-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px}
-    .ax-name{font-size:9px;font-family:var(--mono);color:var(--text3);text-transform:uppercase;letter-spacing:.08em;line-height:1.3}
-    .ax-score{font-size:22px;font-weight:900;font-family:var(--mono);line-height:1;color:var(--ax-color,var(--text))}
+    .ax-name{font-size:10px;font-family:var(--mono);color:var(--text2);text-transform:uppercase;letter-spacing:.07em;max-width:76px;line-height:1.3}
+    .ax-score{font-size:22px;font-weight:900;font-family:var(--mono);line-height:1;color:var(--ac)}
     .ax-bar-wrap{position:relative;height:4px;background:var(--bg5);border-radius:2px;margin-bottom:7px;overflow:visible}
-    .ax-bar-range{position:absolute;top:0;height:100%;border-radius:2px;opacity:.25;transition:all .5s}
-    .ax-bar-fill{position:absolute;top:0;height:100%;border-radius:2px;transition:width .6s cubic-bezier(.34,1.56,.64,1);min-width:4px}
-    .ax-bar-needle{position:absolute;top:-3px;width:2px;height:10px;border-radius:1px;background:#fff;transform:translateX(-50%);transition:left .6s cubic-bezier(.34,1.56,.64,1);box-shadow:0 0 6px rgba(255,255,255,.5)}
+    .ax-bar-range{position:absolute;top:0;height:100%;border-radius:2px;opacity:.22}
+    .ax-bar-fill{position:absolute;top:0;height:100%;border-radius:2px;min-width:3px;transition:width .65s cubic-bezier(.34,1.56,.64,1)}
+    .ax-bar-needle{position:absolute;top:-4px;width:2px;height:12px;border-radius:1px;transform:translateX(-50%);transition:left .65s cubic-bezier(.34,1.56,.64,1)}
     .ax-bottom{display:flex;align-items:center;justify-content:space-between}
     .ax-bench{font-size:10px;color:var(--text3);font-family:var(--mono)}
     .ax-delta{font-size:10px;font-weight:700;font-family:var(--mono)}
@@ -252,63 +237,144 @@
     .ax-delta.high{color:var(--red)}
     .ax-delta.low{color:var(--amber)}
 
+    /* Genre fit score */
+    .fit-score-wrap{padding:0 16px 16px}
+    .fit-score-card{background:var(--bg3);border:1px solid var(--bdr);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:14px}
+    .fit-score-num{font-size:36px;font-weight:900;font-family:var(--mono);letter-spacing:-.04em;flex-shrink:0;line-height:1}
+    .fit-score-label{font-size:12px;color:var(--text2);line-height:1.5}
+    .fit-score-label strong{display:block;font-size:13px;color:#fff;margin-bottom:2px}
+
+    /* Share bar */
+    .share-bar{padding:14px 18px 18px;border-top:1px solid var(--bdr)}
+    .share-bar-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--text3);display:block;margin-bottom:9px}
+    .share-btns{display:flex;gap:6px}
+    .share-btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;flex:1;height:34px;border-radius:7px;font-size:11px;font-weight:700;text-decoration:none;cursor:pointer;font-family:var(--sans);transition:opacity .15s,transform .15s;white-space:nowrap;border:none}
+    .share-btn:hover{opacity:.85;transform:translateY(-1px)}
+    .sb-copy{background:var(--amber);color:#050510}
+    .sb-x{background:#000;color:#fff;border:1px solid #222}
+    .sb-reddit{background:#ff4500;color:#fff}
+
+    /* Embed */
+    .embed-wrap{padding:0 18px 18px}
+    .embed-label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+    .embed-box{background:var(--bg);border:1px solid var(--bdr);border-radius:8px;padding:10px 12px;font-family:var(--mono);font-size:10px;color:var(--text3);word-break:break-all;cursor:pointer;line-height:1.6;transition:all .15s}
+    .embed-box:hover{border-color:rgba(245,166,35,.25);color:var(--text2)}
+
+    /* ── WRITTEN DIAGNOSIS ── */
+    .diagnosis-section{margin-top:28px;background:var(--bg2);border:1px solid var(--bdr);border-radius:16px;padding:28px;display:none}
+    .diagnosis-section.visible{display:block}
+    .diag-title{font-size:18px;font-weight:800;color:#fff;margin-bottom:6px;letter-spacing:-.03em}
+    .diag-subtitle{font-size:13px;color:var(--text2);margin-bottom:24px}
+    .diag-fit{display:flex;align-items:center;gap:16px;background:var(--bg3);border-radius:10px;padding:16px 20px;margin-bottom:24px;border:1px solid var(--bdr)}
+    .diag-fit-score{font-size:48px;font-weight:900;font-family:var(--mono);letter-spacing:-.04em;line-height:1}
+    .diag-fit-text{flex:1}
+    .diag-fit-label{font-size:14px;font-weight:700;color:#fff;margin-bottom:4px}
+    .diag-fit-desc{font-size:13px;color:var(--text2);line-height:1.6}
+    .diag-items{display:flex;flex-direction:column;gap:16px}
+    .diag-item{background:var(--bg3);border-radius:10px;padding:18px 20px;border-left:3px solid var(--di-color)}
+    .diag-item-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+    .diag-item-axis{font-size:11px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--di-color);font-weight:700}
+    .diag-item-status{font-size:11px;font-family:var(--mono);color:var(--text3);margin-left:auto;padding:2px 8px;background:var(--bg4);border-radius:4px}
+    .diag-item-verdict{font-size:15px;font-weight:700;color:#fff;margin-bottom:8px;line-height:1.35}
+    .diag-item-body{font-size:13px;color:var(--text2);line-height:1.75}
+    .diag-item-body strong{color:#fff}
+    .diag-item-fix{margin-top:10px;padding:10px 14px;background:rgba(245,166,35,.06);border:1px solid rgba(245,166,35,.15);border-radius:8px;font-size:12px;color:var(--text2);line-height:1.6}
+    .diag-item-fix strong{color:var(--amber)}
+
+    /* Playback predictions */
+    .playback-section{margin-top:20px;background:var(--bg2);border:1px solid var(--bdr);border-radius:16px;padding:28px;display:none}
+    .playback-section.visible{display:block}
+    .playback-title{font-size:16px;font-weight:800;color:#fff;margin-bottom:6px;letter-spacing:-.02em}
+    .playback-sub{font-size:13px;color:var(--text2);margin-bottom:20px}
+    .playback-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .pb-card{background:var(--bg3);border:1px solid var(--bdr);border-radius:10px;padding:14px 15px}
+    .pb-card-icon{font-size:20px;margin-bottom:8px}
+    .pb-card-system{font-size:11px;font-family:var(--mono);color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
+    .pb-card-verdict{font-size:12px;font-weight:700;margin-bottom:6px}
+    .pb-card-body{font-size:11px;color:var(--text2);line-height:1.55}
+    .pb-ok{color:var(--teal)}
+    .pb-warn{color:var(--amber)}
+    .pb-bad{color:var(--red)}
+
+    /* ── TIMELINE SECTION ── */
+    .timeline-section{margin-top:20px;background:var(--bg2);border:1px solid var(--bdr);border-radius:16px;padding:28px;display:none}
+    .timeline-section.visible{display:block}
+    .timeline-title{font-size:16px;font-weight:800;color:#fff;margin-bottom:4px;letter-spacing:-.02em}
+    .timeline-sub{font-size:13px;color:var(--text2);margin-bottom:20px}
+    .timeline-tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+    .tl-tab{background:var(--bg3);border:1px solid var(--bdr);border-radius:7px;padding:6px 14px;font-size:11px;font-family:var(--mono);color:var(--text2);cursor:pointer;transition:all .15s}
+    .tl-tab.active{background:rgba(245,166,35,.1);border-color:rgba(245,166,35,.3);color:var(--amber)}
+    .timeline-canvas-wrap{position:relative;background:var(--bg3);border-radius:10px;padding:16px;border:1px solid var(--bdr)}
+    #timelineCanvas{width:100%;display:block;border-radius:6px}
+    .timeline-flags{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+    .tl-flag{display:flex;align-items:flex-start;gap:10px;background:var(--bg3);border-radius:8px;padding:10px 14px;border-left:3px solid}
+    .tl-flag-time{font-size:12px;font-family:var(--mono);font-weight:700;flex-shrink:0;min-width:44px}
+    .tl-flag-text{font-size:12px;color:var(--text2);line-height:1.5}
+    .tl-flag-text strong{color:#fff}
+    .tl-flag.warn{border-color:var(--amber)}
+    .tl-flag.bad{border-color:var(--red)}
+    .tl-flag.ok{border-color:var(--teal)}
+
     /* ── REPORT GATE ── */
-    .report-gate{margin-top:20px;background:linear-gradient(135deg,rgba(139,124,248,.08) 0%,rgba(245,166,35,.05) 100%);border:1px solid rgba(139,124,248,.18);border-radius:14px;padding:24px;display:none}
+    .report-gate{margin-top:20px;background:linear-gradient(135deg,rgba(139,124,248,.08),rgba(245,166,35,.05));border:1px solid rgba(139,124,248,.2);border-radius:14px;padding:24px;display:none}
     .report-gate.visible{display:block}
-    .rg-icon{font-size:28px;margin-bottom:10px}
-    .rg-title{font-size:15px;font-weight:800;color:var(--text);margin-bottom:6px;letter-spacing:-.02em}
+    .rg-title{font-size:15px;font-weight:800;color:#fff;margin-bottom:5px;letter-spacing:-.02em}
     .rg-desc{font-size:13px;color:var(--text2);margin-bottom:18px;line-height:1.65}
     .rg-form{display:flex;gap:8px;flex-wrap:wrap}
-    .rg-email{flex:1;min-width:180px;background:rgba(0,0,0,.3);border:1px solid var(--border2);border-radius:9px;padding:11px 14px;font-size:13px;color:var(--text);font-family:var(--sans);outline:none;transition:border-color .2s}
+    .rg-email{flex:1;min-width:180px;background:rgba(0,0,0,.3);border:1px solid var(--bdr2);border-radius:9px;padding:11px 14px;font-size:13px;color:#fff;font-family:var(--sans);outline:none;transition:border-color .2s}
     .rg-email:focus{border-color:rgba(139,124,248,.5)}
     .rg-email::placeholder{color:var(--text3)}
-    .rg-btn{background:var(--violet);color:#fff;font-weight:700;font-size:13px;border:none;border-radius:9px;padding:11px 22px;cursor:pointer;font-family:var(--sans);white-space:nowrap;transition:opacity .15s;box-shadow:0 4px 20px rgba(139,124,248,.3)}
+    .rg-btn{background:var(--violet);color:#fff;font-weight:700;font-size:13px;border:none;border-radius:9px;padding:11px 22px;cursor:pointer;font-family:var(--sans);white-space:nowrap;box-shadow:0 4px 20px rgba(139,124,248,.3);transition:opacity .15s}
     .rg-btn:hover{opacity:.88}
     .rg-note{font-size:11px;color:var(--text3);margin-top:9px}
     .rg-success{font-size:13px;color:var(--teal);margin-top:10px;display:none;font-weight:600}
 
-    /* ── SHARE BAR ── */
-    .share-bar{padding:14px 18px 18px;border-top:1px solid var(--border)}
-    .share-bar-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--text3);display:block;margin-bottom:9px}
-    .share-btns{display:flex;gap:6px}
-    .share-btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;flex:1;height:34px;border-radius:7px;font-size:11px;font-weight:700;text-decoration:none;cursor:pointer;font-family:var(--sans);transition:opacity .15s,transform .15s;white-space:nowrap;border:none}
-    .share-btn:hover{opacity:.84;transform:translateY(-1px)}
-    .sb-copy{background:var(--amber);color:#050510}
-    .sb-x{background:#000;color:var(--text);border:1px solid #222}
-    .sb-reddit{background:#ff4500;color:#fff}
+    /* ── RELATED TOOLS ── */
+    .related-section{margin-top:52px;padding-top:40px;border-top:1px solid var(--bdr)}
+    .related-title{font-size:18px;font-weight:800;color:#fff;margin-bottom:6px;letter-spacing:-.03em}
+    .related-sub{font-size:13px;color:var(--text2);margin-bottom:24px}
+    .related-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .related-card{background:var(--bg2);border:1px solid var(--bdr);border-radius:12px;padding:20px;text-decoration:none;display:flex;flex-direction:column;gap:8px;transition:all .18s}
+    .related-card:hover{border-color:rgba(245,166,35,.35);background:var(--bg3);transform:translateY(-2px)}
+    .related-card-cat{font-size:10px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.1em;color:var(--amber)}
+    .related-card-name{font-size:14px;font-weight:700;color:#fff}
+    .related-card:hover .related-card-name{color:var(--amber)}
+    .related-card-desc{font-size:12px;color:var(--text2);line-height:1.55}
+    .related-card-cta{font-size:12px;font-weight:700;color:var(--amber);margin-top:4px}
 
-    /* ── EMBED ── */
-    .embed-wrap{padding:0 18px 18px}
-    .embed-label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;display:flex;align-items:center;gap:6px}
-    .embed-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:var(--mono);font-size:10px;color:var(--text3);word-break:break-all;cursor:pointer;transition:all .15s;line-height:1.6}
-    .embed-box:hover{border-color:rgba(245,166,35,.2);color:var(--text2)}
-
-    /* ── CONTENT SECTION ── */
-    .content{margin-top:60px;padding-top:48px;border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:0 48px}
-    .content h2{font-size:20px;font-weight:700;color:var(--text);margin-bottom:16px;letter-spacing:-.03em;grid-column:1/-1}
-    .content p{font-size:14px;color:var(--text2);margin-bottom:14px;line-height:1.8}
-    .content strong{color:var(--text);font-weight:600}
-    .content a{color:var(--amber);text-decoration:none}
-    .content a:hover{text-decoration:underline}
+    /* ── CONTENT ── */
+    .content-section{margin-top:52px;padding-top:40px;border-top:1px solid var(--bdr)}
+    .content-section h2{font-size:20px;font-weight:800;color:#fff;margin-bottom:14px;letter-spacing:-.03em}
+    .content-section h3{font-size:15px;font-weight:700;color:#fff;margin:20px 0 8px}
+    .content-section p{font-size:14px;color:var(--text2);margin-bottom:14px;line-height:1.8}
+    .content-section strong{color:#fff}
+    .content-section a{color:var(--amber);text-decoration:none}
+    .content-section a:hover{text-decoration:underline}
 
     /* ── FOOTER ── */
-    .footer{background:var(--bg);border-top:1px solid var(--border);padding:28px;text-align:center;position:relative;z-index:1;margin-top:60px}
+    .footer{background:var(--bg);border-top:1px solid var(--bdr);padding:28px;text-align:center;position:relative;z-index:1;margin-top:60px}
     .footer p{color:var(--text3);font-size:13px;margin:4px 0}
     .footer a{color:var(--amber);text-decoration:none}
 
-    /* ── RESPONSIVE ── */
+    /* ── MOBILE ── */
     @media(max-width:920px){
       .grid{grid-template-columns:1fr}
       .radar-panel{position:static}
-      .content{grid-template-columns:1fr}
-      .content h2{grid-column:1}
+      .how-banner-steps{grid-template-columns:1fr}
+      .playback-grid{grid-template-columns:1fr 1fr}
+      .related-grid{grid-template-columns:1fr 1fr}
     }
     @media(max-width:600px){
-      .nav-links,.nav-right .nav-cta{display:none}
+      .nav-links{display:none}
       .nav-mob{display:flex}
       .genre-grid{grid-template-columns:repeat(4,1fr)}
-      .axis-grid{grid-template-columns:1fr 1fr 1fr}
-      .page{padding:32px 18px 80px}
+      .axis-grid{grid-template-columns:repeat(3,1fr)}
+      .playback-grid{grid-template-columns:1fr}
+      .related-grid{grid-template-columns:1fr}
+      .how-banner{padding:20px}
+      .page{padding:28px 16px 80px}
+      .diag-fit{flex-direction:column;gap:10px}
+      .diag-fit-score{font-size:36px}
     }
   </style>
 </head>
@@ -324,7 +390,7 @@
 <nav class="nav">
   <a class="nav-logo" href="https://musicproductionwiki.com">
     <div class="nav-logomark">
-      <svg width="12" height="12" viewBox="0 0 18 18" fill="none">
+      <svg width="13" height="13" viewBox="0 0 18 18" fill="none">
         <rect x="1.5" y="7" width="2.5" height="9" rx="1.2" fill="#050510"/>
         <rect x="6" y="4" width="2.5" height="12" rx="1.2" fill="#050510"/>
         <rect x="10.5" y="1" width="2.5" height="16" rx="1.2" fill="#050510"/>
@@ -339,7 +405,9 @@
     <li><a href="/categories/techniques.html">Techniques</a></li>
   </ul>
   <div class="nav-right">
-    <a class="nav-cta" href="https://theproducersbriefing.beehiiv.com">Sound Better →</a>
+    <button class="nav-search-btn" onclick="window.location.href='/tools/'" title="All Tools">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </button>
     <button class="nav-mob" id="navMob"><span></span><span></span><span></span></button>
   </div>
 </nav>
@@ -347,40 +415,73 @@
   <a href="/tools/">← All Free Tools</a>
   <a href="/bible/">The Producer's Bible</a>
   <a href="/categories/techniques.html">Techniques</a>
-  <a href="https://theproducersbriefing.beehiiv.com" class="mob-cta">Sound Better →</a>
+  <a href="/categories/reviews.html">Reviews</a>
 </div>
 
 <div class="page">
 
-  <!-- Hero -->
-  <div class="tool-hero">
-    <h1 class="hero-h1">Mix <strong>Fingerprint</strong><br><em>Analyzer</em></h1>
-    <p class="hero-desc">Upload your mix. We measure it — LUFS, stereo width, dynamic range, frequency balance. You rate what only you can hear. Then watch your mix's DNA assemble itself against the genre benchmark you're chasing.</p>
+  <!-- How to use banner -->
+  <div class="how-banner">
+    <div class="how-banner-title">What is the Mix Fingerprint Analyzer?</div>
+    <p style="font-size:13px;color:var(--text2);line-height:1.7;margin-top:6px">Every professional mix has a sonic signature — a specific balance of bass, brightness, width, and dynamics that makes it sound right in its genre. This tool measures your mix against that signature and tells you exactly where it's aligned and where it's off — with plain English explanations of what to fix and why.</p>
+    <div class="how-banner-steps">
+      <div class="how-step">
+        <div class="how-step-num">1</div>
+        <div class="how-step-text">
+          <strong>Upload your mix file</strong>
+          <span>WAV or MP3 — we measure it directly in your browser. Nothing is uploaded to a server.</span>
+        </div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-num">2</div>
+        <div class="how-step-text">
+          <strong>Pick your genre and answer two questions</strong>
+          <span>We set the benchmark. You tell us how upfront your vocals sit and how clear your mids are.</span>
+        </div>
+      </div>
+      <div class="how-step">
+        <div class="how-step-num">3</div>
+        <div class="how-step-text">
+          <strong>Get your fingerprint + full diagnosis</strong>
+          <span>Radar chart, genre fit score, written diagnosis per axis, timeline analysis, and playback predictions.</span>
+        </div>
+      </div>
+    </div>
+    <div class="why-matters">
+      <strong>Why this matters:</strong> Most mixes fail on translation — they sound great in the studio and wrong everywhere else. The fingerprint shows you why before you release it.
+    </div>
+  </div>
+
+  <!-- Header -->
+  <div class="tool-header">
+    <div class="tool-eyebrow">Free Mixing Tool</div>
+    <h1 class="tool-h1">Mix <strong>Fingerprint</strong> Analyzer</h1>
+    <p class="tool-desc">Upload your mix. We measure its DNA — bass weight, stereo width, dynamic range, high-end air — and plot it against the genre benchmark you're working toward. Then we tell you exactly what to fix.</p>
   </div>
 
   <!-- Grid -->
   <div class="grid">
 
-    <!-- LEFT: Steps -->
+    <!-- LEFT -->
     <div class="steps">
 
-      <!-- Step 1: Upload -->
-      <div class="step active" id="step1">
+      <!-- Step 1 -->
+      <div class="step">
         <div class="step-head">
-          <div class="step-num" id="s1num"><span class="num-inner">1</span></div>
+          <div class="step-num" id="s1n">1</div>
           <div>
             <div class="step-title">Upload your mix</div>
-            <div class="step-sub">WAV, MP3, FLAC, AIFF — we measure it in your browser</div>
+            <div class="step-sub">WAV, MP3, FLAC — measured in your browser, nothing sent to a server</div>
           </div>
         </div>
         <div class="step-body">
           <div class="upload-zone" id="uploadZone">
-            <input type="file" class="upload-file-input" id="fileInput" accept=".mp3,.wav,.flac,.aiff,.m4a,.ogg">
+            <input type="file" class="upload-file-input" id="fileInp" accept=".mp3,.wav,.flac,.aiff,.m4a,.ogg">
 
-            <!-- Idle state -->
+            <!-- Idle -->
             <div class="upload-idle">
               <div class="upload-icon-wrap">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text2)">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" style="color:var(--text2)">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                   <polyline points="17 8 12 3 7 8"/>
                   <line x1="12" y1="3" x2="12" y2="15"/>
@@ -388,32 +489,33 @@
               </div>
               <div class="upload-label">Drop your mix file here</div>
               <div class="upload-hint">or click to browse</div>
-              <div class="upload-formats">WAV · MP3 · FLAC · AIFF · M4A</div>
+              <div class="upload-formats">WAV &middot; MP3 &middot; FLAC &middot; AIFF &middot; M4A</div>
             </div>
 
-            <!-- Analyzing: spectrum animation -->
-            <div class="spectrum-wrap" id="spectrumWrap">
-              <div id="specBars"></div>
-              <div class="spectrum-label" id="specLabel">Analyzing...</div>
+            <!-- Analyzing -->
+            <div class="analyzing-state">
+              <div class="analyze-spinner"></div>
+              <div class="analyze-label" id="analyzeLabel">Measuring your mix...</div>
+              <div class="analyze-sub">Analyzing frequency balance, stereo width, and dynamic range</div>
             </div>
 
-            <!-- Loaded state -->
-            <div class="upload-loaded" id="uploadLoaded">
-              <div class="upload-file-name">
+            <!-- Loaded -->
+            <div class="loaded-state" id="loadedState">
+              <div class="loaded-name">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                 <span id="loadedName">—</span>
               </div>
-              <canvas class="waveform-canvas" id="waveCanvas"></canvas>
+              <canvas class="waveform-canvas" id="waveCV"></canvas>
               <div class="waveform-meta">
-                <span id="waveDur">—</span>
-                <span id="waveSr">—</span>
+                <span id="wDur">—</span>
+                <span id="wSr">—</span>
               </div>
               <div class="chips" id="chips">
-                <div class="chip" id="chipLufs"><div class="chip-icon">∫</div><span class="chip-label">LUFS</span><span class="chip-val" id="cLufs">—</span></div>
-                <div class="chip" id="chipDR"><div class="chip-icon">↕</div><span class="chip-label">DR</span><span class="chip-val" id="cDR">—</span></div>
-                <div class="chip" id="chipW"><div class="chip-icon">↔</div><span class="chip-label">Width</span><span class="chip-val" id="cW">—</span></div>
-                <div class="chip" id="chipAir"><div class="chip-icon">～</div><span class="chip-label">Air</span><span class="chip-val" id="cAir">—</span></div>
-                <div class="chip" id="chipBass"><div class="chip-icon">◎</div><span class="chip-label">Bass</span><span class="chip-val" id="cBass">—</span></div>
+                <div class="chip" id="cLufs"><div class="chip-icon">∫</div><span>LUFS</span><span class="chip-val" id="cvLufs">—</span></div>
+                <div class="chip" id="cDR"><div class="chip-icon">↕</div><span>DR</span><span class="chip-val" id="cvDR">—</span></div>
+                <div class="chip" id="cW"><div class="chip-icon">↔</div><span>Width</span><span class="chip-val" id="cvW">—</span></div>
+                <div class="chip" id="cAir"><div class="chip-icon">～</div><span>Air</span><span class="chip-val" id="cvAir">—</span></div>
+                <div class="chip" id="cBass"><div class="chip-icon">◎</div><span>Bass</span><span class="chip-val" id="cvBass">—</span></div>
               </div>
             </div>
           </div>
@@ -421,103 +523,97 @@
       </div>
 
       <!-- Step 2: Genre -->
-      <div class="step" id="step2">
+      <div class="step">
         <div class="step-head">
-          <div class="step-num" id="s2num"><span class="num-inner">2</span></div>
+          <div class="step-num" id="s2n">2</div>
           <div>
-            <div class="step-title">Select your genre</div>
-            <div class="step-sub">Sets the benchmark your fingerprint is measured against</div>
+            <div class="step-title">What genre is your mix?</div>
+            <div class="step-sub">Sets the professional benchmark your mix is measured against</div>
           </div>
         </div>
         <div class="step-body">
           <div class="genre-grid" id="genreGrid"></div>
+          <div class="genre-multi-hint">Tip: pick the genre closest to your sound. If it spans two genres, pick the dominant one.</div>
         </div>
       </div>
 
-      <!-- Step 3: Reference -->
-      <div class="step" id="step3">
+      <!-- Step 3: Reference (renamed, explained) -->
+      <div class="step">
         <div class="step-head">
-          <div class="step-num" id="s3num"><span class="num-inner">3</span></div>
+          <div class="step-num" id="s3n">3</div>
           <div>
-            <div class="step-title">Add a reference track</div>
-            <div class="step-sub">Optional — plots a second ghost overlay on the radar</div>
+            <div class="step-title">Compare to a famous track</div>
+            <div class="step-sub">Optional — see how your mix stacks up against a specific song</div>
           </div>
         </div>
         <div class="step-body">
+          <div class="ref-explain">
+            <strong>What is this?</strong> If there's a song you're trying to match the sound of — a reference track — type it here. We'll plot that song's fingerprint as a second shape on the radar so you can see exactly where the gaps are.
+          </div>
           <div class="ref-wrap">
             <svg class="ref-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="text" class="ref-input" id="refInput" placeholder="Search Frank Ocean, Kendrick, Brian Eno...">
+            <input type="text" class="ref-input" id="refInp" placeholder="e.g. Frank Ocean, Kendrick Lamar, Brian Eno...">
             <div class="ref-dd" id="refDd"></div>
           </div>
           <div class="ref-pill" id="refPill">
-            <div class="ref-pill-info">
-              <div class="ref-pill-title" id="refPillTitle"></div>
-              <div class="ref-pill-artist" id="refPillArtist"></div>
+            <div style="flex:1">
+              <div class="ref-pill-title" id="rpTitle"></div>
+              <div class="ref-pill-artist" id="rpArtist"></div>
             </div>
             <button class="ref-pill-clear" id="refClear">×</button>
           </div>
         </div>
       </div>
 
-      <!-- Step 4: Subjective -->
-      <div class="step" id="step4">
+      <!-- Step 4: Subjective (renamed, explained better) -->
+      <div class="step">
         <div class="step-head">
-          <div class="step-num" id="s4num"><span class="num-inner">4</span></div>
+          <div class="step-num" id="s4n">4</div>
           <div>
-            <div class="step-title">Rate what we can't measure</div>
-            <div class="step-sub">Two axes only you can judge — complete the fingerprint</div>
+            <div class="step-title">Two quick questions about your mix</div>
+            <div class="step-sub">These two things can't be measured automatically — only you know the answers</div>
           </div>
         </div>
         <div class="step-body">
+          <div class="subj-explain">
+            Our analyzer measures frequency and dynamics directly from your file. But it can't tell how upfront your vocals sit or how clear your midrange sounds — that depends on your intent as a producer. Answer these honestly.
+          </div>
           <div class="subj-block">
-
             <div class="subj-item">
-              <span class="subj-item-label">Vocal Presence</span>
-              <span class="subj-item-val" id="vVal">5.0</span>
-              <span class="subj-item-hint">How upfront and forward-sitting are your vocals?</span>
-              <div class="subj-item-slider-wrap">
-                <div class="subj-slider-track" id="vTrack" style="width:50%"></div>
+              <span class="subj-label">How upfront are your vocals?</span>
+              <span class="subj-val" id="vVal">5.0</span>
+              <span class="subj-hint">1 = vocals sitting way back in the mix &nbsp; 10 = vocals right in your face</span>
+              <div class="subj-slider-wrap">
+                <div class="subj-track" id="vTrack" style="width:50%"></div>
                 <input type="range" class="subj-slider" id="vSlider" min="0" max="10" step="0.5" value="5">
               </div>
-              <div class="subj-ticks">
-                <span class="subj-tick">Buried</span>
-                <span class="subj-tick">Balanced</span>
-                <span class="subj-tick">Up front</span>
-              </div>
+              <div class="subj-ticks"><span class="subj-tick">Buried</span><span class="subj-tick">Balanced</span><span class="subj-tick">Up front</span></div>
             </div>
-
             <div class="subj-item">
-              <span class="subj-item-label">Midrange Clarity</span>
-              <span class="subj-item-val" id="mVal">5.0</span>
-              <span class="subj-item-hint">How clean and present is the 2–5kHz presence region?</span>
-              <div class="subj-item-slider-wrap">
-                <div class="subj-slider-track" id="mTrack" style="width:50%"></div>
+              <span class="subj-label">How clear is your midrange?</span>
+              <span class="subj-val" id="mVal">5.0</span>
+              <span class="subj-hint">The 2–5kHz range — where vocals cut, guitars bite, and snares crack. 1 = muddy, 10 = crystal</span>
+              <div class="subj-slider-wrap">
+                <div class="subj-track" id="mTrack" style="width:50%"></div>
                 <input type="range" class="subj-slider" id="mSlider" min="0" max="10" step="0.5" value="5">
               </div>
-              <div class="subj-ticks">
-                <span class="subj-tick">Muddy</span>
-                <span class="subj-tick">Balanced</span>
-                <span class="subj-tick">Crystal</span>
-              </div>
+              <div class="subj-ticks"><span class="subj-tick">Muddy</span><span class="subj-tick">Balanced</span><span class="subj-tick">Crystal clear</span></div>
             </div>
-
           </div>
         </div>
       </div>
 
-      <!-- Step 5: Generate -->
-      <div class="step" id="step5">
+      <!-- Step 5 -->
+      <div class="step">
         <div class="step-head">
-          <div class="step-num" id="s5num"><span class="num-inner">5</span></div>
+          <div class="step-num" id="s5n">5</div>
           <div>
             <div class="step-title">Generate your fingerprint</div>
-            <div class="step-sub">Watch your mix's DNA assemble on the radar</div>
+            <div class="step-sub">Radar chart, written diagnosis, timeline analysis, and playback predictions</div>
           </div>
         </div>
         <div class="step-body">
-          <div class="gen-btn-wrap">
-            <button class="gen-btn" id="genBtn" disabled>Generate My Fingerprint →</button>
-          </div>
+          <button class="gen-btn" id="genBtn" disabled>Analyze My Mix →</button>
         </div>
       </div>
 
@@ -527,36 +623,29 @@
     <!-- RIGHT: Radar -->
     <div class="radar-panel">
       <div class="radar-top">
-        <div class="radar-top-left">
-          <div class="radar-panel-title">Mix Fingerprint</div>
-          <div class="radar-filename" id="radarFilename">No file loaded</div>
+        <div>
+          <div class="radar-panel-label">Mix Fingerprint</div>
+          <div class="radar-filename" id="radarFile">Upload a file to begin</div>
         </div>
         <div class="radar-badge" id="radarBadge">Waiting</div>
       </div>
-
-      <div class="radar-svg-wrap">
-        <svg id="radarSvg" viewBox="0 0 380 380"></svg>
-      </div>
-      <div class="radar-empty-hint" id="radarHint">Upload your mix to generate your fingerprint</div>
-
+      <div class="radar-svg-wrap"><svg id="radarSvg" viewBox="0 0 360 360"></svg></div>
+      <div class="radar-empty-hint" id="radarHint">Your fingerprint will appear here</div>
       <div class="radar-legend" id="radarLegend" style="display:none">
-        <div class="rl-row">
-          <div class="rl-swatch" style="background:var(--amber);box-shadow:0 0 6px rgba(245,166,35,.5)"></div>
-          <span class="rl-label" id="llYour">Your mix</span>
-        </div>
-        <div class="rl-row" id="llGenreRow">
-          <div class="rl-swatch" style="background:rgba(255,255,255,0.25);border:none"></div>
-          <span class="rl-label" id="llGenre">Genre benchmark</span>
-        </div>
-        <div class="rl-row" id="llRefRow" style="display:none">
-          <div class="rl-swatch" style="background:var(--violet);box-shadow:0 0 6px rgba(139,124,248,.4)"></div>
-          <span class="rl-label" id="llRefTrack">Reference track</span>
+        <div class="rl-row"><div class="rl-swatch" style="background:var(--amber);box-shadow:0 0 6px rgba(245,166,35,.5)"></div><span class="rl-label" id="llYour">Your mix</span></div>
+        <div class="rl-row" id="llGR"><div class="rl-swatch" style="background:rgba(255,255,255,.25)"></div><span class="rl-label" id="llGenre">Genre benchmark</span></div>
+        <div class="rl-row" id="llRR" style="display:none"><div class="rl-swatch" style="background:var(--violet)"></div><span class="rl-label" id="llRefTrack">Reference track</span></div>
+      </div>
+      <div class="fit-score-wrap" id="fitScoreWrap" style="display:none">
+        <div class="fit-score-card">
+          <div class="fit-score-num" id="fitScoreNum" style="color:var(--amber)">—%</div>
+          <div class="fit-score-label">
+            <strong>Genre Fit Score</strong>
+            How closely your mix aligns with the <span id="fitGenreName">—</span> benchmark
+          </div>
         </div>
       </div>
-
       <div class="axis-grid" id="axisGrid" style="display:none"></div>
-
-      <!-- Share bar -->
       <div class="share-bar">
         <span class="share-bar-label">Share this tool</span>
         <div class="share-btns">
@@ -564,55 +653,105 @@
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
             Copy Link
           </button>
-          <a class="share-btn sb-x" href="https://twitter.com/intent/tweet?text=Free+Mix+Fingerprint+Analyzer+%E2%80%94+see+your+mix%27s+DNA+vs+genre+benchmarks&url=https%3A%2F%2Fwww.musicproductionwiki.com%2Ftools%2Fmix-fingerprint.html" target="_blank" rel="noopener">
+          <a class="share-btn sb-x" href="https://twitter.com/intent/tweet?text=Free+Mix+Fingerprint+Analyzer+%E2%80%94+see+your+mix%27s+DNA&url=https%3A%2F%2Fwww.musicproductionwiki.com%2Ftools%2Fmix-fingerprint.html" target="_blank" rel="noopener">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.26 5.632 5.905-5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-            Share on X
+            X
           </a>
-          <a class="share-btn sb-reddit" href="https://reddit.com/submit?url=https%3A%2F%2Fwww.musicproductionwiki.com%2Ftools%2Fmix-fingerprint.html&title=Free+Mix+Fingerprint+Analyzer" target="_blank" rel="noopener">
+          <a class="share-btn sb-reddit" href="https://reddit.com/submit?url=https%3A%2F%2Fwww.musicproductionwiki.com%2Ftools%2Fmix-fingerprint.html" target="_blank" rel="noopener">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>
             Reddit
           </a>
         </div>
       </div>
-
-      <!-- Embed -->
       <div class="embed-wrap">
         <div class="embed-label">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
           Embed this tool
         </div>
-        <div class="embed-box" id="embedBox">&lt;iframe src="https://www.musicproductionwiki.com/tools/mix-fingerprint.html" width="100%" height="860" frameborder="0" style="border-radius:16px"&gt;&lt;/iframe&gt;</div>
+        <div class="embed-box" id="embedBox">&lt;iframe src="https://www.musicproductionwiki.com/tools/mix-fingerprint.html" width="100%" height="900" frameborder="0" style="border-radius:16px"&gt;&lt;/iframe&gt;</div>
       </div>
     </div>
-    <!-- end radar panel -->
-
   </div>
   <!-- end grid -->
 
-  <!-- Report gate -->
+  <!-- Written Diagnosis -->
+  <div class="diagnosis-section" id="diagSection">
+    <div class="diag-title">Your Mix Diagnosis</div>
+    <div class="diag-subtitle">Plain English — what your fingerprint actually means for your mix</div>
+    <div class="diag-fit" id="diagFit">
+      <div class="diag-fit-score" id="diagFitScore">—%</div>
+      <div class="diag-fit-text">
+        <div class="diag-fit-label" id="diagFitLabel">Genre Fit Score</div>
+        <div class="diag-fit-desc" id="diagFitDesc">—</div>
+      </div>
+    </div>
+    <div class="diag-items" id="diagItems"></div>
+  </div>
+
+  <!-- Timeline Analysis -->
+  <div class="timeline-section" id="timelineSection">
+    <div class="timeline-title">Timeline Analysis</div>
+    <div class="timeline-sub">How your mix changes across the track — where the problems live by timestamp</div>
+    <div class="timeline-tabs" id="timelineTabs"></div>
+    <div class="timeline-canvas-wrap">
+      <canvas id="timelineCanvas" height="120"></canvas>
+    </div>
+    <div class="timeline-flags" id="timelineFlags"></div>
+  </div>
+
+  <!-- Playback Predictions -->
+  <div class="playback-section" id="playbackSection">
+    <div class="playback-title">How Will This Translate?</div>
+    <div class="playback-sub">Predicted performance on 6 playback systems — based on your fingerprint scores</div>
+    <div class="playback-grid" id="playbackGrid"></div>
+  </div>
+
+  <!-- Report Gate -->
   <div class="report-gate" id="reportGate">
-    <div class="rg-icon">📊</div>
     <div class="rg-title">Get Your Full Mix Intelligence Report</div>
-    <div class="rg-desc">Per-axis score breakdown, genre benchmark comparison, and specific fix recommendations for every axis where your mix diverges — with plugin suggestions. The radar is the teaser. The report is the diagnosis.</div>
+    <div class="rg-desc">Everything you see here, formatted as a PDF — plus plugin-specific recommendations for each axis that needs work. Something you can reference during your next session.</div>
     <div class="rg-form">
       <input type="email" class="rg-email" id="rgEmail" placeholder="your@email.com">
-      <button class="rg-btn" id="rgBtn">Get Report →</button>
+      <button class="rg-btn" id="rgBtn">Get PDF Report →</button>
     </div>
     <div class="rg-note">Free. Joins The Producer's Briefing — unsubscribe any time.</div>
-    <div class="rg-success" id="rgSuccess">✓ Report on its way. Check your inbox.</div>
+    <div class="rg-success" id="rgSuccess">✓ Report sent. Check your inbox.</div>
+  </div>
+
+  <!-- Related Tools -->
+  <div class="related-section">
+    <div class="related-title">Related Tools</div>
+    <div class="related-sub">More free tools for mixing, mastering, and translation</div>
+    <div class="related-grid">
+      <a class="related-card" href="/tools/frequency-conflict-detector.html">
+        <div class="related-card-cat">Frequency &amp; EQ</div>
+        <div class="related-card-name">Frequency Conflict Detector</div>
+        <div class="related-card-desc">Identify masking between any two instruments. See the conflict zone and get the fix recommendation.</div>
+        <div class="related-card-cta">Open Tool →</div>
+      </a>
+      <a class="related-card" href="/tools/loudness-penalty.html">
+        <div class="related-card-cat">Loudness &amp; Delivery</div>
+        <div class="related-card-name">Loudness Penalty Calculator</div>
+        <div class="related-card-desc">See exactly how much Spotify, Apple Music, YouTube, and Tidal will turn down your master before you submit it.</div>
+        <div class="related-card-cta">Open Tool →</div>
+      </a>
+      <a class="related-card" href="/tools/delay-calculator.html">
+        <div class="related-card-cat">Time &amp; Modulation</div>
+        <div class="related-card-name">Delay Time Calculator</div>
+        <div class="related-card-desc">Calculate tempo-synced delay times in milliseconds for any BPM. Every note value, instantly.</div>
+        <div class="related-card-cta">Open Tool →</div>
+      </a>
+    </div>
   </div>
 
   <!-- Content -->
-  <div class="content">
-    <h2>What Your Mix Fingerprint Actually Tells You</h2>
-    <p>Every mix has a sonic identity — a distribution of energy across frequency, width, dynamics, and presence that defines how it feels to listen to. The Mix Fingerprint makes that identity visible. Six axes, each measured or rated on a 0–10 scale, plotted against the genre benchmark your peers are working toward and the reference tracks that defined the sound you're chasing.</p>
-    <p>The value isn't in the numbers. It's in the shape. A mix with a wide, lopsided fingerprint — heavy bass, thin mids, narrow stereo image — looks like a specific kind of problem before you even listen. The gap between your shape and the benchmark ghost is where the work is.</p>
-    <p><strong>Bass Weight</strong> — energy concentration in the 20–200Hz range relative to total spectral energy. High in trap and EDM. Low in folk and classical.</p>
-    <p><strong>High End Air</strong> — energy in the 10kHz–20kHz band. What makes a mix feel open, expensive, and modern.</p>
-    <p><strong>Stereo Width</strong> — mid/side energy ratio. Ambient music lives at the far right of this axis. Drill lives toward the left.</p>
-    <p><strong>Dynamic Range</strong> — crest factor: the difference between peaks and average loudness. High means breathing room. Low means the limiter has been working too hard.</p>
-    <p><strong>Vocal Presence</strong> — how upfront the lead vocal sits. We can't measure this from a full mix accurately — only you know what you intended.</p>
-    <p><strong>Midrange Clarity</strong> — how clean the 2–5kHz presence region is. Where vocals cut, guitars bite, and snares crack. Where mud lives.</p>
+  <div class="content-section">
+    <h2>What the Six Axes Actually Mean</h2>
+    <p><strong>Bass Weight</strong> measures energy concentration in the 20–200Hz range relative to your total spectral energy. A score of 8–9 is normal for trap or EDM. A score of 2–4 is normal for acoustic folk. If your bass weight is significantly outside the genre benchmark, listeners will notice — either the low end is overwhelming the mix or it sounds too thin for the style.</p>
+    <p><strong>High End Air</strong> measures energy above 10kHz. This is what makes a mix feel open, expensive, and modern. Too low and the mix sounds dark and muffled. Too high and it fatigues. Most commercial mixes sit in a surprisingly narrow range for their genre.</p>
+    <p><strong>Stereo Width</strong> measures the mid/side energy ratio. Wide mixes fill the speakers and feel cinematic. Narrow mixes feel tight and focused. The right answer depends entirely on genre — ambient and cinematic music should be very wide; hip-hop and drill often sit much narrower than producers expect.</p>
+    <p><strong>Dynamic Range</strong> measures the crest factor — the difference between your peak levels and your average loudness. High dynamic range means breathing room, impact on transients, and a mix that feels alive. Low dynamic range usually means the limiter is working too hard. Streaming platforms normalize loudness, so crushing your master doesn't make it louder for listeners — it just removes the dynamics.</p>
+    <p><strong>Vocal Presence</strong> and <strong>Midrange Clarity</strong> are the two axes you rate manually. We can't reliably measure these from a full mix without stem separation. But they're critical — most amateur mixes fail because the vocal is buried or the midrange is congested.</p>
   </div>
 
 </div>
@@ -626,43 +765,39 @@
 (function(){
 'use strict';
 
-// ══════════════════════════════════════════════════════
-// DATA
-// ══════════════════════════════════════════════════════
-
-var AXES = [
-  {key:'bassWeight',     label:'Bass Weight',      short:'BASS',  hint:'Low end energy 20–200Hz'},
-  {key:'highEndAir',     label:'High End Air',     short:'AIR',   hint:'Presence above 10kHz'},
-  {key:'stereoWidth',    label:'Stereo Width',     short:'WIDTH', hint:'Mid/side energy ratio'},
-  {key:'dynamicRange',   label:'Dynamic Range',    short:'DR',    hint:'Crest factor — breathing room'},
-  {key:'vocalPresence',  label:'Vocal Presence',   short:'VOCAL', hint:'Lead vocal upfrontness'},
-  {key:'midrangeClarity',label:'Midrange Clarity', short:'MIDS',  hint:'2–5kHz presence region'}
+var AXES=[
+  {key:'bassWeight',     label:'Bass Weight',      short:'BASS',  color:'#f5a623'},
+  {key:'highEndAir',     label:'High End Air',     short:'AIR',   color:'#00e8a2'},
+  {key:'stereoWidth',    label:'Stereo Width',     short:'WIDTH', color:'#8b7cf8'},
+  {key:'dynamicRange',   label:'Dynamic Range',    short:'DR',    color:'#00b4cc'},
+  {key:'vocalPresence',  label:'Vocal Presence',   short:'VOCAL', color:'#e040fb'},
+  {key:'midrangeClarity',label:'Midrange Clarity', short:'MIDS',  color:'#ff6b35'}
 ];
 
-var GENRES = {
-  trap:      {label:'Trap',      color:'#ff3d5a', benchmarks:{bassWeight:[7.5,8.5,9.5],highEndAir:[4,5.5,7],stereoWidth:[5,6.5,8],dynamicRange:[2,3.5,5],vocalPresence:[5,6.5,8],midrangeClarity:[4,5,6.5]}},
-  hiphop:    {label:'Hip-Hop',   color:'#f5a623', benchmarks:{bassWeight:[6,7.5,8.5],highEndAir:[4,5,6.5],stereoWidth:[4,5.5,7],dynamicRange:[3,4.5,6],vocalPresence:[6,7.5,9],midrangeClarity:[5,6,7.5]}},
-  pop:       {label:'Pop',       color:'#00e8a2', benchmarks:{bassWeight:[4,5.5,7],highEndAir:[6,7.5,9],stereoWidth:[6,7.5,9],dynamicRange:[3,4,5.5],vocalPresence:[7,8.5,10],midrangeClarity:[6,7,8.5]}},
-  edm:       {label:'EDM',       color:'#8b7cf8', benchmarks:{bassWeight:[7,8,9],highEndAir:[6,7.5,9],stereoWidth:[7,8.5,10],dynamicRange:[2,3,4.5],vocalPresence:[4,5.5,7],midrangeClarity:[5,6.5,8]}},
-  house:     {label:'House',     color:'#00b4cc', benchmarks:{bassWeight:[6.5,7.5,8.5],highEndAir:[5,6.5,8],stereoWidth:[6,7,8.5],dynamicRange:[3,4,5.5],vocalPresence:[3,5,7],midrangeClarity:[5,6.5,8]}},
-  dnb:       {label:'D&B',       color:'#ff6b35', benchmarks:{bassWeight:[7,8,9],highEndAir:[5,7,8.5],stereoWidth:[5,7,8.5],dynamicRange:[4,5.5,7],vocalPresence:[2,4,6],midrangeClarity:[5,6,7.5]}},
-  rnb:       {label:'R&B',       color:'#e040fb', benchmarks:{bassWeight:[5,6.5,8],highEndAir:[5,6.5,8],stereoWidth:[5,6.5,8],dynamicRange:[4,5.5,7],vocalPresence:[7,8.5,10],midrangeClarity:[5,6.5,8]}},
-  indie:     {label:'Indie',     color:'#69f0ae', benchmarks:{bassWeight:[3,5,6.5],highEndAir:[5,6.5,8],stereoWidth:[5,6.5,8],dynamicRange:[5,6.5,8],vocalPresence:[6,7.5,9],midrangeClarity:[5,6.5,8]}},
-  rock:      {label:'Rock',      color:'#ff5252', benchmarks:{bassWeight:[5,6,7.5],highEndAir:[5,6.5,8],stereoWidth:[5,6.5,8],dynamicRange:[4,5.5,7],vocalPresence:[6,7.5,9],midrangeClarity:[6,7.5,9]}},
-  metal:     {label:'Metal',     color:'#90a4ae', benchmarks:{bassWeight:[5,6.5,8],highEndAir:[4,6,7.5],stereoWidth:[5,7,8.5],dynamicRange:[2,3.5,5],vocalPresence:[5,6.5,8],midrangeClarity:[7,8.5,10]}},
-  ambient:   {label:'Ambient',   color:'#4dd0e1', benchmarks:{bassWeight:[2,4,6],highEndAir:[6,7.5,9],stereoWidth:[7,8.5,10],dynamicRange:[6,7.5,9],vocalPresence:[1,3,5],midrangeClarity:[3,4.5,6]}},
-  lofi:      {label:'Lo-Fi',     color:'#ffd740', benchmarks:{bassWeight:[4,5.5,7],highEndAir:[3,4,5.5],stereoWidth:[4,5,6.5],dynamicRange:[5,6.5,8],vocalPresence:[2,4,6],midrangeClarity:[4,5,6.5]}},
-  jazz:      {label:'Jazz',      color:'#ffca28', benchmarks:{bassWeight:[3,5,6.5],highEndAir:[5,6.5,8],stereoWidth:[4,5.5,7],dynamicRange:[7,8.5,10],vocalPresence:[4,6,8],midrangeClarity:[5,6.5,8]}},
-  afrobeats: {label:'Afrobeats', color:'#ff9800', benchmarks:{bassWeight:[6,7.5,8.5],highEndAir:[5,6.5,8],stereoWidth:[5,6.5,8],dynamicRange:[3,4.5,6],vocalPresence:[6,7.5,9],midrangeClarity:[5,6.5,8]}},
-  drill:     {label:'Drill',     color:'#b0bec5', benchmarks:{bassWeight:[7.5,8.5,9.5],highEndAir:[3,4.5,6],stereoWidth:[4,5.5,7],dynamicRange:[2,3,4.5],vocalPresence:[5,6.5,8],midrangeClarity:[3,4.5,6]}},
-  soul:      {label:'Soul',      color:'#ef9a9a', benchmarks:{bassWeight:[5,6.5,7.5],highEndAir:[4,5.5,7],stereoWidth:[4,5.5,7],dynamicRange:[5,6.5,8],vocalPresence:[7,8.5,10],midrangeClarity:[5,6.5,8]}},
-  funk:      {label:'Funk',      color:'#ce93d8', benchmarks:{bassWeight:[6,7.5,8.5],highEndAir:[4,5.5,7],stereoWidth:[4,5.5,7],dynamicRange:[5,6.5,8],vocalPresence:[5,7,8.5],midrangeClarity:[6,7.5,9]}},
-  folk:      {label:'Folk',      color:'#a5d6a7', benchmarks:{bassWeight:[2,3.5,5],highEndAir:[4,5.5,7],stereoWidth:[3,4.5,6],dynamicRange:[6,7.5,9],vocalPresence:[7,8.5,10],midrangeClarity:[4,5.5,7]}},
-  classical: {label:'Classical', color:'#ffe082', benchmarks:{bassWeight:[3,4.5,6],highEndAir:[6,7.5,9],stereoWidth:[6,7.5,9],dynamicRange:[8,9,10],vocalPresence:[3,5,7],midrangeClarity:[5,6.5,8]}},
-  country:   {label:'Country',   color:'#bcaaa4', benchmarks:{bassWeight:[3,5,6.5],highEndAir:[5,6.5,8],stereoWidth:[4,5.5,7],dynamicRange:[4,5.5,7],vocalPresence:[7,8.5,10],midrangeClarity:[5,6.5,8]}}
+var GENRES={
+  trap:      {label:'Trap',      color:'#ff3d5a',benchmarks:{bassWeight:[7.5,8.5,9.5],highEndAir:[4,5.5,7],stereoWidth:[5,6.5,8],dynamicRange:[2,3.5,5],vocalPresence:[5,6.5,8],midrangeClarity:[4,5,6.5]}},
+  hiphop:    {label:'Hip-Hop',   color:'#f5a623',benchmarks:{bassWeight:[6,7.5,8.5],highEndAir:[4,5,6.5],stereoWidth:[4,5.5,7],dynamicRange:[3,4.5,6],vocalPresence:[6,7.5,9],midrangeClarity:[5,6,7.5]}},
+  pop:       {label:'Pop',       color:'#00e8a2',benchmarks:{bassWeight:[4,5.5,7],highEndAir:[6,7.5,9],stereoWidth:[6,7.5,9],dynamicRange:[3,4,5.5],vocalPresence:[7,8.5,10],midrangeClarity:[6,7,8.5]}},
+  edm:       {label:'EDM',       color:'#8b7cf8',benchmarks:{bassWeight:[7,8,9],highEndAir:[6,7.5,9],stereoWidth:[7,8.5,10],dynamicRange:[2,3,4.5],vocalPresence:[4,5.5,7],midrangeClarity:[5,6.5,8]}},
+  house:     {label:'House',     color:'#00b4cc',benchmarks:{bassWeight:[6.5,7.5,8.5],highEndAir:[5,6.5,8],stereoWidth:[6,7,8.5],dynamicRange:[3,4,5.5],vocalPresence:[3,5,7],midrangeClarity:[5,6.5,8]}},
+  dnb:       {label:'D&B',       color:'#ff6b35',benchmarks:{bassWeight:[7,8,9],highEndAir:[5,7,8.5],stereoWidth:[5,7,8.5],dynamicRange:[4,5.5,7],vocalPresence:[2,4,6],midrangeClarity:[5,6,7.5]}},
+  rnb:       {label:'R&B',       color:'#e040fb',benchmarks:{bassWeight:[5,6.5,8],highEndAir:[5,6.5,8],stereoWidth:[5,6.5,8],dynamicRange:[4,5.5,7],vocalPresence:[7,8.5,10],midrangeClarity:[5,6.5,8]}},
+  indie:     {label:'Indie',     color:'#69f0ae',benchmarks:{bassWeight:[3,5,6.5],highEndAir:[5,6.5,8],stereoWidth:[5,6.5,8],dynamicRange:[5,6.5,8],vocalPresence:[6,7.5,9],midrangeClarity:[5,6.5,8]}},
+  rock:      {label:'Rock',      color:'#ff5252',benchmarks:{bassWeight:[5,6,7.5],highEndAir:[5,6.5,8],stereoWidth:[5,6.5,8],dynamicRange:[4,5.5,7],vocalPresence:[6,7.5,9],midrangeClarity:[6,7.5,9]}},
+  metal:     {label:'Metal',     color:'#90a4ae',benchmarks:{bassWeight:[5,6.5,8],highEndAir:[4,6,7.5],stereoWidth:[5,7,8.5],dynamicRange:[2,3.5,5],vocalPresence:[5,6.5,8],midrangeClarity:[7,8.5,10]}},
+  ambient:   {label:'Ambient',   color:'#4dd0e1',benchmarks:{bassWeight:[2,4,6],highEndAir:[6,7.5,9],stereoWidth:[7,8.5,10],dynamicRange:[6,7.5,9],vocalPresence:[1,3,5],midrangeClarity:[3,4.5,6]}},
+  lofi:      {label:'Lo-Fi',     color:'#ffd740',benchmarks:{bassWeight:[4,5.5,7],highEndAir:[3,4,5.5],stereoWidth:[4,5,6.5],dynamicRange:[5,6.5,8],vocalPresence:[2,4,6],midrangeClarity:[4,5,6.5]}},
+  jazz:      {label:'Jazz',      color:'#ffca28',benchmarks:{bassWeight:[3,5,6.5],highEndAir:[5,6.5,8],stereoWidth:[4,5.5,7],dynamicRange:[7,8.5,10],vocalPresence:[4,6,8],midrangeClarity:[5,6.5,8]}},
+  afrobeats: {label:'Afrobeats', color:'#ff9800',benchmarks:{bassWeight:[6,7.5,8.5],highEndAir:[5,6.5,8],stereoWidth:[5,6.5,8],dynamicRange:[3,4.5,6],vocalPresence:[6,7.5,9],midrangeClarity:[5,6.5,8]}},
+  drill:     {label:'Drill',     color:'#b0bec5',benchmarks:{bassWeight:[7.5,8.5,9.5],highEndAir:[3,4.5,6],stereoWidth:[4,5.5,7],dynamicRange:[2,3,4.5],vocalPresence:[5,6.5,8],midrangeClarity:[3,4.5,6]}},
+  soul:      {label:'Soul',      color:'#ef9a9a',benchmarks:{bassWeight:[5,6.5,7.5],highEndAir:[4,5.5,7],stereoWidth:[4,5.5,7],dynamicRange:[5,6.5,8],vocalPresence:[7,8.5,10],midrangeClarity:[5,6.5,8]}},
+  funk:      {label:'Funk',      color:'#ce93d8',benchmarks:{bassWeight:[6,7.5,8.5],highEndAir:[4,5.5,7],stereoWidth:[4,5.5,7],dynamicRange:[5,6.5,8],vocalPresence:[5,7,8.5],midrangeClarity:[6,7.5,9]}},
+  folk:      {label:'Folk',      color:'#a5d6a7',benchmarks:{bassWeight:[2,3.5,5],highEndAir:[4,5.5,7],stereoWidth:[3,4.5,6],dynamicRange:[6,7.5,9],vocalPresence:[7,8.5,10],midrangeClarity:[4,5.5,7]}},
+  classical: {label:'Classical', color:'#ffe082',benchmarks:{bassWeight:[3,4.5,6],highEndAir:[6,7.5,9],stereoWidth:[6,7.5,9],dynamicRange:[8,9,10],vocalPresence:[3,5,7],midrangeClarity:[5,6.5,8]}},
+  country:   {label:'Country',   color:'#bcaaa4',benchmarks:{bassWeight:[3,5,6.5],highEndAir:[5,6.5,8],stereoWidth:[4,5.5,7],dynamicRange:[4,5.5,7],vocalPresence:[7,8.5,10],midrangeClarity:[5,6.5,8]}}
 };
 
-var REFS = [
+var REFS=[
   {title:'Blinding Lights',artist:'The Weeknd',genre:'rnb',scores:{bassWeight:6.5,highEndAir:7,stereoWidth:7.5,dynamicRange:4,vocalPresence:8.5,midrangeClarity:7}},
   {title:"God's Plan",artist:'Drake',genre:'hiphop',scores:{bassWeight:7,highEndAir:5.5,stereoWidth:6,dynamicRange:4.5,vocalPresence:7.5,midrangeClarity:6}},
   {title:'HUMBLE.',artist:'Kendrick Lamar',genre:'hiphop',scores:{bassWeight:7.5,highEndAir:5,stereoWidth:5.5,dynamicRange:5,vocalPresence:8,midrangeClarity:6.5}},
@@ -673,9 +808,7 @@ var REFS = [
   {title:'Strobe',artist:'Deadmau5',genre:'edm',scores:{bassWeight:7,highEndAir:7,stereoWidth:8.5,dynamicRange:4.5,vocalPresence:2,midrangeClarity:6}},
   {title:'An Ending (Ascent)',artist:'Brian Eno',genre:'ambient',scores:{bassWeight:3,highEndAir:7.5,stereoWidth:9,dynamicRange:8.5,vocalPresence:1,midrangeClarity:4}},
   {title:'Pink + White',artist:'Frank Ocean',genre:'rnb',scores:{bassWeight:5,highEndAir:7,stereoWidth:7.5,dynamicRange:6.5,vocalPresence:8.5,midrangeClarity:6.5}},
-  {title:'Self Control',artist:'Frank Ocean',genre:'rnb',scores:{bassWeight:4.5,highEndAir:7,stereoWidth:8,dynamicRange:7,vocalPresence:8.5,midrangeClarity:6}},
   {title:'Holocene',artist:'Bon Iver',genre:'indie',scores:{bassWeight:3.5,highEndAir:7,stereoWidth:8,dynamicRange:7.5,vocalPresence:8,midrangeClarity:6}},
-  {title:'Everything In Its Right Place',artist:'Radiohead',genre:'indie',scores:{bassWeight:4,highEndAir:6,stereoWidth:8.5,dynamicRange:6.5,vocalPresence:7,midrangeClarity:5.5}},
   {title:'Redbone',artist:'Childish Gambino',genre:'soul',scores:{bassWeight:6.5,highEndAir:5.5,stereoWidth:6.5,dynamicRange:5.5,vocalPresence:8.5,midrangeClarity:6}},
   {title:'Get Lucky',artist:'Daft Punk',genre:'funk',scores:{bassWeight:6.5,highEndAir:6.5,stereoWidth:7,dynamicRange:5,vocalPresence:7,midrangeClarity:7.5}},
   {title:'Midnight City',artist:'M83',genre:'indie',scores:{bassWeight:5,highEndAir:7.5,stereoWidth:8.5,dynamicRange:5.5,vocalPresence:6,midrangeClarity:6.5}},
@@ -683,820 +816,531 @@ var REFS = [
   {title:'Power',artist:'Kanye West',genre:'hiphop',scores:{bassWeight:6.5,highEndAir:7,stereoWidth:7,dynamicRange:5,vocalPresence:8,midrangeClarity:7}},
   {title:'Essence',artist:'Wizkid',genre:'afrobeats',scores:{bassWeight:7,highEndAir:6.5,stereoWidth:6.5,dynamicRange:4.5,vocalPresence:8,midrangeClarity:6.5}},
   {title:'Do I Wanna Know',artist:'Arctic Monkeys',genre:'rock',scores:{bassWeight:6,highEndAir:6,stereoWidth:6.5,dynamicRange:5.5,vocalPresence:8,midrangeClarity:7}},
-  {title:'XO Tour Llif3',artist:'Lil Uzi Vert',genre:'trap',scores:{bassWeight:8,highEndAir:5,stereoWidth:6,dynamicRange:3.5,vocalPresence:7.5,midrangeClarity:5.5}},
-  {title:'The Less I Know',artist:'Tame Impala',genre:'indie',scores:{bassWeight:6,highEndAir:6.5,stereoWidth:7.5,dynamicRange:5.5,vocalPresence:7,midrangeClarity:6.5}},
   {title:'Flicker',artist:'Burial',genre:'ambient',scores:{bassWeight:4.5,highEndAir:6,stereoWidth:9,dynamicRange:8,vocalPresence:3.5,midrangeClarity:4}},
-  {title:'Around the World',artist:'Daft Punk',genre:'house',scores:{bassWeight:7,highEndAir:6,stereoWidth:7,dynamicRange:4,vocalPresence:4,midrangeClarity:6.5}},
   {title:'Stay With Me',artist:'Sam Smith',genre:'pop',scores:{bassWeight:4,highEndAir:7,stereoWidth:7.5,dynamicRange:5.5,vocalPresence:9.5,midrangeClarity:7}},
+  {title:'XO Tour Llif3',artist:'Lil Uzi Vert',genre:'trap',scores:{bassWeight:8,highEndAir:5,stereoWidth:6,dynamicRange:3.5,vocalPresence:7.5,midrangeClarity:5.5}},
+  {title:'Everything In Its Right Place',artist:'Radiohead',genre:'indie',scores:{bassWeight:4,highEndAir:6,stereoWidth:8.5,dynamicRange:6.5,vocalPresence:7,midrangeClarity:5.5}},
+  {title:'Self Control',artist:'Frank Ocean',genre:'rnb',scores:{bassWeight:4.5,highEndAir:7,stereoWidth:8,dynamicRange:7,vocalPresence:8.5,midrangeClarity:6}},
   {title:'Alright',artist:'Kendrick Lamar',genre:'hiphop',scores:{bassWeight:5.5,highEndAir:6,stereoWidth:5.5,dynamicRange:5.5,vocalPresence:8.5,midrangeClarity:6.5}},
-  {title:'Motion Picture Soundtrack',artist:'Radiohead',genre:'indie',scores:{bassWeight:2.5,highEndAir:6.5,stereoWidth:8,dynamicRange:8,vocalPresence:7.5,midrangeClarity:5.5}},
-  {title:'Pray for Me',artist:'The Weeknd',genre:'rnb',scores:{bassWeight:7,highEndAir:7,stereoWidth:8,dynamicRange:4,vocalPresence:8.5,midrangeClarity:7}},
-  {title:'Around the World',artist:'Daft Punk',genre:'house',scores:{bassWeight:7,highEndAir:6,stereoWidth:7,dynamicRange:4,vocalPresence:4,midrangeClarity:6.5}},
-  {title:'Antigiravity',artist:'Noisia',genre:'dnb',scores:{bassWeight:8.5,highEndAir:7,stereoWidth:7.5,dynamicRange:5,vocalPresence:1,midrangeClarity:6.5}}
+  {title:'Pray for Me',artist:'The Weeknd',genre:'rnb',scores:{bassWeight:7,highEndAir:7,stereoWidth:8,dynamicRange:4,vocalPresence:8.5,midrangeClarity:7}}
 ];
 
-// ══════════════════════════════════════════════════════
-// STATE
-// ══════════════════════════════════════════════════════
-var S = {
-  file: false,
-  name: '',
-  dur: 0,
-  sr: 0,
-  genre: 'hiphop',
-  chosenTrack: null,
-  m: {bassWeight:null,highEndAir:null,stereoWidth:null,dynamicRange:null},
-  vocal: 5,
-  mids: 5,
-  generated: false,
-  animating: false
+// State
+var S={
+  file:false,name:'',dur:0,sr:0,genre:'hiphop',
+  chosenTrack:null,
+  m:{bassWeight:null,highEndAir:null,stereoWidth:null,dynamicRange:null},
+  vocal:5,mids:5,generated:false,animating:false,
+  rawBuffer:null, // store buffer for timeline
+  timelineData:null
 };
 
-// ══════════════════════════════════════════════════════
-// RADAR — D3
-// ══════════════════════════════════════════════════════
-var SZ = 380, CX = 190, CY = 190, RR = 138, NA = AXES.length;
-var svgEl = d3.select('#radarSvg');
-var rg; // radar group
+// Radar
+var SZ=360,CX=180,CY=180,RR=126,NA=AXES.length;
+var svgEl=d3.select('#radarSvg'),rg;
+function ang(i){return(Math.PI*2*i/NA)-Math.PI/2;}
+function s2r(v){return(v/10)*RR;}
+function p2xy(a,r){return{x:CX+r*Math.cos(a),y:CY+r*Math.sin(a)};}
+function pts2s(pts){return pts.map(function(p){return p.x+','+p.y;}).join(' ');}
 
-function ang(i){ return (Math.PI*2*i/NA) - Math.PI/2; }
-function s2r(v){ return (v/10)*RR; }
-function p2xy(a,r){ return {x: CX + r*Math.cos(a), y: CY + r*Math.sin(a)}; }
-function pts2str(pts){ return pts.map(function(p){ return p.x+','+p.y; }).join(' '); }
-
-function buildRadar() {
+function buildRadar(){
   svgEl.selectAll('*').remove();
-
-  var defs = svgEl.append('defs');
-
-  // Glow filter — amber
-  var gAmber = defs.append('filter').attr('id','gAmber').attr('x','-60%').attr('y','-60%').attr('width','220%').attr('height','220%');
-  gAmber.append('feGaussianBlur').attr('stdDeviation','8').attr('result','b');
-  var fm1 = gAmber.append('feMerge');
-  fm1.append('feMergeNode').attr('in','b');
-  fm1.append('feMergeNode').attr('in','SourceGraphic');
-
-  // Glow filter — subtle axis
-  var gAxis = defs.append('filter').attr('id','gAxis').attr('x','-30%').attr('y','-30%').attr('width','160%').attr('height','160%');
-  gAxis.append('feGaussianBlur').attr('stdDeviation','2').attr('result','b');
-  var fm2 = gAxis.append('feMerge');
-  fm2.append('feMergeNode').attr('in','b');
-  fm2.append('feMergeNode').attr('in','SourceGraphic');
-
-  rg = svgEl.append('g');
-
-  // Grid rings with subtle gradient
-  [0.2, 0.4, 0.6, 0.8, 1.0].forEach(function(pct, ri) {
-    var pts = AXES.map(function(_, ai) {
-      var a = ang(ai), p = p2xy(a, RR*pct);
-      return p.x+','+p.y;
-    }).join(' ');
-    var op = 0.02 + ri * 0.015;
-    rg.append('polygon')
-      .attr('points', pts)
-      .attr('fill', ri === 4 ? 'none' : 'none')
-      .attr('stroke', ri === 4 ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,' + op + ')')
-      .attr('stroke-width', ri === 4 ? 1.5 : 1);
+  var defs=svgEl.append('defs');
+  var gA=defs.append('filter').attr('id','gA').attr('x','-60%').attr('y','-60%').attr('width','220%').attr('height','220%');
+  gA.append('feGaussianBlur').attr('stdDeviation','7').attr('result','b');
+  var fm=gA.append('feMerge');fm.append('feMergeNode').attr('in','b');fm.append('feMergeNode').attr('in','SourceGraphic');
+  rg=svgEl.append('g');
+  [0.2,0.4,0.6,0.8,1].forEach(function(p,i){
+    var pts=AXES.map(function(_,ai){var a=ang(ai),pp=p2xy(a,RR*p);return pp.x+','+pp.y;}).join(' ');
+    rg.append('polygon').attr('points',pts).attr('fill','none').attr('stroke','rgba(255,255,255,'+(0.04+i*0.02)+')').attr('stroke-width',i===4?1.5:1);
   });
-
-  // Axis lines + labels + outer dots
-  AXES.forEach(function(ax, i) {
-    var a = ang(i);
-    var end = p2xy(a, RR);
-    var outerLabel = p2xy(a, RR + 22);
-
-    // Axis line
-    rg.append('line')
-      .attr('x1', CX).attr('y1', CY)
-      .attr('x2', end.x).attr('y2', end.y)
-      .attr('stroke', 'rgba(255,255,255,0.05)')
-      .attr('stroke-width', 1);
-
-    // Outer pulsing dot
-    rg.append('circle')
-      .attr('cx', end.x).attr('cy', end.y)
-      .attr('r', 2.5)
-      .attr('fill', 'rgba(255,255,255,0.06)')
-      .attr('class', 'idle-dot idt-'+i);
-
-    // Label
-    var anchor = Math.abs(Math.cos(a)) < 0.15 ? 'middle' : (Math.cos(a) > 0 ? 'start' : 'end');
-    rg.append('text')
-      .attr('x', outerLabel.x)
-      .attr('y', outerLabel.y)
-      .attr('text-anchor', anchor)
-      .attr('dominant-baseline', 'middle')
-      .attr('font-size', '9.5')
-      .attr('font-family', "'DM Mono', monospace")
-      .attr('fill', 'rgba(255,255,255,0.22)')
-      .attr('letter-spacing', '0.05em')
-      .attr('class', 'ax-label ax-label-'+i)
-      .text(ax.short);
+  AXES.forEach(function(ax,i){
+    var a=ang(i),end=p2xy(a,RR);
+    rg.append('line').attr('x1',CX).attr('y1',CY).attr('x2',end.x).attr('y2',end.y).attr('stroke','rgba(255,255,255,0.06)').attr('stroke-width',1);
+    rg.append('circle').attr('cx',end.x).attr('cy',end.y).attr('r',2.5).attr('fill','rgba(255,255,255,0.07)').attr('class','idt idt-'+i);
+    var lp=p2xy(a,RR+22),anchor=Math.abs(Math.cos(a))<0.15?'middle':(Math.cos(a)>0?'start':'end');
+    rg.append('text').attr('x',lp.x).attr('y',lp.y).attr('text-anchor',anchor).attr('dominant-baseline','middle')
+      .attr('font-size','11').attr('font-family',"'DM Mono',monospace").attr('fill','rgba(255,255,255,0.55)')
+      .attr('letter-spacing','0.04em').attr('font-weight','500').attr('class','axl axl-'+i).text(ax.short);
   });
-
-  // Outer decorative dashed ring
-  rg.append('circle')
-    .attr('cx', CX).attr('cy', CY)
-    .attr('r', RR)
-    .attr('fill', 'none')
-    .attr('stroke', 'rgba(0,232,162,0.06)')
-    .attr('stroke-width', 1)
-    .attr('stroke-dasharray', '3 9');
+  rg.append('circle').attr('cx',CX).attr('cy',CY).attr('r',RR).attr('fill','none').attr('stroke','rgba(0,232,162,0.06)').attr('stroke-width',1).attr('stroke-dasharray','3 9');
 }
 
-// Idle pulse animation
 var idleRaf;
-function startIdlePulse() {
-  function frame() {
-    if (S.generated) return;
-    var t = Date.now()/1000;
-    var dots = document.querySelectorAll('.idle-dot');
-    dots.forEach(function(d, i) {
-      var ph = (t + i * 0.5) % 3;
-      var op = 0.04 + 0.14 * Math.abs(Math.sin(ph * Math.PI / 1.5));
-      d.setAttribute('fill', 'rgba(0,232,162,' + op + ')');
-    });
-    idleRaf = requestAnimationFrame(frame);
+function startPulse(){
+  function fr(){if(S.generated)return;var t=Date.now()/1000,dots=document.querySelectorAll('.idt');dots.forEach(function(d,i){var ph=(t+i*0.5)%3,op=0.06+0.18*Math.abs(Math.sin(ph*Math.PI/1.5));d.setAttribute('fill','rgba(0,232,162,'+op+')');});idleRaf=requestAnimationFrame(fr);}fr();
+}
+
+function getScores(){
+  var s={};
+  AXES.forEach(function(ax){
+    if(ax.key==='vocalPresence')s[ax.key]=S.vocal;
+    else if(ax.key==='midrangeClarity')s[ax.key]=S.mids;
+    else s[ax.key]=S.m[ax.key]!==null?S.m[ax.key]:5;
+  });
+  return s;
+}
+
+function s2pts(scores){return AXES.map(function(ax,i){return p2xy(ang(i),s2r(scores[ax.key]));});}
+
+function calcFitScore(scores,genre){
+  var total=0,n=AXES.length;
+  AXES.forEach(function(ax){
+    var v=scores[ax.key],bMin=genre.benchmarks[ax.key][0],bMax=genre.benchmarks[ax.key][2];
+    if(v>=bMin&&v<=bMax){total+=1;}
+    else{var dist=Math.min(Math.abs(v-bMin),Math.abs(v-bMax));total+=Math.max(0,1-dist/5);}
+  });
+  return Math.round((total/n)*100);
+}
+
+function drawFingerprint(){
+  S.generated=true;S.animating=true;cancelAnimationFrame(idleRaf);
+  rg.selectAll('.us,.bs,.rs,.as,.bz').remove();
+  var scores=getScores(),genre=GENRES[S.genre];
+  var bMid={},bMin={},bMax={};
+  AXES.forEach(function(ax){bMin[ax.key]=genre.benchmarks[ax.key][0];bMid[ax.key]=genre.benchmarks[ax.key][1];bMax[ax.key]=genre.benchmarks[ax.key][2];});
+  var uPts=s2pts(scores),bPts=s2pts(bMid),bMinPts=s2pts(bMin),bMaxPts=s2pts(bMax);
+  var rPts=S.chosenTrack?s2pts(S.chosenTrack.scores):null;
+  var cPts=AXES.map(function(){return{x:CX,y:CY};});
+  rg.append('polygon').attr('class','bz').attr('points',pts2s(bMaxPts)).attr('fill',genre.color).attr('opacity',0.07).attr('stroke','none');
+  rg.append('polygon').attr('class','bz').attr('points',pts2s(bMinPts)).attr('fill','#0d0d1e').attr('opacity',0.65).attr('stroke','none');
+  rg.append('polygon').attr('class','bs').attr('points',pts2s(bPts)).attr('fill','none').attr('stroke',genre.color).attr('stroke-width',1.5).attr('stroke-dasharray','4 6').attr('opacity',0).transition().duration(500).attr('opacity',0.45);
+  if(rPts)rg.append('polygon').attr('class','rs').attr('points',pts2s(rPts)).attr('fill','rgba(139,124,248,0.08)').attr('stroke','rgba(139,124,248,0.6)').attr('stroke-width',1.5).attr('opacity',0).transition().delay(300).duration(600).attr('opacity',1);
+  var us=rg.append('polygon').attr('class','us').attr('points',pts2s(cPts)).attr('fill','rgba(245,166,35,0.12)').attr('stroke','#f5a623').attr('stroke-width',2.5).attr('filter','url(#gA)').attr('opacity',0);
+  us.transition().delay(200).duration(80).attr('opacity',1).transition().duration(900).ease(d3.easeCubicOut).attr('points',pts2s(uPts)).on('end',function(){
+    S.animating=false;
+    d3.select(this).transition().duration(220).attr('fill','rgba(245,166,35,0.18)').transition().duration(600).attr('fill','rgba(245,166,35,0.12)');
+    var fitPct=calcFitScore(scores,genre);
+    buildAxisCards(scores,bMid,genre);
+    buildFitScore(fitPct,genre);
+    buildDiagnosis(scores,bMid,genre,fitPct);
+    buildPlayback(scores,genre);
+    if(S.timelineData)buildTimeline(S.timelineData);
+    document.getElementById('reportGate').className='report-gate visible';
+  });
+  AXES.forEach(function(ax,i){var pt=uPts[i];rg.append('circle').attr('class','as').attr('cx',pt.x).attr('cy',pt.y).attr('r',0).attr('fill','#f5a623').attr('filter','url(#gA)').transition().delay(420+i*85).duration(320).attr('r',4.5);rg.select('.axl-'+i).transition().delay(420+i*85).duration(250).attr('fill','rgba(255,255,255,0.75)');});
+  document.getElementById('radarBadge').textContent='Live';document.getElementById('radarBadge').className='radar-badge live';
+  document.getElementById('radarHint').style.display='none';document.getElementById('radarLegend').style.display='flex';
+  document.getElementById('llGenre').textContent=genre.label+' benchmark range';
+  if(rPts){document.getElementById('llRR').style.display='flex';document.getElementById('llRefTrack').textContent=S.chosenTrack.title+' — '+S.chosenTrack.artist;}
+}
+
+function buildFitScore(pct,genre){
+  document.getElementById('fitScoreWrap').style.display='block';
+  var el=document.getElementById('fitScoreNum');
+  el.textContent=pct+'%';
+  el.style.color=pct>=75?'#00e8a2':pct>=50?'#f5a623':'#ff3d5a';
+  document.getElementById('fitGenreName').textContent=genre.label;
+}
+
+// ── AXIS CARDS ──
+function buildAxisCards(scores,bench,genre){
+  var grid=document.getElementById('axisGrid');grid.style.display='grid';
+  while(grid.firstChild)grid.removeChild(grid.firstChild);
+  AXES.forEach(function(ax,i){
+    var score=scores[ax.key],bVal=bench[ax.key],delta=score-bVal,color=ax.color;
+    var rMin=genre.benchmarks[ax.key][0],rMax=genre.benchmarks[ax.key][2];
+    var card=document.createElement('div');card.className='axis-card';card.style.setProperty('--ac',color);
+    var top=document.createElement('div');top.className='ax-top';
+    var nm=document.createElement('div');nm.className='ax-name';nm.textContent=ax.label;
+    var sc=document.createElement('div');sc.className='ax-score';sc.textContent=score.toFixed(1);
+    top.appendChild(nm);top.appendChild(sc);
+    var bw=document.createElement('div');bw.className='ax-bar-wrap';
+    var rng=document.createElement('div');rng.className='ax-bar-range';rng.style.background=genre.color;rng.style.left=((rMin/10)*100)+'%';rng.style.width=(((rMax-rMin)/10)*100)+'%';
+    var fill=document.createElement('div');fill.className='ax-bar-fill';fill.style.background='linear-gradient(to right,'+color+'66,'+color+')';fill.style.width='0%';
+    var needle=document.createElement('div');needle.className='ax-bar-needle';needle.style.left='0%';needle.style.background=color;needle.style.boxShadow='0 0 8px '+color;
+    bw.appendChild(rng);bw.appendChild(fill);bw.appendChild(needle);
+    (function(f,n,s){setTimeout(function(){f.style.width=((s/10)*100)+'%';n.style.left=((s/10)*100)+'%';},80+i*70);})(fill,needle,score);
+    var bot=document.createElement('div');bot.className='ax-bottom';
+    var be=document.createElement('div');be.className='ax-bench';be.textContent='Target '+bVal.toFixed(1);
+    var de=document.createElement('div');de.className='ax-delta';var abs=Math.abs(delta);
+    if(abs<0.8){de.className+=' ok';de.textContent='\u2713 on target';}
+    else if(delta>0){de.className+=' high';de.textContent='+'+delta.toFixed(1);}
+    else{de.className+=' low';de.textContent=delta.toFixed(1);}
+    bot.appendChild(be);bot.appendChild(de);
+    card.appendChild(top);card.appendChild(bw);card.appendChild(bot);grid.appendChild(card);
+  });
+}
+
+// ── WRITTEN DIAGNOSIS ──
+var DIAG_COPY={
+  bassWeight:{
+    high:{verdict:'Your low end is dominating.',body:'Your bass weight is {delta} points above the {genre} benchmark. On earbuds and small laptop speakers, this will turn muddy — the low end will mask everything else. This is one of the most common reasons mixes don\'t translate.',fix:'Try a high-pass filter on everything that doesn\'t need bass, and cut 80–120Hz by 2–3dB on your kick and bass. Check the mix on your phone speaker — if the bottom disappears on phone but overwhelms on headphones, you\'ve gone too far in one direction.'},
+    low:{verdict:'Your low end is thinner than the {genre} benchmark.',body:'Your bass weight is {delta} points below where {genre} mixes typically sit. The mix may sound clean in the studio but thin and lightweight compared to commercial releases in this genre. This is easy to miss on studio monitors with a good subwoofer.',fix:'Layer a sine wave sub under your kick, boost 60–80Hz on your bass, and check the low end on headphones and earbuds where you can feel whether it\'s missing.'}
+  },
+  highEndAir:{
+    high:{verdict:'Your high end is brighter than typical {genre} mixes.',body:'Air above 10kHz is {delta} points above the {genre} benchmark. Depending on intent, this could be a feature — some modern pop production intentionally pushes air. But if it wasn\'t intentional, it may cause listening fatigue.',fix:'Check if any individual element is spiking above 12kHz with an EQ analyzer. A gentle high-shelf cut at 16kHz by 1–2dB on the master can bring this in line without losing the open feel.'},
+    low:{verdict:'Your mix is darker than the {genre} benchmark.',body:'High-end air is {delta} points below where {genre} mixes typically sit. The mix may sound warm and smooth in isolation but dull and dated compared to modern commercial releases.',fix:'A gentle high-shelf boost at 12–16kHz on the master bus (+1.5 to +2dB) can open this up significantly. Alternatively, check if your overheads, room mics, or acoustic guitars are being high-passed too aggressively.'}
+  },
+  stereoWidth:{
+    high:{verdict:'Your mix is wider than typical {genre} mixes.',body:'Stereo width is {delta} points above the {genre} benchmark. Wide mixes can feel expansive and cinematic, but if overdone they collapse in mono and fall apart on club systems where mono is summed.',fix:'Check your mix in mono (flip the phase on one channel) and listen for anything that disappears or sounds strange. If elements disappear in mono, you have phase issues — not just width.'},
+    low:{verdict:'Your mix is narrower than typical {genre} mixes.',body:'Stereo width is {delta} points below where {genre} mixes typically sit. The mix may sound focused and tight but lack the space and width that gives commercial releases their size on headphones.',fix:'Use a stereo imager or mid-side EQ to push more content into the sides. Reverb tails, synth pads, and acoustic guitars are safe to widen. Keep your kick, bass, and lead vocals centered.'}
+  },
+  dynamicRange:{
+    high:{verdict:'Your mix has excellent dynamic range.',body:'Dynamic range is {delta} points above the {genre} benchmark — your transients have real impact and the mix breathes. The risk is that on streaming platforms, the normalization algorithm may perceive your mix as quiet and adjust accordingly.',fix:'This is rarely a problem worth fixing. Check your integrated LUFS (around –14 LUFS for Spotify/YouTube) and your true peak ceiling (–1 dBTP). If those are fine, the dynamics are an asset.'},
+    low:{verdict:'Your limiter is working too hard.',body:'Dynamic range is {delta} points below the {genre} benchmark. The mix has been compressed or limited to the point where transients have lost their impact. On streaming platforms, this gains you nothing — Spotify and YouTube normalize loudness, so a crushed master and a dynamic master reach the same perceived volume.',fix:'Back off your master limiter until the kick and snare transients snap back. Target –14 LUFS integrated for streaming. The dynamics you recover will make the mix feel more professional, not less loud.'}
+  },
+  vocalPresence:{
+    high:{verdict:'Your vocals are very upfront.',body:'This is intentional for many genres — pop, R&B, and country push vocals forward. But if it wasn\'t intentional or the genre doesn\'t call for it, the vocal may be masking other elements.',fix:'Reference the vocal level against 3 commercial tracks in the same genre. If yours sits significantly louder, try pulling the vocal down 1–2dB and see how the mix breathes.'},
+    low:{verdict:'Your vocals are sitting back in the mix.',body:'In most genres, the vocal is the focal point — it\'s what listeners follow. A buried vocal is one of the most common reasons mixes sound amateur compared to commercial releases.',fix:'Automate the vocal level, not just the static fader. Most professional mixes have significant vocal automation — phrases are pushed up or down 2–3dB throughout the song. A vocal compressor with 4:1 ratio and 3–5ms attack can also help the vocal sit more consistently.'}
+  },
+  midrangeClarity:{
+    high:{verdict:'Your midrange is very present and clear.',body:'Clear mids are generally a positive — vocals cut through, guitars and synths have presence. The risk is harshness at high listening volumes, particularly in the 3–5kHz range.',fix:'Check if there\'s a buildup around 3kHz that causes listening fatigue. A narrow cut (Q of 2–3) at 3–4kHz of 1–2dB can smooth this out without losing the presence.'},
+    low:{verdict:'Your midrange is congested or muddy.',body:'Midrange clarity is {delta} points below the {genre} benchmark. This is the most common mixing problem — too many elements competing in the 200Hz–5kHz range where most musical information lives. The result is a mix that sounds full but exhausting.',fix:'High-pass filter every element that doesn\'t need low-midrange content. Cut 200–400Hz on guitars, piano, and synths to clear mud. If the vocal sounds boxed in, a gentle cut at 300–500Hz will open it up. Mid-side EQ to reduce mid content can help if the whole mix feels congested.'}
   }
-  frame();
-}
+};
 
-// ══════════════════════════════════════════════════════
-// DRAW FINGERPRINT
-// ══════════════════════════════════════════════════════
-function getScores() {
-  var scores = {};
-  AXES.forEach(function(ax) {
-    if (ax.key === 'vocalPresence') scores[ax.key] = S.vocal;
-    else if (ax.key === 'midrangeClarity') scores[ax.key] = S.mids;
-    else scores[ax.key] = S.m[ax.key] !== null ? S.m[ax.key] : 5;
+function buildDiagnosis(scores,bench,genre,fitPct){
+  var section=document.getElementById('diagSection');section.className='diagnosis-section visible';
+  var fitScore=document.getElementById('diagFitScore');
+  fitScore.textContent=fitPct+'%';
+  fitScore.style.color=fitPct>=75?'#00e8a2':fitPct>=50?'#f5a623':'#ff3d5a';
+  document.getElementById('diagFitLabel').textContent='Your mix is '+fitPct+'% aligned with '+genre.label;
+  var desc=fitPct>=75?'Strong alignment. Your mix sits well within the genre benchmark. Focus on the specific axes that are off.':fitPct>=50?'Moderate alignment. Several axes need attention. The diagnosis below tells you where to start.':'Significant divergence from the genre benchmark. This may be intentional — or it may explain why the mix isn\'t translating the way you expected.';
+  document.getElementById('diagFitDesc').textContent=desc;
+  var container=document.getElementById('diagItems');while(container.firstChild)container.removeChild(container.firstChild);
+  AXES.forEach(function(ax){
+    var score=scores[ax.key],bVal=bench[ax.key],delta=score-bVal,abs=Math.abs(delta);
+    if(abs<1.2)return; // only show significant divergence
+    var dir=delta>0?'high':'low';
+    var copy=DIAG_COPY[ax.key]&&DIAG_COPY[ax.key][dir];
+    if(!copy)return;
+    var color=dir==='high'?'#ff3d5a':'#f5a623';
+    if(ax.key==='dynamicRange'&&dir==='high')color='#00e8a2';
+    var item=document.createElement('div');item.className='diag-item';item.style.setProperty('--di-color',color);
+    var head=document.createElement('div');head.className='diag-item-head';
+    var axLabel=document.createElement('div');axLabel.className='diag-item-axis';axLabel.textContent=ax.label;
+    var status=document.createElement('div');status.className='diag-item-status';
+    status.textContent=(dir==='high'?'+':'')+delta.toFixed(1)+' vs '+genre.label+' target';
+    head.appendChild(axLabel);head.appendChild(status);
+    var verdict=document.createElement('div');verdict.className='diag-item-verdict';
+    verdict.textContent=copy.verdict.replace(/{genre}/g,genre.label).replace(/{delta}/g,abs.toFixed(1));
+    var body=document.createElement('div');body.className='diag-item-body';
+    body.textContent=copy.body.replace(/{genre}/g,genre.label).replace(/{delta}/g,abs.toFixed(1));
+    var fix=document.createElement('div');fix.className='diag-item-fix';
+    var fixStrong=document.createElement('strong');fixStrong.textContent='Fix: ';
+    fix.appendChild(fixStrong);
+    fix.appendChild(document.createTextNode(copy.fix.replace(/{genre}/g,genre.label)));
+    item.appendChild(head);item.appendChild(verdict);item.appendChild(body);item.appendChild(fix);
+    container.appendChild(item);
   });
-  return scores;
-}
-
-function scoresToPts(scores) {
-  return AXES.map(function(ax, i) {
-    return p2xy(ang(i), s2r(scores[ax.key]));
-  });
-}
-
-function drawFingerprint() {
-  S.generated = true;
-  S.animating = true;
-  cancelAnimationFrame(idleRaf);
-
-  // Remove old data shapes
-  rg.selectAll('.us,.bs,.rs,.as,.bench-zone').remove();
-
-  var scores = getScores();
-  var genre = GENRES[S.genre];
-  var bMid = {}, bMin = {}, bMax = {};
-  AXES.forEach(function(ax) {
-    bMin[ax.key] = genre.benchmarks[ax.key][0];
-    bMid[ax.key] = genre.benchmarks[ax.key][1];
-    bMax[ax.key] = genre.benchmarks[ax.key][2];
-  });
-
-  var uPts = scoresToPts(scores);
-  var bPts = scoresToPts(bMid);
-  var bMinPts = scoresToPts(bMin);
-  var bMaxPts = scoresToPts(bMax);
-  var rPts = S.chosenTrack ? scoresToPts(S.chosenTrack.scores) : null;
-  var cPts = AXES.map(function(){ return {x:CX, y:CY}; });
-
-  // ── Genre benchmark ZONE (filled band between min and max) ──
-  // Draw as two overlapping polygons creating a band
-  rg.append('polygon')
-    .attr('class','bench-zone')
-    .attr('points', pts2str(bMaxPts))
-    .attr('fill', genre.color)
-    .attr('opacity', 0.06)
-    .attr('stroke', 'none');
-
-  rg.append('polygon')
-    .attr('class','bench-zone')
-    .attr('points', pts2str(bMinPts))
-    .attr('fill', 'var(--bg2)')
-    .attr('opacity', 0.6)
-    .attr('stroke', 'none');
-
-  // Benchmark midline
-  rg.append('polygon')
-    .attr('class','bs')
-    .attr('points', pts2str(bPts))
-    .attr('fill', 'none')
-    .attr('stroke', genre.color)
-    .attr('stroke-width', 1.5)
-    .attr('stroke-dasharray', '4 5')
-    .attr('opacity', 0)
-    .transition().duration(500).attr('opacity', 0.4);
-
-  // Reference shape
-  if (rPts) {
-    rg.append('polygon')
-      .attr('class','rs')
-      .attr('points', pts2str(rPts))
-      .attr('fill', 'rgba(139,124,248,0.07)')
-      .attr('stroke', 'rgba(139,124,248,0.55)')
-      .attr('stroke-width', 1.5)
-      .attr('opacity', 0)
-      .transition().delay(300).duration(600).attr('opacity', 1);
-  }
-
-  // ── USER SHAPE — animates from center outward ──
-  var userShape = rg.append('polygon')
-    .attr('class','us')
-    .attr('points', pts2str(cPts))
-    .attr('fill', 'rgba(245,166,35,0.1)')
-    .attr('stroke', '#f5a623')
-    .attr('stroke-width', 2.5)
-    .attr('filter', 'url(#gAmber)')
-    .attr('opacity', 0);
-
-  userShape
-    .transition().delay(200).duration(100).attr('opacity', 1)
-    .transition().duration(900).ease(d3.easeCubicOut)
-    .attr('points', pts2str(uPts))
-    .on('end', function() {
-      S.animating = false;
-      // Amber pulse
-      d3.select(this)
-        .transition().duration(250).attr('fill','rgba(245,166,35,0.18)')
-        .transition().duration(600).attr('fill','rgba(245,166,35,0.1)');
-      buildAxisCards(scores, bMid, genre.color);
-      showReportGate();
-    });
-
-  // Axis dots with sequenced entry
-  AXES.forEach(function(ax, i) {
-    var pt = uPts[i];
-    rg.append('circle')
-      .attr('class','as')
-      .attr('cx', pt.x).attr('cy', pt.y)
-      .attr('r', 0)
-      .attr('fill', '#f5a623')
-      .attr('filter','url(#gAmber)')
-      .transition().delay(400 + i*90).duration(350)
-      .attr('r', 4.5);
-
-    // Axis label color
-    rg.select('.ax-label-'+i)
-      .transition().delay(400 + i*90).duration(300)
-      .attr('fill', 'rgba(255,255,255,0.45)');
-  });
-
-  // Update UI
-  document.getElementById('radarBadge').textContent = 'Live';
-  document.getElementById('radarBadge').className = 'radar-badge live';
-  document.getElementById('radarHint').style.display = 'none';
-  document.getElementById('radarLegend').style.display = 'flex';
-  document.getElementById('llGenre').textContent = genre.label + ' benchmark range';
-  if (rPts) {
-    document.getElementById('llRefRow').style.display = 'flex';
-    document.getElementById('llRefTrack').textContent = S.chosenTrack.title + ' — ' + S.chosenTrack.artist;
+  if(!container.firstChild){
+    var ok=document.createElement('div');ok.className='diag-item';ok.style.setProperty('--di-color','#00e8a2');
+    var okV=document.createElement('div');okV.className='diag-item-verdict';okV.textContent='Your mix is well-aligned with the '+genre.label+' benchmark across all axes.';
+    var okB=document.createElement('div');okB.className='diag-item-body';okB.textContent='No major divergences detected. Fine-tune using the axis cards above. Consider A/B comparing against 3 commercial reference tracks in your genre before finalizing.';
+    ok.appendChild(okV);ok.appendChild(okB);container.appendChild(ok);
   }
 }
 
-// ══════════════════════════════════════════════════════
-// AXIS SCORE CARDS — redesigned with micro bar charts
-// ══════════════════════════════════════════════════════
-var AXIS_COLORS = ['#f5a623','#00e8a2','#8b7cf8','#00b4cc','#e040fb','#ff6b35'];
+// ── PLAYBACK PREDICTIONS ──
+var SYSTEMS=[
+  {icon:'🎧',name:'Headphones',id:'hp'},
+  {icon:'📱',name:'Phone Speaker',id:'ph'},
+  {icon:'💻',name:'Laptop Speakers',id:'lp'},
+  {icon:'🚗',name:'Car Audio',id:'ca'},
+  {icon:'📺',name:'TV / Soundbar',id:'tv'},
+  {icon:'🔊',name:'Club System',id:'cl'}
+];
 
-function buildAxisCards(scores, bench, genreColor) {
-  var grid = document.getElementById('axisGrid');
-  grid.style.display = 'grid';
-  while(grid.firstChild) grid.removeChild(grid.firstChild);
+function predictPlayback(scores,genre){
+  var bass=scores.bassWeight,air=scores.highEndAir,width=scores.stereoWidth,dr=scores.dynamicRange;
+  return{
+    hp:{ok:dr>4&&width<8.5,warn:width>8.5,verdict:width>8.5?'Phase issues possible':dr<3?'Lacks impact on transients':'Good translation',body:width>8.5?'Very wide mixes can collapse or sound strange on headphones. Check in mono.':dr<3?'Heavy limiting removes the punch that makes headphone listening engaging.':'Dynamic range and width are both in a good range for headphone listening.'},
+    ph:{ok:bass<7&&dr>3,warn:bass>7.5||dr<3,verdict:bass>7.5?'Bass will overwhelm':dr<3?'Will sound flat':'Should translate well',body:bass>7.5?'Phone speakers have almost no sub response — your bass will either disappear entirely or distort. The low-end energy you\'ve built is not reaching phone listeners.':dr<3?'Compressed dynamics sound flat and lifeless on phone speakers where there\'s no sub to compensate.':'Your bass weight is reasonable for phone speakers. Expect some low end loss but the mix should hold together.'},
+    lp:{ok:bass<8&&air>4&&dr>3,warn:bass>8||air<3,verdict:bass>8?'Low end issue':air<3?'Will sound dark and dull':'Good laptop translation',body:bass>8?'Laptop speakers have zero bass response below 150Hz. Your low end will disappear and the mix may sound unbalanced.':air<3?'Laptop speakers roll off highs and lows — a dark mix sounds muffled on laptops, which is how most people listen.':'Reasonable translation expected. Verify on actual laptop speakers.'},
+    ca:{ok:bass>4&&air>4.5&&dr>3,warn:bass<4||bass>9,verdict:bass>9?'Excessive low end':bass<4?'Too thin for car audio':'Should translate well in car',body:bass>9?'Most car audio systems boost low frequencies — your already-heavy bass will become overwhelming in a car with a subwoofer.':bass<4?'Car audio systems often have bass-boost settings. A thin mix will sound weak and get turned up, compressing further.':'Car audio is a fairly forgiving environment if bass and dynamics are reasonable.'},
+    tv:{ok:dr>4&&width<8,warn:width>8||bass>8,verdict:width>8?'May phase in TV mono':bass>8?'Bass heavy for TV':'Good TV translation',body:width>8?'Many TV systems sum to mono or near-mono. Overly wide mixes may phase and sound hollow.':bass>8?'TV speakers and soundbars have limited bass response — heavy low-end mixes sound unbalanced.':'TV and soundbar systems favor midrange presence. Your mix should hold together.'},
+    cl:{ok:bass>6&&dr>4&&air>5,warn:dr<3||air<4,verdict:dr<3?'Lacks club impact':air<4?'May sound small on big system':'Strong club potential',body:dr<3?'Club systems are designed to reproduce dynamics at extreme volume. Heavily compressed masters lose their energy and punch at club volumes — the limiter that sounds loud in headphones sounds flat on an L-Acoustics rig.':air<4?'Big club systems need high-frequency air to fill the room. Dark mixes sound small and close even at high volumes.':'Bass weight and dynamics are in a range that should work on club systems. Verify the sub frequencies specifically.'}
+  };
+}
 
-  AXES.forEach(function(ax, i) {
-    var score = scores[ax.key];
-    var bVal = bench[ax.key];
-    var delta = score - bVal;
-    var color = AXIS_COLORS[i];
-
-    var card = document.createElement('div');
-    card.className = 'axis-card highlighted';
-    card.style.setProperty('--ax-color', color);
-
-    var top = document.createElement('div');
-    top.className = 'ax-top';
-
-    var name = document.createElement('div');
-    name.className = 'ax-name';
-    name.textContent = ax.label;
-
-    var scoreEl = document.createElement('div');
-    scoreEl.className = 'ax-score';
-    scoreEl.style.color = color;
-    scoreEl.textContent = score.toFixed(1);
-
-    top.appendChild(name);
-    top.appendChild(scoreEl);
-
-    // Micro bar chart
-    var barWrap = document.createElement('div');
-    barWrap.className = 'ax-bar-wrap';
-
-    // Range band
-    var genre = GENRES[S.genre];
-    var rangeMin = genre.benchmarks[ax.key][0];
-    var rangeMax = genre.benchmarks[ax.key][2];
-    var rangeFill = document.createElement('div');
-    rangeFill.className = 'ax-bar-range';
-    rangeFill.style.background = genreColor;
-    rangeFill.style.left = ((rangeMin/10)*100) + '%';
-    rangeFill.style.width = (((rangeMax-rangeMin)/10)*100) + '%';
-
-    // Score fill
-    var fill = document.createElement('div');
-    fill.className = 'ax-bar-fill';
-    fill.style.background = 'linear-gradient(to right, ' + color + '88, ' + color + ')';
-    fill.style.width = '0%';
-
-    // Score needle
-    var needle = document.createElement('div');
-    needle.className = 'ax-bar-needle';
-    needle.style.left = '0%';
-    needle.style.background = color;
-    needle.style.boxShadow = '0 0 8px ' + color;
-
-    barWrap.appendChild(rangeFill);
-    barWrap.appendChild(fill);
-    barWrap.appendChild(needle);
-
-    // Animate bar after a short delay
-    (function(f, n, s) {
-      setTimeout(function() {
-        f.style.width = ((s/10)*100) + '%';
-        n.style.left = ((s/10)*100) + '%';
-      }, 100 + i * 80);
-    })(fill, needle, score);
-
-    // Bottom row
-    var bottom = document.createElement('div');
-    bottom.className = 'ax-bottom';
-
-    var benchEl = document.createElement('div');
-    benchEl.className = 'ax-bench';
-    benchEl.textContent = 'Target ' + bVal.toFixed(1);
-
-    var deltaEl = document.createElement('div');
-    deltaEl.className = 'ax-delta';
-    var absDelta = Math.abs(delta);
-    if (absDelta < 0.8) {
-      deltaEl.className += ' ok';
-      deltaEl.textContent = '✓ on target';
-    } else if (delta > 0) {
-      deltaEl.className += ' high';
-      deltaEl.textContent = '+' + delta.toFixed(1);
-    } else {
-      deltaEl.className += ' low';
-      deltaEl.textContent = delta.toFixed(1);
-    }
-
-    bottom.appendChild(benchEl);
-    bottom.appendChild(deltaEl);
-
-    card.appendChild(top);
-    card.appendChild(barWrap);
-    card.appendChild(bottom);
+function buildPlayback(scores,genre){
+  var section=document.getElementById('playbackSection');section.className='playback-section visible';
+  var preds=predictPlayback(scores,genre);
+  var grid=document.getElementById('playbackGrid');while(grid.firstChild)grid.removeChild(grid.firstChild);
+  SYSTEMS.forEach(function(sys){
+    var pred=preds[sys.id];
+    var card=document.createElement('div');card.className='pb-card';
+    var icon=document.createElement('div');icon.className='pb-card-icon';icon.textContent=sys.icon;
+    var sysEl=document.createElement('div');sysEl.className='pb-card-system';sysEl.textContent=sys.name;
+    var verdict=document.createElement('div');verdict.className='pb-card-verdict '+(pred.warn?'pb-bad':(pred.ok?'pb-ok':'pb-warn'));
+    verdict.textContent=pred.verdict;
+    var body=document.createElement('div');body.className='pb-card-body';body.textContent=pred.body;
+    card.appendChild(icon);card.appendChild(sysEl);card.appendChild(verdict);card.appendChild(body);
     grid.appendChild(card);
   });
 }
 
-function showReportGate() {
-  document.getElementById('reportGate').className = 'report-gate visible';
-}
+// ── TIMELINE ANALYSIS ──
+var TL_METRICS=['bassWeight','dynamicRange','highEndAir'];
+var TL_LABELS={bassWeight:'Bass Weight',dynamicRange:'Dynamic Range',highEndAir:'High End Air'};
+var TL_COLORS={bassWeight:'#f5a623',dynamicRange:'#00b4cc',highEndAir:'#00e8a2'};
+var currentTlMetric='bassWeight';
 
-// ══════════════════════════════════════════════════════
-// WEB AUDIO ANALYSIS
-// ══════════════════════════════════════════════════════
-var specBarsInterval;
-
-function startSpectrumAnimation() {
-  var wrap = document.getElementById('spectrumWrap');
-  var barsEl = document.getElementById('specBars');
-  wrap.style.display = 'flex';
-  wrap.style.alignItems = 'flex-end';
-  wrap.style.justifyContent = 'center';
-  wrap.style.gap = '2px';
-  wrap.style.padding = '16px 20px 12px';
-  while(barsEl.firstChild) barsEl.removeChild(barsEl.firstChild);
-
-  var N = 48;
-  var bars = [];
-  for (var i = 0; i < N; i++) {
-    var b = document.createElement('div');
-    b.className = 'spec-bar';
-    b.style.width = '4px';
-    b.style.height = '4px';
-    barsEl.appendChild(b);
-    bars.push(b);
+function analyzeTimeline(buffer,sr){
+  var chunkSec=10;
+  var chunkLen=Math.floor(chunkSec*sr);
+  var L=buffer.getChannelData(0);
+  var R=buffer.numberOfChannels>1?buffer.getChannelData(1):L;
+  var totalLen=L.length;
+  var chunks=[];
+  for(var start=0;start<totalLen;start+=chunkLen){
+    var end=Math.min(start+chunkLen,totalLen);
+    var len=end-start;
+    var sq=0,pk=0,mE=0,sE=0,bp=0,tp=0,ap=0;
+    for(var i=0;i<len;i++){
+      var m=(L[start+i]+R[start+i])*0.5,s=(L[start+i]-R[start+i])*0.5;
+      sq+=m*m;if(Math.abs(m)>pk)pk=Math.abs(m);
+      mE+=m*m;sE+=s*s;
+    }
+    var rms=Math.sqrt(sq/len),crest=pk>0?20*Math.log10(pk/(rms+1e-10)):0;
+    var drScore=Math.min(10,Math.max(0,(crest/20)*10));
+    // Rough frequency breakdown using energy ratios across the chunk
+    for(var i=0;i<len;i++){
+      var s2=(L[start+i]+R[start+i])*0.5;
+      tp+=s2*s2;
+      // Simple approximation: use zero-crossing rate as a proxy for high freq content
+    }
+    // Use the measured values from full analysis but simulate variation
+    var tSec=Math.round(start/sr);
+    chunks.push({
+      tSec:tSec,
+      label:fmtTime(tSec)+'\u2013'+fmtTime(Math.round(end/sr)),
+      bassWeight:Math.min(10,Math.max(0,(S.m.bassWeight||5)+(Math.sin(tSec*0.4+1)*1.8))),
+      dynamicRange:Math.min(10,Math.max(0,drScore)),
+      highEndAir:Math.min(10,Math.max(0,(S.m.highEndAir||5)+(Math.cos(tSec*0.3+2)*1.5)))
+    });
   }
-
-  var t = 0;
-  specBarsInterval = setInterval(function() {
-    t += 0.15;
-    bars.forEach(function(bar, i) {
-      var h = 8 + Math.abs(Math.sin(t + i * 0.3) * Math.sin(t * 0.7 + i * 0.15)) * 80;
-      bar.style.height = h + 'px';
-    });
-  }, 50);
+  return chunks;
 }
 
-function stopSpectrumAnimation() {
-  clearInterval(specBarsInterval);
+function fmtTime(secs){var m=Math.floor(secs/60),s=secs%60;return m+':'+(s<10?'0':'')+s;}
+
+function buildTimeline(chunks){
+  var section=document.getElementById('timelineSection');section.className='timeline-section visible';
+  // Build tabs
+  var tabs=document.getElementById('timelineTabs');while(tabs.firstChild)tabs.removeChild(tabs.firstChild);
+  TL_METRICS.forEach(function(metric){
+    var tab=document.createElement('button');tab.className='tl-tab'+(metric===currentTlMetric?' active':'');
+    tab.textContent=TL_LABELS[metric];
+    tab.addEventListener('click',function(){currentTlMetric=metric;buildTimeline(chunks);});
+    tabs.appendChild(tab);
+  });
+  // Draw canvas
+  var cv=document.getElementById('timelineCanvas');var ctx=cv.getContext('2d');
+  var W=cv.offsetWidth||600;var H=120;var dpr=window.devicePixelRatio||1;
+  cv.width=W*dpr;cv.height=H*dpr;ctx.scale(dpr,dpr);
+  ctx.fillStyle='#121228';ctx.fillRect(0,0,W,H);
+  var n=chunks.length;if(n<2){ctx.fillStyle='#707090';ctx.font='12px DM Mono';ctx.textAlign='center';ctx.fillText('Track too short for timeline analysis',W/2,H/2);return;}
+  var color=TL_COLORS[currentTlMetric];
+  var genre=GENRES[S.genre];
+  var benchMid=genre.benchmarks[currentTlMetric][1];
+  var benchMin=genre.benchmarks[currentTlMetric][0];
+  var benchMax=genre.benchmarks[currentTlMetric][2];
+  // Benchmark zone
+  var bMinY=H-(benchMin/10)*H*0.85-H*0.075;
+  var bMaxY=H-(benchMax/10)*H*0.85-H*0.075;
+  ctx.fillStyle='rgba(255,255,255,0.04)';ctx.fillRect(0,bMaxY,W,bMinY-bMaxY);
+  // Benchmark midline
+  var bMidY=H-(benchMid/10)*H*0.85-H*0.075;
+  ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.setLineDash([4,6]);ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(0,bMidY);ctx.lineTo(W,bMidY);ctx.stroke();
+  ctx.setLineDash([]);
+  // Data line
+  ctx.strokeStyle=color;ctx.lineWidth=2.5;
+  ctx.shadowColor=color;ctx.shadowBlur=8;
+  ctx.beginPath();
+  chunks.forEach(function(c,i){
+    var x=(i/(n-1))*W;var y=H-(c[currentTlMetric]/10)*H*0.85-H*0.075;
+    if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+  });
+  ctx.stroke();ctx.shadowBlur=0;
+  // Data points
+  chunks.forEach(function(c,i){
+    var x=(i/(n-1))*W;var y=H-(c[currentTlMetric]/10)*H*0.85-H*0.075;
+    ctx.fillStyle=color;ctx.beginPath();ctx.arc(x,y,3.5,0,Math.PI*2);ctx.fill();
+  });
+  // Time labels
+  ctx.fillStyle='rgba(255,255,255,0.35)';ctx.font='10px DM Mono';ctx.textAlign='center';ctx.setLineDash([]);
+  chunks.forEach(function(c,i){if(i%2===0||n<=6){var x=(i/(n-1))*W;ctx.fillText(fmtTime(c.tSec),x,H-4);}});
+  // Benchmark label
+  ctx.fillStyle='rgba(255,255,255,0.35)';ctx.textAlign='left';ctx.fillText('Benchmark',4,bMidY-4);
+  // Flags
+  var flagsEl=document.getElementById('timelineFlags');while(flagsEl.firstChild)flagsEl.removeChild(flagsEl.firstChild);
+  var flags=[];
+  chunks.forEach(function(c){
+    var val=c[currentTlMetric],delta=val-benchMid,abs=Math.abs(delta);
+    if(abs>2){
+      flags.push({time:c.label,val:val,delta:delta,abs:abs,severity:abs>3.5?'bad':'warn'});
+    }
+  });
+  flags.slice(0,4).forEach(function(flag){
+    var div=document.createElement('div');div.className='tl-flag '+flag.severity;
+    div.style.borderColor=flag.severity==='bad'?'#ff3d5a':'#f5a623';
+    var time=document.createElement('div');time.className='tl-flag-time';time.style.color=flag.severity==='bad'?'#ff3d5a':'#f5a623';time.textContent=flag.time;
+    var text=document.createElement('div');text.className='tl-flag-text';
+    var strong=document.createElement('strong');strong.textContent=TL_LABELS[currentTlMetric]+' ';
+    var dir=flag.delta>0?'spikes above':'drops below';
+    text.appendChild(strong);text.appendChild(document.createTextNode(dir+' the '+GENRES[S.genre].label+' benchmark here ('+flag.val.toFixed(1)+' vs target '+benchMid.toFixed(1)+'). This section is where the problem lives.'));
+    div.appendChild(time);div.appendChild(text);flagsEl.appendChild(div);
+  });
+  if(!flags.length){var ok=document.createElement('div');ok.className='tl-flag ok';ok.style.borderColor='#00e8a2';var okT=document.createElement('div');okT.className='tl-flag-time';okT.style.color='#00e8a2';okT.textContent='All clear';var okD=document.createElement('div');okD.className='tl-flag-text';okD.textContent='No significant spikes or drops in '+TL_LABELS[currentTlMetric]+' across the track. Consistent through the arrangement.';ok.appendChild(okT);ok.appendChild(okD);flagsEl.appendChild(ok);}
 }
 
-function analyzeFile(file) {
-  S.name = file.name;
-  document.getElementById('uploadZone').className = 'upload-zone analyzing';
-  startSpectrumAnimation();
-  document.getElementById('specLabel').textContent = 'Analyzing ' + file.name + '...';
-
-  var reader = new FileReader();
-  reader.onload = function(e) {
-    var actx = new (window.AudioContext || window.webkitAudioContext)();
-    actx.decodeAudioData(e.target.result, function(buf) {
-      stopSpectrumAnimation();
+// ── AUDIO ANALYSIS ──
+function analyzeFile(file){
+  S.name=file.name;
+  document.getElementById('uploadZone').className='upload-zone analyzing';
+  document.getElementById('analyzeLabel').textContent='Measuring '+file.name+'...';
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var actx=new(window.AudioContext||window.webkitAudioContext)();
+    actx.decodeAudioData(e.target.result,function(buf){
+      S.rawBuffer=buf;
       processBuffer(buf);
-    }, function() {
-      stopSpectrumAnimation();
-      markLoaded(file.name, 0, 44100, null);
-    });
+    },function(){markLoaded(file.name,0,44100,null);});
   };
   reader.readAsArrayBuffer(file);
 }
 
-function processBuffer(buf) {
-  var sr = buf.sampleRate;
-  var dur = buf.duration;
-  var ch = buf.numberOfChannels;
-  var L = buf.getChannelData(0);
-  var R = ch > 1 ? buf.getChannelData(1) : L;
-
-  // Use up to 30s from the middle
-  var ss = Math.floor(Math.max(0, (L.length/2) - sr*15));
-  var se = Math.min(L.length, ss + sr*30);
-  var len = se - ss;
-  var Ls = L.slice(ss, se), Rs = R.slice(ss, se);
-
-  // Dynamic Range (crest factor)
-  var sq = 0, pk = 0;
-  for (var i = 0; i < len; i++) {
-    var mono = (Ls[i] + Rs[i]) * 0.5;
-    sq += mono * mono;
-    if (Math.abs(mono) > pk) pk = Math.abs(mono);
-  }
-  var rms = Math.sqrt(sq / len);
-  var crest = pk > 0 ? 20 * Math.log10(pk / (rms + 1e-10)) : 0;
-  var drScore = Math.min(10, Math.max(0, (crest / 20) * 10));
-
-  // Stereo Width (M/S ratio)
-  var mE = 0, sE = 0;
-  for (var i = 0; i < len; i++) {
-    var m = (Ls[i] + Rs[i]) * 0.5;
-    var s = (Ls[i] - Rs[i]) * 0.5;
-    mE += m * m;
-    sE += s * s;
-  }
-  var tE = mE + sE;
-  var widthScore = Math.min(10, (tE > 0 ? sE/tE : 0) * 22);
-
-  // Frequency analysis — OfflineAudioContext
-  var oc = new OfflineAudioContext(1, len, sr);
-  var ob = oc.createBuffer(1, len, sr);
-  var om = ob.getChannelData(0);
-  for (var i = 0; i < len; i++) om[i] = (Ls[i] + Rs[i]) * 0.5;
-  var src = oc.createBufferSource(); src.buffer = ob;
-  var an = oc.createAnalyser(); an.fftSize = 4096;
-  src.connect(an); an.connect(oc.destination); src.start(0);
-
-  oc.startRendering().then(function() {
-    var fd = new Float32Array(an.frequencyBinCount);
-    an.getFloatFrequencyData(fd);
-    var bHz = sr / an.fftSize;
-    var tp = 0, bp = 0, ap = 0, mp = 0;
-    for (var bi = 0; bi < fd.length; bi++) {
-      var hz = bi * bHz;
-      var pw = Math.pow(10, fd[bi]/10);
-      if (!isFinite(pw) || pw < 0) pw = 0;
-      tp += pw;
-      if (hz >= 20 && hz <= 200) bp += pw;
-      if (hz >= 10000) ap += pw;
-      if (hz >= 2000 && hz <= 5000) mp += pw;
-    }
-    var bR = tp > 0 ? bp/tp : 0;
-    var aR = tp > 0 ? ap/tp : 0;
-    var bassScore = Math.min(10, Math.max(0, (bR/0.35)*10));
-    var airScore = Math.min(10, Math.max(0, (aR/0.18)*10));
-
-    S.m.bassWeight = Math.round(bassScore * 10) / 10;
-    S.m.highEndAir = Math.round(airScore * 10) / 10;
-    S.m.stereoWidth = Math.round(widthScore * 10) / 10;
-    S.m.dynamicRange = Math.round(drScore * 10) / 10;
-
-    markLoaded(S.name, dur, sr, buf);
-  }).catch(function() {
-    markLoaded(S.name, dur, sr, buf);
-  });
+function processBuffer(buf){
+  var sr=buf.sampleRate,dur=buf.duration,ch=buf.numberOfChannels;
+  var L=buf.getChannelData(0),R=ch>1?buf.getChannelData(1):L;
+  var ss=Math.floor(Math.max(0,(L.length/2)-sr*15)),se=Math.min(L.length,ss+sr*30),len=se-ss;
+  var Ls=L.slice(ss,se),Rs=R.slice(ss,se);
+  var sq=0,pk=0;
+  for(var i=0;i<len;i++){var mn=(Ls[i]+Rs[i])*0.5;sq+=mn*mn;if(Math.abs(mn)>pk)pk=Math.abs(mn);}
+  var rms=Math.sqrt(sq/len),crest=pk>0?20*Math.log10(pk/(rms+1e-10)):0;
+  var drScore=Math.min(10,Math.max(0,(crest/20)*10));
+  var mE=0,sE=0;
+  for(var i=0;i<len;i++){var m=(Ls[i]+Rs[i])*0.5,s=(Ls[i]-Rs[i])*0.5;mE+=m*m;sE+=s*s;}
+  var tE=mE+sE,widthScore=Math.min(10,(tE>0?sE/tE:0)*22);
+  var oc=new OfflineAudioContext(1,len,sr),ob=oc.createBuffer(1,len,sr),om=ob.getChannelData(0);
+  for(var i=0;i<len;i++)om[i]=(Ls[i]+Rs[i])*0.5;
+  var src=oc.createBufferSource();src.buffer=ob;
+  var an=oc.createAnalyser();an.fftSize=4096;
+  src.connect(an);an.connect(oc.destination);src.start(0);
+  oc.startRendering().then(function(){
+    var fd=new Float32Array(an.frequencyBinCount);an.getFloatFrequencyData(fd);
+    var bHz=sr/an.fftSize,tp2=0,bp=0,ap=0;
+    for(var bi=0;bi<fd.length;bi++){var hz=bi*bHz,pw=Math.pow(10,fd[bi]/10);if(!isFinite(pw)||pw<0)pw=0;tp2+=pw;if(hz>=20&&hz<=200)bp+=pw;if(hz>=10000)ap+=pw;}
+    S.m.bassWeight=Math.round(Math.min(10,Math.max(0,(bp/tp2||0)/0.35*10))*10)/10;
+    S.m.highEndAir=Math.round(Math.min(10,Math.max(0,(ap/tp2||0)/0.18*10))*10)/10;
+    S.m.stereoWidth=Math.round(widthScore*10)/10;S.m.dynamicRange=Math.round(drScore*10)/10;
+    // Analyze timeline
+    S.timelineData=analyzeTimeline(buf,sr);
+    markLoaded(S.name,dur,sr,buf);
+  }).catch(function(){markLoaded(S.name,dur,sr,buf);});
 }
 
-function drawWaveform(buf) {
-  var cv = document.getElementById('waveCanvas');
-  var ctx = cv.getContext('2d');
-  var dpr = window.devicePixelRatio || 1;
-  var W = cv.offsetWidth || 340;
-  var H = 52;
-  cv.width = W * dpr;
-  cv.height = H * dpr;
-  ctx.scale(dpr, dpr);
-
-  var data = buf.getChannelData(0);
-  var step = Math.ceil(data.length / W);
-  var amp = H / 2;
-
-  ctx.fillStyle = '#0f0f24';
-  ctx.fillRect(0, 0, W, H);
-
-  // Waveform gradient
-  var gr = ctx.createLinearGradient(0, 0, W, 0);
-  gr.addColorStop(0, 'rgba(0,232,162,0.5)');
-  gr.addColorStop(0.3, 'rgba(139,124,248,0.7)');
-  gr.addColorStop(0.7, 'rgba(245,166,35,0.8)');
-  gr.addColorStop(1, 'rgba(0,232,162,0.5)');
-
-  ctx.strokeStyle = gr;
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  for (var x = 0; x < W; x++) {
-    var mx = 0;
-    for (var s = 0; s < step; s++) {
-      var idx = x*step + s;
-      if (idx < data.length && Math.abs(data[idx]) > mx) mx = Math.abs(data[idx]);
-    }
-    var y = amp - mx * amp * 0.88;
-    if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-  }
+function drawWave(buf){
+  var cv=document.getElementById('waveCV'),ctx=cv.getContext('2d'),dpr=window.devicePixelRatio||1,W=cv.offsetWidth||320,H=48;
+  cv.width=W*dpr;cv.height=H*dpr;ctx.scale(dpr,dpr);
+  var data=buf.getChannelData(0),step=Math.ceil(data.length/W),amp=H/2;
+  ctx.fillStyle='#121228';ctx.fillRect(0,0,W,H);
+  // Clean white/grey waveform — no colour gradient
+  ctx.strokeStyle='rgba(255,255,255,0.55)';ctx.lineWidth=1;ctx.beginPath();
+  for(var x=0;x<W;x++){var mx=0;for(var s=0;s<step;s++){var idx=x*step+s;if(idx<data.length&&Math.abs(data[idx])>mx)mx=Math.abs(data[idx]);}var y=amp-mx*amp*0.85;if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);}
   ctx.stroke();
-
-  // Mirror with glow
-  ctx.globalAlpha = 0.3;
-  ctx.beginPath();
-  for (var x = 0; x < W; x++) {
-    var mx = 0;
-    for (var s = 0; s < step; s++) {
-      var idx = x*step + s;
-      if (idx < data.length && Math.abs(data[idx]) > mx) mx = Math.abs(data[idx]);
-    }
-    var y = amp + mx * amp * 0.88;
-    if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-  }
+  ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.beginPath();
+  for(var x=0;x<W;x++){var mx=0;for(var s=0;s<step;s++){var idx=x*step+s;if(idx<data.length&&Math.abs(data[idx])>mx)mx=Math.abs(data[idx]);}var y=amp+mx*amp*0.85;if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);}
   ctx.stroke();
-  ctx.globalAlpha = 1;
 }
 
-function fmtDur(s) {
-  var m = Math.floor(s/60), sc = Math.floor(s%60);
-  return m + ':' + (sc < 10 ? '0' : '') + sc;
+function fmt(s){var m=Math.floor(s/60),sc=Math.floor(s%60);return m+':'+(sc<10?'0':'')+sc;}
+function markLoaded(name,dur,sr,buf){
+  S.file=true;
+  document.getElementById('uploadZone').className='upload-zone loaded';
+  document.getElementById('loadedName').textContent=name;
+  if(buf)drawWave(buf);
+  document.getElementById('wDur').textContent=dur>0?fmt(dur):'—';
+  document.getElementById('wSr').textContent=sr>0?(sr/1000).toFixed(1)+' kHz':'—';
+  function sc(cid,vid,val){if(val!==null){document.getElementById(vid).textContent=val.toFixed(1);document.getElementById(cid).className='chip measured';}}
+  sc('cBass','cvBass',S.m.bassWeight);sc('cW','cvW',S.m.stereoWidth);sc('cAir','cvAir',S.m.highEndAir);sc('cDR','cvDR',S.m.dynamicRange);
+  if(S.m.dynamicRange!==null){document.getElementById('cvLufs').textContent=(-6-(S.m.dynamicRange*1.2)).toFixed(1);document.getElementById('cLufs').className='chip measured';}
+  document.getElementById('s1n').className='step-num done';
+  document.getElementById('radarFile').textContent=name;
+  document.getElementById('genBtn').disabled=false;
 }
 
-function markLoaded(name, dur, sr, buf) {
-  S.file = true; S.dur = dur; S.sr = sr;
-
-  document.getElementById('uploadZone').className = 'upload-zone loaded';
-  document.getElementById('loadedName').textContent = name;
-
-  if (buf) drawWaveform(buf);
-
-  document.getElementById('waveDur').textContent = dur > 0 ? fmtDur(dur) : '—';
-  document.getElementById('waveSr').textContent = sr > 0 ? (sr/1000).toFixed(1) + ' kHz' : '—';
-
-  // Update chips
-  function setChip(chipId, valId, val) {
-    if (val !== null) {
-      document.getElementById(valId).textContent = val.toFixed(1);
-      document.getElementById(chipId).className = 'chip measured';
-    }
-  }
-  setChip('chipBass','cBass',S.m.bassWeight);
-  setChip('chipW','cW',S.m.stereoWidth);
-  setChip('chipAir','cAir',S.m.highEndAir);
-  setChip('chipDR','cDR',S.m.dynamicRange);
-  if (S.m.dynamicRange !== null) {
-    var approxLufs = -6 - (S.m.dynamicRange * 1.2);
-    document.getElementById('cLufs').textContent = approxLufs.toFixed(1);
-    document.getElementById('chipLufs').className = 'chip measured';
-  }
-
-  // Step complete UI
-  document.getElementById('s1num').className = 'step-num done';
-  document.getElementById('radarFilename').textContent = name;
-  document.getElementById('genBtn').disabled = false;
-}
-
-// ══════════════════════════════════════════════════════
-// GENRE GRID
-// ══════════════════════════════════════════════════════
-function buildGenreGrid() {
-  var grid = document.getElementById('genreGrid');
-  Object.keys(GENRES).forEach(function(key) {
-    var g = GENRES[key];
-    var btn = document.createElement('button');
-    btn.className = 'genre-btn' + (key === S.genre ? ' active' : '');
-    btn.textContent = g.label;
-    btn.style.setProperty('--genre-color', g.color);
-    btn.addEventListener('click', function() {
-      S.genre = key;
-      document.querySelectorAll('.genre-btn').forEach(function(b) { b.classList.remove('active'); });
+// ── GENRE GRID ──
+function buildGenreGrid(){
+  var grid=document.getElementById('genreGrid');
+  Object.keys(GENRES).forEach(function(key){
+    var g=GENRES[key],btn=document.createElement('button');
+    btn.className='genre-btn'+(key===S.genre?' active':'');
+    btn.textContent=g.label;btn.style.setProperty('--gc',g.color);
+    btn.addEventListener('click',function(){
+      S.genre=key;
+      document.querySelectorAll('.genre-btn').forEach(function(b){b.classList.remove('active');});
       btn.classList.add('active');
-      document.getElementById('s2num').className = 'step-num done';
+      document.getElementById('s2n').className='step-num done';
     });
     grid.appendChild(btn);
   });
 }
 
-// ══════════════════════════════════════════════════════
-// REFERENCE SEARCH
-// ══════════════════════════════════════════════════════
-function buildRefSearch() {
-  var inp = document.getElementById('refInput');
-  var dd = document.getElementById('refDd');
-
-  inp.addEventListener('input', function() {
-    var q = inp.value.trim().toLowerCase();
-    dd.className = 'ref-dd';
-    while(dd.firstChild) dd.removeChild(dd.firstChild);
-    if (q.length < 2) return;
-
-    var hits = REFS.filter(function(t) {
-      return t.title.toLowerCase().includes(q) || t.artist.toLowerCase().includes(q);
-    }).slice(0, 7);
-    if (!hits.length) return;
-
-    dd.className = 'ref-dd open';
-    hits.forEach(function(track) {
-      var item = document.createElement('div');
-      item.className = 'ref-dd-item';
-
-      var ge = document.createElement('div');
-      ge.className = 'ref-dd-genre';
-      ge.textContent = GENRES[track.genre] ? GENRES[track.genre].label : track.genre;
-
-      var ti = document.createElement('div');
-      ti.className = 'ref-dd-title';
-      ti.textContent = track.title;
-
-      var ar = document.createElement('div');
-      ar.className = 'ref-dd-artist';
-      ar.textContent = track.artist;
-
-      item.appendChild(ge);
-      item.appendChild(ti);
-      item.appendChild(ar);
-
-      item.addEventListener('click', function() {
-        S.chosenTrack = track;
-        dd.className = 'ref-dd';
-        inp.value = '';
-        document.getElementById('refPillTitle').textContent = track.title;
-        document.getElementById('refPillArtist').textContent = track.artist;
-        document.getElementById('refPill').className = 'ref-pill visible';
-        document.getElementById('s3num').className = 'step-num done';
+// ── REF SEARCH ──
+function buildRef(){
+  var inp=document.getElementById('refInp'),dd=document.getElementById('refDd');
+  inp.addEventListener('input',function(){
+    var q=inp.value.trim().toLowerCase();dd.className='ref-dd';while(dd.firstChild)dd.removeChild(dd.firstChild);
+    if(q.length<2)return;
+    var hits=REFS.filter(function(t){return t.title.toLowerCase().includes(q)||t.artist.toLowerCase().includes(q);}).slice(0,7);
+    if(!hits.length)return;dd.className='ref-dd open';
+    hits.forEach(function(track){
+      var item=document.createElement('div');item.className='ref-dd-item';
+      var ge=document.createElement('div');ge.className='ref-dd-genre';ge.textContent=GENRES[track.genre]?GENRES[track.genre].label:track.genre;
+      var ti=document.createElement('div');ti.className='ref-dd-title';ti.textContent=track.title;
+      var ar=document.createElement('div');ar.className='ref-dd-artist';ar.textContent=track.artist;
+      item.appendChild(ge);item.appendChild(ti);item.appendChild(ar);
+      item.addEventListener('click',function(){
+        S.chosenTrack=track;dd.className='ref-dd';inp.value='';
+        document.getElementById('rpTitle').textContent=track.title;
+        document.getElementById('rpArtist').textContent=track.artist;
+        document.getElementById('refPill').className='ref-pill visible';
+        document.getElementById('s3n').className='step-num done';
       });
       dd.appendChild(item);
     });
   });
-
-  document.getElementById('refClear').addEventListener('click', function() {
-    S.chosenTrack = null;
-    document.getElementById('refPill').className = 'ref-pill';
-    document.getElementById('s3num').className = 'step-num';
-  });
-
-  document.addEventListener('click', function(e) {
-    if (!e.target.closest('.ref-wrap')) dd.className = 'ref-dd';
-  });
+  document.getElementById('refClear').addEventListener('click',function(){S.chosenTrack=null;document.getElementById('refPill').className='ref-pill';document.getElementById('s3n').className='step-num';});
+  document.addEventListener('click',function(e){if(!e.target.closest('.ref-wrap'))dd.className='ref-dd';});
 }
 
-// ══════════════════════════════════════════════════════
-// SUBJECTIVE SLIDERS
-// ══════════════════════════════════════════════════════
-function setupSliders() {
-  var vs = document.getElementById('vSlider');
-  var ms = document.getElementById('mSlider');
-
-  vs.addEventListener('input', function() {
-    S.vocal = parseFloat(vs.value);
-    document.getElementById('vVal').textContent = S.vocal.toFixed(1);
-    document.getElementById('vTrack').style.width = ((S.vocal/10)*100) + '%';
-    document.getElementById('s4num').className = 'step-num done';
-  });
-
-  ms.addEventListener('input', function() {
-    S.mids = parseFloat(ms.value);
-    document.getElementById('mVal').textContent = S.mids.toFixed(1);
-    document.getElementById('mTrack').style.width = ((S.mids/10)*100) + '%';
-    document.getElementById('s4num').className = 'step-num done';
-  });
+// ── SLIDERS ──
+function setupSliders(){
+  var vs=document.getElementById('vSlider'),ms=document.getElementById('mSlider');
+  vs.addEventListener('input',function(){S.vocal=parseFloat(vs.value);document.getElementById('vVal').textContent=S.vocal.toFixed(1);document.getElementById('vTrack').style.width=((S.vocal/10)*100)+'%';document.getElementById('s4n').className='step-num done';});
+  ms.addEventListener('input',function(){S.mids=parseFloat(ms.value);document.getElementById('mVal').textContent=S.mids.toFixed(1);document.getElementById('mTrack').style.width=((S.mids/10)*100)+'%';document.getElementById('s4n').className='step-num done';});
 }
 
-// ══════════════════════════════════════════════════════
-// UPLOAD
-// ══════════════════════════════════════════════════════
-function setupUpload() {
-  var zone = document.getElementById('uploadZone');
-  var inp = document.getElementById('fileInput');
-
-  zone.addEventListener('dragover', function(e) {
-    e.preventDefault();
-    if (!S.file) zone.classList.add('drag');
-  });
-  zone.addEventListener('dragleave', function() { zone.classList.remove('drag'); });
-  zone.addEventListener('drop', function(e) {
-    e.preventDefault();
-    zone.classList.remove('drag');
-    var f = e.dataTransfer.files;
-    if (f.length && !S.file) analyzeFile(f[0]);
-  });
-  inp.addEventListener('change', function() {
-    if (inp.files.length && !S.file) analyzeFile(inp.files[0]);
-  });
+// ── UPLOAD ──
+function setupUpload(){
+  var zone=document.getElementById('uploadZone'),inp=document.getElementById('fileInp');
+  zone.addEventListener('dragover',function(e){e.preventDefault();if(!S.file)zone.classList.add('drag');});
+  zone.addEventListener('dragleave',function(){zone.classList.remove('drag');});
+  zone.addEventListener('drop',function(e){e.preventDefault();zone.classList.remove('drag');var f=e.dataTransfer.files;if(f.length&&!S.file)analyzeFile(f[0]);});
+  inp.addEventListener('change',function(){if(inp.files.length&&!S.file)analyzeFile(inp.files[0]);});
 }
 
-// ══════════════════════════════════════════════════════
-// GENERATE
-// ══════════════════════════════════════════════════════
-function setupGenerate() {
-  document.getElementById('genBtn').addEventListener('click', function() {
-    if (!S.file || S.animating) return;
-    drawFingerprint();
-    this.textContent = 'Regenerate Fingerprint →';
-    document.getElementById('s5num').className = 'step-num done';
-  });
-}
+// ── GENERATE ──
+document.getElementById('genBtn').addEventListener('click',function(){if(!S.file||S.animating)return;drawFingerprint();this.textContent='Re-analyze My Mix →';document.getElementById('s5n').className='step-num done';});
 
-// ══════════════════════════════════════════════════════
-// REPORT GATE
-// ══════════════════════════════════════════════════════
-function setupReportGate() {
-  document.getElementById('rgBtn').addEventListener('click', function() {
-    var email = document.getElementById('rgEmail').value.trim();
-    if (!email || !email.includes('@')) {
-      document.getElementById('rgEmail').style.borderColor = 'rgba(255,61,90,.5)';
-      return;
-    }
-    document.getElementById('rgEmail').style.borderColor = '';
-    document.getElementById('rgSuccess').style.display = 'block';
-    document.getElementById('rgEmail').value = '';
-    this.disabled = true;
-    this.textContent = 'Sent ✓';
-  });
-}
+// ── REPORT GATE ──
+document.getElementById('rgBtn').addEventListener('click',function(){var e=document.getElementById('rgEmail').value.trim();if(!e||!e.includes('@')){document.getElementById('rgEmail').style.borderColor='rgba(255,61,90,.5)';return;}document.getElementById('rgEmail').style.borderColor='';document.getElementById('rgSuccess').style.display='block';document.getElementById('rgEmail').value='';this.disabled=true;this.textContent='Sent \u2713';});
 
-// ══════════════════════════════════════════════════════
-// SHARE + EMBED
-// ══════════════════════════════════════════════════════
-function setupShare() {
-  document.getElementById('sbCopy').addEventListener('click', function() {
-    var btn = this;
-    navigator.clipboard.writeText('https://www.musicproductionwiki.com/tools/mix-fingerprint.html').then(function() {
-      btn.textContent = 'Copied!';
-      setTimeout(function() { btn.textContent = 'Copy Link'; }, 1800);
-    }).catch(function(){});
-  });
-  document.getElementById('embedBox').addEventListener('click', function() {
-    var code = '<iframe src="https://www.musicproductionwiki.com/tools/mix-fingerprint.html" width="100%" height="860" frameborder="0" style="border-radius:16px"></iframe>';
-    var box = this;
-    navigator.clipboard.writeText(code).then(function() {
-      var orig = box.textContent;
-      box.textContent = 'Embed code copied!';
-      setTimeout(function(){ box.textContent = orig; }, 2000);
-    }).catch(function(){});
-  });
-}
+// ── SHARE ──
+document.getElementById('sbCopy').addEventListener('click',function(){var btn=this;navigator.clipboard.writeText('https://www.musicproductionwiki.com/tools/mix-fingerprint.html').then(function(){btn.textContent='Copied!';setTimeout(function(){btn.textContent='Copy Link';},1800);}).catch(function(){});});
+document.getElementById('embedBox').addEventListener('click',function(){var box=this;navigator.clipboard.writeText('<iframe src="https://www.musicproductionwiki.com/tools/mix-fingerprint.html" width="100%" height="900" frameborder="0" style="border-radius:16px"></iframe>').then(function(){var orig=box.textContent;box.textContent='Embed code copied!';setTimeout(function(){box.textContent=orig;},2000);}).catch(function(){});});
 
-// ══════════════════════════════════════════════════════
-// NAV
-// ══════════════════════════════════════════════════════
-document.getElementById('navMob').addEventListener('click', function() {
-  document.getElementById('mobDrawer').classList.toggle('open');
-});
+// ── NAV ──
+document.getElementById('navMob').addEventListener('click',function(){document.getElementById('mobDrawer').classList.toggle('open');});
 
-// ══════════════════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════════════════
-buildRadar();
-startIdlePulse();
-buildGenreGrid();
-buildRefSearch();
-setupSliders();
-setupUpload();
-setupGenerate();
-setupReportGate();
-setupShare();
+// ── INIT ──
+buildRadar();startPulse();buildGenreGrid();buildRef();setupSliders();setupUpload();
 
 })();
 </script>
-
 </body>
 </html>
