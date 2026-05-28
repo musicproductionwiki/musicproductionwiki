@@ -766,7 +766,6 @@ nav.mpw-site-nav .nav-mob span{display:block!important;width:22px!important;heig
       <button class="nav-search-btn" id="navSearchBtn" aria-label="Open search">
         <svg viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
       </button>
-      <a href="https://theproducersbriefing.beehiiv.com" class="nav-cta">Sound Better →</a>
       <button class="nav-mob" id="navMob" aria-label="Toggle menu">
         <span></span><span></span><span></span>
       </button>
@@ -831,48 +830,9 @@ nav.mpw-site-nav .nav-mob span{display:block!important;width:22px!important;heig
 })();
 </script>
 
-<!-- ══ ZONE 1 — LIVE HERO TOOL ══ -->
-<section class="hub-zone1">
-  <div class="hub-zone1-inner">
-
-    <div class="hub-zone1-text">
-      <span class="hub-zone1-eyebrow">The Producer's Tools</span>
-      <div class="hub-zone1-h1">Built for the session.</div>
-      <div class="hub-zone1-h1-sub">Not the syllabus.</div>
-      <p class="hub-zone1-desc">Every tool came from a real gap — a calculation you had to do by hand, a reference buried in a spec sheet, a decision you made by guessing. We built the tools we kept wishing existed.</p>
-      <div class="hub-stats-row">
-        <span class="hub-stat">Free forever</span>
-        <span class="hub-stat">No signup required</span>
-        <span class="hub-stat">Works on mobile</span>
-        <span class="hub-stat" id="hubToolCount">Loading...</span>
-      </div>
-    </div>
-
-    <div class="hub-zone1-tool">
-      <div class="hub-hero-tool-label">Live tool — Loudness Penalty Calculator</div>
-
-      <div class="hlp-slider-label">
-        <span class="hlp-slider-title">Integrated LUFS</span>
-        <span>
-          <span class="hlp-lufs-val" id="heroLufsVal">–14</span>
-          <span class="hlp-lufs-unit">LUFS</span>
-        </span>
-      </div>
-      <input type="range" class="hlp-slider" id="heroSlider" min="-30" max="-5" step="0.5" value="-14" oninput="heroLpcCalc()" style="--pct:66.67%">
-
-      <div class="hlp-bars" id="heroBars"></div>
-
-      <a class="hub-hero-cta" href="/tools/loudness-penalty.html">
-        Full Tool — All Platforms + PDF Export →
-      </a>
-    </div>
-  </div>
-</section>
-
 <!-- ══ ZONE 2 — FLAGSHIP TOOLS ══ -->
 <section class="hub-zone2">
   <div class="hub-zone2-inner">
-    <div class="hub-zone2-label">Flagship destination tools</div>
     <div class="hub-flagship-grid">
 
       <!-- Loudness Penalty Calculator — LIVE -->
@@ -910,19 +870,20 @@ nav.mpw-site-nav .nav-mob span{display:block!important;width:22px!important;heig
         <div class="hub-flagship-cta">Launch Tool →</div>
       </a>
 
-      <!-- Mix Fingerprint — Coming Soon -->
-      <div class="hub-flagship-card coming-soon">
+      <!-- Mix Fingerprint — LIVE -->
+      <a class="hub-flagship-card" href="/tools/mix-fingerprint.html">
+        <div class="hub-new-badge">NEW</div>
         <div class="hub-flagship-preview">
           <svg width="120" height="60" viewBox="0 0 120 60">
             <polygon points="60,5 110,32 90,58 30,58 10,32" fill="none" stroke="#1a1a3a" stroke-width="1.5"/>
-            <polygon points="60,18 90,33 78,50 42,50 30,33" fill="rgba(245,166,35,0.08)" stroke="#f5a623" stroke-width="1" opacity=".5"/>
-            <circle cx="60" cy="30" r="3" fill="#f5a623" opacity=".5"/>
+            <polygon points="60,18 90,33 78,50 42,50 30,33" fill="rgba(245,166,35,0.08)" stroke="#f5a623" stroke-width="1" opacity=".8"/>
+            <circle cx="60" cy="30" r="3" fill="#f5a623" opacity=".8"/>
           </svg>
         </div>
         <div class="hub-flagship-name">Mix Fingerprint Analyzer</div>
-        <div class="hub-flagship-problem">Radar chart of your mix's spectral identity versus genre references — see exactly where your mix diverges.</div>
-        <div class="hub-flagship-soon">Coming Soon</div>
-      </div>
+        <div class="hub-flagship-problem">Upload your mix. See its DNA plotted against genre benchmarks and legendary reference tracks. Real audio measurement.</div>
+        <div class="hub-flagship-cta">Launch Tool →</div>
+      </a>
 
       <!-- Arrangement Blueprint — Coming Soon -->
       <div class="hub-flagship-card coming-soon">
@@ -1425,63 +1386,7 @@ nav.mpw-site-nav .nav-mob span{display:block!important;width:22px!important;heig
   <p>More tools ship regularly. The full suite covers every stage of the production process: mixing, mastering, sound design, arrangement, and music business. Bookmark this page and check back.</p>
 </div>
 
-<script>
-(function(){
-  var PLATFORMS_MINI = [
-    {name:'Spotify',  target:-14},
-    {name:'Apple',    target:-16},
-    {name:'YouTube',  target:-14},
-    {name:'Tidal',    target:-14},
-    {name:'Amazon',   target:-9}
-  ];
-  function penaltyColor(p){ return p<=0?'#00e8a2':p<3?'#f5a623':p<6?'#ff8c42':'#ff3d5a'; }
 
-  window.heroLpcCalc = function(){
-    var slider = document.getElementById('heroSlider');
-    var lufs = parseFloat(slider.value);
-    var pct = ((lufs-(-30))/((-5)-(-30)))*100;
-    slider.style.setProperty('--pct', pct+'%');
-    var valEl = document.getElementById('heroLufsVal');
-    valEl.textContent = (lufs<0?'–':'')+Math.abs(lufs).toFixed(1).replace('.0','');
-    var barsEl = document.getElementById('heroBars');
-    var maxPenalty = Math.max.apply(null, PLATFORMS_MINI.map(function(p){ return Math.max(0,lufs-p.target); }));
-    var barMax = Math.max(maxPenalty,6);
-    while(barsEl.firstChild) barsEl.removeChild(barsEl.firstChild);
-    PLATFORMS_MINI.forEach(function(p){
-      var penalty = Math.max(0,lufs-p.target);
-      var fillPct = penalty>0?Math.min(100,(penalty/barMax)*100):4;
-      var col = penaltyColor(penalty);
-      var label = penalty<=0?'No penalty':('–'+penalty.toFixed(1)+' dB');
-      var row = document.createElement('div'); row.className='hlp-bar-row';
-      var plat = document.createElement('div'); plat.className='hlp-platform'; plat.textContent=p.name;
-      var track = document.createElement('div'); track.className='hlp-track';
-      var fillEl = document.createElement('div'); fillEl.className='hlp-fill';
-      fillEl.style.width=fillPct+'%'; fillEl.style.background=col;
-      var val = document.createElement('span'); val.className='hlp-val';
-      val.textContent=label; val.style.color=penalty<=0?'#111':'#f0f0f0';
-      fillEl.appendChild(val); track.appendChild(fill);
-      row.appendChild(plat); row.appendChild(track); barsEl.appendChild(row);
-    });
-  };
-
-  // Update tool count dynamically
-  function updateHubCount(){
-    var cards = document.querySelectorAll('.tool-card');
-    var n = cards.length;
-    var countEl = document.getElementById('hubToolCount');
-    if(countEl) countEl.textContent = n+' tools, free forever';
-    var z3 = document.getElementById('zone3Count');
-    if(z3) z3.textContent = n+' tools available';
-  }
-
-  heroLpcCalc();
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded', updateHubCount);
-  } else {
-    updateHubCount();
-  }
-})();
-</script>
 
 </body>
 </html>
