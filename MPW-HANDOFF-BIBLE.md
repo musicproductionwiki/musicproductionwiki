@@ -2845,3 +2845,238 @@ Each entry should follow compression.html structure exactly. Before writing any 
 3. Both gold standards must inform every entry — not just one
 
 **Tool milestone:** When first 200 Bible entries are live + Batch 09 (100 breakdowns) + Batch 11 (60 recreations) → build the Tools suite (Frequency Conflict Detector, Arrangement Blueprint Generator, Mix Fingerprint radar chart, Loudness Penalty Calculator, ClearCheck)
+
+---
+
+# FLAGSHIP WRITER SPEC — `mpw_flagship_writer.py`
+
+## Strategic Context
+
+40 flagship entries published in one week via parallel sessions. This is the architecture that makes it possible. The writer is NOT a replacement for quality — it is the mechanism that preserves quality at speed by separating the intellectual work (discovery) from the structural work (assembly).
+
+## Core Principle
+
+**Claude generates content only. Python generates structure.**
+
+The current `mpw_bible_writer.py` asks Claude to generate HTML. The flagship writer asks Claude to generate insights and prose. Python assembles everything else using locked templates from `compression.html`. This means:
+- Structure is guaranteed identical across all 40 entries
+- Share bars, nav JS, fix-it JS, citation block, embed code, footer — all injected verbatim
+- Claude's entire token budget goes to thinking and writing, not formatting
+
+## 3-Pass Architecture
+
+### Pass 1 — Discovery (~2,000 tokens, model: claude-sonnet-4-6)
+
+One API call. Returns JSON only. No HTML.
+
+**System prompt core:**
+> "You are the editorial director of The Producer's Bible. Your job is to find the non-obvious central insight about [term] — the thing every producer thinks they understand but doesn't. This insight must be specific to [term] and cannot apply to any other entry. Generic insights are rejected. The compression insight is: compression is a time tool, not a level tool. Find the equivalent for [term]."
+
+**Returns:**
+```json
+{
+  "central_insight": "One sentence — the non-obvious truth about this term",
+  "opening_hook": "One sentence a producer cannot put down — first sentence of definition",
+  "verdict_opinion": "MPW's authoritative take — 3-4 sentences — what producers get wrong and the correct mental model",
+  "fixit_symptoms": [
+    {
+      "key": "muddy",
+      "text": "My mix sounds muddy",
+      "sub": "Everything blurs together, no separation",
+      "cause": "Root cause — specific, not generic",
+      "fix": "Exact fix with specific settings",
+      "setting": "Setting reference line — e.g. Cut 200Hz · Q 1.4 · 3dB"
+    }
+  ],
+  "in_the_wild": [
+    {
+      "artist": "Artist Name",
+      "track": "Track Title",
+      "year": 2003,
+      "album": "Album Name",
+      "produced_by": "Producer Name",
+      "timestamp": "2:14",
+      "observation": "What to listen for — specific frequency or technique decision"
+    }
+  ],
+  "genre_rows": [
+    {
+      "genre": "Trap / Hip-Hop",
+      "col2": "value",
+      "col3": "value",
+      "col4": "value",
+      "col5": "value",
+      "note": "Producer context note"
+    }
+  ],
+  "producer_dna": [
+    {
+      "name": "Producer Name",
+      "slug": "producer-slug",
+      "role": "Role (Credits)",
+      "signature_technique": "Their specific approach to this term — one sentence",
+      "signal_chain": ["Step 1 with exact settings", "Step 2", "Step 3", "Step 4", "Step 5"]
+    }
+  ],
+  "signatures": [
+    {
+      "name": "The [Name] Move",
+      "track": "Artist — Track (Year)",
+      "settings": "Exact settings in monospace format",
+      "why": "Why it works perceptually — 1-2 sentences"
+    }
+  ],
+  "faq": [
+    {"q": "Long-tail question", "a": "Specific answer with numbers and named tools"}
+  ],
+  "producer_quotes": [
+    {"author": "Name", "quote": "Exact quote from quotes.json", "source": "Source", "section": "definition|history|how-to-use"}
+  ],
+  "comparison_terms": [
+    {"term": "Term Name", "slug": "slug"}
+  ],
+  "prerequisites": ["slug1", "slug2", "slug3"],
+  "plugin_recommendations": {
+    "free": [{"name": "Plugin", "manufacturer": "Co", "why": "Why"}],
+    "mid": [{"name": "Plugin", "manufacturer": "Co", "why": "Why"}],
+    "pro": [{"name": "Plugin", "manufacturer": "Co", "why": "Why"}]
+  }
+}
+```
+
+**Pass 1 validation:** If `central_insight` is generic (applies to more than one term), abort and retry with a harder prompt. Max 2 retries. If still generic on retry 3, flag for human review and skip to next entry.
+
+### Pass 2 — Prose (~8,000 tokens, model: claude-sonnet-4-6)
+
+One API call. Receives Pass 1 JSON. Returns a prose-only JSON — no HTML tags anywhere.
+
+**System prompt core:**
+> "You are the senior editor of The Producer's Bible. The central insight for this entry is: [central_insight from Pass 1]. Every section must serve this insight. You are writing for three simultaneous readers: (1) producer with a problem right now — needs the answer in 30 seconds, (2) producer who wants the full picture, (3) Berklee professor who will cite this as curriculum. No hedging. Specific numbers always. Named producers with named gear and named records. The best sentence in every section should be the kind of sentence a producer screenshots and sends to their session partner."
+
+**Returns:**
+```json
+{
+  "definition_prose": "4-5 paragraphs — starts with opening_hook — builds to the central insight",
+  "how_it_works_prose": "3 paragraphs — physics or signal flow — specific and teachable",
+  "new_producers_prose": "intro paragraph — then 3 mistake blocks, each: mistake + why + fix",
+  "parameters_prose": "6 param cards — each: name + what it controls + extremes + interaction",
+  "quick_reference_prose": "cheat sheet content — specific values per source type",
+  "signal_chain_prose": "position explanation — before/after context — interaction warnings",
+  "history_prose": "4 cards — chronological — specific gear, records, engineers, years",
+  "how_to_use_prose": "2 workflow paragraphs + DAW note + listening paragraph",
+  "topology_prose": "intro + 4-6 type cards — each type has sonic character and use case",
+  "hardware_plugin_prose": "table content + editorial framing",
+  "before_after_prose": "3 scenarios — each: broken state + fix + why it works",
+  "producer_dna_prose": "framing paragraph for each of 3 producers",
+  "types_prose": "intro + type descriptions",
+  "verdict_prose": "verdict_lead (3-4 sentences from verdict_opinion) + verdict_close (1 memorable sentence)",
+  "mistakes_prose": "intro + 5 mistake blocks",
+  "mix_translation_prose": "5 systems + per-system symptoms and fixes",
+  "flags_prose": "red flags list + green flags list",
+  "progression_prose": "beginner block + intermediate block + advanced block",
+  "related_prose": "6 related entry reasons-to-click"
+}
+```
+
+### Pass 3 — Assembly (Python, no API call)
+
+Python takes Pass 1 JSON + Pass 2 JSON and assembles the complete HTML entry.
+
+**What Python injects (all verbatim from compression.html locked templates):**
+- Full `<head>` with all SEO tags built from slug/term/date
+- 5 JSON-LD schema blocks (Article, FAQPage, BreadcrumbList, HowTo, Speakable) — built programmatically
+- Slim bar + Bible bar + entry nav + hamburger drawer — verbatim
+- All 8 share bars at exact locations — built from make_share() function
+- Tools section — fetched from mpw_tools_v3.py by slug
+- Fix-it accordion — built from Pass 1 `fixit_symptoms` JSON
+- Genre table — built as CSS grid from Pass 1 `genre_rows` JSON
+- Producer DNA cards — built from Pass 1 `producer_dna` JSON with collapsible signal chains
+- Signatures cards — built from Pass 1 `signatures` JSON
+- Embed code block — verbatim template with slug substitution
+- Citation block — verbatim template with slug/title/date substitution
+- What to Read Next — built from Pass 1 `comparison_terms` + hardcoded learning path per entry
+- Version changelog — verbatim template, v1.0 only at launch
+- Footer — verbatim from compression.html
+- All CSS — verbatim (share bar, genre grid, fix-it, entry nav, topology, DNA cards, etc.)
+- All JS — verbatim (nav IIFE, fixitSelect, dnaToggle)
+
+**Validation (90-point checklist) before commit:**
+- All 25 section IDs present
+- All 8 share bars present with mpw-share-btns wrapper
+- 3 producer quotes present
+- Fix-it accordion: 8 symptoms, each with matching result div
+- Genre table: genre-grid-wrap present
+- Tools section: tool HTML from mpw_tools_v3.py present
+- Citation block present
+- Changelog present
+- Embed code present
+- 5 JSON-LD blocks present
+- All 6 OG tags present
+- Canonical correct (non-www, /bible/[slug])
+- No unfilled template placeholders
+- Word count floor: 6,500 words
+- JS syntax check: node --check on all script blocks
+
+**Commit:** Trees API, single commit per entry, message: `feat: [slug].html — [Term] flagship entry v1.0 — 25 sections — Wave [N]`
+
+## Quality Gate — The Central Insight Test
+
+This is the most important part of the writer. Before Pass 2 runs, the Pass 1 central insight is evaluated:
+
+**Reject if:**
+- It applies to more than one term ("it's about control" — applies to compression, limiting, gating, everything)
+- It's the obvious angle (EQ = "boosting and cutting frequencies" — that's what everyone says)
+- It uses the word "balance" or "tone" without specifics
+- It could appear in a Wikipedia article unchanged
+
+**Accept if:**
+- It reframes the term in a way that makes the reader pause
+- It's specific enough that only this term generates this insight
+- A producer who reads it thinks "I never thought about it that way"
+
+**Examples:**
+- Compression: "Compression is a time tool, not a level tool — it controls when energy arrives, not how much."
+- EQ: "EQ is a spatial tool masquerading as a corrective one — every cut creates distance, every boost creates presence."
+- Limiting: "A limiter is not a safety net — it is a decision about what information you are willing to destroy."
+- Reverb: "Reverb is not an effect — it is the room the listener believes they are standing in."
+- Gain Staging: "Gain staging is not about preventing clipping — it is about where in the signal chain you choose to introduce noise."
+
+## Parallel Execution Plan
+
+```
+Session A: eq, gain-staging, delay, limiting, saturation          (Wave 1: 5 entries)
+Session B: sidechain-compression, lufs, mastering, reverb, chorus (Wave 1 remaining + 2)
+Session C: parallel-compression, bus-compression, stereo-imaging,
+           mid-side-processing, automation                         (Wave 2: 5 entries)
+Session D: high-pass-filter, parametric-eq, multiband-compression,
+           noise-gate, dynamic-range                               (Wave 2: 5 entries)
+```
+
+Run Sessions A-D simultaneously. Each takes a batch file of 5-10 slugs. Python commits each entry as it completes. All 40 entries live within one week.
+
+**Note:** reverb.html and chorus.html are already live. The writer skips them or regenerates to match the new template if Steve decides consistency matters more than preserving the hand-built versions.
+
+## Tool Suite Strategy
+
+The flagship writer uses mpw_tools_v3.py for all 40 entries using existing tool mappings. The tool suite expansion (hundreds of tools) is a separate parallel track:
+
+1. **Phase 1 (now):** 40 flagships with existing 41 tools
+2. **Phase 2 (after flagships live):** Traffic data from 40 live entries identifies which tools get the most engagement → build those tools first
+3. **Phase 3:** Build tools as standalone products at `/tools/[slug]` with embed codes — backlink generation
+4. **Quality gate for all new tools:** Real calculation (not lookup tables), visual output (canvas/SVG), click-to-copy on every value, mobile QA on real device, Famous producer preset. No exceptions.
+
+## File Location
+
+`C:\Users\swarn\OneDrive\Desktop\mpw-scripts\mpw_flagship_writer.py`
+
+## Session Start Protocol for Build Session
+
+1. Read this spec fully
+2. Read SCRIPTS handoff "mpw_flagship_writer.py Build Brief"
+3. Fetch live `bible/compression.html` — extract all locked template blocks
+4. Confirm mpw_tools_v3.py tool mappings for Wave 1 slugs
+5. Confirm quotes.json has coverage for Wave 1 slugs
+6. Build Pass 1 → test on `eq` → review central insight quality
+7. Build Pass 2 → test on `eq` → review prose quality against compression.html
+8. Build Pass 3 assembly → generate eq.html → visual QA on mobile
+9. Only after all 3 passes confirmed: run full batch

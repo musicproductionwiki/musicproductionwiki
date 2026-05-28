@@ -228,10 +228,17 @@ If a new never rule is added this session → update this file FIRST. SESSION-ST
 
 ---
 
+| Never build the flagship writer without reading the SCRIPTS handoff "mpw_flagship_writer.py Build Brief" section first. | S78 | The build brief contains exact system prompts, validation logic, and assembly function signatures. Building without it causes full rebuilds. | MANUAL |
+| Never build the flagship writer without first extracting all locked templates from the live `bible/compression.html` via GitHub API. | S78 | Templates must come from the live file — not from memory or handoff docs. The live file is authoritative. | MANUAL |
+| Never run the flagship writer batch before testing Pass 1 → Pass 2 → Pass 3 on a single entry and reviewing the output against compression.html quality. | S78 | One confirmed test entry before any parallel batch run. | MANUAL |
+| Never accept a Pass 1 central insight that uses "balance," "tone," "control," or "adjust" without specifics, or that applies to more than one term. | S78 | Generic insights produce generic entries. The central insight is the quality gate. Max 2 retries — if still generic, flag for human review and skip. | MANUAL |
+| Never have the flagship writer generate HTML structure — Python generates structure, Claude generates content only. | S78 | Mixing structure and content generation in one pass produces inconsistent output and wastes tokens on formatting instead of thinking. | MANUAL |
+| Never run all 40 flagship entries in one session — use parallel sessions with batch files (4 sessions × 10 entries). | S78 | Single session context window cannot hold 40 entries. Parallel sessions are the correct architecture. | MANUAL |
+
 ## MASTER COUNTS (Session 78)
-Total rules documented: 125
+Total rules documented: 131
 SCRIPT-ENFORCED: 17
-MANUAL: 108
+MANUAL: 114
 
 ---
 

@@ -20,7 +20,7 @@
 ---
 
 ## TOP 3 PRIORITIES
-1. **Bible writing — P0** — Steve is hand-writing the 40 flagship entries. Compression is entry #1, LIVE. Next: EQ, gain-staging, delay, limiting, saturation, sidechain-compression, lufs, mastering. Writing standard: phenomenal prose, philosophical, three-level reader (mid-session fix / deep learning / institutional licensing). compression.html is the gold standard for structure. reverb.html is the gold standard for prose depth.
+1. **Build `mpw_flagship_writer.py` — P0** — Automated Tier 1 flagship entry writer. 3-pass architecture: Pass 1 (discovery JSON ~2K tokens), Pass 2 (prose only ~8K tokens), Pass 3 (Python assembly — no API call). Target: 40 flagship entries published in one week via parallel sessions (4 sessions × 10 entries). Full spec in BIBLE and SCRIPTS handoffs. Build and test on 3 entries before full run.
 2. **Affiliate applications** — Plugin Boutique, Amazon Associates, Loopmasters, Sweetwater, PluginFox — REVENUE BLOCKER
 3. **GSC indexing requests** — all 42 tools + reverb + compression
 
@@ -140,4 +140,14 @@ Claude responds with: article count, tool count, last SHA, top 3 priorities, rel
 If anything is wrong, correct before proceeding.
 
 ## LAST SESSION HANDOVER NOTE
-Session 78 completed the compression.html flagship build. Full session: 8 strategic share bars (all with `.mpw-share-btns` full-width row layout), Fix-It accordion (result under symptom, no jump), entry nav IntersectionObserver upgrade, APA/MLA/Chicago/Harvard citation block, version changelog, What to Read Next (6 cards), embed code snippet for GR Calculator, genre table replaced with CSS grid (mobile card layout). SEO audit confirmed: 5 JSON-LD schema blocks, all 6 OG tags, canonical correct. compression.html is locked as the gold standard for all future flagship entries. reverb.html remains the gold standard for prose depth and content architecture. Both must be studied before writing any new flagship entry.
+Session 78: compression.html flagship build complete (SHA `9de422e2`). All handoffs updated. Session 78b (this session): flagship writer architecture designed. Key decisions locked:
+
+- **Writer name:** `mpw_flagship_writer.py`
+- **Architecture:** 3-pass — Pass 1 discovery JSON, Pass 2 prose only, Pass 3 Python assembly
+- **Quality gate:** Pass 1 must find the non-obvious central insight per term before Pass 2 runs. Generic insight = abort and retry.
+- **Parallel execution:** 4 sessions × 10 entries = 40 flagships in one run
+- **Tools:** Writer uses existing mpw_tools_v3.py for tool injection. Tool suite expansion is a separate parallel track — build after flagships are live.
+- **Uniqueness mechanism:** The central insight drives every section. EQ is spatial, not corrective. Limiting is decision-making, not safety. Each term has a real insight that the obvious angle misses.
+- **Full spec:** BIBLE handoff Section "FLAGSHIP WRITER SPEC" + SCRIPTS handoff Section "mpw_flagship_writer.py Build Brief"
+
+Next session opens with: read BIBLE flagship writer spec → read SCRIPTS build brief → build the writer → test on eq, gain-staging, delay → run all 40.

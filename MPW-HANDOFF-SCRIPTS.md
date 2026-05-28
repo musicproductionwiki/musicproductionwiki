@@ -3171,3 +3171,266 @@ All S78 work was done via inline Python in Claude's bash environment — no stan
 
 ## Script File State — End of Session 78
 All scripts on Steve's machine unchanged from end of Session 77. No new PS1 scripts delivered this session.
+
+---
+
+# `mpw_flagship_writer.py` — Build Brief
+
+## What This Script Does
+
+Generates all 40 Tier 1 flagship Bible entries at compression.html quality via 3-pass architecture. Each entry is generated in ~3 minutes. Parallel sessions produce 40 entries in one week.
+
+## Input
+
+```powershell
+. .\setenv.ps1
+python mpw_flagship_writer.py --batch-file flagships_wave1.txt --workers 4
+```
+
+Batch file format (one per line):
+```
+eq:EQ:Frequency:1
+gain-staging:Gain Staging:Signal Processing:1
+delay:Delay:Time-Based:1
+limiting:Limiting:Dynamics:1
+saturation:Saturation:Signal Processing:1
+```
+
+## Script Structure
+
+```python
+mpw_flagship_writer.py
+├── LOCKED_TEMPLATES{}         # All verbatim blocks from compression.html
+│   ├── SHARE_CSS              # 742 chars — exact from live file
+│   ├── GENRE_CSS              # 1,342 chars — exact from live file  
+│   ├── NAV_JS                 # 939 chars — exact IIFE
+│   ├── FIXIT_JS               # 670 chars — exact function
+│   ├── CITATION_TEMPLATE      # 7,320 chars — slug/title/date vars only
+│   ├── CHANGELOG_TEMPLATE     # 4,239 chars — slug/title/date/version vars only
+│   ├── FOOTER_TEMPLATE        # 2,248 chars — slug/title vars only
+│   ├── EMBED_TEMPLATE         # 1,777 chars — slug/tool-name vars only
+│   ├── WTRN_TEMPLATE          # Per-entry — 6 cards hardcoded per slug
+│   └── SIDEBAR_SHARE_TEMPLATE # 2,062 chars — slug vars only
+│
+├── WTRN_CARDS{}               # Per-slug What to Read Next cards
+│   ├── 'eq': [6 card dicts]
+│   ├── 'gain-staging': [6 card dicts]
+│   └── ... (all 40 slugs)
+│
+├── GENRE_COLUMNS{}            # Per-slug genre table column headers
+│   ├── 'eq': ['Genre','Key Frequencies','Move','Q','Character','Notes']
+│   ├── 'compression': ['Genre','Ratio','Attack','Release','GR Target','Character']
+│   └── ... (all 40 slugs)
+│
+├── pass1_discovery(slug, term, category)  # API call → JSON
+├── pass2_prose(slug, term, p1_json)       # API call → JSON
+├── pass3_assemble(slug, term, p1, p2)     # Python → full HTML
+├── validate(html, slug)                   # 90-point checklist → bool
+├── commit(slug, html)                     # Trees API → SHA
+└── run_batch(batch_file, workers)         # Parallel execution
+```
+
+## Pass 1 System Prompt (exact)
+
+```
+You are the editorial director of The Producer's Bible at MusicProductionWiki.com.
+
+Your job is to find the non-obvious central insight about {term} — the one thing every producer thinks they understand about this topic but fundamentally doesn't.
+
+CRITICAL: The central insight must be:
+- Specific to {term} only — it cannot apply to any other entry
+- Non-obvious — not the definition, not the Wikipedia answer
+- Reframing — it makes the reader pause and think differently
+- Actionable — a producer can immediately apply it in a DAW session
+
+REJECT these as central insights:
+- Anything that uses "balance," "tone," or "control" without specifics
+- Anything that could appear in the Wikipedia article on {term} unchanged
+- Anything that applies to more than one term in music production
+
+EXAMPLES OF ACCEPTED CENTRAL INSIGHTS:
+- Compression: "Compression is a time tool, not a level tool — it controls when energy arrives, not how much."
+- EQ: "EQ is a spatial tool masquerading as a corrective one — every cut creates distance, every boost creates presence."
+- Limiting: "A limiter is not a safety net — it is a decision about what information you are willing to destroy."
+- Reverb: "Reverb is not an effect — it is the room the listener believes they are standing in."
+
+Return ONLY valid JSON. No preamble. No markdown. No explanation.
+```
+
+## Pass 1 User Prompt (exact)
+
+```
+Term: {term}
+Slug: {slug}
+Category: {category}
+Available producer quote authors for this entry: {available_authors_for_slug}
+
+Return the discovery JSON for this entry. Central insight first — if it is generic, the entire entry fails.
+```
+
+## Pass 1 Central Insight Validation
+
+```python
+def validate_central_insight(insight, term, slug):
+    """Returns (pass, reason)"""
+    generic_words = ['balance', 'control', 'tone', 'adjust', 'affect', 'impact']
+    if any(w in insight.lower() for w in generic_words):
+        return False, f"Generic word found: {[w for w in generic_words if w in insight.lower()]}"
+    if len(insight) < 60:
+        return False, "Too short — not specific enough"
+    if term.lower() not in insight.lower() and slug not in insight.lower():
+        return False, "Insight doesn't reference the term — probably generic"
+    return True, "PASS"
+```
+
+Max 2 retries on fail. On 3rd fail: write to `flagships_review_needed.txt` and skip to next entry.
+
+## Pass 2 System Prompt (exact)
+
+```
+You are the senior editor of The Producer's Bible at MusicProductionWiki.com.
+
+The central insight for this entry is: {central_insight}
+
+Every section you write must serve this insight. A producer who reads only the definition should understand the insight. A producer who reads the verdict should feel it confirmed and deepened.
+
+You are writing for three simultaneous readers:
+1. Producer with a problem RIGHT NOW — needs the answer in 30 seconds
+2. Producer who wants the full picture — theory, history, philosophy
+3. Berklee professor who will cite this entry as curriculum material
+
+WRITING LAWS — no exceptions:
+1. No hedging. Never "it depends," "generally," "in some cases," "typically."
+2. Specific numbers always. Not "boost the highs" — "boost 12kHz by 2dB, Q 0.7, on the vocal bus."
+3. Named producers with named gear and named records. Not "some engineers prefer" — "Michael Brauer uses a Neve 8078 to..."
+4. The best sentence in every section must be the kind of sentence a producer screenshots and sends to their session partner.
+5. The verdict is MPW's authoritative opinion — not a summary. It should be the most opinionated paragraph on the page.
+6. The opening hook is the first sentence of the definition. It must be one sentence a producer cannot put down.
+
+Return ONLY valid JSON. No HTML tags anywhere. No markdown. No preamble.
+```
+
+## Pass 3 Assembly — Key Functions
+
+```python
+def build_share_bar(anchor, label, tweet, slug, copy_label='Copy Link'):
+    """Returns complete share bar HTML with mpw-share-btns wrapper"""
+    url = f'https://musicproductionwiki.com/bible/{slug}#{anchor}'
+    # ... builds full bar from LOCKED_TEMPLATES['SHARE_CSS'] pattern
+
+def build_fixit_accordion(symptoms):
+    """Builds complete fix-it section from Pass 1 fixit_symptoms list"""
+    # Returns full HTML with 8 .fixit-item blocks
+
+def build_genre_table(rows, columns, slug):
+    """Builds CSS grid genre table from Pass 1 genre_rows"""
+    # Uses GENRE_COLUMNS[slug] for column headers
+    # Returns full .genre-grid-wrap HTML
+
+def build_producer_dna(producers):
+    """Builds 3 collapsible DNA cards from Pass 1 producer_dna"""
+    # Includes signal chain, signature technique, dnaToggle JS
+
+def build_citation(slug, term, date):
+    """Returns citation block with APA/MLA/Chicago/Harvard"""
+    # Substitutes into LOCKED_TEMPLATES['CITATION_TEMPLATE']
+
+def build_changelog(slug, term, date, version='1.0', changes=None):
+    """Returns version changelog HTML"""
+    # v1.0 only at launch — substitutes into LOCKED_TEMPLATES['CHANGELOG_TEMPLATE']
+
+def build_wtrn(slug):
+    """Returns What to Read Next block from WTRN_CARDS[slug]"""
+    # 6 cards hardcoded per slug — no API call
+
+def build_seo_head(slug, term, category, read_min, pub_date):
+    """Returns complete <head> with all SEO tags and 5 JSON-LD blocks"""
+    # All 5 schema blocks: Article, FAQPage, BreadcrumbList, HowTo, Speakable
+    # Title pattern: f'{term}: [tagline] | The Producer\'s Bible'
+    # Canonical: non-www always
+```
+
+## Validation Checklist (90 points)
+
+```python
+CHECKS = {
+    # Structure (25)
+    'all_25_sections': all(f'id="{s}"' in html for s in SECTION_IDS),
+    'section_h2_present': all(f'id="{s}"' in html and '<h2>' in get_section(html,s) for s in SECTION_IDS),
+    # Share bars (8)
+    'share_new_producers': 'new-producers' in html and 'mpw-share-btns' in get_after(html,'new-producers'),
+    'share_quick_ref': 'quick-reference' in html and 'mpw-share-btns' in get_after(html,'quick-reference'),
+    'share_tools': 'tools' in html and 'mpw-share-btns' in get_after(html,'tools'),
+    'share_genre': 'genre-table' in html and 'mpw-share-btns' in get_after(html,'genre-table'),
+    'share_in_wild': 'in-the-wild' in html and 'mpw-share-btns' in get_after(html,'in-the-wild'),
+    'share_verdict': 'verdict' in html and 'mpw-share-btns' in get_after(html,'verdict'),
+    'share_sidebar': 'Share This Entry' in html,
+    'share_footer': 'share-x' in html and 'share-reddit' in html,
+    # Content (15)
+    '3_producer_quotes': html.count('producer-quote-block') >= 3,
+    '8_fixit_symptoms': html.count('fixit-symptom') == 8,
+    '8_fixit_results': html.count('fixit-result') == 8,
+    'genre_grid': 'genre-grid-wrap' in html,
+    'producer_dna_3': html.count('dna-card') >= 3,
+    'embed_code': 'Embed This Tool' in html,
+    'citation_block': 'Cite This Entry' in html,
+    'changelog': 'Version History' in html,
+    'wtrn': 'What to Read Next' in html,
+    'tool_present': mpw_tools_v3.build_tools_section_v3(slug, term) is not None,
+    # SEO (15)
+    'canonical': f'bible/{slug}' in html and 'rel="canonical"' in html,
+    'og_title': 'og:title' in html,
+    'og_description': 'og:description' in html,
+    'og_image': 'og:image' in html,
+    'og_url': 'og:url' in html,
+    'twitter_card': 'twitter:card' in html,
+    'article_schema': '"@type": "Article"' in html,
+    'faqpage_schema': '"@type": "FAQPage"' in html,
+    'breadcrumb_schema': '"@type": "BreadcrumbList"' in html,
+    'howto_schema': '"@type": "HowTo"' in html,
+    'speakable_schema': '"@type": "SpeakableSpecification"' in html,
+    'no_www_canonical': 'https://www.' not in html.split('canonical')[1][:100],
+    'ga4': 'G-79VB543KCT' in html,
+    'beehiiv': 'beehiiv' in html,
+    'no_placeholder': '{{' not in html and 'PLACEHOLDER' not in html,
+    # JS (10)
+    'nav_js': 'entry-nav-inner' in html and 'scrollIntoView' in html,
+    'fixit_js': 'window.fixitSelect' in html,
+    'dna_toggle': 'dnaToggle' in html,
+    'no_settimeout': 'setTimeout' not in html.split('<script')[1],
+    'no_innerhtml': 'innerHTML' not in html,
+    'js_syntax': check_js_syntax(html),  # node --check
+    # Quality (17)
+    'word_count_floor': count_words(html) >= 6500,
+    'no_hedging': not any(p in html for p in ['it depends', 'generally speaking', 'in some cases', 'typically,', 'usually,']),
+    'no_2025_dates': '2025' not in html,
+    'no_generic_links': 'href="/bible/sidechain-compression"' not in html,  # excluded slug
+    ...
+}
+```
+
+## Delivery Format
+
+Delivered as 3-part PS1 install scripts (same pattern as mpw_bible_writer.py delivery):
+- `install_flagship_writer_part1.ps1`
+- `install_flagship_writer_part2.ps1`
+- `install_flagship_writer_part3.ps1`
+
+Each part under 200KB. Run in order. Final part runs smoke test: generates `eq.html` locally, prints word count, validation score, and first paragraph for review.
+
+## Wave Batch Files
+
+Create these before running:
+
+```
+flagships_wave1a.txt  → eq, gain-staging, delay, limiting, saturation
+flagships_wave1b.txt  → sidechain-compression, lufs, mastering (reverb+chorus already live)
+flagships_wave2a.txt  → parallel-compression, bus-compression, stereo-imaging, mid-side-processing, automation
+flagships_wave2b.txt  → high-pass-filter, parametric-eq, multiband-compression, noise-gate, dynamic-range
+flagships_wave2c.txt  → headroom, subtractive-synthesis, lfo, adsr, mix-translation
+flagships_wave3a.txt  → transient-shaping, fm-synthesis, wavetable-synthesis, oscillator, true-peak-limiting
+flagships_wave3b.txt  → loudness-normalization, send-return, harmonic-distortion, resonance, sidechain-ducking
+flagships_wave3c.txt  → modulation, chorus (regen?), low-pass-filter, arrangement, reference-mixing
+```
+
+Run wave1a + wave1b + wave2a + wave2b simultaneously (4 parallel sessions) for first 20 entries. Review output. Then run wave2c + wave3a + wave3b + wave3c for remaining 20.
