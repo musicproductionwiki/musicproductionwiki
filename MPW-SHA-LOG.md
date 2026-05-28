@@ -54,3 +54,4 @@
 | 2026-05-28 | 991b5205 | bible/compression.html | S78: genre table mobile fix (min-width+table-layout), embedded calculator share, mix translation share, share button colors |
 | 2026-05-28 | d1314123 | bible/compression.html | S78: Remove redundant calculator share, share-x white text !important, genre table fixed layout, embed code snippet |
 | 2026-05-28 | 9de422e2 | bible/compression.html | S78: Share bars full-width row layout globally, genre table CSS grid (mobile card layout), all 6 share bars rebuilt with mpw-share-btns wrapper |
+| 2026-05-28 | 23e74048 | MPW-HANDOFF-CORE-new.md + MPW-HANDOFF-BIBLE-new.md + MPW-HANDOFF-SCRIPTS-new.md + MPW-HANDOFF-CONTENT-new.md + MPW-NEVER-RULES-new.md + MPW-TOOL-SESSION-PLAN.md + MPW-FLAGSHIP-WRITER-BLUEPRINT.md | S79: Tool session plan, flagship writer blueprint, all handoffs updated — 7 files |

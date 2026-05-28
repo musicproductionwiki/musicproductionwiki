@@ -1,5 +1,5 @@
 # MPW SESSION START CARD
-*Last updated: May 27, 2026 — Session 78*
+*Last updated: May 28, 2026 — Session 79*
 
 ---
 
@@ -9,7 +9,7 @@
 | Articles live | 526 |
 | Bible entries live | 223+ |
 | Tools live | 41 |
-| Last commit SHA | `9de422e2` — S78: compression.html share bars, genre table CSS grid, mpw-share-btns global |
+| Last commit SHA | `23e74048` — S79: Tool session plan, flagship writer blueprint, all handoffs updated |
 | Model string | `claude-sonnet-4-6` |
 | Proxy URL | `https://classy-haupia-be8e43.netlify.app/.netlify/functions/claude-proxy` |
 | GitHub token | `[GITHUB_TOKEN — regenerate at github.com/settings/tokens if expired]` |
@@ -20,7 +20,7 @@
 ---
 
 ## TOP 3 PRIORITIES
-1. **Build `mpw_flagship_writer.py` — P0** — Automated Tier 1 flagship entry writer. 3-pass architecture: Pass 1 (discovery JSON ~2K tokens), Pass 2 (prose only ~8K tokens), Pass 3 (Python assembly — no API call). Target: 40 flagship entries published in one week via parallel sessions (4 sessions × 10 entries). Full spec in BIBLE and SCRIPTS handoffs. Build and test on 3 entries before full run.
+1. **Session 80 — Tool Hub Redesign + Build** — Hub three-zone redesign, Loudness Penalty Calculator, session prompt files for all parallel tool builds. Full spec in `MPW-TOOL-SESSION-PLAN.md`.
 2. **Affiliate applications** — Plugin Boutique, Amazon Associates, Loopmasters, Sweetwater, PluginFox — REVENUE BLOCKER
 3. **GSC indexing requests** — all 42 tools + reverb + compression
 
@@ -50,75 +50,46 @@
 | Never structure share bar buttons inline with label — label on own row, buttons in `.mpw-share-btns` full-width row below | S78 |
 | Never commit a Bible flagship entry without auditing all share bar placements against reverb.html | S78 |
 | Never build a Bible tool without an embed code block below the share bar | S78 |
+| Never gate the tool itself — gate the download/export output only | S79 |
+| Never build a tool without its monetization hook (email gate on download) coded from day one | S79 |
+| Never build a parallel session tool without a complete self-contained session prompt file | S79 |
+| Never commit a tool page without updating /tools/index.html hub card in same Trees API commit | S79 |
+| Never reference TruClarify in ClearCheck architecture — ClearCheck is fully independent | S79 |
+| Never target Pass 2 prose at 4,800 words — correct target is 12,000–14,000 words | S79 |
+| Never run Pass 2 as a single API call — split into Pass 2A (foundation) and Pass 2B (evidence) | S79 |
+| Never generate track lists in any Pass — use flagship_tracks.json (6 locked tracks per slug) | S79 |
+| Never generate genre table numbers — use flagship_genre_data.json | S79 |
+| Never generate producer signal chains — use flagship_producer_dna.json | S79 |
+| Never run flagship writer before all 9 curation files are complete | S79 |
 
 ---
 
 ## COMPRESSION.HTML — GOLD STANDARD (LOCKED S78)
 
 **URL:** `musicproductionwiki.com/bible/compression`
-**File:** `bible/compression.html`
-**Last SHA:** `9de422e2`
-**Version:** v1.2 (May 27, 2026)
-**Size:** ~278KB
+**Last SHA:** `9de422e2` | **Size:** ~288KB | **Version:** v1.2
 
-**Structure (25 sections):**
-definition → how-it-works → new-producers → parameters → quick-reference → tools (GR Calculator) → signal-chain → fix-it → history → how-to-use → genre-table → topology → hardware-plugin → before-after → in-the-wild → producer-dna → signatures → types → verdict → plugin-recs → mistakes → mix-translation → flags → progression → faq → related
+**Also gold standard:** `bible/reverb.html` — prose depth and content architecture.
+Both must be studied before writing any new flagship entry.
 
-**SEO — confirmed perfect:**
-- canonical: `https://musicproductionwiki.com/bible/compression`
-- 5 JSON-LD schema blocks: Article, FAQPage, BreadcrumbList, HowTo, Speakable
-- OG/Twitter: all 6 required tags present
-- Title: `Compression: Complete Guide to Ratio, Attack, Release & Gain Reduction | The Producer's Bible`
+---
 
-**Share bars (8 strategic locations):**
-1. After New Producers — "Share with a producer who needs this"
-2. After Quick Reference table — "Share"
-3. After GR Calculator tool — "Share this tool" + **embed code snippet**
-4. After Genre table — "Share"
-5. After In The Wild/comparison showcase — "Share this breakdown"
-6. After Verdict — "Share the verdict / Copy Verdict"
-7. Sidebar — "Share This Entry" (stacked column)
-8. Footer — X and Reddit
+## KEY NEW DOCUMENTS — SESSION 79
 
-**Share bar CSS pattern (mandatory for all flagship entries):**
-```css
-.mpw-share-bar { display:flex; flex-direction:column; gap:8px; margin-top:14px; padding-top:14px; border-top:1px solid #2a2a4a; }
-.mpw-share-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:#666; display:block; }
-.mpw-share-btns { display:flex; gap:6px; width:100%; }
-.mpw-share-btn { flex:1; height:36px; ... }
-.share-x { background:#000; color:#fff!important; }
-.share-reddit { background:#ff4500; color:#fff; }
-.share-copy { background:#f5a623; color:#000; }
-```
-
-**Fix-It accordion:** 8 symptoms, result drops directly under selected symptom, no page jump
-**Entry nav:** IntersectionObserver + scrollIntoView({inline:'center'}) for active pill auto-centering
-**Citation block:** APA, MLA, Chicago, Harvard — one-click copy — Institutional Licensing footer
-**Version changelog:** amber dot timeline — v1.0 and v1.2
-**What to Read Next:** 6 learning path cards
-**Embed code:** iframe snippet with one-click copy in "Embed This Tool" block
-**Genre table:** CSS grid — desktop 6-column, mobile card layout (no HTML table)
-**Producer quotes:** 3 formal blocks (Dave Pensado, Bob Katz, Tchad Blake) + 3 DNA quotes (Dre, CLA, Tchad)
+| Document | Purpose |
+|---|---|
+| `MPW-TOOL-SESSION-PLAN.md` | Complete tool hub strategy, all 12 destination tool specs, parallel build architecture, Session 80 scope |
+| `MPW-FLAGSHIP-WRITER-BLUEPRINT.md` | Complete Bible writer spec, all 40 pre-approved insights, 4-pass architecture, 3-gate system |
 
 ---
 
 ## 40 FLAGSHIP ENTRIES — STATUS
 
-Steve is hand-writing all 40. compression.html is entry #1, LIVE.
+**Wave 1:** compression ✅ LIVE | eq | gain-staging | reverb ✅ LIVE | delay | limiting | saturation | sidechain-compression | lufs | mastering
 
-**Wave 1 — Universal 10 (write first):**
-compression ✅ LIVE | eq | gain-staging | reverb ✅ LIVE | delay | limiting | saturation | sidechain-compression | lufs | mastering
+**Wave 2:** parallel-compression | bus-compression | stereo-imaging | mid-side-processing | automation | high-pass-filter | parametric-eq | multiband-compression | noise-gate | dynamic-range | headroom | subtractive-synthesis | lfo | adsr | mix-translation
 
-**Wave 2 — Intermediate 15:**
-parallel-compression | bus-compression | stereo-imaging | mid-side-processing | automation | high-pass-filter | parametric-eq | multiband-compression | noise-gate | dynamic-range | headroom | subtractive-synthesis | lfo | adsr | mix-translation
-
-**Wave 3 — Advanced 15:**
-transient-shaping | fm-synthesis | wavetable-synthesis | oscillator | true-peak-limiting | loudness-normalization | send-return | harmonic-distortion | resonance | sidechain-ducking | modulation | chorus | low-pass-filter | arrangement | reference-mixing
-
-**Writing standard:** Phenomenal prose, philosophical depth, three-level reader:
-1. Mid-session fix — producer has a problem right now, needs the answer immediately
-2. Deep learning — understands the full picture, wants the theory
-3. Institutional licensing — Berklee, Full Sail, Icon Collective reading for curriculum
+**Wave 3:** transient-shaping | fm-synthesis | wavetable-synthesis | oscillator | true-peak-limiting | loudness-normalization | send-return | harmonic-distortion | resonance | sidechain-ducking | modulation | chorus | low-pass-filter | arrangement | reference-mixing
 
 ---
 
@@ -129,7 +100,8 @@ transient-shaping | fm-synthesis | wavetable-synthesis | oscillator | true-peak-
 | GSC indexing requests | P0 | All 42 tools + reverb + compression |
 | Replace quotes.json with quotes_merged_v2.json | P1 | Save to mpw-scripts\ |
 | Save mpw_bible_writer_06.py to mpw-scripts\ | P1 | Updated writer |
-| Add 1 more resonance quote to quotes file | P1 | |
+| Add 1 resonance quote + fix 4 zero-coverage gaps | P1 | sidechain-compression, mix-translation, sidechain-ducking, reference-mixing |
+| ClearCheck attorney listing fee pricing decision | P2 | US only, listing fee model |
 | Google Workspace domain dispute | P3 | Case #70817574 |
 
 ---
@@ -140,14 +112,11 @@ Claude responds with: article count, tool count, last SHA, top 3 priorities, rel
 If anything is wrong, correct before proceeding.
 
 ## LAST SESSION HANDOVER NOTE
-Session 78: compression.html flagship build complete (SHA `9de422e2`). All handoffs updated. Session 78b (this session): flagship writer architecture designed. Key decisions locked:
+Session 79: Full planning and architecture session. Two master documents created and committed:
 
-- **Writer name:** `mpw_flagship_writer.py`
-- **Architecture:** 3-pass — Pass 1 discovery JSON, Pass 2 prose only, Pass 3 Python assembly
-- **Quality gate:** Pass 1 must find the non-obvious central insight per term before Pass 2 runs. Generic insight = abort and retry.
-- **Parallel execution:** 4 sessions × 10 entries = 40 flagships in one run
-- **Tools:** Writer uses existing mpw_tools_v3.py for tool injection. Tool suite expansion is a separate parallel track — build after flagships are live.
-- **Uniqueness mechanism:** The central insight drives every section. EQ is spatial, not corrective. Limiting is decision-making, not safety. Each term has a real insight that the obvious angle misses.
-- **Full spec:** BIBLE handoff Section "FLAGSHIP WRITER SPEC" + SCRIPTS handoff Section "mpw_flagship_writer.py Build Brief"
+- **`MPW-TOOL-SESSION-PLAN.md`** — Complete tool hub strategy. One hub (`/tools/`), three-zone architecture, all 12 destination tool specs fully detailed, parallel build system (Groups A/B/C/D, simultaneous sessions), Session 80 scope locked (hub redesign + Loudness Penalty + session prompt files for all tools), ClearCheck updated to attorney listing fee model (US only, no TruClarify dependency).
+- **`MPW-FLAGSHIP-WRITER-BLUEPRINT.md`** — Complete Bible writer master spec. 4-pass architecture (Pass 1 + Pass 1.5 + Pass 2A + Pass 2B + Pass 3). Word count corrected: Pass 2 target 12,000–14,000 words (not 4,800). Gate 3 assembled minimum 15,000 words. All 40 pre-approved central insights locked. 9 curation files documented. 3-gate quality system with per-section word floors. API cost ~$0.40–0.50/entry, ~$16–20 for all 40.
 
-Next session opens with: read BIBLE flagship writer spec → read SCRIPTS build brief → build the writer → test on eq, gain-staging, delay → run all 40.
+All 5 handoff files updated and committed. SHA log and session start updated.
+
+**Session 80 opens with:** Read start card → Read `MPW-TOOL-SESSION-PLAN.md` → Read `MPW-TOOL-BUILD-SPEC.md` → Fetch live `/tools/index.html` and `/tools/frequency-conflict-detector.html` → Build hub redesign → Build Loudness Penalty Calculator → Write all session prompt files → Commit all.
