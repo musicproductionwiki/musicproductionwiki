@@ -81,3 +81,22 @@
 - **Broken at session end:** Hub subcategory pills not sticky (5 failed attempts — root cause: overflow ancestor conflict not fully isolated), mobile search bar overflows right
 - **HEAD:** `1c9fa54` (site) / `506ea69` (handoffs)
 - **P0 for S81:** Fix hub sticky pills — fetch live, trace ancestry, find overflow, fix surgically
+
+## Session 81 — May 29, 2026
+
+| Date | SHA | Files | Description |
+|------|-----|-------|-------------|
+| 5-29 | `22240eb` | tools/index.html | S81: Hub sticky subcategory-pills fix (S80 P0) — completed the truncated `.hub-zone3-count` CSS rule that was the root cause; sticky bar + mobile search width + overflow resolved |
+| 5-29 | `839a71a0` | tools/mix-fingerprint.html, sitemap.xml | S81: Mix Fingerprint v2 — validated BS.1770 engine (K-weighting, gated LUFS, 4x true-peak, EBU LRA, phase corr, Welch PSD), de-saturated genre-calibrated radar, honest distance-from-target fit score, platform LUFS verdicts, true-peak alert, measured reference-track upload (shared mpwAxisScores), full SEO/schema; sitemap -> 805 URLs |
+| 5-29 | `68d071d1` | genres.html + 8 tool pages | S81: Canonical + og:url -> non-www (verified non-www is primary; www 301s). Only 9 files were www, not site-wide |
+| 5-29 | `327bdb1b` | tools/index.html, tools/loudness-penalty.html | S81: Add og:image (ground truth: only 2 of 44 tools were missing it; S72 "35 missing" was already fixed) |
+| 5-29 | `e7d5e71b` | 78 files | S81: GA4 double-tracking fix — single source via js/main.js; removed redundant inline gtag from 78 pages that also load main.js (incl. broken G-XXXXXXXXXX placeholder); 16 inline-only pages left as-is |
+
+### S81 Summary
+- **Built:** Mix Fingerprint Analyzer v2 (tools gold standard — validated DSP engine, honest scoring, reference A/B). New dev scripts: `mpw_mfp_calibrate.js`, `mfp_engine.js` (-> basis for shared DSP engine).
+- **Fixed:** hub sticky pills (S80 P0); GA4 double-tracking (78 files); canonical/og:url -> non-www; og:image on 2 tools.
+- **Strategy:** `MPW-MASTER-CHARTER.md` created (read-first doc) — mission, model policy, gold standards, traffic-first phased revenue (data collection = Phase 1, ClearCheck = Phase 3). NOT committed to repo (served root).
+- **Ground truth (verified from GitHub):** 526 articles, 235 bible, 89 categories, 44 tools, ~900 HTML; sitemap 805.
+- **New NEVER-RULES:** (1) never size a batch from a memory/audit count — grep the live repo first; (2) GA4 single source = js/main.js, never inline-gtag a main.js page; (3) canonical/og:url use non-www (www 301s); (4) live site serves repo files — never commit internal strategy docs to the served root.
+- **HEAD:** `e7d5e71b`
+- **P0 for S82:** Spec & build the data-collection pipe (Netlify event fn + GA4 custom events). Then: rebuild the handoff system (boot-sequence architecture).
