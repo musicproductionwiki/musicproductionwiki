@@ -55,3 +55,29 @@
 | 2026-05-28 | d1314123 | bible/compression.html | S78: Remove redundant calculator share, share-x white text !important, genre table fixed layout, embed code snippet |
 | 2026-05-28 | 9de422e2 | bible/compression.html | S78: Share bars full-width row layout globally, genre table CSS grid (mobile card layout), all 6 share bars rebuilt with mpw-share-btns wrapper |
 | 2026-05-28 | 23e74048 | MPW-HANDOFF-CORE-new.md + MPW-HANDOFF-BIBLE-new.md + MPW-HANDOFF-SCRIPTS-new.md + MPW-HANDOFF-CONTENT-new.md + MPW-NEVER-RULES-new.md + MPW-TOOL-SESSION-PLAN.md + MPW-FLAGSHIP-WRITER-BLUEPRINT.md | S79: Tool session plan, flagship writer blueprint, all handoffs updated — 7 files |
+
+## Session 80 — May 29, 2026
+
+| Date | SHA | Files | Description |
+|------|-----|-------|-------------|
+| 5-29 | `3e6b946` | tools/mix-fingerprint.html, tools/loudness-penalty.html, tools/index.html | S80: Mix Fingerprint Analyzer + Loudness Penalty Calculator + Hub Redesign (three-zone) — BROKEN Zone 1 |
+| 5-29 | `7e4ae55` | tools/index.html | S80: Hub fixes — remove Zone 1 hero, flagship label, fix Mix Fingerprint card to live |
+| 5-29 | `dec2923` | tools/index.html | S80: Restore original tools hub hero + flagship section + Mix Fingerprint live card |
+| 5-29 | `f94b476` | tools/mix-fingerprint.html | S80: Mix Fingerprint full rebuild — contrast fix, written diagnosis, timeline analysis, playback predictions — LAST KNOWN GOOD MFP |
+| 5-29 | `adf1e04` | tools/mix-fingerprint.html | S80: REVERT mix-fingerprint nav — restore slim tool nav, full site nav breaks page |
+| 5-29 | `0211c60` | tools/index.html, tools/mix-fingerprint.html | S80: Hub restore + MFP full nav attempt + banner reorder + rethought timeline + related tools bottom |
+| 5-29 | `fc8bf41` | tools/mix-fingerprint.html | S80: MFP banner below hero, related tools to bottom, full-track section-based timeline with unique flags |
+| 5-29 | `ce91852` | tools/mix-fingerprint.html, tools/index.html | S80: Full nav on MFP (inline CSS + mobile drawer + search), glassmorphism cards, banner removed, hub nav sticky, LP removed from flagship, mobile fixes |
+| 5-29 | `898fab4` | tools/index.html | S80: Hub sticky search + category pills bar below nav, glassmorphic backdrop — PILLS NOT WORKING |
+| 5-29 | `602ac05` | tools/index.html | S80: Hub sticky bar fix — display:none/block instead of transform, remove overflow from body — STILL BROKEN |
+| 5-29 | `a65ac06` | tools/index.html | S80: Hub always-visible fixed pills bar, html overflow-x:clip, mobile search fix — STILL BROKEN |
+| 5-29 | `e958de9` | tools/index.html | S80: Hub z-index 8000 on pills bar, mobile search 80% centered — STILL BROKEN |
+| 5-29 | `1c9fa54` | tools/index.html | S80: Hub pills bar position:sticky, no overflow on body, sections handle overflow — STILL BROKEN |
+| 5-29 | `506ea69` | MPW-HANDOFF-CORE-new.md, MPW-NEVER-RULES-new.md, MPW-HANDOFF-TECH.md, MPW-HANDOFF-SCRIPTS-new.md, MPW-TOOL-BUILD-SPEC.md, MPW-SESSION-START.md | S80: Append S80 updates to all handoff masters |
+
+### S80 Summary
+- **Built:** Mix Fingerprint Analyzer (destination tool — Web Audio + D3 + glassmorphism + diagnosis + timeline + playback), Loudness Penalty Calculator (thin — needs revamp)
+- **Hub:** Original hero restored, flagship section added (MFP first, FCD, 4 coming soon), nav sticky, 43 tool cards
+- **Broken at session end:** Hub subcategory pills not sticky (5 failed attempts — root cause: overflow ancestor conflict not fully isolated), mobile search bar overflows right
+- **HEAD:** `1c9fa54` (site) / `506ea69` (handoffs)
+- **P0 for S81:** Fix hub sticky pills — fetch live, trace ancestry, find overflow, fix surgically
