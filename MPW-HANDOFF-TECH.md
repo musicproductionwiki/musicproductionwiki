@@ -3544,3 +3544,80 @@ window.fixitSelect = function(btn, key){
 | `7bcc86f7` | Share bar CSS + Fix-It accordion + entry nav IntersectionObserver pattern established |
 | `9de422e2` | `.mpw-share-bar` flex-direction:column + `.mpw-share-btns` full-width row — global pattern locked |
 | `d1314123` | Genre table replaced with CSS grid — HTML table pattern deprecated for Bible entries |
+
+---
+
+# SESSION 80 UPDATE — TECH — May 29, 2026
+
+## Tools File State (Updated)
+
+| File | Status | Notes |
+|------|--------|-------|
+| `tools/mix-fingerprint.html` | ✅ LIVE | Full tool — Web Audio, D3, glassmorphism, diagnosis, timeline, playback |
+| `tools/loudness-penalty.html` | ✅ LIVE but weak | Basic LUFS calculator — needs full revamp |
+| `tools/index.html` | ✅ LIVE — partially broken | Nav sticky ✅ Pills not sticky ❌ Mobile search overflows ❌ |
+
+## Nav Pattern — Tool Pages (CONFIRMED)
+
+The working nav pattern for ALL tool pages is extracted from `attack-release-calculator.html`. It has:
+
+1. **Style block 1** — tool-specific CSS (slim bar OR tool CSS)
+2. **Style block 2** — full `nav.mpw-site-nav` CSS with `position:sticky!important` — extracted from attack-release-calculator.html second `<style>` block
+3. **Style block 3** — `body.embed-mode` suppress rules
+4. **Style block 4** — `#backToTop{display:none!important}`
+5. `<script src="../js/main.js" defer></script>` in head
+6. `<nav class="mpw-site-nav">` HTML in body
+7. `<div class="mobile-drawer">` + `<div class="search-overlay">` 
+8. `<script id="mpw-search-js">` inline — handles nav dropdowns + search
+9. Separate mob search btn wiring script
+
+**NEVER inject the mpw-site-nav HTML without also injecting its full inline CSS block.**
+**NEVER attempt to use the full site nav without first fetching attack-release-calculator.html and copying the exact CSS block 2.**
+
+## Hub Architecture (Current Live State)
+
+```
+tools/index.html structure:
+├── <head> — includes nav CSS (block 2 from attack-release-calculator)
+├── <nav class="mpw-site-nav"> — STICKY ✅
+├── <div class="mobile-drawer"> 
+├── <div class="search-overlay">
+├── <section class="tools-hero"> — "Built for the session." headline + desc only (no search/pills)
+├── <div class="tools-sticky-bar"> — BROKEN: pills not sticking
+│   ├── <div class="tools-search-wrap"> + #toolSearch
+│   └── <div class="tools-cats" id="catPills"> — 10 filter buttons
+├── <section class="hub-zone2"> — Flagship cards (MFP, FCD, 4 coming soon)
+├── <main class="tools-main"> / tools-grid — 43 tool cards
+└── <footer>
+```
+
+**Known broken element:** `.tools-sticky-bar` — has `position:sticky; top:60px; z-index:8000` in CSS but pills are not sticking. Multiple approaches attempted — all failed. Root cause confirmed as ancestor overflow conflict but exact element not isolated. S81 must fetch live file and trace ancestry before touching.
+
+## Sticky Bar — Failed Approaches Log (Do Not Repeat)
+
+| Attempt | Approach | Result |
+|---------|----------|--------|
+| 1 | `position:sticky` on bar inside hero | Failed — overflow:hidden on body killed it |
+| 2 | `position:fixed` + transform slide-in + JS scroll listener | Transform clipped by overflow context |
+| 3 | `position:fixed` + display:none → .visible class + JS | JS fired but element stayed hidden |
+| 4 | `position:fixed` + always display:block | Should have worked — Steve reported not visible |
+| 5 | `position:sticky` + overflow:clip on html/body + overflow:hidden on sections | Pills still not sticking |
+
+**S81 diagnosis protocol:**
+1. `python3 -c "fetch live file; print ALL CSS rules for .tools-sticky-bar across ALL style blocks"`
+2. `print ALL parent elements of sticky bar with their CSS overflow rules`
+3. Identify the conflicting rule. Patch that specific rule. Test.
+
+## Mobile Search Bar — Current Broken State
+
+The `.tools-search` input inside `.tools-sticky-bar` overflows right on mobile. CSS `width:80%` rule exists but a more specific competing rule overrides it. S81 fix: fetch live, `grep` all CSS rules targeting `.tools-search` and `.tools-search-wrap`, find the winning specificity rule, override with `!important` and `max-width:calc(100vw - 48px)`.
+
+## Asset Path Reference
+
+```
+articles:     ../css/style.css  +  ../js/main.js
+tools:        ../js/main.js ONLY (NEVER ../css/style.css)
+bible:        self-contained — NO main.js
+bible/cats:   self-contained — NO main.js  
+categories:   ../css/style.css  +  ../js/main.js
+```

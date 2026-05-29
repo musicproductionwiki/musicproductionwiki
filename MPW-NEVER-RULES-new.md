@@ -286,3 +286,43 @@ If a new never rule is identified this session:
 1. Add it to this file in the correct category before presenting any files for approval
 2. Update SESSION-START summary table (top 20) second
 3. Nowhere else
+
+---
+
+# SESSION 80 — NEW NEVER RULES
+
+## RULE #1 — PERMANENT — ALWAYS FIRST IN ANY LIST
+
+> **NEVER GUESS OR ASSUME. ALWAYS FETCH AND READ THE LIVE FILE BEFORE TOUCHING ANYTHING.**
+>
+> Every broken deployment in S80 happened because code was written without reading what was already live. Before any CSS, HTML, or JS change: fetch the file via GitHub API, read every relevant style block and HTML structure, confirm the root cause, then and only then write the fix. This applies to every session, every file, every change — no exceptions.
+
+---
+
+## Category: CSS / Tool Pages
+
+| Rule | Session | Reason |
+|------|---------|--------|
+| Never inject the full site `mpw-site-nav` HTML without also injecting its full inline CSS block | S80 | Nav CSS lives in style.css which tool pages can't load. Without inline CSS the nav renders as raw unstyled bullet text and collapses the entire page. The CSS must be extracted from attack-release-calculator.html (second `<style>` block) verbatim. |
+| Never attempt to build or modify tool page nav without first fetching attack-release-calculator.html | S80 | That file is the gold standard working nav for all tool pages. Read it before touching nav on any tool. |
+| Never use `position:sticky` without first confirming no ancestor has `overflow` set | S80 | Sticky silently fails when ANY ancestor has overflow set to anything other than `visible`. Before applying sticky: fetch live file, grep ALL style blocks for overflow rules on every ancestor class. This is why 5 consecutive sticky attempts all failed. |
+| Never apply CSS fixes without checking specificity of all competing rules first | S80 | Multiple mobile CSS fixes had zero effect because more specific existing rules overrode them. Always grep for ALL rules targeting the same element before writing a new one. |
+| Never use `overflow-x:hidden` on `body` when any descendant uses `position:sticky` or `position:fixed` with `transform` | S80 | `overflow-x:hidden` on body creates a new stacking/containing block that breaks both sticky and fixed+transform. Use `overflow-x:clip` on `html` instead, or apply overflow to individual section elements, not body. |
+
+## Category: Commits / Process
+
+| Rule | Session | Reason |
+|------|---------|--------|
+| Never commit without Steve's explicit approval — present files first, wait for "commit" | S80 | Multiple commits this session were made without approval. Present ALL files, write the approval block, stop completely until Steve responds. |
+| Never do multiple single-file commits in one session — always Trees API, all files together | S80 | S80 had 13 separate commits for hub and MFP. Each one is a separate Netlify deploy. One Trees API commit per session batch. |
+| Never rebuild a working tool section when a targeted patch is all that's needed | S80 | The hub hero was destroyed and rebuilt 4 times this session when a surgical patch would have preserved it. Read the live file, patch only the failing element. |
+
+## Category: Tools / UX
+
+| Rule | Session | Reason |
+|------|---------|--------|
+| Never put "What is this tool?" explanation banner ABOVE the hero headline | S80 | It buries the hero. How-to context goes BELOW the headline and description, not before it. |
+| Never show a Loading/Analyzing animation that collapses to a single line on mobile | S80 | The 44-bar spectrum animation was one pixel wide on Steve's screen. Animations must degrade to a clean spinner with text, not bars. |
+| Never gate the timeline analysis before 20,000 visitors/month on Mix Fingerprint | S80 | Paywall trigger is confirmed at 20K visitors/month. Before that threshold, full timeline is free. |
+| Never put Loudness Penalty in the flagship section | S80 | Tool is too thin — basic LUFS input only. Needs file-upload based analysis before flagship promotion. |
+| Never show flagship section without Mix Fingerprint as the first card | S80 | MFP is the lead destination tool. Order: MFP → FCD → coming soon cards. LP not in flagship until revamp. |

@@ -801,3 +801,120 @@ NEVER rules from this project:
 - NEVER set canvas dimensions via HTML attributes — use JS
 ```
 
+---
+
+# SESSION 80 ADDENDUM — TOOL BUILD SPEC
+# Destination Tool Standards + Full Flagship Queue
+*Appended to MPW-TOOL-BUILD-SPEC.md — May 29, 2026*
+
+---
+
+## GOLD STANDARDS — CORRECT REFERENCES
+
+| Reference | Purpose | File |
+|-----------|---------|------|
+| **Frequency Conflict Detector** | Design + UX gold standard for ALL destination tools | `/tools/frequency-conflict-detector.html` |
+| **Mix Fingerprint Analyzer** | Gold standard for Web Audio + D3 destination tools specifically | `/tools/mix-fingerprint.html` |
+| **attack-release-calculator.html** | Nav extraction source ONLY — copy nav CSS block 2 + nav HTML from here | `/tools/attack-release-calculator.html` |
+| **compression.html** | Share bar pattern, embed code pattern, schema structure | `bible/compression.html` |
+
+**Never confuse these roles.** The attack-release calculator is a calculator-tier tool. It is not a design reference. It is only used as a source for the nav HTML + CSS injection pattern because its nav CSS block is confirmed working and self-contained.
+
+---
+
+## What Makes a Destination Tool vs a Calculator
+
+A **calculator** answers one question. Returns immediately. One input → one output.
+
+A **destination tool** is a product people return to, share, and reference in sessions. Visual output that communicates more than text. Curated data that took real research. A recommendation engine that tells the producer what to do next. These go in the flagship section and are Product Hunt submission material.
+
+---
+
+## Visual Standard — Destination Tools
+
+| Element | Requirement |
+|---------|-------------|
+| Design gold standard | Frequency Conflict Detector — match or exceed |
+| Background | `#0d0d1a` (--bg) with ambient orb glows via radial-gradient |
+| Cards | Glassmorphism — `backdrop-filter:blur(20px)`, `rgba(255,255,255,0.04)` backgrounds |
+| Charts | D3.js or Canvas — never static SVG for live data visualization |
+| Animation | Elements draw themselves in — `d3.easeCubicOut`, 700–900ms |
+| Color system | Each metric has its own color, consistent across chart + cards + diagnosis |
+| Typography | DM Sans (UI) + DM Mono (numbers/labels) — Google Fonts, preconnected |
+| Design variables | `--bg:#0d0d1a; --bg2:#111120; --bg3:#16162a; --bg4:#1c1c32; --amber:#f5a623; --teal:#00e8a2; --red:#ff3d5a; --text:#f0f0f4; --text2:#a0a0b8; --text3:#5a5a7a; --mono:'DM Mono',monospace; --sans:'DM Sans',sans-serif;` |
+
+---
+
+## UX Standard — Destination Tools
+
+| Element | Requirement |
+|---------|-------------|
+| Layout | Input left / visualization right on desktop; single column on mobile |
+| Flow | Numbered steps — user always knows where they are |
+| Auto-measurement | Measure everything measurable automatically from uploaded file |
+| Manual input | Only for what genuinely cannot be measured |
+| How-to | 3-step plain English explanation BELOW the hero headline — never above it |
+| Presets | Named producer/track presets — one-click load. Minimum 4 presets per tool |
+| Click-to-copy | On every value a producer would enter in a DAW |
+| Recommendation | Tool tells producer what to do next — not just what the number is |
+| Diagnosis | Written verdict + body + specific fix per divergent axis/output |
+| Related tools | At very bottom above footer only — never mid-page |
+
+---
+
+## Technical Standard — Destination Tools
+
+| Requirement | Detail |
+|-------------|--------|
+| Nav | Full `mpw-site-nav` — HTML + CSS extracted from `attack-release-calculator.html` block 2. Never rebuild from scratch. |
+| main.js | `<script src="../js/main.js" defer></script>` in `<head>` |
+| No style.css | Tool pages never load `../css/style.css` |
+| OG image | `<meta property="og:image" content="https://musicproductionwiki.com/og-image.png">` |
+| Canonical | Non-www: `https://musicproductionwiki.com/tools/[slug].html` |
+| Schema | FAQPage + BreadcrumbList minimum |
+| Share bar | Copy Link + Share on X + Reddit — flex row, flex:1 each, no wrap |
+| Embed code | Every tool embeddable — one-click iframe snippet below share bar |
+| Email gate | On export/report output — never on the tool itself |
+| Embed mode | `?embed=true` hides nav and footer |
+| Mobile | Single column ≤920px. Visualization full width. Score cards 2-col. |
+| Monetization | Built in from day one — not retrofitted |
+
+---
+
+## Full Flagship Destination Tool Queue — All 12
+
+| # | Tool | Slug | Group | Status | Priority |
+|---|------|------|-------|--------|----------|
+| 1 | Loudness Penalty Calculator | `/tools/loudness-penalty` | A — Pure JS | ⚠️ Live but thin — needs file upload revamp | S81 revamp |
+| 2 | 808 Relationship Analyzer | `/tools/808-relationship-analyzer` | B — Web Audio | 🔜 Not built | S81+ |
+| 3 | Arrangement Blueprint Generator | `/tools/arrangement-blueprint` | C — Canvas/SVG | 🔜 Not built | S81+ |
+| 4 | Mix Fingerprint Analyzer | `/tools/mix-fingerprint` | C — D3.js | ✅ LIVE | Done |
+| 5 | Vocal Chain Builder | `/tools/vocal-chain-builder` | D — Claude API | 🔜 Not built | S82+ |
+| 6 | ClearCheck — Sample Risk Assessor | `/tools/clearcheck` | D — Claude API | 🔜 Not built | S82+ |
+| 7 | Mix Translation System Simulator | `/tools/mix-translation` | C — SVG multi-panel | 🔜 Not built | S82+ |
+| 8 | Plugin Chain Signal Flow Visualizer | `/tools/signal-flow-visualizer` | C — Drag-drop SVG | 🔜 Not built | S82+ |
+| 9 | Reference Track Decoder | `/tools/reference-decoder` | D — Claude API | 🔜 Not built | S82+ |
+| 10 | Producer BPM DNA | `/tools/bpm-dna` | C — D3 bell curve | 🔜 Not built | S81+ |
+| 11 | Stem Quality Tester | `/tools/stem-quality-tester` | D — Claude API + Web Audio | 🔜 Not built | S82+ |
+| 12 | Frequency Conflict Detector v2 | `/tools/frequency-conflict-detector` | A — Pure JS upgrade | 🔜 Not built | S81+ |
+
+---
+
+## Flagship Section on Hub — Current State
+
+| Card | Status |
+|------|--------|
+| Mix Fingerprint Analyzer | ✅ LIVE — first card |
+| Frequency Conflict Detector | ✅ LIVE — second card |
+| Arrangement Blueprint Generator | Coming Soon card |
+| Mix Translation Stress Tester | Coming Soon card |
+| Dynamic Range Analyzer | Coming Soon card |
+| ClearCheck | Coming Soon card |
+
+Loudness Penalty is NOT in the flagship section until full revamp with file upload is complete.
+
+---
+
+## Hub Architecture Note
+
+Zone 1 (live tool as hero) was NOT built in S80 — too complex and broke the page. The hub currently uses the original hero (headline + desc) with the flagship cards section (Zone 2) between hero and grid. Zone 1 remains a future enhancement after the destination tool queue matures.

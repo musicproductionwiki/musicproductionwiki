@@ -3544,3 +3544,101 @@ flagships_wave3c.txt  → modulation, low-pass-filter, arrangement, reference-mi
 
 Run wave1a + wave1b + wave2a + wave2b simultaneously (4 parallel sessions).
 Review output from all 4. Then run wave2c + wave3a + wave3b + wave3c simultaneously.
+
+---
+
+# SESSION 80 UPDATE — SCRIPTS — May 29, 2026
+
+## New Tool Files Built This Session
+
+### mix-fingerprint.html — `tools/mix-fingerprint.html`
+Built from scratch in S80. Key technical components:
+- **Web Audio API analysis:** `OfflineAudioContext`, `AnalyserNode` with `fftSize:4096`
+- **Measurements:** bass weight (20–200Hz ratio), high-end air (10kHz+ ratio), stereo width (M/S energy ratio), dynamic range (crest factor)
+- **D3 v7.8.5:** radar chart with animated polygon draw, genre benchmark zone (min/max band), reference track ghost overlay
+- **Section detection:** 4-second windows across full buffer, RMS energy change >18% triggers new section, named by position (Intro/Verse 1/Chorus/Bridge/Final chorus/Outro)
+- **Timeline flags:** top 3 by severity descending, each with unique actionable message (3 unique messages per metric per direction)
+- **Playback predictions:** computed from score values — no additional audio analysis needed
+- **Written diagnosis:** `DIAG_COPY` object — verdict + body + fix per axis per direction
+
+### loudness-penalty.html — `tools/loudness-penalty.html`
+Basic streaming loudness calculator. Needs full revamp in S81+.
+
+## Nav Extraction Pattern — Tool Pages
+
+Always extract nav from `tools/attack-release-calculator.html` via GitHub API:
+
+```python
+import urllib.request, json, base64
+
+token = "TOKEN"
+req = urllib.request.Request(
+    'https://api.github.com/repos/musicproductionwiki/musicproductionwiki/contents/tools/attack-release-calculator.html',
+    headers={'Authorization': f'token {token}'}
+)
+d = json.loads(urllib.request.urlopen(req).read())
+arc = base64.b64decode(d['content']).decode()
+
+# Get style block 2 — the nav CSS block
+import re
+styles = []
+for m in re.finditer(r'<style>', arc):
+    e = arc.find('</style>', m.start()) + 8
+    styles.append(arc[m.start():e])
+# Block index 1 is the nav CSS (has position:sticky, mpw-site-nav)
+nav_css_block = styles[1]  # 9498 chars
+
+# Get nav HTML + mobile drawer + search overlay
+body_start = arc.find('<body>') + 6
+main_start = arc.find('<main', body_start)
+nav_html_block = arc[body_start:main_start].strip()
+```
+
+## Trees API Commit Pattern — All S80+ Commits
+
+```python
+import json, urllib.request
+
+def trees_commit(token, repo, files_dict, message):
+    """
+    files_dict: {'path/to/file.html': 'content string', ...}
+    """
+    # Get HEAD
+    req = urllib.request.Request(f'https://api.github.com/repos/{repo}/git/refs/heads/main', headers={'Authorization': f'token {token}'})
+    head = json.loads(urllib.request.urlopen(req).read())['object']['sha']
+    
+    # Get base tree
+    req2 = urllib.request.Request(f'https://api.github.com/repos/{repo}/git/commits/{head}', headers={'Authorization': f'token {token}'})
+    base_tree = json.loads(urllib.request.urlopen(req2).read())['tree']['sha']
+    
+    # Create tree — ALL files in one call
+    tree_items = [{'path': path, 'mode': '100644', 'type': 'blob', 'content': content} for path, content in files_dict.items()]
+    req3 = urllib.request.Request(f'https://api.github.com/repos/{repo}/git/trees', data=json.dumps({'base_tree': base_tree, 'tree': tree_items}).encode(), headers={'Authorization': f'token {token}', 'Content-Type': 'application/json'})
+    tree_sha = json.loads(urllib.request.urlopen(req3).read())['sha']
+    
+    # Commit
+    req4 = urllib.request.Request(f'https://api.github.com/repos/{repo}/git/commits', data=json.dumps({'message': message, 'tree': tree_sha, 'parents': [head]}).encode(), headers={'Authorization': f'token {token}', 'Content-Type': 'application/json'})
+    commit_sha = json.loads(urllib.request.urlopen(req4).read())['sha']
+    
+    # Update ref
+    req5 = urllib.request.Request(f'https://api.github.com/repos/{repo}/git/refs/heads/main', data=json.dumps({'sha': commit_sha}).encode(), headers={'Authorization': f'token {token}', 'Content-Type': 'application/json'})
+    req5.get_method = lambda: 'PATCH'
+    urllib.request.urlopen(req5)
+    return commit_sha
+```
+
+## Pre-Commit Checklist — Tool Pages
+
+Run `mpw_precommit_check.py` on every file before presenting for approval. Then manually verify:
+
+- [ ] Div balance: `hub.count('<div') == hub.count('</div>')`
+- [ ] JS syntax: `node --check /tmp/tool.js`
+- [ ] No `f'` or `f"` patterns (Python artifacts)
+- [ ] No `innerHTML` 
+- [ ] No `style.css` loaded
+- [ ] Has `favicon.svg` link
+- [ ] Has `og:image` meta
+- [ ] Non-www canonical URL
+- [ ] `main.js` loaded with `defer`
+- [ ] Mobile CSS at 600px breakpoint
+- [ ] Share bar: 3 buttons, flex row, no wrap

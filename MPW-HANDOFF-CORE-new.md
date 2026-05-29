@@ -3896,3 +3896,183 @@ Sessions 88+:     Bible writer parallel batch runs (8 simultaneous sessions)
 | Never build a parallel session tool without a complete self-contained session prompt file | Each build session is self-contained — no cross-session dependencies |
 | Never commit a tool page without updating /tools/index.html hub card in same Trees API commit | Hub and tool page are one atomic commit |
 | Never reference TruClarify in ClearCheck architecture — ClearCheck is independent | ClearCheck Layer 3 is attorney listing fee model only |
+
+---
+
+# SESSION 80 UPDATE — CORE — May 29, 2026
+
+## Session Type: TOOL BUILD + HUB REDESIGN
+
+## Current State
+
+| Item | Value |
+|------|-------|
+| Articles live | **526** |
+| Bible entries live | **223** |
+| Tools live | **43** (added: mix-fingerprint, loudness-penalty, MFP in hub grid) |
+| Last confirmed working SHA | `fc8bf41` — MFP banner/related/timeline fix |
+| HEAD SHA | `1c9fa54` |
+| Session | 80 |
+
+## S80 SHA Log (chronological)
+
+| SHA | Description | Status |
+|-----|-------------|--------|
+| `3e6b946` | S80: Mix Fingerprint + Loudness Penalty + Hub three-zone (Zone 1 broke page) | BROKEN — reverted |
+| `7e4ae55` | Hub fixes — remove Zone 1, flagship label, fix MFP card to live | Intermediate |
+| `dec2923` | Restore original hub hero + flagship + MFP live card | Intermediate |
+| `f94b476` | MFP full rebuild — contrast, diagnosis, timeline, playback, how-to, related tools | **LAST KNOWN GOOD MFP** |
+| `adf1e04` | REVERT MFP nav — restore slim tool nav (full site nav broke page) | Fix |
+| `0211c60` | Hub restore + MFP full nav + banner reorder + rethought timeline + related bottom | Intermediate |
+| `fc8bf41` | MFP: banner below hero, related to bottom, full-track section timeline | Good |
+| `ce91852` | Full nav on MFP (inline CSS + glassmorphism + mobile fixes) + hub nav sticky + LP removed from flagship | Intermediate |
+| `898fab4` | Hub: sticky search + category pills bar below nav, glassmorphic backdrop | Broken — pills not sticky |
+| `602ac05` | Hub sticky bar fix — display:none/block, remove overflow from body | Still broken |
+| `a65ac06` | Hub — always-visible fixed pills bar, html overflow-x:clip, mobile search fix | Still broken |
+| `e958de9` | Hub — z-index 8000 on pills bar, mobile search 80% centered | Still broken |
+| `1c9fa54` | Hub pills bar — position:sticky, no overflow on body, sections handle overflow | **CURRENT HEAD — pills STILL NOT WORKING** |
+
+## What Was Built This Session
+
+### Mix Fingerprint Analyzer — `tools/mix-fingerprint.html` ✅ LIVE
+- Web Audio API file upload — real measurement of bass weight, stereo width, dynamic range, high-end air
+- D3 radar chart with animated draw, genre benchmark zone (colored band showing min/max range)
+- 20 genres, 25 reference tracks (searchable)
+- Written diagnosis per axis — plain English, actionable fix per divergent axis
+- Genre fit score — single % number
+- Section-based timeline analysis — 4-second windows, named sections (Intro/Verse/Chorus etc.), max 3 flags ranked by severity, unique messages per flag
+- Playback predictions — 6 systems (headphones, phone, laptop, car, TV, club)
+- Axis score cards with micro bar charts showing score vs benchmark range
+- Email gate for PDF report
+- Full site nav (mpw-site-nav with inline CSS — extracted from attack-release-calculator.html gold standard)
+- Glassmorphism on all cards and panels
+- Related tools section at bottom
+- How-to banner below hero (not above)
+
+### Loudness Penalty Calculator — `tools/loudness-penalty.html` ✅ LIVE
+- Basic streaming loudness calculator
+- **STATUS: Tool is too thin — needs full revamp before promoting to flagship**
+- In tool grid under Loudness & Delivery
+- NOT in flagship section
+
+### Hub — `tools/index.html` ✅ LIVE (partially broken)
+- Original hero restored — "Built for the session. Not the syllabus." headline, search, category pills
+- Flagship section between hero and grid: Mix Fingerprint (live, first), Frequency Conflict Detector (live), 4 coming soon (Arrangement Blueprint, Mix Translation Stress Tester, Dynamic Range Analyzer, ClearCheck)
+- 43 tool cards in grid (added MFP + LP)
+- 10 category filter pills working
+- Full mpw-site-nav with inline CSS — nav IS sticky
+- **BROKEN: Subcategory pills not sticky** — multiple attempts failed, root cause identified but not fixed
+- **BROKEN: Mobile search bar overflows right** — 80% CSS applied but not rendering correctly
+
+## What Is BROKEN and Needs Fixing S81
+
+### PRIORITY 1: Hub sticky subcategory pills
+**Root cause confirmed:** `position:sticky` on any element fails when ANY ancestor has `overflow` set. The sticky bar div is between `</section>` (hero) and `<section>` (flagship) — direct child of body. Body has no overflow. BUT the mpw-site-nav CSS injected inline has styles that may be creating a stacking context. Multiple failed approaches:
+- `position:sticky` — killed by overflow on ancestor
+- `position:fixed` with transform — killed by overflow:hidden on body
+- `position:fixed` with display:none/JS toggle — JS fires but element stays hidden
+- `position:fixed` with display:block always — should work but Steve can't see it (possibly hidden behind nav or below viewport)
+
+**CORRECT NEXT APPROACH for S81:**
+1. Fetch the live file FIRST. Read every CSS rule in every style block.
+2. Identify exactly which ancestor has overflow set and which CSS block sets it.
+3. Remove overflow from that specific rule ONLY.
+4. Test with position:sticky on the bar, top equal to exact nav height.
+5. DO NOT guess. DO NOT write new code until root cause is confirmed by reading live source.
+
+### PRIORITY 2: Mobile search bar overflow
+The search bar inside `.tools-sticky-bar` extends past the viewport right edge on mobile. CSS `width:80%` was applied but isn't taking effect — likely overridden by a more specific rule. Fix: fetch live file, find the actual computed width rule winning the specificity battle, override it with `!important` at 90% width, box-sizing:border-box.
+
+### PRIORITY 3: MFP timeline analysis
+Timeline flags only cover the last 40 seconds of a 3:29 track (flags show 3:20–3:29 range). The section detection groups all sections but the flag display only shows the last few. Logic bug in the severity sort + slice.
+
+### PRIORITY 4: Loudness Penalty revamp
+Before it can enter the flagship section, needs full file-upload based analysis (not just LUFS input field). See MPW-TOOL-SESSION-PLAN.md for spec.
+
+## Mix Fingerprint Paywall Plan (LOCKED)
+At **20,000 visitors/month**, gate the timeline analysis:
+- **Free:** radar chart + worst section flagged only
+- **Paid ($9–19/month or $29 one-time):** stem-level attribution (which element causes spike), before/after comparison (upload two versions, overlay fingerprints), export as session notes PDF, "sounds like" at timestamp level
+- Do NOT gate before traffic threshold
+
+## New Never Rules — Session 80
+
+| Rule | Detail |
+|------|--------|
+| **RULE #1 — PERMANENT — NEVER GUESS OR ASSUME. ALWAYS CHECK LIVE FILES AND SCOPE EFFICIENTLY BEFORE TOUCHING ANYTHING.** | Fetch the live file via GitHub API. Read every relevant CSS block and HTML structure. Identify the exact root cause. Only then write a fix. Every broken sticky attempt this session happened because Claude wrote code without reading what was already there. |
+| Never inject the full site `mpw-site-nav` HTML without also injecting its full inline CSS block | The nav CSS lives in style.css which tool pages don't load. CSS must come from the working tool's second style block (extracted from attack-release-calculator.html). Injecting nav HTML without CSS renders unstyled bullet text and breaks the page. |
+| Never scope nav changes without reading the gold standard tool source first | Always fetch attack-release-calculator.html and verify the exact pattern before touching any nav on any tool page. This is the gold standard for tool nav. |
+| Never do multiple single-file commits | Always Trees API, both/all files in one commit per session batch. Multiple commits = multiple Netlify deploys = burned build minutes + broken intermediate states. |
+| Never use position:sticky without first confirming no ancestor has overflow set | `position:sticky` silently fails when any ancestor element has `overflow` set to anything other than `visible`. Before applying sticky, fetch live file, check EVERY ancestor's CSS for overflow rules across ALL style blocks. |
+| Never apply CSS fixes without checking specificity of competing rules | Multiple mobile CSS fixes this session had no effect because more specific existing rules overrode them. Always fetch live file and grep for all rules targeting the same element before writing overrides. |
+| Never rebuild a tool page nav when the working nav can be extracted from attack-release-calculator.html | That file is the confirmed working nav pattern for all tool pages. Extract from it, do not rebuild from memory. |
+| Never present files for commit without Steve's explicit approval | Present ALL files, write the approval block, stop completely. No commits until Steve responds "commit". |
+
+## Flagship Tools List (Current State)
+
+| Tool | Status | URL |
+|------|--------|-----|
+| Mix Fingerprint Analyzer | ✅ LIVE | /tools/mix-fingerprint.html |
+| Frequency Conflict Detector | ✅ LIVE | /tools/frequency-conflict-detector.html |
+| Arrangement Blueprint Generator | 🔜 Coming Soon | — |
+| Mix Translation Stress Tester | 🔜 Coming Soon | — |
+| Dynamic Range Analyzer | 🔜 Coming Soon | — |
+| ClearCheck — Sample Risk Assessor | 🔜 Coming Soon | — |
+| Loudness Penalty Calculator | ⚠️ LIVE but needs revamp | /tools/loudness-penalty.html |
+
+## How Steve Likes His Destination Tools Built (Product Hunt Standard)
+
+These are the requirements for any tool that goes in the flagship section:
+
+**Visual:**
+- Dark background (#07070f or similar), ambient orb glow effects (radial gradients, mix-blend-mode:screen)
+- Glassmorphism on all cards — `backdrop-filter:blur(20px)`, translucent backgrounds
+- D3.js or Canvas for any chart/visualization — no static SVGs for data
+- Color-coded per axis/metric — each dimension has its own color, consistent throughout
+- Micro bar charts on score cards showing where score sits relative to benchmark range
+- Animated draw on any chart — shapes draw themselves in with cubic ease
+- DM Sans + DM Mono — no system fonts
+
+**UX:**
+- Upload/input at top left, visualization panel sticky on right (desktop)
+- Step-by-step numbered flow — user always knows where they are
+- Measured automatically where possible — manual input only for what can't be measured
+- Results appear below the tool, not in a modal
+- Plain English throughout — no jargon without explanation
+- "How to use this" section with 3-step plain English explanation
+- Written diagnosis per output axis — verdict + body + specific fix recommendation
+- Playback/system predictions where relevant
+- Related tools at the very bottom, above footer only
+
+**Technical:**
+- Full site nav (mpw-site-nav) with inline CSS extracted from attack-release-calculator.html
+- No style.css loaded
+- main.js loaded with defer
+- Embed mode support (?embed=true hides nav/footer)
+- og:image meta tag
+- Non-www canonical URL
+- FAQPage schema
+- Share bar: Copy Link + Share on X + Reddit — flex row, no wrap
+- Email gate on export/report (not on the tool itself)
+- Mobile single-column layout, radar/chart full width, score cards 2-col grid
+
+**What makes it Product Hunt worthy:**
+- Does something that was previously impossible without expensive software or expertise
+- Gives a result that feels personal and specific to the user's file/situation
+- Written output that a producer would screenshot and reference in a session
+- Shareable result (the fingerprint, the score, the diagnosis)
+- Paywall on the premium output, not the tool itself
+
+## Priority Queue — S81
+
+| Priority | Task |
+|----------|------|
+| **P0** | Fix hub: sticky subcategory pills (fetch live, find overflow root cause, fix surgically) |
+| **P0** | Fix hub: mobile search bar overflow |
+| **P0** | Affiliate applications — Plugin Boutique, Amazon Associates, Loopmasters, Sweetwater, PluginFox |
+| **P0** | GSC indexing requests — all tools + reverb + compression |
+| **P1** | Fix MFP timeline — flags only showing last 40 seconds of track |
+| **P1** | Loudness Penalty full revamp (file-upload based) |
+| **P1** | Replace quotes.json with quotes_merged_v2.json |
+| **P1** | Save mpw_bible_writer_06.py to mpw-scripts\ |
+| **P2** | Google Workspace domain dispute Case #70817574 |
