@@ -421,6 +421,14 @@
 <div class="page">
 
   <!-- How to use banner -->
+  
+
+  <!-- Header -->
+  <div class="tool-header">
+    <div class="tool-eyebrow">Free Mixing Tool</div>
+    <h1 class="tool-h1">Mix <strong>Fingerprint</strong> Analyzer</h1>
+    <p class="tool-desc">Upload your mix. We measure its DNA — bass weight, stereo width, dynamic range, high-end air — and plot it against the genre benchmark you're working toward. Then we tell you exactly what to fix.</p>
+
   <div class="how-banner">
     <div class="how-banner-title">What is the Mix Fingerprint Analyzer?</div>
     <p style="font-size:13px;color:var(--text2);line-height:1.7;margin-top:6px">Every professional mix has a sonic signature — a specific balance of bass, brightness, width, and dynamics that makes it sound right in its genre. This tool measures your mix against that signature and tells you exactly where it's aligned and where it's off — with plain English explanations of what to fix and why.</p>
@@ -452,11 +460,6 @@
     </div>
   </div>
 
-  <!-- Header -->
-  <div class="tool-header">
-    <div class="tool-eyebrow">Free Mixing Tool</div>
-    <h1 class="tool-h1">Mix <strong>Fingerprint</strong> Analyzer</h1>
-    <p class="tool-desc">Upload your mix. We measure its DNA — bass weight, stereo width, dynamic range, high-end air — and plot it against the genre benchmark you're working toward. Then we tell you exactly what to fix.</p>
   </div>
 
   <!-- Grid -->
@@ -719,7 +722,22 @@
   </div>
 
   <!-- Related Tools -->
-  <div class="related-section">
+  
+
+  <!-- Content -->
+  <div class="content-section">
+    <h2>What the Six Axes Actually Mean</h2>
+    <p><strong>Bass Weight</strong> measures energy concentration in the 20–200Hz range relative to your total spectral energy. A score of 8–9 is normal for trap or EDM. A score of 2–4 is normal for acoustic folk. If your bass weight is significantly outside the genre benchmark, listeners will notice — either the low end is overwhelming the mix or it sounds too thin for the style.</p>
+    <p><strong>High End Air</strong> measures energy above 10kHz. This is what makes a mix feel open, expensive, and modern. Too low and the mix sounds dark and muffled. Too high and it fatigues. Most commercial mixes sit in a surprisingly narrow range for their genre.</p>
+    <p><strong>Stereo Width</strong> measures the mid/side energy ratio. Wide mixes fill the speakers and feel cinematic. Narrow mixes feel tight and focused. The right answer depends entirely on genre — ambient and cinematic music should be very wide; hip-hop and drill often sit much narrower than producers expect.</p>
+    <p><strong>Dynamic Range</strong> measures the crest factor — the difference between your peak levels and your average loudness. High dynamic range means breathing room, impact on transients, and a mix that feels alive. Low dynamic range usually means the limiter is working too hard. Streaming platforms normalize loudness, so crushing your master doesn't make it louder for listeners — it just removes the dynamics.</p>
+    <p><strong>Vocal Presence</strong> and <strong>Midrange Clarity</strong> are the two axes you rate manually. We can't reliably measure these from a full mix without stem separation. But they're critical — most amateur mixes fail because the vocal is buried or the midrange is congested.</p>
+  </div>
+
+</div>
+
+
+<div class="related-section">
     <div class="related-title">Related Tools</div>
     <div class="related-sub">More free tools for mixing, mastering, and translation</div>
     <div class="related-grid">
@@ -743,18 +761,6 @@
       </a>
     </div>
   </div>
-
-  <!-- Content -->
-  <div class="content-section">
-    <h2>What the Six Axes Actually Mean</h2>
-    <p><strong>Bass Weight</strong> measures energy concentration in the 20–200Hz range relative to your total spectral energy. A score of 8–9 is normal for trap or EDM. A score of 2–4 is normal for acoustic folk. If your bass weight is significantly outside the genre benchmark, listeners will notice — either the low end is overwhelming the mix or it sounds too thin for the style.</p>
-    <p><strong>High End Air</strong> measures energy above 10kHz. This is what makes a mix feel open, expensive, and modern. Too low and the mix sounds dark and muffled. Too high and it fatigues. Most commercial mixes sit in a surprisingly narrow range for their genre.</p>
-    <p><strong>Stereo Width</strong> measures the mid/side energy ratio. Wide mixes fill the speakers and feel cinematic. Narrow mixes feel tight and focused. The right answer depends entirely on genre — ambient and cinematic music should be very wide; hip-hop and drill often sit much narrower than producers expect.</p>
-    <p><strong>Dynamic Range</strong> measures the crest factor — the difference between your peak levels and your average loudness. High dynamic range means breathing room, impact on transients, and a mix that feels alive. Low dynamic range usually means the limiter is working too hard. Streaming platforms normalize loudness, so crushing your master doesn't make it louder for listeners — it just removes the dynamics.</p>
-    <p><strong>Vocal Presence</strong> and <strong>Midrange Clarity</strong> are the two axes you rate manually. We can't reliably measure these from a full mix without stem separation. But they're critical — most amateur mixes fail because the vocal is buried or the midrange is congested.</p>
-  </div>
-
-</div>
 
 <footer class="footer">
   <p>© 2026 <a href="/">MusicProductionWiki</a> · <a href="/tools/">Free Tools</a> · <a href="/bible/">The Producer's Bible</a> · <a href="https://theproducersbriefing.beehiiv.com">Newsletter</a></p>
@@ -1072,120 +1078,271 @@ function buildPlayback(scores,genre){
 }
 
 // ── TIMELINE ANALYSIS ──
-var TL_METRICS=['bassWeight','dynamicRange','highEndAir'];
-var TL_LABELS={bassWeight:'Bass Weight',dynamicRange:'Dynamic Range',highEndAir:'High End Air'};
-var TL_COLORS={bassWeight:'#f5a623',dynamicRange:'#00b4cc',highEndAir:'#00e8a2'};
-var currentTlMetric='bassWeight';
+var TL_METRICS = ['bassWeight','dynamicRange','highEndAir'];
+var TL_LABELS = {bassWeight:'Bass Weight',dynamicRange:'Dynamic Range',highEndAir:'High End Air'};
+var TL_COLORS = {bassWeight:'#f5a623',dynamicRange:'#00b4cc',highEndAir:'#00e8a2'};
+var currentTlMetric = 'bassWeight';
 
-function analyzeTimeline(buffer,sr){
-  var chunkSec=10;
-  var chunkLen=Math.floor(chunkSec*sr);
-  var L=buffer.getChannelData(0);
-  var R=buffer.numberOfChannels>1?buffer.getChannelData(1):L;
-  var totalLen=L.length;
-  var chunks=[];
-  for(var start=0;start<totalLen;start+=chunkLen){
-    var end=Math.min(start+chunkLen,totalLen);
-    var len=end-start;
-    var sq=0,pk=0,mE=0,sE=0,bp=0,tp=0,ap=0;
-    for(var i=0;i<len;i++){
-      var m=(L[start+i]+R[start+i])*0.5,s=(L[start+i]-R[start+i])*0.5;
-      sq+=m*m;if(Math.abs(m)>pk)pk=Math.abs(m);
-      mE+=m*m;sE+=s*s;
+function analyzeTimeline(buffer, sr) {
+  var L = buffer.getChannelData(0);
+  var R = buffer.numberOfChannels > 1 ? buffer.getChannelData(1) : L;
+  var totalLen = L.length;
+  var dur = buffer.duration;
+
+  // Scan in 4-second windows across the FULL track
+  var winSec = 4;
+  var winLen = Math.floor(winSec * sr);
+  var windows = [];
+
+  for (var start = 0; start < totalLen; start += winLen) {
+    var end = Math.min(start + winLen, totalLen);
+    var len = end - start;
+    var sq = 0, pk = 0, mE = 0, sE = 0, hfSum = 0;
+    var prev = 0;
+    for (var i = 0; i < len; i++) {
+      var m = (L[start+i] + R[start+i]) * 0.5;
+      sq += m * m;
+      if (Math.abs(m) > pk) pk = Math.abs(m);
+      mE += m * m;
+      sE += ((L[start+i] - R[start+i]) * 0.5) * ((L[start+i] - R[start+i]) * 0.5);
+      // Zero-crossing rate as high-freq proxy
+      if (i > 0 && ((m >= 0 && prev < 0) || (m < 0 && prev >= 0))) hfSum++;
+      prev = m;
     }
-    var rms=Math.sqrt(sq/len),crest=pk>0?20*Math.log10(pk/(rms+1e-10)):0;
-    var drScore=Math.min(10,Math.max(0,(crest/20)*10));
-    // Rough frequency breakdown using energy ratios across the chunk
-    for(var i=0;i<len;i++){
-      var s2=(L[start+i]+R[start+i])*0.5;
-      tp+=s2*s2;
-      // Simple approximation: use zero-crossing rate as a proxy for high freq content
-    }
-    // Use the measured values from full analysis but simulate variation
-    var tSec=Math.round(start/sr);
-    chunks.push({
-      tSec:tSec,
-      label:fmtTime(tSec)+'\u2013'+fmtTime(Math.round(end/sr)),
-      bassWeight:Math.min(10,Math.max(0,(S.m.bassWeight||5)+(Math.sin(tSec*0.4+1)*1.8))),
-      dynamicRange:Math.min(10,Math.max(0,drScore)),
-      highEndAir:Math.min(10,Math.max(0,(S.m.highEndAir||5)+(Math.cos(tSec*0.3+2)*1.5)))
+    var rms = Math.sqrt(sq / len);
+    var crest = pk > 0 ? 20 * Math.log10(pk / (rms + 1e-10)) : 0;
+    var tE = mE + sE;
+    var zcr = hfSum / len; // zero-crossing rate
+    windows.push({
+      tStart: start / sr,
+      tEnd: Math.min(end / sr, dur),
+      rms: rms,
+      crest: crest,
+      tE: tE,
+      zcr: zcr,
+      sideRatio: tE > 0 ? sE / tE : 0
     });
   }
-  return chunks;
-}
 
-function fmtTime(secs){var m=Math.floor(secs/60),s=secs%60;return m+':'+(s<10?'0':'')+s;}
-
-function buildTimeline(chunks){
-  var section=document.getElementById('timelineSection');section.className='timeline-section visible';
-  // Build tabs
-  var tabs=document.getElementById('timelineTabs');while(tabs.firstChild)tabs.removeChild(tabs.firstChild);
-  TL_METRICS.forEach(function(metric){
-    var tab=document.createElement('button');tab.className='tl-tab'+(metric===currentTlMetric?' active':'');
-    tab.textContent=TL_LABELS[metric];
-    tab.addEventListener('click',function(){currentTlMetric=metric;buildTimeline(chunks);});
-    tabs.appendChild(tab);
-  });
-  // Draw canvas
-  var cv=document.getElementById('timelineCanvas');var ctx=cv.getContext('2d');
-  var W=cv.offsetWidth||600;var H=120;var dpr=window.devicePixelRatio||1;
-  cv.width=W*dpr;cv.height=H*dpr;ctx.scale(dpr,dpr);
-  ctx.fillStyle='#121228';ctx.fillRect(0,0,W,H);
-  var n=chunks.length;if(n<2){ctx.fillStyle='#707090';ctx.font='12px DM Mono';ctx.textAlign='center';ctx.fillText('Track too short for timeline analysis',W/2,H/2);return;}
-  var color=TL_COLORS[currentTlMetric];
-  var genre=GENRES[S.genre];
-  var benchMid=genre.benchmarks[currentTlMetric][1];
-  var benchMin=genre.benchmarks[currentTlMetric][0];
-  var benchMax=genre.benchmarks[currentTlMetric][2];
-  // Benchmark zone
-  var bMinY=H-(benchMin/10)*H*0.85-H*0.075;
-  var bMaxY=H-(benchMax/10)*H*0.85-H*0.075;
-  ctx.fillStyle='rgba(255,255,255,0.04)';ctx.fillRect(0,bMaxY,W,bMinY-bMaxY);
-  // Benchmark midline
-  var bMidY=H-(benchMid/10)*H*0.85-H*0.075;
-  ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.setLineDash([4,6]);ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(0,bMidY);ctx.lineTo(W,bMidY);ctx.stroke();
-  ctx.setLineDash([]);
-  // Data line
-  ctx.strokeStyle=color;ctx.lineWidth=2.5;
-  ctx.shadowColor=color;ctx.shadowBlur=8;
-  ctx.beginPath();
-  chunks.forEach(function(c,i){
-    var x=(i/(n-1))*W;var y=H-(c[currentTlMetric]/10)*H*0.85-H*0.075;
-    if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
-  });
-  ctx.stroke();ctx.shadowBlur=0;
-  // Data points
-  chunks.forEach(function(c,i){
-    var x=(i/(n-1))*W;var y=H-(c[currentTlMetric]/10)*H*0.85-H*0.075;
-    ctx.fillStyle=color;ctx.beginPath();ctx.arc(x,y,3.5,0,Math.PI*2);ctx.fill();
-  });
-  // Time labels
-  ctx.fillStyle='rgba(255,255,255,0.35)';ctx.font='10px DM Mono';ctx.textAlign='center';ctx.setLineDash([]);
-  chunks.forEach(function(c,i){if(i%2===0||n<=6){var x=(i/(n-1))*W;ctx.fillText(fmtTime(c.tSec),x,H-4);}});
-  // Benchmark label
-  ctx.fillStyle='rgba(255,255,255,0.35)';ctx.textAlign='left';ctx.fillText('Benchmark',4,bMidY-4);
-  // Flags
-  var flagsEl=document.getElementById('timelineFlags');while(flagsEl.firstChild)flagsEl.removeChild(flagsEl.firstChild);
-  var flags=[];
-  chunks.forEach(function(c){
-    var val=c[currentTlMetric],delta=val-benchMid,abs=Math.abs(delta);
-    if(abs>2){
-      flags.push({time:c.label,val:val,delta:delta,abs:abs,severity:abs>3.5?'bad':'warn'});
+  // Group into sections by energy change (>15% jump = new section, max 20s per section)
+  var sections = [];
+  var curSec = null;
+  windows.forEach(function(w) {
+    if (!curSec) {
+      curSec = {tStart: w.tStart, tEnd: w.tEnd, wins: [w]};
+    } else {
+      var prevRms = curSec.wins[curSec.wins.length - 1].rms;
+      var jump = prevRms > 0 ? Math.abs(w.rms - prevRms) / prevRms : 0;
+      var tooLong = (w.tStart - curSec.tStart) >= 20;
+      if (jump > 0.18 || tooLong) {
+        curSec.tEnd = w.tStart;
+        sections.push(curSec);
+        curSec = {tStart: w.tStart, tEnd: w.tEnd, wins: [w]};
+      } else {
+        curSec.tEnd = w.tEnd;
+        curSec.wins.push(w);
+      }
     }
   });
-  flags.slice(0,4).forEach(function(flag){
-    var div=document.createElement('div');div.className='tl-flag '+flag.severity;
-    div.style.borderColor=flag.severity==='bad'?'#ff3d5a':'#f5a623';
-    var time=document.createElement('div');time.className='tl-flag-time';time.style.color=flag.severity==='bad'?'#ff3d5a':'#f5a623';time.textContent=flag.time;
-    var text=document.createElement('div');text.className='tl-flag-text';
-    var strong=document.createElement('strong');strong.textContent=TL_LABELS[currentTlMetric]+' ';
-    var dir=flag.delta>0?'spikes above':'drops below';
-    text.appendChild(strong);text.appendChild(document.createTextNode(dir+' the '+GENRES[S.genre].label+' benchmark here ('+flag.val.toFixed(1)+' vs target '+benchMid.toFixed(1)+'). This section is where the problem lives.'));
-    div.appendChild(time);div.appendChild(text);flagsEl.appendChild(div);
+  if (curSec) sections.push(curSec);
+
+  // Score each section — use measured values as anchors, vary by local energy
+  var bassBench = S.m.bassWeight || 5;
+  var airBench = S.m.highEndAir || 5;
+  var allRms = windows.map(function(w){return w.rms;});
+  var maxRms = Math.max.apply(null, allRms) || 1;
+  var allZcr = windows.map(function(w){return w.zcr;});
+  var maxZcr = Math.max.apply(null, allZcr) || 1;
+
+  sections.forEach(function(sec, i) {
+    var n = sec.wins.length;
+    var avgRms = sec.wins.reduce(function(a,w){return a+w.rms;},0)/n;
+    var avgCrest = sec.wins.reduce(function(a,w){return a+w.crest;},0)/n;
+    var avgZcr = sec.wins.reduce(function(a,w){return a+w.zcr;},0)/n;
+    var avgSide = sec.wins.reduce(function(a,w){return a+w.sideRatio;},0)/n;
+
+    // Bass varies with RMS (more energy = more bass activity)
+    var rmsNorm = avgRms / maxRms;
+    sec.bassWeight = Math.min(10, Math.max(0, bassBench + (rmsNorm - 0.6) * 3.5));
+
+    // Dynamic range: crest factor directly
+    sec.dynamicRange = Math.min(10, Math.max(0, (avgCrest / 20) * 10));
+
+    // Air: varies with zero-crossing rate
+    var zcrNorm = avgZcr / maxZcr;
+    sec.highEndAir = Math.min(10, Math.max(0, airBench + (zcrNorm - 0.5) * 3));
+
+    // Name by position in track
+    var pct = sec.tStart / dur;
+    if      (pct < 0.07) sec.name = 'Intro';
+    else if (pct < 0.22) sec.name = 'Verse 1';
+    else if (pct < 0.38) sec.name = 'Chorus';
+    else if (pct < 0.52) sec.name = 'Verse 2';
+    else if (pct < 0.65) sec.name = 'Bridge';
+    else if (pct < 0.82) sec.name = 'Final chorus';
+    else                  sec.name = 'Outro';
   });
-  if(!flags.length){var ok=document.createElement('div');ok.className='tl-flag ok';ok.style.borderColor='#00e8a2';var okT=document.createElement('div');okT.className='tl-flag-time';okT.style.color='#00e8a2';okT.textContent='All clear';var okD=document.createElement('div');okD.className='tl-flag-text';okD.textContent='No significant spikes or drops in '+TL_LABELS[currentTlMetric]+' across the track. Consistent through the arrangement.';ok.appendChild(okT);ok.appendChild(okD);flagsEl.appendChild(ok);}
+
+  return {sections: sections, duration: dur};
 }
+
+function fmtTime(s) {
+  var m = Math.floor(s/60), sc = Math.floor(s%60);
+  return m+':'+(sc<10?'0':'')+sc;
+}
+
+function buildTimeline(data) {
+  var section = document.getElementById('timelineSection');
+  section.className = 'timeline-section visible';
+  var sections = data.sections;
+  var dur = data.duration;
+  var genre = GENRES[S.genre];
+  var benchMid = genre.benchmarks[currentTlMetric][1];
+  var benchMin = genre.benchmarks[currentTlMetric][0];
+  var benchMax = genre.benchmarks[currentTlMetric][2];
+
+  // Tabs
+  var tabs = document.getElementById('timelineTabs');
+  while(tabs.firstChild) tabs.removeChild(tabs.firstChild);
+  TL_METRICS.forEach(function(metric) {
+    var tab = document.createElement('button');
+    tab.className = 'tl-tab'+(metric===currentTlMetric?' active':'');
+    tab.textContent = TL_LABELS[metric];
+    tab.addEventListener('click',function(){currentTlMetric=metric;buildTimeline(data);});
+    tabs.appendChild(tab);
+  });
+
+  // Canvas — proportional to full track
+  var cv = document.getElementById('timelineCanvas');
+  var ctx = cv.getContext('2d');
+  var W = cv.offsetWidth || 600;
+  var H = 130;
+  var dpr = window.devicePixelRatio||1;
+  cv.width = W*dpr; cv.height = H*dpr;
+  ctx.scale(dpr,dpr);
+
+  var PL=12, PR=12, PT=18, PB=22;
+  var cW = W-PL-PR, cH = H-PT-PB;
+  ctx.fillStyle='#0f0f24'; ctx.fillRect(0,0,W,H);
+
+  var color = TL_COLORS[currentTlMetric];
+
+  // Benchmark zone
+  var bMinY = PT + cH - (benchMin/10)*cH;
+  var bMaxY = PT + cH - (benchMax/10)*cH;
+  var bMidY = PT + cH - (benchMid/10)*cH;
+  ctx.fillStyle='rgba(255,255,255,0.04)';
+  ctx.fillRect(PL, bMaxY, cW, bMinY-bMaxY);
+  ctx.strokeStyle='rgba(255,255,255,0.2)'; ctx.setLineDash([4,6]); ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(PL,bMidY); ctx.lineTo(PL+cW,bMidY); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='rgba(255,255,255,0.28)'; ctx.font='9px DM Mono'; ctx.textAlign='left';
+  ctx.fillText('Benchmark '+benchMid.toFixed(1), PL+4, bMidY-4);
+
+  if (sections.length < 2) {
+    ctx.fillStyle='rgba(255,255,255,0.3)'; ctx.font='11px DM Mono'; ctx.textAlign='center';
+    ctx.fillText('Track too short for section analysis', W/2, H/2); return;
+  }
+
+  // Alternating section bands
+  sections.forEach(function(sec,i){
+    var x = PL+(sec.tStart/dur)*cW;
+    var w2 = ((sec.tEnd-sec.tStart)/dur)*cW;
+    if(i%2===0){ctx.fillStyle='rgba(255,255,255,0.012)';ctx.fillRect(x,PT,w2,cH);}
+    // Section divider
+    if(i>0){ctx.strokeStyle='rgba(255,255,255,0.06)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,PT);ctx.lineTo(x,PT+cH);ctx.stroke();}
+  });
+
+  // Data line
+  ctx.strokeStyle=color; ctx.lineWidth=2.5;
+  ctx.shadowColor=color; ctx.shadowBlur=8;
+  ctx.beginPath();
+  sections.forEach(function(sec,i){
+    var val = sec[currentTlMetric];
+    var xMid = PL+((sec.tStart+sec.tEnd)/2/dur)*cW;
+    var y = PT+cH-(val/10)*cH;
+    if(i===0) ctx.moveTo(xMid,y); else ctx.lineTo(xMid,y);
+  });
+  ctx.stroke(); ctx.shadowBlur=0;
+
+  // Points — color by delta from benchmark
+  sections.forEach(function(sec){
+    var val = sec[currentTlMetric];
+    var delta = val-benchMid;
+    var xMid = PL+((sec.tStart+sec.tEnd)/2/dur)*cW;
+    var y = PT+cH-(val/10)*cH;
+    var ptColor = Math.abs(delta)<1?'#00e8a2':Math.abs(delta)<2.5?'#f5a623':'#ff3d5a';
+    ctx.fillStyle=ptColor; ctx.shadowColor=ptColor; ctx.shadowBlur=5;
+    ctx.beginPath(); ctx.arc(xMid,y,4,0,Math.PI*2); ctx.fill();
+    ctx.shadowBlur=0;
+  });
+
+  // Time labels — proportional across full duration
+  ctx.fillStyle='rgba(255,255,255,0.28)'; ctx.font='9px DM Mono'; ctx.textAlign='center';
+  var interval = dur>180?60:dur>90?30:dur>45?20:10;
+  for(var t=0;t<=dur;t+=interval){
+    ctx.fillText(fmtTime(t), PL+(t/dur)*cW, H-5);
+  }
+
+  // ── FLAGS: top 3 by severity, each unique message ──
+  var flagsEl = document.getElementById('timelineFlags');
+  while(flagsEl.firstChild) flagsEl.removeChild(flagsEl.firstChild);
+
+  var scored = sections.map(function(sec){
+    return {sec:sec, val:sec[currentTlMetric], delta:sec[currentTlMetric]-benchMid, abs:Math.abs(sec[currentTlMetric]-benchMid)};
+  }).filter(function(s){return s.abs>1.5;});
+
+  scored.sort(function(a,b){return b.abs-a.abs;});
+  var flags = scored.slice(0,3);
+  flags.sort(function(a,b){return a.sec.tStart-b.sec.tStart;});
+
+  if(!flags.length){
+    var okDiv=document.createElement('div'); okDiv.className='tl-flag ok'; okDiv.style.borderColor='#00e8a2';
+    var okT=document.createElement('div'); okT.className='tl-flag-time'; okT.style.color='#00e8a2'; okT.textContent='All clear';
+    var okD=document.createElement('div'); okD.className='tl-flag-text';
+    okD.textContent=TL_LABELS[currentTlMetric]+' stays within the '+GENRES[S.genre].label+' benchmark throughout the track.';
+    okDiv.appendChild(okT); okDiv.appendChild(okD); flagsEl.appendChild(okDiv); return;
+  }
+
+  // Unique actionable messages per flag position
+  var actions = {
+    bassWeight:{
+      high:['This is your densest low-end section — the kick and bass are peaking here. If you are cutting anywhere on the low end, start here.','The low end is heaviest at this point in the track. Check if multiple bass-range elements are hitting simultaneously — bass, kick, and 808 often coincide at chorus drops.','Low-end energy spikes here. In a mastering context this is where the limiter works hardest. A targeted cut at 80\u2013100Hz specifically in this section will yield the most headroom.'],
+      low:['This section is noticeably thinner in the low end. Check if your bass or kick drops out here, or if an arrangement gap is leaving the bottom empty.','The low end pulls back significantly in this part of the track. This may be intentional (breakdown, intro) or a mix balance issue if it occurs mid-song.','Bass energy is lower here than elsewhere. If this is not an intentional arrangement choice, check for phase cancellation between your bass and kick in this section.']
+    },
+    dynamicRange:{
+      high:['This is your most dynamic section \u2014 transients have the most impact here. If the mix feels alive anywhere, it is here. Protect this with your mastering limiter.','Maximum crest factor occurs in this section. The mix breathes most at this point. Verify your limiter ceiling is not clamping this section specifically.','Dynamics peak here. If you are targeting a specific LUFS target, this section will pull your integrated loudness down the most \u2014 factor this into your master bus settings.'],
+      low:['This is your most compressed section \u2014 the mix is densest and most limited here. If fatigue or flatness is a problem, it is centered on this part of the track.','Lowest dynamic range occurs here. Heavy element stacking or a drop in crest factor suggests multiple loud elements hitting simultaneously. Identify what is converging.','The limiter is working hardest in this section. If you hear pumping or loss of punch specifically here, this is where to address the gain staging upstream.']
+    },
+    highEndAir:{
+      high:['High-frequency presence peaks here. If the mix sounds bright or harsh at any point, listen critically to this section. It may also be the most \u201copen\u201d sounding part of your track.','Air is most prominent in this section. This is likely a section with sustained cymbals, acoustic elements, or a wide reverb tail. Verify it does not become fatiguing at volume.','Brightest section of the track. If your reference comparison shows the whole mix is dark but this section stands out, the rest of the track needs a lift rather than this section needing a cut.'],
+      low:['This is your darkest section. If the mix sounds muffled anywhere specific, this is it. Check for a cymbal dropout, a filtered element, or a reverb tail that is rolling off highs.','Air is lowest here. A sudden drop often indicates an element that dominates this section has its highs rolled off aggressively. Check your primary element EQ and make sure it is not over-filtered.','Least high-end energy in the track. If this is a verse or breakdown, some darkness may be intentional contrast. If it is a chorus or hook, something is absorbing your highs in this section.']
+    }
+  };
+
+  flags.forEach(function(f, idx){
+    var severity = f.abs>3?'bad':'warn';
+    var dir = f.delta>0?'high':'low';
+    var timeStr = fmtTime(f.sec.tStart)+'\u2013'+fmtTime(Math.min(f.sec.tEnd,dur));
+    var actionText = actions[currentTlMetric][dir][idx] || actions[currentTlMetric][dir][0];
+
+    var div=document.createElement('div'); div.className='tl-flag '+severity;
+    div.style.borderColor=severity==='bad'?'#ff3d5a':'#f5a623';
+
+    var timeEl=document.createElement('div'); timeEl.className='tl-flag-time';
+    timeEl.style.color=severity==='bad'?'#ff3d5a':'#f5a623';
+    timeEl.textContent=timeStr;
+
+    var textEl=document.createElement('div'); textEl.className='tl-flag-text';
+    var strong=document.createElement('strong');
+    strong.textContent=f.sec.name+' ('+f.val.toFixed(1)+' vs target '+benchMid.toFixed(1)+')\u2002';
+    textEl.appendChild(strong);
+    textEl.appendChild(document.createTextNode(actionText));
+
+    div.appendChild(timeEl); div.appendChild(textEl); flagsEl.appendChild(div);
+  });
+}
+
 
 // ── AUDIO ANALYSIS ──
 function analyzeFile(file){
