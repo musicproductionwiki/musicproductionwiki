@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow, max-image-preview:large">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <title>Mix Fingerprint Analyzer — See Your Mix's DNA | MusicProductionWiki</title>
   <meta name="description" content="Upload your mix and instantly see its sonic fingerprint — bass weight, stereo width, dynamic range and more — plotted against genre benchmarks. Free.">
@@ -10,6 +11,10 @@
   <meta property="og:title" content="Mix Fingerprint Analyzer | MusicProductionWiki">
   <meta property="og:description" content="Upload your mix. See its DNA. Compare against genre benchmarks and legendary reference tracks.">
   <meta property="og:url" content="https://www.musicproductionwiki.com/tools/mix-fingerprint.html">
+  <meta property="og:image" content="https://musicproductionwiki.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:image" content="https://musicproductionwiki.com/og-image.png">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-79VB543KCT"></script>
@@ -568,6 +573,21 @@ body.embed-mode nav.mpw-site-nav,body.embed-mode .mobile-drawer,body.embed-mode 
 body.embed-mode{padding-top:0!important}
 </style>
 <style>#backToTop{display:none!important}</style>
+<style>
+/* MFP v2 platform verdict rows */
+.mpw-plat-label{font-family:var(--mono,monospace);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#7a7a90;margin:14px 0 6px}
+.mpw-plat-list{display:flex;flex-direction:column;gap:4px}
+.mpw-plat-row{display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:5px 10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:6px}
+.mpw-plat-name{font-family:var(--mono,monospace);color:#b8b8c8}
+.mpw-plat-verdict{color:#9a9ab0;font-size:11.5px;text-align:right}
+.ref-upload{border:1.5px dashed rgba(255,255,255,0.14);border-radius:12px;padding:18px;cursor:pointer;transition:border-color .15s,background .15s;background:rgba(255,255,255,0.02)}
+.ref-upload:hover,.ref-upload.drag{border-color:#00e8a2;background:rgba(0,232,162,0.05)}
+.ref-upload-inner{display:flex;align-items:center;justify-content:center;gap:10px;color:#9a9ab0;font-size:13px;text-align:center}
+.ref-upload-inner strong{color:#00e8a2;font-weight:600}
+.ref-upload svg{color:#7a7a90;flex-shrink:0}
+.diag-title,.timeline-title,.playback-title,.rg-title,.related-title{margin-top:0}
+</style>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.musicproductionwiki.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://www.musicproductionwiki.com/tools/"},{"@type":"ListItem","position":3,"name":"Mix Fingerprint Analyzer","item":"https://www.musicproductionwiki.com/tools/mix-fingerprint.html"}]}</script>
 </head>
 <body>
 <nav class="mpw-site-nav" role="navigation" aria-label="Main navigation">
@@ -892,18 +912,20 @@ body.embed-mode{padding-top:0!important}
         <div class="step-head">
           <div class="step-num" id="s3n">3</div>
           <div>
-            <div class="step-title">Compare to a famous track</div>
+            <div class="step-title">Compare to a reference track</div>
             <div class="step-sub">Optional — see how your mix stacks up against a specific song</div>
           </div>
         </div>
         <div class="step-body">
           <div class="ref-explain">
-            <strong>What is this?</strong> If there's a song you're trying to match the sound of — a reference track — type it here. We'll plot that song's fingerprint as a second shape on the radar so you can see exactly where the gaps are.
+            <strong>Optional:</strong> Upload a commercial track you want to sound like. We measure it with the exact same engine and overlay its fingerprint on the radar, so you can see precisely where your mix differs. Measured in your browser — the file never leaves your device.
           </div>
-          <div class="ref-wrap">
-            <svg class="ref-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="text" class="ref-input" id="refInp" placeholder="e.g. Frank Ocean, Kendrick Lamar, Brian Eno...">
-            <div class="ref-dd" id="refDd"></div>
+          <div class="ref-upload" id="refZone">
+            <input type="file" id="refInp" accept="audio/*" style="display:none">
+            <div class="ref-upload-inner">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <span>Drop a reference track or <strong>browse</strong> — WAV, MP3, FLAC</span>
+            </div>
           </div>
           <div class="ref-pill" id="refPill">
             <div style="flex:1">
@@ -920,36 +942,38 @@ body.embed-mode{padding-top:0!important}
         <div class="step-head">
           <div class="step-num" id="s4n">4</div>
           <div>
-            <div class="step-title">Two quick questions about your mix</div>
-            <div class="step-sub">These two things can't be measured automatically — only you know the answers</div>
+            <div class="step-title">Loudness, dynamics &amp; stereo</div>
+            <div class="step-sub">Measured directly from your file using the ITU-R BS.1770 standard — nothing here is guessed</div>
           </div>
         </div>
         <div class="step-body">
           <div class="subj-explain">
-            Our analyzer measures frequency and dynamics directly from your file. But it can't tell how upfront your vocals sit or how clear your midrange sounds — that depends on your intent as a producer. Answer these honestly.
+            These are the same measurements professional metering tools report. They are computed from your audio in your browser — your file never leaves your device.
           </div>
           <div class="subj-block">
             <div class="subj-item">
-              <span class="subj-label">How upfront are your vocals?</span>
-              <span class="subj-val" id="vVal">5.0</span>
-              <span class="subj-hint">1 = vocals sitting way back in the mix &nbsp; 10 = vocals right in your face</span>
-              <div class="subj-slider-wrap">
-                <div class="subj-track" id="vTrack" style="width:50%"></div>
-                <input type="range" class="subj-slider" id="vSlider" min="0" max="10" step="0.5" value="5">
-              </div>
-              <div class="subj-ticks"><span class="subj-tick">Buried</span><span class="subj-tick">Balanced</span><span class="subj-tick">Up front</span></div>
+              <span class="subj-label">Integrated Loudness</span>
+              <span class="subj-val" id="mLufs">—</span>
+              <span class="subj-hint">LUFS. Streaming normalizes to roughly -14 LUFS; -7 to -10 is typical for loud modern masters.</span>
             </div>
             <div class="subj-item">
-              <span class="subj-label">How clear is your midrange?</span>
-              <span class="subj-val" id="mVal">5.0</span>
-              <span class="subj-hint">The 2–5kHz range — where vocals cut, guitars bite, and snares crack. 1 = muddy, 10 = crystal</span>
-              <div class="subj-slider-wrap">
-                <div class="subj-track" id="mTrack" style="width:50%"></div>
-                <input type="range" class="subj-slider" id="mSlider" min="0" max="10" step="0.5" value="5">
-              </div>
-              <div class="subj-ticks"><span class="subj-tick">Muddy</span><span class="subj-tick">Balanced</span><span class="subj-tick">Crystal clear</span></div>
+              <span class="subj-label">True Peak</span>
+              <span class="subj-val" id="mTP">—</span>
+              <span class="subj-hint" id="mTPhint">dBTP (4x oversampled). Keep below -1.0 dBTP so it does not clip after lossy streaming conversion.</span>
+            </div>
+            <div class="subj-item">
+              <span class="subj-label">Loudness Range</span>
+              <span class="subj-val" id="mLRA">—</span>
+              <span class="subj-hint">LU (EBU R128). How much loudness varies across the track. Low = consistent/compressed, high = dynamic.</span>
+            </div>
+            <div class="subj-item">
+              <span class="subj-label">Phase Correlation</span>
+              <span class="subj-val" id="mCorr">—</span>
+              <span class="subj-hint">-1 to +1. Mono compatibility. Near +1 = mono-safe; below 0 means parts cancel on mono systems (phones, clubs).</span>
             </div>
           </div>
+          <div class="mpw-plat-label">How streaming platforms will play it</div>
+          <div id="mPlatforms" class="mpw-plat-list"></div>
         </div>
       </div>
 
@@ -1026,7 +1050,7 @@ body.embed-mode{padding-top:0!important}
 
   <!-- Written Diagnosis -->
   <div class="diagnosis-section" id="diagSection">
-    <div class="diag-title">Your Mix Diagnosis</div>
+    <h2 class="diag-title">Your Mix Diagnosis</h2>
     <div class="diag-subtitle">Plain English — what your fingerprint actually means for your mix</div>
     <div class="diag-fit" id="diagFit">
       <div class="diag-fit-score" id="diagFitScore">—%</div>
@@ -1040,7 +1064,7 @@ body.embed-mode{padding-top:0!important}
 
   <!-- Timeline Analysis -->
   <div class="timeline-section" id="timelineSection">
-    <div class="timeline-title">Timeline Analysis</div>
+    <h2 class="timeline-title">Timeline Analysis</h2>
     <div class="timeline-sub">How your mix changes across the track — where the problems live by timestamp</div>
     <div class="timeline-tabs" id="timelineTabs"></div>
     <div class="timeline-canvas-wrap">
@@ -1051,14 +1075,14 @@ body.embed-mode{padding-top:0!important}
 
   <!-- Playback Predictions -->
   <div class="playback-section" id="playbackSection">
-    <div class="playback-title">How Will This Translate?</div>
+    <h2 class="playback-title">How Will This Translate?</h2>
     <div class="playback-sub">Predicted performance on 6 playback systems — based on your fingerprint scores</div>
     <div class="playback-grid" id="playbackGrid"></div>
   </div>
 
   <!-- Report Gate -->
   <div class="report-gate" id="reportGate">
-    <div class="rg-title">Get Your Full Mix Intelligence Report</div>
+    <h2 class="rg-title">Get Your Full Mix Intelligence Report</h2>
     <div class="rg-desc">Everything you see here, formatted as a PDF — plus plugin-specific recommendations for each axis that needs work. Something you can reference during your next session.</div>
     <div class="rg-form">
       <input type="email" class="rg-email" id="rgEmail" placeholder="your@email.com">
@@ -1074,18 +1098,18 @@ body.embed-mode{padding-top:0!important}
   <!-- Content -->
   <div class="content-section">
     <h2>What the Six Axes Actually Mean</h2>
-    <p><strong>Bass Weight</strong> measures energy concentration in the 20–200Hz range relative to your total spectral energy. A score of 8–9 is normal for trap or EDM. A score of 2–4 is normal for acoustic folk. If your bass weight is significantly outside the genre benchmark, listeners will notice — either the low end is overwhelming the mix or it sounds too thin for the style.</p>
+    <p><strong>Bass Weight</strong> measures the energy in the 20–150Hz band, scored per octave against a reference tonal-balance curve so it reflects your low-end balance rather than just overall volume. A score around 8 is normal for trap or EDM; 3–4 is normal for acoustic folk. If your bass weight is significantly outside the genre benchmark, listeners will notice — either the low end is overwhelming the mix or it sounds too thin for the style.</p>
     <p><strong>High End Air</strong> measures energy above 10kHz. This is what makes a mix feel open, expensive, and modern. Too low and the mix sounds dark and muffled. Too high and it fatigues. Most commercial mixes sit in a surprisingly narrow range for their genre.</p>
     <p><strong>Stereo Width</strong> measures the mid/side energy ratio. Wide mixes fill the speakers and feel cinematic. Narrow mixes feel tight and focused. The right answer depends entirely on genre — ambient and cinematic music should be very wide; hip-hop and drill often sit much narrower than producers expect.</p>
-    <p><strong>Dynamic Range</strong> measures the crest factor — the difference between your peak levels and your average loudness. High dynamic range means breathing room, impact on transients, and a mix that feels alive. Low dynamic range usually means the limiter is working too hard. Streaming platforms normalize loudness, so crushing your master doesn't make it louder for listeners — it just removes the dynamics.</p>
-    <p><strong>Vocal Presence</strong> and <strong>Midrange Clarity</strong> are the two axes you rate manually. We can't reliably measure these from a full mix without stem separation. But they're critical — most amateur mixes fail because the vocal is buried or the midrange is congested.</p>
+    <p><strong>Dynamic Range</strong> measures PSR — the gap between your true-peak level and your short-term loudness (the modern successor to crest factor). High dynamic range means breathing room, impact on transients, and a mix that feels alive. Low dynamic range usually means the limiter is working too hard. Streaming platforms normalize loudness, so crushing your master doesn't make it louder for listeners — it just removes the dynamics.</p>
+    <p><strong>Presence</strong> (2–5kHz) and <strong>Mids</strong> (250Hz–2kHz) are measured directly from your spectrum, like every other axis — the presence band is where vocals, snares and lead instruments cut through, and the mid band is the body of the mix. These read the energy in those bands, not isolated stems: true vocal-versus-backing balance needs source separation, but band energy is a strong, honest proxy. Most amateur mixes fail right here — the vocal sits back (low presence) or the midrange congests (too much mid energy).</p>
   </div>
 
 </div>
 
 
 <div class="related-section">
-    <div class="related-title">Related Tools</div>
+    <h2 class="related-title">Related Tools</h2>
     <div class="related-sub">More free tools for mixing, mastering, and translation</div>
     <div class="related-grid">
       <a class="related-card" href="/tools/frequency-conflict-detector.html">
@@ -1123,66 +1147,41 @@ var AXES=[
   {key:'highEndAir',     label:'High End Air',     short:'AIR',   color:'#00e8a2'},
   {key:'stereoWidth',    label:'Stereo Width',     short:'WIDTH', color:'#8b7cf8'},
   {key:'dynamicRange',   label:'Dynamic Range',    short:'DR',    color:'#00b4cc'},
-  {key:'vocalPresence',  label:'Vocal Presence',   short:'VOCAL', color:'#e040fb'},
-  {key:'midrangeClarity',label:'Midrange Clarity', short:'MIDS',  color:'#ff6b35'}
+  {key:'vocalPresence',  label:'Presence',         short:'PRES',  color:'#e040fb'},
+  {key:'midrangeClarity',label:'Mids',             short:'MIDS',  color:'#ff6b35'}
 ];
 
 var GENRES={
-  trap:      {label:'Trap',      color:'#ff3d5a',benchmarks:{bassWeight:[7.5,8.5,9.5],highEndAir:[4,5.5,7],stereoWidth:[5,6.5,8],dynamicRange:[2,3.5,5],vocalPresence:[5,6.5,8],midrangeClarity:[4,5,6.5]}},
-  hiphop:    {label:'Hip-Hop',   color:'#f5a623',benchmarks:{bassWeight:[6,7.5,8.5],highEndAir:[4,5,6.5],stereoWidth:[4,5.5,7],dynamicRange:[3,4.5,6],vocalPresence:[6,7.5,9],midrangeClarity:[5,6,7.5]}},
-  pop:       {label:'Pop',       color:'#00e8a2',benchmarks:{bassWeight:[4,5.5,7],highEndAir:[6,7.5,9],stereoWidth:[6,7.5,9],dynamicRange:[3,4,5.5],vocalPresence:[7,8.5,10],midrangeClarity:[6,7,8.5]}},
-  edm:       {label:'EDM',       color:'#8b7cf8',benchmarks:{bassWeight:[7,8,9],highEndAir:[6,7.5,9],stereoWidth:[7,8.5,10],dynamicRange:[2,3,4.5],vocalPresence:[4,5.5,7],midrangeClarity:[5,6.5,8]}},
-  house:     {label:'House',     color:'#00b4cc',benchmarks:{bassWeight:[6.5,7.5,8.5],highEndAir:[5,6.5,8],stereoWidth:[6,7,8.5],dynamicRange:[3,4,5.5],vocalPresence:[3,5,7],midrangeClarity:[5,6.5,8]}},
-  dnb:       {label:'D&B',       color:'#ff6b35',benchmarks:{bassWeight:[7,8,9],highEndAir:[5,7,8.5],stereoWidth:[5,7,8.5],dynamicRange:[4,5.5,7],vocalPresence:[2,4,6],midrangeClarity:[5,6,7.5]}},
-  rnb:       {label:'R&B',       color:'#e040fb',benchmarks:{bassWeight:[5,6.5,8],highEndAir:[5,6.5,8],stereoWidth:[5,6.5,8],dynamicRange:[4,5.5,7],vocalPresence:[7,8.5,10],midrangeClarity:[5,6.5,8]}},
-  indie:     {label:'Indie',     color:'#69f0ae',benchmarks:{bassWeight:[3,5,6.5],highEndAir:[5,6.5,8],stereoWidth:[5,6.5,8],dynamicRange:[5,6.5,8],vocalPresence:[6,7.5,9],midrangeClarity:[5,6.5,8]}},
-  rock:      {label:'Rock',      color:'#ff5252',benchmarks:{bassWeight:[5,6,7.5],highEndAir:[5,6.5,8],stereoWidth:[5,6.5,8],dynamicRange:[4,5.5,7],vocalPresence:[6,7.5,9],midrangeClarity:[6,7.5,9]}},
-  metal:     {label:'Metal',     color:'#90a4ae',benchmarks:{bassWeight:[5,6.5,8],highEndAir:[4,6,7.5],stereoWidth:[5,7,8.5],dynamicRange:[2,3.5,5],vocalPresence:[5,6.5,8],midrangeClarity:[7,8.5,10]}},
-  ambient:   {label:'Ambient',   color:'#4dd0e1',benchmarks:{bassWeight:[2,4,6],highEndAir:[6,7.5,9],stereoWidth:[7,8.5,10],dynamicRange:[6,7.5,9],vocalPresence:[1,3,5],midrangeClarity:[3,4.5,6]}},
-  lofi:      {label:'Lo-Fi',     color:'#ffd740',benchmarks:{bassWeight:[4,5.5,7],highEndAir:[3,4,5.5],stereoWidth:[4,5,6.5],dynamicRange:[5,6.5,8],vocalPresence:[2,4,6],midrangeClarity:[4,5,6.5]}},
-  jazz:      {label:'Jazz',      color:'#ffca28',benchmarks:{bassWeight:[3,5,6.5],highEndAir:[5,6.5,8],stereoWidth:[4,5.5,7],dynamicRange:[7,8.5,10],vocalPresence:[4,6,8],midrangeClarity:[5,6.5,8]}},
-  afrobeats: {label:'Afrobeats', color:'#ff9800',benchmarks:{bassWeight:[6,7.5,8.5],highEndAir:[5,6.5,8],stereoWidth:[5,6.5,8],dynamicRange:[3,4.5,6],vocalPresence:[6,7.5,9],midrangeClarity:[5,6.5,8]}},
-  drill:     {label:'Drill',     color:'#b0bec5',benchmarks:{bassWeight:[7.5,8.5,9.5],highEndAir:[3,4.5,6],stereoWidth:[4,5.5,7],dynamicRange:[2,3,4.5],vocalPresence:[5,6.5,8],midrangeClarity:[3,4.5,6]}},
-  soul:      {label:'Soul',      color:'#ef9a9a',benchmarks:{bassWeight:[5,6.5,7.5],highEndAir:[4,5.5,7],stereoWidth:[4,5.5,7],dynamicRange:[5,6.5,8],vocalPresence:[7,8.5,10],midrangeClarity:[5,6.5,8]}},
-  funk:      {label:'Funk',      color:'#ce93d8',benchmarks:{bassWeight:[6,7.5,8.5],highEndAir:[4,5.5,7],stereoWidth:[4,5.5,7],dynamicRange:[5,6.5,8],vocalPresence:[5,7,8.5],midrangeClarity:[6,7.5,9]}},
-  folk:      {label:'Folk',      color:'#a5d6a7',benchmarks:{bassWeight:[2,3.5,5],highEndAir:[4,5.5,7],stereoWidth:[3,4.5,6],dynamicRange:[6,7.5,9],vocalPresence:[7,8.5,10],midrangeClarity:[4,5.5,7]}},
-  classical: {label:'Classical', color:'#ffe082',benchmarks:{bassWeight:[3,4.5,6],highEndAir:[6,7.5,9],stereoWidth:[6,7.5,9],dynamicRange:[8,9,10],vocalPresence:[3,5,7],midrangeClarity:[5,6.5,8]}},
-  country:   {label:'Country',   color:'#bcaaa4',benchmarks:{bassWeight:[3,5,6.5],highEndAir:[5,6.5,8],stereoWidth:[4,5.5,7],dynamicRange:[4,5.5,7],vocalPresence:[7,8.5,10],midrangeClarity:[5,6.5,8]}}
+  trap:{label:'Trap',color:'#ff3d5a',benchmarks:{bassWeight:[6.5,8.0,9.5],highEndAir:[2.9,4.4,5.9],stereoWidth:[3.5,5.0,6.5],dynamicRange:[1.5,3.0,4.5],vocalPresence:[3.5,5.0,6.5],midrangeClarity:[2.9,4.4,5.9]}},
+  hiphop:{label:'Hip-Hop',color:'#f5a623',benchmarks:{bassWeight:[5.6,7.1,8.6],highEndAir:[3.2,4.7,6.2],stereoWidth:[3.5,5.0,6.5],dynamicRange:[2.0,3.5,5.0],vocalPresence:[3.8,5.3,6.8],midrangeClarity:[3.5,5.0,6.5]}},
+  pop:{label:'Pop',color:'#00e8a2',benchmarks:{bassWeight:[3.5,5.0,6.5],highEndAir:[4.7,6.2,7.7],stereoWidth:[5.5,7.0,8.5],dynamicRange:[2.5,4.0,5.5],vocalPresence:[4.4,5.9,7.4],midrangeClarity:[3.8,5.3,6.8]}},
+  edm:{label:'EDM',color:'#8b7cf8',benchmarks:{bassWeight:[5.9,7.4,8.9],highEndAir:[4.4,5.9,7.4],stereoWidth:[6.0,7.5,9.0],dynamicRange:[1.5,3.0,4.5],vocalPresence:[3.8,5.3,6.8],midrangeClarity:[2.9,4.4,5.9]}},
+  house:{label:'House',color:'#00b4cc',benchmarks:{bassWeight:[5.3,6.8,8.3],highEndAir:[4.1,5.6,7.1],stereoWidth:[5.5,7.0,8.5],dynamicRange:[2.0,3.5,5.0],vocalPresence:[4.1,5.6,7.1],midrangeClarity:[3.5,5.0,6.5]}},
+  dnb:{label:'D&B',color:'#e040fb',benchmarks:{bassWeight:[5.9,7.4,8.9],highEndAir:[4.4,5.9,7.4],stereoWidth:[5.5,7.0,8.5],dynamicRange:[2.0,3.5,5.0],vocalPresence:[4.1,5.6,7.1],midrangeClarity:[3.2,4.7,6.2]}},
+  rnb:{label:'R&B',color:'#ff6b35',benchmarks:{bassWeight:[4.7,6.2,7.7],highEndAir:[3.8,5.3,6.8],stereoWidth:[4.5,6.0,7.5],dynamicRange:[3.0,4.5,6.0],vocalPresence:[4.1,5.6,7.1],midrangeClarity:[3.8,5.3,6.8]}},
+  indie:{label:'Indie',color:'#00e8a2',benchmarks:{bassWeight:[3.2,4.7,6.2],highEndAir:[3.2,4.7,6.2],stereoWidth:[5.0,6.5,8.0],dynamicRange:[4.0,5.5,7.0],vocalPresence:[3.8,5.3,6.8],midrangeClarity:[4.1,5.6,7.1]}},
+  rock:{label:'Rock',color:'#ff3d5a',benchmarks:{bassWeight:[2.9,4.4,5.9],highEndAir:[3.5,5.0,6.5],stereoWidth:[4.5,6.0,7.5],dynamicRange:[3.5,5.0,6.5],vocalPresence:[4.7,6.2,7.7],midrangeClarity:[4.7,6.2,7.7]}},
+  metal:{label:'Metal',color:'#8b7cf8',benchmarks:{bassWeight:[3.2,4.7,6.2],highEndAir:[3.8,5.3,6.8],stereoWidth:[5.0,6.5,8.0],dynamicRange:[2.0,3.5,5.0],vocalPresence:[5.0,6.5,8.0],midrangeClarity:[5.0,6.5,8.0]}},
+  ambient:{label:'Ambient',color:'#00b4cc',benchmarks:{bassWeight:[3.5,5.0,6.5],highEndAir:[2.9,4.4,5.9],stereoWidth:[6.5,8.0,9.5],dynamicRange:[5.5,7.0,8.5],vocalPresence:[2.3,3.8,5.3],midrangeClarity:[2.6,4.1,5.6]}},
+  lofi:{label:'Lo-Fi',color:'#f5a623',benchmarks:{bassWeight:[4.4,5.9,7.4],highEndAir:[1.4,2.9,4.4],stereoWidth:[4.0,5.5,7.0],dynamicRange:[3.0,4.5,6.0],vocalPresence:[2.0,3.5,5.0],midrangeClarity:[2.9,4.4,5.9]}},
+  jazz:{label:'Jazz',color:'#e040fb',benchmarks:{bassWeight:[2.3,3.8,5.3],highEndAir:[4.1,5.6,7.1],stereoWidth:[5.0,6.5,8.0],dynamicRange:[6.0,7.5,9.0],vocalPresence:[3.8,5.3,6.8],midrangeClarity:[4.1,5.6,7.1]}},
+  afrobeats:{label:'Afrobeats',color:'#ff6b35',benchmarks:{bassWeight:[5.3,6.8,8.3],highEndAir:[3.8,5.3,6.8],stereoWidth:[4.5,6.0,7.5],dynamicRange:[2.5,4.0,5.5],vocalPresence:[4.1,5.6,7.1],midrangeClarity:[3.5,5.0,6.5]}},
+  drill:{label:'Drill',color:'#ff3d5a',benchmarks:{bassWeight:[6.5,8.0,9.5],highEndAir:[2.6,4.1,5.6],stereoWidth:[3.5,5.0,6.5],dynamicRange:[1.5,3.0,4.5],vocalPresence:[3.5,5.0,6.5],midrangeClarity:[2.9,4.4,5.9]}},
+  soul:{label:'Soul',color:'#f5a623',benchmarks:{bassWeight:[4.1,5.6,7.1],highEndAir:[3.8,5.3,6.8],stereoWidth:[4.5,6.0,7.5],dynamicRange:[4.0,5.5,7.0],vocalPresence:[4.1,5.6,7.1],midrangeClarity:[4.1,5.6,7.1]}},
+  funk:{label:'Funk',color:'#00e8a2',benchmarks:{bassWeight:[4.7,6.2,7.7],highEndAir:[3.5,5.0,6.5],stereoWidth:[4.5,6.0,7.5],dynamicRange:[3.5,5.0,6.5],vocalPresence:[4.1,5.6,7.1],midrangeClarity:[4.4,5.9,7.4]}},
+  folk:{label:'Folk',color:'#00b4cc',benchmarks:{bassWeight:[1.7,3.2,4.7],highEndAir:[4.4,5.9,7.4],stereoWidth:[4.5,6.0,7.5],dynamicRange:[5.5,7.0,8.5],vocalPresence:[4.4,5.9,7.4],midrangeClarity:[4.4,5.9,7.4]}},
+  classical:{label:'Classical',color:'#8b7cf8',benchmarks:{bassWeight:[2.0,3.5,5.0],highEndAir:[4.4,5.9,7.4],stereoWidth:[6.0,7.5,9.0],dynamicRange:[7.0,8.5,10],vocalPresence:[3.5,5.0,6.5],midrangeClarity:[3.8,5.3,6.8]}},
+  country:{label:'Country',color:'#ff6b35',benchmarks:{bassWeight:[2.9,4.4,5.9],highEndAir:[4.1,5.6,7.1],stereoWidth:[4.5,6.0,7.5],dynamicRange:[4.0,5.5,7.0],vocalPresence:[4.4,5.9,7.4],midrangeClarity:[4.4,5.9,7.4]}}
 };
 
-var REFS=[
-  {title:'Blinding Lights',artist:'The Weeknd',genre:'rnb',scores:{bassWeight:6.5,highEndAir:7,stereoWidth:7.5,dynamicRange:4,vocalPresence:8.5,midrangeClarity:7}},
-  {title:"God's Plan",artist:'Drake',genre:'hiphop',scores:{bassWeight:7,highEndAir:5.5,stereoWidth:6,dynamicRange:4.5,vocalPresence:7.5,midrangeClarity:6}},
-  {title:'HUMBLE.',artist:'Kendrick Lamar',genre:'hiphop',scores:{bassWeight:7.5,highEndAir:5,stereoWidth:5.5,dynamicRange:5,vocalPresence:8,midrangeClarity:6.5}},
-  {title:'Bad Guy',artist:'Billie Eilish',genre:'pop',scores:{bassWeight:6,highEndAir:6,stereoWidth:8,dynamicRange:6,vocalPresence:9,midrangeClarity:6.5}},
-  {title:'Nights',artist:'Frank Ocean',genre:'rnb',scores:{bassWeight:6,highEndAir:6.5,stereoWidth:7,dynamicRange:6.5,vocalPresence:8,midrangeClarity:6}},
-  {title:'Sicko Mode',artist:'Travis Scott',genre:'trap',scores:{bassWeight:8.5,highEndAir:5.5,stereoWidth:6.5,dynamicRange:3,vocalPresence:7,midrangeClarity:5.5}},
-  {title:'SAD!',artist:'XXXTENTACION',genre:'trap',scores:{bassWeight:8,highEndAir:5,stereoWidth:5.5,dynamicRange:3.5,vocalPresence:7,midrangeClarity:5}},
-  {title:'Strobe',artist:'Deadmau5',genre:'edm',scores:{bassWeight:7,highEndAir:7,stereoWidth:8.5,dynamicRange:4.5,vocalPresence:2,midrangeClarity:6}},
-  {title:'An Ending (Ascent)',artist:'Brian Eno',genre:'ambient',scores:{bassWeight:3,highEndAir:7.5,stereoWidth:9,dynamicRange:8.5,vocalPresence:1,midrangeClarity:4}},
-  {title:'Pink + White',artist:'Frank Ocean',genre:'rnb',scores:{bassWeight:5,highEndAir:7,stereoWidth:7.5,dynamicRange:6.5,vocalPresence:8.5,midrangeClarity:6.5}},
-  {title:'Holocene',artist:'Bon Iver',genre:'indie',scores:{bassWeight:3.5,highEndAir:7,stereoWidth:8,dynamicRange:7.5,vocalPresence:8,midrangeClarity:6}},
-  {title:'Redbone',artist:'Childish Gambino',genre:'soul',scores:{bassWeight:6.5,highEndAir:5.5,stereoWidth:6.5,dynamicRange:5.5,vocalPresence:8.5,midrangeClarity:6}},
-  {title:'Get Lucky',artist:'Daft Punk',genre:'funk',scores:{bassWeight:6.5,highEndAir:6.5,stereoWidth:7,dynamicRange:5,vocalPresence:7,midrangeClarity:7.5}},
-  {title:'Midnight City',artist:'M83',genre:'indie',scores:{bassWeight:5,highEndAir:7.5,stereoWidth:8.5,dynamicRange:5.5,vocalPresence:6,midrangeClarity:6.5}},
-  {title:'DNA.',artist:'Kendrick Lamar',genre:'hiphop',scores:{bassWeight:7,highEndAir:5.5,stereoWidth:5.5,dynamicRange:5,vocalPresence:9,midrangeClarity:7}},
-  {title:'Power',artist:'Kanye West',genre:'hiphop',scores:{bassWeight:6.5,highEndAir:7,stereoWidth:7,dynamicRange:5,vocalPresence:8,midrangeClarity:7}},
-  {title:'Essence',artist:'Wizkid',genre:'afrobeats',scores:{bassWeight:7,highEndAir:6.5,stereoWidth:6.5,dynamicRange:4.5,vocalPresence:8,midrangeClarity:6.5}},
-  {title:'Do I Wanna Know',artist:'Arctic Monkeys',genre:'rock',scores:{bassWeight:6,highEndAir:6,stereoWidth:6.5,dynamicRange:5.5,vocalPresence:8,midrangeClarity:7}},
-  {title:'Flicker',artist:'Burial',genre:'ambient',scores:{bassWeight:4.5,highEndAir:6,stereoWidth:9,dynamicRange:8,vocalPresence:3.5,midrangeClarity:4}},
-  {title:'Stay With Me',artist:'Sam Smith',genre:'pop',scores:{bassWeight:4,highEndAir:7,stereoWidth:7.5,dynamicRange:5.5,vocalPresence:9.5,midrangeClarity:7}},
-  {title:'XO Tour Llif3',artist:'Lil Uzi Vert',genre:'trap',scores:{bassWeight:8,highEndAir:5,stereoWidth:6,dynamicRange:3.5,vocalPresence:7.5,midrangeClarity:5.5}},
-  {title:'Everything In Its Right Place',artist:'Radiohead',genre:'indie',scores:{bassWeight:4,highEndAir:6,stereoWidth:8.5,dynamicRange:6.5,vocalPresence:7,midrangeClarity:5.5}},
-  {title:'Self Control',artist:'Frank Ocean',genre:'rnb',scores:{bassWeight:4.5,highEndAir:7,stereoWidth:8,dynamicRange:7,vocalPresence:8.5,midrangeClarity:6}},
-  {title:'Alright',artist:'Kendrick Lamar',genre:'hiphop',scores:{bassWeight:5.5,highEndAir:6,stereoWidth:5.5,dynamicRange:5.5,vocalPresence:8.5,midrangeClarity:6.5}},
-  {title:'Pray for Me',artist:'The Weeknd',genre:'rnb',scores:{bassWeight:7,highEndAir:7,stereoWidth:8,dynamicRange:4,vocalPresence:8.5,midrangeClarity:7}}
-];
+/* reference tracks are now measured from user-uploaded audio (see buildRef) */
 
 // State
 var S={
   file:false,name:'',dur:0,sr:0,genre:'hiphop',
   chosenTrack:null,
-  m:{bassWeight:null,highEndAir:null,stereoWidth:null,dynamicRange:null},
+  m:{bassWeight:null,highEndAir:null,stereoWidth:null,dynamicRange:null,vocalPresence:null,midrangeClarity:null},
+  lufs:null,truePeak:null,lra:null,psr:null,corr:null,
   vocal:5,mids:5,generated:false,animating:false,
   rawBuffer:null, // store buffer for timeline
   timelineData:null
@@ -1226,11 +1225,7 @@ function startPulse(){
 
 function getScores(){
   var s={};
-  AXES.forEach(function(ax){
-    if(ax.key==='vocalPresence')s[ax.key]=S.vocal;
-    else if(ax.key==='midrangeClarity')s[ax.key]=S.mids;
-    else s[ax.key]=S.m[ax.key]!==null?S.m[ax.key]:5;
-  });
+  AXES.forEach(function(ax){ s[ax.key]=S.m[ax.key]!==null&&S.m[ax.key]!==undefined?S.m[ax.key]:5; });
   return s;
 }
 
@@ -1239,9 +1234,10 @@ function s2pts(scores){return AXES.map(function(ax,i){return p2xy(ang(i),s2r(sco
 function calcFitScore(scores,genre){
   var total=0,n=AXES.length;
   AXES.forEach(function(ax){
-    var v=scores[ax.key],bMin=genre.benchmarks[ax.key][0],bMax=genre.benchmarks[ax.key][2];
-    if(v>=bMin&&v<=bMax){total+=1;}
-    else{var dist=Math.min(Math.abs(v-bMin),Math.abs(v-bMax));total+=Math.max(0,1-dist/5);}
+    var v=scores[ax.key],mid=genre.benchmarks[ax.key][1];
+    var d=Math.abs(v-mid);
+    // distance from the genre target: full credit within 0.5, linear falloff to 0 at 3.5 points
+    total += d<=0.5 ? 1 : Math.max(0, 1-(d-0.5)/3.0);
   });
   return Math.round((total/n)*100);
 }
@@ -1275,7 +1271,7 @@ function drawFingerprint(){
   document.getElementById('radarBadge').textContent='Live';document.getElementById('radarBadge').className='radar-badge live';
   document.getElementById('radarHint').style.display='none';document.getElementById('radarLegend').style.display='flex';
   document.getElementById('llGenre').textContent=genre.label+' benchmark range';
-  if(rPts){document.getElementById('llRR').style.display='flex';document.getElementById('llRefTrack').textContent=S.chosenTrack.title+' — '+S.chosenTrack.artist;}
+  if(rPts){document.getElementById('llRR').style.display='flex';document.getElementById('llRefTrack').textContent=S.chosenTrack.title+' — '+S.chosenTrack.artist;}else{document.getElementById('llRR').style.display='none';}
 }
 
 function buildFitScore(pct,genre){
@@ -1397,13 +1393,15 @@ var SYSTEMS=[
 
 function predictPlayback(scores,genre){
   var bass=scores.bassWeight,air=scores.highEndAir,width=scores.stereoWidth,dr=scores.dynamicRange;
+  var corr=(S.corr!==null&&S.corr!==undefined&&isFinite(S.corr))?S.corr:1;
+  var monoRisk=corr<0.1, monoBad=corr<-0.05;
   return{
-    hp:{ok:dr>4&&width<8.5,warn:width>8.5,verdict:width>8.5?'Phase issues possible':dr<3?'Lacks impact on transients':'Good translation',body:width>8.5?'Very wide mixes can collapse or sound strange on headphones. Check in mono.':dr<3?'Heavy limiting removes the punch that makes headphone listening engaging.':'Dynamic range and width are both in a good range for headphone listening.'},
-    ph:{ok:bass<7&&dr>3,warn:bass>7.5||dr<3,verdict:bass>7.5?'Bass will overwhelm':dr<3?'Will sound flat':'Should translate well',body:bass>7.5?'Phone speakers have almost no sub response — your bass will either disappear entirely or distort. The low-end energy you\'ve built is not reaching phone listeners.':dr<3?'Compressed dynamics sound flat and lifeless on phone speakers where there\'s no sub to compensate.':'Your bass weight is reasonable for phone speakers. Expect some low end loss but the mix should hold together.'},
-    lp:{ok:bass<8&&air>4&&dr>3,warn:bass>8||air<3,verdict:bass>8?'Low end issue':air<3?'Will sound dark and dull':'Good laptop translation',body:bass>8?'Laptop speakers have zero bass response below 150Hz. Your low end will disappear and the mix may sound unbalanced.':air<3?'Laptop speakers roll off highs and lows — a dark mix sounds muffled on laptops, which is how most people listen.':'Reasonable translation expected. Verify on actual laptop speakers.'},
-    ca:{ok:bass>4&&air>4.5&&dr>3,warn:bass<4||bass>9,verdict:bass>9?'Excessive low end':bass<4?'Too thin for car audio':'Should translate well in car',body:bass>9?'Most car audio systems boost low frequencies — your already-heavy bass will become overwhelming in a car with a subwoofer.':bass<4?'Car audio systems often have bass-boost settings. A thin mix will sound weak and get turned up, compressing further.':'Car audio is a fairly forgiving environment if bass and dynamics are reasonable.'},
-    tv:{ok:dr>4&&width<8,warn:width>8||bass>8,verdict:width>8?'May phase in TV mono':bass>8?'Bass heavy for TV':'Good TV translation',body:width>8?'Many TV systems sum to mono or near-mono. Overly wide mixes may phase and sound hollow.':bass>8?'TV speakers and soundbars have limited bass response — heavy low-end mixes sound unbalanced.':'TV and soundbar systems favor midrange presence. Your mix should hold together.'},
-    cl:{ok:bass>6&&dr>4&&air>5,warn:dr<3||air<4,verdict:dr<3?'Lacks club impact':air<4?'May sound small on big system':'Strong club potential',body:dr<3?'Club systems are designed to reproduce dynamics at extreme volume. Heavily compressed masters lose their energy and punch at club volumes — the limiter that sounds loud in headphones sounds flat on an L-Acoustics rig.':air<4?'Big club systems need high-frequency air to fill the room. Dark mixes sound small and close even at high volumes.':'Bass weight and dynamics are in a range that should work on club systems. Verify the sub frequencies specifically.'}
+    hp:{ok:dr>4&&!monoRisk,warn:monoRisk||width>8.5,verdict:monoBad?'Phase cancellation likely':monoRisk?'Mono-fold risk':dr<3?'Lacks impact on transients':'Good translation',body:monoBad?'Your phase correlation is negative ('+corr.toFixed(2)+') \u2014 elements will cancel when summed to mono. Fold to mono and check what disappears.':monoRisk?'Phase correlation is low ('+corr.toFixed(2)+'). Some stereo content may weaken or cancel on mono playback. Check the mix in mono.':dr<3?'Heavy limiting removes the punch that makes headphone listening engaging.':'Dynamic range and stereo correlation are both in a good range for headphone listening.'},
+    ph:{ok:bass<7&&dr>3,warn:bass>7.5||dr<3,verdict:bass>7.5?'Bass will overwhelm':dr<3?'Will sound flat':'Should translate well',body:bass>7.5?'Phone speakers have almost no sub response \u2014 your bass will either disappear or distort. The low-end energy you have built is not reaching phone listeners.':dr<3?'Compressed dynamics sound flat and lifeless on phone speakers where there is no sub to compensate.':'Your bass weight is reasonable for phone speakers. Expect some low end loss but the mix should hold together.'},
+    lp:{ok:bass<8&&air>4&&dr>3,warn:bass>8||air<3,verdict:bass>8?'Low end issue':air<3?'Will sound dark and dull':'Good laptop translation',body:bass>8?'Laptop speakers have almost no bass below 150Hz. Your low end will disappear and the mix may sound unbalanced.':air<3?'Laptop speakers roll off highs and lows \u2014 a dark mix sounds muffled on laptops, which is how most people listen.':'Reasonable translation expected. Verify on actual laptop speakers.'},
+    ca:{ok:bass>4&&air>4.5&&dr>3,warn:bass<4||bass>9,verdict:bass>9?'Excessive low end':bass<4?'Too thin for car audio':'Should translate well in car',body:bass>9?'Most car systems boost low frequencies \u2014 your already-heavy bass will become overwhelming with a subwoofer.':bass<4?'Car audio often has bass-boost. A thin mix will sound weak and get turned up, compressing further.':'Car audio is a fairly forgiving environment if bass and dynamics are reasonable.'},
+    tv:{ok:dr>4&&!monoRisk,warn:monoRisk||bass>8,verdict:monoBad?'Hollow in TV mono':monoRisk?'May phase in TV mono':bass>8?'Bass heavy for TV':'Good TV translation',body:monoRisk?'Many TV systems sum to mono or near-mono. Your correlation ('+corr.toFixed(2)+') indicates wide/anti-phase content that may sound hollow when folded.':bass>8?'TV speakers and soundbars have limited bass \u2014 heavy low-end mixes sound unbalanced.':'TV and soundbar systems favor midrange presence. Your mix should hold together.'},
+    cl:{ok:bass>6&&dr>4&&air>5,warn:dr<3||air<4||monoBad,verdict:monoBad?'Sub may cancel in club':dr<3?'Lacks club impact':air<4?'May sound small on big system':'Strong club potential',body:monoBad?'Club subs are usually mono. Negative correlation means your low end may partially cancel on a club rig \u2014 check the sub in mono.':dr<3?'Club systems reproduce dynamics at extreme volume. Heavily compressed masters lose punch at club volumes.':air<4?'Big club systems need high-frequency air to fill the room. Dark mixes sound small even at high volume.':'Bass weight and dynamics are in a range that should work on club systems. Verify the sub frequencies specifically.'}
   };
 }
 
@@ -1430,107 +1428,63 @@ var TL_LABELS = {bassWeight:'Bass Weight',dynamicRange:'Dynamic Range',highEndAi
 var TL_COLORS = {bassWeight:'#f5a623',dynamicRange:'#00b4cc',highEndAir:'#00e8a2'};
 var currentTlMetric = 'bassWeight';
 
-function analyzeTimeline(buffer, sr) {
-  var L = buffer.getChannelData(0);
-  var R = buffer.numberOfChannels > 1 ? buffer.getChannelData(1) : L;
-  var totalLen = L.length;
-  var dur = buffer.duration;
-
-  // Scan in 4-second windows across the FULL track
-  var winSec = 4;
-  var winLen = Math.floor(winSec * sr);
-  var windows = [];
-
-  for (var start = 0; start < totalLen; start += winLen) {
-    var end = Math.min(start + winLen, totalLen);
-    var len = end - start;
-    var sq = 0, pk = 0, mE = 0, sE = 0, hfSum = 0;
-    var prev = 0;
-    for (var i = 0; i < len; i++) {
-      var m = (L[start+i] + R[start+i]) * 0.5;
-      sq += m * m;
-      if (Math.abs(m) > pk) pk = Math.abs(m);
-      mE += m * m;
-      sE += ((L[start+i] - R[start+i]) * 0.5) * ((L[start+i] - R[start+i]) * 0.5);
-      // Zero-crossing rate as high-freq proxy
-      if (i > 0 && ((m >= 0 && prev < 0) || (m < 0 && prev >= 0))) hfSum++;
-      prev = m;
+function analyzeTimeline(buffer, sr){
+  var L=buffer.getChannelData(0);
+  var R=buffer.numberOfChannels>1?buffer.getChannelData(1):L;
+  var totalLen=L.length, dur=buffer.duration;
+  var winSec=4, winLen=Math.floor(winSec*sr), windows=[];
+  for(var start=0; start<totalLen; start+=winLen){
+    var end=Math.min(start+winLen,totalLen), len=end-start;
+    if(len<winLen*0.5) break; // drop final partial window (was a source of crest blow-up)
+    var sq=0,pk=0,mE=0,sE=0,hf=0,prev=0;
+    for(var i=0;i<len;i++){
+      var m=(L[start+i]+R[start+i])*0.5;
+      sq+=m*m; if(Math.abs(m)>pk)pk=Math.abs(m); mE+=m*m;
+      var sd=(L[start+i]-R[start+i])*0.5; sE+=sd*sd;
+      if(i>0&&((m>=0&&prev<0)||(m<0&&prev>=0)))hf++; prev=m;
     }
-    var rms = Math.sqrt(sq / len);
-    var crest = pk > 0 ? 20 * Math.log10(pk / (rms + 1e-10)) : 0;
-    var tE = mE + sE;
-    var zcr = hfSum / len; // zero-crossing rate
-    windows.push({
-      tStart: start / sr,
-      tEnd: Math.min(end / sr, dur),
-      rms: rms,
-      crest: crest,
-      tE: tE,
-      zcr: zcr,
-      sideRatio: tE > 0 ? sE / tE : 0
-    });
+    var rms=Math.sqrt(sq/len);
+    var crest=pk>0&&rms>1e-6?Math.min(30,20*Math.log10(pk/(rms+1e-10))):0; // clamp crest
+    var tE=mE+sE;
+    windows.push({tStart:start/sr,tEnd:Math.min(end/sr,dur),rms:rms,crest:crest,tE:tE,zcr:hf/len,sideRatio:tE>0?sE/tE:0});
   }
-
-  // Group into sections by energy change (>15% jump = new section, max 20s per section)
-  var sections = [];
-  var curSec = null;
-  windows.forEach(function(w) {
-    if (!curSec) {
-      curSec = {tStart: w.tStart, tEnd: w.tEnd, wins: [w]};
-    } else {
-      var prevRms = curSec.wins[curSec.wins.length - 1].rms;
-      var jump = prevRms > 0 ? Math.abs(w.rms - prevRms) / prevRms : 0;
-      var tooLong = (w.tStart - curSec.tStart) >= 20;
-      if (jump > 0.18 || tooLong) {
-        curSec.tEnd = w.tStart;
-        sections.push(curSec);
-        curSec = {tStart: w.tStart, tEnd: w.tEnd, wins: [w]};
-      } else {
-        curSec.tEnd = w.tEnd;
-        curSec.wins.push(w);
-      }
+  // Silence gate: ignore windows far below the loudest window (fade-outs, intros, gaps)
+  var maxRms=0,i2; for(i2=0;i2<windows.length;i2++)if(windows[i2].rms>maxRms)maxRms=windows[i2].rms;
+  var silThr=Math.max(maxRms*0.06, 0.0008);
+  var live=windows.filter(function(w){return w.rms>=silThr;});
+  if(!live.length) live=windows;
+  // Group consecutive live windows into sections by energy change (>18%) or 20s cap
+  var sections=[], cur=null;
+  live.forEach(function(w){
+    if(!cur){cur={tStart:w.tStart,tEnd:w.tEnd,wins:[w]};}
+    else{
+      var prevRms=cur.wins[cur.wins.length-1].rms;
+      var jump=prevRms>0?Math.abs(w.rms-prevRms)/prevRms:0;
+      var tooLong=(w.tStart-cur.tStart)>=20;
+      var gap=(w.tStart-cur.wins[cur.wins.length-1].tEnd)>winSec*1.5; // a silent stretch was skipped
+      if(jump>0.18||tooLong||gap){cur.tEnd=cur.wins[cur.wins.length-1].tEnd;sections.push(cur);cur={tStart:w.tStart,tEnd:w.tEnd,wins:[w]};}
+      else{cur.tEnd=w.tEnd;cur.wins.push(w);}
     }
   });
-  if (curSec) sections.push(curSec);
-
-  // Score each section — use measured values as anchors, vary by local energy
-  var bassBench = S.m.bassWeight || 5;
-  var airBench = S.m.highEndAir || 5;
-  var allRms = windows.map(function(w){return w.rms;});
-  var maxRms = Math.max.apply(null, allRms) || 1;
-  var allZcr = windows.map(function(w){return w.zcr;});
-  var maxZcr = Math.max.apply(null, allZcr) || 1;
-
-  sections.forEach(function(sec, i) {
-    var n = sec.wins.length;
-    var avgRms = sec.wins.reduce(function(a,w){return a+w.rms;},0)/n;
-    var avgCrest = sec.wins.reduce(function(a,w){return a+w.crest;},0)/n;
-    var avgZcr = sec.wins.reduce(function(a,w){return a+w.zcr;},0)/n;
-    var avgSide = sec.wins.reduce(function(a,w){return a+w.sideRatio;},0)/n;
-
-    // Bass varies with RMS (more energy = more bass activity)
-    var rmsNorm = avgRms / maxRms;
-    sec.bassWeight = Math.min(10, Math.max(0, bassBench + (rmsNorm - 0.6) * 3.5));
-
-    // Dynamic range: crest factor directly
-    sec.dynamicRange = Math.min(10, Math.max(0, (avgCrest / 20) * 10));
-
-    // Air: varies with zero-crossing rate
-    var zcrNorm = avgZcr / maxZcr;
-    sec.highEndAir = Math.min(10, Math.max(0, airBench + (zcrNorm - 0.5) * 3));
-
-    // Name by position in track
-    var pct = sec.tStart / dur;
-    if      (pct < 0.07) sec.name = 'Intro';
-    else if (pct < 0.22) sec.name = 'Verse 1';
-    else if (pct < 0.38) sec.name = 'Chorus';
-    else if (pct < 0.52) sec.name = 'Verse 2';
-    else if (pct < 0.65) sec.name = 'Bridge';
-    else if (pct < 0.82) sec.name = 'Final chorus';
-    else                  sec.name = 'Outro';
+  if(cur)sections.push(cur);
+  var bassBench=(S.m.bassWeight!==null?S.m.bassWeight:5), airBench=(S.m.highEndAir!==null?S.m.highEndAir:5);
+  var liveMaxRms=0,liveMaxZcr=0; live.forEach(function(w){if(w.rms>liveMaxRms)liveMaxRms=w.rms;if(w.zcr>liveMaxZcr)liveMaxZcr=w.zcr;});
+  liveMaxRms=liveMaxRms||1; liveMaxZcr=liveMaxZcr||1;
+  sections.forEach(function(sec){
+    var n=sec.wins.length;
+    var avgRms=sec.wins.reduce(function(a,w){return a+w.rms;},0)/n;
+    var avgCrest=sec.wins.reduce(function(a,w){return a+w.crest;},0)/n;
+    var avgZcr=sec.wins.reduce(function(a,w){return a+w.zcr;},0)/n;
+    var rmsNorm=avgRms/liveMaxRms;
+    sec.bassWeight=Math.min(10,Math.max(0,bassBench+(rmsNorm-0.7)*3.0));
+    sec.dynamicRange=Math.min(10,Math.max(0,(avgCrest/20)*10));
+    var zcrNorm=avgZcr/liveMaxZcr;
+    sec.highEndAir=Math.min(10,Math.max(0,airBench+(zcrNorm-0.5)*3));
+    var pct=sec.tStart/dur;
+    if(pct<0.07)sec.name='Intro'; else if(pct<0.22)sec.name='Verse 1'; else if(pct<0.38)sec.name='Chorus';
+    else if(pct<0.52)sec.name='Verse 2'; else if(pct<0.65)sec.name='Bridge'; else if(pct<0.82)sec.name='Final chorus'; else sec.name='Outro';
   });
-
-  return {sections: sections, duration: dur};
+  return {sections:sections, duration:dur};
 }
 
 function fmtTime(s) {
@@ -1707,34 +1661,107 @@ function analyzeFile(file){
   reader.readAsArrayBuffer(file);
 }
 
+/* ===== MPW Mix Fingerprint Engine v2 (BS.1770 / Welch / correlation) ===== */
+function _rbjHS(fs,f0,Q,dB){var A=Math.pow(10,dB/40),w=2*Math.PI*f0/fs,c=Math.cos(w),s=Math.sin(w),al=s/(2*Q),sq=Math.sqrt(A);
+var b0=A*((A+1)+(A-1)*c+2*sq*al),b1=-2*A*((A-1)+(A+1)*c),b2=A*((A+1)+(A-1)*c-2*sq*al);
+var a0=(A+1)-(A-1)*c+2*sq*al,a1=2*((A-1)-(A+1)*c),a2=(A+1)-(A-1)*c-2*sq*al;
+return[b0/a0,b1/a0,b2/a0,a1/a0,a2/a0];}
+function _rbjHP(fs,f0,Q){var w=2*Math.PI*f0/fs,c=Math.cos(w),s=Math.sin(w),al=s/(2*Q);
+var b0=(1+c)/2,b1=-(1+c),b2=(1+c)/2,a0=1+al,a1=-2*c,a2=1-al;
+return[b0/a0,b1/a0,b2/a0,a1/a0,a2/a0];}
+function _biquad(x,co){var b0=co[0],b1=co[1],b2=co[2],a1=co[3],a2=co[4];
+var y=new Float64Array(x.length),x1=0,x2=0,y1=0,y2=0;
+for(var n=0;n<x.length;n++){var xn=x[n];var yn=b0*xn+b1*x1+b2*x2-a1*y1-a2*y2;x2=x1;x1=xn;y2=y1;y1=yn;y[n]=yn;}return y;}
+function _kWeight(x,fs){return _biquad(_biquad(x,_rbjHS(fs,1681.974450955532,0.7071752369554196,3.999843853973347)),_rbjHP(fs,38.13547087602444,0.5003270373253953));}
+function _msBlocks(yk,fs,blkS,stepS){var blk=Math.round(blkS*fs),step=Math.round(stepS*fs),out=[];
+for(var st=0;st+blk<=yk.length;st+=step){var s=0;for(var i=0;i<blk;i++){var v=yk[st+i];s+=v*v;}out.push(s/blk);}return out;}
+function mpwLUFS(L,R,fs){var kl=_kWeight(L,fs),kr=_kWeight(R,fs);var zl=_msBlocks(kl,fs,0.4,0.1),zr=_msBlocks(kr,fs,0.4,0.1);
+var nB=Math.min(zl.length,zr.length);if(!nB)return -Infinity;var lj=[],zs=[],i;
+for(i=0;i<nB;i++){zs[i]=zl[i]+zr[i];lj[i]=-0.691+10*Math.log10(zs[i]+1e-12);}
+var gz=[];for(i=0;i<nB;i++)if(lj[i]>=-70)gz.push(zs[i]);if(!gz.length)return -Infinity;
+var mA=gz.reduce(function(a,b){return a+b;},0)/gz.length;var rt=-0.691+10*Math.log10(mA+1e-12)-10;
+var rz=[];for(i=0;i<nB;i++)if(lj[i]>=-70&&lj[i]>=rt)rz.push(zs[i]);if(!rz.length)return -Infinity;
+var mR=rz.reduce(function(a,b){return a+b;},0)/rz.length;return -0.691+10*Math.log10(mR+1e-12);}
+function mpwShortTerm(L,R,fs,winS,hopS){var kl=_kWeight(L,fs),kr=_kWeight(R,fs);var blk=Math.round(winS*fs),hop=Math.round(hopS*fs),out=[];
+for(var st=0;st+blk<=kl.length;st+=hop){var s=0;for(var i=0;i<blk;i++){s+=kl[st+i]*kl[st+i]+kr[st+i]*kr[st+i];}var z=s/blk;out.push(-0.691+10*Math.log10(z+1e-12));}return out;}
+function mpwLRA(st){var g=st.filter(function(v){return v>-70;});if(g.length<2)return 0;
+var lin=g.map(function(v){return Math.pow(10,v/10);});var m=lin.reduce(function(a,b){return a+b;},0)/lin.length;var thr=10*Math.log10(m)-20;
+var k=g.filter(function(v){return v>=thr;}).sort(function(a,b){return a-b;});if(k.length<2)return 0;
+function pct(p){var idx=(k.length-1)*p,lo=Math.floor(idx),hi=Math.ceil(idx);return k[lo]+(k[hi]-k[lo])*(idx-lo);}
+return pct(0.95)-pct(0.10);}
+function mpwTruePeak(L,R,fs){
+  // 4x sinc oversample, bounded to neighborhoods of near-peak samples (fast + accurate)
+  function tp(x){var os=4,taps=16,half=taps/2,peak=0,i,n,gp=0;
+    for(i=0;i<x.length;i++){var a=Math.abs(x[i]);if(a>gp)gp=a;}
+    var thr=gp*0.708; // candidates within ~3dB of peak
+    function sinc(t){return t===0?1:Math.sin(Math.PI*t)/(Math.PI*t);}
+    peak=gp;
+    for(n=0;n<x.length;n++){if(Math.abs(x[n])<thr)continue;
+      for(var p=1;p<os;p++){var acc=0,frac=p/os,k;
+        for(k=-half+1;k<=half;k++){var idx=n+k;if(idx<0||idx>=x.length)continue;
+          var w=0.5-0.5*Math.cos(2*Math.PI*((k+half-1)/(taps-1)));acc+=x[idx]*sinc(k-frac)*w;}
+        var aa=Math.abs(acc);if(aa>peak)peak=aa;}}
+    return peak;}
+  return 20*Math.log10(Math.max(tp(L),tp(R))+1e-12);}
+function mpwCorr(L,R){var n=Math.min(L.length,R.length),lr=0,ll=0,rr=0;
+for(var i=0;i<n;i++){lr+=L[i]*R[i];ll+=L[i]*L[i];rr+=R[i]*R[i];}var d=Math.sqrt(ll*rr);return d>0?lr/d:1;}
+function mpwWidth(L,R){var n=Math.min(L.length,R.length),mE=0,sE=0;
+for(var i=0;i<n;i++){var m=(L[i]+R[i])*0.5,s=(L[i]-R[i])*0.5;mE+=m*m;sE+=s*s;}var t=mE+sE;return t>0?sE/t:0;}
+function _fft(re,im){var n=re.length,j=0,i,k;
+for(i=1;i<n;i++){var bit=n>>1;for(;j&bit;bit>>=1)j^=bit;j^=bit;if(i<j){var tr=re[i];re[i]=re[j];re[j]=tr;var ti=im[i];im[i]=im[j];im[j]=ti;}}
+for(var len=2;len<=n;len<<=1){var ang=-2*Math.PI/len,wr=Math.cos(ang),wi=Math.sin(ang);
+for(i=0;i<n;i+=len){var cr=1,ci=0;for(k=0;k<len/2;k++){var ur=re[i+k],ui=im[i+k];
+var vr=re[i+k+len/2]*cr-im[i+k+len/2]*ci,vi=re[i+k+len/2]*ci+im[i+k+len/2]*cr;
+re[i+k]=ur+vr;im[i+k]=ui+vi;re[i+k+len/2]=ur-vr;im[i+k+len/2]=ui-vi;var nr=cr*wr-ci*wi;ci=cr*wi+ci*wr;cr=nr;}}}}
+function mpwWelch(x,fs,nfft){nfft=nfft||8192;var hop=nfft>>1;var win=new Float64Array(nfft),ws=0,i;
+for(i=0;i<nfft;i++){win[i]=0.5-0.5*Math.cos(2*Math.PI*i/(nfft-1));ws+=win[i]*win[i];}
+var psd=new Float64Array(nfft/2),fr=0;
+for(var st=0;st+nfft<=x.length;st+=hop){var re=new Float64Array(nfft),im=new Float64Array(nfft);
+for(i=0;i<nfft;i++)re[i]=x[st+i]*win[i];_fft(re,im);for(i=0;i<nfft/2;i++)psd[i]+=re[i]*re[i]+im[i]*im[i];fr++;}
+if(!fr)return{psd:psd,binHz:fs/nfft,frames:0};var nm=1/(fr*fs*ws);for(i=0;i<psd.length;i++)psd[i]*=nm;
+return{psd:psd,binHz:fs/nfft,frames:fr};}
+function mpwBandFrac(psd,binHz,lo,hi,total){var s=0;for(var i=0;i<psd.length;i++){var f=i*binHz;if(f>=lo&&f<hi)s+=psd[i];}return total>0?s/total:0;}
+function _clamp10(v){return Math.round(Math.max(0,Math.min(10,v))*10)/10;}
+function mpwPlatforms(lufs,tp){
+  var P=[['Spotify',-14,1,-1],['Apple Music',-16,1,-1],['YouTube',-14,0,-1],['Tidal',-14,0,-1],['Amazon',-14,0,-2]];
+  var out=[];
+  for(var i=0;i<P.length;i++){var name=P[i][0],tgt=P[i][1],boost=P[i][2],tpc=P[i][3],d=tgt-lufs,v;
+    if(d<-0.3){v='turned down '+Math.abs(d).toFixed(1)+' dB';}
+    else if(d>0.3){var hr=Math.max(0,-1-tp);var b=boost?Math.min(d,hr):0;v=b>0.3?('turned up '+b.toFixed(1)+' dB'):'no change (plays quieter)';}
+    else{v='plays as-mastered';}
+    out.push({name:name,target:tgt,verdict:v,tpOver:(tp>tpc)});}
+  return out;
+}
+
+function mpwAxisScores(L,R,fs,psr){
+  var n=L.length,mono=new Float32Array(n),i;
+  for(i=0;i<n;i++)mono[i]=(L[i]+R[i])*0.5;
+  var w=mpwWelch(mono,fs,8192),psd=w.psd,bh=w.binHz,total=0;
+  for(i=0;i<psd.length;i++)total+=psd[i];
+  function _be(lo,hi){return mpwBandFrac(psd,bh,lo,hi,total)*total;}
+  function _ol(lo,hi){return 10*Math.log10(_be(lo,hi)/Math.log2(hi/lo)+1e-30);}
+  var bL=_ol(20,150),mL=_ol(250,2000),pL=_ol(2000,5000),aL=_ol(10000,20000),anc=(bL+mL+pL+aL)/4;
+  function _ax(lvl,ref){return Math.round(Math.max(0,Math.min(10,5+((lvl-anc)-ref)*0.6))*10)/10;}
+  return {bassWeight:_ax(bL,6.433),midrangeClarity:_ax(mL,1.195),vocalPresence:_ax(pL,-2.196),highEndAir:_ax(aL,-5.433),dynamicRange:_clamp10(psr/18*10),stereoWidth:_clamp10(mpwWidth(L,R)*22)};
+}
 function processBuffer(buf){
-  var sr=buf.sampleRate,dur=buf.duration,ch=buf.numberOfChannels;
+  var fs=buf.sampleRate,dur=buf.duration,ch=buf.numberOfChannels;
   var L=buf.getChannelData(0),R=ch>1?buf.getChannelData(1):L;
-  var ss=Math.floor(Math.max(0,(L.length/2)-sr*15)),se=Math.min(L.length,ss+sr*30),len=se-ss;
-  var Ls=L.slice(ss,se),Rs=R.slice(ss,se);
-  var sq=0,pk=0;
-  for(var i=0;i<len;i++){var mn=(Ls[i]+Rs[i])*0.5;sq+=mn*mn;if(Math.abs(mn)>pk)pk=Math.abs(mn);}
-  var rms=Math.sqrt(sq/len),crest=pk>0?20*Math.log10(pk/(rms+1e-10)):0;
-  var drScore=Math.min(10,Math.max(0,(crest/20)*10));
-  var mE=0,sE=0;
-  for(var i=0;i<len;i++){var m=(Ls[i]+Rs[i])*0.5,s=(Ls[i]-Rs[i])*0.5;mE+=m*m;sE+=s*s;}
-  var tE=mE+sE,widthScore=Math.min(10,(tE>0?sE/tE:0)*22);
-  var oc=new OfflineAudioContext(1,len,sr),ob=oc.createBuffer(1,len,sr),om=ob.getChannelData(0);
-  for(var i=0;i<len;i++)om[i]=(Ls[i]+Rs[i])*0.5;
-  var src=oc.createBufferSource();src.buffer=ob;
-  var an=oc.createAnalyser();an.fftSize=4096;
-  src.connect(an);an.connect(oc.destination);src.start(0);
-  oc.startRendering().then(function(){
-    var fd=new Float32Array(an.frequencyBinCount);an.getFloatFrequencyData(fd);
-    var bHz=sr/an.fftSize,tp2=0,bp=0,ap=0;
-    for(var bi=0;bi<fd.length;bi++){var hz=bi*bHz,pw=Math.pow(10,fd[bi]/10);if(!isFinite(pw)||pw<0)pw=0;tp2+=pw;if(hz>=20&&hz<=200)bp+=pw;if(hz>=10000)ap+=pw;}
-    S.m.bassWeight=Math.round(Math.min(10,Math.max(0,(bp/tp2||0)/0.35*10))*10)/10;
-    S.m.highEndAir=Math.round(Math.min(10,Math.max(0,(ap/tp2||0)/0.18*10))*10)/10;
-    S.m.stereoWidth=Math.round(widthScore*10)/10;S.m.dynamicRange=Math.round(drScore*10)/10;
-    // Analyze timeline
-    S.timelineData=analyzeTimeline(buf,sr);
-    markLoaded(S.name,dur,sr,buf);
-  }).catch(function(){markLoaded(S.name,dur,sr,buf);});
+  // Yield one frame so the "Measuring..." state paints before heavy compute
+  requestAnimationFrame(function(){
+    // --- Loudness / dynamics / stereo (rigorous, BS.1770) ---
+    S.lufs=mpwLUFS(L,R,fs);
+    S.truePeak=mpwTruePeak(L,R,fs);
+    var stS=mpwShortTerm(L,R,fs,3,1);
+    S.lra=mpwLRA(stS);
+    var stMax=stS.length?Math.max.apply(null,stS):S.lufs;
+    S.psr=S.truePeak-stMax;                 // peak-to-short-term ratio (dynamics)
+    S.corr=mpwCorr(L,R);                     // broadband phase correlation -1..+1
+    // --- Six measured fingerprint axes (same engine used for reference tracks) ---
+    S.m=mpwAxisScores(L,R,fs,S.psr);
+    S.timelineData=analyzeTimeline(buf,fs);
+    markLoaded(S.name,dur,fs,buf);
+  });
 }
 
 function drawWave(buf){
@@ -1757,11 +1784,39 @@ function markLoaded(name,dur,sr,buf){
   document.getElementById('uploadZone').className='upload-zone loaded';
   document.getElementById('loadedName').textContent=name;
   if(buf)drawWave(buf);
-  document.getElementById('wDur').textContent=dur>0?fmt(dur):'—';
-  document.getElementById('wSr').textContent=sr>0?(sr/1000).toFixed(1)+' kHz':'—';
-  function sc(cid,vid,val){if(val!==null){document.getElementById(vid).textContent=val.toFixed(1);document.getElementById(cid).className='chip measured';}}
+  document.getElementById('wDur').textContent=dur>0?fmt(dur):'\u2014';
+  document.getElementById('wSr').textContent=sr>0?(sr/1000).toFixed(1)+' kHz':'\u2014';
+  function sc(cid,vid,val){if(val!==null&&val!==undefined){document.getElementById(vid).textContent=val.toFixed(1);document.getElementById(cid).className='chip measured';}}
   sc('cBass','cvBass',S.m.bassWeight);sc('cW','cvW',S.m.stereoWidth);sc('cAir','cvAir',S.m.highEndAir);sc('cDR','cvDR',S.m.dynamicRange);
-  if(S.m.dynamicRange!==null){document.getElementById('cvLufs').textContent=(-6-(S.m.dynamicRange*1.2)).toFixed(1);document.getElementById('cLufs').className='chip measured';}
+  // Real integrated LUFS into the LUFS chip
+  if(S.lufs!==null&&isFinite(S.lufs)){document.getElementById('cvLufs').textContent=S.lufs.toFixed(1);document.getElementById('cLufs').className='chip measured';}
+  // Measured metrics panel
+  function setm(id,txt){var el=document.getElementById(id);if(el)el.textContent=txt;}
+  setm('mLufs', (S.lufs!==null&&isFinite(S.lufs))?S.lufs.toFixed(1)+' LUFS':'\u2014');
+  setm('mTP',   (S.truePeak!==null&&isFinite(S.truePeak))?(S.truePeak>0?'+':'')+S.truePeak.toFixed(1)+' dBTP':'\u2014');
+  setm('mLRA',  (S.lra!==null&&isFinite(S.lra))?S.lra.toFixed(1)+' LU':'\u2014');
+  setm('mCorr', (S.corr!==null&&isFinite(S.corr))?(S.corr>0?'+':'')+S.corr.toFixed(2):'\u2014');
+  // True-peak over-ceiling alert
+  var tpEl=document.getElementById('mTP'),tpHint=document.getElementById('mTPhint');
+  if(S.truePeak!==null&&isFinite(S.truePeak)){
+    if(S.truePeak> -1){ if(tpEl)tpEl.style.color='#ff3d5a';
+      if(tpHint)tpHint.textContent=(S.truePeak>0?'CLIPPING RISK \u2014 your master exceeds 0 dBTP and will distort after streaming encode. ':'Over the -1 dBTP ceiling \u2014 may distort after lossy encode. ')+'Lower your limiter ceiling to -1.0 dBTP (-2 for Amazon).'; }
+    else { if(tpEl)tpEl.style.color='#00e8a2'; }
+  }
+  // Streaming platform playback verdict
+  var pc=document.getElementById('mPlatforms');
+  if(pc&&S.lufs!==null&&isFinite(S.lufs)){
+    while(pc.firstChild)pc.removeChild(pc.firstChild);
+    var plats=mpwPlatforms(S.lufs,(S.truePeak!==null&&isFinite(S.truePeak))?S.truePeak:-1);
+    plats.forEach(function(p){
+      var row=document.createElement('div'); row.className='mpw-plat-row';
+      var nm=document.createElement('span'); nm.className='mpw-plat-name'; nm.textContent=p.name+' ('+p.target+')';
+      var vd=document.createElement('span'); vd.className='mpw-plat-verdict';
+      vd.textContent=p.verdict; if(p.verdict.indexOf('down')!==-1)vd.style.color='#f5a623'; else if(p.verdict.indexOf('as-mastered')!==-1)vd.style.color='#00e8a2';
+      row.appendChild(nm); row.appendChild(vd); pc.appendChild(row);
+    });
+  }
+  var s4=document.getElementById('s4n');if(s4)s4.className='step-num done';
   document.getElementById('s1n').className='step-num done';
   document.getElementById('radarFile').textContent=name;
   document.getElementById('genBtn').disabled=false;
@@ -1786,38 +1841,45 @@ function buildGenreGrid(){
 
 // ── REF SEARCH ──
 function buildRef(){
-  var inp=document.getElementById('refInp'),dd=document.getElementById('refDd');
-  inp.addEventListener('input',function(){
-    var q=inp.value.trim().toLowerCase();dd.className='ref-dd';while(dd.firstChild)dd.removeChild(dd.firstChild);
-    if(q.length<2)return;
-    var hits=REFS.filter(function(t){return t.title.toLowerCase().includes(q)||t.artist.toLowerCase().includes(q);}).slice(0,7);
-    if(!hits.length)return;dd.className='ref-dd open';
-    hits.forEach(function(track){
-      var item=document.createElement('div');item.className='ref-dd-item';
-      var ge=document.createElement('div');ge.className='ref-dd-genre';ge.textContent=GENRES[track.genre]?GENRES[track.genre].label:track.genre;
-      var ti=document.createElement('div');ti.className='ref-dd-title';ti.textContent=track.title;
-      var ar=document.createElement('div');ar.className='ref-dd-artist';ar.textContent=track.artist;
-      item.appendChild(ge);item.appendChild(ti);item.appendChild(ar);
-      item.addEventListener('click',function(){
-        S.chosenTrack=track;dd.className='ref-dd';inp.value='';
-        document.getElementById('rpTitle').textContent=track.title;
-        document.getElementById('rpArtist').textContent=track.artist;
-        document.getElementById('refPill').className='ref-pill visible';
-        document.getElementById('s3n').className='step-num done';
-      });
-      dd.appendChild(item);
-    });
-  });
-  document.getElementById('refClear').addEventListener('click',function(){S.chosenTrack=null;document.getElementById('refPill').className='ref-pill';document.getElementById('s3n').className='step-num';});
-  document.addEventListener('click',function(e){if(!e.target.closest('.ref-wrap'))dd.className='ref-dd';});
+  var zone=document.getElementById('refZone'),inp=document.getElementById('refInp');
+  function setPill(t,a){document.getElementById('rpTitle').textContent=t;document.getElementById('rpArtist').textContent=a;document.getElementById('refPill').className='ref-pill visible';}
+  function load(file){
+    if(!file)return;
+    setPill('Measuring '+file.name+' ...','');
+    var rd=new FileReader();
+    rd.onload=function(e){
+      var AC=window.AudioContext||window.webkitAudioContext;var actx=new AC();
+      actx.decodeAudioData(e.target.result,function(buf){
+        requestAnimationFrame(function(){
+          try{
+            var fs=buf.sampleRate,ch=buf.numberOfChannels;
+            var L=buf.getChannelData(0),R=ch>1?buf.getChannelData(1):L;
+            var stS=mpwShortTerm(L,R,fs,3,1);
+            var stMax=stS.length?Math.max.apply(null,stS):mpwLUFS(L,R,fs);
+            var psr=mpwTruePeak(L,R,fs)-stMax;
+            var sc=mpwAxisScores(L,R,fs,psr);
+            S.chosenTrack={title:file.name,artist:'Reference',scores:sc};
+            setPill(file.name,'Reference \u2014 measured in your browser');
+            document.getElementById('s3n').className='step-num done';
+            var ll=document.getElementById('llRefTrack');if(ll)ll.textContent=file.name;
+            if(S.generated)drawFingerprint();
+          }catch(err){setPill('Could not analyze '+file.name,'Try a WAV/MP3/FLAC file');}
+          try{actx.close();}catch(e2){}
+        });
+      },function(){setPill('Could not read '+file.name,'Try a WAV, MP3, or FLAC file');try{actx.close();}catch(e2){}});
+    };
+    rd.readAsArrayBuffer(file);
+  }
+  zone.addEventListener('click',function(){inp.click();});
+  zone.addEventListener('dragover',function(e){e.preventDefault();zone.classList.add('drag');});
+  zone.addEventListener('dragleave',function(){zone.classList.remove('drag');});
+  zone.addEventListener('drop',function(e){e.preventDefault();zone.classList.remove('drag');if(e.dataTransfer.files.length)load(e.dataTransfer.files[0]);});
+  inp.addEventListener('change',function(){if(inp.files.length)load(inp.files[0]);});
+  document.getElementById('refClear').addEventListener('click',function(){S.chosenTrack=null;document.getElementById('refPill').className='ref-pill';document.getElementById('s3n').className='step-num';if(S.generated)drawFingerprint();});
 }
 
 // ── SLIDERS ──
-function setupSliders(){
-  var vs=document.getElementById('vSlider'),ms=document.getElementById('mSlider');
-  vs.addEventListener('input',function(){S.vocal=parseFloat(vs.value);document.getElementById('vVal').textContent=S.vocal.toFixed(1);document.getElementById('vTrack').style.width=((S.vocal/10)*100)+'%';document.getElementById('s4n').className='step-num done';});
-  ms.addEventListener('input',function(){S.mids=parseFloat(ms.value);document.getElementById('mVal').textContent=S.mids.toFixed(1);document.getElementById('mTrack').style.width=((S.mids/10)*100)+'%';document.getElementById('s4n').className='step-num done';});
-}
+function setupSliders(){ /* sliders removed in v2 — presence & mids are now measured */ }
 
 // ── UPLOAD ──
 function setupUpload(){
