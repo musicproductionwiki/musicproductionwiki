@@ -457,14 +457,22 @@
   
   /* ── STICKY FILTER BAR ── */
   .tools-sticky-bar {
-    position: sticky;
-    top: 60px; /* height of mpw-site-nav */
+    position: fixed;
+    top: 60px; /* below mpw-site-nav */
+    left: 0;
+    right: 0;
     z-index: 500;
-    background: rgba(13,13,26,0.95);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-    padding: 12px 24px 14px;
+    background: rgba(10,10,18,0.97);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-bottom: 1px solid rgba(255,255,255,0.09);
+    padding: 10px 24px 12px;
+    transform: translateY(-120%);
+    transition: transform 0.22s ease;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+  .tools-sticky-bar.visible {
+    transform: translateY(0);
   }
   .tools-sticky-inner {
     max-width: 1180px;
@@ -498,6 +506,16 @@
       padding: 4px 10px;
     }
   }
+
+
+  /* When sticky filter bar is visible, offset main content */
+  .tools-sticky-bar.visible ~ .hub-zone2,
+  .tools-sticky-bar.visible ~ .tools-main-outer {
+    /* Fixed bars don't push content — users expect this behavior */
+  }
+  /* The bar appears above — ensure z-index is correct */
+  .hub-zone2 { position: relative; z-index: 1; }
+  .tools-main-outer { position: relative; z-index: 1; }
 
 </style>
 <style>
@@ -1424,5 +1442,23 @@ nav.mpw-site-nav .nav-mob span{display:block!important;width:22px!important;heig
   .hub-flagship-grid{grid-template-columns:1fr 1fr!important}
 }
 </style>
+
+<script>
+(function(){
+  var bar = document.getElementById('toolsStickyBar');
+  var hero = document.querySelector('.tools-hero');
+  if(!bar || !hero) return;
+  function onScroll(){
+    var heroBottom = hero.getBoundingClientRect().bottom;
+    if(heroBottom <= 60){
+      bar.classList.add('visible');
+    } else {
+      bar.classList.remove('visible');
+    }
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+})();
+</script>
 </body>
 </html>
