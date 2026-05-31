@@ -383,7 +383,10 @@ body.embed-mode{padding-top:0!important}
 <style>#backToTop{display:none!important}</style>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style id="mpw-unav-css">
+
 .mnav-wrap,.usearch{--ink:#09090d;--panel:#0f0f18;--panel2:#15151f;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);--amber:#f5a623;--teal:#00e8a2;--teal-d:rgba(0,232,162,.12);--text:#f2f2f7;--t2:#9a9ab2;--t3:#56566f;--sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'DM Mono',ui-monospace,SFMono-Regular,monospace;}
+.mnav-wrap *,.mnav-wrap *::before,.mnav-wrap *::after,.usearch *,.usearch *::before,.usearch *::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#060609;color:var(--text);font-family:var(--sans);padding:30px 20px 90px;-webkit-font-smoothing:antialiased}
 .mnav-wrap{background:var(--ink);border-bottom:1px solid var(--line);position:relative}
 .mnav{height:60px;display:flex;align-items:center}
 .mnav-in{max-width:1180px;margin:0 auto;padding:0 22px;width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
@@ -437,6 +440,7 @@ body.embed-mode{padding-top:0!important}
 .mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(2){opacity:0}
 .mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
 @media(max-width:860px){.mnav-links,.mnav-cta{display:none}.mnav-burger{display:flex}}
+
 /* ===== UNIFIED SEARCH OVERLAY ===== */
 .usearch{position:fixed;inset:0;z-index:10000;display:none;background:rgba(6,6,11,.78);backdrop-filter:blur(6px);padding:80px 20px 20px}
 .usearch.open{display:block}
@@ -456,10 +460,44 @@ body.embed-mode{padding-top:0!important}
 .ur-cat[data-c="Bible"]{background:rgba(245,166,35,.18);color:#f5a623;border:1px solid rgba(245,166,35,.4)}
 .ur-desc{color:var(--t2);font-size:12.5px;line-height:1.45;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .usearch-empty{padding:30px;text-align:center;color:var(--t3);font-size:13.5px}
+/* --- sticky-header + entry-page chrome (pilot, refined for density) ---
+   entry nav = 60px main bar only (no category sub-bar). Desktop: hide the horizontal section
+   nav (the sticky sidebar TOC covers sections) and retune offsets to the 60px nav. Mobile: the
+   sidebar is hidden, so SHOW the section nav flush under the bar. All in THIS block. --- */
+.mnav-wrap{position:sticky;top:0;z-index:1000;line-height:1.4}
+.entry-nav{display:none}
+[id].entry-section{scroll-margin-top:90px}
+.entry-main h2{scroll-margin-top:90px}
+.entry-sidebar{top:78px;height:calc(100vh - 98px)}
+@media(max-width:768px){
+  .entry-nav{display:block!important;top:60px!important}
+  [id].entry-section{scroll-margin-top:130px!important}
+  .entry-main h2{scroll-margin-top:130px!important}
+}
+/* dropdown overflow safety */
+.mnav-panel,.mnav-panel-wide{max-height:min(72vh,560px);overflow-y:auto}
+/* mobile drawer: category CARD grid (slick old-nav look), CSS-only */
+.mnav-drawer{padding:10px 18px 18px;gap:0}
+.drw-label{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--t3);margin:12px 2px 8px}
+.drw-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.drw-card{display:flex;align-items:center;padding:12px 14px;border-radius:10px;text-decoration:none;font-size:13.5px;font-weight:600;color:var(--text);background:var(--panel);border:1px solid var(--line2)}
+.drw-card:hover{border-color:var(--teal);color:var(--teal)}
+.drw-feat{display:flex;align-items:center;gap:8px;padding:13px 16px;border-radius:10px;text-decoration:none;font-size:14px;font-weight:700;color:var(--text);background:var(--panel);border:1px solid var(--line2);margin-top:8px}
+.drw-feat-bible{color:#f5a623;background:rgba(245,166,35,.08);border-color:rgba(245,166,35,.30)}
+.drw-feat-bible:hover{border-color:rgba(245,166,35,.6)}
+.drw-cta{display:block;text-align:center;padding:14px;border-radius:10px;background:var(--teal);color:#06281f;font-weight:800;font-size:14px;text-decoration:none;margin-top:12px}
+/* mobile sunlight legibility: lift the intentionally-dim greys in glare (nav + search only), scoped */
+@media(max-width:860px){
+  .mnav-wrap,.usearch{--t2:#c8c8da;--t3:#9696b0}
+  .drw-label{color:#bdbdd0;font-weight:500}
+  .usearch-top input::placeholder{color:#9696b0}
+  .drw-card,.drw-feat{background:#20202e;border:1.5px solid #45455c}
+  .drw-feat-bible{background:rgba(245,166,35,.12);border:1.5px solid rgba(245,166,35,.6)}
+}
 </style>
 </head>
 <body>
-<div class="demo-frame"><div class="demo-label"><b>Tools hub</b></div><div class="mnav-wrap" data-section="tools">
+<div class="mnav-wrap" data-section="tools">
   <input type="checkbox" id="mnav-toggle" class="mnav-toggle" aria-hidden="true">
   <nav class="mnav" aria-label="Main navigation">
     <div class="mnav-in">
@@ -477,12 +515,20 @@ body.embed-mode{padding-top:0!important}
       </div>
     </div>
   </nav>
-  <div class="mnav-drawer"><details open><summary>Articles</summary><div class="mnav-acc"><a href="/categories/techniques">Techniques</a><a href="/categories/reviews">Reviews</a><a href="/categories/comparisons">Comparisons</a><a href="/categories/breakdowns">Breakdowns</a><a href="/categories/recreations">Recreations</a><a href="/genres">Genres</a><a href="/categories/ai-music">AI Music</a><a href="/categories/music-business">Music Business</a></div></details>
-    <details><summary>Gear</summary><div class="mnav-acc"><a href="/categories/daws">DAWs</a><a href="/categories/plugins">Plugins</a><a href="/categories/gear">Hardware</a></div></details>
-    <a class="drw-link" href="/tools/">Tools</a><a class="drw-link" data-nav="bible" href="/bible/">The Bible</a>
-    <a class="drw-cta" href="https://theproducersbriefing.beehiiv.com">Sound Better &rarr;</a></div>
-  <div class="mnav-sub"><div class="mnav-sub-in"><a href="/bible/categories/dynamics">Dynamics</a><a href="/bible/categories/frequency">Frequency</a><a href="/bible/categories/mastering">Mastering</a><a href="/bible/categories/mixing">Mixing</a><a href="/bible/categories/music-theory">Music Theory</a><a href="/bible/categories/production">Production</a><a href="/bible/categories/recording">Recording</a><a href="/bible/categories/signal-processing">Signal Processing</a><a href="/bible/categories/synthesis">Synthesis</a><a href="/bible/categories/time-based">Time-Based</a><a href="/bible/categories/tools">Tools</a></div></div>
-</div><div class="demo-page"><div class="demo-h1">The Producer's Tools</div></div></div>
+  <div class="mnav-drawer">
+    <div class="drw-label">Articles</div>
+    <div class="drw-grid">
+      <a href="/categories/techniques" class="drw-card">Techniques</a><a href="/categories/reviews" class="drw-card">Reviews</a><a href="/categories/comparisons" class="drw-card">Comparisons</a><a href="/categories/breakdowns" class="drw-card">Breakdowns</a><a href="/categories/recreations" class="drw-card">Recreations</a><a href="/genres" class="drw-card">Genres</a><a href="/categories/ai-music" class="drw-card">AI Music</a><a href="/categories/music-business" class="drw-card">Music Business</a>
+    </div>
+    <div class="drw-label">Gear</div>
+    <div class="drw-grid">
+      <a href="/categories/daws" class="drw-card">DAWs</a><a href="/categories/plugins" class="drw-card">Plugins</a><a href="/categories/gear" class="drw-card">Hardware</a>
+    </div>
+    <a href="/bible/" class="drw-feat drw-feat-bible">&#9670; The Producer's Bible</a>
+    <a href="/tools/" class="drw-feat">The Producer's Tools</a>
+    <a href="https://theproducersbriefing.beehiiv.com" class="drw-cta">Sound Better &rarr;</a>
+  </div>
+</div>
 
 <main id="main-content">
   <div class="tool-page-wrap">
@@ -787,7 +833,6 @@ dlyCalc();
     <div class="usearch-results" id="usearchResults"></div>
   </div>
 </div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
 <script>
 (function(){
