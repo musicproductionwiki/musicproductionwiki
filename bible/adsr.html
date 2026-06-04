@@ -717,100 +717,233 @@
 /* Entry nav scroll fix v2 — margin:0 removes centering, padding-right forces overflow */
 .entry-nav-inner{margin:0!important;padding-left:16px!important;padding-right:48px!important}
 </style>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style id="mpw-bible-nav-css">
+/* ============================================================================
+   The Producer's Bible nav — own standard ("bi-universal"), S97 render-safe rebuild.
+   Single source of truth; stamped identically on all Bible entries.
+   Design = locked (slim 40px bar + centered Producer's Bible band + JS drawer).
+   The S97 fix vs the S96 broken pilot:
+     - everything is namespaced bnav-*  (was: mpw-slim-bar/bible-bar/bb-cats/bmn-drawer,
+       which COLLIDE with the page's own inline old-nav CSS + style.css -> killed centering
+       and let the page's .msb-logomark{background:#00e8a2} green square bleed onto the logo)
+     - one wrapper .bnav-wrap{display:contents} carries a zero-specificity :where() shield
+       (mirrors the proven .mnav-wrap pattern) so host style.css / inline old-nav CSS cannot
+       reach in; display:contents keeps the two sticky bars sticking to the viewport, not the wrapper
+     - search = the SITEWIDE homepage usearch (ported verbatim), NOT the per-page search
+     - exactly ONE mobile drawer (.bnav-drawer); the page's old drawer is stripped by the transform
+   ============================================================================ */
+
+/* sticky safety (S87): a page's own overflow-x:hidden on html/body silently kills position:sticky.
+   clip (not hidden) keeps no-horizontal-scroll WITHOUT making the root a scroll container. */
+html{overflow-x:clip!important;max-width:none!important}
+body{overflow-x:clip!important}
+
+/* tokens + reset + host-CSS shield — scoped to .bnav-wrap,.usearch (lifted from the live homepage) */
+.bnav-wrap,.usearch{--ink:#09090d;--panel:#0f0f18;--panel2:#15151f;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);--amber:#f5a623;--teal:#00e8a2;--teal-d:rgba(0,232,162,.12);--text:#f2f2f7;--t2:#9a9ab2;--t3:#56566f;--sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'DM Mono',ui-monospace,SFMono-Regular,monospace}
+.bnav-wrap *,.bnav-wrap *::before,.bnav-wrap *::after,.usearch *,.usearch *::before,.usearch *::after{box-sizing:border-box;margin:0;padding:0}
+.bnav-wrap,.usearch{font-family:var(--sans);font-size:14px;font-weight:400;font-style:normal;line-height:1.4;letter-spacing:normal;color:var(--text);text-align:left;text-transform:none}
+:where(.bnav-wrap,.usearch) a{color:inherit;text-decoration:none;background:none;border:0;font:inherit;letter-spacing:inherit}
+:where(.bnav-wrap,.usearch) ul,:where(.bnav-wrap,.usearch) ol{list-style:none;margin:0;padding:0;border:0}
+:where(.bnav-wrap,.usearch) li{margin:0;padding:0;border:0;font-size:inherit;line-height:inherit;color:inherit;background:none}
+:where(.bnav-wrap,.usearch) h1,:where(.bnav-wrap,.usearch) h2,:where(.bnav-wrap,.usearch) h3,:where(.bnav-wrap,.usearch) h4,:where(.bnav-wrap,.usearch) h5,:where(.bnav-wrap,.usearch) h6,:where(.bnav-wrap,.usearch) p{margin:0;padding:0;border:0;font:inherit;color:inherit;line-height:inherit;letter-spacing:inherit;text-transform:none}
+:where(.bnav-wrap,.usearch) button{font:inherit;color:inherit;background:none;border:0;letter-spacing:inherit;text-align:inherit}
+:where(.bnav-wrap,.usearch) svg{display:inline-block;vertical-align:middle}
+:where(.bnav-wrap,.usearch) img{max-width:none}
+
+/* wrapper generates no box -> the two sticky bars stick to the viewport (not to a short wrapper) */
+.bnav-wrap{display:contents}
+
+/* ── Slim bar (40px) ── */
+.bnav-slim{position:sticky;top:0;z-index:700;background:#181818;border-bottom:1px solid rgba(255,255,255,0.07);height:40px;display:flex;align-items:center;padding:0 20px;gap:0}
+.bnav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;margin-right:24px}
+.bnav-logomark{width:22px;height:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:none;border-radius:0}
+.bnav-name{font-size:11px;font-weight:500;color:#777;letter-spacing:-0.01em}
+.bnav-links{display:flex;align-items:center;gap:0;list-style:none;flex:1}
+.bnav-links a{color:#666;text-decoration:none;font-size:11.5px;padding:4px 10px;border-radius:4px;white-space:nowrap}
+.bnav-links a:hover{color:#bbb;background:rgba(255,255,255,.05)}
+.bnav-pub{font-size:10.5px;color:#8a8a9a;font-style:italic;margin-left:auto;white-space:nowrap;padding-right:8px}
+.bnav-search{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:5px;background:none;border:none;cursor:pointer;color:#c8c8da;flex-shrink:0}
+.bnav-search:hover{color:#ffffff;background:rgba(255,255,255,.07)}
+.bnav-cta{border:1px solid #00e8a2;color:#00e8a2;text-decoration:none;padding:4px 12px;border-radius:8px;font-size:11.5px;font-weight:600;white-space:nowrap;flex-shrink:0;margin-left:14px}
+.bnav-cta:hover{background:rgba(0,232,162,.12)}
+.bnav-mob{display:none;background:none;border:none;cursor:pointer;padding:6px;flex-direction:column;gap:4px;flex-shrink:0;margin-left:8px}
+.bnav-mob span{display:block;width:20px;height:2px;background:#999;border-radius:2px}
+
+/* ── Bible bar (50px, centered) ── */
+.bnav-bible{position:sticky;top:40px;z-index:600;background:#0d0800;border-bottom:2px solid #f5a623;height:50px;display:flex;align-items:center;justify-content:center;padding:0 20px;gap:12px}
+.bnav-identity{display:flex;align-items:center;gap:8px;flex-shrink:0;text-decoration:none}
+.bnav-diamond{color:#f5a623;font-size:14px;line-height:1}
+.bnav-title{font-size:14px;font-weight:800;color:#f5a623;letter-spacing:.01em;white-space:nowrap}
+.bnav-divider{width:1px;height:22px;background:rgba(245,166,35,.25);flex-shrink:0}
+.bnav-cats{display:flex;align-items:center;gap:4px;overflow:hidden}
+.bnav-cat{font-size:11px;color:#c8c8da;text-decoration:none;padding:4px 10px;border-radius:20px;border:1px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s,background .15s}
+.bnav-cat:hover,.bnav-cat.active{color:#f5a623;border-color:rgba(245,166,35,.5);background:rgba(245,166,35,.07);font-weight:600}
+
+/* ── Mobile drawer (JS toggle) — card grid: every section two-column ── */
+.bnav-drawer{display:none;position:fixed;top:40px;left:0;right:0;bottom:0;background:rgba(10,10,11,0.99);z-index:699;overflow-y:auto;padding:14px 16px 22px;border-top:1px solid rgba(255,255,255,0.09);flex-direction:column;gap:0}
+.bnav-drawer.open{display:flex}
+.bnav-drawer-bible{display:flex;align-items:center;gap:8px;padding:13px 16px;border-radius:10px;background:rgba(245,166,35,0.08);border:1px solid rgba(245,166,35,0.30);color:#f5a623;font-size:14px;font-weight:700;text-decoration:none;margin-bottom:4px}
+.bnav-drawer-dot{width:6px;height:6px;border-radius:50%;background:#f5a623;display:inline-block;flex-shrink:0}
+.bnav-drawer-label{font-size:10px;font-family:var(--mono);color:#6a6a7a;text-transform:uppercase;letter-spacing:.13em;margin:14px 2px 8px}
+.bnav-drawer-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+/* gray cards — Articles, Gear, Site (matches the live MPW mobile-nav .drw-card gray) */
+.bnav-drawer-card{display:flex;align-items:center;padding:12px 14px;border-radius:10px;text-decoration:none;font-size:13.5px;font-weight:600;color:#f2f2f7;background:#20202e;border:1.5px solid #45455c}
+.bnav-drawer-card:hover{border-color:#00e8a2;color:#00e8a2}
+/* amber cards — the Bible's own categories */
+.bnav-drawer-cat{display:flex;align-items:center;padding:12px 14px;border-radius:10px;text-decoration:none;font-size:13.5px;font-weight:600;color:#f5a623;background:rgba(245,166,35,0.07);border:1px solid rgba(245,166,35,0.28)}
+.bnav-drawer-cat:hover{background:rgba(245,166,35,0.14);border-color:rgba(245,166,35,0.6)}
+/* CTA — matches the slim-bar .bnav-cta (outline green) */
+.bnav-drawer-cta{display:block;border:1px solid #00e8a2;color:#00e8a2;background:none;font-weight:600;font-size:13.5px;padding:13px 16px;border-radius:10px;text-decoration:none;text-align:center;margin-top:16px}
+.bnav-drawer-cta:hover{background:rgba(0,232,162,.12)}
+
+/* ── Search overlay (sitewide usearch, identical to homepage) ── */
+.usearch{position:fixed;inset:0;z-index:10000;display:none;background:rgba(6,6,11,.78);backdrop-filter:blur(6px);padding:80px 20px 20px}
+.usearch.open{display:block}
+.usearch-box{max-width:620px;margin:0 auto;background:var(--panel);border:1px solid var(--line2);border-radius:16px;overflow:hidden;box-shadow:0 40px 90px -30px rgba(0,0,0,.95)}
+.usearch-top{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.usearch-top svg{color:var(--t3);flex:0 0 auto}
+.usearch-top input{flex:1;background:none;border:0;outline:none;color:var(--text);font-family:var(--sans);font-size:17px}
+.usearch-top input::placeholder{color:var(--t3)}
+.usearch-top kbd{font-family:var(--mono);font-size:11px;color:var(--t3);border:1px solid var(--line2);border-radius:6px;padding:2px 7px}
+.usearch-results{max-height:56vh;overflow-y:auto;padding:8px}
+.usearch-results a{display:block;padding:11px 14px;border-radius:10px;text-decoration:none;transition:background .12s}
+.usearch-results a:hover,.usearch-results a.sel{background:rgba(255,255,255,.05)}
+.ur-top{display:flex;align-items:baseline;gap:9px}
+.ur-title{color:var(--text);font-size:14.5px;font-weight:600}
+.ur-cat{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.06);color:var(--t2);flex:0 0 auto}
+.ur-cat[data-c="Tools"]{background:var(--teal-d);color:var(--teal);border:1px solid rgba(0,232,162,.4)}
+.ur-cat[data-c="Bible"]{background:rgba(245,166,35,.18);color:#f5a623;border:1px solid rgba(245,166,35,.4)}
+.ur-desc{color:var(--t2);font-size:12.5px;line-height:1.45;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.usearch-empty{padding:30px;text-align:center;color:var(--t3);font-size:13.5px}
+
+/* ── Mobile (<=860px): hamburger + drawer; collapse desktop links/pub/cta/pills ── */
+@media(max-width:860px){
+  .bnav-links,.bnav-pub,.bnav-cta{display:none}
+  .bnav-logo{margin-right:auto}
+  .bnav-mob{display:flex}
+  .bnav-cats{display:none}
+  .bnav-wrap,.usearch{--t2:#c8c8da;--t3:#9696b0}
+  .usearch-top input::placeholder{color:#9696b0}
+  /* S98 mobile refinements: 42px slim bar + re-chained sticky offsets + drawer buffer + larger branding */
+  .bnav-slim{height:42px}
+  .bnav-bible{top:42px}
+  .bnav-drawer{top:42px;padding-top:20px}
+  .bnav-logomark,.bnav-logomark svg{width:26px;height:26px}
+  .bnav-name{font-size:12.5px}
+}
+</style>
 </head>
 <body>
+<div class="bnav-wrap">
+  <div class="bnav-slim">
+    <a href="/" class="bnav-logo" aria-label="MusicProductionWiki home">
+      <span class="bnav-logomark"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="6" stroke="#f5a623" stroke-width="1.7"/><path d="M7 15V9l3 3 3-5 4 8" stroke="#00e8a2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span class="bnav-name">MusicProductionWiki</span>
+    </a>
+    <ul class="bnav-links" role="list">
+      <li><a href="/categories/techniques.html">Articles</a></li>
+      <li><a href="/categories/hardware.html">Gear</a></li>
+      <li><a href="/about.html">About</a></li>
+      <li><a href="/tools/">Tools</a></li>
+    </ul>
+    <span class="bnav-pub">A MusicProductionWiki Publication</span>
+    <button class="bnav-search" data-nav-search aria-label="Search (Ctrl+K)">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+    <a href="https://theproducersbriefing.beehiiv.com" class="bnav-cta" target="_blank" rel="noopener">Sound Better →</a>
+    <button class="bnav-mob" id="bnavToggle" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </div>
+  <div class="bnav-bible">
+    <a href="/bible/" class="bnav-identity">
+      <span class="bnav-diamond">◆</span>
+      <span class="bnav-title">The Producer's Bible</span>
+    </a>
+    <div class="bnav-divider"></div>
+    <div class="bnav-cats">
+      <a class="bnav-cat" href="/bible/categories/dynamics/">Dynamics</a>
+      <a class="bnav-cat" href="/bible/categories/frequency/">Frequency</a>
+      <a class="bnav-cat" href="/bible/categories/time-based/">Time-Based</a>
+      <a class="bnav-cat" href="/bible/categories/signal-processing/">Signal Processing</a>
+      <a class="bnav-cat" href="/bible/categories/mixing/">Mixing</a>
+      <a class="bnav-cat" href="/bible/categories/mastering/">Mastering</a>
+      <a class="bnav-cat" href="/bible/categories/synthesis/">Synthesis</a>
+      <a class="bnav-cat" href="/bible/categories/music-theory/">Music Theory</a>
+      <a class="bnav-cat" href="/bible/categories/production/">Production</a>
+      <a class="bnav-cat" href="/bible/categories/recording/">Recording</a>
+      <a class="bnav-cat" href="/bible/categories/tools/">Tools</a>
+    </div>
+  </div>
+  <div class="bnav-drawer" id="bnavDrawer" role="dialog" aria-label="Navigation menu">
+    <a href="/bible/" class="bnav-drawer-bible">
+      <span class="bnav-drawer-dot"></span>
+      The Producer's Bible
+    </a>
+    <div class="bnav-drawer-label">Bible Categories</div>
+    <div class="bnav-drawer-grid">
+      <a class="bnav-drawer-cat" href="/bible/categories/dynamics/">Dynamics</a>
+      <a class="bnav-drawer-cat" href="/bible/categories/frequency/">Frequency</a>
+      <a class="bnav-drawer-cat" href="/bible/categories/time-based/">Time-Based</a>
+      <a class="bnav-drawer-cat" href="/bible/categories/signal-processing/">Signal Proc.</a>
+      <a class="bnav-drawer-cat" href="/bible/categories/mixing/">Mixing</a>
+      <a class="bnav-drawer-cat" href="/bible/categories/mastering/">Mastering</a>
+      <a class="bnav-drawer-cat" href="/bible/categories/synthesis/">Synthesis</a>
+      <a class="bnav-drawer-cat" href="/bible/categories/music-theory/">Music Theory</a>
+      <a class="bnav-drawer-cat" href="/bible/categories/production/">Production</a>
+      <a class="bnav-drawer-cat" href="/bible/categories/recording/">Recording</a>
+      <a class="bnav-drawer-cat" href="/bible/categories/tools/">Tools</a>
+    </div>
+    <div class="bnav-drawer-label">Articles</div>
+    <div class="bnav-drawer-grid">
+      <a class="bnav-drawer-card" href="/categories/techniques.html">Techniques</a>
+      <a class="bnav-drawer-card" href="/categories/reviews.html">Reviews</a>
+      <a class="bnav-drawer-card" href="/categories/comparisons.html">Comparisons</a>
+      <a class="bnav-drawer-card" href="/categories/breakdowns.html">Breakdowns</a>
+      <a class="bnav-drawer-card" href="/genres.html">Genres</a>
+      <a class="bnav-drawer-card" href="/categories/ai-music.html">AI Music</a>
+      <a class="bnav-drawer-card" href="/categories/music-business.html">Music Business</a>
+    </div>
+    <div class="bnav-drawer-label">Gear</div>
+    <div class="bnav-drawer-grid">
+      <a class="bnav-drawer-card" href="/categories/daws.html">DAWs</a>
+      <a class="bnav-drawer-card" href="/categories/plugins.html">Plugins</a>
+      <a class="bnav-drawer-card" href="/categories/hardware.html">Hardware</a>
+    </div>
+    <div class="bnav-drawer-label">Site</div>
+    <div class="bnav-drawer-grid">
+      <a class="bnav-drawer-card" href="/tools/">Tools</a>
+      <a class="bnav-drawer-card" href="/about.html">About</a>
+    </div>
+    <a href="https://theproducersbriefing.beehiiv.com" class="bnav-drawer-cta" target="_blank" rel="noopener">Sound Better →</a>
+  </div>
+</div>
+<div class="usearch" id="usearch" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="usearch-box">
+    <div class="usearch-top">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input id="usearchInput" type="text" placeholder="Search tools, articles, the Bible…" autocomplete="off">
+      <kbd>esc</kbd>
+    </div>
+    <div class="usearch-results" id="usearchResults"></div>
+  </div>
+</div>
 
 <div id="reading-progress"></div>
 
 <!-- MPW Slim Bar -->
-<div class="mpw-slim-bar">
-  <a href="/" class="msb-logo" aria-label="MusicProductionWiki home">
-    <div class="msb-logomark">
-      <svg width="14" height="14" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-        <rect x="1.5" y="7" width="2.5" height="9" rx="1.2" fill="#0a0a0b"/>
-        <rect x="6" y="4" width="2.5" height="12" rx="1.2" fill="#0a0a0b"/>
-        <rect x="10.5" y="1" width="2.5" height="16" rx="1.2" fill="#0a0a0b"/>
-        <rect x="15" y="5" width="2.5" height="9" rx="1.2" fill="#0a0a0b"/>
-      </svg>
-    </div>
-    <span class="msb-name">MusicProductionWiki</span>
-  </a>
-  <ul class="msb-links" role="list">
-    <li><a href="/categories/techniques.html">Articles</a></li>
-    <li><a href="/categories/gear.html">Gear</a></li>
-    <li><a href="/about.html">About</a></li>
-  </ul>
-  <span class="msb-pub">A MusicProductionWiki Publication</span>
-  <button class="msb-search" id="bmnSearchBtn" aria-label="Open search">
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-  </button>
-  <a href="https://theproducersbriefing.beehiiv.com" class="msb-cta">Sound Better →</a>
-  <button class="msb-mob" id="bmnMob" aria-label="Toggle menu">
-    <span></span><span></span><span></span>
-  </button>
-</div>
+
 
 <!-- Bible Bar -->
-<div class="bible-bar">
-  <a href="/bible/" class="bb-identity">
-    <span class="bb-diamond">◆</span>
-    <span class="bb-title">The Producer's Bible</span>
-  </a>
-  <div class="bb-divider"></div>
-  <nav class="bb-cats" aria-label="Bible categories">
-    <a href="/bible/categories/dynamics" class="bb-cat">Dynamics</a>
-    <a href="/bible/categories/frequency" class="bb-cat">Frequency</a>
-    <a href="/bible/categories/time-based" class="bb-cat">Time-Based</a>
-    <a href="/bible/categories/signal-processing" class="bb-cat">Signal Processing</a>
-    <a href="/bible/categories/mixing" class="bb-cat">Mixing</a>
-    <a href="/bible/categories/mastering" class="bb-cat">Mastering</a>
-    <a href="/bible/categories/synthesis" class="bb-cat active">Synthesis</a>
-    <a href="/bible/categories/music-theory" class="bb-cat">Music Theory</a>
-  </nav>
-  <a href="/bible/index.html" class="bb-all">All entries →</a>
-</div>
+
 
 <!-- Mobile drawer -->
-<div class="bmn-drawer" id="bmnDrawer" role="dialog" aria-label="Navigation menu">
-  <a href="/bible/" class="bmn-drawer-bible">◆ The Producer's Bible</a>
-  <div class="bmn-drawer-label">Browse The Bible</div>
-  <div class="bmn-drawer-cats">
-    <a href="/bible/categories/dynamics" class="bmn-drawer-cat">Dynamics</a>
-    <a href="/bible/categories/frequency" class="bmn-drawer-cat">Frequency</a>
-    <a href="/bible/categories/time-based" class="bmn-drawer-cat">Time-Based</a>
-    <a href="/bible/categories/signal-processing" class="bmn-drawer-cat">Signal Processing</a>
-    <a href="/bible/categories/mixing" class="bmn-drawer-cat">Mixing</a>
-    <a href="/bible/categories/mastering" class="bmn-drawer-cat">Mastering</a>
-    <a href="/bible/categories/synthesis" class="bmn-drawer-cat">Synthesis</a>
-    <a href="/bible/categories/music-theory" class="bmn-drawer-cat">Music Theory</a>
-  </div>
-  <a href="/bible/" style="font-size:13px;color:#f5a623;padding:6px 12px;display:block">All entries →</a>
-  <div class="bmn-drawer-label">Articles</div>
-  <div class="bmn-drawer-cats">
-    <a href="/categories/techniques.html" class="bmn-drawer-cat">Techniques</a>
-    <a href="/categories/reviews.html" class="bmn-drawer-cat">Reviews</a>
-    <a href="/categories/comparisons.html" class="bmn-drawer-cat">Comparisons</a>
-    <a href="/categories/breakdowns.html" class="bmn-drawer-cat">Breakdowns</a>
-    <a href="/categories/gear.html" class="bmn-drawer-cat">Hardware</a>
-    <a href="/about.html" class="bmn-drawer-cat">About</a>
-  </div>
-  <a href="https://theproducersbriefing.beehiiv.com" class="bmn-drawer-cta">Sound Better →</a>
-</div>
+
 
 <!-- Mobile bible bar -->
 <div class="bible-mobile-bar" aria-hidden="true">The Producer's Bible</div>
 
 <!-- Search overlay -->
-<div id="bibleSearchOverlay" role="dialog" aria-modal="true" aria-label="Search">
-  <div class="bso-box">
-    <div class="bso-input-wrap">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="#666" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="#666" stroke-width="1.5" stroke-linecap="round"/></svg>
-      <input id="bibleSearchInput" type="text" placeholder="Search articles and Bible entries…" autocomplete="off" spellcheck="false" aria-label="Search">
-      <span style="font-size:11px;color:#555;white-space:nowrap;flex-shrink:0">ESC to close</span>
-    </div>
-    <div id="bibleSearchResults" role="listbox"></div>
-  </div>
-</div>
+
 
 <nav class="entry-nav" aria-label="Entry sections">
   <div class="entry-nav-inner">
@@ -1848,24 +1981,7 @@ function dawTab(btn, daw) {
   }
 })();
 
-(function(){
-  var overlay = document.getElementById('bibleSearchOverlay');
-  var input   = document.getElementById('bibleSearchInput');
-  var results = document.getElementById('bibleSearchResults');
-  var sBtn    = document.getElementById('bmnSearchBtn');
-  var index   = null;
-  function openSearch(){ overlay.style.display='flex'; setTimeout(function(){ input&&input.focus(); },50); if(!index) fetch('/bible-index.json').then(function(r){return r.json();}).then(function(d){index=d;}).catch(function(){}); }
-  function closeSearch(){ overlay.style.display='none'; if(results) results.innerHTML=''; }
-  if(sBtn) sBtn.addEventListener('click', openSearch);
-  document.addEventListener('keydown', function(e){ if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();openSearch();} if(e.key==='Escape') closeSearch(); });
-  if(overlay) overlay.addEventListener('click', function(e){ if(e.target===overlay) closeSearch(); });
-  if(input) input.addEventListener('input', function(){
-    var q=input.value.trim().toLowerCase();
-    if(!q||!index||!results){results.innerHTML='';return;}
-    var hits=index.filter(function(e){return e.term.toLowerCase().includes(q)||(e.category||'').toLowerCase().includes(q);}).slice(0,8);
-    results.innerHTML=hits.map(function(e){return '<a href="/bible/'+e.slug+'" style="display:block;padding:10px 16px;color:#e0e0f0;text-decoration:none;border-radius:6px;font-size:14px"><strong>'+e.term+'</strong> <span style="color:#666;font-size:12px">'+e.category+'</span></a>';}).join('');
-  });
-})();
+
 
 var _gateAsset = 'full';
 // EMAIL GATE bypassed — downloads fire directly (TODO P3.5: Kit/Brevo API)
@@ -1981,4 +2097,57 @@ function helpfulSubmit(){
 })();
 </script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
+<script>
+/* drawer toggle — kept JS, pushState/popstate, null-guarded, DOM API only */
+(function(){
+  var t=document.getElementById('bnavToggle'), d=document.getElementById('bnavDrawer');
+  if(!t||!d) return;
+  t.addEventListener('click',function(){ var open=d.classList.toggle('open'); if(open) history.pushState({bnav:1},''); });
+  window.addEventListener('popstate',function(){ d.classList.remove('open'); });
+  d.querySelectorAll('a').forEach(function(a){ a.addEventListener('click',function(){ d.classList.remove('open'); }); });
+})();
+/* sitewide search — ported verbatim from the homepage usearch (createElement only, no main.js) */
+(function(){
+  var data=null, fuse=null;
+  var overlay=document.getElementById('usearch');
+  var input=document.getElementById('usearchInput');
+  var box=document.getElementById('usearchResults');
+  var sel=-1, current=[];
+  function urlFor(s){ return (s.indexOf('bible/')===0||s.indexOf('tools/')===0) ? '/'+s : '/articles/'+s; }
+  function buildFuse(arr){ data=arr; fuse=new Fuse(data,{keys:['title','category','description'],threshold:0.34,ignoreLocation:true,minMatchCharLength:2}); }
+  function ensureIndex(cb){
+    if(fuse){cb();return;}
+    fetch('/search-index.json').then(function(r){return r.json();}).then(function(arr){ buildFuse(arr); cb(); }).catch(function(){ box.textContent='Search failed to load.'; });
+  }
+  function render(results){
+    current=results;
+    while(box.firstChild) box.removeChild(box.firstChild);
+    if(!input.value.trim()){ var p=document.createElement('div'); p.className='usearch-empty'; p.textContent='Start typing to search everything.'; box.appendChild(p); return; }
+    if(!results.length){ var n=document.createElement('div'); n.className='usearch-empty'; n.textContent='No results for "'+input.value+'".'; box.appendChild(n); return; }
+    results.slice(0,12).forEach(function(r,i){
+      var e=r.item||r;
+      var a=document.createElement('a'); a.href=urlFor(e.slug); if(i===sel)a.className='sel';
+      var top=document.createElement('div'); top.className='ur-top';
+      var t=document.createElement('span'); t.className='ur-title'; t.textContent=e.title;
+      var c=document.createElement('span'); c.className='ur-cat'; c.setAttribute('data-c',e.category||''); c.textContent=e.category||'';
+      top.appendChild(t); top.appendChild(c); a.appendChild(top);
+      if(e.description){ var d=document.createElement('div'); d.className='ur-desc'; d.textContent=e.description; a.appendChild(d); }
+      box.appendChild(a);
+    });
+  }
+  function open(q){ ensureIndex(function(){ overlay.classList.add('open'); input.focus(); if(q!=null){input.value=q;} sel=-1; render(input.value?fuse.search(input.value):[]); }); }
+  function close(){ overlay.classList.remove('open'); }
+  document.querySelectorAll('[data-nav-search]').forEach(function(b){ b.addEventListener('click',function(){open(null);}); });
+  input.addEventListener('input',function(){ sel=-1; render(fuse?fuse.search(input.value):[]); });
+  input.addEventListener('keydown',function(e){
+    if(e.key==='Escape')close();
+    else if(e.key==='ArrowDown'){e.preventDefault(); sel=Math.min(sel+1,Math.min(current.length,12)-1); render(current);}
+    else if(e.key==='ArrowUp'){e.preventDefault(); sel=Math.max(sel-1,0); render(current);}
+    else if(e.key==='Enter'&&current[sel]){ var e2=current[sel].item||current[sel]; location.href=urlFor(e2.slug); }
+  });
+  overlay.addEventListener('click',function(e){ if(e.target===overlay)close(); });
+  document.addEventListener('keydown',function(e){ if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();open(null);} });
+})();
+</script>
 </body></html>
