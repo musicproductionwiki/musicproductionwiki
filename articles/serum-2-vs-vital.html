@@ -293,14 +293,13 @@ null
 <style id="toc-bar-css">
 .toc-bar{display:none}
 @media (max-width: 900px){
-.toc-bar{display:block;position:sticky;top:60px;z-index:90;margin:0 0 1.25rem;background:var(--bg-void);border-top:1px solid var(--border-subtle);border-bottom:1px solid var(--border-default)}
-.toc-bar-track{display:flex;gap:.5rem;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:.6rem .85rem}
-.toc-bar-track::-webkit-scrollbar{display:none}
-.toc-bar-track a{flex:0 0 auto;display:inline-flex;align-items:center;gap:.4rem;white-space:nowrap;font-family:var(--font-mono,ui-monospace,monospace);font-size:.74rem;font-weight:500;letter-spacing:.02em;color:var(--text-secondary);text-decoration:none;border:1px solid var(--border-default);border-radius:99px;padding:.4rem .8rem;background:var(--bg-surface);transition:color .15s,border-color .15s,background .15s}
-.toc-bar-track a .n{font-size:.66rem;font-weight:700;color:var(--text-muted)}
-.toc-bar-track a.active{color:var(--teal);border-color:var(--teal);background:rgba(0,212,168,.10)}
-.toc-bar-track a.active .n{color:var(--teal)}
-.article-body h2[id]{scroll-margin-top:120px}
+.toc-bar{display:block;position:sticky;top:60px;z-index:400;margin:0 0 1.25rem;background:var(--bg-void);border-bottom:1px solid var(--border-default);overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(to right,#000 88%,transparent 100%);mask-image:linear-gradient(to right,#000 88%,transparent 100%)}
+.toc-bar::-webkit-scrollbar{display:none}
+.toc-bar-track{display:flex;gap:4px;padding:9px 10px;min-width:max-content}
+.toc-bar-track a{color:var(--text-secondary);text-decoration:none;font-family:var(--font-mono,ui-monospace,monospace);font-size:10px;text-transform:uppercase;letter-spacing:.05em;padding:6px 10px;border-radius:4px;white-space:nowrap;min-height:30px;display:inline-flex;align-items:center;transition:color .15s,background .15s}
+.toc-bar-track a:hover{color:var(--teal);background:var(--bg-elevated)}
+.toc-bar-track a.active{color:var(--teal);background:var(--bg-elevated)}
+.article-body h2[id]{scroll-margin-top:116px}
 }
 </style>
 </head>
@@ -1078,25 +1077,33 @@ function mpwFaqToggle(el) {
   var body=document.querySelector('.article-body');
   var track=document.getElementById('tocBarTrack');
   if(!body||!track)return;
+  var bar=track.parentElement;
   function slug(t,i){return (t.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''))||('section-'+i);}
+  function short(t){
+    t=t.trim();var cut=t.length;
+    [':',','].forEach(function(d){var i=t.indexOf(d);if(i>0)cut=Math.min(cut,i);});
+    var ia=t.toLowerCase().indexOf(' and ');if(ia>0)cut=Math.min(cut,ia);
+    var s=t.slice(0,cut).trim();
+    if(s.length>20)s=s.slice(0,19).replace(/\s+\S*$/,'')+'\u2026';
+    return s||t;
+  }
   var hs=[].slice.call(body.querySelectorAll('h2')), byId={};
   hs.forEach(function(h,i){
     if(!h.id)h.id=slug(h.textContent,i);
     var a=document.createElement('a');a.href='#'+h.id;
-    var n=document.createElement('span');n.className='n';n.textContent=('0'+(i+1)).slice(-2);
-    a.appendChild(n);a.appendChild(document.createTextNode(h.textContent));
+    a.textContent=short(h.textContent);a.setAttribute('aria-label',h.textContent.trim());
     track.appendChild(a);byId[h.id]=a;
   });
   function setActive(id){
-    var a=byId[id]; if(!a)return;
+    var a=byId[id];if(!a)return;
     for(var k in byId)byId[k].classList.remove('active');
     a.classList.add('active');
-    track.scrollTo({left:a.offsetLeft-(track.clientWidth/2)+(a.clientWidth/2),behavior:'smooth'});
+    bar.scrollTo({left:a.offsetLeft-(bar.clientWidth/2)+(a.clientWidth/2),behavior:'smooth'});
   }
   if('IntersectionObserver' in window){
     var io=new IntersectionObserver(function(es){
-      es.forEach(function(e){ if(e.isIntersecting) setActive(e.target.id); });
-    },{rootMargin:'-120px 0px -65% 0px',threshold:0});
+      es.forEach(function(e){if(e.isIntersecting)setActive(e.target.id);});
+    },{rootMargin:'-116px 0px -65% 0px',threshold:0});
     hs.forEach(function(h){io.observe(h);});
   }
 })();
