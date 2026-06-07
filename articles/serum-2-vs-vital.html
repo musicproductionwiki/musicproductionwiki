@@ -1077,29 +1077,6 @@ function mpwFaqToggle(el) {
   document.addEventListener('keydown',function(e){ if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();open(null);} });
 })();
 </script>
-<script id="cmp-spy">
-window.addEventListener('load', function(){
-  var list = document.querySelector('.toc-list');
-  if (!list) return;
-  function update(){
-    var ls = Array.prototype.slice.call(list.querySelectorAll('a[href^="#"]'));
-    if (!ls.length) return;
-    var offset = 120, curIdx = 0;
-    for (var i=0;i<ls.length;i++){
-      var el = document.getElementById(ls[i].getAttribute('href').slice(1));
-      if (el && el.getBoundingClientRect().top <= offset) curIdx = i;
-    }
-    for (var j=0;j<ls.length;j++){
-      var li = ls[j].parentElement;
-      if (li) li.classList.toggle('active', j === curIdx);
-    }
-  }
-  var ticking=false;
-  function onScroll(){ if(!ticking){ticking=true; requestAnimationFrame(function(){ticking=false; update();});} }
-  window.addEventListener('scroll', onScroll, {passive:true});
-  window.addEventListener('resize', onScroll, {passive:true});
-  update();
-});
-</script>
+<script id="cmp-spy">(function(){var links=Array.prototype.slice.call(document.querySelectorAll(".toc-list a[href^="#"]"));if(!links.length)return;var map=links.map(function(a){var el=document.getElementById(a.getAttribute("href").slice(1));return el?{a:a,el:el}:null}).filter(Boolean);if(!map.length)return;var ticking=false;function update(){ticking=false;var offset=130,cur=map[0].a;for(var i=0;i<map.length;i++){if(map[i].el.getBoundingClientRect().top<=offset)cur=map[i].a;}for(var j=0;j<links.length;j++){links[j].classList.toggle("active",links[j]===cur);}}function onScroll(){if(!ticking){ticking=true;window.requestAnimationFrame(update);}}window.addEventListener("scroll",onScroll,{passive:true});window.addEventListener("resize",onScroll,{passive:true});update();})();</script>
 </body>
 </html>
