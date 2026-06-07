@@ -290,21 +290,17 @@ null
 .toc-list li.active a:hover{color:var(--teal)}
 .toc-list li.active a::before{color:var(--teal)}
 </style>
-<style id="toc-mobile-css">
-.toc-mobile{display:none}
+<style id="toc-bar-css">
+.toc-bar{display:none}
 @media (max-width: 900px){
-.toc-mobile{display:block;margin:0 0 1.5rem;border:1px solid var(--border-default);border-radius:10px;background:var(--bg-surface);overflow:hidden}
-.toc-m summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:.5rem;padding:.85rem 1.1rem}
-.toc-m summary::-webkit-details-marker{display:none}
-.toc-m-eyebrow{font-family:var(--font-mono,ui-monospace,monospace);font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal)}
-.toc-m-chev{color:var(--text-muted);transition:transform .2s ease;flex:0 0 auto}
-.toc-m[open] .toc-m-chev{transform:rotate(180deg)}
-.toc-m-list{counter-reset:tocm;list-style:none;margin:0;padding:.2rem 0 .55rem;border-top:1px solid var(--border-subtle)}
-.toc-m-list li{counter-increment:tocm}
-.toc-m-list a{display:flex;gap:.7rem;align-items:baseline;padding:.55rem 1.1rem;font-size:.9rem;font-weight:500;line-height:1.4;color:var(--text-secondary);text-decoration:none}
-.toc-m-list a::before{content:counter(tocm,decimal-leading-zero);font-family:var(--font-mono,ui-monospace,monospace);font-size:.72rem;font-weight:600;color:var(--teal);flex:0 0 auto;min-width:1.6em}
-.toc-m-list a:active{color:var(--text-primary)}
-.article-body h2[id]{scroll-margin-top:76px}
+.toc-bar{display:block;position:sticky;top:60px;z-index:90;margin:0 0 1.25rem;background:var(--bg-void);border-top:1px solid var(--border-subtle);border-bottom:1px solid var(--border-default)}
+.toc-bar-track{display:flex;gap:.5rem;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:.6rem .85rem}
+.toc-bar-track::-webkit-scrollbar{display:none}
+.toc-bar-track a{flex:0 0 auto;display:inline-flex;align-items:center;gap:.4rem;white-space:nowrap;font-family:var(--font-mono,ui-monospace,monospace);font-size:.74rem;font-weight:500;letter-spacing:.02em;color:var(--text-secondary);text-decoration:none;border:1px solid var(--border-default);border-radius:99px;padding:.4rem .8rem;background:var(--bg-surface);transition:color .15s,border-color .15s,background .15s}
+.toc-bar-track a .n{font-size:.66rem;font-weight:700;color:var(--text-muted)}
+.toc-bar-track a.active{color:var(--teal);border-color:var(--teal);background:rgba(0,212,168,.10)}
+.toc-bar-track a.active .n{color:var(--teal)}
+.article-body h2[id]{scroll-margin-top:120px}
 }
 </style>
 </head>
@@ -506,7 +502,7 @@ html{overflow-x:clip!important;max-width:none!important}body{overflow-x:clip!imp
           <span class="meta-divider"></span><span class="meta-item">Updated June 2026&nbsp;·&nbsp;19 min read&nbsp;·&nbsp;<span style="font-size:.78rem;color:var(--text-muted);">Verified May 7, 2026</span></span>
         </div>
       </header>
-      <div class="article-body"><nav class="toc-mobile" aria-label="In this article"><details class="toc-m"><summary><span class="toc-m-eyebrow">In this article</span><svg class="toc-m-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></summary><ul class="toc-m-list" id="tocMList"></ul></details></nav>
+      <div class="article-body"><nav class="toc-bar" aria-label="Section navigation"><div class="toc-bar-track" id="tocBarTrack"></div></nav>
 <div class="quick-answer">
 <div class="quick-answer-label">Quick Answer — Updated June 2026</div>
 <p>Serum 2 is the more powerful and versatile instrument, with a multi-engine architecture spanning five oscillator modes, and the deepest preset ecosystem in electronic music production. Vital is a genuinely excellent free alternative whose sound engine is competitive in most production contexts. For producers on a budget or just starting out, Vital's free tier is hard to argue against. If you are already earning from music or need the extra horsepower, Serum 2 at $249 is worth every dollar.</p>
@@ -1077,19 +1073,32 @@ function mpwFaqToggle(el) {
   document.addEventListener('keydown',function(e){ if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();open(null);} });
 })();
 </script>
-<script id="toc-mobile-js">
+<script id="toc-bar-js">
 (function(){
   var body=document.querySelector('.article-body');
-  var list=document.getElementById('tocMList');
-  if(!body||!list)return;
+  var track=document.getElementById('tocBarTrack');
+  if(!body||!track)return;
   function slug(t,i){return (t.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''))||('section-'+i);}
-  Array.prototype.slice.call(body.querySelectorAll('h2')).forEach(function(h,i){
+  var hs=[].slice.call(body.querySelectorAll('h2')), byId={};
+  hs.forEach(function(h,i){
     if(!h.id)h.id=slug(h.textContent,i);
-    var li=document.createElement('li'),a=document.createElement('a');
-    a.href='#'+h.id;a.textContent=h.textContent;li.appendChild(a);list.appendChild(li);
+    var a=document.createElement('a');a.href='#'+h.id;
+    var n=document.createElement('span');n.className='n';n.textContent=('0'+(i+1)).slice(-2);
+    a.appendChild(n);a.appendChild(document.createTextNode(h.textContent));
+    track.appendChild(a);byId[h.id]=a;
   });
-  var det=list.closest('details');
-  list.addEventListener('click',function(e){ if(e.target.closest('a')&&det)det.open=false; });
+  function setActive(id){
+    var a=byId[id]; if(!a)return;
+    for(var k in byId)byId[k].classList.remove('active');
+    a.classList.add('active');
+    track.scrollTo({left:a.offsetLeft-(track.clientWidth/2)+(a.clientWidth/2),behavior:'smooth'});
+  }
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting) setActive(e.target.id); });
+    },{rootMargin:'-120px 0px -65% 0px',threshold:0});
+    hs.forEach(function(h){io.observe(h);});
+  }
 })();
 </script>
 </body>
