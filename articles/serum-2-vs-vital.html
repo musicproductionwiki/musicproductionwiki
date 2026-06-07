@@ -306,8 +306,6 @@ null
 .settings-table tbody tr:hover td:nth-child(3),
 .settings-table tbody tr:hover td:nth-child(4){background:var(--cmp-b-tint2)!important}
 @media(max-width:640px){.settings-table{display:block!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important}}
-.diagram-wrap svg{width:100%!important;height:auto!important;max-width:560px!important;min-width:460px;display:block;margin:0 auto;}
-@media(max-width:640px){.diagram-wrap{padding:1rem!important}}
 </style>
 </head>
 <body>
@@ -576,39 +574,26 @@ html{overflow-x:clip!important;max-width:none!important}body{overflow-x:clip!imp
 
 <p>With three wavetable oscillators and a sample/noise oscillator, Vital has plenty of simultaneous sound sources. For most wavetable synthesis tasks — basses, leads, pads, plucks — Vital's engine is fully competitive. Where it falls short of Serum 2 is the absence of the multisample, granular, and dedicated spectral engine modes that let Serum 2 behave like several different synth types inside one instrument.</p>
 
-<div class="diagram-wrap">
-<svg viewBox="0 0 620 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Oscillator engine comparison diagram for Serum 2 and Vital">
-  <rect width="620" height="260" rx="10" fill="#12151a"/>
-  <text x="310" y="28" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="700" fill="#00d4a8">Oscillator Engine Comparison</text>
-  <!-- Serum 2 column -->
-  <rect x="30" y="45" width="260" height="195" rx="8" fill="#1a1e26" stroke="#00d4a8" stroke-width="1.5"/>
-  <text x="160" y="68" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#ffffff">SERUM 2</text>
-  <text x="160" y="88" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#00d4a8">3 osc × 5 engine modes</text>
-  <rect x="50" y="98" width="220" height="24" rx="4" fill="#252b38"/>
-  <text x="160" y="114" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#e0e0e0">Wavetable</text>
-  <rect x="50" y="128" width="220" height="24" rx="4" fill="#252b38"/>
-  <text x="160" y="144" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#e0e0e0">Sample / Multisample</text>
-  <rect x="50" y="158" width="220" height="24" rx="4" fill="#252b38"/>
-  <text x="160" y="174" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#e0e0e0">Granular</text>
-  <rect x="50" y="188" width="220" height="24" rx="4" fill="#252b38"/>
-  <text x="160" y="204" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#e0e0e0">Spectral</text>
-  <rect x="50" y="218" width="220" height="14" rx="4" fill="#1f2733"/>
-  <text x="160" y="229" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#888">+ sub &amp; noise osc</text>
-  <!-- Vital column -->
-  <rect x="330" y="45" width="260" height="195" rx="8" fill="#1a1e26" stroke="#a78bfa" stroke-width="1.5"/>
-  <text x="460" y="68" text-anchor="middle" font-family="sans-serif" font-size="12" font-weight="700" fill="#ffffff">VITAL</text>
-  <text x="460" y="88" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#a78bfa">3 wavetable osc + sample/noise</text>
-  <rect x="350" y="98" width="220" height="24" rx="4" fill="#252b38"/>
-  <text x="460" y="114" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#e0e0e0">Wavetable (+ spectral warp)</text>
-  <rect x="350" y="128" width="220" height="24" rx="4" fill="#252b38"/>
-  <text x="460" y="144" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#e0e0e0">Sample / Noise Osc</text>
-  <rect x="350" y="158" width="220" height="24" rx="4" fill="#252b38"/>
-  <text x="460" y="174" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#e0e0e0">Drag-and-drop mod matrix</text>
-  <rect x="350" y="188" width="220" height="24" rx="4" fill="#252b38"/>
-  <text x="460" y="204" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#e0e0e0">Single engine type</text>
-  <rect x="350" y="218" width="220" height="14" rx="4" fill="#1f2733"/>
-  <text x="460" y="229" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#888">No multisample / granular / spectral</text>
-</svg>
+<style id="osc-cmp-css">
+.osc-cmp{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:1.75rem 0;}
+.osc-cmp .occ-card{background:var(--cmp-panel,#131920);border:1px solid var(--cmp-line,rgba(255,255,255,.10));border-radius:12px;padding:16px 16px 14px;}
+.osc-cmp .occ-card.a{border-top:3px solid var(--cmp-a,#6fe39a);}
+.osc-cmp .occ-card.b{border-top:3px solid var(--cmp-b,#b69bff);}
+.osc-cmp .occ-head{font-family:var(--cmp-mono,'JetBrains Mono',monospace);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;margin:0 0 2px;}
+.osc-cmp .occ-card.a .occ-head{color:var(--cmp-a,#6fe39a);}
+.osc-cmp .occ-card.b .occ-head{color:var(--cmp-b,#b69bff);}
+.osc-cmp .occ-sub{font-size:.8rem;color:var(--cmp-text2,#8a9bb0);margin:0 0 10px;}
+.osc-cmp ul{list-style:none;margin:0;padding:0;}
+.osc-cmp li{font-size:.86rem;color:#d7d7e5;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.06);display:flex;gap:8px;align-items:flex-start;line-height:1.45;}
+.osc-cmp li:last-child{border-bottom:none;}
+.osc-cmp li::before{content:"\25AA";color:var(--cmp-teal,#00d4a8);font-size:.7rem;line-height:1.7;}
+.osc-cmp li.muted{color:#8a8aa2;}
+.osc-cmp li.muted::before{content:"\2013";color:#666;}
+@media(max-width:640px){.osc-cmp{grid-template-columns:1fr;}}
+</style>
+<div class="osc-cmp" role="group" aria-label="Oscillator engine comparison: Serum 2 versus Vital">
+  <div class="occ-card a"><p class="occ-head">Serum 2</p><p class="occ-sub">3 osc &#215; 5 engine modes (+ sub &amp; noise)</p><ul><li>Wavetable</li><li>Sample / Multisample</li><li>Granular</li><li>Spectral</li><li>Sub &amp; noise oscillators</li></ul></div>
+  <div class="occ-card b"><p class="occ-head">Vital</p><p class="occ-sub">3 wavetable osc + sample/noise</p><ul><li>Wavetable (+ spectral warp)</li><li>Sample / noise oscillator</li><li>Drag-and-drop mod matrix</li><li class="muted">Single engine type</li><li class="muted">No multisample / granular / spectral</li></ul></div>
 </div>
 
 <h2 id="modulation">Modulation Systems: Routing, Depth, and Workflow</h2>
