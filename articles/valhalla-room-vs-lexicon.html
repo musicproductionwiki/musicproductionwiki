@@ -202,6 +202,18 @@
   ]
 }
 </script>
+<style id="faq-accordion-css">
+.faq-accordion{margin:1.75rem 0;}
+.faq-accordion-item{background:var(--bg-surface);border:1px solid var(--border-subtle);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;margin-bottom:8px;overflow:hidden;}
+.faq-accordion-q{display:grid;grid-template-columns:auto 1fr;column-gap:.75rem;row-gap:.15rem;align-items:start;padding:1rem 1.25rem;cursor:pointer;}
+.faq-accordion-q:hover{background:var(--bg-elevated);}
+.faq-accordion-icon{grid-column:1;grid-row:1 / span 2;align-self:center;display:inline-block;width:16px;text-align:center;font-size:1.2rem;line-height:1;font-weight:400;color:var(--purple);transition:transform .2s ease;user-select:none;}
+.faq-accordion-icon.open{transform:rotate(45deg);}
+.faq-accordion-label{grid-column:2;grid-row:1;font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);}
+.faq-accordion-q-text{grid-column:2;grid-row:2;font-size:.92rem;font-weight:600;color:var(--text-primary);line-height:1.45;font-family:var(--font-display);}
+.faq-accordion-a{display:none;padding:0 1.25rem 1rem 2.75rem;font-size:.88rem;color:var(--text-secondary);line-height:1.7;border-top:1px solid var(--border-subtle);padding-top:.85rem;}
+.faq-accordion-a.open{display:block;}
+</style>
 </head>
 <body>
 
@@ -703,5 +715,22 @@ html{overflow-x:clip!important;max-width:none!important}body{overflow-x:clip!imp
   overlay.addEventListener('click',function(e){ if(e.target===overlay)close(); });
   document.addEventListener('keydown',function(e){ if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();open(null);} });
 })();
+</script>
+<script>
+function mpwFaqToggle(el){
+  var answer = el.nextElementSibling;
+  if(!answer || !answer.classList.contains('faq-accordion-a')) return;
+  var isOpen = answer.classList.contains('open');
+  document.querySelectorAll('.faq-accordion-a.open').forEach(function(a){
+    a.classList.remove('open');
+    var q = a.previousElementSibling;
+    if(q){ var ic = q.querySelector('.faq-accordion-icon, .faq-plus'); if(ic) ic.classList.remove('open'); }
+  });
+  if(!isOpen){
+    answer.classList.add('open');
+    var icon = el.querySelector('.faq-accordion-icon, .faq-plus');
+    if(icon) icon.classList.add('open');
+  }
+}
 </script>
 </body></html>
