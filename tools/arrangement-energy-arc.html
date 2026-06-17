@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <title>Arrangement Energy Arc — Map Your Song's Shape | MusicProductionWiki</title>
+  <meta name="description" content="Drop your track and see its energy arc — where it builds, peaks and sags. Get plain-English structure fixes: intro, monotony, peak placement, ending. Free.">
+  <link rel="canonical" href="https://musicproductionwiki.com/tools/arrangement-energy-arc.html">
+  <meta property="og:title" content="Arrangement Energy Arc | MusicProductionWiki">
+  <meta property="og:description" content="See your song's shape. Find where it sags. Fix the structure. Measured in your browser — the file never leaves your device.">
+  <meta property="og:url" content="https://musicproductionwiki.com/tools/arrangement-energy-arc.html">
+  <meta property="og:image" content="https://musicproductionwiki.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:image" content="https://musicproductionwiki.com/og-image.png">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,900;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Arrangement Energy Arc","url":"https://musicproductionwiki.com/tools/arrangement-energy-arc.html","description":"Plot your track's energy over time, flag structural problems in plain English, and see what to change.","applicationCategory":"MusicApplication","operatingSystem":"Any (browser-based)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://musicproductionwiki.com/"},{"@type":"ListItem","position":2,"name":"Tools","item":"https://musicproductionwiki.com/tools/"},{"@type":"ListItem","position":3,"name":"Arrangement Energy Arc","item":"https://musicproductionwiki.com/tools/arrangement-energy-arc.html"}]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does my audio get uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The file is decoded and analysed entirely in your browser using the Web Audio API. The audio never leaves your device — only anonymous result metrics (like intro length and peak position) are counted, never the file itself."}},{"@type":"Question","name":"How does it find sections like the intro, build and drop?","acceptedAnswer":{"@type":"Answer","text":"It measures a short-term loudness envelope (ITU-R BS.1770) plus a fine RMS envelope, then marks boundaries where energy changes sharply. These boundaries are estimates labelled as such, and you can rename or drag them — the tool never claims with false confidence that a given section is your chorus."}},{"@type":"Question","name":"What structural problems does it flag?","acceptedAnswer":{"@type":"Answer","text":"Intro length versus streaming skip-risk, monotony (energy that never moves), whether there is a real build into the peak, whether the peak lands too early or too late, and the shape of the ending. Each flag comes with a concrete fix and a timestamp."}},{"@type":"Question","name":"Is it free?","acceptedAnswer":{"@type":"Answer","text":"Yes — the energy arc, the universal structure diagnostics and the worst-section flag are free with no signup. Deeper section-by-section breakdowns and A/B overlays are on the roadmap."}}]}</script>
+
+  <style>
+    :root {
+      --bg:     #07070f;
+      --bg2:    #0d0d1e;
+      --bg3:    #121228;
+      --bg4:    #181838;
+      --bg5:    #1e1e44;
+      --bdr:    rgba(255,255,255,0.08);
+      --bdr2:   rgba(255,255,255,0.14);
+      --amber:  #f5a623;
+      --teal:   #00e8a2;
+      --red:    #ff3d5a;
+      --violet: #8b7cf8;
+      --text:   #ffffff;
+      --text2:  #b0b0cc;
+      --text3:  #707090;
+      --mono:   'DM Mono', monospace;
+      --sans:   'DM Sans', sans-serif;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{overflow-x:clip;scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;overflow-x:clip}
+
+    /* ── ORBS ── */
+    .orbs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+    .orb{position:absolute;border-radius:50%;mix-blend-mode:screen}
+    .orb1{width:700px;height:700px;background:radial-gradient(circle,rgba(139,124,248,0.10),transparent 70%);top:-250px;left:-150px;animation:d1 20s ease-in-out infinite}
+    .orb2{width:600px;height:600px;background:radial-gradient(circle,rgba(0,232,162,0.07),transparent 70%);top:30%;right:-200px;animation:d2 24s ease-in-out infinite}
+    .orb3{width:500px;height:500px;background:radial-gradient(circle,rgba(245,166,35,0.06),transparent 70%);bottom:-100px;left:25%;animation:d3 18s ease-in-out infinite}
+    @keyframes d1{0%,100%{transform:translate(0,0)}33%{transform:translate(60px,-40px)}66%{transform:translate(-30px,50px)}}
+    @keyframes d2{0%,100%{transform:translate(0,0)}50%{transform:translate(-50px,30px)}}
+    @keyframes d3{0%,100%{transform:translate(0,0)}40%{transform:translate(35px,-55px)}80%{transform:translate(-20px,20px)}}
+
+    /* ── PAGE ── */
+    .page{position:relative;z-index:1;max-width:920px;margin:0 auto;padding:44px 24px 100px}
+
+    /* ── HEADER ── */
+    .tool-header{margin-bottom:28px}
+    .tool-eyebrow{font-size:10px;font-family:var(--mono);color:var(--teal);letter-spacing:.2em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+    .tool-eyebrow::before{content:'';display:inline-block;width:20px;height:1px;background:var(--teal);opacity:.6}
+    .tool-h1{font-size:clamp(2rem,5vw,3.1rem);font-weight:900;color:#fff;line-height:1.04;letter-spacing:-.05em;margin-bottom:12px}
+    .tool-h1 strong{color:var(--amber)}
+    .tool-desc{font-size:15px;color:var(--text2);max-width:600px;line-height:1.75}
+
+    /* ── BRANDED TOOL HEADER CARD (thc) ── */
+    .thc{background:var(--bg2);border:1px solid var(--bdr2);border-radius:12px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:12px}
+    .thc-brand{display:flex;align-items:center;gap:12px}
+    .thc-mark{width:32px;height:32px;border-radius:8px;background:var(--teal);display:flex;align-items:center;justify-content:center}
+    .thc-name{font-size:14px;font-weight:600;color:var(--text)}
+    .thc-sub{font-size:11px;color:var(--amber);font-family:var(--mono);letter-spacing:.04em}
+    .thc-right{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+    .thc-badge{font-size:10px;font-family:var(--mono);font-weight:700;color:var(--amber);border:1px solid rgba(245,166,35,0.4);border-radius:4px;padding:4px 10px;letter-spacing:.1em}
+    .thc-related{font-size:13px;color:var(--text2);text-decoration:none;transition:color .15s}
+    .thc-related:hover{color:var(--teal)}
+
+    /* ── SECTION CARD (tsec) ── */
+    .tsec{background:var(--bg2);border:1px solid var(--bdr);border-radius:14px;padding:22px;margin-bottom:16px}
+    .tsec-label{font-size:9px;font-family:var(--mono);font-weight:700;color:var(--amber);letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+    .tsec-h{font-size:16px;font-weight:700;color:#fff;margin-bottom:4px}
+    .tsec-sub{font-size:13px;color:var(--text2);line-height:1.6}
+
+    /* ── UPLOAD ── */
+    .upload-zone{position:relative;border:1.5px dashed rgba(255,255,255,.15);border-radius:12px;cursor:pointer;transition:all .25s;min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+    .upload-zone:hover,.upload-zone.drag{border-color:rgba(0,232,162,.4);background:rgba(0,232,162,.03)}
+    .upload-zone.loaded{border-style:solid;border-color:rgba(0,232,162,.3);background:rgba(0,232,162,.03);min-height:0;cursor:default}
+    .upload-file-input{position:absolute;inset:0;opacity:0;cursor:pointer}
+    .upload-zone.loaded .upload-file-input{display:none}
+    .up-icon{width:42px;height:42px;border-radius:11px;background:var(--bg4);border:1px solid var(--bdr2);display:flex;align-items:center;justify-content:center;margin-bottom:14px;color:var(--teal)}
+    .up-label{font-size:15px;font-weight:600;color:#fff;margin-bottom:4px}
+    .up-hint{font-size:13px;color:var(--text2)}
+    .up-formats{font-size:11px;font-family:var(--mono);color:var(--text3);letter-spacing:.06em;margin-top:12px}
+    .up-loaded{display:none;width:100%;text-align:left}
+    .upload-zone.loaded .up-loaded{display:block}
+    .upload-zone.loaded .up-idle{display:none}
+    .up-loaded-row{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+    .up-loaded-dot{width:8px;height:8px;border-radius:50%;background:var(--teal);box-shadow:0 0 8px var(--teal);flex-shrink:0}
+    .up-loaded-name{font-size:14px;font-weight:600;color:#fff;word-break:break-all}
+    .up-loaded-meta{font-size:11px;font-family:var(--mono);color:var(--text3);letter-spacing:.04em;margin-left:18px}
+    .up-busy{font-size:13px;color:var(--teal);font-family:var(--mono);margin-top:10px}
+
+    /* ── GENRE TAG (optional, data only) ── */
+    .tagfield{margin-top:16px}
+    .taglabel{font-size:9px;font-family:var(--mono);color:var(--text3);letter-spacing:.12em;text-transform:uppercase;display:block;margin-bottom:8px}
+    .tagselect{background:var(--bg3);border:1px solid var(--bdr2);color:var(--text);font-family:var(--sans);font-size:14px;border-radius:9px;padding:11px 14px;width:100%;cursor:pointer;appearance:none}
+    .tagselect:focus{outline:none;border-color:rgba(0,232,162,.4)}
+    .taghint{font-size:11.5px;color:var(--text3);margin-top:7px;line-height:1.5}
+
+    /* ── ANALYSE BUTTON ── */
+    .gen-btn{width:100%;background:linear-gradient(135deg,var(--teal),#00c98c);color:#04140e;border:none;border-radius:11px;padding:16px;font-family:var(--sans);font-size:15px;font-weight:800;letter-spacing:-.01em;cursor:pointer;position:relative;overflow:hidden;transition:transform .12s,box-shadow .2s;box-shadow:0 8px 28px rgba(0,232,162,.18)}
+    .gen-btn::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.18),transparent 55%);pointer-events:none}
+    .gen-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 12px 34px rgba(0,232,162,.28)}
+    .gen-btn:disabled{opacity:.4;cursor:not-allowed;box-shadow:none}
+
+    /* ── INSIGHT (tinsight) ── */
+    .tinsight{border-left:3px solid var(--amber);background:rgba(245,166,35,0.06);border-radius:0 8px 8px 0;padding:15px 18px;font-size:14.5px;color:var(--text);line-height:1.7;margin-top:16px}
+    .tinsight.teal{border-left-color:var(--teal);background:rgba(0,232,162,0.08)}
+
+    /* ── RESULTS WRAP ── */
+    .results{display:none}
+    .results.show{display:block}
+
+    /* ── ARC CANVAS — the signature ── */
+    .arc-wrap{position:relative;background:var(--bg3);border-radius:14px;padding:18px 16px 12px;border:1px solid var(--bdr)}
+    .arc-canvas{display:block;width:100%;cursor:default}
+    .arc-canvas.editing{cursor:ew-resize}
+    .arc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+    .arc-title{font-size:14px;font-weight:700;color:#fff}
+    .arc-fname{font-size:11px;font-family:var(--mono);color:var(--text3);margin-top:2px;word-break:break-all}
+    .arc-legend{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+    .arc-leg{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2)}
+    .arc-leg-sw{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+    .arc-edit-hint{font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:8px;text-align:center}
+    .arc-edit-hint strong{color:var(--text2);font-weight:500}
+
+    /* ── METRIC STRIP ── */
+    .mstrip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+    .mcell{background:var(--bg2);border:1px solid var(--bdr);border-radius:10px;padding:12px 14px}
+    .mcell-k{font-size:9px;font-family:var(--mono);color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+    .mcell-v{font-size:20px;font-weight:800;color:#fff;letter-spacing:-.02em;font-family:var(--mono)}
+    .mcell-v small{font-size:11px;color:var(--text2);font-weight:500;letter-spacing:0}
+    .mcell-s{font-size:11px;color:var(--text2);margin-top:3px;line-height:1.4}
+
+    /* ── DIAGNOSTICS ── */
+    .diag-item{border-left:3px solid var(--di,var(--text3));background:rgba(255,255,255,.02);border-radius:0 10px 10px 0;padding:14px 16px;margin-bottom:10px}
+    .diag-head{display:flex;align-items:center;gap:10px;margin-bottom:5px}
+    .diag-status{font-size:9px;font-family:var(--mono);font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:5px;color:var(--di,var(--text3));border:1px solid currentColor}
+    .diag-name{font-size:14px;font-weight:700;color:#fff}
+    .diag-body{font-size:13.5px;color:var(--text2);line-height:1.65}
+    .diag-fix{font-size:13px;color:var(--text);margin-top:7px;line-height:1.6}
+    .diag-fix strong{color:var(--teal)}
+    .diag-ts{font-family:var(--mono);color:var(--amber);font-size:12.5px}
+
+    /* ── ROADMAP (paid-later, honest) ── */
+    .roadmap{background:linear-gradient(135deg,rgba(139,124,248,.08),rgba(0,232,162,.03));border:1px solid var(--bdr2);border-radius:14px;padding:20px 22px;margin-bottom:16px}
+    .roadmap-label{font-size:9px;font-family:var(--mono);font-weight:700;color:var(--violet);letter-spacing:.18em;text-transform:uppercase;margin-bottom:12px}
+    .roadmap-list{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:10px 18px}
+    .roadmap-list li{font-size:13px;color:var(--text2);display:flex;align-items:flex-start;gap:9px;line-height:1.5}
+    .roadmap-list li::before{content:'◇';color:var(--violet);flex-shrink:0;margin-top:1px}
+    .roadmap-list li strong{color:#fff;font-weight:600}
+    .roadmap-note{font-size:12px;color:var(--text3);margin-top:14px;line-height:1.6}
+
+    /* ── SHARE BAR ── */
+    .share-bar{display:flex;align-items:center;justify-content:space-between;gap:14px;background:var(--bg2);border:1px solid var(--bdr);border-radius:12px;padding:14px 18px;margin-bottom:16px;flex-wrap:wrap}
+    .share-label{font-size:13px;color:var(--text2)}
+    .share-btns{display:flex;gap:10px;flex-wrap:wrap}
+    .share-btn{background:var(--bg3);border:1px solid var(--bdr2);color:var(--text2);font-family:var(--sans);font-size:12.5px;font-weight:500;border-radius:8px;padding:8px 14px;cursor:pointer;transition:all .15s}
+    .share-btn:hover{color:#fff;border-color:var(--teal);background:rgba(0,232,162,.05)}
+
+    /* ── RELATED TOOLS ── */
+    .trelated{margin-top:14px}
+    .trelated-label{font-size:9px;font-family:var(--mono);font-weight:700;color:var(--amber);letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px}
+    .trelated-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .trelated-card{background:var(--bg2);border:1px solid var(--bdr);border-radius:12px;padding:16px;text-decoration:none;display:flex;flex-direction:column;gap:5px;transition:all .15s}
+    .trelated-card:hover{border-color:var(--teal);background:rgba(0,232,162,.03);transform:translateY(-2px)}
+    .trelated-name{font-size:14px;font-weight:700;color:#fff}
+    .trelated-desc{font-size:12px;color:var(--text2);line-height:1.5}
+
+    /* ── FOOTER ── */
+    .footer{background:var(--bg);border-top:1px solid var(--bdr);padding:28px;text-align:center;position:relative;z-index:1;margin-top:60px}
+    .footer p{color:var(--text3);font-size:13px;margin:4px 0}
+    .footer a{color:var(--amber);text-decoration:none}
+
+    /* ── HOW-IT-WORKS ── */
+    .prose-sec{margin-top:40px}
+    .prose-sec h2{font-size:20px;font-weight:800;color:#fff;letter-spacing:-.02em;margin-bottom:12px;padding-left:12px;border-left:3px solid var(--teal)}
+    .prose-sec p{font-size:14px;color:var(--text2);line-height:1.8;margin-bottom:12px;max-width:680px}
+    .prose-sec p strong{color:var(--text)}
+    .faq-q{font-size:14.5px;font-weight:700;color:#fff;margin:18px 0 5px}
+    .faq-a{font-size:13.5px;color:var(--text2);line-height:1.75;max-width:680px}
+
+    @media(max-width:600px){
+      .page{padding:28px 16px 60px}
+      .mstrip{grid-template-columns:repeat(2,1fr)}
+      .roadmap-list{grid-template-columns:1fr}
+      .trelated-grid{grid-template-columns:1fr}
+      .share-bar{flex-direction:column;align-items:flex-start}
+    }
+  </style>
+<style id="mpw-unav-css">
+
+.mnav-wrap,.usearch{--ink:#09090d;--panel:#0f0f18;--panel2:#15151f;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);--amber:#f5a623;--teal:#00e8a2;--teal-d:rgba(0,232,162,.12);--text:#f2f2f7;--t2:#9a9ab2;--t3:#56566f;--sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'DM Mono',ui-monospace,SFMono-Regular,monospace;}
+.mnav-wrap *,.mnav-wrap *::before,.mnav-wrap *::after,.usearch *,.usearch *::before,.usearch *::after{box-sizing:border-box;margin:0;padding:0}
+.mnav-wrap{background:var(--ink);border-bottom:1px solid var(--line);position:relative}
+.mnav{height:60px;display:flex;align-items:center}
+.mnav-in{max-width:1180px;margin:0 auto;padding:0 22px;width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.mnav-brand{display:flex;align-items:center;gap:10px;color:var(--text);text-decoration:none;flex:0 0 auto}
+.mnav-word{font-weight:700;font-size:15px;letter-spacing:-.02em}
+.mnav-links{display:flex;align-items:center;gap:6px;margin-left:8px}
+.mnav-flat,.mnav-trigger{color:var(--t2);background:none;border:0;font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;padding:8px 12px;border-radius:8px;display:inline-flex;align-items:center;gap:6px}
+.mnav-flat:hover,.mnav-trigger:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.caret{font-size:9px;color:var(--t3);transition:transform .18s}
+.mnav-right{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.mnav-search{background:none;border:0;color:var(--t2);cursor:pointer;display:flex;padding:6px;border-radius:8px}
+.mnav-search:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.mnav-cta{border:1px solid var(--teal);color:var(--teal);text-decoration:none;padding:7px 15px;border-radius:8px;font-size:13px;font-weight:600;white-space:nowrap}
+.mnav-cta:hover{background:var(--teal-d)}
+.mnav-wrap[data-section="tools"] .mnav-flat[data-nav="tools"]{color:var(--text);font-weight:600}
+.mnav-wrap[data-section="articles"] .mnav-trigger[data-nav="articles"]{color:var(--text);font-weight:600}
+/* Bible = amber brand color, desktop link + mobile drawer */
+.mnav-flat[data-nav="bible"],.drw-link[data-nav="bible"]{color:#f5a623!important;font-weight:600}
+.mnav-flat[data-nav="bible"]:hover,.drw-link[data-nav="bible"]:hover{color:#ffc04d!important}
+.mnav-item{position:relative}
+.mnav-panel,.mnav-panel-wide{position:absolute;top:calc(100% + 6px);left:0;z-index:50;display:none;background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:14px;box-shadow:0 24px 60px -24px rgba(0,0,0,.9);min-width:240px}
+.mnav-panel-wide{grid-template-columns:1fr 1fr;gap:8px 22px;min-width:520px}
+.mnav-item:hover .mnav-panel,.mnav-item:focus-within .mnav-panel,.mnav-item:hover .mnav-panel-wide,.mnav-item:focus-within .mnav-panel-wide{display:grid}
+.mnav-item:hover .caret{transform:rotate(180deg)}
+.mp-col{display:flex;flex-direction:column}
+.mp-head{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);padding:6px 10px 8px}
+.mnav-panel a{display:flex;flex-direction:column;gap:1px;padding:8px 10px;border-radius:9px;text-decoration:none}
+.mnav-panel a:hover{background:rgba(255,255,255,.05)}
+.mp-name{color:var(--text);font-size:13.5px;font-weight:600}.mp-desc{color:var(--t2);font-size:11.5px}
+.mnav-sub{display:none;background:var(--panel);border-bottom:1px solid var(--line)}
+.mnav-wrap[data-section="bible"] .mnav-sub{display:block}
+.mnav-sub-in{max-width:1180px;margin:0 auto;padding:10px 22px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.mnav-sub-in::-webkit-scrollbar{display:none}
+.mnav-sub-in a{flex:0 0 auto;color:var(--t2);text-decoration:none;font-size:12.5px;font-family:var(--mono);border:1px solid var(--line2);border-radius:99px;padding:5px 12px;white-space:nowrap}
+.mnav-sub-in a:hover{color:var(--teal);border-color:rgba(0,232,162,.4)}
+.mnav-toggle{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.mnav-burger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:8px;border-radius:8px}
+.mnav-burger span{display:block;width:20px;height:2px;background:var(--text);border-radius:2px;transition:.2s}
+.mnav-drawer{display:none;flex-direction:column;padding:6px 18px 16px;background:var(--ink);border-bottom:1px solid var(--line)}
+.mnav-drawer details{border-bottom:1px solid var(--line)}
+.mnav-drawer summary{list-style:none;cursor:pointer;padding:13px 2px;font-size:15px;font-weight:600;color:var(--text);display:flex;justify-content:space-between}
+.mnav-drawer summary::-webkit-details-marker{display:none}
+.mnav-drawer summary::after{content:"+";color:var(--t3)}
+.mnav-drawer details[open] summary::after{content:"\2013"}
+.mnav-acc{display:flex;flex-direction:column;padding:0 0 10px 12px}
+.mnav-acc a{color:var(--t2);text-decoration:none;font-size:14px;padding:8px 0}
+.drw-link{color:var(--t2);text-decoration:none;font-size:15px;font-weight:600;padding:13px 2px;border-bottom:1px solid var(--line)}
+.drw-cta{color:var(--teal);text-decoration:none;font-weight:600;font-size:15px;padding:14px 2px}
+.mnav-toggle:checked ~ .mnav-drawer{display:flex}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(2){opacity:0}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+@media(max-width:860px){.mnav-links,.mnav-cta{display:none}.mnav-burger{display:flex}}
+
+/* ===== UNIFIED SEARCH OVERLAY ===== */
+.usearch{position:fixed;inset:0;z-index:10000;display:none;background:rgba(6,6,11,.78);backdrop-filter:blur(6px);padding:80px 20px 20px}
+.usearch.open{display:block}
+.usearch-box{max-width:620px;margin:0 auto;background:var(--panel);border:1px solid var(--line2);border-radius:16px;overflow:hidden;box-shadow:0 40px 90px -30px rgba(0,0,0,.95)}
+.usearch-top{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.usearch-top svg{color:var(--t3);flex:0 0 auto}
+.usearch-top input{flex:1;background:none;border:0;outline:none;color:var(--text);font-family:var(--sans);font-size:17px}
+.usearch-top input::placeholder{color:var(--t3)}
+.usearch-top kbd{font-family:var(--mono);font-size:11px;color:var(--t3);border:1px solid var(--line2);border-radius:6px;padding:2px 7px}
+.usearch-results{max-height:56vh;overflow-y:auto;padding:8px}
+.usearch-results a{display:block;padding:11px 14px;border-radius:10px;text-decoration:none;transition:background .12s}
+.usearch-results a:hover,.usearch-results a.sel{background:rgba(255,255,255,.05)}
+.ur-top{display:flex;align-items:baseline;gap:9px}
+.ur-title{color:var(--text);font-size:14.5px;font-weight:600}
+.ur-cat{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.06);color:var(--t2);flex:0 0 auto}
+.ur-cat[data-c="Tools"]{background:var(--teal-d);color:var(--teal);border:1px solid rgba(0,232,162,.4)}
+.ur-cat[data-c="Bible"]{background:rgba(245,166,35,.18);color:#f5a623;border:1px solid rgba(245,166,35,.4)}
+.ur-desc{color:var(--t2);font-size:12.5px;line-height:1.45;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.usearch-empty{padding:30px;text-align:center;color:var(--t3);font-size:13.5px}
+/* --- sticky-header + entry-page chrome (pilot, refined for density) ---
+   entry nav = 60px main bar only (no category sub-bar). Desktop: hide the horizontal section
+   nav (the sticky sidebar TOC covers sections) and retune offsets to the 60px nav. Mobile: the
+   sidebar is hidden, so SHOW the section nav flush under the bar. All in THIS block. --- */
+.mnav-wrap{position:sticky;top:0;z-index:1000;line-height:1.4}
+.entry-nav{display:none}
+[id].entry-section{scroll-margin-top:90px}
+.entry-main h2{scroll-margin-top:90px}
+.entry-sidebar{top:78px;height:calc(100vh - 98px)}
+@media(max-width:768px){
+  .entry-nav{display:block!important;top:60px!important}
+  [id].entry-section{scroll-margin-top:130px!important}
+  .entry-main h2{scroll-margin-top:130px!important}
+}
+/* dropdown overflow safety */
+.mnav-panel,.mnav-panel-wide{max-height:min(72vh,560px);overflow-y:auto}
+/* mobile drawer: category CARD grid (slick old-nav look), CSS-only */
+.mnav-drawer{padding:10px 18px 18px;gap:0}
+.drw-label{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--t3);margin:12px 2px 8px}
+.drw-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.drw-card{display:flex;align-items:center;padding:12px 14px;border-radius:10px;text-decoration:none;font-size:13.5px;font-weight:600;color:var(--text);background:var(--panel);border:1px solid var(--line2)}
+.drw-card:hover{border-color:var(--teal);color:var(--teal)}
+.drw-feat{display:flex;align-items:center;gap:8px;padding:13px 16px;border-radius:10px;text-decoration:none;font-size:14px;font-weight:700;color:var(--text);background:var(--panel);border:1px solid var(--line2);margin-top:8px}
+.drw-feat-bible{color:#f5a623;background:rgba(245,166,35,.08);border-color:rgba(245,166,35,.30)}
+.drw-feat-bible:hover{border-color:rgba(245,166,35,.6)}
+.drw-cta{display:block;text-align:center;padding:14px;border-radius:10px;background:var(--teal);color:#06281f;font-weight:800;font-size:14px;text-decoration:none;margin-top:12px}
+/* mobile sunlight legibility: lift the intentionally-dim greys in glare (nav + search only), scoped */
+@media(max-width:860px){
+  .mnav-wrap,.usearch{--t2:#c8c8da;--t3:#9696b0}
+  .drw-label{color:#bdbdd0;font-weight:500}
+  .usearch-top input::placeholder{color:#9696b0}
+  .drw-card,.drw-feat{background:#20202e;border:1.5px solid #45455c}
+  .drw-feat-bible{background:rgba(245,166,35,.12);border:1.5px solid rgba(245,166,35,.6)}
+}
+html{overflow-x:clip!important;max-width:none!important}body{overflow-x:clip!important}
+
+/* mix-fingerprint: keep embed-mode hiding the nav after the swap */
+body.embed-mode .mnav-wrap{display:none!important}
+</style>
+
+</head>
+<body>
+
+<div class="orbs"><div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div></div>
+
+<div class="mnav-wrap" data-section="tools">
+  <input type="checkbox" id="mnav-toggle" class="mnav-toggle" aria-hidden="true">
+  <nav class="mnav" aria-label="Main navigation">
+    <div class="mnav-in">
+      <a class="mnav-brand" href="/"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="6" stroke="#f5a623" stroke-width="1.7"/><path d="M7 15V9l3 3 3-5 4 8" stroke="#00e8a2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="mnav-word">MusicProductionWiki</span></a>
+      <div class="mnav-links">
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="articles">Articles <span class="caret">&#9662;</span></button><div class="mnav-panel mnav-panel-wide"><div class="mp-col"><div class="mp-head">Techniques & Analysis</div><a href="/categories/techniques"><span class="mp-name">Techniques</span><span class="mp-desc">Mixing, mastering, sound design</span></a><a href="/categories/reviews"><span class="mp-name">Reviews</span><span class="mp-desc">Honest. No paid placements.</span></a><a href="/categories/comparisons"><span class="mp-name">Comparisons</span><span class="mp-desc">Head-to-head</span></a><a href="/categories/breakdowns"><span class="mp-name">Breakdowns</span><span class="mp-desc">Track-by-track</span></a><a href="/categories/recreations"><span class="mp-name">Recreations</span><span class="mp-desc">Recreate iconic sounds</span></a><a href="/genres"><span class="mp-name">Genres</span><span class="mp-desc">Every genre & style</span></a></div><div class="mp-col"><div class="mp-head">Reference & Business</div><a href="/categories/ai-music"><span class="mp-name">AI Music</span><span class="mp-desc">Suno, Udio, AI tools</span></a><a href="/categories/music-business"><span class="mp-name">Music Business</span><span class="mp-desc">Royalties, licensing, sync</span></a></div></div></div>
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="gear">Gear <span class="caret">&#9662;</span></button><div class="mnav-panel"><div class="mp-col"><a href="/categories/daws"><span class="mp-name">DAWs</span><span class="mp-desc">Every major DAW</span></a><a href="/categories/plugins"><span class="mp-name">Plugins</span><span class="mp-desc">EQ, comp, reverb, synths</span></a><a href="/categories/hardware"><span class="mp-name">Hardware</span><span class="mp-desc">Interfaces, mics, monitors</span></a></div></div></div>
+        <a class="mnav-flat" href="/tools/" data-nav="tools">Tools</a>
+        <a class="mnav-flat" href="/bible/" data-nav="bible">The Bible</a>
+      </div>
+      <div class="mnav-right">
+        <button class="mnav-search" data-nav-search aria-label="Search"><svg width="17" height="17" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <a class="mnav-cta" href="https://theproducersbriefing.beehiiv.com">Sound Better &rarr;</a>
+        <label class="mnav-burger" for="mnav-toggle"><span></span><span></span><span></span></label>
+      </div>
+    </div>
+  </nav>
+  <div class="mnav-drawer">
+    <div class="drw-label">Articles</div>
+    <div class="drw-grid">
+      <a href="/categories/techniques" class="drw-card">Techniques</a><a href="/categories/reviews" class="drw-card">Reviews</a><a href="/categories/comparisons" class="drw-card">Comparisons</a><a href="/categories/breakdowns" class="drw-card">Breakdowns</a><a href="/categories/recreations" class="drw-card">Recreations</a><a href="/genres" class="drw-card">Genres</a><a href="/categories/ai-music" class="drw-card">AI Music</a><a href="/categories/music-business" class="drw-card">Music Business</a>
+    </div>
+    <div class="drw-label">Gear</div>
+    <div class="drw-grid">
+      <a href="/categories/daws" class="drw-card">DAWs</a><a href="/categories/plugins" class="drw-card">Plugins</a><a href="/categories/hardware" class="drw-card">Hardware</a>
+    </div>
+    <a href="/bible/" class="drw-feat drw-feat-bible">&#9670; The Producer's Bible</a>
+    <a href="/tools/" class="drw-feat">The Producer's Tools</a>
+    <a href="https://theproducersbriefing.beehiiv.com" class="drw-cta">Sound Better &rarr;</a>
+  </div>
+</div>
+
+
+<div class="page">
+
+  <!-- HEADER -->
+  <header class="tool-header">
+    <div class="tool-eyebrow">Arrangement &amp; Structure</div>
+    <h1 class="tool-h1">Arrangement <strong>Energy Arc</strong></h1>
+    <p class="tool-desc">Drop a track and see its shape — where it builds, peaks and sags. The arc is measured from the file itself, then read back to you in plain English with a fix for every problem. See your song's shape, find where it sags, fix the structure.</p>
+  </header>
+
+  <!-- BRANDED HEADER CARD -->
+  <div class="thc">
+    <div class="thc-brand">
+      <div class="thc-mark">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <rect x="1.5" y="7" width="2.5" height="9" rx="1.2" fill="#0a0a0b"/>
+          <rect x="6" y="4" width="2.5" height="12" rx="1.2" fill="#0a0a0b"/>
+          <rect x="10.5" y="1" width="2.5" height="16" rx="1.2" fill="#0a0a0b"/>
+          <rect x="15" y="5" width="2.5" height="9" rx="1.2" fill="#0a0a0b"/>
+        </svg>
+      </div>
+      <div>
+        <div class="thc-name">MusicProductionWiki.com</div>
+        <div class="thc-sub">◆ The Producer's Tools</div>
+      </div>
+    </div>
+    <div class="thc-right">
+      <span class="thc-badge">INTERACTIVE TOOL</span>
+      <a href="/tools/mix-fingerprint.html" class="thc-related">Mix Fingerprint →</a>
+    </div>
+  </div>
+
+  <!-- UPLOAD -->
+  <div class="tsec">
+    <div class="tsec-label">① Your track</div>
+    <div class="upload-zone" id="uploadZone">
+      <input type="file" class="upload-file-input" id="fileInp" accept=".mp3,.wav,.flac,.aiff,.aif,.m4a,.ogg,audio/*">
+      <div class="up-idle">
+        <div class="up-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </div>
+        <div class="up-label">Drop your track here</div>
+        <div class="up-hint">or click to browse — full mix, bounce or demo</div>
+        <div class="up-formats">WAV · MP3 · FLAC · AIFF · M4A · OGG</div>
+      </div>
+      <div class="up-loaded" id="upLoaded">
+        <div class="up-loaded-row"><span class="up-loaded-dot"></span><span class="up-loaded-name" id="upName">—</span></div>
+        <div class="up-loaded-meta" id="upMeta">—</div>
+        <div class="up-busy" id="upBusy" style="display:none">Measuring energy across the timeline…</div>
+      </div>
+    </div>
+
+    <div class="tagfield">
+      <label class="taglabel" for="genreSel">Genre — optional</label>
+      <select class="tagselect" id="genreSel">
+        <option value="">Skip / not sure</option>
+        <option value="pop">Pop</option>
+        <option value="hiphop">Hip-hop / Trap</option>
+        <option value="house">House</option>
+        <option value="techno">Techno</option>
+        <option value="dnb">Drum &amp; Bass</option>
+        <option value="rock">Rock</option>
+        <option value="metal">Metal</option>
+        <option value="rnb">R&amp;B / Soul</option>
+        <option value="ambient">Ambient / Cinematic</option>
+        <option value="country">Country / Folk</option>
+        <option value="other">Other</option>
+      </select>
+      <p class="taghint">It doesn't change your analysis. It helps us build a free, anonymous benchmark of how real tracks are shaped — which later powers a genre overlay. Your audio never leaves the browser.</p>
+    </div>
+
+    <button class="gen-btn" id="genBtn" disabled style="margin-top:18px">Map the energy arc →</button>
+    <div class="tinsight" id="errBox" style="display:none"></div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results" id="results">
+
+    <!-- ARC CANVAS — signature -->
+    <div class="tsec">
+      <div class="tsec-label">② The arc</div>
+      <div class="arc-wrap">
+        <div class="arc-head">
+          <div>
+            <div class="arc-title">Energy over time</div>
+            <div class="arc-fname" id="arcFname">—</div>
+          </div>
+          <div class="arc-legend">
+            <span class="arc-leg"><span class="arc-leg-sw" style="background:var(--teal)"></span>Energy</span>
+            <span class="arc-leg"><span class="arc-leg-sw" style="background:var(--amber)"></span>Loudest</span>
+            <span class="arc-leg"><span class="arc-leg-sw" style="background:var(--violet)"></span>Quietest stretch</span>
+          </div>
+        </div>
+        <canvas class="arc-canvas" id="arcCanvas"></canvas>
+        <div class="arc-edit-hint">Section boundaries are <strong>estimated</strong> — drag a divider to move it, or click a label to rename it.</div>
+      </div>
+
+      <div class="mstrip">
+        <div class="mcell"><div class="mcell-k">Duration</div><div class="mcell-v" id="mDur">—</div></div>
+        <div class="mcell"><div class="mcell-k">Intro length</div><div class="mcell-v" id="mIntro">—</div><div class="mcell-s" id="mIntroS">to first sustained lift</div></div>
+        <div class="mcell"><div class="mcell-k">Peak at</div><div class="mcell-v" id="mPeak">—</div><div class="mcell-s" id="mPeakS">loudest moment</div></div>
+        <div class="mcell"><div class="mcell-k">Dynamic range</div><div class="mcell-v" id="mLra">—</div><div class="mcell-s">short-term loudness, BS.1770</div></div>
+      </div>
+    </div>
+
+    <!-- DIAGNOSTICS -->
+    <div class="tsec">
+      <div class="tsec-label">③ What to change</div>
+      <div class="tsec-h">Structure read</div>
+      <div class="tsec-sub" style="margin-bottom:16px">Every flag below is measured from your file — no genre assumptions — and comes with one concrete move.</div>
+      <div id="diagList"></div>
+    </div>
+
+    <!-- ROADMAP (honest paid-later) -->
+    <div class="roadmap">
+      <div class="roadmap-label">On the roadmap</div>
+      <ul class="roadmap-list">
+        <li><strong>Section-by-section breakdown</strong> — energy, length and role of each part</li>
+        <li><strong>Two-version A/B overlay</strong> — compare a remix against the original arc</li>
+        <li><strong>Genre overlay</strong> — your arc against how real tracks in your genre are shaped</li>
+        <li><strong>PDF export</strong> — the arc + the fixes, ready to share with a collaborator</li>
+      </ul>
+      <p class="roadmap-note">These are free while we build them. The genre overlay switches on once enough tracks have been measured to draw an honest benchmark — we won't show a made-up line before then.</p>
+    </div>
+
+    <!-- SHARE -->
+    <div class="share-bar">
+      <span class="share-label">Found a sag? Send this to a collaborator.</span>
+      <div class="share-btns">
+        <button class="share-btn" id="copyLink">Copy link</button>
+        <button class="share-btn" id="copyEmbed">Copy embed code</button>
+        <a class="share-btn" href="https://theproducersbriefing.beehiiv.com" style="text-decoration:none">Get the briefing →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- RELATED TOOLS -->
+  <div class="trelated">
+    <div class="trelated-label">Related tools</div>
+    <div class="trelated-grid">
+      <a href="/tools/arrangement-timer" class="trelated-card">
+        <span class="trelated-name">Arrangement Timer</span>
+        <span class="trelated-desc">Map section lengths against genre norms and a target duration.</span>
+      </a>
+      <a href="/tools/mix-fingerprint.html" class="trelated-card">
+        <span class="trelated-name">Mix Fingerprint Analyzer</span>
+        <span class="trelated-desc">Upload your mix and measure its sonic DNA across six axes.</span>
+      </a>
+      <a href="/tools/the-pocket" class="trelated-card">
+        <span class="trelated-name">The Pocket</span>
+        <span class="trelated-desc">Find the groove and timing feel that makes a beat sit right.</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS + FAQ -->
+  <div class="prose-sec">
+    <h2>How the arc is measured</h2>
+    <p>The tool decodes your file in the browser and walks two loudness envelopes across it: a <strong>short-term loudness curve</strong> using the ITU-R BS.1770 standard — the same loudness math streaming platforms use — and a finer RMS envelope for shape detail. Together they trace how the energy of the track rises and falls from the first second to the last.</p>
+    <p>Section boundaries are placed where the energy <strong>changes sharply</strong>. That is an honest estimate, not a claim about song form — so the tool labels each section generically and lets you drag the dividers or rename them. It will never tell you "this is your chorus" and pretend it knows.</p>
+    <p>Nothing is uploaded. The audio is read with the Web Audio API on your device; only anonymous shape metrics — intro length, peak position, dynamic range — are counted so we can build a free genre benchmark over time.</p>
+
+    <h2 style="margin-top:28px">Common questions</h2>
+    <div class="faq-q">Does my audio get uploaded?</div>
+    <div class="faq-a">No. Decoding and analysis happen entirely in your browser. The file never leaves your device — only anonymous result metrics are counted, never the audio.</div>
+    <div class="faq-q">How does it find the intro, build and drop?</div>
+    <div class="faq-a">It measures the loudness envelope, then marks boundaries where energy changes sharply. Those boundaries are estimates you can drag or rename — the tool doesn't claim with false confidence which section is which.</div>
+    <div class="faq-q">What does it actually flag?</div>
+    <div class="faq-a">Intro length versus streaming skip-risk, monotony (energy that never moves), whether there's a real build into the peak, whether the peak lands too early or too late, and the shape of the ending — each with a concrete fix and a timestamp.</div>
+    <div class="faq-q">Is it free?</div>
+    <div class="faq-a">Yes. The arc, the structure diagnostics and the worst-section flag are free with no signup. Deeper breakdowns and overlays are on the roadmap above.</div>
+  </div>
+
+</div>
+
+<footer class="footer">
+  <p>© 2026 <a href="/">MusicProductionWiki</a> · <a href="/tools/">Free Tools</a> · <a href="/bible/">The Producer's Bible</a> · <a href="https://theproducersbriefing.beehiiv.com">Newsletter</a></p>
+  <p style="margin-top:6px;font-size:11px">Free forever. No signup required. Works on mobile. Your audio never leaves your browser.</p>
+</footer>
+
+<script src="../js/main.js" defer></script>
+<script>
+(function(){
+'use strict';
+
+/* ===== loudness DSP — copied verbatim from tools/mix-fingerprint.html (proven, unchanged) ===== */
+function _rbjHS(fs,f0,Q,dB){var A=Math.pow(10,dB/40),w=2*Math.PI*f0/fs,c=Math.cos(w),s=Math.sin(w),al=s/(2*Q),sq=Math.sqrt(A);
+var b0=A*((A+1)+(A-1)*c+2*sq*al),b1=-2*A*((A-1)+(A+1)*c),b2=A*((A+1)+(A-1)*c-2*sq*al);
+var a0=(A+1)-(A-1)*c+2*sq*al,a1=2*((A-1)-(A+1)*c),a2=(A+1)-(A-1)*c-2*sq*al;
+return[b0/a0,b1/a0,b2/a0,a1/a0,a2/a0];}
+function _rbjHP(fs,f0,Q){var w=2*Math.PI*f0/fs,c=Math.cos(w),s=Math.sin(w),al=s/(2*Q);
+var b0=(1+c)/2,b1=-(1+c),b2=(1+c)/2,a0=1+al,a1=-2*c,a2=1-al;
+return[b0/a0,b1/a0,b2/a0,a1/a0,a2/a0];}
+function _biquad(x,co){var b0=co[0],b1=co[1],b2=co[2],a1=co[3],a2=co[4];
+var y=new Float64Array(x.length),x1=0,x2=0,y1=0,y2=0;
+for(var n=0;n<x.length;n++){var xn=x[n];var yn=b0*xn+b1*x1+b2*x2-a1*y1-a2*y2;x2=x1;x1=xn;y2=y1;y1=yn;y[n]=yn;}return y;}
+function _kWeight(x,fs){return _biquad(_biquad(x,_rbjHS(fs,1681.974450955532,0.7071752369554196,3.999843853973347)),_rbjHP(fs,38.13547087602444,0.5003270373253953));}
+function _msBlocks(yk,fs,blkS,stepS){var blk=Math.round(blkS*fs),step=Math.round(stepS*fs),out=[];
+for(var st=0;st+blk<=yk.length;st+=step){var s=0;for(var i=0;i<blk;i++){var v=yk[st+i];s+=v*v;}out.push(s/blk);}return out;}
+function mpwLUFS(L,R,fs){var kl=_kWeight(L,fs),kr=_kWeight(R,fs);var zl=_msBlocks(kl,fs,0.4,0.1),zr=_msBlocks(kr,fs,0.4,0.1);
+var nB=Math.min(zl.length,zr.length);if(!nB)return -Infinity;var lj=[],zs=[],i;
+for(i=0;i<nB;i++){zs[i]=zl[i]+zr[i];lj[i]=-0.691+10*Math.log10(zs[i]+1e-12);}
+var gz=[];for(i=0;i<nB;i++)if(lj[i]>=-70)gz.push(zs[i]);if(!gz.length)return -Infinity;
+var mA=gz.reduce(function(a,b){return a+b;},0)/gz.length;var rt=-0.691+10*Math.log10(mA+1e-12)-10;
+var rz=[];for(i=0;i<nB;i++)if(lj[i]>=-70&&lj[i]>=rt)rz.push(zs[i]);if(!rz.length)return -Infinity;
+var mR=rz.reduce(function(a,b){return a+b;},0)/rz.length;return -0.691+10*Math.log10(mR+1e-12);}
+function mpwShortTerm(L,R,fs,winS,hopS){var kl=_kWeight(L,fs),kr=_kWeight(R,fs);var blk=Math.round(winS*fs),hop=Math.round(hopS*fs),out=[];
+for(var st=0;st+blk<=kl.length;st+=hop){var s=0;for(var i=0;i<blk;i++){s+=kl[st+i]*kl[st+i]+kr[st+i]*kr[st+i];}var z=s/blk;out.push(-0.691+10*Math.log10(z+1e-12));}return out;}
+function mpwLRA(st){var g=st.filter(function(v){return v>-70;});if(g.length<2)return 0;
+var lin=g.map(function(v){return Math.pow(10,v/10);});var m=lin.reduce(function(a,b){return a+b;},0)/lin.length;var thr=10*Math.log10(m)-20;
+var k=g.filter(function(v){return v>=thr;}).sort(function(a,b){return a-b;});if(k.length<2)return 0;
+function pct(p){var idx=(k.length-1)*p,lo=Math.floor(idx),hi=Math.ceil(idx);return k[lo]+(k[hi]-k[lo])*(idx-lo);}
+return pct(0.95)-pct(0.10);}
+function mpwTruePeak(L,R,fs){
+  // 4x sinc oversample, bounded to neighborhoods of near-peak samples (fast + accurate)
+  function tp(x){var os=4,taps=16,half=taps/2,peak=0,i,n,gp=0;
+    for(i=0;i<x.length;i++){var a=Math.abs(x[i]);if(a>gp)gp=a;}
+    var thr=gp*0.708; // candidates within ~3dB of peak
+    function sinc(t){return t===0?1:Math.sin(Math.PI*t)/(Math.PI*t);}
+    peak=gp;
+    for(n=0;n<x.length;n++){if(Math.abs(x[n])<thr)continue;
+      for(var p=1;p<os;p++){var acc=0,frac=p/os,k;
+        for(k=-half+1;k<=half;k++){var idx=n+k;if(idx<0||idx>=x.length)continue;
+          var w=0.5-0.5*Math.cos(2*Math.PI*((k+half-1)/(taps-1)));acc+=x[idx]*sinc(k-frac)*w;}
+        var aa=Math.abs(acc);if(aa>peak)peak=aa;}}
+    return peak;}
+  return 20*Math.log10(Math.max(tp(L),tp(R))+1e-12);}
+function mpwCorr(L,R){var n=Math.min(L.length,R.length),lr=0,ll=0,rr=0;
+for(var i=0;i<n;i++){lr+=L[i]*R[i];ll+=L[i]*L[i];rr+=R[i]*R[i];}var d=Math.sqrt(ll*rr);return d>0?lr/d:1;}
+function mpwWidth(L,R){var n=Math.min(L.length,R.length),mE=0,sE=0;
+for(var i=0;i<n;i++){var m=(L[i]+R[i])*0.5,s=(L[i]-R[i])*0.5;mE+=m*m;sE+=s*s;}var t=mE+sE;return t>0?sE/t:0;}
+/* ===== end loudness DSP ===== */
+
+/* ====== anonymized metrics endpoint — Netlify event function NOT YET BUILT (Charter P1).
+   Left null so nothing 404s on every analyze. When the function ships, set the path here.
+   GA4 custom events fire regardless via window.gtag (loaded by main.js). ====== */
+var ARC_EVENT_ENDPOINT = null;
+
+var S = {};
+var canvas = document.getElementById('arcCanvas');
+var ctx = canvas.getContext('2d');
+var LAY = null;          // current canvas layout for hit-testing
+var drag = { active:false, idx:-1 };
+
+/* ---------- helpers ---------- */
+function fmtTime(s){ if(!isFinite(s)||s<0) s=0; var m=Math.floor(s/60), ss=Math.round(s%60); if(ss===60){m++;ss=0;} return m+':'+(ss<10?'0':'')+ss; }
+function clamp(v,a,b){ return v<a?a:(v>b?b:v); }
+function median(arr){ if(!arr.length) return 0; var a=arr.slice().sort(function(x,y){return x-y;}); var i=a.length>>1; return a.length%2?a[i]:(a[i-1]+a[i])/2; }
+
+/* ---------- analysis ---------- */
+function analyzeArc(buffer){
+  var L = buffer.getChannelData(0);
+  var R = buffer.numberOfChannels>1 ? buffer.getChannelData(1) : L;
+  var fs = buffer.sampleRate, dur = buffer.duration, total = L.length;
+
+  // fine ~100ms RMS envelope (mono sum) for shape resolution
+  var hop = Math.max(1, Math.floor(0.1*fs));
+  var env = [];
+  var maxRms = 0;
+  for(var st=0; st+hop<=total; st+=hop){
+    var sq=0;
+    for(var i=0;i<hop;i++){ var m=(L[st+i]+R[st+i])*0.5; sq+=m*m; }
+    var rms=Math.sqrt(sq/hop);
+    if(rms>maxRms) maxRms=rms;
+    env.push({ t:(st+hop*0.5)/fs, rms:rms });
+  }
+  if(!env.length){ env.push({t:0,rms:0}); maxRms=1; }
+  maxRms = maxRms||1;
+  for(var k=0;k<env.length;k++){ env[k].e = env[k].rms/maxRms; }
+
+  // silence gate (fades / gaps)
+  var silThr = Math.max(maxRms*0.06, 0.0008);
+  var liveE = env.filter(function(w){ return w.rms>=silThr; });
+  if(!liveE.length) liveE = env;
+  var medLoud = median(liveE.map(function(w){return w.e;}));
+
+  // short-term BS.1770 loudness -> dynamic range (LRA)
+  var stLufs = mpwShortTerm(L,R,fs,3,0.1);
+  var lra = mpwLRA(stLufs);
+
+  // smoothed energy (~2s) for intro / build / sections
+  function smooth(win){
+    var r=Math.max(1,Math.round(win/0.1)), out=new Array(env.length);
+    for(var i=0;i<env.length;i++){
+      var a=Math.max(0,i-r), b=Math.min(env.length-1,i+r), s=0,n=0;
+      for(var j=a;j<=b;j++){ s+=env[j].e; n++; }
+      out[i]=s/n;
+    }
+    return out;
+  }
+  var sm = smooth(2.0);
+
+  // peak (loudest 100ms)
+  var peakIdx=0, peakRms=0;
+  for(var p=0;p<env.length;p++){ if(env[p].rms>peakRms){peakRms=env[p].rms;peakIdx=p;} }
+  var peakT = env[peakIdx].t, peakPct = dur>0?peakT/dur:0;
+
+  // intro length = first time smoothed energy crosses 0.45*medLoud and holds >=3s
+  var thr = 0.45*medLoud, holdN = Math.round(3/0.1), introIdx = 0;
+  for(var q=0;q<sm.length;q++){
+    if(sm[q]>=thr){
+      var ok=true;
+      for(var h=q; h<Math.min(sm.length,q+holdN); h++){ if(sm[h] < thr*0.8){ ok=false; break; } }
+      if(ok){ introIdx=q; break; }
+    }
+  }
+  var introLen = env[introIdx] ? env[introIdx].t : 0;
+
+  // front vs back energy balance
+  var frontSq=0, backSq=0, mid=dur/2;
+  env.forEach(function(w){ var pw=w.rms*w.rms; if(w.t<mid) frontSq+=pw; else backSq+=pw; });
+  var frontPct = (frontSq+backSq)>0 ? frontSq/(frontSq+backSq) : 0.5;
+
+  // ending shape (final segment)
+  var endWin = Math.min(8, dur*0.15), endStartT = dur-endWin;
+  var endVals = env.filter(function(w){ return w.t>=endStartT; }).map(function(w){return w.e;});
+  var endStart = endVals.length?endVals[0]:0, endLast = endVals.length?endVals[endVals.length-1]:0;
+  var tailRms = env.length?env[env.length-1].rms:0;
+  var ending;
+  if(tailRms < maxRms*0.12) ending = {key:'fade', label:'Fades out', detail:'energy tapers toward silence'};
+  else if(endLast > 0.7) ending = {key:'hard', label:'Ends at full energy', detail:'a hard cut from near-peak level'};
+  else if(endLast >= endStart*0.85) ending = {key:'sustained', label:'Holds its level', detail:'energy stays roughly flat into the end'};
+  else ending = {key:'taper', label:'Eases down', detail:'a gentle drop into the ending'};
+
+  // sections: group live windows by energy jump / 20s cap / gaps (boundaries are ESTIMATES)
+  var coarse = [];
+  for(var c=0;c<env.length;c+=20){ coarse.push({ t:env[c].t, e:sm[c] }); } // ~2s grid
+  var bounds = [0]; // boundary times (start)
+  var lastE = coarse.length?coarse[0].e:0, segStart = 0;
+  for(var ci=1;ci<coarse.length;ci++){
+    var jump = lastE>0.02 ? Math.abs(coarse[ci].e-lastE)/Math.max(lastE,0.02) : 0;
+    var tooLong = (coarse[ci].t - coarse[segStart].t) >= 20;
+    if((jump>0.30 || tooLong) && (coarse[ci].t - bounds[bounds.length-1]) > 4){
+      bounds.push(coarse[ci].t); segStart=ci;
+    }
+    lastE = coarse[ci].e;
+  }
+  bounds.push(dur);
+  // collapse to max ~8 sections for legibility
+  while(bounds.length > 9){
+    // drop the boundary creating the smallest energy contrast
+    var bi=1, best=1e9;
+    for(var b=1;b<bounds.length-1;b++){
+      var eL=energyAt(env,(bounds[b-1]+bounds[b])/2), eR=energyAt(env,(bounds[b]+bounds[b+1])/2);
+      var d=Math.abs(eR-eL); if(d<best){best=d;bi=b;}
+    }
+    bounds.splice(bi,1);
+  }
+  S = { fname:S.fname, dur:dur, fs:fs, env:env, sm:sm, maxRms:maxRms, peakT:peakT, peakPct:peakPct,
+        introLen:introLen, frontPct:frontPct, lra:lra, ending:ending, bounds:bounds, genre:S.genre };
+  rebuildSections();
+  // quietest sustained stretch (the sag) — among sections >=4s, lowest avg energy
+  var sag=null;
+  S.sections.forEach(function(sec){
+    if((sec.t1-sec.t0)>=4 && (sag===null || sec.avgE<sag.avgE)) sag=sec;
+  });
+  S.sag = sag;
+}
+
+function energyAt(env,t){
+  var lo=0,hi=env.length-1;
+  while(lo<hi){ var m=(lo+hi)>>1; if(env[m].t<t) lo=m+1; else hi=m; }
+  return env[lo]?env[lo].e:0;
+}
+
+function rebuildSections(){
+  var b=S.bounds, secs=[];
+  for(var i=0;i<b.length-1;i++){
+    var t0=b[i], t1=b[i+1], s=0,n=0;
+    S.env.forEach(function(w){ if(w.t>=t0 && w.t<t1){ s+=w.e; n++; } });
+    var avg=n?s/n:0;
+    secs.push({ t0:t0, t1:t1, avgE:avg, custom:(S.sections&&S.sections[i]&&S.sections[i].custom)?S.sections[i].custom:false,
+                name:(S.sections&&S.sections[i]&&S.sections[i].custom)?S.sections[i].name:tierName(avg) });
+  }
+  S.sections = secs;
+}
+function tierName(e){ if(e>=0.82) return 'Peak'; if(e>=0.6) return 'Loud'; if(e>=0.35) return 'Mid'; return 'Quiet'; }
+
+/* ---------- canvas ---------- */
+function sizeCanvas(){
+  var cssW = canvas.parentElement.clientWidth - 0;
+  var cssH = window.innerWidth<600 ? 220 : 280;
+  var dpr = window.devicePixelRatio||1;
+  canvas.style.width = cssW+'px'; canvas.style.height = cssH+'px';
+  canvas.width = Math.round(cssW*dpr); canvas.height = Math.round(cssH*dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  return {w:cssW,h:cssH};
+}
+function drawArc(){
+  if(!S.env) return;
+  var dim = sizeCanvas(), W=dim.w, H=dim.h;
+  var padL=10, padR=10, padT=22, padB=26;
+  var x0=padL, x1=W-padR, y0=H-padB, y1=padT;
+  var dur=S.dur;
+  function X(t){ return x0 + (dur>0?t/dur:0)*(x1-x0); }
+  function Y(e){ return y0 - clamp(e,0,1)*(y0-y1); }
+  LAY = {X:X,Y:Y,x0:x0,x1:x1,y0:y0,y1:y1,W:W,H:H};
+
+  ctx.clearRect(0,0,W,H);
+
+  // baseline grid
+  ctx.strokeStyle='rgba(255,255,255,0.05)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y0); ctx.stroke();
+
+  // sag band (quietest stretch)
+  if(S.sag){
+    ctx.fillStyle='rgba(139,124,248,0.10)';
+    ctx.fillRect(X(S.sag.t0),y1,X(S.sag.t1)-X(S.sag.t0),y0-y1);
+  }
+
+  // build smooth curve points (downsample env to ~W samples)
+  var pts=[], step=Math.max(1,Math.floor(S.env.length/Math.max(2,(x1-x0))));
+  for(var i=0;i<S.env.length;i+=step){ pts.push({x:X(S.env[i].t), y:Y(S.env[i].e)}); }
+  pts.push({x:X(dur), y:Y(S.env[S.env.length-1].e)});
+
+  // filled area under curve
+  var grad=ctx.createLinearGradient(0,y1,0,y0);
+  grad.addColorStop(0,'rgba(0,232,162,0.34)'); grad.addColorStop(1,'rgba(0,232,162,0.02)');
+  ctx.beginPath(); ctx.moveTo(pts[0].x,y0);
+  smoothPath(pts); ctx.lineTo(pts[pts.length-1].x,y0); ctx.closePath();
+  ctx.fillStyle=grad; ctx.fill();
+
+  // curve stroke
+  ctx.beginPath(); ctx.moveTo(pts[0].x,pts[0].y); smoothPath(pts);
+  ctx.strokeStyle='#00e8a2'; ctx.lineWidth=2; ctx.lineJoin='round';
+  ctx.shadowColor='rgba(0,232,162,0.45)'; ctx.shadowBlur=8; ctx.stroke(); ctx.shadowBlur=0;
+
+  // section dividers + labels
+  ctx.font='600 11px DM Sans, sans-serif'; ctx.textBaseline='top';
+  for(var d=1; d<S.bounds.length-1; d++){
+    var bx=X(S.bounds[d]);
+    ctx.strokeStyle='rgba(255,255,255,0.16)'; ctx.setLineDash([3,4]); ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(bx,y1); ctx.lineTo(bx,y0); ctx.stroke(); ctx.setLineDash([]);
+    // grip handle
+    ctx.fillStyle='rgba(255,255,255,0.32)';
+    ctx.fillRect(bx-1.5, (y1+y0)/2-9, 3, 18);
+  }
+  // labels per section (centered)
+  S.sections.forEach(function(sec){
+    var cx=(X(sec.t0)+X(sec.t1))/2;
+    var lbl=sec.name; var tw=ctx.measureText(lbl).width;
+    ctx.fillStyle='rgba(13,13,30,0.72)';
+    roundRect(cx-tw/2-6, y1-2, tw+12, 17, 5); ctx.fill();
+    ctx.fillStyle=sec.custom?'#f5a623':'rgba(176,176,204,0.95)';
+    ctx.fillText(lbl, cx-tw/2, y1);
+    sec._lx=cx-tw/2-6; sec._lw=tw+12; sec._ly=y1-2; sec._lh=19; // label hit-box
+  });
+
+  // peak marker
+  var px=X(S.peakT), py=Y(S.env[binIdx(S.peakT)].e);
+  ctx.beginPath(); ctx.arc(px,py,5,0,Math.PI*2); ctx.fillStyle='#f5a623';
+  ctx.shadowColor='rgba(245,166,35,0.8)'; ctx.shadowBlur=12; ctx.fill(); ctx.shadowBlur=0;
+  ctx.fillStyle='#f5a623'; ctx.font='700 11px DM Mono, monospace';
+  var plbl='Peak '+fmtTime(S.peakT); var pw=ctx.measureText(plbl).width;
+  var plx=clamp(px-pw/2, x0, x1-pw);
+  ctx.fillText(plbl, plx, clamp(py-18,y1,y0));
+
+  // time axis ticks
+  ctx.fillStyle='rgba(112,112,144,0.9)'; ctx.font='10px DM Mono, monospace'; ctx.textBaseline='top';
+  var ticks=4;
+  for(var tk=0;tk<=ticks;tk++){
+    var tt=dur*tk/ticks, txx=X(tt);
+    var lab=fmtTime(tt), lw=ctx.measureText(lab).width;
+    ctx.fillText(lab, clamp(txx-lw/2,0,W-lw), y0+6);
+  }
+}
+function smoothPath(pts){
+  for(var i=1;i<pts.length;i++){
+    var p0=pts[i-1], p1=pts[i];
+    var mx=(p0.x+p1.x)/2;
+    ctx.quadraticCurveTo(p0.x,p0.y,mx,(p0.y+p1.y)/2);
+    ctx.quadraticCurveTo(mx,(p0.y+p1.y)/2,p1.x,p1.y);
+  }
+}
+function roundRect(x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function binIdx(t){ var lo=0,hi=S.env.length-1; while(lo<hi){var m=(lo+hi)>>1; if(S.env[m].t<t)lo=m+1; else hi=m;} return lo; }
+
+/* ---------- pointer: drag boundaries / rename labels ---------- */
+function canvasXY(ev){
+  var r=canvas.getBoundingClientRect();
+  var cx=(ev.touches?ev.touches[0].clientX:ev.clientX)-r.left;
+  var cy=(ev.touches?ev.touches[0].clientY:ev.clientY)-r.top;
+  return {x:cx,y:cy};
+}
+canvas.addEventListener('pointerdown', function(ev){
+  if(!LAY) return;
+  var p=canvasXY(ev);
+  // label hit?
+  for(var i=0;i<S.sections.length;i++){
+    var s=S.sections[i];
+    if(p.x>=s._lx && p.x<=s._lx+s._lw && p.y>=s._ly && p.y<=s._ly+s._lh){ renameSection(i); return; }
+  }
+  // boundary hit?
+  for(var d=1; d<S.bounds.length-1; d++){
+    if(Math.abs(p.x - LAY.X(S.bounds[d])) < 9){
+      drag.active=true; drag.idx=d; canvas.classList.add('editing'); canvas.setPointerCapture(ev.pointerId); return;
+    }
+  }
+});
+canvas.addEventListener('pointermove', function(ev){
+  if(!LAY) return;
+  if(!drag.active){
+    // hover affordance
+    var p=canvasXY(ev), near=false;
+    for(var d=1; d<S.bounds.length-1; d++){ if(Math.abs(p.x-LAY.X(S.bounds[d]))<9){near=true;break;} }
+    canvas.style.cursor = near?'ew-resize':'default';
+    return;
+  }
+  var px=canvasXY(ev).x;
+  var t = clamp((px-LAY.x0)/(LAY.x1-LAY.x0)*S.dur, S.bounds[drag.idx-1]+1, S.bounds[drag.idx+1]-1);
+  S.bounds[drag.idx]=t; rebuildSections(); drawArc();
+});
+function endDrag(ev){ if(drag.active){ drag.active=false; drag.idx=-1; canvas.classList.remove('editing'); rebuildSections(); refreshSag(); drawArc(); } }
+canvas.addEventListener('pointerup', endDrag);
+canvas.addEventListener('pointercancel', endDrag);
+function refreshSag(){ var sag=null; S.sections.forEach(function(sec){ if((sec.t1-sec.t0)>=4 && (sag===null||sec.avgE<sag.avgE)) sag=sec; }); S.sag=sag; }
+function renameSection(i){
+  var cur=S.sections[i].name;
+  var v=window.prompt('Rename this section', cur);
+  if(v!==null){ v=v.trim().slice(0,18); if(v){ S.sections[i].name=v; S.sections[i].custom=v; } drawArc(); }
+}
+
+/* ---------- diagnostics (createElement only, no innerHTML) ---------- */
+var DI_COLORS={good:'#00e8a2',watch:'#f5a623',fix:'#ff3d5a'};
+function mkDiag(level,name,bodyHtmlNodes,fixLabel,fixNodes){
+  var wrap=document.createElement('div'); wrap.className='diag-item'; wrap.style.setProperty('--di',DI_COLORS[level]);
+  var head=document.createElement('div'); head.className='diag-head';
+  var st=document.createElement('span'); st.className='diag-status'; st.textContent=(level==='good'?'Good':level==='watch'?'Watch':'Fix'); head.appendChild(st);
+  var nm=document.createElement('span'); nm.className='diag-name'; nm.textContent=name; head.appendChild(nm);
+  wrap.appendChild(head);
+  var body=document.createElement('div'); body.className='diag-body'; bodyHtmlNodes.forEach(function(n){body.appendChild(n);}); wrap.appendChild(body);
+  if(fixNodes){
+    var fix=document.createElement('div'); fix.className='diag-fix';
+    var fl=document.createElement('strong'); fl.textContent=fixLabel+' '; fix.appendChild(fl);
+    fixNodes.forEach(function(n){fix.appendChild(n);}); wrap.appendChild(fix);
+  }
+  return wrap;
+}
+function txt(s){ return document.createTextNode(s); }
+function ts(s){ var e=document.createElement('span'); e.className='diag-ts'; e.textContent=fmtTime(s); return e; }
+
+function renderDiagnostics(){
+  var list=document.getElementById('diagList');
+  while(list.firstChild) list.removeChild(list.firstChild);
+
+  // 1) intro length vs skip-risk
+  (function(){
+    var L=S.introLen, lvl, body, fix=null;
+    if(L>12){ lvl='fix';
+      body=[txt('The first sustained lift arrives at '), ts(L), txt('. On Spotify a play under 30s counts as a skip against the track, and most listeners decide in the opening seconds.')];
+      fix=[txt('Trim the intro or move a hook earlier so energy lifts before ~'),ts(8),txt('.')];
+    } else if(L>8){ lvl='watch';
+      body=[txt('Intro lifts at '), ts(L), txt(' — on the long side for streaming, but defensible if the opening earns attention.')];
+      fix=[txt('Make sure the first '),ts(8),txt(' gives a reason to stay.')];
+    } else { lvl='good';
+      body=[txt('Energy lifts early (around '), ts(L), txt('), so the track gets to its point before listeners drift.')];
+    }
+    list.appendChild(mkDiag(lvl,'Intro length',body,'Fix:',fix));
+  })();
+
+  // 2) monotony / dynamic range
+  (function(){
+    var lra=S.lra, lvl, body, fix=null;
+    if(lra<3){ lvl='fix';
+      body=[txt('Energy barely moves across the track — about '+lra.toFixed(1)+' LU of loudness range. With no contrast, sections blur together.')];
+      var sagAt = S.sag? Math.round((S.sag.t0+S.sag.t1)/2) : Math.round(S.dur*0.6);
+      fix=[txt('Pull energy down for a breakdown around '),ts(sagAt),txt(', then bring it back — the drop is what makes the lift land.')];
+    } else if(lra<5){ lvl='watch';
+      body=[txt('Moderate movement ('+lra.toFixed(1)+' LU). There is contrast, but a clearer drop-and-lift would add impact.')];
+    } else { lvl='good';
+      body=[txt('Healthy dynamic movement ('+lra.toFixed(1)+' LU) — the arc breathes between loud and quiet.')];
+    }
+    list.appendChild(mkDiag(lvl,'Monotony / contrast',body,'Fix:',fix));
+  })();
+
+  // 3) build into the peak + peak position
+  (function(){
+    var pp=S.peakPct, prePeakE=energyAt(S.env,Math.max(0,S.peakT-10)), peakE=energyAt(S.env,S.peakT);
+    var hasBuild = peakE>prePeakE*1.15;
+    var lvl, body, fix=null;
+    if(pp<0.25){ lvl='watch';
+      body=[txt('The loudest moment lands at '), ts(S.peakT), txt(', very early — most of the track plays out after the payoff.')];
+      fix=[txt('Hold something back so there is a bigger moment later, or treat this as an intentional front-loaded hook.')];
+    } else if(pp>0.85){ lvl='watch';
+      body=[txt('The peak sits at '), ts(S.peakT), txt(', right at the end — listeners wait almost the whole track for it.')];
+      fix=[txt('Bring a strong section forward so the energy pays off before the final stretch.')];
+    } else if(!hasBuild){ lvl='watch';
+      body=[txt('The peak at '), ts(S.peakT), txt(' arrives without much of a run-up — energy jumps rather than builds.')];
+      fix=[txt('Add a riser, drum build or filter sweep in the ~10s before the peak so it feels earned.')];
+    } else { lvl='good';
+      body=[txt('There is a clear build into the peak at '), ts(S.peakT), txt(' — energy climbs into the loudest moment.')];
+    }
+    list.appendChild(mkDiag(lvl,'Build &amp; peak'.replace('&amp;','&'),body,'Fix:',fix));
+  })();
+
+  // 4) ending shape
+  (function(){
+    var e=S.ending, lvl=(e.key==='hard')?'watch':'good', body, fix=null;
+    body=[txt(e.label+' — '+e.detail+'.')];
+    if(e.key==='hard'){ fix=[txt('A hard ending can work, but confirm it is deliberate — an abrupt cut can read as unfinished. A short tail or fade often resolves better.')]; }
+    list.appendChild(mkDiag(lvl,'Ending',body,'Fix:',fix));
+  })();
+
+  // 5) worst-section flag (free)
+  if(S.sag){
+    var body=[txt('Your lowest-energy sustained stretch runs '), ts(S.sag.t0), txt(' – '), ts(S.sag.t1), txt('. If that is mid-song it may read as a lull rather than a deliberate breakdown.')];
+    var lvl = (S.sag.t0>S.dur*0.25 && S.sag.t1<S.dur*0.85) ? 'watch':'good';
+    var fix = lvl==='watch' ? [txt('Either commit to it as a breakdown (strip it back further, then lift hard) or add a layer to carry energy through.')] : null;
+    list.appendChild(mkDiag(lvl,'Quietest stretch',body,'Fix:',fix));
+  }
+}
+
+/* ---------- data pipe (anonymized result metrics only) ---------- */
+function arcShapeClass(){
+  if(S.lra<3) return 'flat';
+  if(S.peakPct>0.85) return 'late-peak';
+  if(S.peakPct<0.25) return 'early-peak';
+  if(S.frontPct>0.56) return 'front-loaded';
+  if(S.frontPct<0.44) return 'back-loaded';
+  return 'balanced';
+}
+function logArc(){
+  var payload={
+    genre: S.genre||'unset',
+    arc_shape_class: arcShapeClass(),
+    intro_length_s: Math.round(S.introLen),
+    peak_position_pct: Math.round(S.peakPct*100),
+    dynamic_variance_lu: Math.round(S.lra*10)/10,
+    duration_s: Math.round(S.dur)
+  };
+  try{ if(window.gtag) window.gtag('event','arc_analyzed',payload); }catch(e){}
+  if(ARC_EVENT_ENDPOINT){
+    try{ fetch(ARC_EVENT_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),keepalive:true}).catch(function(){}); }catch(e){}
+  }
+}
+
+/* ---------- file handling ---------- */
+var actx=null;
+function getCtx(){ if(!actx) actx=new (window.AudioContext||window.webkitAudioContext)(); return actx; }
+function setError(msg){ var b=document.getElementById('errBox'); b.style.display='block'; b.textContent=msg; }
+function clearError(){ var b=document.getElementById('errBox'); b.style.display='none'; b.textContent=''; }
+
+function onFile(file){
+  if(!file) return;
+  clearError();
+  S.fname=file.name;
+  document.getElementById('uploadZone').classList.add('loaded');
+  document.getElementById('upName').textContent=file.name;
+  document.getElementById('upMeta').textContent=(file.size/1048576).toFixed(1)+' MB';
+  document.getElementById('genBtn').disabled=false;
+  S._file=file;
+}
+function runAnalysis(){
+  if(!S._file) return;
+  S.genre=document.getElementById('genreSel').value;
+  var busy=document.getElementById('upBusy'); busy.style.display='block';
+  var btn=document.getElementById('genBtn'); btn.disabled=true; btn.textContent='Measuring…';
+  var fr=new FileReader();
+  fr.onload=function(){
+    getCtx().decodeAudioData(fr.result.slice(0)).then(function(buffer){
+      try{
+        analyzeArc(buffer);
+        document.getElementById('arcFname').textContent=S.fname;
+        document.getElementById('mDur').textContent=fmtTime(S.dur);
+        var im=document.getElementById('mIntro'); im.textContent=fmtTime(S.introLen);
+        document.getElementById('mPeak').textContent=fmtTime(S.peakT);
+        document.getElementById('mLra').textContent='';
+        document.getElementById('mLra').appendChild(document.createTextNode(S.lra.toFixed(1)));
+        var lu=document.createElement('small'); lu.textContent=' LU'; document.getElementById('mLra').appendChild(lu);
+        document.getElementById('results').classList.add('show');
+        drawArc(); renderDiagnostics(); logArc();
+        btn.textContent='Re-map the energy arc →'; btn.disabled=false;
+        document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});
+      }catch(err){ setError('Could not analyse this file. Try a different bounce (WAV or MP3).'); btn.textContent='Map the energy arc →'; btn.disabled=false; }
+      busy.style.display='none';
+    }).catch(function(){
+      setError('That file could not be decoded. Most WAV, MP3, FLAC, M4A and OGG files work — try exporting a standard WAV or MP3.');
+      busy.style.display='none'; btn.textContent='Map the energy arc →'; btn.disabled=false;
+    });
+  };
+  fr.onerror=function(){ setError('Could not read the file.'); busy.style.display='none'; btn.textContent='Map the energy arc →'; btn.disabled=false; };
+  fr.readAsArrayBuffer(S._file);
+}
+
+/* ---------- wiring ---------- */
+var zone=document.getElementById('uploadZone'), inp=document.getElementById('fileInp');
+inp.addEventListener('change',function(){ if(inp.files.length) onFile(inp.files[0]); });
+zone.addEventListener('dragover',function(e){ e.preventDefault(); zone.classList.add('drag'); });
+zone.addEventListener('dragleave',function(){ zone.classList.remove('drag'); });
+zone.addEventListener('drop',function(e){ e.preventDefault(); zone.classList.remove('drag'); if(e.dataTransfer.files.length) onFile(e.dataTransfer.files[0]); });
+document.getElementById('genBtn').addEventListener('click',runAnalysis);
+
+document.getElementById('copyLink').addEventListener('click',function(){
+  var b=this; navigator.clipboard.writeText('https://musicproductionwiki.com/tools/arrangement-energy-arc.html').then(function(){ b.textContent='Copied!'; setTimeout(function(){b.textContent='Copy link';},1600); }).catch(function(){});
+});
+document.getElementById('copyEmbed').addEventListener('click',function(){
+  var b=this; navigator.clipboard.writeText('<iframe src="https://musicproductionwiki.com/tools/arrangement-energy-arc.html" width="100%" height="900" frameborder="0" style="border-radius:16px"></iframe>').then(function(){ b.textContent='Embed copied!'; setTimeout(function(){b.textContent='Copy embed code';},1600); }).catch(function(){});
+});
+
+var rT; window.addEventListener('resize',function(){ clearTimeout(rT); rT=setTimeout(function(){ if(S.env) drawArc(); },150); });
+
+})();
+</script>
+<div class="usearch" id="usearch" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="usearch-box">
+    <div class="usearch-top">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input id="usearchInput" type="text" placeholder="Search tools, articles, the Bible…" autocomplete="off">
+      <kbd>esc</kbd>
+    </div>
+    <div class="usearch-results" id="usearchResults"></div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
+<script>
+(function(){
+  // === production parity: lazy-load index on first open, build Fuse once ===
+  var data=null, fuse=null;
+  var overlay=document.getElementById('usearch');
+  var input=document.getElementById('usearchInput');
+  var box=document.getElementById('usearchResults');
+  var sel=-1, current=[];
+  // article slugs are bare; bible/ and tools/ slugs carry their prefix (verified vs live search-index.json)
+  function urlFor(s){ return (s.indexOf('bible/')===0||s.indexOf('tools/')===0) ? '/'+s : '/articles/'+s; }
+
+  function buildFuse(arr){
+    data=arr;
+    fuse=new Fuse(data,{keys:['title','category','description'],threshold:0.34,ignoreLocation:true,minMatchCharLength:2});
+  }
+  function ensureIndex(cb){
+    if(fuse){cb();return;}
+    // PRODUCTION: one shared index, lazy-loaded on first open.
+    fetch('/search-index.json').then(function(r){return r.json();}).then(function(arr){
+      buildFuse(arr); cb();
+    }).catch(function(){ box.textContent='Search failed to load.'; });
+  }
+
+  function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  function render(results){
+    current=results;
+    while(box.firstChild) box.removeChild(box.firstChild);   // no innerHTML
+    if(!input.value.trim()){ var p=document.createElement('div'); p.className='usearch-empty'; p.textContent='Start typing to search everything.'; box.appendChild(p); return; }
+    if(!results.length){ var n=document.createElement('div'); n.className='usearch-empty'; n.textContent='No results for "'+input.value+'".'; box.appendChild(n); return; }
+    results.slice(0,12).forEach(function(r,i){
+      var e=r.item||r;
+      var a=document.createElement('a'); a.href=urlFor(e.slug); if(i===sel)a.className='sel';
+      var top=document.createElement('div'); top.className='ur-top';
+      var t=document.createElement('span'); t.className='ur-title'; t.textContent=e.title;
+      var c=document.createElement('span'); c.className='ur-cat'; c.setAttribute('data-c',e.category||''); c.textContent=e.category||'';
+      top.appendChild(t); top.appendChild(c); a.appendChild(top);
+      if(e.description){ var d=document.createElement('div'); d.className='ur-desc'; d.textContent=e.description; a.appendChild(d); }
+      box.appendChild(a);
+    });
+  }
+
+  function open(q){ ensureIndex(function(){ overlay.classList.add('open'); input.focus(); if(q!=null){input.value=q;} sel=-1; render(input.value?fuse.search(input.value):[]); }); }
+  function close(){ overlay.classList.remove('open'); }
+
+  // wire every nav's search button to the shared overlay
+  document.querySelectorAll('[data-nav-search]').forEach(function(b){ b.addEventListener('click',function(){open(null);}); });
+  input.addEventListener('input',function(){ sel=-1; render(fuse?fuse.search(input.value):[]); });
+  input.addEventListener('keydown',function(e){
+    if(e.key==='Escape')close();
+    else if(e.key==='ArrowDown'){e.preventDefault(); sel=Math.min(sel+1,Math.min(current.length,12)-1); render(current);}
+    else if(e.key==='ArrowUp'){e.preventDefault(); sel=Math.max(sel-1,0); render(current);}
+    else if(e.key==='Enter'&&current[sel]){ var e2=current[sel].item||current[sel]; location.href=urlFor(e2.slug); }
+  });
+  overlay.addEventListener('click',function(e){ if(e.target===overlay)close(); });
+  document.addEventListener('keydown',function(e){ if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();open(null);} });
+})();
+</script>
+</body>
+</html>
