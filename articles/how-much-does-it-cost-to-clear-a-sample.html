@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="What sample clearance costs in 2026: master vs publishing, the upfront-vs-lifetime-split math, and when to interpolate or drop instead of paying." />
+  <title>How Much Does It Cost to Clear a Sample? (2026 Cost Guide)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <style>
+    #readingProgress{position:fixed;top:0;left:0;height:3px;background:var(--teal);width:0%;z-index:200;transition:width 0.1s linear;}
+    .quick-answer{background:linear-gradient(135deg,rgba(0,212,168,0.08),rgba(167,139,250,0.06));border:1px solid rgba(0,212,168,0.3);border-left:4px solid var(--teal);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .quick-answer-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.6rem;}
+    .quick-answer p{font-size:1rem;line-height:1.65;color:var(--text-primary);margin:0;}
+    .skill-badge{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .6rem;border-radius:4px;margin-left:.6rem;vertical-align:middle;position:relative;top:-2px;}
+    .skill-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .skill-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .skill-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .settings-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .settings-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .settings-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .settings-table tr:last-child td{border-bottom:none;}
+    .settings-table tr:hover td{background:var(--bg-surface);}
+    .settings-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .settings-table .mono{font-family:var(--font-mono);font-size:.82rem;color:var(--teal);}
+    .mistake-box{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-left:4px solid #ef4444;border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .mistake-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ef4444;margin-bottom:.4rem;}
+    .mistake-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference{border-left:3px solid var(--purple);padding:.75rem 1.25rem;margin:1.25rem 0;background:rgba(167,139,250,0.05);border-radius:0 6px 6px 0;}
+    .pro-reference-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.35rem;}
+    .pro-reference p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference strong{color:var(--text-primary);}
+    .listening-prescription{background:var(--bg-void);border:1px solid var(--border-default);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;position:relative;}
+    .listening-prescription::before{content:'🎧';position:absolute;top:-14px;left:1.5rem;background:var(--bg-void);padding:0 .4rem;font-size:1.1rem;}
+    .listening-prescription-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:.75rem;}
+    .listening-prescription p{font-size:.9rem;line-height:1.7;color:var(--text-secondary);margin:0 0 .5rem;}
+    .listening-record{font-weight:600;color:var(--text-primary);}
+    .decision-framework{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .decision-framework-title{font-family:var(--font-display);font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:1rem;}
+    .decision-item{display:flex;gap:1rem;padding:.65rem 0;border-bottom:1px solid var(--border-subtle);font-size:.88rem;line-height:1.55;}
+    .decision-item:last-child{border-bottom:none;}
+    .decision-if{color:var(--text-muted);font-style:italic;min-width:2rem;}
+    .decision-then{color:var(--text-primary);}
+    .decision-then strong{color:var(--teal);}
+    .exercise-block{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.25rem 0;}
+    .exercise-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;}
+    .exercise-badge{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .7rem;border-radius:4px;}
+    .exercise-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .exercise-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .exercise-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .exercise-title{font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text-primary);}
+    .exercise-block ol{margin:0;padding-left:1.25rem;color:var(--text-secondary);font-size:.88rem;line-height:1.7;}
+    .exercise-block ol li{margin-bottom:.4rem;}
+    .version-line{font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:4px;padding:.4rem .75rem;margin:.75rem 0 1.5rem;display:inline-block;}
+    .go-deeper{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:10px;padding:1.75rem;margin:2.5rem 0;}
+    .go-deeper-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text-primary);margin-bottom:1.25rem;}
+    .go-deeper-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;}
+    .go-deeper-item{background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:7px;padding:1rem 1.1rem;}
+    .go-deeper-item-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.35rem;}
+    .go-deeper-item a{font-size:.88rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;}
+    .go-deeper-item p{font-size:.78rem;color:var(--text-muted);margin:.3rem 0 0;}
+    .citation{font-size:.78rem;color:var(--text-muted);font-style:italic;margin-top:.25rem;}
+    .diagram-wrap{margin:1.75rem 0;background:var(--bg-void);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem;overflow-x:auto;}
+    .diagram-caption{font-size:.78rem;color:var(--text-muted);text-align:center;margin-top:.75rem;font-style:italic;}
+    .highlight-box{background:rgba(0,212,168,0.06);border:1px solid rgba(0,212,168,0.2);border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .highlight-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.4rem;}
+    .highlight-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin:1.5rem 0;}
+    .stat-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem;text-align:center;}
+    .stat-number{font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--teal);display:block;}
+    .stat-label{font-size:.78rem;color:var(--text-secondary);margin-top:.25rem;}
+    .action-steps{counter-reset:steps;list-style:none;padding:0;margin:1.5rem 0;}
+    .action-steps li{counter-increment:steps;position:relative;padding:.85rem 0 .85rem 2.6rem;border-bottom:1px solid var(--border-subtle);font-size:.9rem;color:var(--text-secondary);line-height:1.6;}
+    .action-steps li:last-child{border-bottom:none;}
+    .action-steps li::before{content:counter(steps);position:absolute;left:0;top:.9rem;background:var(--teal);color:#000;font-weight:800;font-size:.75rem;width:1.6rem;height:1.6rem;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+    .genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:1.5rem 0;}
+    .genre-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem 1.25rem;}
+    .genre-card-name{font-family:var(--font-display);font-size:.85rem;font-weight:700;color:var(--teal);margin-bottom:.4rem;}
+    .genre-card p{font-size:.82rem;color:var(--text-secondary);line-height:1.55;margin:0;}
+    .comparison-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .comparison-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .comparison-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .comparison-table tr:last-child td{border-bottom:none;}
+    .comparison-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .affiliate-cta{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,212,168,0.1);border:1px solid rgba(0,212,168,0.25);color:var(--teal);font-size:.82rem;font-weight:600;padding:.45rem .9rem;border-radius:6px;text-decoration:none;}
+
+    .faq-accordion{margin:1.75rem 0;}
+    .faq-accordion-item{background:var(--bg-surface);border:1px solid var(--border-subtle);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;margin-bottom:8px;overflow:hidden;}
+    .faq-accordion-q{display:flex;align-items:flex-start;padding:1rem 1.25rem;cursor:pointer;gap:.75rem;}
+    .faq-accordion-q:hover{background:var(--bg-elevated);}
+    .faq-accordion-icon{width:16px;height:16px;flex-shrink:0;margin-top:3px;color:var(--purple);transition:transform .2s ease;}
+    .faq-accordion-icon.open{transform:rotate(45deg);}
+    .faq-accordion-q-inner{display:flex;flex-direction:column;}
+    .faq-accordion-label{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin-bottom:.2rem;}
+    .faq-accordion-q-text{font-size:.92rem;font-weight:600;color:var(--text-primary);line-height:1.45;font-family:var(--font-display);}
+    .faq-accordion-a{display:none;padding:0 1.25rem 1rem 2.75rem;font-size:.88rem;color:var(--text-secondary);line-height:1.7;border-top:1px solid var(--border-subtle);padding-top:.85rem;}
+    .faq-accordion-a.open{display:block;}
+    .scorecard-table{display:table;table-layout:fixed;width:100%;border-collapse:collapse;font-size:.88rem;margin:1.5rem 0;border:1px solid var(--border-default);border-radius:8px;overflow:hidden;}
+    .scorecard-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;padding:.7rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .scorecard-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;vertical-align:top;}
+    .scorecard-table tr:last-child td{border-bottom:none;}
+    .scorecard-table td:first-child{color:var(--text-primary);font-weight:600;}
+    .scorecard-table .sc-num{font-family:var(--font-mono);font-weight:600;color:var(--teal);text-align:center;}
+    .scorecard-table .sc-amber{color:var(--purple);}
+    .scorecard-table .sc-overall td{background:rgba(0,212,168,0.06);font-weight:700;}
+    .vs-verdict{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.1rem 0 .4rem;}
+    @media(max-width:560px){.vs-verdict{grid-template-columns:1fr;}}
+    .vs-card{background:var(--bg-void);border:1px solid var(--border-subtle);border-radius:8px;padding:1.2rem 1.35rem;}
+    .vs-card.win{border-color:rgba(0,212,168,0.4);}
+    .vs-name{font-family:var(--font-display);font-size:1.02rem;font-weight:700;color:var(--text-primary);margin-bottom:.35rem;}
+    .vs-score{font-size:2.5rem;font-weight:800;color:var(--teal);line-height:1;font-family:var(--font-display);}
+    .vs-score small{font-size:.95rem;color:var(--text-muted);font-weight:600;}
+    .vs-tag{font-size:.8rem;color:var(--text-secondary);margin:.5rem 0 0;line-height:1.5;}
+    .vs-pc{font-size:.82rem;line-height:1.6;margin-top:.55rem;color:var(--text-secondary);}
+    .vs-pc strong{color:var(--text-primary);}
+</style>
+
+  <link rel="canonical" href="https://musicproductionwiki.com/articles/how-much-does-it-cost-to-clear-a-sample.html"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="How Much Does It Cost to Clear a Sample? (2026 Cost Guide)"/>
+  <meta property="og:description" content="What sample clearance costs in 2026: master vs publishing, the upfront-vs-lifetime-split math, and when to interpolate or drop instead of paying."/>
+  <meta property="og:url" content="https://musicproductionwiki.com/articles/how-much-does-it-cost-to-clear-a-sample.html"/>
+  <meta property="og:site_name" content="Music Production Wiki"/>
+  <meta property="og:image" content="https://musicproductionwiki.com/og-image.png"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="article:author" content="Music Production Wiki Team"/>
+  <meta property="article:section" content="Music Business"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="How Much Does It Cost to Clear a Sample? (2026 Cost Guide)"/>
+  <meta name="twitter:description" content="What sample clearance really costs in 2026 — the two bills, the lifetime-split math, and when to interpolate instead. A verified producer's cost guide."/>
+  <meta name="twitter:image" content="https://musicproductionwiki.com/og-image.png"/>
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="article:published_time" content="2026-06-17T00:00:00+00:00" />
+  <meta property="article:modified_time" content="2026-06-17T00:00:00+00:00" />
+  <meta name="keywords" content="how to clear a sample, sample clearance, sample clearance cost, how to clear a sample legally, do i need to clear a sample, clear a sample for a song, interpolation vs sampling, sample clearance 2026" />
+  <!-- Article schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How Much Does It Cost to Clear a Sample? (And When to Interpolate Instead)",
+  "description": "What sample clearance really costs in 2026: the two bills (master and publishing), the upfront-vs-lifetime-split math, and when to interpolate or drop it instead.",
+  "image": [
+    "https://musicproductionwiki.com/og-image.png",
+    "https://musicproductionwiki.com/images/sample-clearance-cost-two-copyrights.png",
+    "https://musicproductionwiki.com/images/sample-clearance-clear-vs-interpolate.png",
+    "https://musicproductionwiki.com/images/sample-clearance-upfront-vs-lifetime.png"
+  ],
+  "datePublished": "2026-06-21",
+  "dateModified": "2026-06-21",
+  "wordCount": 4200,
+  "timeRequired": "PT18M",
+  "keywords": [
+    "how much does it cost to clear a sample",
+    "sample clearance cost",
+    "sample clearance 2026",
+    "interpolation cost",
+    "master vs publishing",
+    "publishing split",
+    "clear interpolate or drop"
+  ],
+  "author": {
+    "@type": "Organization",
+    "name": "Music Production Wiki",
+    "url": "https://musicproductionwiki.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Music Production Wiki",
+    "url": "https://musicproductionwiki.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://musicproductionwiki.com/og-image.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://musicproductionwiki.com/articles/how-much-does-it-cost-to-clear-a-sample.html"
+  },
+  "articleSection": "Music Business",
+  "inLanguage": "en-US"
+}
+</script>
+  <!-- HowTo schema -->
+  
+  <!-- Organization schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Music Production Wiki",
+  "url": "https://musicproductionwiki.com",
+  "logo": {"@type": "ImageObject", "url": "https://musicproductionwiki.com/og-image.png"}
+}
+</script>
+  <!-- WebSite schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Music Production Wiki",
+  "url": "https://musicproductionwiki.com",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {"@type": "EntryPoint", "urlTemplate": "https://musicproductionwiki.com/?s={search_term_string}"},
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+<!-- Breadcrumb schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://musicproductionwiki.com/"},
+    {"@type": "ListItem", "position": 2, "name": "Music Business", "item": "https://musicproductionwiki.com/categories/music-business.html"},
+    {"@type": "ListItem", "position": 3, "name": "Royalties & Publishing", "item": "https://musicproductionwiki.com/categories/music-business/royalties-publishing.html"},
+    {"@type": "ListItem", "position": 4, "name": "How Much Does It Cost to Clear a Sample?", "item": "https://musicproductionwiki.com/articles/how-much-does-it-cost-to-clear-a-sample.html"}
+  ]
+}
+</script>
+  <!-- FAQ schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How much does it cost to clear a sample?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "There is no fixed price. Industry-reported 2026 ranges put the upfront fee anywhere from a few hundred dollars for an obscure indie record to $50,000 or more for a famous master used prominently, with a common band around $2,000–$25,000 per license — and that is before the ongoing royalty split of roughly 15–50% (up to 100% of the publishing if the sample is your hook). Master and publishing are billed separately. Every figure is a sourced range, not a quote; the rights holders set the actual price and can refuse entirely."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why do I have to pay twice for one sample?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Because a recording contains two separate copyrights: the master (the recording, owned by the label) and the publishing (the composition, owned by the songwriters and publishers). A direct sample uses both, so you clear both, often with different owners. If you only clear one, the track is still uncleared. The exception is interpolation, where re-recording the part yourself removes the master and leaves only the publishing."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is interpolation cheaper than sampling?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Usually, yes — because it removes the master bill entirely. You re-record the part with new performers, so there is no master license to buy and no label to negotiate with. You still clear the publishing, reported around $2,000–$25,000+ upfront plus 25–50% of your publishing in 2026. It is not free, and for a signature hook the publishers can still demand a large split, but it cuts your negotiation from two parties to one and stays open even when a master owner refuses."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there a number of seconds I can sample legally?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. There is no “five-second rule” and no safe number of bars. If a sample is recognizable, it needs clearance, regardless of length. Pitching, chopping, filtering, or reversing it does not remove the original copyright either — it is still a copy of someone else’s recording and composition. The test is whether the sample is identifiable, not how long it runs."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens if I release a track with an uncleared sample?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It is copyright infringement, and the consequences are real: platforms take the track down when a rights holder files a claim (costing you streams, playlist placements, and algorithmic momentum), and the owner can demand all of the revenue your track has generated — not their percentage, the entire amount — plus possible legal action. The asymmetry is the point: clearing is a known cost; not clearing is an uncapped one that lands exactly when the track starts working."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is the royalty split more important than the upfront fee?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Because the upfront fee is paid once, but the split is a permanent share of everything your song earns. A 50% publishing split on a track that does well can cost many times the upfront fee over the life of the song, paid out slowly and forever. Producers budget for the fee and forget the split, which is backwards — price a sample against the lifetime of the track, not just release day."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long does sample clearance take?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Plan for 2 to 6 months from first contact to signed agreements, and sometimes longer. Major labels and publishers move slowly, and multiple rights holders — several co-writers, separate publishers, a label on the master — each add time. Start the moment you decide to use a sample, never near your release date; a rushed clearance hands the rights holder all the leverage and usually a higher price."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I avoid clearance costs entirely?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Two clean routes. Use a pre-cleared sampling service such as Tracklib, which licenses real records with the rights handled, or use royalty-free sample libraries where you keep 100% of your publishing. The other route is to write the part yourself — an original melody or texture owes nobody. Interpolation reduces but does not eliminate cost, since you still clear publishing; only pre-cleared or original material removes clearance completely."
+      }
+    }
+  ]
+}
+</script>
+<style id="toc-skin">
+.toc-widget .sidebar-widget-header{margin-bottom:.35rem}
+.toc-list{counter-reset:tocnum;list-style:none;margin:0;padding:0}
+.toc-list li{counter-increment:tocnum;position:relative;margin:0;border-left:2px solid var(--border-subtle);transition:border-color .15s ease,background .15s ease}
+.toc-list li a{display:flex;gap:.7rem;align-items:baseline;padding:.5rem .85rem .5rem 1rem;font-size:.82rem;line-height:1.45;font-weight:500;color:var(--text-secondary);text-decoration:none;transition:color .15s ease}
+.toc-list li a::before{content:counter(tocnum,decimal-leading-zero);font-family:var(--font-mono,ui-monospace,monospace);font-size:.7rem;font-weight:600;letter-spacing:.04em;color:var(--text-muted);flex:0 0 auto;min-width:1.5em;padding-top:.05rem}
+.toc-list li a:hover{color:var(--text-primary)}
+.toc-list li.active{border-left-color:var(--teal);background:linear-gradient(90deg,rgba(0,212,168,.08),transparent 80%)}
+.toc-list li.active a{color:var(--teal);font-weight:600}
+.toc-list li.active a:hover{color:var(--teal)}
+.toc-list li.active a::before{color:var(--teal)}
+</style>
+<style id="toc-bar-css">
+.toc-bar{display:none}
+@media (max-width: 900px){
+.toc-bar{display:block;position:sticky;top:60px;z-index:400;background:var(--bg-void);border-bottom:1px solid var(--border-default);overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(to right,#000 88%,transparent 100%);mask-image:linear-gradient(to right,#000 88%,transparent 100%)}
+.toc-bar::-webkit-scrollbar{display:none}
+.toc-bar-track{display:flex;gap:4px;padding:9px 10px;min-width:max-content}
+.toc-bar-track a{color:var(--text-secondary);text-decoration:none;font-family:var(--font-mono,ui-monospace,monospace);font-size:10px;text-transform:uppercase;letter-spacing:.05em;padding:6px 10px;border-radius:4px;white-space:nowrap;min-height:30px;display:inline-flex;align-items:center;transition:color .15s,background .15s}
+.toc-bar-track a.active{color:var(--teal);background:var(--bg-elevated)}
+.article-body h2[id]{scroll-margin-top:116px}
+}
+@media (max-width: 900px) and (hover:hover){.toc-bar-track a:hover{color:var(--teal)}}
+</style>
+</head>
+<body>
+<div id="readingProgress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+<style id="mpw-unav-css">
+
+.mnav-wrap,.usearch{--ink:#09090d;--panel:#0f0f18;--panel2:#15151f;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);--amber:#f5a623;--teal:#00e8a2;--teal-d:rgba(0,232,162,.12);--text:#f2f2f7;--t2:#9a9ab2;--t3:#56566f;--sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'DM Mono',ui-monospace,SFMono-Regular,monospace;}
+.mnav-wrap *,.mnav-wrap *::before,.mnav-wrap *::after,.usearch *,.usearch *::before,.usearch *::after{box-sizing:border-box;margin:0;padding:0}
+/* host-CSS shield: a page loading style.css (articles) must not bleed its body font/color/line-height into the bar. Direct rule on .mnav-wrap beats inherited body styles. */
+.mnav-wrap,.usearch{font-family:var(--sans);font-size:14px;font-weight:400;font-style:normal;line-height:1.4;letter-spacing:normal;color:var(--text);text-align:left;text-transform:none}
+/* S91 host-CSS isolation (:where() = zero-specificity; beats style.css bare a/li by source order, LOSES to nav's own .drw-card/.mnav-flat classes) */
+:where(.mnav-wrap,.usearch) a{color:inherit;text-decoration:none;background:none;border:0;font:inherit;letter-spacing:inherit}
+:where(.mnav-wrap,.usearch) ul,:where(.mnav-wrap,.usearch) ol{list-style:none;margin:0;padding:0;border:0}
+:where(.mnav-wrap,.usearch) li{margin:0;padding:0;border:0;font-size:inherit;line-height:inherit;color:inherit;background:none}
+:where(.mnav-wrap,.usearch) h1,:where(.mnav-wrap,.usearch) h2,:where(.mnav-wrap,.usearch) h3,:where(.mnav-wrap,.usearch) h4,:where(.mnav-wrap,.usearch) h5,:where(.mnav-wrap,.usearch) h6,:where(.mnav-wrap,.usearch) p{margin:0;padding:0;border:0;font:inherit;color:inherit;line-height:inherit;letter-spacing:inherit;text-transform:none}
+:where(.mnav-wrap,.usearch) button{font:inherit;color:inherit;background:none;border:0;letter-spacing:inherit;text-align:inherit}
+:where(.mnav-wrap,.usearch) svg{display:inline-block;vertical-align:middle}
+:where(.mnav-wrap,.usearch) img{max-width:none}
+.mnav-wrap{background:var(--ink);border-bottom:1px solid var(--line);position:relative}
+.mnav{height:60px;display:flex;align-items:center}
+.mnav-in{max-width:1180px;margin:0 auto;padding:0 22px;width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.mnav-brand{display:flex;align-items:center;gap:10px;color:var(--text);text-decoration:none;flex:0 0 auto}
+.mnav-word{font-weight:700;font-size:15px;letter-spacing:-.02em}
+.mnav-links{display:flex;align-items:center;gap:6px;margin-left:8px}
+.mnav-flat,.mnav-trigger{color:var(--t2);background:none;border:0;font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;padding:8px 12px;border-radius:8px;display:inline-flex;align-items:center;gap:6px}
+.mnav-flat:hover,.mnav-trigger:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.caret{font-size:9px;color:var(--t3);transition:transform .18s}
+.mnav-right{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.mnav-search{background:none;border:0;color:var(--t2);cursor:pointer;display:flex;padding:6px;border-radius:8px}
+.mnav-search:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.mnav-cta{border:1px solid var(--teal);color:var(--teal);text-decoration:none;padding:7px 15px;border-radius:8px;font-size:13px;font-weight:600;white-space:nowrap}
+.mnav-cta:hover{background:var(--teal-d)}
+.mnav-wrap[data-section="tools"] .mnav-flat[data-nav="tools"]{color:var(--text);font-weight:600}
+.mnav-wrap[data-section="articles"] .mnav-trigger[data-nav="articles"]{color:var(--text);font-weight:600}
+/* Bible = amber brand color, desktop link + mobile drawer */
+.mnav-flat[data-nav="bible"],.drw-link[data-nav="bible"]{color:#f5a623!important;font-weight:600}
+.mnav-flat[data-nav="bible"]:hover,.drw-link[data-nav="bible"]:hover{color:#ffc04d!important}
+.mnav-item{position:relative}
+.mnav-panel,.mnav-panel-wide{position:absolute;top:calc(100% + 6px);left:0;z-index:50;display:none;background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:14px;box-shadow:0 24px 60px -24px rgba(0,0,0,.9);min-width:240px}
+.mnav-panel-wide{grid-template-columns:1fr 1fr;gap:8px 22px;min-width:520px}
+.mnav-item:hover .mnav-panel,.mnav-item:focus-within .mnav-panel,.mnav-item:hover .mnav-panel-wide,.mnav-item:focus-within .mnav-panel-wide{display:grid}
+.mnav-item:hover .caret{transform:rotate(180deg)}
+.mp-col{display:flex;flex-direction:column}
+.mp-head{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);padding:6px 10px 8px}
+.mnav-panel a{display:flex;flex-direction:column;gap:1px;padding:8px 10px;border-radius:9px;text-decoration:none}
+.mnav-panel a:hover{background:rgba(255,255,255,.05)}
+.mp-name{color:var(--text);font-size:13.5px;font-weight:600}.mp-desc{color:var(--t2);font-size:11.5px}
+.mnav-sub{display:none;background:var(--panel);border-bottom:1px solid var(--line)}
+.mnav-wrap[data-section="bible"] .mnav-sub{display:block}
+.mnav-sub-in{max-width:1180px;margin:0 auto;padding:10px 22px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.mnav-sub-in::-webkit-scrollbar{display:none}
+.mnav-sub-in a{flex:0 0 auto;color:var(--t2);text-decoration:none;font-size:12.5px;font-family:var(--mono);border:1px solid var(--line2);border-radius:99px;padding:5px 12px;white-space:nowrap}
+.mnav-sub-in a:hover{color:var(--teal);border-color:rgba(0,232,162,.4)}
+.mnav-toggle{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.mnav-burger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:8px;border-radius:8px}
+.mnav-burger span{display:block;width:20px;height:2px;background:var(--text);border-radius:2px;transition:.2s}
+.mnav-drawer{display:none;flex-direction:column;padding:6px 18px 16px;background:var(--ink);border-bottom:1px solid var(--line)}
+.mnav-drawer details{border-bottom:1px solid var(--line)}
+.mnav-drawer summary{list-style:none;cursor:pointer;padding:13px 2px;font-size:15px;font-weight:600;color:var(--text);display:flex;justify-content:space-between}
+.mnav-drawer summary::-webkit-details-marker{display:none}
+.mnav-drawer summary::after{content:"+";color:var(--t3)}
+.mnav-drawer details[open] summary::after{content:"\2013"}
+.mnav-acc{display:flex;flex-direction:column;padding:0 0 10px 12px}
+.mnav-acc a{color:var(--t2);text-decoration:none;font-size:14px;padding:8px 0}
+.drw-link{color:var(--t2);text-decoration:none;font-size:15px;font-weight:600;padding:13px 2px;border-bottom:1px solid var(--line)}
+.drw-cta{color:var(--teal);text-decoration:none;font-weight:600;font-size:15px;padding:14px 2px}
+.mnav-toggle:checked ~ .mnav-drawer{display:flex}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(2){opacity:0}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+@media(max-width:860px){.mnav-links,.mnav-cta{display:none}.mnav-burger{display:flex}}
+
+/* ===== UNIFIED SEARCH OVERLAY ===== */
+.usearch{position:fixed;inset:0;z-index:10000;display:none;background:rgba(6,6,11,.78);backdrop-filter:blur(6px);padding:80px 20px 20px}
+.usearch.open{display:block}
+.usearch-box{max-width:620px;margin:0 auto;background:var(--panel);border:1px solid var(--line2);border-radius:16px;overflow:hidden;box-shadow:0 40px 90px -30px rgba(0,0,0,.95)}
+.usearch-top{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.usearch-top svg{color:var(--t3);flex:0 0 auto}
+.usearch-top input{flex:1;background:none;border:0;outline:none;color:var(--text);font-family:var(--sans);font-size:17px}
+.usearch-top input::placeholder{color:var(--t3)}
+.usearch-top kbd{font-family:var(--mono);font-size:11px;color:var(--t3);border:1px solid var(--line2);border-radius:6px;padding:2px 7px}
+.usearch-results{max-height:56vh;overflow-y:auto;padding:8px}
+.usearch-results a{display:block;padding:11px 14px;border-radius:10px;text-decoration:none;transition:background .12s}
+.usearch-results a:hover,.usearch-results a.sel{background:rgba(255,255,255,.05)}
+.ur-top{display:flex;align-items:baseline;gap:9px}
+.ur-title{color:var(--text);font-size:14.5px;font-weight:600}
+.ur-cat{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.06);color:var(--t2);flex:0 0 auto}
+.ur-cat[data-c="Tools"]{background:var(--teal-d);color:var(--teal);border:1px solid rgba(0,232,162,.4)}
+.ur-cat[data-c="Bible"]{background:rgba(245,166,35,.18);color:#f5a623;border:1px solid rgba(245,166,35,.4)}
+.ur-desc{color:var(--t2);font-size:12.5px;line-height:1.45;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.usearch-empty{padding:30px;text-align:center;color:var(--t3);font-size:13.5px}
+/* --- sticky-header + entry-page chrome (pilot, refined for density) ---
+   entry nav = 60px main bar only (no category sub-bar). Desktop: hide the horizontal section
+   nav (the sticky sidebar TOC covers sections) and retune offsets to the 60px nav. Mobile: the
+   sidebar is hidden, so SHOW the section nav flush under the bar. All in THIS block. --- */
+.mnav-wrap{position:sticky;top:0;z-index:1000;line-height:1.4}
+.entry-nav{display:none}
+[id].entry-section{scroll-margin-top:90px}
+.entry-main h2{scroll-margin-top:90px}
+.entry-sidebar{top:78px;height:calc(100vh - 98px)}
+@media(max-width:768px){
+  .entry-nav{display:block!important;top:60px!important}
+  [id].entry-section{scroll-margin-top:130px!important}
+  .entry-main h2{scroll-margin-top:130px!important}
+}
+/* dropdown overflow safety */
+.mnav-panel,.mnav-panel-wide{max-height:min(72vh,560px);overflow-y:auto}
+/* mobile drawer: category CARD grid (slick old-nav look), CSS-only */
+.mnav-drawer{padding:10px 18px 18px;gap:0}
+.drw-label{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--t3);margin:12px 2px 8px}
+.drw-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.drw-card{display:flex;align-items:center;padding:12px 14px;border-radius:10px;text-decoration:none;font-size:13.5px;font-weight:600;color:var(--text);background:var(--panel);border:1px solid var(--line2)}
+.drw-card:hover{border-color:var(--teal);color:var(--teal)}
+.drw-feat{display:flex;align-items:center;gap:8px;padding:13px 16px;border-radius:10px;text-decoration:none;font-size:14px;font-weight:700;color:var(--text);background:var(--panel);border:1px solid var(--line2);margin-top:8px}
+.drw-feat-bible{color:#f5a623;background:rgba(245,166,35,.08);border-color:rgba(245,166,35,.30)}
+.drw-feat-bible:hover{border-color:rgba(245,166,35,.6)}
+.drw-cta{display:block;text-align:center;padding:14px;border-radius:10px;background:var(--teal);color:#06281f;font-weight:800;font-size:14px;text-decoration:none;margin-top:12px}
+/* mobile sunlight legibility: lift the intentionally-dim greys in glare (nav + search only), scoped */
+@media(max-width:860px){
+  .mnav-wrap,.usearch{--t2:#c8c8da;--t3:#9696b0}
+  .drw-label{color:#bdbdd0;font-weight:500}
+  .usearch-top input::placeholder{color:#9696b0}
+  .drw-card,.drw-feat{background:#20202e;border:1.5px solid #45455c}
+  .drw-feat-bible{background:rgba(245,166,35,.12);border:1.5px solid rgba(245,166,35,.6)}
+}
+html{overflow-x:clip!important;max-width:none!important}body{overflow-x:clip!important}
+</style>
+<!-- MPW universal nav -->
+<div class="mnav-wrap" data-section="articles">
+  <input type="checkbox" id="mnav-toggle" class="mnav-toggle" aria-hidden="true">
+  <nav class="mnav" aria-label="Main navigation">
+    <div class="mnav-in">
+      <a class="mnav-brand" href="/"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="6" stroke="#f5a623" stroke-width="1.7"/><path d="M7 15V9l3 3 3-5 4 8" stroke="#00e8a2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="mnav-word">MusicProductionWiki</span></a>
+      <div class="mnav-links">
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="articles">Articles <span class="caret">&#9662;</span></button><div class="mnav-panel mnav-panel-wide"><div class="mp-col"><div class="mp-head">Techniques & Analysis</div><a href="/categories/techniques"><span class="mp-name">Techniques</span><span class="mp-desc">Mixing, mastering, sound design</span></a><a href="/categories/reviews"><span class="mp-name">Reviews</span><span class="mp-desc">Honest. No paid placements.</span></a><a href="/categories/comparisons"><span class="mp-name">Comparisons</span><span class="mp-desc">Head-to-head</span></a><a href="/categories/breakdowns"><span class="mp-name">Breakdowns</span><span class="mp-desc">Track-by-track</span></a><a href="/categories/recreations"><span class="mp-name">Recreations</span><span class="mp-desc">Recreate iconic sounds</span></a><a href="/genres"><span class="mp-name">Genres</span><span class="mp-desc">Every genre & style</span></a></div><div class="mp-col"><div class="mp-head">Reference & Business</div><a href="/categories/ai-music"><span class="mp-name">AI Music</span><span class="mp-desc">Suno, Udio, AI tools</span></a><a href="/categories/music-business"><span class="mp-name">Music Business</span><span class="mp-desc">Royalties, licensing, sync</span></a></div></div></div>
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="gear">Gear <span class="caret">&#9662;</span></button><div class="mnav-panel"><div class="mp-col"><a href="/categories/daws"><span class="mp-name">DAWs</span><span class="mp-desc">Every major DAW</span></a><a href="/categories/plugins"><span class="mp-name">Plugins</span><span class="mp-desc">EQ, comp, reverb, synths</span></a><a href="/categories/hardware"><span class="mp-name">Hardware</span><span class="mp-desc">Interfaces, mics, monitors</span></a></div></div></div>
+        <a class="mnav-flat" href="/tools/" data-nav="tools">Tools</a>
+        <a class="mnav-flat" href="/bible/" data-nav="bible">The Bible</a>
+      </div>
+      <div class="mnav-right">
+        <button class="mnav-search" data-nav-search aria-label="Search"><svg width="17" height="17" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <a class="mnav-cta" href="https://theproducersbriefing.beehiiv.com">Sound Better &rarr;</a>
+        <label class="mnav-burger" for="mnav-toggle"><span></span><span></span><span></span></label>
+      </div>
+    </div>
+  </nav>
+  <div class="mnav-drawer">
+    <div class="drw-label">Articles</div>
+    <div class="drw-grid">
+      <a href="/categories/techniques" class="drw-card">Techniques</a><a href="/categories/reviews" class="drw-card">Reviews</a><a href="/categories/comparisons" class="drw-card">Comparisons</a><a href="/categories/breakdowns" class="drw-card">Breakdowns</a><a href="/categories/recreations" class="drw-card">Recreations</a><a href="/genres" class="drw-card">Genres</a><a href="/categories/ai-music" class="drw-card">AI Music</a><a href="/categories/music-business" class="drw-card">Music Business</a>
+    </div>
+    <div class="drw-label">Gear</div>
+    <div class="drw-grid">
+      <a href="/categories/daws" class="drw-card">DAWs</a><a href="/categories/plugins" class="drw-card">Plugins</a><a href="/categories/hardware" class="drw-card">Hardware</a>
+    </div>
+    <a href="/bible/" class="drw-feat drw-feat-bible">&#9670; The Producer's Bible</a>
+    <a href="/tools/" class="drw-feat">The Producer's Tools</a>
+    <a href="https://theproducersbriefing.beehiiv.com" class="drw-cta">Sound Better &rarr;</a>
+  </div>
+</div>
+
+
+<div class="container">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><ol>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../categories/music-business.html">Music Business</a></li>
+    <li><a href="../categories/music-business/royalties-publishing.html">Royalties &amp; Publishing</a></li>
+    <li><span aria-current="page">Cost to Clear a Sample</span></li>
+  </ol></nav>
+</div>
+
+<nav class="toc-bar" aria-label="Section navigation"><div class="toc-bar-track" id="tocBarTrack"></div></nav>
+<main class="container" id="main-content">
+  <div class="article-layout">
+    <article aria-labelledby="articleTitle">
+      <header class="article-header">
+        <div class="article-tags"><span class="article-tag teal"><a href="../categories/music-business.html" style="color:inherit;text-decoration:none;">Music Business</a></span>
+<span class="article-tag teal"><a href="../categories/music-business/royalties-publishing.html" style="color:inherit;text-decoration:none;">Royalties &amp; Publishing</a></span></div>
+        <h1 id="articleTitle">How Much Does It Cost to Clear a Sample? <span style="font-weight:600;color:var(--text-secondary);">(And When to Interpolate Instead)</span></h1>
+        <div class="article-header-meta">
+          <div class="article-author"><div class="author-avatar" aria-hidden="true">MP</div><span class="author-name">The Music Production Wiki Team</span></div>
+          <span class="meta-divider"></span><span class="meta-item">Updated June 2026&nbsp;&middot;&nbsp;18 min read&nbsp;&middot;&nbsp;<span style="font-size:.78rem;color:var(--text-muted);">Figures verified June 21, 2026</span></span>
+        </div>
+      </header>
+      <div class="article-body">
+<div class="quick-answer"><div class="quick-answer-label">The short answer</div>
+<p>There is <strong>no fixed price</strong> to clear a sample &mdash; no statutory rate, no published table, no &ldquo;X seconds is free.&rdquo; Every clearance is a private negotiation across <strong>two separate bills</strong>: the <strong>master</strong> (the recording) and the <strong>publishing</strong> (the song underneath). Industry-reported 2026 ranges put the upfront fee anywhere from <strong>a few hundred dollars</strong> for an obscure indie record to <strong>$50,000 or more</strong> for a famous master used prominently, on top of an ongoing <strong>royalty split</strong> of roughly 15&ndash;50% &mdash; and up to 100% of the publishing if the sample is your hook. But the headline number is the wrong thing to fixate on. The real question is a <strong>decision</strong>: clear it, interpolate it, or drop it. This page is about the money and that decision; for the step-by-step mechanics of who to email and how to paper the deal, see <a href="how-to-clear-a-sample.html">how to clear a sample</a>.</p></div>
+
+<div class="highlight-box"><div class="highlight-box-label">Not legal advice &middot; sourcing note</div><p>This is education, not legal advice &mdash; clearance terms are negotiated case-by-case, and a real release should be run past a music attorney. Every dollar figure below is an <strong>industry-reported range</strong> (sourced to 2026 clearance guides and reporting), <strong>not a quote and not a statutory rate</strong>. Some links may be affiliate links; that changes none of the guidance.</p></div>
+
+<h2 id="short">There&rsquo;s No Price. There&rsquo;s a Decision.</h2>
+<p style="font-size:1.06rem;line-height:1.7;">Almost every producer who asks &ldquo;how much does it cost to clear a sample&rdquo; is hoping for a number they can budget against. The honest answer is that no such number exists, and chasing one is how people waste months and thousands of dollars on a sample they were never going to be able to afford. Unlike a cover song &mdash; where U.S. law fixes the mechanical rate and anyone can compulsorily license it &mdash; a sample clearance is a private deal the rights holders can decline for any reason, or no reason at all. They can name any price they like. There is no ceiling, no floor, and no obligation to say yes.</p>
+<p>So the useful framing is not &ldquo;what does it cost&rdquo; but &ldquo;given what this sample would cost me, what should I do with it?&rdquo; That reframes a budgeting problem into a decision with three outcomes: <strong>clear it</strong> (pay for both copyrights and release legally), <strong>interpolate it</strong> (re-record the part yourself and skip an entire bill), or <strong>drop it</strong> (replace the sample and keep your whole song). Most of this guide is about how to run that decision on your own track and how to read the dollar figures that drive it &mdash; the upfront fee everyone fixates on, and the royalty split almost nobody models, which is usually the part that actually costs you.</p>
+<p>One boundary worth setting up front: this page is the <em>money and the decision</em>. It is not the how-to. If your decision lands on &ldquo;clear it,&rdquo; the mechanics &mdash; identifying the master and publishing owners, finding the right contact at a label or publisher, submitting the request, and getting the agreement in writing &mdash; live in the companion guide on <a href="how-to-clear-a-sample.html">clearing a sample step by step</a>. Keep both open; this one tells you <em>whether</em> and <em>what it costs</em>, that one tells you <em>how</em>.</p>
+
+<h2 id="two-bills">Why Every Sample Is Two Separate Bills</h2>
+<p>The single most expensive misunderstanding in sampling is thinking you are buying one thing. You are not. Every commercial recording carries <strong>two distinct copyrights</strong>, owned (usually) by two different parties, and a direct sample uses both &mdash; so you owe both, and you negotiate them separately. Miss either one and your track is uncleared no matter how much you paid for the other.</p>
+<div class="diagram-wrap">
+<img src="../images/sample-clearance-cost-two-copyrights.png" alt="Diagram of the two copyrights in a sample shown as two separate bills: the master, owned by the label or recording owner, paid as an upfront fee plus a roughly 3 to 10 percent master royalty split; and the publishing, owned by the songwriters and publishers, paid as an upfront fee plus a 15 to 50 percent publishing split, up to 100 percent if the sample is the hook. A direct sample needs both permissions." width="1080" height="1470" loading="lazy" />
+<div class="diagram-caption">A direct sample is two bills, not one. Clear the master, miss the publishing, and the track is still uncleared. Ranges are illustrative, verified June 2026.</div>
+</div>
+<p>The <strong>master</strong> is the sound recording itself &mdash; the exact audio you lifted. It is almost always owned by a record label (or, for older catalog, whoever now controls it). To use it you need a <em>master use license</em>, and the master owner typically wants an upfront fee plus a small ongoing royalty on your new recording, commonly reported in the <strong>3&ndash;10%</strong> range. The master is the copyright you can sometimes avoid entirely &mdash; more on that below &mdash; because you only owe it if you used the actual recording.</p>
+<p>The <strong>publishing</strong> is the composition underneath &mdash; the melody, the chords, the lyrics, the part a human wrote. It is owned by the songwriters and their publishers, and there can be several of them on one song. To use it you need permission from every writer or publisher with a stake, and they take a <em>split</em> of your new song&rsquo;s publishing &mdash; an ownership share, not just a fee. This is the copyright you almost never escape: even if you re-record everything yourself, the underlying song is still theirs. Understanding how those publishing shares work is its own subject; the short version lives in <a href="music-publishing-explained.html">music publishing explained</a> and <a href="how-music-royalties-work.html">how music royalties work</a>.</p>
+<p>There is a complication on the publishing side that quietly multiplies cost: a song often has <strong>many writers</strong>. The master is usually controlled by one party &mdash; the label that released the record &mdash; so master clearance, while expensive, is typically one negotiation. Publishing is rarely so tidy. A single famous record can have four, five, or more credited writers, each potentially signed to a different publisher, and you may need a separate yes from every one of them. Each can set their own terms, each can hold up the whole release, and any one of them can refuse. When you read that publishing clearance &ldquo;runs $2,000&ndash;$25,000+ per license,&rdquo; note the words <em>per license</em>: if four publishers each want a piece, that range can apply four times over. The more hands that touched the original song, the more expensive and slower your clearance becomes &mdash; which is itself a reason to favor simpler, less-co-written source material when you have the choice.</p>
+<p>The reason this two-bill structure matters so much for cost is that the two bills behave completely differently. The master is mostly a <em>fee</em> &mdash; a number you pay and move on. The publishing is mostly a <em>split</em> &mdash; a permanent share of everything your song will ever earn. People budget for the fee and forget the split, which is exactly backwards: the split is usually the expensive part. We will price both, but hold onto the distinction, because it is also what makes the single best money-saving move possible.</p>
+
+<h2 id="what-it-costs">What Clearance Actually Costs in 2026</h2>
+<p>With the two-bill model in hand, here are the figures producers and clearance services actually report in 2026 &mdash; useful for sanity-checking a quote, useless as a price list. Treat every number as a sourced range that moves with how famous the original is and how central the sample is to your track.</p>
+<table class="comparison-table">
+<thead><tr><th>Cost component</th><th>Reported 2026 range</th><th>What drives it</th></tr></thead>
+<tbody>
+<tr><td>Master upfront fee</td><td>~$2,000&ndash;$10,000 (indie) up to $25,000&ndash;$50,000+ (famous)</td><td>Fame of the recording; how prominent the sample is</td></tr>
+<tr><td>Master royalty split</td><td>~3&ndash;10% of your new master</td><td>How load-bearing the sample is</td></tr>
+<tr><td>Publishing upfront fee</td><td>~$2,000&ndash;$25,000+ per license</td><td>Negotiated separately from the master</td></tr>
+<tr><td>Publishing split</td><td>15&ndash;50% (up to 100% if it&rsquo;s the hook)</td><td>How much of your song the sample carries</td></tr>
+<tr><td>&ldquo;Consideration&rdquo; / review fee</td><td>Sometimes non-refundable</td><td>Some publishers charge just to review the request</td></tr>
+<tr><td>Timeline</td><td>2&ndash;6 months, sometimes longer</td><td>Major labels, multiple writers, backlogged departments</td></tr>
+</tbody>
+</table>
+<p>It also helps to know the <strong>shapes a deal can take</strong>, because the structure changes the math as much as the number. A <em>buyout</em> is a one-time flat fee for the right to use the sample &mdash; clean, predictable, and the most producer-friendly when you can get it, because there is no ongoing claim on your song. An <em>advance against royalties</em> is an upfront payment that is then recouped from &mdash; and continues as &mdash; a royalty share, so the upfront number is really a down payment on a permanent split. The most common structure in 2026 is a <strong>combination</strong>: a smaller upfront fee plus an ongoing royalty percentage. And in some cases the original owner asks for outright <em>co-ownership</em> of your new composition, which is the most expensive outcome of all because it makes them a permanent co-writer of everything the song does. When a quote comes back, the first thing to read is not the dollar figure but the structure: a $5,000 buyout and a $5,000 advance against a 50% split are wildly different deals wearing the same headline number.</p>
+<p>Two more variables move the bill in ways producers forget. <strong>Territory</strong> is one: worldwide rights cost more than a single-territory license, and if you only clear the U.S. you can be exposed the moment the track travels. <strong>Timing</strong> is the other, and it is the one you control &mdash; a track already released with an uncleared sample is the weakest possible negotiating position, because the owner now knows it exists, knows it is earning, and prices accordingly. The same clearance is materially cheaper while the song is still an unreleased file on your drive than it is after it has streams. Clearing early is not just good hygiene; it is a discount you give yourself.</p>
+<p>Three factors move every one of those numbers. The first is <strong>recognizability</strong>: a household-name hook commands far more than a forgotten deep cut, because the owner is pricing against the cultural value you are borrowing. The second is <strong>how load-bearing the sample is</strong> &mdash; a two-second background texture is a different conversation from the four-bar loop your entire chorus rides on. The third is <strong>your track&rsquo;s commercial potential</strong>: owners price against what they think you will earn, which is one reason clearing <em>before</em> you have a hit is dramatically cheaper than clearing after.</p>
+<p>Watch for the costs that hide outside the headline fee. Some publishers charge a non-refundable <strong>advance or &ldquo;consideration&rdquo; fee</strong> just to review your request &mdash; money you do not get back even if they say no. There are also the soft costs of the process itself: most producers running a real clearance end up paying a music attorney to drive it, and that time adds up. None of this is a reason to panic; it is a reason to be sure a sample is worth pursuing before you start spending to ask. And it is the reason the next section exists, because the cheapest legal route is frequently not a clearance at all.</p>
+<div class="mistake-box"><div class="mistake-box-label">The myth that gets people sued</div><p>There is no &ldquo;five-second rule,&rdquo; no &ldquo;under eight bars is fine,&rdquo; and no amount of pitching, chopping, or filtering that turns someone else&rsquo;s recording into yours. If a sample is recognizable, it needs clearance &mdash; full stop. The length of the sample does not determine legality; whether it is identifiable does.</p></div>
+
+<h2 id="decision">Clear It, Interpolate It, or Drop It</h2>
+<p>This is the part the cost tables bury. Once you know a sample is not free and not cheap, the move is not to start emailing labels &mdash; it is to run the sample through a decision that often saves you an entire bill, or tells you to walk away before you spend a cent. Three questions get you there.</p>
+<div class="diagram-wrap">
+<img src="../images/sample-clearance-clear-vs-interpolate.png" alt="Decision flow for a sample: question one, did you use the original recording? If no, it is already an interpolation and you owe publishing only. Question two, can you re-play or re-sing it convincingly? If yes, interpolate and skip the master bill. Question three, is it worth it and can you afford the quote? If yes, clear both master and publishing in writing before release; if no, drop it and replace the sample. Outcomes: interpolate is one bill, clear both is two bills, drop it is zero bills." width="1080" height="1800" loading="lazy" />
+<div class="diagram-caption">Run your sample down the spine before you spend a dollar. A recognizable sample is never &ldquo;too short to clear.&rdquo;</div>
+</div>
+<p><strong>Question one: did you use the original recording?</strong> If the sound in your track is literally lifted from someone else&rsquo;s release, you owe the master <em>and</em> the publishing. But if you only borrowed the idea &mdash; you played the melody yourself, programmed the chords, sang the line &mdash; then it was never a sample in the first place. It is an <em>interpolation</em>, and you owe the publishing only. That single distinction is worth thousands of dollars, and it is why the next question matters so much.</p>
+<p><strong>Question two: can you re-play or re-sing it convincingly?</strong> If you used the recording but the part is something you (or a session player or vocalist) could recreate, you can often convert a two-bill sample into a one-bill interpolation by simply re-recording it. You drop the master clearance entirely and negotiate only with the publisher. This is the highest-leverage move in the whole process and it gets its own section below.</p>
+<p><strong>Question three: is it worth it, and can you afford the quote?</strong> If you genuinely need the original recording &mdash; the texture, the performance, the specific sound that can&rsquo;t be replayed &mdash; then you are clearing both copyrights, and the question becomes whether the sample earns its keep against the fee and the split you will be quoted. If yes, you clear both, in writing, before release. If the quote is beyond your budget, or the owner refuses, or it was only ever a background texture, the disciplined answer is to <strong>drop it</strong> &mdash; replace the sample with something cleared or original and keep 100% of your song. A sample you cannot afford is, for practical purposes, an uncleared sample.</p>
+<p>The most expensive mistakes happen <em>before</em> any of these questions get asked. The first is building an entire track around a sample you never priced &mdash; arranging, mixing, and falling in love with a record whose hook belongs to a famous master you could never afford, so that by the time reality arrives you are emotionally and creatively committed to something you have to tear out. The second is mistaking a casual yes for a clearance: a DM, an email thread, a verbal &ldquo;sure, go ahead&rdquo; from someone who may not even control the rights is not a license, and it will not survive a claim. Run the three questions at the <em>sketch</em> stage, when the sample is still load-bearing but easy to swap, not at the master stage when it is welded into the arrangement. Deciding early is free; deciding late is what costs people their releases.</p>
+<div class="decision-framework"><div class="decision-framework-title">Which path wins, at a glance</div>
+<div class="decision-item"><span class="decision-if">If&hellip;</span><span class="decision-then">you can re-play the part &rarr; <strong>interpolate</strong> &mdash; one bill, publishing only</span></div>
+<div class="decision-item"><span class="decision-if">If&hellip;</span><span class="decision-then">you truly need the recording and it&rsquo;s worth it &rarr; <strong>clear both</strong> master and publishing</span></div>
+<div class="decision-item"><span class="decision-if">If&hellip;</span><span class="decision-then">the quote is unaffordable, refused, or it&rsquo;s just texture &rarr; <strong>drop it</strong></span></div>
+<div class="decision-item"><span class="decision-if">If&hellip;</span><span class="decision-then">you want zero clearance at all &rarr; use a <a href="are-splice-samples-royalty-free.html">pre-cleared library</a></span></div>
+</div>
+
+<h2 id="interpolate">Interpolation: The Single Biggest Money Move</h2>
+<p>If you remember one thing from this page, make it this: re-recording a part you would otherwise have sampled deletes an entire bill. An <strong>interpolation</strong> &mdash; replaying or re-singing the composition with new performers and a new recording &mdash; means you never used the original master, so there is no master license to negotiate, no label to chase, no master royalty split. You still owe the publishing, because the underlying song is still someone else&rsquo;s, but you have cut the number of parties you negotiate with from two (often more) down to one.</p>
+<p>The savings are real and the cost is honest. Publishing clearance for an interpolation is reported in 2026 at roughly <strong>$2,000&ndash;$25,000+ upfront plus 25&ndash;50% of your track&rsquo;s publishing</strong> &mdash; cheaper than a full two-copyright clearance, but not free, and the split can still be steep for a major song. What you are buying is leverage and speed: one negotiation instead of two, no need to satisfy a label&rsquo;s legal department, and a path that stays open even when the master owner flatly refuses to license. When the master is prohibitively expensive, when the owner won&rsquo;t deal, or when you simply have the players to recreate the part faithfully, interpolation is usually the right call.</p>
+<p>Put concrete numbers on it. Say a recognizable hook would clear as a full sample at, illustratively, an $8,000 master buyout plus a 5% master split, and a $10,000 publishing fee plus a 40% publishing split &mdash; two parties, two upfronts, two ongoing claims. Interpolate the same hook and the entire master side vanishes: no $8,000 buyout, no master split, no label negotiation. You are left with the publishing only &mdash; in this example the $10,000 and the 40%, perhaps negotiated a little differently now that you are not also asking for the recording. You have not made the song free, but you have removed one of the two upfronts and one of the two permanent splits, and you have collapsed a multi-party negotiation into a single one. On an indie budget, that difference is frequently the line between a release that can happen and one that cannot.</p>
+<p>The catch is craft, not law. An interpolation only works if the re-performance is convincing &mdash; a thin, obviously-fake replay of an iconic line can sound worse than no sample at all, and chasing a perfect recreation can eat the very budget you saved. Be honest about whether you, or a player you can afford, can actually deliver the part. When you can, interpolation is the most reliable lever in this entire guide. When you cannot, forcing it is just a different way of damaging the track.</p>
+<p>It is not a loophole, and it is not always cheaper than it looks. If the part you are recreating <em>is</em> the song &mdash; the signature hook everyone recognizes &mdash; the publishers know it, and they can demand a large publishing split anyway, because their composition is still carrying your record. Interpolation changes <em>which</em> bills you pay, not the underlying truth that a recognizable borrowed idea owes the people who wrote it. What it reliably does is remove the master from the equation, which is frequently the more expensive and more obstinate of the two parties. For the broader picture of what sampling versus interpolation actually means musically, see <a href="what-is-sampling-in-music.html">what sampling is</a> and the practical craft in <a href="how-to-chop-samples.html">how to chop samples</a>.</p>
+
+<h2 id="lifetime">The Upfront Fee Is the Cheap Part</h2>
+<p>Here is the number almost no clearance guide models honestly. When a rights holder takes a <strong>50% publishing split</strong>, that is not a fee you pay and forget &mdash; it is half of everything your song&rsquo;s publishing will ever generate, for as long as the track earns. The upfront buyout is a one-time line item. The split is a permanent co-ownership of your work. Producers budget hard for the first number and barely think about the second, which is exactly backwards.</p>
+<div class="diagram-wrap">
+<img src="../images/sample-clearance-upfront-vs-lifetime.png" alt="Worked example contrasting the upfront fee with the lifetime publishing split for one cleared hook. An illustrative upfront buyout of $8,000 is paid once. If the track earns $120,000 in publishing over its life, the rights holder's 50 percent split is $60,000, paid on every payout forever. A bar comparison shows the $8,000 upfront as a small bar against a much larger $60,000-plus lifetime split. Real case: on Juice WRLD's interpolation of Shape of My Heart, Sting reportedly took about 85 percent of the publishing." width="1080" height="1650" loading="lazy" />
+<div class="diagram-caption">The split can cost many times the upfront &mdash; and unlike the fee, it never stops. Figures illustrative; splits are negotiated case-by-case. Verified June 2026.</div>
+</div>
+<p>Walk the math. Imagine you clear a hook for an <strong>$8,000 upfront buyout</strong> &mdash; a real-feeling number for a recognizable but not stratospheric sample. Now imagine the track does well over its life and earns, hypothetically, <strong>$120,000 in publishing</strong> across streaming, sync placements, and radio over the years. A 50% publishing split hands the original owners <strong>$60,000</strong> of that &mdash; seven and a half times the upfront fee, paid out slowly, forever. The fee was the cheap part. The split was the expensive part, and you agreed to it on day one without feeling it.</p>
+<p>The clearest real-world illustration is an interpolation, not a sample, which makes the point even sharper. When Juice WRLD&rsquo;s producer interpolated Sting&rsquo;s &ldquo;Shape of My Heart,&rdquo; Sting reportedly ended up with around <strong>85% of the publishing</strong> &mdash; the master was free to skip, but the song was so recognizable that the writer&rsquo;s share dwarfed everything else. That is the lifetime split in its most extreme form: a single creative decision quietly reassigning most of a hit&rsquo;s publishing to someone who wrote the part decades earlier. It was, by all accounts, still worth it &mdash; which is the right lesson. A large split on a song that becomes a hit can be a good trade. A large split on a song that goes nowhere is just a smaller slice of nothing. The point is to <em>see</em> the split before you sign it, and price the sample against the life of the track, not the day of release.</p>
+
+<p>Run the math the other direction too, because it is the more common outcome. Most tracks do not become hits. If the same song earns $4,000 in publishing over its life instead of $120,000, that 50% split is worth $2,000 &mdash; and you may well have paid an $8,000 upfront to acquire a permanent claim on a song that never recouped the fee, let alone justified the split. This is the quiet tragedy of over-clearing: a large upfront on a sample-heavy track that goes nowhere is money spent to give away a share of nothing. The split only becomes expensive if the song succeeds, but the upfront is gone either way &mdash; which is exactly why the cheap, reversible moves (interpolate, or use pre-cleared material) are so often the right ones for music whose commercial future is unknown, which is to say almost all of it.</p>
+<p>One more place the split bites that producers miss: <strong>sync</strong>. If a supervisor wants your track for a film, ad, or game, the sync fee is typically split along the same publishing ownership lines &mdash; so a 50% publishing split does not just halve your streaming pennies, it halves the single largest checks your song may ever earn. A sync placement can be worth more than years of streams, and handing half of it to a sample owner is a real cost that never shows up in a clearance quote. When you weigh a split, weigh it against the <em>best</em> case for the song, not just the steady-state streaming case.</p>
+<h2 id="wrong">What It Costs to Get It Wrong</h2>
+<p>Every cost above assumes you clear the sample. Skipping clearance has its own price, and it is the one that ends careers. Releasing a track with an uncleared, recognizable sample is copyright infringement, and the consequences are not abstract risk &mdash; they are specific, mechanical, and asymmetric against you.</p>
+<p>It helps to understand <em>how</em> these claims actually surface, because it explains the timing. Labels and publishers monitor for uses of their catalog, and platforms run automated content-matching that can flag a recognizable recording without anyone listening. The unsettling part is that a claim almost never lands while your track is invisible &mdash; it lands once the song starts working, once it has the streams and the playlist placement that make it worth someone&rsquo;s attention. So the worst-case scenario is not &ldquo;I might get caught early and quietly fix it.&rdquo; It is &ldquo;the one track that finally breaks for me is the one that gets pulled and drained,&rdquo; at the exact moment it was about to pay off. The enforcement risk is correlated with success, which is precisely backwards from how most people imagine it.</p>
+<p>The first is <strong>takedowns</strong>. When a rights holder files a claim, platforms remove your track, and you lose more than the song. You lose the streams it was accumulating, the playlist placements it had earned, and the algorithmic momentum that was feeding it new listeners &mdash; momentum that does not come back when the track does. For an independent artist, a takedown at the wrong moment can erase months of slow growth overnight. If you want to understand how fragile that momentum is, the mechanics are in <a href="music-streaming-royalties-explained.html">streaming royalties explained</a> and <a href="music-distribution-explained.html">music distribution explained</a>.</p>
+<p>The second is the one producers underestimate most: <strong>revenue seizure</strong>. A rights holder can demand <em>all</em> of the revenue your track has generated &mdash; not their percentage of it, not the split they would have negotiated, but the entire amount. You do not get to keep your share of an infringing release. You can spend a year building a song, finally see it earn, and hand over every dollar of that earning because you skipped a clearance that might have cost a fraction of it. On top of that sits the possibility of <strong>legal action</strong>, where the costs are measured in years and attorneys&rsquo; fees rather than royalties.</p>
+<div class="pro-reference"><div class="pro-reference-label">The asymmetry that should decide it</div><p>Clearing costs a known, negotiable amount you can plan around. <strong>Not</strong> clearing risks an unknown, uncapped loss &mdash; 100% of revenue, plus takedowns, plus legal exposure &mdash; that arrives precisely when the track is finally working. That asymmetry is why the disciplined move on an unaffordable sample is to interpolate or drop it, never to release and hope. For where copyright protection actually begins, see <a href="how-to-copyright-your-music.html">how to copyright your music</a>.</p></div>
+
+<h2 id="worth-it">Is This Sample Worth Clearing?</h2>
+<p>Cost only answers half the question. The other half is whether this particular sample earns the fee, the split, and the months of waiting &mdash; and for most independent producers, on most samples, the honest answer is no. That is not a failure; it is the math working correctly. A recognizable sample from a famous master is frequently <em>prohibitively</em> expensive for an indie release, and the right response is to design the track so it does not depend on something you cannot afford.</p>
+<p>The biggest lever you control is <strong>timing</strong>. Clear before you release, not after. An unreleased track gives you all the negotiating leverage and the lowest price, because the owner is pricing against potential. The moment a track gains traction with an uncleared sample, you have handed the rights holder every card: they know it is working, they know you are exposed, and the quote reflects it. Starting the clearance the day you decide to use a sample &mdash; not the week before your release date &mdash; is the single cheapest thing you can do.</p>
+<p>It is worth being blunt about the indie budget reality, because the cost ranges on this page can read as abstract until you hold them against an actual release budget. If you have a few hundred dollars to put behind a song, a famous master is simply not on the menu &mdash; not because the system is unfair, but because the owner is pricing against a commercial upside your release does not have. Pretending otherwise leads to months of unanswered emails and a release date that slips and slips. The producers who thrive under this constraint do not treat it as a wall; they treat it as a brief. They reach for deep, obscure, single-writer source material where an &ldquo;all-in&rdquo; clearance with one cooperative owner is actually negotiable, or they interpolate, or they build from pre-cleared and royalty-free libraries and keep every cent of their publishing. A small budget does not mean you cannot sample legally. It means you cannot sample <em>anything</em> legally &mdash; and choosing the right thing to sample is a creative skill, not a compromise.</p>
+<p>If clearance is not viable, the alternatives are genuinely good. <strong>Interpolation</strong> removes the master bill, as covered above. <strong>Pre-cleared libraries</strong> remove clearance altogether: services like Tracklib license real records for sampling with the rights already handled, and royalty-free sample platforms let you keep 100% of your publishing &mdash; the trade-offs are laid out in <a href="are-splice-samples-royalty-free.html">are Splice samples royalty-free</a> and the licensing landscape in <a href="beat-licensing-explained.html">beat licensing explained</a>. And if you are building beats around samples to sell, the clearance question changes shape again &mdash; <a href="how-to-sell-beats-online.html">selling beats online</a> walks through what you can and cannot legally pass on to a buyer. The producers who never get burned are not the ones with the biggest clearance budgets; they are the ones who decided <em>before</em> the session whether a sample was a clear, an interpolation, or a no.</p>
+
+<h2 id="next">When the Answer Is &ldquo;Clear It&rdquo;</h2>
+<p>Sometimes the sample is worth it. The recording is irreplaceable, the budget is real, the song is built to last &mdash; and the decision lands cleanly on &ldquo;clear it.&rdquo; When it does, the cost questions on this page hand off to the process questions on the companion guide: who exactly owns the master and the publishing, how to reach the right person at the label or publisher, what to put in the request, and how to get a clearance that actually holds up. That full walkthrough is in <a href="how-to-clear-a-sample.html">how to clear a sample, step by step</a>. The AI-era version of these questions &mdash; clearing and licensing when generative tools are in the mix &mdash; is in <a href="ai-music-licensing-explained.html">AI music licensing explained</a>, and the close cousin of sampling, releasing someone else&rsquo;s song, is in <a href="how-to-release-a-cover-song.html">how to release a cover song</a>.</p>
+<p>This is also where MusicProductionWiki is building something for the moment your decision lands on &ldquo;clear it.&rdquo; <strong>ClearCheck</strong> &mdash; our in-house U.S. sample-clearance front door &mdash; is designed to take the &ldquo;how much, and is it worth it&rdquo; question you just worked through and turn it into a real risk assessment and a path to actually clearing the sample, without leaving you to cold-email a major label&rsquo;s legal department alone. The decision is yours; the legwork doesn&rsquo;t have to be. If budgeting the rest of a release is on your mind too, <a href="how-much-does-it-cost-to-mix-and-master-a-song.html">what it costs to mix and master a song</a> is the natural next number to pin down.</p>
+<div class="highlight-box"><div class="highlight-box-label">Before you spend a dollar</div><p>Run the sample down the three questions, price it against the <em>life</em> of the track and not just release day, and remember the asymmetry: clearing is a known cost, not clearing is an uncapped one. This is education, not legal advice &mdash; clearance terms are negotiated case-by-case, and a real release should be reviewed by a music attorney.</p></div>
+
+<h2 id="exercises">Put It Into Practice: 3 Exercises</h2>
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--beginner">Beginner</span><span class="exercise-title">Separate the two bills on a real track</span></div>
+<ol>
+<li>Pick a famous sample-based song you love. Identify the <strong>master</strong> owner from the original record&rsquo;s label credits (try Discogs or the streaming page).</li>
+<li>Identify the <strong>publishing</strong> owners by searching the original song in the ASCAP, BMI, or SESAC database &mdash; note every co-writer and publisher listed.</li>
+<li>Write down, in two columns, who would have to say yes on the master side and who on the publishing side. The point: feel how a single sample becomes two separate negotiations, often with more than two parties.</li>
+</ol></div>
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--intermediate">Intermediate</span><span class="exercise-title">Run the clear / interpolate / drop decision</span></div>
+<ol>
+<li>Take a sample you are actually considering for a track. Answer question one: did you use the original recording, or could the part be re-played?</li>
+<li>If it could be re-played, sketch the interpolation: what would you re-record, and who would still need to clear on the publishing side?</li>
+<li>Estimate, using the ranges in this guide, the rough upfront and split for both paths &mdash; clear-both versus interpolate. Decide which you would actually pursue, and write one sentence on why. If neither is affordable, name what you would replace the sample with.</li>
+</ol></div>
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--advanced">Advanced</span><span class="exercise-title">Model the lifetime cost of a split</span></div>
+<ol>
+<li>Assume a 50% publishing split and an $8,000 upfront on a hypothetical clear. Pick a plausible lifetime publishing figure for a modestly successful track and calculate what the split actually costs over that life.</li>
+<li>Now redo it for a 25% split (a common interpolation outcome) and for a 100% split (a hook). Compare all three against the upfront fee.</li>
+<li>Write down the stream or revenue level at which clearing this sample stops being worth it to you. That number &mdash; your walk-away point &mdash; is the most useful thing you can take into any clearance negotiation.</li>
+</ol></div>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+<div class="faq-accordion">
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-accordion-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">How much does it cost to clear a sample?</span></div></div>
+<div class="faq-accordion-a"><p>There is no fixed price. Industry-reported 2026 ranges put the upfront fee anywhere from a few hundred dollars for an obscure indie record to $50,000 or more for a famous master used prominently, with a common band around $2,000&ndash;$25,000 per license &mdash; and that is before the ongoing royalty split of roughly 15&ndash;50% (up to 100% of the publishing if the sample is your hook). Master and publishing are billed separately. Every figure is a sourced range, not a quote; the rights holders set the actual price and can refuse entirely.</p></div>
+</div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-accordion-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Why do I have to pay twice for one sample?</span></div></div>
+<div class="faq-accordion-a"><p>Because a recording contains two separate copyrights: the master (the recording, owned by the label) and the publishing (the composition, owned by the songwriters and publishers). A direct sample uses both, so you clear both, often with different owners. If you only clear one, the track is still uncleared. The exception is interpolation, where re-recording the part yourself removes the master and leaves only the publishing.</p></div>
+</div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-accordion-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Is interpolation cheaper than sampling?</span></div></div>
+<div class="faq-accordion-a"><p>Usually, yes &mdash; because it removes the master bill entirely. You re-record the part with new performers, so there is no master license to buy and no label to negotiate with. You still clear the publishing, reported around $2,000&ndash;$25,000+ upfront plus 25&ndash;50% of your publishing in 2026. It is not free, and for a signature hook the publishers can still demand a large split, but it cuts your negotiation from two parties to one and stays open even when a master owner refuses.</p></div>
+</div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-accordion-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Is there a number of seconds I can sample legally?</span></div></div>
+<div class="faq-accordion-a"><p>No. There is no &ldquo;five-second rule&rdquo; and no safe number of bars. If a sample is recognizable, it needs clearance, regardless of length. Pitching, chopping, filtering, or reversing it does not remove the original copyright either &mdash; it is still a copy of someone else&rsquo;s recording and composition. The test is whether the sample is identifiable, not how long it runs.</p></div>
+</div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-accordion-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">What happens if I release a track with an uncleared sample?</span></div></div>
+<div class="faq-accordion-a"><p>It is copyright infringement, and the consequences are real: platforms take the track down when a rights holder files a claim (costing you streams, playlist placements, and algorithmic momentum), and the owner can demand all of the revenue your track has generated &mdash; not their percentage, the entire amount &mdash; plus possible legal action. The asymmetry is the point: clearing is a known cost; not clearing is an uncapped one that lands exactly when the track starts working.</p></div>
+</div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-accordion-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Why is the royalty split more important than the upfront fee?</span></div></div>
+<div class="faq-accordion-a"><p>Because the upfront fee is paid once, but the split is a permanent share of everything your song earns. A 50% publishing split on a track that does well can cost many times the upfront fee over the life of the song, paid out slowly and forever. Producers budget for the fee and forget the split, which is backwards &mdash; price a sample against the lifetime of the track, not just release day.</p></div>
+</div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-accordion-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">How long does sample clearance take?</span></div></div>
+<div class="faq-accordion-a"><p>Plan for 2 to 6 months from first contact to signed agreements, and sometimes longer. Major labels and publishers move slowly, and multiple rights holders &mdash; several co-writers, separate publishers, a label on the master &mdash; each add time. Start the moment you decide to use a sample, never near your release date; a rushed clearance hands the rights holder all the leverage and usually a higher price.</p></div>
+</div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-accordion-icon" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">How do I avoid clearance costs entirely?</span></div></div>
+<div class="faq-accordion-a"><p>Two clean routes. Use a pre-cleared sampling service such as Tracklib, which licenses real records with the rights handled, or use royalty-free sample libraries where you keep 100% of your publishing. The other route is to write the part yourself &mdash; an original melody or texture owes nobody. Interpolation reduces but does not eliminate cost, since you still clear publishing; only pre-cleared or original material removes clearance completely.</p></div>
+</div>
+</div>
+
+<div class="related-grid">
+<a href="how-to-clear-a-sample.html" class="related-card"><div class="related-card-tag">Music Business</div><h3 class="related-card-title">How to Clear a Sample</h3><p class="related-card-desc">The companion how-to: who owns what, who to contact, and how to get a clearance that actually holds up.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="are-splice-samples-royalty-free.html" class="related-card"><div class="related-card-tag">Music Business</div><h3 class="related-card-title">Are Splice Samples Royalty-Free?</h3><p class="related-card-desc">The no-clearance path: what royalty-free actually means, and where the licensing fine print bites.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-release-a-cover-song.html" class="related-card"><div class="related-card-tag">Music Business</div><h3 class="related-card-title">How to Release a Cover Song</h3><p class="related-card-desc">Sampling&rsquo;s close cousin &mdash; where the price is fixed by law and anyone can license. The contrast is instructive.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="beat-licensing-explained.html" class="related-card"><div class="related-card-tag">Music Business</div><h3 class="related-card-title">Beat Licensing Explained</h3><p class="related-card-desc">Lease vs exclusive, royalty splits, and the rights you can and cannot pass to a buyer.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-music-royalties-work.html" class="related-card"><div class="related-card-tag">Music Business</div><h3 class="related-card-title">How Music Royalties Work</h3><p class="related-card-desc">Where the publishing money you&rsquo;ll be splitting actually comes from &mdash; mechanical, performance, and the difference.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="music-streaming-royalties-explained.html" class="related-card"><div class="related-card-tag">Music Business</div><h3 class="related-card-title">Streaming Royalties Explained</h3><p class="related-card-desc">What a stream is worth and why a takedown costs more than the track &mdash; the momentum you can&rsquo;t get back.</p><span class="related-card-meta">Read article &rarr;</span></a>
+</div>
+</div>
+
+    </article>
+    <aside aria-label="Article sidebar">
+      <div class="sidebar-widget toc-widget" aria-labelledby="tocHeading">
+        <div class="sidebar-widget-header"><h2 class="sidebar-widget-title" id="tocHeading">In This Article</h2></div>
+        <div class="sidebar-widget-body"><ul class="toc-list">
+<li><a href="#short">There&rsquo;s No Price, There&rsquo;s a Decision</a></li><li><a href="#two-bills">Two Separate Bills</a></li><li><a href="#what-it-costs">What It Costs in 2026</a></li><li><a href="#decision">Clear, Interpolate, or Drop</a></li><li><a href="#interpolate">The Interpolation Money Move</a></li><li><a href="#lifetime">The Upfront Is the Cheap Part</a></li><li><a href="#wrong">The Cost of Getting It Wrong</a></li><li><a href="#worth-it">Is It Worth Clearing?</a></li><li><a href="#next">When the Answer Is &ldquo;Clear It&rdquo;</a></li><li><a href="#exercises">3 Exercises</a></li><li><a href="#faq">FAQ</a></li>
+</ul></div>
+      </div>
+      <div class="sidebar-widget" style="background:var(--bg-void);border-color:var(--border-default);">
+        <div class="sidebar-widget-body" style="padding:1.5rem;">
+          <p style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.5rem;">Newsletter</p>
+          <h3 style="font-family:var(--font-display);color:var(--text-primary);font-size:1.1rem;margin-bottom:.5rem;">The Producer&rsquo;s Briefing</h3>
+          <p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:1rem;line-height:1.55;">Weekly tips, gear news, and technique guides. Free.</p>
+          <form class="newsletter-form-js" style="display:flex;flex-direction:column;gap:.5rem;" novalidate>
+            <input type="email" name="email" class="form-input" placeholder="Your email" required />
+            <button type="submit" class="btn-newsletter" style="font-size:.82rem;padding:.65rem 1rem;">Subscribe Free</button>
+          </form>
+        </div>
+      <div class="sidebar-widget" style="margin-top:1.5rem;">
+        <div class="sidebar-widget-header" style="text-align:center;">
+          <h2 class="sidebar-widget-title">Related Articles</h2>
+        </div>
+        <div class="sidebar-widget-body" style="padding:1rem;">
+<ul style="list-style:none;padding:0;margin:0;text-align:center;"><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="how-to-clear-a-sample.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">How to Clear a Sample</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Music Business</span></li>
+<li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="are-splice-samples-royalty-free.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">Are Splice Samples Royalty-Free?</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Music Business</span></li>
+<li style="padding:.6rem 0;"><a href="how-to-release-a-cover-song.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">How to Release a Cover Song</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Music Business</span></li></ul>
+        </div>
+      </div>
+      </div>
+    </aside>
+
+  </div>
+</main>
+<section class="newsletter-section" id="newsletter" aria-labelledby="newsletterHeading">
+  <div class="container">
+    <div class="newsletter-inner">
+      <div class="newsletter-content">
+        <p class="newsletter-label">Newsletter</p>
+        <h2 id="newsletterHeading" class="newsletter-title">The Producer's <em>Briefing</em></h2>
+        <p class="newsletter-desc">Weekly techniques, gear news, and music business insights. Free.</p>
+      </div>
+      <div class="newsletter-form-wrap">
+        <form class="newsletter-form-js" novalidate>
+          <input type="email" name="email" class="form-input" placeholder="Your email address" required />
+          <button type="submit" class="btn-newsletter">Subscribe Free</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<footer class="site-footer" role="contentinfo">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="../index.html" class="site-logo"><span class="logo-wordmark">Music<span>Production</span>Wiki</span><span class="logo-tagline">The Producer's Reference</span></a>
+    </div>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <div class="footer-col">
+        <h3 class="footer-col-title">Categories</h3>
+        <ul>
+          <li><a href="../categories/reviews.html">Reviews</a></li>
+          <li><a href="../categories/comparisons.html">Comparisons</a></li>
+          <li><a href="../categories/ai-music.html">AI Music</a></li>
+          <li><a href="../categories/daws.html">DAWs</a></li>
+          <li><a href="../categories/plugins.html">Plugins</a></li>
+          <li><a href="../categories/hardware.html">Gear</a></li>
+          <li><a href="../categories/techniques.html">Techniques</a></li>
+          <li><a href="../categories/music-business.html">Music Business</a></li>
+          <li><a href="../categories/glossary.html">Glossary</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">Popular</h3>
+        <ul>
+          <li><a href="../articles/suno-vs-udio.html">Suno vs Udio</a></li>
+          <li><a href="../articles/best-daw-for-beginners.html">Best DAW for Beginners</a></li>
+          <li><a href="../articles/focusrite-scarlett-2i2-gen-4-review.html">Scarlett 2i2 Review</a></li>
+          <li><a href="../articles/sidechain-compression-guide.html">Sidechain Compression</a></li>
+          <li><a href="../articles/best-compressor-plugins.html">Best Compressor Plugins</a></li>
+          <li><a href="../articles/what-is-gain-staging.html">What Is Gain Staging</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">About</h3>
+        <ul>
+          <li><a href="../about.html">About MPW</a></li>
+          <li><a href="../about.html#team">Our Team</a></li>
+          <li><a href="../about.html#methodology">Review Methodology</a></li>
+          <li><a href="../about.html#affiliate">Affiliate Disclosure</a></li>
+          <li><a href="../about.html#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="footer-bottom"><div class="container"><p>© <span id="copyrightYear"></span> MusicProductionWiki.com. All rights reserved. Content by the Music Production Wiki Team.</p></div></div>
+</footer>
+<script src="../js/main.js"></script>
+<script>document.getElementById('copyrightYear').textContent = new Date().getFullYear();</script>
+
+<button id="mpwBackTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  aria-label="Back to top"
+  style="position:fixed;bottom:1.5rem;right:1.5rem;width:2.5rem;height:2.5rem;border-radius:50%;
+         background:var(--teal);color:#000;border:none;cursor:pointer;display:none;
+         align-items:center;justify-content:center;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3);">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <polyline points="18 15 12 9 6 15"/>
+  </svg>
+</button>
+<script>
+(function(){
+  var btn=document.getElementById('mpwBackTop');
+  var bar=document.getElementById('readingProgress');
+  var art=document.querySelector('.article-body');
+  window.addEventListener('scroll',function(){
+    var st=window.scrollY||document.documentElement.scrollTop;
+    btn.style.display=st>400?'flex':'none';
+    if(bar&&art){
+      var h=art.getBoundingClientRect().height;
+      var top=art.getBoundingClientRect().top+st;
+      var pct=Math.min(100,Math.max(0,(st-top+window.innerHeight)*100/h));
+      bar.style.width=pct+'%';
+      bar.setAttribute('aria-valuenow',Math.round(pct));
+    }
+  });
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<!-- MPW universal search: one overlay, one Fuse index (/search-index.json) -->
+<div class="usearch" id="usearch" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="usearch-box">
+    <div class="usearch-top">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input id="usearchInput" type="text" placeholder="Search tools, articles, the Bible…" autocomplete="off">
+      <kbd>esc</kbd>
+    </div>
+    <div class="usearch-results" id="usearchResults"></div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
+<script>
+(function(){
+  // === production parity: lazy-load index on first open, build Fuse once ===
+  var data=null, fuse=null;
+  var overlay=document.getElementById('usearch');
+  var input=document.getElementById('usearchInput');
+  var box=document.getElementById('usearchResults');
+  var sel=-1, current=[];
+  // article slugs are bare; bible/ and tools/ slugs carry their prefix (verified vs live search-index.json)
+  function urlFor(s){ return (s.indexOf('bible/')===0||s.indexOf('tools/')===0) ? '/'+s : '/articles/'+s; }
+
+  function buildFuse(arr){
+    data=arr;
+    fuse=new Fuse(data,{keys:['title','category','description'],threshold:0.34,ignoreLocation:true,minMatchCharLength:2});
+  }
+  function ensureIndex(cb){
+    if(fuse){cb();return;}
+    // PRODUCTION: one shared index, lazy-loaded on first open.
+    fetch('/search-index.json').then(function(r){return r.json();}).then(function(arr){
+      buildFuse(arr); cb();
+    }).catch(function(){ box.textContent='Search failed to load.'; });
+  }
+
+  function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  function render(results){
+    current=results;
+    while(box.firstChild) box.removeChild(box.firstChild);   // no innerHTML
+    if(!input.value.trim()){ var p=document.createElement('div'); p.className='usearch-empty'; p.textContent='Start typing to search everything.'; box.appendChild(p); return; }
+    if(!results.length){ var n=document.createElement('div'); n.className='usearch-empty'; n.textContent='No results for "'+input.value+'".'; box.appendChild(n); return; }
+    results.slice(0,12).forEach(function(r,i){
+      var e=r.item||r;
+      var a=document.createElement('a'); a.href=urlFor(e.slug); if(i===sel)a.className='sel';
+      var top=document.createElement('div'); top.className='ur-top';
+      var t=document.createElement('span'); t.className='ur-title'; t.textContent=e.title;
+      var c=document.createElement('span'); c.className='ur-cat'; c.setAttribute('data-c',e.category||''); c.textContent=e.category||'';
+      top.appendChild(t); top.appendChild(c); a.appendChild(top);
+      if(e.description){ var d=document.createElement('div'); d.className='ur-desc'; d.textContent=e.description; a.appendChild(d); }
+      box.appendChild(a);
+    });
+  }
+
+  function open(q){ ensureIndex(function(){ overlay.classList.add('open'); input.focus(); if(q!=null){input.value=q;} sel=-1; render(input.value?fuse.search(input.value):[]); }); }
+  function close(){ overlay.classList.remove('open'); }
+
+  // wire every nav's search button to the shared overlay
+  document.querySelectorAll('[data-nav-search]').forEach(function(b){ b.addEventListener('click',function(){open(null);}); });
+  input.addEventListener('input',function(){ sel=-1; render(fuse?fuse.search(input.value):[]); });
+  input.addEventListener('keydown',function(e){
+    if(e.key==='Escape')close();
+    else if(e.key==='ArrowDown'){e.preventDefault(); sel=Math.min(sel+1,Math.min(current.length,12)-1); render(current);}
+    else if(e.key==='ArrowUp'){e.preventDefault(); sel=Math.max(sel-1,0); render(current);}
+    else if(e.key==='Enter'&&current[sel]){ var e2=current[sel].item||current[sel]; location.href=urlFor(e2.slug); }
+  });
+  overlay.addEventListener('click',function(e){ if(e.target===overlay)close(); });
+  document.addEventListener('keydown',function(e){ if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();open(null);} });
+})();
+</script>
+<script id="toc-bar-js">
+(function(){
+  var body=document.querySelector('.article-body');
+  var track=document.getElementById('tocBarTrack');
+  if(!body||!track)return;
+  var heads=[].slice.call(body.querySelectorAll('h2[id]'));
+  if(!heads.length)return;
+  heads.forEach(function(h){
+    var a=document.createElement('a');a.href='#'+h.id;
+    var t=h.textContent.trim();var i=t.indexOf(':');if(i>0)t=t.slice(0,i);
+    a.textContent=t;track.appendChild(a);
+  });
+  var links=[].slice.call(track.querySelectorAll('a'));
+  function onScroll(){
+    var y=window.scrollY+130,cur=heads[0].id;
+    heads.forEach(function(h){if(h.offsetTop<=y)cur=h.id;});
+    links.forEach(function(l){var on=l.getAttribute('href')==='#'+cur;l.classList.toggle('active',on);
+      if(on)l.scrollIntoView({inline:'center',block:'nearest'});});
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+})();
+</script>
+<script>
+function mpwFaqToggle(el){
+  var answer = el.nextElementSibling;
+  if(!answer || !answer.classList.contains('faq-accordion-a')) return;
+  var isOpen = answer.classList.contains('open');
+  document.querySelectorAll('.faq-accordion-a.open').forEach(function(a){
+    a.classList.remove('open');
+    var q = a.previousElementSibling;
+    if(q){ var ic = q.querySelector('.faq-accordion-icon, .faq-plus'); if(ic) ic.classList.remove('open'); }
+  });
+  if(!isOpen){
+    answer.classList.add('open');
+    var icon = el.querySelector('.faq-accordion-icon, .faq-plus');
+    if(icon) icon.classList.add('open');
+  }
+}
+</script>
+<style>.faq-plus.open{transform:rotate(45deg);transition:transform .2s ease}</style>
+</body>
+
+</html>
