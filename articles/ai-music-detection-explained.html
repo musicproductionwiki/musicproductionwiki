@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="How AI music detection works in 2026: SynthID, C2PA, Deezer's classifier, watermarks, accuracy and false positives, for anyone making or checking AI music." />
+  <title>AI Music Detection Explained (2026) | MusicProductionWiki.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <style>
+    #readingProgress{position:fixed;top:0;left:0;height:3px;background:var(--teal);width:0%;z-index:200;transition:width 0.1s linear;}
+    .quick-answer{background:linear-gradient(135deg,rgba(0,212,168,0.08),rgba(167,139,250,0.06));border:1px solid rgba(0,212,168,0.3);border-left:4px solid var(--teal);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .quick-answer-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.6rem;}
+    .quick-answer p{font-size:1rem;line-height:1.65;color:var(--text-primary);margin:0;}
+    .skill-badge{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .6rem;border-radius:4px;margin-left:.6rem;vertical-align:middle;position:relative;top:-2px;}
+    .skill-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .skill-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .skill-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .settings-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .settings-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .settings-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .settings-table tr:last-child td{border-bottom:none;}
+    .settings-table tr:hover td{background:var(--bg-surface);}
+    .settings-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .settings-table .mono{font-family:var(--font-mono);font-size:.82rem;color:var(--teal);}
+    .mistake-box{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-left:4px solid #ef4444;border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .mistake-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ef4444;margin-bottom:.4rem;}
+    .mistake-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference{border-left:3px solid var(--purple);padding:.75rem 1.25rem;margin:1.25rem 0;background:rgba(167,139,250,0.05);border-radius:0 6px 6px 0;}
+    .pro-reference-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.35rem;}
+    .pro-reference p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference strong{color:var(--text-primary);}
+    .listening-prescription{background:var(--bg-void);border:1px solid var(--border-default);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;position:relative;}
+    .listening-prescription::before{content:'🎧';position:absolute;top:-14px;left:1.5rem;background:var(--bg-void);padding:0 .4rem;font-size:1.1rem;}
+    .listening-prescription-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:.75rem;}
+    .listening-prescription p{font-size:.9rem;line-height:1.7;color:var(--text-secondary);margin:0 0 .5rem;}
+    .listening-record{font-weight:600;color:var(--text-primary);}
+    .decision-framework{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .decision-framework-title{font-family:var(--font-display);font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:1rem;}
+    .decision-item{display:flex;gap:1rem;padding:.65rem 0;border-bottom:1px solid var(--border-subtle);font-size:.88rem;line-height:1.55;}
+    .decision-item:last-child{border-bottom:none;}
+    .decision-if{color:var(--text-muted);font-style:italic;min-width:2rem;}
+    .decision-then{color:var(--text-primary);}
+    .decision-then strong{color:var(--teal);}
+    .exercise-block{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.25rem 0;}
+    .exercise-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;}
+    .exercise-badge{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .7rem;border-radius:4px;}
+    .exercise-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .exercise-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .exercise-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .exercise-title{font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text-primary);}
+    .exercise-block ol{margin:0;padding-left:1.25rem;color:var(--text-secondary);font-size:.88rem;line-height:1.7;}
+    .exercise-block ol li{margin-bottom:.4rem;}
+    .version-line{font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:4px;padding:.4rem .75rem;margin:.75rem 0 1.5rem;display:inline-block;}
+    .go-deeper{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:10px;padding:1.75rem;margin:2.5rem 0;}
+    .go-deeper-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text-primary);margin-bottom:1.25rem;}
+    .go-deeper-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;}
+    .go-deeper-item{background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:7px;padding:1rem 1.1rem;}
+    .go-deeper-item-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.35rem;}
+    .go-deeper-item a{font-size:.88rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;}
+    .go-deeper-item p{font-size:.78rem;color:var(--text-muted);margin:.3rem 0 0;}
+    .citation{font-size:.78rem;color:var(--text-muted);font-style:italic;margin-top:.25rem;}
+    .diagram-wrap{margin:1.75rem 0;background:var(--bg-void);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem;overflow-x:auto;}
+    .diagram-caption{font-size:.78rem;color:var(--text-muted);text-align:center;margin-top:.75rem;font-style:italic;}
+    .highlight-box{background:rgba(0,212,168,0.06);border:1px solid rgba(0,212,168,0.2);border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .highlight-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.4rem;}
+    .highlight-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin:1.5rem 0;}
+    .stat-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem;text-align:center;}
+    .stat-number{font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--teal);display:block;}
+    .stat-label{font-size:.78rem;color:var(--text-secondary);margin-top:.25rem;}
+    .action-steps{counter-reset:steps;list-style:none;padding:0;margin:1.5rem 0;}
+    .action-steps li{counter-increment:steps;position:relative;padding:.85rem 0 .85rem 2.6rem;border-bottom:1px solid var(--border-subtle);font-size:.9rem;color:var(--text-secondary);line-height:1.6;}
+    .action-steps li:last-child{border-bottom:none;}
+    .action-steps li::before{content:counter(steps);position:absolute;left:0;top:.9rem;background:var(--teal);color:#000;font-weight:800;font-size:.75rem;width:1.6rem;height:1.6rem;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+    .genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:1.5rem 0;}
+    .genre-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem 1.25rem;}
+    .genre-card-name{font-family:var(--font-display);font-size:.85rem;font-weight:700;color:var(--teal);margin-bottom:.4rem;}
+    .genre-card p{font-size:.82rem;color:var(--text-secondary);line-height:1.55;margin:0;}
+    .comparison-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .comparison-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .comparison-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .comparison-table tr:last-child td{border-bottom:none;}
+    .comparison-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .affiliate-cta{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,212,168,0.1);border:1px solid rgba(0,212,168,0.25);color:var(--teal);font-size:.82rem;font-weight:600;padding:.45rem .9rem;border-radius:6px;text-decoration:none;}
+
+    .faq-accordion{margin:1.75rem 0;}
+    .faq-accordion-item{background:var(--bg-surface);border:1px solid var(--border-subtle);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;margin-bottom:8px;overflow:hidden;}
+    .faq-accordion-q{display:flex;align-items:flex-start;padding:1rem 1.25rem;cursor:pointer;gap:.75rem;}
+    .faq-accordion-q:hover{background:var(--bg-elevated);}
+    .faq-accordion-icon{width:16px;height:16px;flex-shrink:0;margin-top:3px;color:var(--purple);transition:transform .2s ease;}
+    .faq-accordion-icon.open{transform:rotate(45deg);}
+    .faq-accordion-q-inner{display:flex;flex-direction:column;}
+    .faq-accordion-label{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin-bottom:.2rem;}
+    .faq-accordion-q-text{font-size:.92rem;font-weight:600;color:var(--text-primary);line-height:1.45;font-family:var(--font-display);}
+    .faq-accordion-a{display:none;padding:0 1.25rem 1rem 2.75rem;font-size:.88rem;color:var(--text-secondary);line-height:1.7;border-top:1px solid var(--border-subtle);padding-top:.85rem;}
+    .faq-accordion-a.open{display:block;}
+    .scorecard-table{display:table;table-layout:fixed;width:100%;border-collapse:collapse;font-size:.88rem;margin:1.5rem 0;border:1px solid var(--border-default);border-radius:8px;overflow:hidden;}
+    .scorecard-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;padding:.7rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .scorecard-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;vertical-align:top;}
+    .scorecard-table tr:last-child td{border-bottom:none;}
+    .scorecard-table td:first-child{color:var(--text-primary);font-weight:600;}
+    .scorecard-table .sc-num{font-family:var(--font-mono);font-weight:600;color:var(--teal);text-align:center;}
+    .scorecard-table .sc-amber{color:var(--purple);}
+    .scorecard-table .sc-overall td{background:rgba(0,212,168,0.06);font-weight:700;}
+    .vs-verdict{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.1rem 0 .4rem;}
+    @media(max-width:560px){.vs-verdict{grid-template-columns:1fr;}}
+    .vs-card{background:var(--bg-void);border:1px solid var(--border-subtle);border-radius:8px;padding:1.2rem 1.35rem;}
+    .vs-card.win{border-color:rgba(0,212,168,0.4);}
+    .vs-name{font-family:var(--font-display);font-size:1.02rem;font-weight:700;color:var(--text-primary);margin-bottom:.35rem;}
+    .vs-score{font-size:2.5rem;font-weight:800;color:var(--teal);line-height:1;font-family:var(--font-display);}
+    .vs-score small{font-size:.95rem;color:var(--text-muted);font-weight:600;}
+    .vs-tag{font-size:.8rem;color:var(--text-secondary);margin:.5rem 0 0;line-height:1.5;}
+    .vs-pc{font-size:.82rem;line-height:1.6;margin-top:.55rem;color:var(--text-secondary);}
+    .vs-pc strong{color:var(--text-primary);}
+    .diagram-wrap img{width:100%;height:auto;display:block;border-radius:6px;}
+</style>
+
+  <link rel="canonical" href="https://musicproductionwiki.com/articles/ai-music-detection-explained.html"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="AI Music Detection Explained (2026): How &ldquo;Is It AI?&rdquo; Tools Actually Work"/>
+  <meta property="og:description" content="SynthID, C2PA, Deezer's classifier, watermarks, accuracy and false positives &mdash; how AI music detection actually works in 2026, and its limits. Verified June 26, 2026."/>
+  <meta property="og:url" content="https://musicproductionwiki.com/articles/ai-music-detection-explained.html"/>
+  <meta property="og:site_name" content="Music Production Wiki"/>
+  <meta property="og:image" content="https://musicproductionwiki.com/og-image.png"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="article:author" content="Music Production Wiki Team"/>
+  <meta property="article:section" content="AI Music"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="AI Music Lawsuits &amp; Settlements: The 2026 Tracker"/>
+  <meta name="twitter:description" content="The AI-music settlement era, tracked: who settled, who's still litigating, the July 2026 verdicts, and what it means for independent producers."/>
+  <meta name="twitter:image" content="https://musicproductionwiki.com/og-image.png"/>
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="article:published_time" content="2026-06-24T00:00:00+00:00" />
+  <meta property="article:modified_time" content="2026-06-24T00:00:00+00:00" />
+  <meta name="keywords" content="ai music detection, ai music detector, how to tell if a song is ai, synthid, c2pa content credentials, deezer ai detector, will my song get flagged as ai, ai music false positive, ai music disclosure, is this song ai" />
+  <!-- Article schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "AI Music Detection Explained (2026): How \u201cIs It AI?\u201d Tools Actually Work \u2014 and Their Limits",
+  "description": "How AI music detection actually works in 2026 \u2014 provenance (C2PA), watermarks (SynthID), platform classifiers (Deezer) and fingerprinting \u2014 what each can and can't prove, how accurate detectors really are, why human tracks get false-flagged, and how to keep clean provenance.",
+  "articleSection": "AI Music",
+  "image": [
+    "https://musicproductionwiki.com/images/ai-music-detection-explained-four-layers.png",
+    "https://musicproductionwiki.com/images/ai-music-detection-explained-decision-flow.png",
+    "https://musicproductionwiki.com/images/ai-music-detection-explained-false-positive-map.png",
+    "https://musicproductionwiki.com/og-image.png"
+  ],
+  "datePublished": "2026-06-26",
+  "dateModified": "2026-06-26",
+  "author": {"@type": "Organization", "name": "Music Production Wiki", "url": "https://musicproductionwiki.com"},
+  "publisher": {"@type": "Organization", "name": "Music Production Wiki", "url": "https://musicproductionwiki.com", "logo": {"@type": "ImageObject", "url": "https://musicproductionwiki.com/og-image.png"}},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://musicproductionwiki.com/articles/ai-music-detection-explained.html"}
+}
+</script>
+  <!-- HowTo: protect yourself now -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to check whether a music track is AI-generated",
+  "step": [
+    {"@type": "HowToStep", "position": 1, "name": "Preserve the original file first", "text": "Work from the highest-quality original you have. Re-encoding, normalizing or converting a file can strip metadata and degrade the signals every later check depends on, so make a copy and inspect that rather than the working version."},
+    {"@type": "HowToStep", "position": 2, "name": "Check provenance: C2PA Content Credentials and SynthID", "text": "Look for cryptographically signed C2PA Content Credentials and, for Google-model audio, a SynthID watermark. Present credentials are the strongest evidence of origin. But a missing credential proves nothing, because credentials strip on re-encode and most generators do not embed SynthID at all."},
+    {"@type": "HowToStep", "position": 3, "name": "Read the metadata and encoder fields", "text": "Inspect the ID3, XMP and encoder fields. Raw exports from some generators carry tell-tale tool or version strings. This is the easiest signal to find and also the easiest to remove, so treat its presence as informative and its absence as inconclusive."},
+    {"@type": "HowToStep", "position": 4, "name": "Run a probabilistic classifier and read it as odds", "text": "Run the audio through a reputable detector. It returns a probability, not a verdict, and different detectors disagree on the same file. Treat a high score as one piece of evidence and note that vendor accuracy figures are claims measured on the vendor's own test set."},
+    {"@type": "HowToStep", "position": 5, "name": "Cross-check rights records and human documentation", "text": "Compare against fingerprint and rights databases, and against any human documentation \u2014 stems, sessions, dated drafts. A track with a full human paper trail is far easier to stand behind than one with none."},
+    {"@type": "HowToStep", "position": 6, "name": "Weigh the layers \u2014 no single score is a verdict", "text": "Combine provenance, watermark, metadata, classifier and rights signals into a judgement. No individual score should drive a high-stakes decision, and a confident-sounding percentage from one tool is the most common way people get this wrong."}
+  ]
+}
+</script>
+  <!-- Organization -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Music Production Wiki",
+  "url": "https://musicproductionwiki.com",
+  "logo": {"@type": "ImageObject", "url": "https://musicproductionwiki.com/og-image.png"}
+}
+</script>
+  <!-- WebSite -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Music Production Wiki",
+  "url": "https://musicproductionwiki.com",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {"@type": "EntryPoint", "urlTemplate": "https://musicproductionwiki.com/?s={search_term_string}"},
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+  <!-- Breadcrumb -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://musicproductionwiki.com/"},
+    {"@type": "ListItem", "position": 2, "name": "AI Music", "item": "https://musicproductionwiki.com/categories/ai-music.html"},
+    {"@type": "ListItem", "position": 3, "name": "AI Music Detection Explained (2026)", "item": "https://musicproductionwiki.com/articles/ai-music-detection-explained.html"}
+  ]
+}
+</script>
+  <!-- FAQ -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "Can you 100% detect AI music?", "acceptedAnswer": {"@type": "Answer", "text": "No. No method detects AI music with certainty. Provenance - a C2PA credential or a SynthID watermark - is strong evidence when present, but it is silent when absent, and classifiers return a probability that can be wrong and that different tools disagree on. A Deezer/Ipsos blind test found about 97% of listeners could not tell AI from human by ear. Detection gives you odds, not proof, so treat any '100% accurate' claim as marketing."}},
+    {"@type": "Question", "name": "What's the most accurate AI music detector?", "acceptedAnswer": {"@type": "Answer", "text": "There is no single agreed winner, and the honest move is to distrust the biggest numbers. Platform and commercial tools advertise around 99% or more, but those are vendor figures on their own test sets with no published benchmark. A transparent musician-facing detector publishes about 87.67% holdout accuracy - lower, but auditable. Detectors disagree on the same file, so check more than one and read each result as a probability rather than a verdict."}},
+    {"@type": "Question", "name": "Will my human-made song get flagged as AI?", "acceptedAnswer": {"@type": "Answer", "text": "It can. Detectors look for machine-precise timing, an unusually clean spectrum and a too-perfect noise floor - characteristics a heavily quantized, brickwalled, pristine electronic track can share even when a human made every choice. You lower the risk with genuine micro-timing and dynamics where they suit the music, and above all by keeping your stems, sessions and dated drafts as proof of authorship."}},
+    {"@type": "Question", "name": "Does Spotify or DistroKid reject AI music?", "acceptedAnswer": {"@type": "Answer", "text": "Mostly they allow disclosed AI music and act against concealment and spam. DistroKid accepts AI tracks if you hold the rights and check its AI box; undisclosed AI it detects is held for review. TuneCore allows AI-assisted work but not fully-AI tracks, and CD Baby is the strictest. Spotify allows AI music, runs an informational AI-credits tag via DDEX metadata, and has removed large numbers of spam-pattern uploads. Disclose at upload - concealment is what gets tracks pulled."}},
+    {"@type": "Question", "name": "What is SynthID and C2PA?", "acceptedAnswer": {"@type": "Answer", "text": "They are the two main provenance technologies. C2PA Content Credentials are cryptographically signed metadata recording who made a file, with what tool, when, and what edits - strong when present, but they strip on re-encode. SynthID is Google DeepMind's inaudible watermark embedded in the audio itself; it survives compression but only marks Google-model audio such as Lyria, and says nothing about who or when. In May 2026 the two were aligned to be used together, since neither is sufficient alone."}},
+    {"@type": "Question", "name": "Can detection be fooled?", "acceptedAnswer": {"@type": "Answer", "text": "In principle yes - research shows watermarks can be removed and classifiers evaded, and metadata is trivial to strip. But that is the wrong goal. Stripping metadata leaves the spectral fingerprint intact and solves little, while creating the undisclosed-AI concealment that gets accounts penalized when platforms catch it downstream. The durable, lower-risk path is disclosure and clean provenance, not evasion."}},
+    {"@type": "Question", "name": "Does AI music have a watermark?", "acceptedAnswer": {"@type": "Answer", "text": "Sometimes, but not universally. Google-model audio can carry a SynthID watermark; many other generators instead leave a statistical spectral fingerprint and/or metadata tags rather than a SynthID-style watermark. So a 'no watermark detected' result from a single tool, such as Google's SynthID portal, is not evidence a track is human - it may simply not be a SynthID-marked file."}},
+    {"@type": "Question", "name": "How do I prove my song is human-made?", "acceptedAnswer": {"@type": "Answer", "text": "With a paper trail, not a tool. Keep your stems and session files, your dated project history and draft bounces; preserve any C2PA credential your tools produce; and disclose honestly at upload. A complete human record is the strongest possible answer to 'prove this is human,' because it is exactly what a generated track cannot produce."}}
+  ]
+}
+</script>
+<style id="toc-skin">
+.toc-widget .sidebar-widget-header{margin-bottom:.35rem}
+.toc-list{counter-reset:tocnum;list-style:none;margin:0;padding:0}
+.toc-list li{counter-increment:tocnum;position:relative;margin:0;border-left:2px solid var(--border-subtle);transition:border-color .15s ease,background .15s ease}
+.toc-list li a{display:flex;gap:.7rem;align-items:baseline;padding:.5rem .85rem .5rem 1rem;font-size:.82rem;line-height:1.45;font-weight:500;color:var(--text-secondary);text-decoration:none;transition:color .15s ease}
+.toc-list li a::before{content:counter(tocnum,decimal-leading-zero);font-family:var(--font-mono,ui-monospace,monospace);font-size:.7rem;font-weight:600;letter-spacing:.04em;color:var(--text-muted);flex:0 0 auto;min-width:1.5em;padding-top:.05rem}
+.toc-list li a:hover{color:var(--text-primary)}
+.toc-list li.active{border-left-color:var(--teal);background:linear-gradient(90deg,rgba(0,212,168,.08),transparent 80%)}
+.toc-list li.active a{color:var(--teal);font-weight:600}
+.toc-list li.active a:hover{color:var(--teal)}
+.toc-list li.active a::before{color:var(--teal)}
+</style>
+<style id="toc-bar-css">
+.toc-bar{display:none}
+@media (max-width: 900px){
+.toc-bar{display:block;position:sticky;top:60px;z-index:400;background:var(--bg-void);border-bottom:1px solid var(--border-default);overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(to right,#000 88%,transparent 100%);mask-image:linear-gradient(to right,#000 88%,transparent 100%)}
+.toc-bar::-webkit-scrollbar{display:none}
+.toc-bar-track{display:flex;gap:4px;padding:9px 10px;min-width:max-content}
+.toc-bar-track a{color:var(--text-secondary);text-decoration:none;font-family:var(--font-mono,ui-monospace,monospace);font-size:10px;text-transform:uppercase;letter-spacing:.05em;padding:6px 10px;border-radius:4px;white-space:nowrap;min-height:30px;display:inline-flex;align-items:center;transition:color .15s,background .15s}
+.toc-bar-track a.active{color:var(--teal);background:var(--bg-elevated)}
+.article-body h2[id]{scroll-margin-top:116px}
+}
+@media (max-width: 900px) and (hover:hover){.toc-bar-track a:hover{color:var(--teal)}}
+</style>
+</head>
+<body>
+<div id="readingProgress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+<style id="mpw-unav-css">
+
+.mnav-wrap,.usearch{--ink:#09090d;--panel:#0f0f18;--panel2:#15151f;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);--amber:#f5a623;--teal:#00e8a2;--teal-d:rgba(0,232,162,.12);--text:#f2f2f7;--t2:#9a9ab2;--t3:#56566f;--sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'DM Mono',ui-monospace,SFMono-Regular,monospace;}
+.mnav-wrap *,.mnav-wrap *::before,.mnav-wrap *::after,.usearch *,.usearch *::before,.usearch *::after{box-sizing:border-box;margin:0;padding:0}
+/* host-CSS shield: a page loading style.css (articles) must not bleed its body font/color/line-height into the bar. Direct rule on .mnav-wrap beats inherited body styles. */
+.mnav-wrap,.usearch{font-family:var(--sans);font-size:14px;font-weight:400;font-style:normal;line-height:1.4;letter-spacing:normal;color:var(--text);text-align:left;text-transform:none}
+/* S91 host-CSS isolation (:where() = zero-specificity; beats style.css bare a/li by source order, LOSES to nav's own .drw-card/.mnav-flat classes) */
+:where(.mnav-wrap,.usearch) a{color:inherit;text-decoration:none;background:none;border:0;font:inherit;letter-spacing:inherit}
+:where(.mnav-wrap,.usearch) ul,:where(.mnav-wrap,.usearch) ol{list-style:none;margin:0;padding:0;border:0}
+:where(.mnav-wrap,.usearch) li{margin:0;padding:0;border:0;font-size:inherit;line-height:inherit;color:inherit;background:none}
+:where(.mnav-wrap,.usearch) h1,:where(.mnav-wrap,.usearch) h2,:where(.mnav-wrap,.usearch) h3,:where(.mnav-wrap,.usearch) h4,:where(.mnav-wrap,.usearch) h5,:where(.mnav-wrap,.usearch) h6,:where(.mnav-wrap,.usearch) p{margin:0;padding:0;border:0;font:inherit;color:inherit;line-height:inherit;letter-spacing:inherit;text-transform:none}
+:where(.mnav-wrap,.usearch) button{font:inherit;color:inherit;background:none;border:0;letter-spacing:inherit;text-align:inherit}
+:where(.mnav-wrap,.usearch) svg{display:inline-block;vertical-align:middle}
+:where(.mnav-wrap,.usearch) img{max-width:none}
+.mnav-wrap{background:var(--ink);border-bottom:1px solid var(--line);position:relative}
+.mnav{height:60px;display:flex;align-items:center}
+.mnav-in{max-width:1180px;margin:0 auto;padding:0 22px;width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.mnav-brand{display:flex;align-items:center;gap:10px;color:var(--text);text-decoration:none;flex:0 0 auto}
+.mnav-word{font-weight:700;font-size:15px;letter-spacing:-.02em}
+.mnav-links{display:flex;align-items:center;gap:6px;margin-left:8px}
+.mnav-flat,.mnav-trigger{color:var(--t2);background:none;border:0;font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;padding:8px 12px;border-radius:8px;display:inline-flex;align-items:center;gap:6px}
+.mnav-flat:hover,.mnav-trigger:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.caret{font-size:9px;color:var(--t3);transition:transform .18s}
+.mnav-right{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.mnav-search{background:none;border:0;color:var(--t2);cursor:pointer;display:flex;padding:6px;border-radius:8px}
+.mnav-search:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.mnav-cta{border:1px solid var(--teal);color:var(--teal);text-decoration:none;padding:7px 15px;border-radius:8px;font-size:13px;font-weight:600;white-space:nowrap}
+.mnav-cta:hover{background:var(--teal-d)}
+.mnav-wrap[data-section="tools"] .mnav-flat[data-nav="tools"]{color:var(--text);font-weight:600}
+.mnav-wrap[data-section="articles"] .mnav-trigger[data-nav="articles"]{color:var(--text);font-weight:600}
+/* Bible = amber brand color, desktop link + mobile drawer */
+.mnav-flat[data-nav="bible"],.drw-link[data-nav="bible"]{color:#f5a623!important;font-weight:600}
+.mnav-flat[data-nav="bible"]:hover,.drw-link[data-nav="bible"]:hover{color:#ffc04d!important}
+.mnav-item{position:relative}
+.mnav-panel,.mnav-panel-wide{position:absolute;top:calc(100% + 6px);left:0;z-index:50;display:none;background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:14px;box-shadow:0 24px 60px -24px rgba(0,0,0,.9);min-width:240px}
+.mnav-panel-wide{grid-template-columns:1fr 1fr;gap:8px 22px;min-width:520px}
+.mnav-item:hover .mnav-panel,.mnav-item:focus-within .mnav-panel,.mnav-item:hover .mnav-panel-wide,.mnav-item:focus-within .mnav-panel-wide{display:grid}
+.mnav-item:hover .caret{transform:rotate(180deg)}
+.mp-col{display:flex;flex-direction:column}
+.mp-head{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);padding:6px 10px 8px}
+.mnav-panel a{display:flex;flex-direction:column;gap:1px;padding:8px 10px;border-radius:9px;text-decoration:none}
+.mnav-panel a:hover{background:rgba(255,255,255,.05)}
+.mp-name{color:var(--text);font-size:13.5px;font-weight:600}.mp-desc{color:var(--t2);font-size:11.5px}
+.mnav-sub{display:none;background:var(--panel);border-bottom:1px solid var(--line)}
+.mnav-wrap[data-section="bible"] .mnav-sub{display:block}
+.mnav-sub-in{max-width:1180px;margin:0 auto;padding:10px 22px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.mnav-sub-in::-webkit-scrollbar{display:none}
+.mnav-sub-in a{flex:0 0 auto;color:var(--t2);text-decoration:none;font-size:12.5px;font-family:var(--mono);border:1px solid var(--line2);border-radius:99px;padding:5px 12px;white-space:nowrap}
+.mnav-sub-in a:hover{color:var(--teal);border-color:rgba(0,232,162,.4)}
+.mnav-toggle{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.mnav-burger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:8px;border-radius:8px}
+.mnav-burger span{display:block;width:20px;height:2px;background:var(--text);border-radius:2px;transition:.2s}
+.mnav-drawer{display:none;flex-direction:column;padding:6px 18px 16px;background:var(--ink);border-bottom:1px solid var(--line)}
+.mnav-drawer details{border-bottom:1px solid var(--line)}
+.mnav-drawer summary{list-style:none;cursor:pointer;padding:13px 2px;font-size:15px;font-weight:600;color:var(--text);display:flex;justify-content:space-between}
+.mnav-drawer summary::-webkit-details-marker{display:none}
+.mnav-drawer summary::after{content:"+";color:var(--t3)}
+.mnav-drawer details[open] summary::after{content:"\2013"}
+.mnav-acc{display:flex;flex-direction:column;padding:0 0 10px 12px}
+.mnav-acc a{color:var(--t2);text-decoration:none;font-size:14px;padding:8px 0}
+.drw-link{color:var(--t2);text-decoration:none;font-size:15px;font-weight:600;padding:13px 2px;border-bottom:1px solid var(--line)}
+.drw-cta{color:var(--teal);text-decoration:none;font-weight:600;font-size:15px;padding:14px 2px}
+.mnav-toggle:checked ~ .mnav-drawer{display:flex}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(2){opacity:0}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+@media(max-width:860px){.mnav-links,.mnav-cta{display:none}.mnav-burger{display:flex}}
+
+/* ===== UNIFIED SEARCH OVERLAY ===== */
+.usearch{position:fixed;inset:0;z-index:10000;display:none;background:rgba(6,6,11,.78);backdrop-filter:blur(6px);padding:80px 20px 20px}
+.usearch.open{display:block}
+.usearch-box{max-width:620px;margin:0 auto;background:var(--panel);border:1px solid var(--line2);border-radius:16px;overflow:hidden;box-shadow:0 40px 90px -30px rgba(0,0,0,.95)}
+.usearch-top{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.usearch-top svg{color:var(--t3);flex:0 0 auto}
+.usearch-top input{flex:1;background:none;border:0;outline:none;color:var(--text);font-family:var(--sans);font-size:17px}
+.usearch-top input::placeholder{color:var(--t3)}
+.usearch-top kbd{font-family:var(--mono);font-size:11px;color:var(--t3);border:1px solid var(--line2);border-radius:6px;padding:2px 7px}
+.usearch-results{max-height:56vh;overflow-y:auto;padding:8px}
+.usearch-results a{display:block;padding:11px 14px;border-radius:10px;text-decoration:none;transition:background .12s}
+.usearch-results a:hover,.usearch-results a.sel{background:rgba(255,255,255,.05)}
+.ur-top{display:flex;align-items:baseline;gap:9px}
+.ur-title{color:var(--text);font-size:14.5px;font-weight:600}
+.ur-cat{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.06);color:var(--t2);flex:0 0 auto}
+.ur-cat[data-c="Tools"]{background:var(--teal-d);color:var(--teal);border:1px solid rgba(0,232,162,.4)}
+.ur-cat[data-c="Bible"]{background:rgba(245,166,35,.18);color:#f5a623;border:1px solid rgba(245,166,35,.4)}
+.ur-desc{color:var(--t2);font-size:12.5px;line-height:1.45;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.usearch-empty{padding:30px;text-align:center;color:var(--t3);font-size:13.5px}
+/* --- sticky-header + entry-page chrome (pilot, refined for density) ---
+   entry nav = 60px main bar only (no category sub-bar). Desktop: hide the horizontal section
+   nav (the sticky sidebar TOC covers sections) and retune offsets to the 60px nav. Mobile: the
+   sidebar is hidden, so SHOW the section nav flush under the bar. All in THIS block. --- */
+.mnav-wrap{position:sticky;top:0;z-index:1000;line-height:1.4}
+.entry-nav{display:none}
+[id].entry-section{scroll-margin-top:90px}
+.entry-main h2{scroll-margin-top:90px}
+.entry-sidebar{top:78px;height:calc(100vh - 98px)}
+@media(max-width:768px){
+  .entry-nav{display:block!important;top:60px!important}
+  [id].entry-section{scroll-margin-top:130px!important}
+  .entry-main h2{scroll-margin-top:130px!important}
+}
+/* dropdown overflow safety */
+.mnav-panel,.mnav-panel-wide{max-height:min(72vh,560px);overflow-y:auto}
+/* mobile drawer: category CARD grid (slick old-nav look), CSS-only */
+.mnav-drawer{padding:10px 18px 18px;gap:0}
+.drw-label{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--t3);margin:12px 2px 8px}
+.drw-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.drw-card{display:flex;align-items:center;padding:12px 14px;border-radius:10px;text-decoration:none;font-size:13.5px;font-weight:600;color:var(--text);background:var(--panel);border:1px solid var(--line2)}
+.drw-card:hover{border-color:var(--teal);color:var(--teal)}
+.drw-feat{display:flex;align-items:center;gap:8px;padding:13px 16px;border-radius:10px;text-decoration:none;font-size:14px;font-weight:700;color:var(--text);background:var(--panel);border:1px solid var(--line2);margin-top:8px}
+.drw-feat-bible{color:#f5a623;background:rgba(245,166,35,.08);border-color:rgba(245,166,35,.30)}
+.drw-feat-bible:hover{border-color:rgba(245,166,35,.6)}
+.drw-cta{display:block;text-align:center;padding:14px;border-radius:10px;background:var(--teal);color:#06281f;font-weight:800;font-size:14px;text-decoration:none;margin-top:12px}
+/* mobile sunlight legibility: lift the intentionally-dim greys in glare (nav + search only), scoped */
+@media(max-width:860px){
+  .mnav-wrap,.usearch{--t2:#c8c8da;--t3:#9696b0}
+  .drw-label{color:#bdbdd0;font-weight:500}
+  .usearch-top input::placeholder{color:#9696b0}
+  .drw-card,.drw-feat{background:#20202e;border:1.5px solid #45455c}
+  .drw-feat-bible{background:rgba(245,166,35,.12);border:1.5px solid rgba(245,166,35,.6)}
+}
+html{overflow-x:clip!important;max-width:none!important}body{overflow-x:clip!important}
+</style>
+<!-- MPW universal nav -->
+<div class="mnav-wrap" data-section="articles">
+  <input type="checkbox" id="mnav-toggle" class="mnav-toggle" aria-hidden="true">
+  <nav class="mnav" aria-label="Main navigation">
+    <div class="mnav-in">
+      <a class="mnav-brand" href="/"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="6" stroke="#f5a623" stroke-width="1.7"/><path d="M7 15V9l3 3 3-5 4 8" stroke="#00e8a2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="mnav-word">MusicProductionWiki</span></a>
+      <div class="mnav-links">
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="articles">Articles <span class="caret">&#9662;</span></button><div class="mnav-panel mnav-panel-wide"><div class="mp-col"><div class="mp-head">Techniques & Analysis</div><a href="/categories/techniques"><span class="mp-name">Techniques</span><span class="mp-desc">Mixing, mastering, sound design</span></a><a href="/categories/reviews"><span class="mp-name">Reviews</span><span class="mp-desc">Honest. No paid placements.</span></a><a href="/categories/comparisons"><span class="mp-name">Comparisons</span><span class="mp-desc">Head-to-head</span></a><a href="/categories/breakdowns"><span class="mp-name">Breakdowns</span><span class="mp-desc">Track-by-track</span></a><a href="/categories/recreations"><span class="mp-name">Recreations</span><span class="mp-desc">Recreate iconic sounds</span></a><a href="/genres"><span class="mp-name">Genres</span><span class="mp-desc">Every genre & style</span></a></div><div class="mp-col"><div class="mp-head">Reference & Business</div><a href="/categories/ai-music"><span class="mp-name">AI Music</span><span class="mp-desc">Suno, Udio, AI tools</span></a><a href="/categories/music-business"><span class="mp-name">Music Business</span><span class="mp-desc">Royalties, licensing, sync</span></a></div></div></div>
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="gear">Gear <span class="caret">&#9662;</span></button><div class="mnav-panel"><div class="mp-col"><a href="/categories/daws"><span class="mp-name">DAWs</span><span class="mp-desc">Every major DAW</span></a><a href="/categories/plugins"><span class="mp-name">Plugins</span><span class="mp-desc">EQ, comp, reverb, synths</span></a><a href="/categories/hardware"><span class="mp-name">Hardware</span><span class="mp-desc">Interfaces, mics, monitors</span></a></div></div></div>
+        <a class="mnav-flat" href="/tools/" data-nav="tools">Tools</a>
+        <a class="mnav-flat" href="/bible/" data-nav="bible">The Bible</a>
+      </div>
+      <div class="mnav-right">
+        <button class="mnav-search" data-nav-search aria-label="Search"><svg width="17" height="17" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <a class="mnav-cta" href="https://theproducersbriefing.beehiiv.com">Sound Better &rarr;</a>
+        <label class="mnav-burger" for="mnav-toggle"><span></span><span></span><span></span></label>
+      </div>
+    </div>
+  </nav>
+  <div class="mnav-drawer">
+    <div class="drw-label">Articles</div>
+    <div class="drw-grid">
+      <a href="/categories/techniques" class="drw-card">Techniques</a><a href="/categories/reviews" class="drw-card">Reviews</a><a href="/categories/comparisons" class="drw-card">Comparisons</a><a href="/categories/breakdowns" class="drw-card">Breakdowns</a><a href="/categories/recreations" class="drw-card">Recreations</a><a href="/genres" class="drw-card">Genres</a><a href="/categories/ai-music" class="drw-card">AI Music</a><a href="/categories/music-business" class="drw-card">Music Business</a>
+    </div>
+    <div class="drw-label">Gear</div>
+    <div class="drw-grid">
+      <a href="/categories/daws" class="drw-card">DAWs</a><a href="/categories/plugins" class="drw-card">Plugins</a><a href="/categories/hardware" class="drw-card">Hardware</a>
+    </div>
+    <a href="/bible/" class="drw-feat drw-feat-bible">&#9670; The Producer's Bible</a>
+    <a href="/tools/" class="drw-feat">The Producer's Tools</a>
+    <a href="https://theproducersbriefing.beehiiv.com" class="drw-cta">Sound Better &rarr;</a>
+  </div>
+</div>
+
+
+<div class="container">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><ol>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../categories/ai-music.html">AI Music</a></li>
+    <li><span aria-current="page">AI Music Detection Explained (2026)</span></li>
+  </ol></nav>
+</div>
+
+<nav class="toc-bar" aria-label="Section navigation"><div class="toc-bar-track" id="tocBarTrack"></div></nav>
+<main class="container" id="main-content">
+  <div class="article-layout">
+    <article aria-labelledby="articleTitle">
+      <header class="article-header">
+        <div class="article-tags"><span class="article-tag teal"><a href="../categories/ai-music.html" style="color:inherit;text-decoration:none;">AI Music</a></span></div>
+        <h1 id="articleTitle">AI Music Detection Explained (2026): How &ldquo;Is It AI?&rdquo; Tools Actually Work &mdash; and Their Limits</h1>
+        <div class="article-header-meta">
+          <div class="article-author"><div class="author-avatar" aria-hidden="true">MP</div><span class="author-name">The Music Production Wiki Team</span></div>
+          <span class="meta-divider"></span><span class="meta-item">Updated June 2026&nbsp;&middot;&nbsp;19 min read&nbsp;&middot;&nbsp;<span style="font-size:.78rem;color:var(--text-muted);">Facts verified June 26, 2026</span></span>
+        </div>
+      </header>
+      <div class="article-body">
+
+<p style="font-size:1.06rem;line-height:1.7;">Every week, more producers ask the same two-sided question. One half is from people who want to know whether a track they are hearing &mdash; or about to license, playlist, or sign &mdash; was made by AI. The other half is from human musicians who are genuinely frightened that their own song will be flagged as AI and pulled from a platform they have spent years building on. Both groups want the same thing: a button that takes a song and returns a clean yes or no. That button does not exist, and the honest reason it does not exist is the most useful thing this article can teach you. AI music detection in 2026 is not one test. It is a stack of imperfect signals &mdash; provenance, watermarks, classifiers and fingerprints &mdash; that each answer a slightly different question, disagree with each other, and together produce odds rather than proof.</p>
+
+<div class="highlight-box" style="margin-bottom:1.5rem;"><div class="highlight-box-label">Affiliate Disclosure</div><p>This article links to MPW tools and to third-party platforms, some of which are affiliate links. If you sign up through one we may earn a commission at no cost to you. It changes nothing about the analysis &mdash; the detectors, accuracy figures and policies below are reported as they are, click or not.</p></div>
+
+<div class="highlight-box"><div class="highlight-box-label">The 30-second version</div><p>There is <strong>no single public &ldquo;is-it-AI&rdquo; button</strong>. Detection works in four layers: <strong>provenance</strong> (C2PA Content Credentials), <strong>watermarks</strong> (Google&rsquo;s SynthID, which only covers Google&rsquo;s own models), <strong>classifiers</strong> (Deezer&rsquo;s platform detector and tools like ACRCloud), and <strong>fingerprinting plus rights records</strong>. Each proves something different, and a missing signal never proves a track is human. Vendors advertise 99%-plus accuracy on their own test sets, a transparent academic-style detector publishes <strong>87.67%</strong>, and a blind study found <strong>97% of listeners</strong> could not tell AI from human at all. The takeaway for anyone releasing music: you cannot &ldquo;beat&rdquo; detection and should not try &mdash; the durable move is to make your release <strong>provably yours</strong>.</p></div>
+
+<p><strong>One honesty note before the detail.</strong> This is a fast-moving corner of the industry &mdash; the headline facts below were re-verified on June 26, 2026, and the dated snapshot section is built to be refreshed because parts of it will be stale within weeks. We treat every vendor accuracy figure as a <em>claim</em>, not a measured fact, we separate what a tool can prove from what it cannot, and we keep the whole piece on the right side of one line: this explains how detection and provenance work so you can stay compliant and protect honest work. It is not a guide to defeating detection, and the &ldquo;can it be fooled?&rdquo; question is answered factually, without method.</p>
+
+<h2 id="no-button">Why There Is No Single &ldquo;Is It AI?&rdquo; Button</h2>
+
+<p>The instinct to want a single verdict is reasonable, because that is how plagiarism checkers and reverse-image search feel to use: paste something in, get an answer. Music does not work that way, and the reason is worth understanding before you trust any tool. A plagiarism checker compares your text against a known corpus of existing text; a match is a match. An AI-music detector is not comparing your song against a library of known AI songs. It is making a statistical guess about whether the <em>internal characteristics</em> of the audio &mdash; how notes are placed in time, how the spectrum is shaped, how clean the noise floor is &mdash; look more like the output of a generative model than like a human performance. That is a probability estimate, and probability estimates are wrong some of the time by definition.</p>
+
+<p>The scale of what these systems are trying to filter explains why the industry built them anyway. Deezer reported in 2026 that it receives roughly 75,000 fully AI-generated tracks every single day, accounting for around 44% of all new uploads to its catalog &mdash; up from about 10,000 a day in early 2025. That is more than two million machine-made tracks a month arriving at one platform alone. No human review process can touch that volume, so detection had to be automated, and automation at that scale means accepting a trade-off between catching AI tracks and wrongly flagging human ones. Every threshold a platform picks moves that trade-off in one direction or the other; there is no setting that catches all the AI without ever touching a real musician.</p>
+
+<p>The reason platforms tolerate that false-positive risk at all is money. The flood of AI uploads is not mostly people sharing music they love; the dominant motive is fraud. Deezer says up to 85% of the streams on the AI tracks it identifies are fraudulent &mdash; bot-driven plays designed to siphon royalties out of a pool that is split among everyone &mdash; which is why it demonetizes them rather than paying out. That reframes detection from a taste question into an accounting one: every undetected fraudulent stream is money taken from human artists, so platforms have a direct financial incentive to over-detect rather than under-detect. For an honest producer that incentive is a double edge. It means the systems are aggressive, and aggressive systems are exactly the ones that occasionally catch a real human in the net. Understanding that the machine is hunting stream-farms, not punishing creativity, is the first step to not taking a flag personally &mdash; and to documenting your work well enough that a flag is easy to reverse.</p>
+
+<p>There is a second, quieter reason the single-button dream fails: the tools are getting harder to tell apart from people, not easier. Deezer, working with Ipsos, ran a blind listening test across eight countries and roughly 9,000 respondents and found that about 97% could not reliably distinguish fully AI-generated songs from human-made ones by ear. If trained ears at that scale cannot do it, no consumer is going to do it by &ldquo;listening for the AI,&rdquo; and any tool that claims to is selling confidence it cannot back up. The honest framing &mdash; the one the better field guides have converged on &mdash; is that detection is not a single-score problem. It is a layered case you build, where a missing watermark is not proof of humanity and a high classifier score is not proof of guilt. To see where this fits the larger picture of how AI music is treated legally and commercially, our hub on <a href="is-ai-music-legal.html">whether AI music is legal</a> is the evergreen companion to this piece.</p>
+
+<h2 id="four-layers">The Four Layers of AI-Music Detection</h2>
+
+<p>It is easier to reason about detection if you stop thinking of it as one tool and start thinking of it as four separate layers, each answering a different question and each with a different blind spot. The first layer is <strong>provenance</strong>: signed records that travel with the file and state where it came from. The second is <strong>watermarking</strong>: an inaudible pattern baked into the audio itself at the moment of generation. The third is <strong>classification</strong>: a model that listens to the finished audio and estimates the odds it was machine-made. The fourth is <strong>fingerprinting and rights records</strong>: matching the track against databases of known recordings and registered works. A serious answer to &ldquo;is this AI?&rdquo; consults more than one layer, because each one is strong exactly where another is weak.</p>
+
+<div class="diagram-wrap"><picture><source media="(max-width:900px)" srcset="../images/ai-music-detection-explained-four-layers-m.png"><img src="../images/ai-music-detection-explained-four-layers.png" alt="The four layers of AI-music detection shown as a stack - provenance (C2PA Content Credentials), watermark (SynthID), classifier (Deezer, ACRCloud), and fingerprint plus rights records - each annotated with what it can prove and what it cannot prove, showing that a missing signal never proves a track is human-made" width="1080" height="1040" loading="lazy"></picture></div>
+
+<p>The fourth layer, fingerprinting and rights records, is the one producers think about least and rely on more than they realize. Audio fingerprinting &mdash; the same family of technology behind content-ID matching &mdash; reduces a recording to a compact signature and compares it against a database. In a detection context that database can hold the signatures of known generator outputs, which is part of how platform-scale classifiers recognize prolific models; in a rights context it is the registries of released recordings and registered compositions, keyed by identifiers like ISRCs. This layer cannot tell you a brand-new track is AI by itself, because a never-before-seen file has nothing to match. What it can do is place a track in the web of existing rights: whether it duplicates a known recording, whether it is registered, and to whom royalties should flow. That is why provenance and rights records, not classifier scores, are what the clearance side of the industry actually leans on.</p>
+
+<p>What makes the stack confusing in practice is that the layers fail in opposite directions. Provenance and watermarks can give you a strong <em>positive</em> &mdash; if a valid credential or watermark is present, you have real evidence of origin &mdash; but they are silent when absent, because a credential can be stripped by a simple re-encode and most generators never embed a watermark in the first place. Classifiers are the reverse: they always return something, a number for any file you hand them, but that number is a guess that can be confidently wrong. Fingerprinting only helps when there is a matching record to find. No single layer is both always-available and always-right, which is precisely why the people who do this well never let one layer cast the deciding vote. The sections that follow take the two layers producers most misunderstand &mdash; provenance and classifiers &mdash; and show exactly what each can and cannot tell you.</p>
+
+<h2 id="provenance">Provenance: C2PA Content Credentials and SynthID</h2>
+
+<p>Provenance is the strongest signal when it exists, and 2026 was the year it stopped being a niche idea. The two technologies you need to know are C2PA Content Credentials and Google&rsquo;s SynthID, and they work in fundamentally different ways. C2PA Content Credentials are structured, cryptographically signed metadata attached to a file: a manifest that records who created it, which tool produced it, when, and what edits were applied. Because the manifest is signed, tampering breaks the signature, so a valid credential is hard to forge. The catch is that the credential lives in the file&rsquo;s metadata layer, which means it can be removed &mdash; deliberately or accidentally &mdash; the moment the file is re-encoded, converted, or run through a tool that does not preserve it. A present, valid C2PA manifest is excellent evidence; its absence tells you almost nothing.</p>
+
+<p>SynthID solves the durability problem and inherits a different limitation. Instead of attaching metadata, Google DeepMind&rsquo;s SynthID alters the audio samples themselves in a pattern that is inaudible to listeners but readable by a trained detector, distributed across frequency bands and time so that it survives compression and transcoding &mdash; enough of the pattern reportedly persists even after MP3 encoding at 128kbps. The trade-off is information poverty and coverage. SynthID can tell you that a file came from a SynthID-enabled generator, but not who made it, when, or what was edited. And critically, it is <em>Google-only</em>: it marks audio from Google models such as Lyria, but it is not a universal decoder for a Suno, Udio, ElevenLabs or Stable Audio file. If you run a typical Suno export through Google&rsquo;s SynthID portal, it will read &ldquo;not detected,&rdquo; and that result is meaningless for that file &mdash; not evidence of anything.</p>
+
+<p>The most important development of the year is that these two approaches stopped competing and started stacking. On May 19, 2026, OpenAI joined the C2PA standards steering committee and committed to embedding SynthID watermarks alongside the C2PA credentials it already attaches; the same day, Google announced that C2PA verification and SynthID detection were coming natively to Google Search and Chrome. The shared conclusion from two of the largest AI labs, published on the same day, was blunt: neither layer is sufficient alone. Metadata carries rich context but strips on re-encode; a watermark survives transformation but says little. Paired, they are far more resilient than either is by itself. For a producer, the practical reading is simple: provenance is becoming the system the platforms trust most, so the smart play is to preserve it on your own releases rather than to wonder how to remove it. The mechanics of how this metadata travels are covered in our explainer on <a href="music-metadata-explained.html">music metadata</a>.</p>
+<h2 id="classifiers">Classifiers: How Detectors Actually Score a Track</h2>
+
+<p>When people say &ldquo;AI music detector,&rdquo; they almost always mean a classifier &mdash; the layer that takes finished audio with no metadata and no watermark and still returns a probability. This is the workhorse behind Deezer&rsquo;s platform tagging and behind the consumer tools you can paste a link into, and understanding roughly how it works tells you a lot about when to trust it. A modern classifier converts the audio into a dense numerical representation &mdash; embeddings from a model trained on a great deal of music &mdash; that capture patterns in spectral texture, rhythm and timbre that are hard to describe in words. A second, simpler model then maps those embeddings to a single human-versus-AI score. The classifier is not recognizing a specific song; it is recognizing the statistical fingerprint that a generation process tends to leave.</p>
+
+<p>Three of those statistical tells come up again and again, and they are worth knowing because they are also the source of most false positives. The first is timing. Generative models tend to place events on a machine-precise grid, while human performers introduce tiny, constant micro-timing variations &mdash; the fractional looseness that makes a groove feel human. A track whose timing is suspiciously perfect reads as more likely machine-made. The second is spectral shape: some generators leave characteristic patterns in the high frequencies or in how energy is distributed across the spectrum. The third is the noise floor and stereo image &mdash; output that is unusually clean, or unusually close to mono, can look synthetic. None of these is a smoking gun. They are tendencies, and the moment you understand that a hyper-quantized, brickwalled, spotless mix is exactly what trips the classifier, you can see why a perfectly human electronic track sometimes gets caught in the net.</p>
+
+<h2 id="accuracy">How Accurate Are AI Music Detectors, Really?</h2>
+
+<p>This is the question every vendor answers with a big number and almost nobody answers with a methodology, so it pays to look at the spread rather than any single figure. At the confident end, platform-scale and commercial tools advertise accuracy in the high nineties: Deezer&rsquo;s free public detector, launched in June 2026, claims 99.8% accuracy, and the ACRCloud fingerprinting layer that underpins many intake scanners is cited around 99%. Those are real systems doing real work, but the numbers are vendor-reported, measured on the vendor&rsquo;s own test data, with no published benchmark, audit or shared methodology behind them. A 99.8% figure on a curated internal set is not a promise about your specific track, and treating it as one is the single most common mistake people make when reading a detector result.</p>
+
+<p>At the transparent end, the picture is more sober and more believable. One musician-facing detector publishes its model name, its roughly 1,900-song training set, and &mdash; unusually &mdash; its actual holdout accuracy: about 87.67% for its current model, up from 84.35% for the previous one, released in May 2026. That is not 99%, and the honesty is the point. It also lines up with the broader academic literature, which frames AI-music detection as an ongoing arms race in which detectors trained on yesterday&rsquo;s generators lose ground as new models appear, and in which audio watermarks have repeatedly been shown to be removable under determined attack. Put the three reference points together &mdash; vendor claims near 99%, a transparent benchmark near 88%, and a blind human test where 97% could not tell at all &mdash; and the realistic read is that good detectors are genuinely useful as a <em>probability</em>, unreliable as a verdict, and dangerous when a single confident percentage is allowed to end a high-stakes decision on its own.</p>
+
+<p>The academic literature explains why even an honest 88% should not be read as a permanent grade. Researchers describe AI-music detection as an arms race: a detector is trained on the outputs of the generators that exist today, and every new or updated model shifts the target, so accuracy measured this quarter can quietly erode next quarter as the things being detected change. The same literature has repeatedly shown that audio watermarks, the supposedly durable layer, can be weakened or removed under determined attack &mdash; which is one more reason no serious process treats a watermark check as conclusive on its own. The practical lesson is not despair; it is humility. These tools are improving and genuinely useful, but they are snapshots of a moving target, and a number that looks authoritative is still just the best current estimate from one model on one test set.</p>
+
+<p>Two practical consequences follow. First, detectors disagree with each other on the same file, because they are trained on different data with different thresholds; a track can score 71% on one tool and 94% on another, or pass one checker and fail the next. Second, a result has a shelf life. A classifier that flagged nothing three months ago may flag your track today because the model was retrained, and the reverse is also true. If you are checking a track that matters, check it on more than one tool, re-check before release rather than once, and read the output as &ldquo;these are the odds this tool assigns&rdquo; rather than &ldquo;this is what the track is.&rdquo; If you want a sense of how protectable a given track is in copyright terms once you have a read on its origin, the <a href="../tools/ai-copyright-strength.html">AI Copyright Strength</a> tool estimates that separately.</p>
+
+<h2 id="snapshot">Where Detection Stands &mdash; June 2026 <span style="font-size:.62em;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);">&mdash; refreshable snapshot</span></h2>
+
+<p>Because this layer moves monthly, here is a dated snapshot of the state of play, current as of June 26, 2026. Treat the figures as the platforms&rsquo; own claims and re-check them before relying on any one of them.</p>
+
+<div class="highlight-box"><div class="highlight-box-label">State of detection &mdash; verified June 26, 2026</div><p><strong>Volume:</strong> Deezer reports roughly 75,000 fully AI-generated tracks uploaded per day, about 44% of new uploads, and says up to 85% of streams on AI tracks were flagged as fraudulent and demonetized. <strong>Public tooling:</strong> on June 11, 2026 Deezer launched a free, cross-platform AI detector covering 20 streaming services in 27 languages, claiming 99.8% accuracy, and has been licensing its detection technology to rights bodies since January 2026. <strong>Provenance:</strong> the May 19, 2026 alignment of C2PA and SynthID, with native verification coming to Google Search and Chrome, is pushing the industry toward provenance-first checking. <strong>Disclosure:</strong> AI disclosure has moved into the upload flow &mdash; Spotify&rsquo;s AI credits beta began April 16, 2026 using DDEX-based metadata (informational, not a ranking penalty), Apple Music began phasing in transparency tags, and Spotify has carried out large retroactive removals of spam-pattern AI uploads. <strong>The constant:</strong> every public figure here is a vendor or platform claim, and a missing signal still never proves a track is human.</p></div>
+
+<h2 id="false-positives">Why Real Music Gets False-Flagged &mdash; and How to Lower the Risk</h2>
+
+<p>This is the section human producers actually came for, and it deserves a clear answer: yes, genuinely human tracks do get flagged as AI, and it happens for understandable reasons rather than random malice. Remember what the classifier is looking for &mdash; machine-precise timing, an unusually clean spectrum, a too-perfect noise floor. Modern electronic production naturally produces some of those same characteristics. A track built entirely on quantized programming, mastered loud and limited flat, with pristine digital synths and almost no stereo width, shares a statistical profile with generated audio even though a human made every decision. The detector is not &ldquo;wrong&rdquo; in a malfunctioning sense; it is doing exactly what it does, and your track happens to sit near the boundary it was trained to draw.</p>
+
+<div class="diagram-wrap"><picture><source media="(max-width:900px)" srcset="../images/ai-music-detection-explained-false-positive-map-m.png"><img src="../images/ai-music-detection-explained-false-positive-map.png" alt="False-positive risk map for human music wrongly flagged as AI - four risk factors (over-quantized timing, brickwalled and too-loud master, too-clean spectrum and noise floor, stock preset and near-mono image) each mapped to a concrete mitigation such as adding human micro-timing, preserving dynamics, and keeping stems and session files as proof of authorship" width="1080" height="984" loading="lazy"></picture></div>
+
+<p>The good news is that the same understanding tells you how to reduce the risk without changing your art. Where it suits the music, a little human micro-timing &mdash; a real performance, a touch of swing, played rather than perfectly gridded parts &mdash; pulls a track away from the machine-precise tell. Preserving some genuine dynamics rather than crushing everything to a flat ceiling helps, as does a real stereo image. But the most reliable protection is not sonic at all; it is documentary. Keep your stems, your session file, your dated project history and your draft bounces, because the strongest possible answer to &ldquo;prove this is human&rdquo; is a complete human paper trail that no generated track can produce. If your work combines AI-generated elements with substantial human production, that documentation is what lets you explain the track honestly rather than hope a classifier rules in your favor. Our guides on <a href="how-to-release-ai-music.html">how to release AI music</a> and <a href="how-to-distribute-music.html">how to distribute music</a> both lean on the same habit.</p>
+
+<h2 id="platforms">What Platforms and Distributors Actually Do</h2>
+
+<p>For most producers the detection layer they will actually meet is not a tool they choose to run but the gate their distributor and streaming platform run automatically. In 2026 that gate has a consistent shape: AI music is broadly allowed, but it must be disclosed, and concealment is what triggers consequences. DistroKid accepts AI-generated tracks if you hold the rights and tick its AI-disclosure box at upload; it also runs an automated scan before delivery, and a track that the scan flags as AI without the box checked is held for manual review rather than waved through. It does not cap how many AI tracks you upload, but it does draw a hard line at unauthorized voice clones of named artists. TuneCore sits in the middle &mdash; it allows AI-assisted work but will not distribute tracks that are 100% AI with no human creative input, and a flagged upload is paused for resubmission rather than permanently rejected. CD Baby is the strictest of the majors, declining tracks where a human is not the primary creative force.</p>
+
+<p>The bigger shift is that disclosure has moved into the upload flow itself and now travels as structured metadata. Spotify began an AI-credits beta on April 16, 2026, starting with DistroKid, that surfaces an informational tag in a track&rsquo;s credits when AI involvement is declared through the distributor. That tag rides on DDEX metadata, it is opt-in at the distributor level rather than imposed by the platform, and Spotify has been explicit that it is meant to inform listeners, not to demote or filter &mdash; there is no published policy linking the tag to playlist eligibility or algorithmic placement. Spotify has separately removed very large numbers of spam-pattern AI uploads in retroactive sweeps, which is the enforcement that actually bites. Apple Music began phasing in its own transparency tags, moving from optional toward required on new deliveries. The common thread is that the credit you declare at upload is the same credit the platform reads, so getting it right once at the distributor cascades everywhere.</p>
+
+<p>One trap catches newcomers regardless of detection: the terms of the generator itself. Most AI music tools grant commercial and distribution rights only on paid tiers, so uploading free-tier output to a streaming service can violate the tool&rsquo;s own terms of service before any distributor policy is even in play. Before a release, confirm three things in order &mdash; that you hold commercial rights from your generator&rsquo;s plan, that your distributor still accepts that tool, and that you have completed its disclosure step. Our walkthroughs on <a href="how-to-distribute-music.html">how to distribute music</a> and specifically <a href="how-to-get-music-on-spotify.html">how to get music on Spotify</a> map those gates step by step. Do them in that order and the platform&rsquo;s detection layer becomes a formality rather than a threat.</p>
+
+<h2 id="self-check">How to Check a Track Yourself</h2>
+
+<p>If you need to assess a track &mdash; your own before release, or someone else&rsquo;s before you license or sign it &mdash; the process mirrors the four layers, in order of how much each can prove. The decision flow below is the same one the better field guides recommend, and it ends where every honest process ends: with judgement, not a single number.</p>
+
+<div class="diagram-wrap"><picture><source media="(max-width:900px)" srcset="../images/ai-music-detection-explained-decision-flow-m.png"><img src="../images/ai-music-detection-explained-decision-flow.png" alt="Decision flow for checking whether a track is AI-generated - preserve the original file, then check provenance (C2PA and SynthID), then read metadata and encoder fields, then run a probabilistic classifier, then cross-check rights and fingerprint records, with each branch noting what a positive or missing result does and does not prove, ending in the rule that no single score is a verdict" width="1080" height="1088" loading="lazy"></picture></div>
+
+<p>Start by preserving the original file, because re-encoding can strip the very signals you are about to check. Then look for provenance first: a valid C2PA credential or, for Google-model audio, a SynthID watermark is the strongest evidence of origin you can get &mdash; but read a missing credential as inconclusive, never as proof of humanity. Next read the metadata and encoder fields, where some raw exports still carry tell-tale tool or version strings; their presence is informative, their absence is not. Only then run a classifier, and read its output as odds rather than a verdict, ideally on more than one tool. Finally, cross-check against fingerprint and rights databases and against any human documentation. Weigh all of it together. The one rule that protects you from the most common error is the one the flow ends on: no single score is a verdict, and a confident percentage from one tool is exactly how people reach the wrong conclusion. For releases specifically, you can walk the rights and disclosure side interactively with the <a href="../tools/ai-music-rights-navigator.html">AI Music Rights Navigator</a>.</p>
+
+<h2 id="for-creators">For AI Creators and Human Producers Alike: Keep Clean Provenance</h2>
+
+<p>Whichever side of the question you are on, the advice converges on the same habit, and it is worth being explicit about why this article does not tell you how to defeat detection. Stripping metadata or processing a track to dodge a classifier solves almost nothing &mdash; the metadata was the weakest signal anyway, the spectral fingerprint survives, and the platforms run different, tightening stacks downstream of whatever you passed at the distributor &mdash; while creating exactly the concealment that gets accounts penalized when it is discovered. The disclosure systems now built into the upload flow are not traps; on Spotify the AI tag is informational rather than a ranking penalty, and disclosed AI music is broadly allowed. What gets tracks pulled and accounts suspended is undisclosed AI that detection later catches. Compliance is cheaper than concealment, every time.</p>
+
+<p>So the durable strategy, for an AI-assisted producer and a fully-human one alike, is to make every release <em>provably yours</em>. Preserve C2PA credentials where your tools support them rather than scrubbing them. Disclose AI involvement at upload through your distributor&rsquo;s checkbox so the credit travels in the DDEX metadata that Spotify and Apple read. Keep a provenance file for each release &mdash; the tools and versions used, their licensing status, the date, your prompts, and every human edit &mdash; because that file is your evidence if a platform or rights holder ever asks. And keep your stems and sessions, the human paper trail that no detector can argue with. None of this is about gaming a system; it is about being the creator who can answer the question cleanly when it is asked.</p>
+
+<p>There is a rights dimension underneath all of this that detection cannot resolve on its own. In the United States, the Copyright Office has affirmed that copyright requires human authorship, so a purely AI-generated track is not registrable &mdash; which means provenance and disclosure are not just about avoiding takedowns but about knowing which parts of your work you can actually protect and monetize. The detail there sits in our explainers on <a href="can-you-copyright-ai-music.html">whether you can copyright AI music</a> and, for Suno specifically, <a href="can-you-copyright-suno-ai-music.html">copyrighting Suno AI music</a>, while <a href="ai-music-licensing-explained.html">AI music licensing</a> covers where a generator&rsquo;s commercial-use rights actually come from. For the broader legal weather &mdash; the settlements and the two pending 2026 rulings that shape the whole space &mdash; see the <a href="ai-music-lawsuits-2026.html">2026 AI music lawsuits tracker</a>, and for the related question of cloned voices, <a href="is-ai-voice-cloning-legal.html">whether AI voice cloning is legal</a>. If you are choosing a generator in the first place, our roundup of the <a href="best-ai-music-generators-2026.html">best AI music generators</a> and the individual <a href="suno-ai-review-2026.html">Suno</a> and <a href="udio-review-2026.html">Udio</a> reviews flag which tools&rsquo; licensing and provenance posture will keep you on the defensible side of all this. Detection tells you the odds; provenance is how you make the odds irrelevant.</p>
+
+<h2 id="exercises">Before You Release: Three Checks</h2>
+<p>Detection is something you can prepare for instead of fear. Run these three checks before your next release &mdash; they take the abstract layers above and turn them into a release habit that protects whatever you make, AI-assisted or fully human.</p>
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--beginner">Beginner</span><span class="exercise-title">Inspect your export&rsquo;s metadata and encoder fields</span></div>
+<ol>
+<li>Open your final export in a metadata viewer and read the ID3, XMP and encoder fields. Note what is actually written there &mdash; tool names, version strings, encoder tags &mdash; and understand that this is the first thing any intake scanner reads.</li>
+<li>Check whether a C2PA Content Credential is present and valid. If your tools support it, confirm the credential survived your export; if it was stripped on bounce, you have just learned how fragile that layer is.</li>
+<li>Write one sentence describing what your metadata currently reveals about the track&rsquo;s origin, and decide whether that is the story you want it to tell at upload.</li>
+</ol></div>
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--intermediate">Intermediate</span><span class="exercise-title">Build a provenance file for one release</span></div>
+<ol>
+<li>Open a single document and record, for one track: every tool and model version used, each tool&rsquo;s current licensing status, the date, your prompts if any, and every human contribution &mdash; performance, arrangement, editing, mixing.</li>
+<li>Attach the evidence: the stems, the session file, dated draft bounces, and any C2PA credential you preserved. This is the human paper trail a classifier cannot dispute.</li>
+<li>State plainly whether the track is fully AI-generated, genuinely AI-assisted with you as the primary creative force, or fully human &mdash; because that classification decides what you can disclose, register and monetize.</li>
+</ol></div>
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--advanced">Advanced</span><span class="exercise-title">Run a release through the detection and distribution gates</span></div>
+<ol>
+<li>Take a real track you intend to release and run it through more than one classifier, recording each score. Treat the spread between them as the lesson: these are odds, and they disagree.</li>
+<li>Complete your distributor&rsquo;s AI-disclosure step honestly, then verify with the <a href="../tools/ai-music-ddex-checker.html">AI Music DDEX Disclosure Checker</a> that the AI credit is actually carried in the DDEX metadata rather than merely ticked in a form.</li>
+<li>File the classifier scores, the disclosure confirmation and your provenance document together, so that if any platform questions the track later you can answer in minutes with evidence rather than scrambling.</li>
+</ol></div>
+
+
+<h2 id="faq">Frequently Asked Questions</h2>
+<div class="faq-accordion">
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Can you 100% detect AI music?</span></div></div>
+<div class="faq-accordion-a"><p>No. No method detects AI music with certainty. Provenance &mdash; a C2PA credential or a SynthID watermark &mdash; is strong evidence when present, but it is silent when absent, and classifiers return a probability that can be wrong and that different tools disagree on. A Deezer/Ipsos blind test found about 97% of listeners could not tell AI from human by ear. Detection gives you <em>odds</em>, not proof, so treat any &ldquo;100% accurate&rdquo; claim as marketing.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">What's the most accurate AI music detector?</span></div></div>
+<div class="faq-accordion-a"><p>There is no single agreed winner, and the honest move is to distrust the biggest numbers. Platform and commercial tools advertise around 99% or more, but those are vendor figures on their own test sets with no published benchmark. A transparent musician-facing detector publishes about <strong>87.67%</strong> holdout accuracy &mdash; lower, but auditable. Detectors disagree on the same file, so check more than one and read each result as a probability rather than a verdict.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Will my human-made song get flagged as AI?</span></div></div>
+<div class="faq-accordion-a"><p>It can. Detectors look for machine-precise timing, an unusually clean spectrum and a too-perfect noise floor &mdash; characteristics a heavily quantized, brickwalled, pristine electronic track can share even when a human made every choice. You lower the risk with genuine micro-timing and dynamics where they suit the music, and above all by keeping your stems, sessions and dated drafts as proof of authorship.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Does Spotify or DistroKid reject AI music?</span></div></div>
+<div class="faq-accordion-a"><p>Mostly they allow <em>disclosed</em> AI music and act against concealment and spam. DistroKid accepts AI tracks if you hold the rights and check its AI box; undisclosed AI it detects is held for review. TuneCore allows AI-assisted work but not fully-AI tracks, and CD Baby is the strictest. Spotify allows AI music, runs an informational AI-credits tag via DDEX metadata, and has removed large numbers of spam-pattern uploads. Disclose at upload &mdash; concealment is what gets tracks pulled. More in <a href="how-to-distribute-music.html">how to distribute music</a>.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">What is SynthID and C2PA?</span></div></div>
+<div class="faq-accordion-a"><p>They are the two main provenance technologies. C2PA Content Credentials are cryptographically signed metadata recording who made a file, with what tool, when, and what edits &mdash; strong when present, but they strip on re-encode. SynthID is Google DeepMind&rsquo;s inaudible watermark embedded in the audio itself; it survives compression but only marks Google-model audio such as Lyria, and says nothing about who or when. In May 2026 the two were aligned to be used together, since neither is sufficient alone. See <a href="music-metadata-explained.html">music metadata explained</a>.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Can detection be fooled?</span></div></div>
+<div class="faq-accordion-a"><p>In principle yes &mdash; research shows watermarks can be removed and classifiers evaded, and metadata is trivial to strip. But that is the wrong goal. Stripping metadata leaves the spectral fingerprint intact and solves little, while creating the undisclosed-AI concealment that gets accounts penalized when platforms catch it downstream. The durable, lower-risk path is disclosure and clean provenance, not evasion.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Does AI music have a watermark?</span></div></div>
+<div class="faq-accordion-a"><p>Sometimes, but not universally. Google-model audio can carry a SynthID watermark; many other generators instead leave a statistical spectral fingerprint and/or metadata tags rather than a SynthID-style watermark. So a &ldquo;no watermark detected&rdquo; result from a single tool, such as Google&rsquo;s SynthID portal, is not evidence a track is human &mdash; it may simply not be a SynthID-marked file.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">How do I prove my song is human-made?</span></div></div>
+<div class="faq-accordion-a"><p>With a paper trail, not a tool. Keep your stems and session files, your dated project history and draft bounces; preserve any C2PA credential your tools produce; and disclose honestly at upload. A complete human record is the strongest possible answer to &ldquo;prove this is human,&rdquo; because it is exactly what a generated track cannot produce. The <a href="../tools/ai-copyright-strength.html">AI Copyright Strength</a> tool and <a href="../tools/ai-music-rights-navigator.html">AI Music Rights Navigator</a> help you document and assess the rights side.</p></div></div>
+</div>
+
+<div class="related-grid">
+<a href="is-ai-music-legal.html" class="related-card"><div class="related-card-tag">AI Music</div><h3 class="related-card-title">Is AI Music Legal?</h3><p class="related-card-desc">The evergreen hub for how AI-music legality works &mdash; training, copyright, licensing and platform rules.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="ai-music-lawsuits-2026.html" class="related-card"><div class="related-card-tag">AI Music</div><h3 class="related-card-title">AI Music Lawsuits &amp; Settlements 2026</h3><p class="related-card-desc">Who settled, who&rsquo;s still fighting, and the two July 2026 rulings shaping the whole space.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="can-you-copyright-ai-music.html" class="related-card"><div class="related-card-tag">AI Music</div><h3 class="related-card-title">Can You Copyright AI Music?</h3><p class="related-card-desc">Why a purely AI-generated track isn&rsquo;t registrable, and how to protect the human-authored layer.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="music-metadata-explained.html" class="related-card"><div class="related-card-tag">Music Business</div><h3 class="related-card-title">Music Metadata Explained</h3><p class="related-card-desc">What ID3, encoder fields and DDEX carry &mdash; the layer detection and disclosure both read.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-release-ai-music.html" class="related-card"><div class="related-card-tag">AI Music</div><h3 class="related-card-title">How to Release AI Music</h3><p class="related-card-desc">The compliant release path: disclosure, provenance and the habits that keep tracks live.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="best-ai-music-generators-2026.html" class="related-card"><div class="related-card-tag">AI Music</div><h3 class="related-card-title">Best AI Music Generators 2026</h3><p class="related-card-desc">Which generators&rsquo; licensing and provenance posture keep you on the defensible side.</p><span class="related-card-meta">Read article &rarr;</span></a>
+</div>
+</div>
+    </article>
+    <aside aria-label="Article sidebar">
+      <div class="sidebar-widget toc-widget" aria-labelledby="tocHeading">
+        <div class="sidebar-widget-header"><h2 class="sidebar-widget-title" id="tocHeading">In This Article</h2></div>
+        <div class="sidebar-widget-body"><ul class="toc-list">
+<li><a href="#no-button">No Single &ldquo;Is It AI?&rdquo; Button</a></li><li><a href="#four-layers">The Four Detection Layers</a></li><li><a href="#provenance">Provenance: C2PA &amp; SynthID</a></li><li><a href="#classifiers">How Classifiers Score a Track</a></li><li><a href="#accuracy">How Accurate, Really?</a></li><li><a href="#snapshot">Where Detection Stands &mdash; 2026</a></li><li><a href="#false-positives">Why Real Music Gets Flagged</a></li><li><a href="#platforms">What Platforms Actually Do</a></li><li><a href="#self-check">How to Check a Track Yourself</a></li><li><a href="#for-creators">Keep Clean Provenance</a></li><li><a href="#exercises">Before You Release: Three Checks</a></li><li><a href="#faq">Frequently Asked Questions</a></li>
+</ul></div>
+      </div>
+      <div class="sidebar-widget" style="background:var(--bg-void);border-color:var(--border-default);">
+        <div class="sidebar-widget-body" style="padding:1.5rem;">
+          <p style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.5rem;">Newsletter</p>
+          <h3 style="font-family:var(--font-display);color:var(--text-primary);font-size:1.1rem;margin-bottom:.5rem;">The Producer&rsquo;s Briefing</h3>
+          <p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:1rem;line-height:1.55;">Weekly tips, gear news, and technique guides. Free.</p>
+          <form class="newsletter-form-js" style="display:flex;flex-direction:column;gap:.5rem;" novalidate>
+            <input type="email" name="email" class="form-input" placeholder="Your email" required />
+            <button type="submit" class="btn-newsletter" style="font-size:.82rem;padding:.65rem 1rem;">Subscribe Free</button>
+          </form>
+        </div>
+      <div class="sidebar-widget" style="margin-top:1.5rem;">
+        <div class="sidebar-widget-header" style="text-align:center;">
+          <h2 class="sidebar-widget-title">Related Articles</h2>
+        </div>
+        <div class="sidebar-widget-body" style="padding:1rem;">
+<ul style="list-style:none;padding:0;margin:0;text-align:center;"><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="is-ai-music-legal.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">Is AI Music Legal?</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">AI Music</span></li><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="suno-vs-udio.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">Suno vs. Udio</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">AI Music</span></li><li style="padding:.6rem 0;"><a href="can-you-copyright-suno-ai-music.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">Can You Copyright Suno AI Music?</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">AI Music</span></li></ul>
+        </div>
+      </div>
+      </div>
+    </aside>
+
+  </div>
+</main>
+<section class="newsletter-section" id="newsletter" aria-labelledby="newsletterHeading">
+  <div class="container">
+    <div class="newsletter-inner">
+      <div class="newsletter-content">
+        <p class="newsletter-label">Newsletter</p>
+        <h2 id="newsletterHeading" class="newsletter-title">The Producer's <em>Briefing</em></h2>
+        <p class="newsletter-desc">Weekly techniques, gear news, and music business insights. Free.</p>
+      </div>
+      <div class="newsletter-form-wrap">
+        <form class="newsletter-form-js" novalidate>
+          <input type="email" name="email" class="form-input" placeholder="Your email address" required />
+          <button type="submit" class="btn-newsletter">Subscribe Free</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<footer class="site-footer" role="contentinfo">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="../index.html" class="site-logo"><span class="logo-wordmark">Music<span>Production</span>Wiki</span><span class="logo-tagline">The Producer's Reference</span></a>
+    </div>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <div class="footer-col">
+        <h3 class="footer-col-title">Categories</h3>
+        <ul>
+          <li><a href="../categories/reviews.html">Reviews</a></li>
+          <li><a href="../categories/comparisons.html">Comparisons</a></li>
+          <li><a href="../categories/ai-music.html">AI Music</a></li>
+          <li><a href="../categories/daws.html">DAWs</a></li>
+          <li><a href="../categories/plugins.html">Plugins</a></li>
+          <li><a href="../categories/hardware.html">Gear</a></li>
+          <li><a href="../categories/techniques.html">Techniques</a></li>
+          <li><a href="../categories/music-business.html">Music Business</a></li>
+          <li><a href="../categories/glossary.html">Glossary</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">Popular</h3>
+        <ul>
+          <li><a href="../articles/suno-vs-udio.html">Suno vs Udio</a></li>
+          <li><a href="../articles/best-daw-for-beginners.html">Best DAW for Beginners</a></li>
+          <li><a href="../articles/focusrite-scarlett-2i2-gen-4-review.html">Scarlett 2i2 Review</a></li>
+          <li><a href="../articles/sidechain-compression-guide.html">Sidechain Compression</a></li>
+          <li><a href="../articles/best-compressor-plugins.html">Best Compressor Plugins</a></li>
+          <li><a href="../articles/what-is-gain-staging.html">What Is Gain Staging</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">About</h3>
+        <ul>
+          <li><a href="../about.html">About MPW</a></li>
+          <li><a href="../about.html#team">Our Team</a></li>
+          <li><a href="../about.html#methodology">Review Methodology</a></li>
+          <li><a href="../about.html#affiliate">Affiliate Disclosure</a></li>
+          <li><a href="../about.html#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="footer-bottom"><div class="container"><p>© <span id="copyrightYear"></span> MusicProductionWiki.com. All rights reserved. Content by the Music Production Wiki Team.</p></div></div>
+</footer>
+<script src="../js/main.js"></script>
+<script>document.getElementById('copyrightYear').textContent = new Date().getFullYear();</script>
+
+<button id="mpwBackTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  aria-label="Back to top"
+  style="position:fixed;bottom:1.5rem;right:1.5rem;width:2.5rem;height:2.5rem;border-radius:50%;
+         background:var(--teal);color:#000;border:none;cursor:pointer;display:none;
+         align-items:center;justify-content:center;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3);">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <polyline points="18 15 12 9 6 15"/>
+  </svg>
+</button>
+<script>
+(function(){
+  var btn=document.getElementById('mpwBackTop');
+  var bar=document.getElementById('readingProgress');
+  var art=document.querySelector('.article-body');
+  window.addEventListener('scroll',function(){
+    var st=window.scrollY||document.documentElement.scrollTop;
+    btn.style.display=st>400?'flex':'none';
+    if(bar&&art){
+      var h=art.getBoundingClientRect().height;
+      var top=art.getBoundingClientRect().top+st;
+      var pct=Math.min(100,Math.max(0,(st-top+window.innerHeight)*100/h));
+      bar.style.width=pct+'%';
+      bar.setAttribute('aria-valuenow',Math.round(pct));
+    }
+  });
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<!-- MPW universal search: one overlay, one Fuse index (/search-index.json) -->
+<div class="usearch" id="usearch" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="usearch-box">
+    <div class="usearch-top">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input id="usearchInput" type="text" placeholder="Search tools, articles, the Bible…" autocomplete="off">
+      <kbd>esc</kbd>
+    </div>
+    <div class="usearch-results" id="usearchResults"></div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
+<script>
+(function(){
+  // === production parity: lazy-load index on first open, build Fuse once ===
+  var data=null, fuse=null;
+  var overlay=document.getElementById('usearch');
+  var input=document.getElementById('usearchInput');
+  var box=document.getElementById('usearchResults');
+  var sel=-1, current=[];
+  // article slugs are bare; bible/ and tools/ slugs carry their prefix (verified vs live search-index.json)
+  function urlFor(s){ return (s.indexOf('bible/')===0||s.indexOf('tools/')===0) ? '/'+s : '/articles/'+s; }
+
+  function buildFuse(arr){
+    data=arr;
+    fuse=new Fuse(data,{keys:['title','category','description'],threshold:0.34,ignoreLocation:true,minMatchCharLength:2});
+  }
+  function ensureIndex(cb){
+    if(fuse){cb();return;}
+    // PRODUCTION: one shared index, lazy-loaded on first open.
+    fetch('/search-index.json').then(function(r){return r.json();}).then(function(arr){
+      buildFuse(arr); cb();
+    }).catch(function(){ box.textContent='Search failed to load.'; });
+  }
+
+  function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  function render(results){
+    current=results;
+    while(box.firstChild) box.removeChild(box.firstChild);   // no innerHTML
+    if(!input.value.trim()){ var p=document.createElement('div'); p.className='usearch-empty'; p.textContent='Start typing to search everything.'; box.appendChild(p); return; }
+    if(!results.length){ var n=document.createElement('div'); n.className='usearch-empty'; n.textContent='No results for "'+input.value+'".'; box.appendChild(n); return; }
+    results.slice(0,12).forEach(function(r,i){
+      var e=r.item||r;
+      var a=document.createElement('a'); a.href=urlFor(e.slug); if(i===sel)a.className='sel';
+      var top=document.createElement('div'); top.className='ur-top';
+      var t=document.createElement('span'); t.className='ur-title'; t.textContent=e.title;
+      var c=document.createElement('span'); c.className='ur-cat'; c.setAttribute('data-c',e.category||''); c.textContent=e.category||'';
+      top.appendChild(t); top.appendChild(c); a.appendChild(top);
+      if(e.description){ var d=document.createElement('div'); d.className='ur-desc'; d.textContent=e.description; a.appendChild(d); }
+      box.appendChild(a);
+    });
+  }
+
+  function open(q){ ensureIndex(function(){ overlay.classList.add('open'); input.focus(); if(q!=null){input.value=q;} sel=-1; render(input.value?fuse.search(input.value):[]); }); }
+  function close(){ overlay.classList.remove('open'); }
+
+  // wire every nav's search button to the shared overlay
+  document.querySelectorAll('[data-nav-search]').forEach(function(b){ b.addEventListener('click',function(){open(null);}); });
+  input.addEventListener('input',function(){ sel=-1; render(fuse?fuse.search(input.value):[]); });
+  input.addEventListener('keydown',function(e){
+    if(e.key==='Escape')close();
+    else if(e.key==='ArrowDown'){e.preventDefault(); sel=Math.min(sel+1,Math.min(current.length,12)-1); render(current);}
+    else if(e.key==='ArrowUp'){e.preventDefault(); sel=Math.max(sel-1,0); render(current);}
+    else if(e.key==='Enter'&&current[sel]){ var e2=current[sel].item||current[sel]; location.href=urlFor(e2.slug); }
+  });
+  overlay.addEventListener('click',function(e){ if(e.target===overlay)close(); });
+  document.addEventListener('keydown',function(e){ if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();open(null);} });
+})();
+</script>
+<script id="toc-bar-js">
+(function(){
+  var body=document.querySelector('.article-body');
+  var track=document.getElementById('tocBarTrack');
+  if(!body||!track)return;
+  var heads=[].slice.call(body.querySelectorAll('h2[id]'));
+  if(!heads.length)return;
+  heads.forEach(function(h){
+    var a=document.createElement('a');a.href='#'+h.id;
+    var t=h.textContent.trim();var i=t.indexOf(':');if(i>0)t=t.slice(0,i);
+    a.textContent=t;track.appendChild(a);
+  });
+  var links=[].slice.call(track.querySelectorAll('a'));
+  function onScroll(){
+    var y=window.scrollY+130,cur=heads[0].id;
+    heads.forEach(function(h){if(h.offsetTop<=y)cur=h.id;});
+    links.forEach(function(l){var on=l.getAttribute('href')==='#'+cur;l.classList.toggle('active',on);
+      if(on)l.scrollIntoView({inline:'center',block:'nearest'});});
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+})();
+</script>
+<script>
+function mpwFaqToggle(el){
+  var answer = el.nextElementSibling;
+  if(!answer || !answer.classList.contains('faq-accordion-a')) return;
+  var isOpen = answer.classList.contains('open');
+  document.querySelectorAll('.faq-accordion-a.open').forEach(function(a){
+    a.classList.remove('open');
+    var q = a.previousElementSibling;
+    if(q){ var ic = q.querySelector('.faq-accordion-icon, .faq-plus'); if(ic) ic.classList.remove('open'); }
+  });
+  if(!isOpen){
+    answer.classList.add('open');
+    var icon = el.querySelector('.faq-accordion-icon, .faq-plus');
+    if(icon) icon.classList.add('open');
+  }
+}
+</script>
+<style>.faq-plus.open{transform:rotate(45deg);transition:transform .2s ease}</style>
+</body>
+
+</html>
