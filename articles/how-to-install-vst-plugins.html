@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Install VST plugins on any DAW: the format-and-folder model, step-by-step install, every major DAW scan path, and the fixes for when a plugin will not show up." />
+  <title>How to Install VST Plugins (Any DAW) | MusicProductionWiki.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <style>
+    #readingProgress{position:fixed;top:0;left:0;height:3px;background:var(--teal);width:0%;z-index:200;transition:width 0.1s linear;}
+    .quick-answer{background:linear-gradient(135deg,rgba(0,212,168,0.08),rgba(167,139,250,0.06));border:1px solid rgba(0,212,168,0.3);border-left:4px solid var(--teal);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .quick-answer-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.6rem;}
+    .quick-answer p{font-size:1rem;line-height:1.65;color:var(--text-primary);margin:0;}
+    .skill-badge{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .6rem;border-radius:4px;margin-left:.6rem;vertical-align:middle;position:relative;top:-2px;}
+    .skill-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .skill-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .skill-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .settings-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .settings-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .settings-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .settings-table tr:last-child td{border-bottom:none;}
+    .settings-table tr:hover td{background:var(--bg-surface);}
+    .settings-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .settings-table .mono{font-family:var(--font-mono);font-size:.82rem;color:var(--teal);}
+    .mistake-box{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-left:4px solid #ef4444;border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .mistake-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ef4444;margin-bottom:.4rem;}
+    .mistake-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference{border-left:3px solid var(--purple);padding:.75rem 1.25rem;margin:1.25rem 0;background:rgba(167,139,250,0.05);border-radius:0 6px 6px 0;}
+    .pro-reference-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.35rem;}
+    .pro-reference p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference strong{color:var(--text-primary);}
+    .listening-prescription{background:var(--bg-void);border:1px solid var(--border-default);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;position:relative;}
+    .listening-prescription::before{content:'🎧';position:absolute;top:-14px;left:1.5rem;background:var(--bg-void);padding:0 .4rem;font-size:1.1rem;}
+    .listening-prescription-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:.75rem;}
+    .listening-prescription p{font-size:.9rem;line-height:1.7;color:var(--text-secondary);margin:0 0 .5rem;}
+    .listening-record{font-weight:600;color:var(--text-primary);}
+    .decision-framework{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .decision-framework-title{font-family:var(--font-display);font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:1rem;}
+    .decision-item{display:flex;gap:1rem;padding:.65rem 0;border-bottom:1px solid var(--border-subtle);font-size:.88rem;line-height:1.55;}
+    .decision-item:last-child{border-bottom:none;}
+    .decision-if{color:var(--text-muted);font-style:italic;min-width:2rem;}
+    .decision-then{color:var(--text-primary);}
+    .decision-then strong{color:var(--teal);}
+    .exercise-block{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.25rem 0;}
+    .exercise-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;}
+    .exercise-badge{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .7rem;border-radius:4px;}
+    .exercise-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .exercise-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .exercise-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .exercise-title{font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text-primary);}
+    .exercise-block ol{margin:0;padding-left:1.25rem;color:var(--text-secondary);font-size:.88rem;line-height:1.7;}
+    .exercise-block ol li{margin-bottom:.4rem;}
+    .version-line{font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:4px;padding:.4rem .75rem;margin:.75rem 0 1.5rem;display:inline-block;}
+    .go-deeper{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:10px;padding:1.75rem;margin:2.5rem 0;}
+    .go-deeper-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text-primary);margin-bottom:1.25rem;}
+    .go-deeper-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;}
+    .go-deeper-item{background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:7px;padding:1rem 1.1rem;}
+    .go-deeper-item-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.35rem;}
+    .go-deeper-item a{font-size:.88rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;}
+    .go-deeper-item p{font-size:.78rem;color:var(--text-muted);margin:.3rem 0 0;}
+    .citation{font-size:.78rem;color:var(--text-muted);font-style:italic;margin-top:.25rem;}
+    .diagram-wrap{margin:1.9rem auto;max-width:100%;}
+    .diagram-wrap img{width:100%;height:auto;display:block;border:1px solid var(--border-subtle);border-radius:10px;}
+    .diagram-wrap picture{display:block;}
+    .diagram-caption{font-size:.78rem;color:var(--text-muted);text-align:center;margin-top:.75rem;font-style:italic;}
+    .highlight-box{background:rgba(0,212,168,0.06);border:1px solid rgba(0,212,168,0.2);border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .highlight-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.4rem;}
+    .highlight-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin:1.5rem 0;}
+    .stat-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem;text-align:center;}
+    .stat-number{font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--teal);display:block;}
+    .stat-label{font-size:.78rem;color:var(--text-secondary);margin-top:.25rem;}
+    .action-steps{counter-reset:steps;list-style:none;padding:0;margin:1.5rem 0;}
+    .action-steps li{counter-increment:steps;display:flex;gap:1rem;padding:.85rem 0;border-bottom:1px solid var(--border-subtle);font-size:.9rem;color:var(--text-secondary);line-height:1.6;}
+    .action-steps li:last-child{border-bottom:none;}
+    .action-steps li::before{content:counter(steps);background:var(--teal);color:#000;font-weight:800;font-size:.75rem;width:1.6rem;height:1.6rem;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem;}
+    .genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:1.5rem 0;}
+    .genre-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem 1.25rem;}
+    .genre-card-name{font-family:var(--font-display);font-size:.85rem;font-weight:700;color:var(--teal);margin-bottom:.4rem;}
+    .genre-card p{font-size:.82rem;color:var(--text-secondary);line-height:1.55;margin:0;}
+    .comparison-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .comparison-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .comparison-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .comparison-table tr:last-child td{border-bottom:none;}
+    .comparison-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .affiliate-cta{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,212,168,0.1);border:1px solid rgba(0,212,168,0.25);color:var(--teal);font-size:.82rem;font-weight:600;padding:.45rem .9rem;border-radius:6px;text-decoration:none;}
+
+    .faq-accordion{margin:1.75rem 0;}
+    .faq-accordion-item{background:var(--bg-surface);border:1px solid var(--border-subtle);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;margin-bottom:8px;overflow:hidden;}
+    .faq-accordion-q{display:flex;align-items:flex-start;padding:1rem 1.25rem;cursor:pointer;gap:.75rem;}
+    .faq-accordion-q:hover{background:var(--bg-elevated);}
+    .faq-accordion-icon{width:16px;height:16px;flex-shrink:0;margin-top:3px;color:var(--purple);transition:transform .2s ease;}
+    .faq-accordion-icon.open{transform:rotate(45deg);}
+    .faq-accordion-q-inner{display:flex;flex-direction:column;}
+    .faq-accordion-label{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin-bottom:.2rem;}
+    .faq-accordion-q-text{font-size:.92rem;font-weight:600;color:var(--text-primary);line-height:1.45;font-family:var(--font-display);}
+    .faq-accordion-a{display:none;padding:0 1.25rem 1rem 2.75rem;font-size:.88rem;color:var(--text-secondary);line-height:1.7;border-top:1px solid var(--border-subtle);padding-top:.85rem;}
+    .faq-accordion-a.open{display:block;}
+</style>
+  <link rel="canonical" href="https://musicproductionwiki.com/articles/how-to-install-vst-plugins.html"/>
+  <!-- Open Graph -->
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="How to Install VST Plugins (Any DAW)"/>
+  <meta property="og:description" content="Install VST plugins on any DAW: the format-and-folder model, the universal install flow, per-DAW scan steps, and why a plugin installs but never shows up."/>
+  <meta property="og:url" content="https://musicproductionwiki.com/articles/how-to-install-vst-plugins.html"/>
+  <meta property="og:site_name" content="Music Production Wiki"/>
+  <meta property="og:image" content="https://musicproductionwiki.com/og-image.png"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="article:author" content="Music Production Wiki Team"/>
+  <meta property="article:section" content="Techniques"/>
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="How to Install VST Plugins (Any DAW)"/>
+  <meta name="twitter:description" content="Install VST plugins on any DAW: the format-and-folder model, the universal install flow, per-DAW scan steps, and why a plugin installs but never shows up."/>
+  <meta name="twitter:image" content="https://musicproductionwiki.com/og-image.png"/>
+  <!-- Article Schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How to Install VST Plugins (and Fix the Ones That Won't Show Up)",
+  "description": "Install VST plugins on any DAW: the format-and-folder model, step-by-step install, every major DAW scan path, and the fixes for when a plugin will not show up.",
+  "image": [
+    "https://musicproductionwiki.com/og-image.png",
+    "https://musicproductionwiki.com/images/how-to-install-vst-plugins-format-folder-map.png",
+    "https://musicproductionwiki.com/images/how-to-install-vst-plugins-troubleshooting-tree.png",
+    "https://musicproductionwiki.com/images/how-to-install-vst-plugins-compatibility-matrix.png"
+  ],
+  "datePublished": "2026-06-28",
+  "dateModified": "2026-06-28",
+  "wordCount": 4340,
+  "timeRequired": "PT18M",
+  "keywords": [
+    "how to install vst plugins",
+    "where do vst plugins go",
+    "vst plugin not showing up",
+    "how to scan plugins",
+    "install vst3 plugins",
+    "add plugins to fl studio",
+    "add plugins to ableton",
+    "vst vs vst3",
+    "install au plugins",
+    "plugin folder location"
+  ],
+  "author": {
+    "@type": "Organization",
+    "name": "Music Production Wiki",
+    "url": "https://musicproductionwiki.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Music Production Wiki",
+    "url": "https://musicproductionwiki.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://musicproductionwiki.com/og-image.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://musicproductionwiki.com/articles/how-to-install-vst-plugins.html"
+  },
+  "articleSection": "Techniques",
+  "inLanguage": "en-US"
+}
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Install a VST Plugin",
+  "description": "The universal five-step procedure for installing any plugin and getting your DAW to find it, regardless of brand, format, or operating system.",
+  "totalTime": "PT10M",
+  "tool": [
+    {"@type": "HowToTool", "name": "Your DAW (FL Studio, Ableton, Logic, Studio One, Reaper, or Pro Tools)"},
+    {"@type": "HowToTool", "name": "The plugin installer from the developer's website"}
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "Download the correct installer",
+      "text": "Download the installer from the developer's own website or your storefront account, never a third-party mirror. Grab the build for your operating system: a Windows .exe will not run on macOS, and a macOS .pkg will not run on Windows."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Run the installer",
+      "text": "On Windows, right-click and choose Run as administrator if it needs to write to protected system folders. On macOS, double-click the .pkg and follow the prompts; if it is blocked as coming from an unidentified developer, approve it in System Settings later."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Choose your formats",
+      "text": "Tick the format your DAW reads, defaulting to VST3 on Windows and AU on Logic. Leave the formats you will never load unchecked so your plugin list stays clean and scans stay fast."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Let the installer place the files",
+      "text": "VST3 and AU go to their single legal system folder automatically. For VST2, pick one dedicated folder and remember the exact path, because you will point your DAW at it later."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Open your DAW and rescan",
+      "text": "Open your DAW's plugin manager and trigger a rescan so the host re-reads its folders. A perfectly installed plugin stays invisible until you do this final step."
+    }
+  ]
+}
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Where do VST plugins install by default?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "On Windows, VST3 plugins go to C:\\Program Files\\Common Files\\VST3, which is a fixed system folder, while VST2 plugins go to whatever folder the installer chooses or you specify. On macOS, VST3 lives in /Library/Audio/Plug-Ins/VST3, VST2 in /Library/Audio/Plug-Ins/VST, and Audio Units in /Library/Audio/Plug-Ins/Components. AU is macOS-only and AAX installs to the Avid plug-ins folder."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why isn't my plugin showing up in my DAW?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Almost always one of five things: you installed a format your DAW doesn't read, the file landed in a folder your DAW doesn't scan, you never triggered a rescan, the plugin is 32-bit on a 64-bit host, or macOS security blocked it. Work down that list in order &mdash; the first yes is your fix &mdash; and nine times out of ten it is one of the first three."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I install VST2 or VST3?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Install VST3. It is the current standard, supports more parameters and features, and is what new hosts favor; Steinberg stopped issuing new VST2 licenses years ago, so no new VST2-only plugins are being made. Keep VST2 only if you run an older host or a specific plugin that never shipped a VST3 build."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I get plugins to show up in FL Studio?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Open Settings (F10), go to the File tab, and click &ldquo;Manage plugins.&rdquo; In the Plugin Manager, confirm your VST3 folder is listed under Plugin search paths, then click &ldquo;Find installed plugins&rdquo; to rescan. If a plugin crashes the scan, switch it to Bridged mode in its Wrapper Settings. Make sure you installed the 64-bit version, since FL Studio is a 64-bit application."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why won't my VST plugins load in Logic Pro?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Logic Pro does not load VST or VST3 at all &mdash; it only reads Audio Units (AU). Re-run the plugin's installer and tick the AU format. If you have the AU but it still doesn't appear, it likely failed Logic's validation on launch; update the plugin to its latest version and use Reset &amp; Rescan Selection in Logic's Plug-In Manager."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "macOS says the plugin can't be opened &mdash; what do I do?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "On Sequoia and Tahoe, unsigned plugins get blocked on first scan and the old right-click bypass no longer works. Try to load it, dismiss the warning, then open System Settings &rarr; Privacy &amp; Security, scroll to the Security section, and click &ldquo;Open Anyway&rdquo; next to the blocked plugin. Rescan afterward. Only do this for plugins from sources you trust."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need to install both the VST and VST3 versions?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Installing both formats of the same plugin just creates duplicate entries in your browser and can cause confusion when sharing projects. Install one format &mdash; VST3 by default &mdash; and use it consistently. The only reason to keep both is if you use a plugin across different apps that don't all support VST3."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is it safe to install plugins from anywhere?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Only install from the developer's official website or a reputable storefront. Cracked or pirated plugins are one of the most common malware vectors for music producers, and a free plugin from an unknown mirror isn't worth the risk to your projects and system. When in doubt, buy from a trusted retailer or stick to the well-known free plugins recommended by sources you trust."
+      }
+    }
+  ]
+}
+</script>
+
+  <!-- SEO meta v6.1 -->
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="article:published_time" content="2026-06-27T00:00:00+00:00" />
+  <meta property="article:modified_time" content="2026-06-27T00:00:00+00:00" />
+  <meta name="keywords" content="how to install vst plugins, where do vst plugins go, vst plugin not showing up, how to scan plugins, install vst3 plugins, add plugins to fl studio, add plugins to ableton, vst vs vst3, install au plugins, plugin folder location" />
+  <!-- Organization schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Music Production Wiki",
+    "url": "https://musicproductionwiki.com",
+    "logo": {"@type": "ImageObject", "url": "https://musicproductionwiki.com/images/og-default.jpg"},
+    "sameAs": []
+  }
+  </script>
+  <!-- WebSite schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Music Production Wiki",
+    "url": "https://musicproductionwiki.com",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {"@type": "EntryPoint", "urlTemplate": "https://musicproductionwiki.com/?s={search_term_string}"},
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://musicproductionwiki.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Techniques",
+      "item": "https://musicproductionwiki.com/categories/techniques.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "How to Install VST Plugins",
+      "item": "https://musicproductionwiki.com/articles/how-to-install-vst-plugins.html"
+    }
+  ]
+}
+</script>
+
+<style id="toc-skin">
+.toc-widget .sidebar-widget-header{margin-bottom:.35rem}
+.toc-list{counter-reset:tocnum;list-style:none;margin:0;padding:0}
+.toc-list li{counter-increment:tocnum;position:relative;margin:0;border-left:2px solid var(--border-subtle);transition:border-color .15s ease,background .15s ease}
+.toc-list li a{display:flex;gap:.7rem;align-items:baseline;padding:.5rem .85rem .5rem 1rem;font-size:.82rem;line-height:1.45;font-weight:500;color:var(--text-secondary);text-decoration:none;transition:color .15s ease}
+.toc-list li a::before{content:counter(tocnum,decimal-leading-zero);font-family:var(--font-mono,ui-monospace,monospace);font-size:.7rem;font-weight:600;letter-spacing:.04em;color:var(--text-muted);flex:0 0 auto;min-width:1.5em;padding-top:.05rem}
+.toc-list li a:hover{color:var(--text-primary)}
+.toc-list li.active{border-left-color:var(--teal);background:linear-gradient(90deg,rgba(0,212,168,.08),transparent 80%)}
+.toc-list li.active a{color:var(--teal);font-weight:600}
+.toc-list li.active a:hover{color:var(--teal)}
+.toc-list li.active a::before{color:var(--teal)}
+</style>
+<style id="toc-bar-css">
+.toc-bar{display:none}
+@media (max-width: 900px){
+.toc-bar{display:block;position:sticky;top:60px;z-index:400;background:var(--bg-void);border-bottom:1px solid var(--border-default);overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(to right,#000 88%,transparent 100%);mask-image:linear-gradient(to right,#000 88%,transparent 100%)}
+.toc-bar::-webkit-scrollbar{display:none}
+.toc-bar-track{display:flex;gap:4px;padding:9px 10px;min-width:max-content}
+.toc-bar-track a{color:var(--text-secondary);text-decoration:none;font-family:var(--font-mono,ui-monospace,monospace);font-size:10px;text-transform:uppercase;letter-spacing:.05em;padding:6px 10px;border-radius:4px;white-space:nowrap;min-height:30px;display:inline-flex;align-items:center;transition:color .15s,background .15s}
+.toc-bar-track a.active{color:var(--teal);background:var(--bg-elevated)}
+.article-body h2[id]{scroll-margin-top:116px}
+}
+@media (max-width: 900px) and (hover:hover){.toc-bar-track a:hover{color:var(--teal)}}
+</style>
+</head>
+<body>
+
+
+
+<style id="mpw-unav-css">
+
+.mnav-wrap,.usearch{--ink:#09090d;--panel:#0f0f18;--panel2:#15151f;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);--amber:#f5a623;--teal:#00e8a2;--teal-d:rgba(0,232,162,.12);--text:#f2f2f7;--t2:#9a9ab2;--t3:#56566f;--sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'DM Mono',ui-monospace,SFMono-Regular,monospace;}
+.mnav-wrap *,.mnav-wrap *::before,.mnav-wrap *::after,.usearch *,.usearch *::before,.usearch *::after{box-sizing:border-box;margin:0;padding:0}
+/* host-CSS shield: a page loading style.css (articles) must not bleed its body font/color/line-height into the bar. Direct rule on .mnav-wrap beats inherited body styles. */
+.mnav-wrap,.usearch{font-family:var(--sans);font-size:14px;font-weight:400;font-style:normal;line-height:1.4;letter-spacing:normal;color:var(--text);text-align:left;text-transform:none}
+/* S91 host-CSS isolation (:where() = zero-specificity; beats style.css bare a/li by source order, LOSES to nav's own .drw-card/.mnav-flat classes) */
+:where(.mnav-wrap,.usearch) a{color:inherit;text-decoration:none;background:none;border:0;font:inherit;letter-spacing:inherit}
+:where(.mnav-wrap,.usearch) ul,:where(.mnav-wrap,.usearch) ol{list-style:none;margin:0;padding:0;border:0}
+:where(.mnav-wrap,.usearch) li{margin:0;padding:0;border:0;font-size:inherit;line-height:inherit;color:inherit;background:none}
+:where(.mnav-wrap,.usearch) h1,:where(.mnav-wrap,.usearch) h2,:where(.mnav-wrap,.usearch) h3,:where(.mnav-wrap,.usearch) h4,:where(.mnav-wrap,.usearch) h5,:where(.mnav-wrap,.usearch) h6,:where(.mnav-wrap,.usearch) p{margin:0;padding:0;border:0;font:inherit;color:inherit;line-height:inherit;letter-spacing:inherit;text-transform:none}
+:where(.mnav-wrap,.usearch) button{font:inherit;color:inherit;background:none;border:0;letter-spacing:inherit;text-align:inherit}
+:where(.mnav-wrap,.usearch) svg{display:inline-block;vertical-align:middle}
+:where(.mnav-wrap,.usearch) img{max-width:none}
+.mnav-wrap{background:var(--ink);border-bottom:1px solid var(--line);position:relative}
+.mnav{height:60px;display:flex;align-items:center}
+.mnav-in{max-width:1180px;margin:0 auto;padding:0 22px;width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.mnav-brand{display:flex;align-items:center;gap:10px;color:var(--text);text-decoration:none;flex:0 0 auto}
+.mnav-word{font-weight:700;font-size:15px;letter-spacing:-.02em}
+.mnav-links{display:flex;align-items:center;gap:6px;margin-left:8px}
+.mnav-flat,.mnav-trigger{color:var(--t2);background:none;border:0;font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;padding:8px 12px;border-radius:8px;display:inline-flex;align-items:center;gap:6px}
+.mnav-flat:hover,.mnav-trigger:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.caret{font-size:9px;color:var(--t3);transition:transform .18s}
+.mnav-right{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.mnav-search{background:none;border:0;color:var(--t2);cursor:pointer;display:flex;padding:6px;border-radius:8px}
+.mnav-search:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.mnav-cta{border:1px solid var(--teal);color:var(--teal);text-decoration:none;padding:7px 15px;border-radius:8px;font-size:13px;font-weight:600;white-space:nowrap}
+.mnav-cta:hover{background:var(--teal-d)}
+.mnav-wrap[data-section="tools"] .mnav-flat[data-nav="tools"]{color:var(--text);font-weight:600}
+.mnav-wrap[data-section="articles"] .mnav-trigger[data-nav="articles"]{color:var(--text);font-weight:600}
+/* Bible = amber brand color, desktop link + mobile drawer */
+.mnav-flat[data-nav="bible"],.drw-link[data-nav="bible"]{color:#f5a623!important;font-weight:600}
+.mnav-flat[data-nav="bible"]:hover,.drw-link[data-nav="bible"]:hover{color:#ffc04d!important}
+.mnav-item{position:relative}
+.mnav-panel,.mnav-panel-wide{position:absolute;top:calc(100% + 6px);left:0;z-index:50;display:none;background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:14px;box-shadow:0 24px 60px -24px rgba(0,0,0,.9);min-width:240px}
+.mnav-panel-wide{grid-template-columns:1fr 1fr;gap:8px 22px;min-width:520px}
+.mnav-item:hover .mnav-panel,.mnav-item:focus-within .mnav-panel,.mnav-item:hover .mnav-panel-wide,.mnav-item:focus-within .mnav-panel-wide{display:grid}
+.mnav-item:hover .caret{transform:rotate(180deg)}
+.mp-col{display:flex;flex-direction:column}
+.mp-head{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);padding:6px 10px 8px}
+.mnav-panel a{display:flex;flex-direction:column;gap:1px;padding:8px 10px;border-radius:9px;text-decoration:none}
+.mnav-panel a:hover{background:rgba(255,255,255,.05)}
+.mp-name{color:var(--text);font-size:13.5px;font-weight:600}.mp-desc{color:var(--t2);font-size:11.5px}
+.mnav-sub{display:none;background:var(--panel);border-bottom:1px solid var(--line)}
+.mnav-wrap[data-section="bible"] .mnav-sub{display:block}
+.mnav-sub-in{max-width:1180px;margin:0 auto;padding:10px 22px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.mnav-sub-in::-webkit-scrollbar{display:none}
+.mnav-sub-in a{flex:0 0 auto;color:var(--t2);text-decoration:none;font-size:12.5px;font-family:var(--mono);border:1px solid var(--line2);border-radius:99px;padding:5px 12px;white-space:nowrap}
+.mnav-sub-in a:hover{color:var(--teal);border-color:rgba(0,232,162,.4)}
+.mnav-toggle{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.mnav-burger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:8px;border-radius:8px}
+.mnav-burger span{display:block;width:20px;height:2px;background:var(--text);border-radius:2px;transition:.2s}
+.mnav-drawer{display:none;flex-direction:column;padding:6px 18px 16px;background:var(--ink);border-bottom:1px solid var(--line)}
+.mnav-drawer details{border-bottom:1px solid var(--line)}
+.mnav-drawer summary{list-style:none;cursor:pointer;padding:13px 2px;font-size:15px;font-weight:600;color:var(--text);display:flex;justify-content:space-between}
+.mnav-drawer summary::-webkit-details-marker{display:none}
+.mnav-drawer summary::after{content:"+";color:var(--t3)}
+.mnav-drawer details[open] summary::after{content:"\2013"}
+.mnav-acc{display:flex;flex-direction:column;padding:0 0 10px 12px}
+.mnav-acc a{color:var(--t2);text-decoration:none;font-size:14px;padding:8px 0}
+.drw-link{color:var(--t2);text-decoration:none;font-size:15px;font-weight:600;padding:13px 2px;border-bottom:1px solid var(--line)}
+.drw-cta{color:var(--teal);text-decoration:none;font-weight:600;font-size:15px;padding:14px 2px}
+.mnav-toggle:checked ~ .mnav-drawer{display:flex}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(2){opacity:0}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+@media(max-width:860px){.mnav-links,.mnav-cta{display:none}.mnav-burger{display:flex}}
+
+/* ===== UNIFIED SEARCH OVERLAY ===== */
+.usearch{position:fixed;inset:0;z-index:10000;display:none;background:rgba(6,6,11,.78);backdrop-filter:blur(6px);padding:80px 20px 20px}
+.usearch.open{display:block}
+.usearch-box{max-width:620px;margin:0 auto;background:var(--panel);border:1px solid var(--line2);border-radius:16px;overflow:hidden;box-shadow:0 40px 90px -30px rgba(0,0,0,.95)}
+.usearch-top{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.usearch-top svg{color:var(--t3);flex:0 0 auto}
+.usearch-top input{flex:1;background:none;border:0;outline:none;color:var(--text);font-family:var(--sans);font-size:17px}
+.usearch-top input::placeholder{color:var(--t3)}
+.usearch-top kbd{font-family:var(--mono);font-size:11px;color:var(--t3);border:1px solid var(--line2);border-radius:6px;padding:2px 7px}
+.usearch-results{max-height:56vh;overflow-y:auto;padding:8px}
+.usearch-results a{display:block;padding:11px 14px;border-radius:10px;text-decoration:none;transition:background .12s}
+.usearch-results a:hover,.usearch-results a.sel{background:rgba(255,255,255,.05)}
+.ur-top{display:flex;align-items:baseline;gap:9px}
+.ur-title{color:var(--text);font-size:14.5px;font-weight:600}
+.ur-cat{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.06);color:var(--t2);flex:0 0 auto}
+.ur-cat[data-c="Tools"]{background:var(--teal-d);color:var(--teal);border:1px solid rgba(0,232,162,.4)}
+.ur-cat[data-c="Bible"]{background:rgba(245,166,35,.18);color:#f5a623;border:1px solid rgba(245,166,35,.4)}
+.ur-desc{color:var(--t2);font-size:12.5px;line-height:1.45;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.usearch-empty{padding:30px;text-align:center;color:var(--t3);font-size:13.5px}
+/* --- sticky-header + entry-page chrome (pilot, refined for density) ---
+   entry nav = 60px main bar only (no category sub-bar). Desktop: hide the horizontal section
+   nav (the sticky sidebar TOC covers sections) and retune offsets to the 60px nav. Mobile: the
+   sidebar is hidden, so SHOW the section nav flush under the bar. All in THIS block. --- */
+.mnav-wrap{position:sticky;top:0;z-index:1000;line-height:1.4}
+.entry-nav{display:none}
+[id].entry-section{scroll-margin-top:90px}
+.entry-main h2{scroll-margin-top:90px}
+.entry-sidebar{top:78px;height:calc(100vh - 98px)}
+@media(max-width:768px){
+  .entry-nav{display:block!important;top:60px!important}
+  [id].entry-section{scroll-margin-top:130px!important}
+  .entry-main h2{scroll-margin-top:130px!important}
+}
+/* dropdown overflow safety */
+.mnav-panel,.mnav-panel-wide{max-height:min(72vh,560px);overflow-y:auto}
+/* mobile drawer: category CARD grid (slick old-nav look), CSS-only */
+.mnav-drawer{padding:10px 18px 18px;gap:0}
+.drw-label{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--t3);margin:12px 2px 8px}
+.drw-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.drw-card{display:flex;align-items:center;padding:12px 14px;border-radius:10px;text-decoration:none;font-size:13.5px;font-weight:600;color:var(--text);background:var(--panel);border:1px solid var(--line2)}
+.drw-card:hover{border-color:var(--teal);color:var(--teal)}
+.drw-feat{display:flex;align-items:center;gap:8px;padding:13px 16px;border-radius:10px;text-decoration:none;font-size:14px;font-weight:700;color:var(--text);background:var(--panel);border:1px solid var(--line2);margin-top:8px}
+.drw-feat-bible{color:#f5a623;background:rgba(245,166,35,.08);border-color:rgba(245,166,35,.30)}
+.drw-feat-bible:hover{border-color:rgba(245,166,35,.6)}
+.drw-cta{display:block;text-align:center;padding:14px;border-radius:10px;background:var(--teal);color:#06281f;font-weight:800;font-size:14px;text-decoration:none;margin-top:12px}
+/* mobile sunlight legibility: lift the intentionally-dim greys in glare (nav + search only), scoped */
+@media(max-width:860px){
+  .mnav-wrap,.usearch{--t2:#c8c8da;--t3:#9696b0}
+  .drw-label{color:#bdbdd0;font-weight:500}
+  .usearch-top input::placeholder{color:#9696b0}
+  .drw-card,.drw-feat{background:#20202e;border:1.5px solid #45455c}
+  .drw-feat-bible{background:rgba(245,166,35,.12);border:1.5px solid rgba(245,166,35,.6)}
+}
+html{overflow-x:clip!important;max-width:none!important}body{overflow-x:clip!important}
+</style>
+<!-- MPW universal nav -->
+<div class="mnav-wrap" data-section="articles">
+  <input type="checkbox" id="mnav-toggle" class="mnav-toggle" aria-hidden="true">
+  <nav class="mnav" aria-label="Main navigation">
+    <div class="mnav-in">
+      <a class="mnav-brand" href="/"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="6" stroke="#f5a623" stroke-width="1.7"/><path d="M7 15V9l3 3 3-5 4 8" stroke="#00e8a2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="mnav-word">MusicProductionWiki</span></a>
+      <div class="mnav-links">
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="articles">Articles <span class="caret">&#9662;</span></button><div class="mnav-panel mnav-panel-wide"><div class="mp-col"><div class="mp-head">Techniques & Analysis</div><a href="/categories/techniques"><span class="mp-name">Techniques</span><span class="mp-desc">Mixing, mastering, sound design</span></a><a href="/categories/reviews"><span class="mp-name">Reviews</span><span class="mp-desc">Honest. No paid placements.</span></a><a href="/categories/comparisons"><span class="mp-name">Comparisons</span><span class="mp-desc">Head-to-head</span></a><a href="/categories/breakdowns"><span class="mp-name">Breakdowns</span><span class="mp-desc">Track-by-track</span></a><a href="/categories/recreations"><span class="mp-name">Recreations</span><span class="mp-desc">Recreate iconic sounds</span></a><a href="/genres"><span class="mp-name">Genres</span><span class="mp-desc">Every genre & style</span></a></div><div class="mp-col"><div class="mp-head">Reference & Business</div><a href="/categories/ai-music"><span class="mp-name">AI Music</span><span class="mp-desc">Suno, Udio, AI tools</span></a><a href="/categories/music-business"><span class="mp-name">Music Business</span><span class="mp-desc">Royalties, licensing, sync</span></a></div></div></div>
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="gear">Gear <span class="caret">&#9662;</span></button><div class="mnav-panel"><div class="mp-col"><a href="/categories/daws"><span class="mp-name">DAWs</span><span class="mp-desc">Every major DAW</span></a><a href="/categories/plugins"><span class="mp-name">Plugins</span><span class="mp-desc">EQ, comp, reverb, synths</span></a><a href="/categories/hardware"><span class="mp-name">Hardware</span><span class="mp-desc">Interfaces, mics, monitors</span></a></div></div></div>
+        <a class="mnav-flat" href="/tools/" data-nav="tools">Tools</a>
+        <a class="mnav-flat" href="/bible/" data-nav="bible">The Bible</a>
+      </div>
+      <div class="mnav-right">
+        <button class="mnav-search" data-nav-search aria-label="Search"><svg width="17" height="17" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <a class="mnav-cta" href="https://theproducersbriefing.beehiiv.com">Sound Better &rarr;</a>
+        <label class="mnav-burger" for="mnav-toggle"><span></span><span></span><span></span></label>
+      </div>
+    </div>
+  </nav>
+  <div class="mnav-drawer">
+    <div class="drw-label">Articles</div>
+    <div class="drw-grid">
+      <a href="/categories/techniques" class="drw-card">Techniques</a><a href="/categories/reviews" class="drw-card">Reviews</a><a href="/categories/comparisons" class="drw-card">Comparisons</a><a href="/categories/breakdowns" class="drw-card">Breakdowns</a><a href="/categories/recreations" class="drw-card">Recreations</a><a href="/genres" class="drw-card">Genres</a><a href="/categories/ai-music" class="drw-card">AI Music</a><a href="/categories/music-business" class="drw-card">Music Business</a>
+    </div>
+    <div class="drw-label">Gear</div>
+    <div class="drw-grid">
+      <a href="/categories/daws" class="drw-card">DAWs</a><a href="/categories/plugins" class="drw-card">Plugins</a><a href="/categories/hardware" class="drw-card">Hardware</a>
+    </div>
+    <a href="/bible/" class="drw-feat drw-feat-bible">&#9670; The Producer's Bible</a>
+    <a href="/tools/" class="drw-feat">The Producer's Tools</a>
+    <a href="https://theproducersbriefing.beehiiv.com" class="drw-cta">Sound Better &rarr;</a>
+  </div>
+</div>
+
+
+<div class="container">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><ol>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../categories/techniques.html">Techniques</a></li>
+    <li><span aria-current="page">How to Install VST Plugins</span></li>
+  </ol></nav>
+</div>
+<nav class="toc-bar" aria-label="Section navigation"><div class="toc-bar-track" id="tocBarTrack"></div></nav>
+<main class="container" id="main-content">
+  <div class="article-layout">
+    <article aria-labelledby="articleTitle">
+      <header class="article-header">
+        <div class="article-tags"><span class="article-tag teal"><a href="../categories/techniques.html" style="color:inherit;text-decoration:none;">Techniques</a></span>
+<span class="article-tag teal"><a href="../categories/techniques.html" style="color:inherit;text-decoration:none;">Plugins</a></span>
+<span class="article-tag teal"><a href="../categories/techniques.html" style="color:inherit;text-decoration:none;">Beginners</a></span></div>
+        <h1 id="articleTitle">How to Install VST Plugins (and Fix the Ones That Won&rsquo;t Show Up)</h1>
+        <div class="article-header-meta">
+          <div class="article-author"><div class="author-avatar" aria-hidden="true">MP</div><span class="author-name">The Music Production Wiki Team</span></div>
+          <span class="meta-divider"></span><span class="meta-item">Updated June 2026&nbsp;&middot;&nbsp;18 min read</span>
+        </div>
+      </header>
+      <div class="article-body">
+<p style="font-size:1.06rem;line-height:1.7;">You bought a plugin, ran the installer, opened your DAW &mdash; and it isn&rsquo;t there. No new synth in the browser, no new effect in the list, nothing. This is the single most common wall a new producer hits, and it is almost never a broken download. It is a misunderstanding of how plugins actually get from a website into your project, and once you understand that path, the problem stops being mysterious and becomes a thirty-second fix. Installing a plugin is really three separate things happening in sequence: a file in a particular <strong>format</strong> lands in a particular <strong>folder</strong>, and then your DAW <strong>scans</strong> that folder and decides whether it can read the format. Break any link in that chain and the plugin is installed but invisible. Get all three right and it appears every time.</p>
+
+<p>This guide covers the whole chain for every major DAW &mdash; FL Studio, Ableton Live, Logic Pro, Studio One, Reaper, and Pro Tools &mdash; on both Windows and macOS. We will start with the mental model that makes the rest obvious, walk the universal install flow, give the exact scan steps per DAW, list where every format lives on disk, and then spend real time on the part you actually came here for: the troubleshooting tree for when a plugin refuses to show up. If you are brand new to all of this, it is worth skimming our <a href="music-production-for-beginners.html">music production for beginners</a> primer and our explainer on <a href="what-is-a-daw.html">what a DAW is</a> first, because a plugin only makes sense once you understand the host it plugs into.</p>
+
+<div class="quick-answer">
+<div class="quick-answer-label">The Short Answer</div>
+<p>Download the plugin, run its installer, and let it install the right <strong>format</strong> for your DAW (VST3 for most; AU for Logic; AAX for Pro Tools). The installer puts it in the correct system <strong>folder</strong> automatically. Then open your DAW and <strong>rescan</strong> &mdash; in FL Studio, Settings &rarr; Manage plugins &rarr; Find installed plugins; in Ableton, Settings &rarr; Plug-Ins &rarr; Rescan. If it still doesn&rsquo;t appear, it&rsquo;s almost always the wrong format, the wrong folder, a missing rescan, a 32-bit file, or a macOS security block &mdash; the tree below walks each one.</p>
+</div>
+
+<h2 id="model">The Mental Model: Format, Folder, Scan</h2>
+<p>Almost every &ldquo;my plugin won&rsquo;t show up&rdquo; problem is one of three failures, and they map exactly onto the three stages of how a plugin reaches your DAW. The first stage is <strong>format</strong>. A plugin is not a single universal file; it is built in one or more competing standards &mdash; VST2, VST3, AU, AAX, CLAP &mdash; and your DAW can only load the standards it was built to understand. Logic Pro, for instance, ignores VST entirely and only reads Audio Units. Pro Tools reads only AAX. Install the wrong format for your host and the file can sit perfectly on your drive while the DAW acts as if it doesn&rsquo;t exist, because to that DAW it really doesn&rsquo;t. If the difference between these formats is fuzzy, our piece on <a href="what-is-vst-plugin.html">what a VST plugin is</a> and the companion on <a href="what-is-a-vst3-plugin.html">what a VST3 plugin is</a> lay out the lineage in plain language.</p>
+
+<p>The second stage is <strong>folder</strong>. Every DAW scans a fixed set of locations on your disk and nowhere else. VST3 is the strictest case: the VST3 specification requires that the format live in one canonical directory &mdash; <span style="font-family:var(--font-mono);color:var(--teal);font-size:.92rem;">C:\Program Files\Common Files\VST3</span> on Windows, <span style="font-family:var(--font-mono);color:var(--teal);font-size:.92rem;">/Library/Audio/Plug-Ins/VST3</span> on macOS &mdash; and compliant hosts only look there. A reputable installer drops the file in the right place for you, which is exactly why &ldquo;just reinstall from the official installer&rdquo; fixes so many folder problems. Trouble starts when you move files by hand, point an installer somewhere custom, or copy a plugin from another machine: the file exists, but not where the DAW is looking.</p>
+
+<p>The third stage is <strong>scan</strong>. A DAW does not watch your folders in real time. It builds a cached list of plugins when it launches or when you explicitly tell it to rescan, and a plugin you installed five minutes ago is invisible until that list is rebuilt. This is the most common &ldquo;bug&rdquo; of all and the least deserving of the name &mdash; the plugin is installed correctly, in the right folder, in a format the DAW supports, and it simply hasn&rsquo;t been re-indexed yet. The diagram below ties the three stages together: each format, where it installs, and which DAWs can load it.</p>
+
+<div class="diagram-wrap">
+<picture>
+<source media="(max-width:900px)" srcset="../images/how-to-install-vst-plugins-format-folder-map-m.png">
+<img src="../images/how-to-install-vst-plugins-format-folder-map.png" alt="A map of plugin formats showing how VST3, VST2, AU, AAX, and CLAP each install to a specific folder on Windows or macOS and which DAWs can load each format, illustrating that a plugin only appears when its format, folder, and a rescan all line up" width="1040" height="845" loading="lazy" />
+</picture>
+<div class="diagram-caption">The whole chain in one view. A plugin appears only when its format matches your DAW, it sits in the folder your DAW scans, and you&rsquo;ve told the DAW to rescan.</div>
+</div>
+
+<h2 id="formats">The Five Formats &mdash; And Which One You Actually Need</h2>
+<p>You do not need to memorize the technical differences between plugin formats; you need to know which one your DAW loads so you install that and ignore the rest. <strong>VST3</strong> is the modern default and the one you should choose whenever it is offered. It is the actively developed standard &mdash; Steinberg, which created VST, re-released the VST3 development kit under a permissive open-source (MIT) license in late 2025, signaling that VST3 is where the format is going to live for the long haul. It installs to a single fixed folder, handles CPU more efficiently than its predecessor, and is supported by every major DAW except Apple&rsquo;s Logic.</p>
+
+<p><strong>VST2</strong> is the legacy version, the original <span style="font-family:var(--font-mono);color:var(--text-secondary);font-size:.9rem;">.dll</span> standard that ran the plugin world for two decades. It still works in hosts that already support it, but it is on the way out: Steinberg stopped issuing new VST2 development licenses back in 2018 and has since pulled the VST2 kit from public availability, so no genuinely new plugin will ship as VST2-only. You will still install VST2 versions of older or free plugins, and that is fine &mdash; just prefer the VST3 build when both are offered, and never install both formats of the same plugin into the same project, which only creates duplicate, confusing entries.</p>
+
+<p><strong>AU</strong> (Audio Units) is Apple&rsquo;s format, and it matters for one reason: it is the only format Logic Pro and GarageBand will load. AU is macOS-only and does not exist on Windows at all. <strong>AAX</strong> is Avid&rsquo;s format and exists for exactly one host &mdash; Pro Tools &mdash; which loads nothing else. <strong>CLAP</strong> is the newcomer, an open standard co-developed by Bitwig and u-he with growing but not universal support: Bitwig and Reaper handle it fully, FL Studio added it in its 2024 release, Studio One support is partial, and Ableton and Logic have not adopted it. CLAP is genuinely promising, especially for modulation-heavy synthesizers, but in 2026 it is still a &ldquo;nice to have if your DAW reads it,&rdquo; not a format you go out of your way to install. For the overwhelming majority of producers, the rule is simply: <strong>VST3 if you can, AU if you&rsquo;re on Logic, AAX if you&rsquo;re on Pro Tools.</strong></p>
+
+<div class="pro-reference">
+<div class="pro-reference-label">Worth Knowing</div>
+<p>The behind-the-scenes link between a plugin&rsquo;s format and its latency is real but rarely visible &mdash; if you want the deeper mechanics of how hosts compensate for plugin delay, the Bible entry on <a href="../bible/pdc.html">plugin delay compensation</a> explains it, and the broader <a href="../bible/plugin.html">plugin</a> entry covers the concept from the ground up.</p>
+</div>
+
+<h2 id="install">The Universal Install Flow</h2>
+<p>Every plugin installation, regardless of brand or format, follows the same five steps. Internalize this sequence and you will rarely need a per-plugin tutorial again. <strong>First, download the correct installer from the developer&rsquo;s own website.</strong> Always go to the source &mdash; the actual maker&rsquo;s site or your account on a storefront like Plugin Boutique &mdash; never a third-party mirror or a torrent, which is how the overwhelming majority of malware reaches producer machines. Make sure you grab the build for your operating system: a Windows <span style="font-family:var(--font-mono);color:var(--text-secondary);font-size:.9rem;">.exe</span> will not run on a Mac, and a macOS <span style="font-family:var(--font-mono);color:var(--text-secondary);font-size:.9rem;">.pkg</span> will not run on Windows.</p>
+
+<p><strong>Second, run the installer.</strong> On Windows, if the installer needs to write to the protected system plugin folders, right-click it and choose &ldquo;Run as administrator&rdquo; so it has permission. On macOS, you will double-click the <span style="font-family:var(--font-mono);color:var(--text-secondary);font-size:.9rem;">.pkg</span> and follow the prompts; if macOS blocks it as coming from an unidentified developer, hold that thought &mdash; the security section below covers it. <strong>Third, choose your formats.</strong> Most installers present checkboxes for VST3, VST2, AU, AAX, and sometimes CLAP. Tick the format your DAW reads and feel free to leave the others unchecked; installing formats you will never load just clutters your plugin list and lengthens every future scan.</p>
+
+<p><strong>Fourth, let the installer place the files.</strong> For VST3 and AU this is non-negotiable and automatic &mdash; the file goes to its one legal system folder. For VST2, the installer will usually ask which folder you want, and you should pick a single dedicated VST2 folder and remember it, because you will need to point your DAW at that exact path later. <strong>Fifth, open your DAW and rescan.</strong> This final step is the one beginners skip, and it is why a perfectly installed plugin seems missing. With the file in place, you simply tell the host to re-read its folders, which is what the next section covers DAW by DAW. The five steps above are also encoded as the structured how-to on this page so search engines can surface them directly.</p>
+
+<div class="mistake-box">
+<div class="mistake-box-label">The Mistake Almost Everyone Makes</div>
+<p>Copying plugin files from an old computer to a new one instead of reinstalling. Many plugins &mdash; especially VST3 instruments &mdash; install support content (presets, wavetables, sample libraries, license files) into other system folders. Copy only the plugin file and it will either fail to scan or crash on load. Always reinstall from the official installer on a new machine.</p>
+</div>
+
+<h2 id="daws">Scanning Plugins in Every Major DAW</h2>
+<p>The install flow is universal; the rescan step is where each DAW differs. Below is the exact path for the six most common hosts. The wording moves slightly between versions, but the location of the control is stable, so even if a menu label has shifted in your build, you will find the rescan within a click or two of where it&rsquo;s described.</p>
+
+<p><strong>FL Studio.</strong> Open Settings (the <span style="font-family:var(--font-mono);color:var(--text-secondary);font-size:.9rem;">F10</span> key), go to the File tab, and click &ldquo;Manage plugins&rdquo; to open the Plugin Manager. Confirm that your VST3 folder appears in the &ldquo;Plugin search paths&rdquo; list on the left &mdash; you can add a custom VST2 path here with the folder icons &mdash; then click &ldquo;Find installed plugins&rdquo; to run the scan. If a plugin crashes the scan, enable &ldquo;Bridged&rdquo; mode for it under the plugin&rsquo;s Wrapper Settings to run it in a separate process. New to FL specifically? Our <a href="how-to-use-fl-studio-for-beginners.html">FL Studio for beginners</a> walkthrough covers the wider workflow around this.</p>
+
+<p><strong>Ableton Live.</strong> Open Settings (<span style="font-family:var(--font-mono);color:var(--text-secondary);font-size:.9rem;">Cmd</span>/<span style="font-family:var(--font-mono);color:var(--text-secondary);font-size:.9rem;">Ctrl</span>+comma) and click the Plug-Ins tab. Turn on &ldquo;Use VST3 Plug-In System Folder&rdquo; and, on a Mac, &ldquo;Use Audio Units&rdquo;; if you keep VST2 plugins somewhere custom, switch on &ldquo;Use VST Plug-In Custom Folder&rdquo; and Browse to that path. Click Rescan. If a plugin is stubborn, hold <span style="font-family:var(--font-mono);color:var(--text-secondary);font-size:.9rem;">Alt</span>/<span style="font-family:var(--font-mono);color:var(--text-secondary);font-size:.9rem;">Option</span> while clicking Rescan to force a deep rescan of everything. Live 12 also shows any plugins it had to block after a crash right there in the Plug-Ins preferences. The <a href="ableton-live-beginners-guide.html">Ableton Live beginners guide</a> has the rest of the orientation.</p>
+
+<p><strong>Logic Pro.</strong> Logic only loads Audio Units, and it validates every AU on launch &mdash; a plugin that fails validation will not appear. To force a re-check, open the Plug-In Manager (Logic Pro &rarr; Settings, or from the Plug-in menu), find the plugin, and use &ldquo;Reset &amp; Rescan Selection.&rdquo; If an AU consistently fails validation, update it to its latest version, because the cause is almost always an outdated build that predates your macOS. The <a href="logic-pro-beginners-guide.html">Logic Pro beginners guide</a> covers Logic&rsquo;s AU-only world in more depth.</p>
+
+<p><strong>Studio One.</strong> Studio One reads VST2, VST3, and (on macOS) AU. Open Studio One &rarr; Settings/Preferences &rarr; Locations &rarr; VST Plug-Ins to confirm or add a folder, then use the Reset Blocklist and rescan controls so a previously failed plugin gets another chance. It scans on launch as well, so a restart often does the job on its own. <strong>Reaper.</strong> Reaper is the permissive one &mdash; it ignores the VST3 single-folder rule and will scan any path you give it. Go to Options &rarr; Preferences &rarr; Plug-ins &rarr; VST, add your folder to the VST plug-in paths, and click &ldquo;Re-scan&rdquo; (or &ldquo;Clear cache and re-scan&rdquo; if a plugin is misbehaving). Reaper also reads CLAP and, on macOS, AU.</p>
+
+<p><strong>Pro Tools.</strong> Pro Tools is the simplest and the strictest: it loads AAX and nothing else &mdash; no VST, no VST3, no AU. AAX plugins install to Avid&rsquo;s own plugin directory automatically, and Pro Tools rescans on launch, so the &ldquo;install the right format&rdquo; rule does almost all the work here. If an AAX plugin is missing, the cause is nearly always an iLok authorization problem rather than a folder or scan problem, so check your license first.</p>
+
+<h2 id="folders">Where Plugins Live: The Folder Reference</h2>
+<p>When you need to verify by hand that a file landed where it should &mdash; or point a DAW at a custom location &mdash; this is the map. These are the default system folders each format uses; user-level equivalents exist under your home <span style="font-family:var(--font-mono);color:var(--text-secondary);font-size:.9rem;">~/Library</span> on macOS for the rare installer that uses them.</p>
+
+<table class="settings-table">
+<thead><tr><th>Format</th><th>Windows</th><th>macOS</th></tr></thead>
+<tbody>
+<tr><td>VST3</td><td class="mono">C:\Program Files\Common Files\VST3</td><td class="mono">/Library/Audio/Plug-Ins/VST3</td></tr>
+<tr><td>VST2</td><td class="mono">A custom folder (e.g. C:\Program Files\VSTPlugins)</td><td class="mono">/Library/Audio/Plug-Ins/VST</td></tr>
+<tr><td>AU</td><td>&mdash; (not supported)</td><td class="mono">/Library/Audio/Plug-Ins/Components</td></tr>
+<tr><td>AAX</td><td class="mono">C:\Program Files\Common Files\Avid\Audio\Plug-Ins</td><td class="mono">/Library/Application Support/Avid/Audio/Plug-Ins</td></tr>
+</tbody>
+</table>
+
+<p>The two things to remember from this table: VST3 has exactly one legal home, so if a VST3 plugin is missing, checking that folder for the <span style="font-family:var(--font-mono);color:var(--text-secondary);font-size:.9rem;">.vst3</span> file is the fastest possible diagnosis. And VST2 and VST3 must always live in separate, dedicated folders &mdash; never point both at the same path. Once a plugin is correctly placed and scanned, the fun part begins: building it into a signal chain. Our guide to <a href="how-to-build-a-plugin-chain.html">how to build a plugin chain</a> is the natural next step once everything is loading.</p>
+
+<h2 id="troubleshooting">When It Still Won&rsquo;t Show Up: The Troubleshooting Tree</h2>
+<p>This is the section you came for. A plugin that refuses to appear feels random, but it almost never is &mdash; it fails for one of five reasons, and they have a natural order of likelihood. Work down the list and stop at the first one that applies; that is your fix. The decision tree below is the same logic in visual form.</p>
+
+<div class="diagram-wrap">
+<picture>
+<source media="(max-width:900px)" srcset="../images/how-to-install-vst-plugins-troubleshooting-tree-m.png">
+<img src="../images/how-to-install-vst-plugins-troubleshooting-tree.png" alt="A troubleshooting decision tree for a plugin that will not appear in a DAW, walking through five diagnostic questions in order of likelihood: wrong format, wrong folder, no rescan, 32-bit file, or a macOS security block, each paired with its fix" width="1040" height="817" loading="lazy" />
+</picture>
+<div class="diagram-caption">Walk down in order. Nine times out of ten the answer is one of the first three: wrong format, wrong folder, or no rescan.</div>
+</div>
+
+<p><strong>Cause one: wrong format for your DAW.</strong> This is the most common failure of all and the easiest to overlook, because the installer happily finished and the file is sitting on your disk &mdash; it&rsquo;s just a format your host can&rsquo;t read. If you&rsquo;re on Logic and installed only the VST3, Logic will never see it; you need the AU build. If you&rsquo;re on Pro Tools, you need AAX. Re-run the installer, tick the format your DAW actually loads (check the compatibility grid further down if you&rsquo;re unsure), and rescan.</p>
+
+<p><strong>Cause two: it&rsquo;s not in a folder your DAW scans.</strong> If the format is right but the plugin still doesn&rsquo;t appear, confirm the file is actually in the correct system folder using the table above. This is where hand-copied files and installers pointed at a custom directory go wrong. The cleanest fix is to uninstall and reinstall from the official installer, letting it choose the default location; for VST2, add your custom folder to the DAW&rsquo;s plugin paths so it knows where to look. <strong>Cause three: you didn&rsquo;t rescan.</strong> If the format and folder are both correct, you almost certainly just need to rebuild the plugin list. Open your DAW&rsquo;s plugin manager and run Find/Rescan (Alt-click Rescan in Ableton for a deep pass), or simply restart the DAW, which forces a fresh scan on launch.</p>
+
+<p><strong>Cause four: it&rsquo;s a 32-bit plugin.</strong> Every current DAW is 64-bit only and will silently skip 32-bit plugin files during scanning &mdash; no error, just absence. If a very old free plugin won&rsquo;t appear no matter what, check whether a 64-bit version exists and install that; if only a 32-bit build was ever made, the plugin is effectively dead on modern systems without a third-party bridge. <strong>Cause five: macOS security blocked it.</strong> On recent macOS (Sequoia and Tahoe), an unsigned or un-notarized plugin gets quarantined the first time the DAW tries to scan it, and Apple removed the old Control-click shortcut to bypass this. The current path is: try to load it, dismiss the warning, then go to System Settings &rarr; Privacy &amp; Security, scroll to the Security section, and click &ldquo;Open Anyway&rdquo; next to the blocked item &mdash; then rescan. Only do this for plugins you downloaded from a source you trust.</p>
+
+<div class="decision-framework">
+<div class="decision-framework-title">Fast Triage</div>
+<div class="decision-item"><span class="decision-if">If</span><span class="decision-then">you&rsquo;re on Logic or Pro Tools and nothing appears &rarr; <strong>you installed the wrong format.</strong> Get AU (Logic) or AAX (Pro Tools).</span></div>
+<div class="decision-item"><span class="decision-if">If</span><span class="decision-then">it worked yesterday and one plugin vanished &rarr; <strong>rescan</strong>, or the plugin updated and failed validation.</span></div>
+<div class="decision-item"><span class="decision-if">If</span><span class="decision-then">a brand-new install is missing on a Mac &rarr; check <strong>Privacy &amp; Security</strong> for a block before anything else.</span></div>
+<div class="decision-item"><span class="decision-if">If</span><span class="decision-then">a free plugin from years ago won&rsquo;t load &rarr; it&rsquo;s probably <strong>32-bit</strong> &mdash; find a 64-bit build.</span></div>
+</div>
+
+<h2 id="hygiene">Choosing What to Install &mdash; And Keeping It Clean</h2>
+<p>Knowing how to install plugins is the moment most producers start installing far too many of them, and a bloated, half-broken plugin folder is its own kind of problem: slower scans, longer load times, and a browser so crowded you can&rsquo;t find the three tools you actually use. Treat installation as a deliberate act, not a reflex. When a plugin offers a free demo, use it before you buy &mdash; most paid plugins run in demo mode with periodic silence or saved-project limits, which is plenty to decide whether it earns a place in your setup. And lean on the free tier first: the gap between free and paid has narrowed enormously, and our roundups of the <a href="best-free-vst-plugins.html">best free VST plugins</a> and the <a href="best-plugins-for-beginners.html">best plugins for beginners</a> will get a new producer a complete, capable toolkit without spending a cent. If you specifically want stock-replacement instruments and effects, the <a href="best-vst-plugins-for-beginners.html">best VST plugins for beginners</a> list is the place to start.</p>
+
+<p>Compatibility is the other half of hygiene &mdash; checking that a plugin fits your setup <em>before</em> you download spares you the entire troubleshooting tree above. The grid below maps which formats each major DAW accepts; match a plugin&rsquo;s available formats against your host before you install, and you&rsquo;ll never install a file your DAW can&rsquo;t read.</p>
+
+<div class="diagram-wrap">
+<picture>
+<source media="(max-width:900px)" srcset="../images/how-to-install-vst-plugins-compatibility-matrix-m.png">
+<img src="../images/how-to-install-vst-plugins-compatibility-matrix.png" alt="A compatibility matrix mapping the six major DAWs (FL Studio, Ableton Live, Logic Pro, Studio One, Reaper, Pro Tools, and Bitwig) against the five plugin formats VST2, VST3, AU, AAX, and CLAP, showing which formats each DAW can load" width="1040" height="845" loading="lazy" />
+</picture>
+<div class="diagram-caption">Match the plugin&rsquo;s available formats against your DAW before downloading. AU is macOS-only; verify against current versions, as support evolves.</div>
+</div>
+
+<p>Finally, mind your machine&rsquo;s headroom. Every plugin you load costs CPU, and an instrument-heavy project can stutter long before you&rsquo;ve run out of ideas. Choosing efficient tools from the start matters more than most beginners expect &mdash; our guide to the <a href="best-cpu-friendly-plugins.html">best CPU-friendly plugins</a> is worth reading before you fill a project with the heaviest synths you can find, and the <a href="best-plugins-for-mixing-2026.html">best plugins for mixing</a> roundup points you at the efficient workhorses that do the most for the least overhead. Install with intention, keep the folder lean, and the tools stay an asset instead of becoming a maintenance burden.</p>
+
+<h2 id="exercises">Put It Into Practice: 3 Drills</h2>
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--beginner">Beginner</span><span class="exercise-title">Install a free synth end to end</span></div>
+<ol><li>Pick one free synth from our <a href="best-free-vst-plugins.html">free plugins</a> roundup and download the installer for your operating system from the developer&rsquo;s own site.</li><li>Run it, tick only the format your DAW reads (VST3 for most, AU for Logic), and let it install to the default folder.</li><li>Open your DAW, run a rescan, and load the synth on a new track. If it appears first try, you understood the chain.</li></ol></div>
+
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--intermediate">Intermediate</span><span class="exercise-title">Point your DAW at a custom folder</span></div>
+<ol><li>Create a dedicated VST2 folder somewhere memorable and install one VST2 plugin into it deliberately.</li><li>In your DAW&rsquo;s plugin settings, add that folder to the scan paths &mdash; the custom VST folder in Ableton, a search path in FL Studio or Reaper.</li><li>Rescan and confirm it appears. You now control where your DAW looks, not just what it finds by default.</li></ol></div>
+
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--advanced">Advanced</span><span class="exercise-title">Diagnose a hidden plugin on purpose</span></div>
+<ol><li>Take a plugin that currently works and move its file out of the scanned folder, then rescan and watch it disappear.</li><li>Without reinstalling, work the troubleshooting tree: identify that it&rsquo;s a folder problem, return the file to its correct location.</li><li>Rescan and confirm it returns. Practicing the failure makes the real one trivial. Then load a synth and explore it with our <a href="../tools/synthesis-type-selector.html">synthesis type selector</a>.</li></ol></div>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+<div class="faq-accordion">
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Where do VST plugins install by default?</span></div></div>
+<div class="faq-accordion-a"><p>VST3 plugins install to one fixed system folder: <span style="font-family:var(--font-mono);">C:\Program Files\Common Files\VST3</span> on Windows and <span style="font-family:var(--font-mono);">/Library/Audio/Plug-Ins/VST3</span> on macOS. VST2 plugins go to a custom folder you choose during installation and then point your DAW at. AU plugins (macOS only) install to <span style="font-family:var(--font-mono);">/Library/Audio/Plug-Ins/Components</span>. A good installer places the file in the right folder automatically.</p></div>
+</div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Why isn&rsquo;t my plugin showing up in my DAW?</span></div></div>
+<div class="faq-accordion-a"><p>It&rsquo;s one of five things: you installed the wrong format for your DAW, the file isn&rsquo;t in a folder your DAW scans, you haven&rsquo;t rescanned since installing, it&rsquo;s a 32-bit plugin on a 64-bit DAW, or macOS security blocked it. Work those in order &mdash; the first three account for the vast majority of cases, and a rescan or reinstall from the official installer fixes most of them.</p></div>
+</div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Should I install VST2 or VST3?</span></div></div>
+<div class="faq-accordion-a"><p>Install VST3 whenever it&rsquo;s offered. It&rsquo;s the modern, actively developed standard, handles CPU more efficiently, and installs to a single predictable folder. VST2 still works in hosts that support it and you&rsquo;ll use it for older or free plugins, but no new plugins ship as VST2-only anymore. Don&rsquo;t install both formats of the same plugin into one project &mdash; pick one to avoid duplicate entries.</p></div>
+</div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">How do I get plugins to show up in FL Studio?</span></div></div>
+<div class="faq-accordion-a"><p>Open Settings (F10), go to the File tab, and click &ldquo;Manage plugins.&rdquo; In the Plugin Manager, confirm your VST3 folder is listed under Plugin search paths, then click &ldquo;Find installed plugins&rdquo; to rescan. If a plugin crashes the scan, switch it to Bridged mode in its Wrapper Settings. Make sure you installed the 64-bit version, since FL Studio is a 64-bit application.</p></div>
+</div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Why won&rsquo;t my VST plugins load in Logic Pro?</span></div></div>
+<div class="faq-accordion-a"><p>Logic Pro does not load VST or VST3 at all &mdash; it only reads Audio Units (AU). Re-run the plugin&rsquo;s installer and tick the AU format. If you have the AU but it still doesn&rsquo;t appear, it likely failed Logic&rsquo;s validation on launch; update the plugin to its latest version and use Reset &amp; Rescan Selection in Logic&rsquo;s Plug-In Manager.</p></div>
+</div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">macOS says the plugin can&rsquo;t be opened &mdash; what do I do?</span></div></div>
+<div class="faq-accordion-a"><p>On Sequoia and Tahoe, unsigned plugins get blocked on first scan and the old right-click bypass no longer works. Try to load it, dismiss the warning, then open System Settings &rarr; Privacy &amp; Security, scroll to the Security section, and click &ldquo;Open Anyway&rdquo; next to the blocked plugin. Rescan afterward. Only do this for plugins from sources you trust.</p></div>
+</div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Do I need to install both the VST and VST3 versions?</span></div></div>
+<div class="faq-accordion-a"><p>No. Installing both formats of the same plugin just creates duplicate entries in your browser and can cause confusion when sharing projects. Install one format &mdash; VST3 by default &mdash; and use it consistently. The only reason to keep both is if you use a plugin across different apps that don&rsquo;t all support VST3.</p></div>
+</div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Is it safe to install plugins from anywhere?</span></div></div>
+<div class="faq-accordion-a"><p>Only install from the developer&rsquo;s official website or a reputable storefront. Cracked or pirated plugins are one of the most common malware vectors for music producers, and a free plugin from an unknown mirror isn&rsquo;t worth the risk to your projects and system. When in doubt, buy from a trusted retailer or stick to the well-known free plugins recommended by sources you trust.</p></div>
+</div>
+</div>
+
+<div class="related-grid">
+<a href="what-is-a-vst3-plugin.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">What Is a VST3 Plugin?</h3><p class="related-card-desc">The format you should install by default &mdash; what VST3 changed and why hosts now prefer it.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="what-is-vst-plugin.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">What Is a VST Plugin?</h3><p class="related-card-desc">The concept underneath all of this &mdash; what a plugin actually is and how a DAW hosts it.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="best-free-vst-plugins.html" class="related-card"><div class="related-card-tag">Reviews</div><h3 class="related-card-title">Best Free VST Plugins</h3><p class="related-card-desc">Safe, high-quality plugins to install first &mdash; the perfect way to practice the flow in this guide.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-build-a-plugin-chain.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">How to Build a Plugin Chain</h3><p class="related-card-desc">Now that they load, learn the order plugins belong in on a channel &mdash; the next skill up.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="best-plugins-for-beginners.html" class="related-card"><div class="related-card-tag">Reviews</div><h3 class="related-card-title">Best Plugins for Beginners</h3><p class="related-card-desc">A starter toolkit worth installing &mdash; the essentials before you spend a cent.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="best-vst-plugins-for-beginners.html" class="related-card"><div class="related-card-tag">Reviews</div><h3 class="related-card-title">Best VST Plugins for Beginners</h3><p class="related-card-desc">The VST picks beginners reach for first, in every core category.</p><span class="related-card-meta">Read article &rarr;</span></a>
+</div>
+
+</div>
+
+    </article>
+    <aside aria-label="Article sidebar">
+      <div class="sidebar-widget toc-widget" aria-labelledby="tocHeading">
+        <div class="sidebar-widget-header"><h2 class="sidebar-widget-title" id="tocHeading">In This Article</h2></div>
+        <div class="sidebar-widget-body"><ul class="toc-list">
+<li><a href="#model">The Format-Folder Model</a></li><li><a href="#formats">Plugin Formats</a></li><li><a href="#install">The Install Flow</a></li><li><a href="#daws">DAW-by-DAW Scanning</a></li><li><a href="#folders">Where Plugins Live</a></li><li><a href="#troubleshooting">Not Showing Up?</a></li><li><a href="#hygiene">Install Hygiene</a></li><li><a href="#exercises">3 Drills</a></li><li><a href="#faq">FAQ</a></li>
+</ul></div>
+      </div>
+      <div class="sidebar-widget" style="background:var(--bg-void);border-color:var(--border-default);">
+        <div class="sidebar-widget-body" style="padding:1.5rem;">
+          <p style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.5rem;">Newsletter</p>
+          <h3 style="font-family:var(--font-display);color:var(--text-primary);font-size:1.1rem;margin-bottom:.5rem;">The Producer's Briefing</h3>
+          <p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:1rem;line-height:1.55;">Weekly tips, gear news, and technique guides. Free.</p>
+          <form class="newsletter-form-js" style="display:flex;flex-direction:column;gap:.5rem;" novalidate>
+            <input type="email" name="email" class="form-input" placeholder="Your email" required />
+            <button type="submit" class="btn-newsletter" style="font-size:.82rem;padding:.65rem 1rem;">Subscribe Free</button>
+          </form>
+        </div>
+      <div class="sidebar-widget" style="margin-top:1.5rem;">
+        <div class="sidebar-widget-header" style="text-align:center;">
+          <h2 class="sidebar-widget-title">Related Articles</h2>
+        </div>
+        <div class="sidebar-widget-body" style="padding:1rem;">
+<ul style="list-style:none;padding:0;margin:0;text-align:center;"><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="what-is-vst-plugin.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">What Is a VST Plugin?</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Techniques</span></li><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="best-free-vst-plugins.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">Best Free VST Plugins</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Reviews</span></li><li style="padding:.6rem 0;"><a href="best-plugins-for-beginners.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">Best Plugins for Beginners</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Reviews</span></li></ul>
+        </div>
+      </div>
+      </div>
+    </aside>
+  </div>
+</main>
+<section class="newsletter-section" id="newsletter" aria-labelledby="newsletterHeading">
+  <div class="container">
+    <div class="newsletter-inner">
+      <div class="newsletter-content">
+        <p class="newsletter-label">Newsletter</p>
+        <h2 id="newsletterHeading" class="newsletter-title">The Producer's <em>Briefing</em></h2>
+        <p class="newsletter-desc">Weekly techniques, gear news, and music business insights. Free.</p>
+      </div>
+      <div class="newsletter-form-wrap">
+        <form class="newsletter-form-js" novalidate>
+          <input type="email" name="email" class="form-input" placeholder="Your email address" required />
+          <button type="submit" class="btn-newsletter">Subscribe Free</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<footer class="site-footer" role="contentinfo">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="../index.html" class="site-logo"><span class="logo-wordmark">Music<span>Production</span>Wiki</span><span class="logo-tagline">The Producer's Reference</span></a>
+    </div>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <div class="footer-col">
+        <h3 class="footer-col-title">Categories</h3>
+        <ul>
+          <li><a href="../categories/reviews.html">Reviews</a></li>
+          <li><a href="../categories/comparisons.html">Comparisons</a></li>
+          <li><a href="../categories/ai-music.html">AI Music</a></li>
+          <li><a href="../categories/daws.html">DAWs</a></li>
+          <li><a href="../categories/plugins.html">Plugins</a></li>
+          <li><a href="../categories/hardware.html">Gear</a></li>
+          <li><a href="../categories/techniques.html">Techniques</a></li>
+          <li><a href="../categories/music-business.html">Music Business</a></li>
+          <li><a href="../categories/glossary.html">Glossary</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">Popular</h3>
+        <ul>
+          <li><a href="../articles/suno-vs-udio.html">Suno vs Udio</a></li>
+          <li><a href="../articles/best-daw-for-beginners.html">Best DAW for Beginners</a></li>
+          <li><a href="../articles/focusrite-scarlett-2i2-gen-4-review.html">Scarlett 2i2 Review</a></li>
+          <li><a href="../articles/sidechain-compression-guide.html">Sidechain Compression</a></li>
+          <li><a href="../articles/best-compressor-plugins.html">Best Compressor Plugins</a></li>
+          <li><a href="../articles/what-is-gain-staging.html">What Is Gain Staging</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">About</h3>
+        <ul>
+          <li><a href="../about.html">About MPW</a></li>
+          <li><a href="../about.html#team">Our Team</a></li>
+          <li><a href="../about.html#methodology">Review Methodology</a></li>
+          <li><a href="../about.html#affiliate">Affiliate Disclosure</a></li>
+          <li><a href="../about.html#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="footer-bottom"><div class="container"><p>© <span id="copyrightYear"></span> MusicProductionWiki.com. All rights reserved. Content by the Music Production Wiki Team.</p></div></div>
+</footer>
+<script src="../js/main.js"></script>
+<script>document.getElementById('copyrightYear').textContent = new Date().getFullYear();</script>
+
+<button id="mpwBackTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  aria-label="Back to top"
+  style="position:fixed;bottom:1.5rem;right:1.5rem;width:2.5rem;height:2.5rem;border-radius:50%;
+         background:var(--teal);color:#000;border:none;cursor:pointer;display:none;
+         align-items:center;justify-content:center;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3);">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <polyline points="18 15 12 9 6 15"/>
+  </svg>
+</button>
+<script>
+(function(){
+  var btn=document.getElementById('mpwBackTop');
+  var bar=document.getElementById('readingProgress');
+  var art=document.querySelector('.article-body');
+  window.addEventListener('scroll',function(){
+    var st=window.scrollY||document.documentElement.scrollTop;
+    btn.style.display=st>400?'flex':'none';
+    if(bar&&art){
+      var h=art.getBoundingClientRect().height;
+      var top=art.getBoundingClientRect().top+st;
+      var pct=Math.min(100,Math.max(0,(st-top+window.innerHeight)*100/h));
+      bar.style.width=pct+'%';
+      bar.setAttribute('aria-valuenow',Math.round(pct));
+    }
+  });
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<!-- MPW universal search: one overlay, one Fuse index (/search-index.json) -->
+<div class="usearch" id="usearch" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="usearch-box">
+    <div class="usearch-top">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input id="usearchInput" type="text" placeholder="Search tools, articles, the Bible…" autocomplete="off">
+      <kbd>esc</kbd>
+    </div>
+    <div class="usearch-results" id="usearchResults"></div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
+<script>
+(function(){
+  // === production parity: lazy-load index on first open, build Fuse once ===
+  var data=null, fuse=null;
+  var overlay=document.getElementById('usearch');
+  var input=document.getElementById('usearchInput');
+  var box=document.getElementById('usearchResults');
+  var sel=-1, current=[];
+  // article slugs are bare; bible/ and tools/ slugs carry their prefix (verified vs live search-index.json)
+  function urlFor(s){ return (s.indexOf('bible/')===0||s.indexOf('tools/')===0) ? '/'+s : '/articles/'+s; }
+
+  function buildFuse(arr){
+    data=arr;
+    fuse=new Fuse(data,{keys:['title','category','description'],threshold:0.34,ignoreLocation:true,minMatchCharLength:2});
+  }
+  function ensureIndex(cb){
+    if(fuse){cb();return;}
+    // PRODUCTION: one shared index, lazy-loaded on first open.
+    fetch('/search-index.json').then(function(r){return r.json();}).then(function(arr){
+      buildFuse(arr); cb();
+    }).catch(function(){ box.textContent='Search failed to load.'; });
+  }
+
+  function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  function render(results){
+    current=results;
+    while(box.firstChild) box.removeChild(box.firstChild);   // no innerHTML
+    if(!input.value.trim()){ var p=document.createElement('div'); p.className='usearch-empty'; p.textContent='Start typing to search everything.'; box.appendChild(p); return; }
+    if(!results.length){ var n=document.createElement('div'); n.className='usearch-empty'; n.textContent='No results for "'+input.value+'".'; box.appendChild(n); return; }
+    results.slice(0,12).forEach(function(r,i){
+      var e=r.item||r;
+      var a=document.createElement('a'); a.href=urlFor(e.slug); if(i===sel)a.className='sel';
+      var top=document.createElement('div'); top.className='ur-top';
+      var t=document.createElement('span'); t.className='ur-title'; t.textContent=e.title;
+      var c=document.createElement('span'); c.className='ur-cat'; c.setAttribute('data-c',e.category||''); c.textContent=e.category||'';
+      top.appendChild(t); top.appendChild(c); a.appendChild(top);
+      if(e.description){ var d=document.createElement('div'); d.className='ur-desc'; d.textContent=e.description; a.appendChild(d); }
+      box.appendChild(a);
+    });
+  }
+
+  function open(q){ ensureIndex(function(){ overlay.classList.add('open'); input.focus(); if(q!=null){input.value=q;} sel=-1; render(input.value?fuse.search(input.value):[]); }); }
+  function close(){ overlay.classList.remove('open'); }
+
+  // wire every nav's search button to the shared overlay
+  document.querySelectorAll('[data-nav-search]').forEach(function(b){ b.addEventListener('click',function(){open(null);}); });
+  input.addEventListener('input',function(){ sel=-1; render(fuse?fuse.search(input.value):[]); });
+  input.addEventListener('keydown',function(e){
+    if(e.key==='Escape')close();
+    else if(e.key==='ArrowDown'){e.preventDefault(); sel=Math.min(sel+1,Math.min(current.length,12)-1); render(current);}
+    else if(e.key==='ArrowUp'){e.preventDefault(); sel=Math.max(sel-1,0); render(current);}
+    else if(e.key==='Enter'&&current[sel]){ var e2=current[sel].item||current[sel]; location.href=urlFor(e2.slug); }
+  });
+  overlay.addEventListener('click',function(e){ if(e.target===overlay)close(); });
+  document.addEventListener('keydown',function(e){ if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();open(null);} });
+})();
+</script>
+<script id="toc-bar-js">
+(function(){
+  var body=document.querySelector('.article-body');
+  var track=document.getElementById('tocBarTrack');
+  if(!body||!track)return;
+  var heads=[].slice.call(body.querySelectorAll('h2[id]'));
+  if(!heads.length)return;
+  heads.forEach(function(h){
+    var a=document.createElement('a');a.href='#'+h.id;
+    var t=h.textContent.trim();var i=t.indexOf(':');if(i>0)t=t.slice(0,i);
+    a.textContent=t;track.appendChild(a);
+  });
+  var links=[].slice.call(track.querySelectorAll('a'));
+  function onScroll(){
+    var y=window.scrollY+130,cur=heads[0].id;
+    heads.forEach(function(h){if(h.offsetTop<=y)cur=h.id;});
+    links.forEach(function(l){var on=l.getAttribute('href')==='#'+cur;l.classList.toggle('active',on);
+      if(on)l.scrollIntoView({inline:'center',block:'nearest'});});
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+})();
+</script>
+<script>
+function mpwFaqToggle(el){
+  var answer = el.nextElementSibling;
+  if(!answer || !answer.classList.contains('faq-accordion-a')) return;
+  var isOpen = answer.classList.contains('open');
+  document.querySelectorAll('.faq-accordion-a.open').forEach(function(a){
+    a.classList.remove('open');
+    var q = a.previousElementSibling;
+    if(q){ var ic = q.querySelector('.faq-accordion-icon, .faq-plus'); if(ic) ic.classList.remove('open'); }
+  });
+  if(!isOpen){
+    answer.classList.add('open');
+    var icon = el.querySelector('.faq-accordion-icon, .faq-plus');
+    if(icon) icon.classList.add('open');
+  }
+}
+</script>
+<style>.faq-plus.open{transform:rotate(45deg);transition:transform .2s ease}</style>
+</body>
+</html>
