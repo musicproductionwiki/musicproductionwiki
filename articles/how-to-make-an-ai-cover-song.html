@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Make an AI voice cover the right way: the two rights you must clear, the hosted-vs-RVC routes, and the mix chain that stops it sounding robotic." />
+  <title>How to Make an AI Cover Song (2026) | MusicProductionWiki.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+      <style>
+    #readingProgress{position:fixed;top:0;left:0;height:3px;background:var(--teal);width:0%;z-index:200;transition:width 0.1s linear;}
+    .quick-answer{background:linear-gradient(135deg,rgba(0,212,168,0.08),rgba(167,139,250,0.06));border:1px solid rgba(0,212,168,0.3);border-left:4px solid var(--teal);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .quick-answer-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.6rem;}
+    .quick-answer p{font-size:1rem;line-height:1.65;color:var(--text-primary);margin:0;}
+    .skill-badge{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .6rem;border-radius:4px;margin-left:.6rem;vertical-align:middle;position:relative;top:-2px;}
+    .skill-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .skill-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .skill-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .settings-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .settings-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .settings-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .settings-table tr:last-child td{border-bottom:none;}
+    .settings-table tr:hover td{background:var(--bg-surface);}
+    .settings-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .settings-table .mono{font-family:var(--font-mono);font-size:.82rem;color:var(--teal);}
+    .mistake-box{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-left:4px solid #ef4444;border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .mistake-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ef4444;margin-bottom:.4rem;}
+    .mistake-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference{border-left:3px solid var(--purple);padding:.75rem 1.25rem;margin:1.25rem 0;background:rgba(167,139,250,0.05);border-radius:0 6px 6px 0;}
+    .pro-reference-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.35rem;}
+    .pro-reference p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference strong{color:var(--text-primary);}
+    .listening-prescription{background:var(--bg-void);border:1px solid var(--border-default);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;position:relative;}
+    .listening-prescription::before{content:'🎧';position:absolute;top:-14px;left:1.5rem;background:var(--bg-void);padding:0 .4rem;font-size:1.1rem;}
+    .listening-prescription-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:.75rem;}
+    .listening-prescription p{font-size:.9rem;line-height:1.7;color:var(--text-secondary);margin:0 0 .5rem;}
+    .listening-record{font-weight:600;color:var(--text-primary);}
+    .decision-framework{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .decision-framework-title{font-family:var(--font-display);font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:1rem;}
+    .decision-item{display:flex;gap:1rem;padding:.65rem 0;border-bottom:1px solid var(--border-subtle);font-size:.88rem;line-height:1.55;}
+    .decision-item:last-child{border-bottom:none;}
+    .decision-if{color:var(--text-muted);font-style:italic;min-width:2rem;}
+    .decision-then{color:var(--text-primary);}
+    .decision-then strong{color:var(--teal);}
+    .exercise-block{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.25rem 0;}
+    .exercise-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;}
+    .exercise-badge{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .7rem;border-radius:4px;}
+    .exercise-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .exercise-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .exercise-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .exercise-title{font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text-primary);}
+    .exercise-block ol{margin:0;padding-left:1.25rem;color:var(--text-secondary);font-size:.88rem;line-height:1.7;}
+    .exercise-block ol li{margin-bottom:.4rem;}
+    .version-line{font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:4px;padding:.4rem .75rem;margin:.75rem 0 1.5rem;display:inline-block;}
+    .go-deeper{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:10px;padding:1.75rem;margin:2.5rem 0;}
+    .go-deeper-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text-primary);margin-bottom:1.25rem;}
+    .go-deeper-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;}
+    .go-deeper-item{background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:7px;padding:1rem 1.1rem;}
+    .go-deeper-item-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.35rem;}
+    .go-deeper-item a{font-size:.88rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;}
+    .go-deeper-item p{font-size:.78rem;color:var(--text-muted);margin:.3rem 0 0;}
+    .citation{font-size:.78rem;color:var(--text-muted);font-style:italic;margin-top:.25rem;}
+    .diagram-wrap{margin:1.75rem 0;background:var(--bg-void);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem;overflow-x:auto;}
+    .diagram-caption{font-size:.78rem;color:var(--text-muted);text-align:center;margin-top:.75rem;font-style:italic;}
+    .highlight-box{background:rgba(0,212,168,0.06);border:1px solid rgba(0,212,168,0.2);border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .highlight-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.4rem;}
+    .highlight-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin:1.5rem 0;}
+    .stat-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem;text-align:center;}
+    .stat-number{font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--teal);display:block;}
+    .stat-label{font-size:.78rem;color:var(--text-secondary);margin-top:.25rem;}
+    .action-steps{counter-reset:steps;list-style:none;padding:0;margin:1.5rem 0;}
+    .action-steps li{counter-increment:steps;position:relative;padding:.85rem 0 .85rem 2.6rem;border-bottom:1px solid var(--border-subtle);font-size:.9rem;color:var(--text-secondary);line-height:1.6;}
+    .action-steps li:last-child{border-bottom:none;}
+    .action-steps li::before{content:counter(steps);position:absolute;left:0;top:.9rem;background:var(--teal);color:#000;font-weight:800;font-size:.75rem;width:1.6rem;height:1.6rem;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+    .genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:1.5rem 0;}
+    .genre-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem 1.25rem;}
+    .genre-card-name{font-family:var(--font-display);font-size:.85rem;font-weight:700;color:var(--teal);margin-bottom:.4rem;}
+    .genre-card p{font-size:.82rem;color:var(--text-secondary);line-height:1.55;margin:0;}
+    .comparison-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .comparison-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .comparison-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .comparison-table tr:last-child td{border-bottom:none;}
+    .comparison-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .affiliate-cta{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,212,168,0.1);border:1px solid rgba(0,212,168,0.25);color:var(--teal);font-size:.82rem;font-weight:600;padding:.45rem .9rem;border-radius:6px;text-decoration:none;}
+
+    .faq-accordion{margin:1.75rem 0;}
+    .faq-accordion-item{background:var(--bg-surface);border:1px solid var(--border-subtle);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;margin-bottom:8px;overflow:hidden;}
+    .faq-accordion-q{display:flex;align-items:flex-start;padding:1rem 1.25rem;cursor:pointer;gap:.75rem;}
+    .faq-accordion-q:hover{background:var(--bg-elevated);}
+    .faq-accordion-icon{width:16px;height:16px;flex-shrink:0;margin-top:3px;color:var(--purple);transition:transform .2s ease;}
+    .faq-accordion-icon.open{transform:rotate(45deg);}
+    .faq-accordion-q-inner{display:flex;flex-direction:column;}
+    .faq-accordion-label{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin-bottom:.2rem;}
+    .faq-accordion-q-text{font-size:.92rem;font-weight:600;color:var(--text-primary);line-height:1.45;font-family:var(--font-display);}
+    .faq-accordion-a{display:none;padding:0 1.25rem 1rem 2.75rem;font-size:.88rem;color:var(--text-secondary);line-height:1.7;border-top:1px solid var(--border-subtle);padding-top:.85rem;}
+    .faq-accordion-a.open{display:block;}
+    .scorecard-table{display:table;table-layout:fixed;width:100%;border-collapse:collapse;font-size:.88rem;margin:1.5rem 0;border:1px solid var(--border-default);border-radius:8px;overflow:hidden;}
+    .scorecard-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;padding:.7rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .scorecard-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;vertical-align:top;}
+    .scorecard-table tr:last-child td{border-bottom:none;}
+    .scorecard-table td:first-child{color:var(--text-primary);font-weight:600;}
+    .scorecard-table .sc-num{font-family:var(--font-mono);font-weight:600;color:var(--teal);text-align:center;}
+    .scorecard-table .sc-amber{color:var(--purple);}
+    .scorecard-table .sc-overall td{background:rgba(0,212,168,0.06);font-weight:700;}
+    .vs-verdict{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.1rem 0 .4rem;}
+    @media(max-width:560px){.vs-verdict{grid-template-columns:1fr;}}
+    .vs-card{background:var(--bg-void);border:1px solid var(--border-subtle);border-radius:8px;padding:1.2rem 1.35rem;}
+    .vs-card.win{border-color:rgba(0,212,168,0.4);}
+    .vs-name{font-family:var(--font-display);font-size:1.02rem;font-weight:700;color:var(--text-primary);margin-bottom:.35rem;}
+    .vs-score{font-size:2.5rem;font-weight:800;color:var(--teal);line-height:1;font-family:var(--font-display);}
+    .vs-score small{font-size:.95rem;color:var(--text-muted);font-weight:600;}
+    .vs-tag{font-size:.8rem;color:var(--text-secondary);margin:.5rem 0 0;line-height:1.5;}
+    .vs-pc{font-size:.82rem;line-height:1.6;margin-top:.55rem;color:var(--text-secondary);}
+    .vs-pc strong{color:var(--text-primary);}
+    .diagram-wrap img{width:100%;height:auto;display:block;border-radius:6px;}
+</style>
+
+  <link rel="canonical" href="https://musicproductionwiki.com/articles/how-to-make-an-ai-cover-song.html"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="How to Make an AI Cover Song (2026): The Honest, Rights-Aware Workflow"/>
+  <meta property="og:description" content="An AI cover is two rights glued together. The workflow nobody teaches honestly: hosted vs open-source RVC, dry-audio conversion, mixing it like a real vocal, and where you can actually post it. Verified June 29, 2026."/>
+  <meta property="og:url" content="https://musicproductionwiki.com/articles/how-to-make-an-ai-cover-song.html"/>
+  <meta property="og:site_name" content="Music Production Wiki"/>
+  <meta property="og:image" content="https://musicproductionwiki.com/og-image.png"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="article:author" content="Music Production Wiki Team"/>
+  <meta property="article:section" content="AI Music"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="How to Make an AI Cover Song (2026)"/>
+  <meta name="twitter:description" content="The two rights you must clear, the hosted-vs-RVC routes, and the mix chain that stops it sounding robotic."/>
+  <meta name="twitter:image" content="https://musicproductionwiki.com/og-image.png"/>
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="article:published_time" content="2026-06-29T00:00:00+00:00" />
+  <meta property="article:modified_time" content="2026-06-29T00:00:00+00:00" />
+  <meta name="keywords" content="how to make an ai cover song, ai voice cover, ai song cover, how to make ai covers, rvc voice cover, kits ai cover, clone my own voice, are ai covers legal" />
+  <!-- Article -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How to Make an AI Cover Song (2026): The Honest, Rights-Aware Workflow",
+  "description": "What an AI cover actually is (voice conversion vs generation vs text-to-speech), the two rights you clear (composition and voice), the hosted-vs-open-source-RVC route choice, the dry-audio conversion workflow, mixing the AI vocal like a real vocal, cloning your own voice, and where platforms let you post it.",
+  "articleSection": "AI Music",
+  "image": [
+    "https://musicproductionwiki.com/images/how-to-make-an-ai-cover-song-two-objects-clearance.png",
+    "https://musicproductionwiki.com/images/how-to-make-an-ai-cover-song-route-split.png",
+    "https://musicproductionwiki.com/images/how-to-make-an-ai-cover-song-vocal-chain.png",
+    "https://musicproductionwiki.com/og-image.png"
+  ],
+  "datePublished": "2026-06-29",
+  "dateModified": "2026-06-29",
+  "author": {
+    "@type": "Organization",
+    "name": "Music Production Wiki",
+    "url": "https://musicproductionwiki.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Music Production Wiki",
+    "url": "https://musicproductionwiki.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://musicproductionwiki.com/og-image.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://musicproductionwiki.com/articles/how-to-make-an-ai-cover-song.html"
+  }
+}
+</script>
+  <!-- Organization -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Music Production Wiki",
+  "url": "https://musicproductionwiki.com",
+  "logo": {
+    "@type": "ImageObject",
+    "url": "https://musicproductionwiki.com/og-image.png"
+  }
+}
+</script>
+  <!-- WebSite -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Music Production Wiki",
+  "url": "https://musicproductionwiki.com",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://musicproductionwiki.com/?s={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://musicproductionwiki.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "AI Music",
+      "item": "https://musicproductionwiki.com/categories/ai-music.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "How to Make an AI Cover Song (2026)",
+      "item": "https://musicproductionwiki.com/articles/how-to-make-an-ai-cover-song.html"
+    }
+  ]
+}
+</script>
+  <!-- FAQPage -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Are AI cover songs legal?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It depends on whose voice and whose song. An AI cover is really two rights stacked together: the underlying composition (the melody and lyrics someone wrote) and the voice or likeness being imitated. Covering a copyrighted song generally needs a mechanical or cover licence even when an AI sings it, and imitating a real artist's voice can run into right-of-publicity laws such as Tennessee's ELVIS Act and similar state statutes. Cloning your own voice to sing a song you have licensed is the cleanest case. None of this is legal advice - it is the shape of the risk - so check our dedicated explainers and a professional before you monetise."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I make an AI cover for free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, technically. Open-source RVC (Retrieval-based Voice Conversion) is free and MIT-licensed, and hosted tools like Kits.ai have free tiers. But free hides costs: RVC needs an NVIDIA GPU (or a Google Colab or Hugging Face session) and an hour of setup, and hosted free tiers usually cap conversion minutes and lock downloads behind a paid plan. The bigger hidden cost is legal - the free pre-trained celebrity voice models traded in communities carry no licence, and that exposure rides with you, not the tool."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is Kits.ai or RVC better for AI covers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "They solve different problems. Kits.ai (and similar hosted tools) is faster, runs in a browser, and ships an ethically-licensed artist-voice library plus your-own-voice cloning, which makes commercial release cleaner - though quality varies by source material and the free tier is download-limited. RVC gives you total control and is free, but you install it, train or download models, and accept that model licensing is on you. Pick hosted if you value speed and a clean licence; pick RVC if you value control and already have a GPU."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I make my AI cover not sound robotic?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Three moves fix most of it. First, convert on dry, clean audio - never feed reverb, delay or effects into the model, because it bakes the artifacts in; add space afterwards. Second, convert in the voice model's comfortable range and match the key, pitching your guide vocal if needed. Third, mix the output like a real vocal: subtractive EQ to tame the 2 to 5 kHz harshness, de-essing, gentle compression, then any pitch or timing repair, and only then reverb and delay."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I clone my own voice?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, and it is the underrated professional move. Cloning your own voice means you already hold the likeness, so you sidestep the thorniest rights questions, and it is genuinely useful for stacking harmonies, doubling a lead, building demos, or extending your range. Quality comes from the dataset: feed the model several minutes of clean, dry, consistently-recorded audio that covers your full range, with no reverb or background noise. More good data beats a clever setting every time."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need a clean vocal to start?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You need a dry, isolated vocal - either a true a cappella or a guide vocal you sing yourself. Conversion is only as faithful as its input: a vocal smeared with reverb or buried under a beat produces a smeared, artifacted clone. If all you have is a finished stereo track, run it through a stem-separation tool first to pull the vocal out, accepting some bleed and artifacts, then clean it before you convert."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Will my AI cover get taken down on Spotify or YouTube?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Platform policy - not the law alone - is the binding gate, and it shifts often. As of 2026 Spotify only allows vocal impersonation of a real artist with that artist's authorisation, distributors like CD Baby block fully-AI tracks while others require you to own the rights and disclose AI use, and YouTube is strict enough that even voice-style similarity can trigger a takedown or Content ID dispute. An own-voice cover of a song you have licensed, disclosed honestly, is the postable case; an unlicensed celebrity impression is the one that gets pulled."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does an AI cover count as my own song?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Partly, and only the human parts. Under the current US human-authorship standard a purely AI-generated element is not registrable, but the composition you wrote or licensed, the arrangement, the mix decisions and any singing you actually did are yours and can carry authorship. The more of your own creative work you layer on - your own voice, your own arrangement, your own production - the more the track is genuinely yours, in both the legal and the artistic sense. This area is unsettled in 2026, so we defer specifics to our dedicated copyright explainers."
+      }
+    }
+  ]
+}
+</script>
+
+<style id="toc-skin">
+.toc-widget .sidebar-widget-header{margin-bottom:.35rem}
+.toc-list{counter-reset:tocnum;list-style:none;margin:0;padding:0}
+.toc-list li{counter-increment:tocnum;position:relative;margin:0;border-left:2px solid var(--border-subtle);transition:border-color .15s ease,background .15s ease}
+.toc-list li a{display:flex;gap:.7rem;align-items:baseline;padding:.5rem .85rem .5rem 1rem;font-size:.82rem;line-height:1.45;font-weight:500;color:var(--text-secondary);text-decoration:none;transition:color .15s ease}
+.toc-list li a::before{content:counter(tocnum,decimal-leading-zero);font-family:var(--font-mono,ui-monospace,monospace);font-size:.7rem;font-weight:600;letter-spacing:.04em;color:var(--text-muted);flex:0 0 auto;min-width:1.5em;padding-top:.05rem}
+.toc-list li a:hover{color:var(--text-primary)}
+.toc-list li.active{border-left-color:var(--teal);background:linear-gradient(90deg,rgba(0,212,168,.08),transparent 80%)}
+.toc-list li.active a{color:var(--teal);font-weight:600}
+.toc-list li.active a:hover{color:var(--teal)}
+.toc-list li.active a::before{color:var(--teal)}
+</style>
+<style id="toc-bar-css">
+.toc-bar{display:none}
+@media (max-width: 900px){
+.toc-bar{display:block;position:sticky;top:60px;z-index:400;background:var(--bg-void);border-bottom:1px solid var(--border-default);overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(to right,#000 88%,transparent 100%);mask-image:linear-gradient(to right,#000 88%,transparent 100%)}
+.toc-bar::-webkit-scrollbar{display:none}
+.toc-bar-track{display:flex;gap:4px;padding:9px 10px;min-width:max-content}
+.toc-bar-track a{color:var(--text-secondary);text-decoration:none;font-family:var(--font-mono,ui-monospace,monospace);font-size:10px;text-transform:uppercase;letter-spacing:.05em;padding:6px 10px;border-radius:4px;white-space:nowrap;min-height:30px;display:inline-flex;align-items:center;transition:color .15s,background .15s}
+.toc-bar-track a.active{color:var(--teal);background:var(--bg-elevated)}
+.article-body h2[id]{scroll-margin-top:116px}
+}
+@media (max-width: 900px) and (hover:hover){.toc-bar-track a:hover{color:var(--teal)}}
+</style>
+</head>
+<body>
+<div id="readingProgress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+<style id="mpw-unav-css">
+
+.mnav-wrap,.usearch{--ink:#09090d;--panel:#0f0f18;--panel2:#15151f;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);--amber:#f5a623;--teal:#00e8a2;--teal-d:rgba(0,232,162,.12);--text:#f2f2f7;--t2:#9a9ab2;--t3:#56566f;--sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'DM Mono',ui-monospace,SFMono-Regular,monospace;}
+.mnav-wrap *,.mnav-wrap *::before,.mnav-wrap *::after,.usearch *,.usearch *::before,.usearch *::after{box-sizing:border-box;margin:0;padding:0}
+/* host-CSS shield: a page loading style.css (articles) must not bleed its body font/color/line-height into the bar. Direct rule on .mnav-wrap beats inherited body styles. */
+.mnav-wrap,.usearch{font-family:var(--sans);font-size:14px;font-weight:400;font-style:normal;line-height:1.4;letter-spacing:normal;color:var(--text);text-align:left;text-transform:none}
+/* S91 host-CSS isolation (:where() = zero-specificity; beats style.css bare a/li by source order, LOSES to nav's own .drw-card/.mnav-flat classes) */
+:where(.mnav-wrap,.usearch) a{color:inherit;text-decoration:none;background:none;border:0;font:inherit;letter-spacing:inherit}
+:where(.mnav-wrap,.usearch) ul,:where(.mnav-wrap,.usearch) ol{list-style:none;margin:0;padding:0;border:0}
+:where(.mnav-wrap,.usearch) li{margin:0;padding:0;border:0;font-size:inherit;line-height:inherit;color:inherit;background:none}
+:where(.mnav-wrap,.usearch) h1,:where(.mnav-wrap,.usearch) h2,:where(.mnav-wrap,.usearch) h3,:where(.mnav-wrap,.usearch) h4,:where(.mnav-wrap,.usearch) h5,:where(.mnav-wrap,.usearch) h6,:where(.mnav-wrap,.usearch) p{margin:0;padding:0;border:0;font:inherit;color:inherit;line-height:inherit;letter-spacing:inherit;text-transform:none}
+:where(.mnav-wrap,.usearch) button{font:inherit;color:inherit;background:none;border:0;letter-spacing:inherit;text-align:inherit}
+:where(.mnav-wrap,.usearch) svg{display:inline-block;vertical-align:middle}
+:where(.mnav-wrap,.usearch) img{max-width:none}
+.mnav-wrap{background:var(--ink);border-bottom:1px solid var(--line);position:relative}
+.mnav{height:60px;display:flex;align-items:center}
+.mnav-in{max-width:1180px;margin:0 auto;padding:0 22px;width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.mnav-brand{display:flex;align-items:center;gap:10px;color:var(--text);text-decoration:none;flex:0 0 auto}
+.mnav-word{font-weight:700;font-size:15px;letter-spacing:-.02em}
+.mnav-links{display:flex;align-items:center;gap:6px;margin-left:8px}
+.mnav-flat,.mnav-trigger{color:var(--t2);background:none;border:0;font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;padding:8px 12px;border-radius:8px;display:inline-flex;align-items:center;gap:6px}
+.mnav-flat:hover,.mnav-trigger:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.caret{font-size:9px;color:var(--t3);transition:transform .18s}
+.mnav-right{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.mnav-search{background:none;border:0;color:var(--t2);cursor:pointer;display:flex;padding:6px;border-radius:8px}
+.mnav-search:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.mnav-cta{border:1px solid var(--teal);color:var(--teal);text-decoration:none;padding:7px 15px;border-radius:8px;font-size:13px;font-weight:600;white-space:nowrap}
+.mnav-cta:hover{background:var(--teal-d)}
+.mnav-wrap[data-section="tools"] .mnav-flat[data-nav="tools"]{color:var(--text);font-weight:600}
+.mnav-wrap[data-section="articles"] .mnav-trigger[data-nav="articles"]{color:var(--text);font-weight:600}
+/* Bible = amber brand color, desktop link + mobile drawer */
+.mnav-flat[data-nav="bible"],.drw-link[data-nav="bible"]{color:#f5a623!important;font-weight:600}
+.mnav-flat[data-nav="bible"]:hover,.drw-link[data-nav="bible"]:hover{color:#ffc04d!important}
+.mnav-item{position:relative}
+.mnav-panel,.mnav-panel-wide{position:absolute;top:calc(100% + 6px);left:0;z-index:50;display:none;background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:14px;box-shadow:0 24px 60px -24px rgba(0,0,0,.9);min-width:240px}
+.mnav-panel-wide{grid-template-columns:1fr 1fr;gap:8px 22px;min-width:520px}
+.mnav-item:hover .mnav-panel,.mnav-item:focus-within .mnav-panel,.mnav-item:hover .mnav-panel-wide,.mnav-item:focus-within .mnav-panel-wide{display:grid}
+.mnav-item:hover .caret{transform:rotate(180deg)}
+.mp-col{display:flex;flex-direction:column}
+.mp-head{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);padding:6px 10px 8px}
+.mnav-panel a{display:flex;flex-direction:column;gap:1px;padding:8px 10px;border-radius:9px;text-decoration:none}
+.mnav-panel a:hover{background:rgba(255,255,255,.05)}
+.mp-name{color:var(--text);font-size:13.5px;font-weight:600}.mp-desc{color:var(--t2);font-size:11.5px}
+.mnav-sub{display:none;background:var(--panel);border-bottom:1px solid var(--line)}
+.mnav-wrap[data-section="bible"] .mnav-sub{display:block}
+.mnav-sub-in{max-width:1180px;margin:0 auto;padding:10px 22px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.mnav-sub-in::-webkit-scrollbar{display:none}
+.mnav-sub-in a{flex:0 0 auto;color:var(--t2);text-decoration:none;font-size:12.5px;font-family:var(--mono);border:1px solid var(--line2);border-radius:99px;padding:5px 12px;white-space:nowrap}
+.mnav-sub-in a:hover{color:var(--teal);border-color:rgba(0,232,162,.4)}
+.mnav-toggle{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.mnav-burger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:8px;border-radius:8px}
+.mnav-burger span{display:block;width:20px;height:2px;background:var(--text);border-radius:2px;transition:.2s}
+.mnav-drawer{display:none;flex-direction:column;padding:6px 18px 16px;background:var(--ink);border-bottom:1px solid var(--line)}
+.mnav-drawer details{border-bottom:1px solid var(--line)}
+.mnav-drawer summary{list-style:none;cursor:pointer;padding:13px 2px;font-size:15px;font-weight:600;color:var(--text);display:flex;justify-content:space-between}
+.mnav-drawer summary::-webkit-details-marker{display:none}
+.mnav-drawer summary::after{content:"+";color:var(--t3)}
+.mnav-drawer details[open] summary::after{content:"\2013"}
+.mnav-acc{display:flex;flex-direction:column;padding:0 0 10px 12px}
+.mnav-acc a{color:var(--t2);text-decoration:none;font-size:14px;padding:8px 0}
+.drw-link{color:var(--t2);text-decoration:none;font-size:15px;font-weight:600;padding:13px 2px;border-bottom:1px solid var(--line)}
+.drw-cta{color:var(--teal);text-decoration:none;font-weight:600;font-size:15px;padding:14px 2px}
+.mnav-toggle:checked ~ .mnav-drawer{display:flex}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(2){opacity:0}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+@media(max-width:860px){.mnav-links,.mnav-cta{display:none}.mnav-burger{display:flex}}
+
+/* ===== UNIFIED SEARCH OVERLAY ===== */
+.usearch{position:fixed;inset:0;z-index:10000;display:none;background:rgba(6,6,11,.78);backdrop-filter:blur(6px);padding:80px 20px 20px}
+.usearch.open{display:block}
+.usearch-box{max-width:620px;margin:0 auto;background:var(--panel);border:1px solid var(--line2);border-radius:16px;overflow:hidden;box-shadow:0 40px 90px -30px rgba(0,0,0,.95)}
+.usearch-top{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.usearch-top svg{color:var(--t3);flex:0 0 auto}
+.usearch-top input{flex:1;background:none;border:0;outline:none;color:var(--text);font-family:var(--sans);font-size:17px}
+.usearch-top input::placeholder{color:var(--t3)}
+.usearch-top kbd{font-family:var(--mono);font-size:11px;color:var(--t3);border:1px solid var(--line2);border-radius:6px;padding:2px 7px}
+.usearch-results{max-height:56vh;overflow-y:auto;padding:8px}
+.usearch-results a{display:block;padding:11px 14px;border-radius:10px;text-decoration:none;transition:background .12s}
+.usearch-results a:hover,.usearch-results a.sel{background:rgba(255,255,255,.05)}
+.ur-top{display:flex;align-items:baseline;gap:9px}
+.ur-title{color:var(--text);font-size:14.5px;font-weight:600}
+.ur-cat{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.06);color:var(--t2);flex:0 0 auto}
+.ur-cat[data-c="Tools"]{background:var(--teal-d);color:var(--teal);border:1px solid rgba(0,232,162,.4)}
+.ur-cat[data-c="Bible"]{background:rgba(245,166,35,.18);color:#f5a623;border:1px solid rgba(245,166,35,.4)}
+.ur-desc{color:var(--t2);font-size:12.5px;line-height:1.45;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.usearch-empty{padding:30px;text-align:center;color:var(--t3);font-size:13.5px}
+/* --- sticky-header + entry-page chrome (pilot, refined for density) ---
+   entry nav = 60px main bar only (no category sub-bar). Desktop: hide the horizontal section
+   nav (the sticky sidebar TOC covers sections) and retune offsets to the 60px nav. Mobile: the
+   sidebar is hidden, so SHOW the section nav flush under the bar. All in THIS block. --- */
+.mnav-wrap{position:sticky;top:0;z-index:1000;line-height:1.4}
+.entry-nav{display:none}
+[id].entry-section{scroll-margin-top:90px}
+.entry-main h2{scroll-margin-top:90px}
+.entry-sidebar{top:78px;height:calc(100vh - 98px)}
+@media(max-width:768px){
+  .entry-nav{display:block!important;top:60px!important}
+  [id].entry-section{scroll-margin-top:130px!important}
+  .entry-main h2{scroll-margin-top:130px!important}
+}
+/* dropdown overflow safety */
+.mnav-panel,.mnav-panel-wide{max-height:min(72vh,560px);overflow-y:auto}
+/* mobile drawer: category CARD grid (slick old-nav look), CSS-only */
+.mnav-drawer{padding:10px 18px 18px;gap:0}
+.drw-label{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--t3);margin:12px 2px 8px}
+.drw-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.drw-card{display:flex;align-items:center;padding:12px 14px;border-radius:10px;text-decoration:none;font-size:13.5px;font-weight:600;color:var(--text);background:var(--panel);border:1px solid var(--line2)}
+.drw-card:hover{border-color:var(--teal);color:var(--teal)}
+.drw-feat{display:flex;align-items:center;gap:8px;padding:13px 16px;border-radius:10px;text-decoration:none;font-size:14px;font-weight:700;color:var(--text);background:var(--panel);border:1px solid var(--line2);margin-top:8px}
+.drw-feat-bible{color:#f5a623;background:rgba(245,166,35,.08);border-color:rgba(245,166,35,.30)}
+.drw-feat-bible:hover{border-color:rgba(245,166,35,.6)}
+.drw-cta{display:block;text-align:center;padding:14px;border-radius:10px;background:var(--teal);color:#06281f;font-weight:800;font-size:14px;text-decoration:none;margin-top:12px}
+/* mobile sunlight legibility: lift the intentionally-dim greys in glare (nav + search only), scoped */
+@media(max-width:860px){
+  .mnav-wrap,.usearch{--t2:#c8c8da;--t3:#9696b0}
+  .drw-label{color:#bdbdd0;font-weight:500}
+  .usearch-top input::placeholder{color:#9696b0}
+  .drw-card,.drw-feat{background:#20202e;border:1.5px solid #45455c}
+  .drw-feat-bible{background:rgba(245,166,35,.12);border:1.5px solid rgba(245,166,35,.6)}
+}
+html{overflow-x:clip!important;max-width:none!important}body{overflow-x:clip!important}
+</style>
+<!-- MPW universal nav -->
+<div class="mnav-wrap" data-section="articles">
+  <input type="checkbox" id="mnav-toggle" class="mnav-toggle" aria-hidden="true">
+  <nav class="mnav" aria-label="Main navigation">
+    <div class="mnav-in">
+      <a class="mnav-brand" href="/"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="6" stroke="#f5a623" stroke-width="1.7"/><path d="M7 15V9l3 3 3-5 4 8" stroke="#00e8a2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="mnav-word">MusicProductionWiki</span></a>
+      <div class="mnav-links">
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="articles">Articles <span class="caret">&#9662;</span></button><div class="mnav-panel mnav-panel-wide"><div class="mp-col"><div class="mp-head">Techniques & Analysis</div><a href="/categories/techniques"><span class="mp-name">Techniques</span><span class="mp-desc">Mixing, mastering, sound design</span></a><a href="/categories/reviews"><span class="mp-name">Reviews</span><span class="mp-desc">Honest. No paid placements.</span></a><a href="/categories/comparisons"><span class="mp-name">Comparisons</span><span class="mp-desc">Head-to-head</span></a><a href="/categories/breakdowns"><span class="mp-name">Breakdowns</span><span class="mp-desc">Track-by-track</span></a><a href="/categories/recreations"><span class="mp-name">Recreations</span><span class="mp-desc">Recreate iconic sounds</span></a><a href="/genres"><span class="mp-name">Genres</span><span class="mp-desc">Every genre & style</span></a></div><div class="mp-col"><div class="mp-head">Reference & Business</div><a href="/categories/ai-music"><span class="mp-name">AI Music</span><span class="mp-desc">Suno, Udio, AI tools</span></a><a href="/categories/music-business"><span class="mp-name">Music Business</span><span class="mp-desc">Royalties, licensing, sync</span></a></div></div></div>
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="gear">Gear <span class="caret">&#9662;</span></button><div class="mnav-panel"><div class="mp-col"><a href="/categories/daws"><span class="mp-name">DAWs</span><span class="mp-desc">Every major DAW</span></a><a href="/categories/plugins"><span class="mp-name">Plugins</span><span class="mp-desc">EQ, comp, reverb, synths</span></a><a href="/categories/hardware"><span class="mp-name">Hardware</span><span class="mp-desc">Interfaces, mics, monitors</span></a></div></div></div>
+        <a class="mnav-flat" href="/tools/" data-nav="tools">Tools</a>
+        <a class="mnav-flat" href="/bible/" data-nav="bible">The Bible</a>
+      </div>
+      <div class="mnav-right">
+        <button class="mnav-search" data-nav-search aria-label="Search"><svg width="17" height="17" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <a class="mnav-cta" href="https://theproducersbriefing.beehiiv.com">Sound Better &rarr;</a>
+        <label class="mnav-burger" for="mnav-toggle"><span></span><span></span><span></span></label>
+      </div>
+    </div>
+  </nav>
+  <div class="mnav-drawer">
+    <div class="drw-label">Articles</div>
+    <div class="drw-grid">
+      <a href="/categories/techniques" class="drw-card">Techniques</a><a href="/categories/reviews" class="drw-card">Reviews</a><a href="/categories/comparisons" class="drw-card">Comparisons</a><a href="/categories/breakdowns" class="drw-card">Breakdowns</a><a href="/categories/recreations" class="drw-card">Recreations</a><a href="/genres" class="drw-card">Genres</a><a href="/categories/ai-music" class="drw-card">AI Music</a><a href="/categories/music-business" class="drw-card">Music Business</a>
+    </div>
+    <div class="drw-label">Gear</div>
+    <div class="drw-grid">
+      <a href="/categories/daws" class="drw-card">DAWs</a><a href="/categories/plugins" class="drw-card">Plugins</a><a href="/categories/hardware" class="drw-card">Hardware</a>
+    </div>
+    <a href="/bible/" class="drw-feat drw-feat-bible">&#9670; The Producer's Bible</a>
+    <a href="/tools/" class="drw-feat">The Producer's Tools</a>
+    <a href="https://theproducersbriefing.beehiiv.com" class="drw-cta">Sound Better &rarr;</a>
+  </div>
+</div>
+
+
+<div class="container">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><ol><li><a href="../index.html">Home</a></li><li><a href="../categories/ai-music.html">AI Music</a></li><li aria-current="page">How to Make an AI Cover Song</li></ol></nav>
+</div>
+<nav class="toc-bar" aria-label="Section navigation"><div class="toc-bar-track" id="tocBarTrack"></div></nav>
+<main class="container" id="main-content">
+  <div class="article-layout">
+    <article aria-labelledby="articleTitle">
+      <header class="article-header">
+        <div class="article-tags"><span class="article-tag teal"><a href="../categories/ai-music.html" style="color:inherit;text-decoration:none;">AI Music</a></span><span class="article-tag"><a href="../categories/techniques.html" style="color:inherit;text-decoration:none;">Vocals</a></span><span class="article-tag"><a href="../categories/techniques.html" style="color:inherit;text-decoration:none;">Production</a></span></div>
+        <h1 id="articleTitle">How to Make an AI Cover Song (2026): The Honest, Rights-Aware Workflow</h1>
+        <div class="article-header-meta">
+          <div class="article-author"><div class="author-avatar" aria-hidden="true">MP</div><span class="author-name">The Music Production Wiki Team</span></div>
+          <span class="meta-divider"></span><span class="meta-item">Updated June 2026&nbsp;&middot;&nbsp;16 min read&nbsp;&middot;&nbsp;<span style="font-size:.78rem;color:var(--text-muted);">Facts verified June 29, 2026</span></span>
+        </div>
+      </header>
+      <div class="article-body">
+
+<p style="font-size:1.06rem;line-height:1.7;">An AI cover is one of the most-watched tricks on the internet right now &mdash; a familiar voice singing a song it never recorded &mdash; and almost every tutorial teaches you the buttons and waves away everything that matters. The buttons are the easy part. The part nobody teaches honestly is that an AI cover is two separate things glued together: a song that someone wrote, and a voice that belongs to someone. Get one of those wrong and your viral upload becomes a takedown, or worse. This guide teaches the actual workflow &mdash; from a clean vocal to a converted, mixed, postable track &mdash; <em>and</em> the two-clearance reality underneath it, so you ship something you can actually keep up.</p>
+
+<div class="highlight-box" style="margin-bottom:1.5rem;"><div class="highlight-box-label">Affiliate Disclosure</div><p>This article links to MPW tools and to third-party platforms, some of which are affiliate links. If you sign up through one we may earn a commission at no cost to you. It changes nothing about the method &mdash; the workflow, the honest tradeoffs and the caveats below are reported as they are, click or not.</p></div>
+
+<div class="quick-answer"><div class="quick-answer-label">Quick answer</div><p>To make an AI cover: start from a <strong>clean, dry vocal</strong> (an a cappella, a separated stem, or a guide vocal you sing), pick a <strong>route</strong> (a hosted tool like Kits.ai for speed and licensed voices, or open-source <strong>RVC</strong> for free, full control), <strong>convert on dry audio</strong> with the key matched to the model, then <strong>mix the output like a real vocal</strong> &mdash; subtractive EQ, de-essing, compression, pitch and timing repair, and reverb <em>last</em>. The catch nobody mentions: a cover is <strong>two rights</strong> &mdash; the composition (a cover/mechanical licence) and the voice (right of publicity) &mdash; so cloning <strong>your own</strong> voice on a song you have licensed is the genuinely safe, professional move.</p></div>
+
+<p><strong>One honesty note before the steps.</strong> AI voice tooling and the platform rules around it change almost monthly, so the tool details here were re-verified on June 29, 2026, and the prices and tiers will drift &mdash; treat them as a snapshot, not gospel, and confirm inside each app. The legal questions are genuinely unsettled in 2026; this piece does not pretend to resolve them, it points you to the dedicated explainers and keeps the focus on craft and on making informed choices.</p>
+
+<h2 id="what-is">What an AI Cover Actually Is &mdash; and Three Things People Conflate</h2>
+
+<p>Before you touch a tool, it is worth being precise about what an &ldquo;AI cover&rdquo; is, because the phrase is used loosely for three different technologies that behave differently, cost differently, and clear differently under the law. Lumping them together is exactly how people end up surprised by a takedown. The thing you almost certainly mean &mdash; a recognisable voice singing an existing song &mdash; is only one of the three, and it is the one with the most specific recipe.</p>
+
+<p>The first and the one that earns the name is <strong>voice conversion</strong>: you feed in an existing sung performance and the model re-sings it in a different voice, preserving the original melody, timing, phrasing and emotion while swapping out the timbre. This is what tools like RVC and Kits.ai do, and it is the literal definition of a cover &mdash; the same song, a different singer. The model is not inventing the performance; it is transferring it. Everything in this guide is built around this technology specifically, because it is what &ldquo;make an AI cover&rdquo; actually means.</p>
+
+<p>The second is <strong>full generation</strong> &mdash; tools like Suno and Udio that turn a text prompt into a whole song from nothing. That is a powerful thing, but it is not a cover; it produces an original (or original-ish) track, with a completely different rights story, and we cover its workflow separately in <a href="how-to-use-suno-ai.html">how to use Suno AI</a>. If you generate a brand-new song and call it a cover, you have confused two different processes. The third is <strong>text-to-speech</strong>, the ElevenLabs lane: you type words and the model speaks (not sings) them. It is brilliant for producer tags and spoken intros and useless for a melodic cover, because it has no performance to transfer.</p>
+
+<p>Why labour the distinction? Because the route, the inputs and the legal exposure all hinge on it. A voice conversion needs a source performance and a target voice; a generation needs neither; a TTS read needs a script. And as we are about to see, a cover&rsquo;s two-rights problem only exists because conversion sits on top of an existing song and an existing voice. Keep the three straight and the rest of the workflow falls into place.</p>
+
+<h2 id="two-objects">An AI Cover Is Two Rights, Glued Together</h2>
+
+<p>Here is the thesis the button-pushing guides skip, and it is the single most important thing on this page: a finished AI cover is two separate legal objects stuck together, and you have to clear &mdash; or deliberately not monetise &mdash; each one independently. The first object is the <strong>composition</strong>: the melody and lyrics that some songwriter and publisher own. The second is the <strong>voice</strong>: a real person&rsquo;s vocal identity. They are governed by completely different bodies of law, and satisfying one does nothing for the other. Most takedowns happen because someone cleared one object, or neither, and assumed that was the whole story.</p>
+
+<div class="diagram-wrap"><picture><source media="(max-width:900px)" srcset="../images/how-to-make-an-ai-cover-song-two-objects-clearance-m.png"><img src="../images/how-to-make-an-ai-cover-song-two-objects-clearance.png" alt="Diagram showing one AI cover splitting into two separate rights objects: the composition, which needs a mechanical or cover licence even when an AI sings it, and the voice or likeness, which is governed by right of publicity such as Tennessee's ELVIS Act - with a third lane showing that cloning your own voice means you already hold both objects" width="1040" height="538" loading="lazy"></picture></div>
+
+<p>Take the composition first. When you cover a copyrighted song &mdash; whoever or whatever sings it &mdash; you generally need a mechanical or &ldquo;cover&rdquo; licence to distribute it, because you are reproducing someone else&rsquo;s underlying work. That is true of a human cover band and it is equally true of an AI conversion; the technology that produced the vocal does not change the fact that the song belongs to someone. This is ordinary music-licensing territory, the same ground you would walk for any cover or remix, and we lay it out in <a href="music-copyright-fair-use-explained.html">music copyright and fair use</a> and <a href="how-to-legally-release-a-remix.html">how to legally release a remix</a>. The encouraging part is that it is a <em>solved</em> problem &mdash; cover licences exist and are routine.</p>
+
+<p>The voice is the newer and messier object. Imitating a real, identifiable artist&rsquo;s voice runs into the <strong>right of publicity</strong> &mdash; a person&rsquo;s right to control the commercial use of their identity, which several states have recently extended to explicitly cover AI-generated voice replicas. Tennessee&rsquo;s ELVIS Act, in force since mid-2024, was the first to add a simulated voice to that protection and even reaches the tools whose main purpose is unauthorised replication; California and other states have layered on their own statutes, while a federal law (the proposed NO FAKES Act) is still circulating but not passed as of 2026. The result is a patchwork, not a clean rule, and the high-profile &ldquo;fake Drake&rdquo; track that kicked off this whole debate is the cautionary tale. The deep dive lives in <a href="is-ai-voice-cloning-legal.html">is AI voice cloning legal</a>; the takeaway here is that imitating someone else&rsquo;s voice is the object most likely to get you into trouble.</p>
+
+<p>So the practical rule that falls out of the two-object model is simple: for each object, either clear it or do not monetise it. License the song; use a voice you are entitled to use. And the cleanest way to satisfy the second object entirely is the one the next section is about &mdash; use the one voice you already own.</p>
+
+<div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.28);border-left:4px solid #f59e0b;border-radius:8px;padding:1.25rem 1.5rem;margin:1.5rem 0;"><div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#f59e0b;margin-bottom:.4rem;">Not legal advice</div><p style="font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;">This guide maps the <em>shape</em> of the rights and risks so you can make informed choices &mdash; it is not legal advice, the law is unsettled and varies by state and country, and you should consult a qualified professional before you monetise a cover. For the detail, see our explainers on <a href="is-ai-voice-cloning-legal.html">whether AI voice cloning is legal</a> and <a href="music-copyright-fair-use-explained.html">music copyright and fair use</a>.</p></div>
+
+<h2 id="own-vs-others">Your Own Voice vs Someone Else&rsquo;s: The Honest Split</h2>
+
+<p>The two-object model splits every AI cover into a safe lane and a risky one, and being honest about which is which is the whole point of this guide. When you clone <strong>your own</strong> voice, you already hold the likeness object &mdash; nobody can claim you imitated them, because it is you &mdash; so the only thing left to clear is the composition. That is why cloning your own voice is the underrated professional move: it is the lane where the law is on your side, and it unlocks genuinely useful production work like stacking harmonies, doubling a lead, building quick demos in your own voice, or extending your range upward and downward without straining.</p>
+
+<p>The other lane &mdash; training or borrowing a model of a real, recognisable artist so they appear to sing something they never touched &mdash; is the one that goes viral, and it is also the one platforms pull and lawyers write about. It can be done, and people do it constantly, but it sits squarely on the contested voice object, it usually cannot be monetised cleanly, and the rules are tightening rather than loosening. We are not going to pretend that use does not exist; we are going to be straight that it is the fraught one, and that &ldquo;it&rsquo;s everywhere on TikTok&rdquo; is not the same as &ldquo;it&rsquo;s cleared.&rdquo;</p>
+
+<p>There is a sensible middle ground that often gets missed. Some hosted platforms maintain libraries of <strong>licensed</strong> artist and session voices &mdash; voices whose owners consented and are compensated &mdash; which lets you sing in a voice that is not yours <em>and</em> not a rights violation, because the platform did the clearing. Kits.ai built its business on exactly this ethically-licensed model, paying the artists whose voices it distributes rather than scraping them. If your goal is &ldquo;a voice that is not mine, released commercially,&rdquo; a licensed library is the clean path; a grey-market celebrity model from a community Discord is not.</p>
+
+<p>So the honest split is this: your own voice is safe and pro; a licensed library voice is clean and commercial; an unlicensed clone of a real artist is the viral, risky one. Decide which lane you are in <em>before</em> you start, because it changes which route, which model, and which platform make sense for the rest of the workflow.</p>
+
+<h2 id="inputs">Gather Your Inputs: A Clean, Dry Vocal</h2>
+
+<p>Voice conversion is only ever as good as the vocal you feed it, and this is where most amateur covers are quietly lost before any setting is touched. The model needs a <strong>clean, dry, isolated vocal</strong> &mdash; just the voice, with no instrumental behind it and no reverb, delay or effects on it. Garbage in, garbage out is not a clich&eacute; here; it is literal. A vocal that is smeared with reverb or bleeding into a beat produces a smeared, artifacted, robotic-sounding conversion, and no amount of clever settings downstream will fully rescue it.</p>
+
+<p>You have three honest ways to get that clean input. The best, if you can find it, is a real <strong>a cappella</strong> &mdash; an official isolated vocal of the song you are covering. The second, when you only have a finished stereo mix, is to <strong>separate</strong> the vocal yourself with an AI stem-separation tool; modern separation is genuinely good but not perfect, so expect a little bleed and a few artifacts, and clean them before converting. Our <a href="ai-stem-separation-guide.html">AI stem separation guide</a> walks through the tools and how clean the splits actually get. The third, and the one that sidesteps half the rights problem, is to <strong>sing the guide vocal yourself</strong>.</p>
+
+<p>If you are singing your own guide, record it the way you would record any serious vocal: a quiet room, a close mic, a consistent distance, and crucially <strong>no effects on the way in</strong> &mdash; print it bone dry. Our guide to <a href="how-to-record-vocals-home-studio.html">recording vocals in a home studio</a> covers the room and signal-chain basics. A dry, well-sung guide gives the conversion clean phrasing and timing to transfer, which is most of what makes a cover feel like a performance rather than a karaoke machine.</p>
+
+<p>Whichever input you use, hold one rule above the rest, because it is the one this whole craft turns on: the vocal you convert must be <strong>dry</strong>. Strip any reverb, delay, doubling or saturation before conversion. Effects belong at the end, after the voice has been swapped, for the simple reason that the model will otherwise treat the reverb tail as part of the voice and bake an unfixable smear into the output. We will come back to this rule twice more, because almost every &ldquo;why does mine sound robotic&rdquo; question traces back to ignoring it.</p>
+
+<h2 id="route">Pick Your Route: Hosted Tool or Open-Source RVC</h2>
+
+<p>There are two real ways to actually perform the conversion, and they are opposite trades. One is a hosted, no-code tool you run in a browser; the other is open-source software you install and run yourself. Neither is &ldquo;better&rdquo; in the abstract &mdash; they bind you in different places, and the right pick depends on whether your scarce resource is time, money, control, or a clean licence.</p>
+
+<div class="diagram-wrap"><picture><source media="(max-width:900px)" srcset="../images/how-to-make-an-ai-cover-song-route-split-m.png"><img src="../images/how-to-make-an-ai-cover-song-route-split.png" alt="Diagram comparing two routes for making an AI cover: a hosted no-code tool like Kits.ai (fast, free tier then around ten to thirty dollars a month, less control, built-in artist-licensed voices) versus open-source RVC (free and open-source, needs a GPU, hours to set up, total control, but you source the voice models yourself with grey-market licensing risk)" width="1040" height="502" loading="lazy"></picture></div>
+
+<p>The <strong>hosted no-code route</strong> &mdash; Kits.ai is the best-known, with Voicify, LALAL.AI and others alongside it &mdash; is the fast path. You upload your dry vocal, pick a voice, and convert, all in a browser with nothing to install. Kits.ai in particular leans on an <em>ethically-licensed</em> artist-voice library and supports cloning your own voice, which makes it one of the cleaner options for commercial release. Be honest about the limits, though: as of 2026 its free tier gives you a small allowance of conversion minutes but gates downloads, paid plans run from around ten to thirty dollars a month, and reviews are mixed &mdash; the voices can sound synthetic on some material, and the platform has steadily moved features behind paywalls. Try the free tier on your own audio before you pay, because if the voice sounds robotic on your material, a subscription will not fix it.</p>
+
+<p>The <strong>open-source route</strong> is RVC &mdash; Retrieval-based Voice Conversion, free and MIT-licensed, the engine behind a huge share of the AI covers you hear. It gives you total control over every parameter and costs nothing in licence fees, but it asks for a real NVIDIA GPU (or a Google Colab / Hugging Face session if you lack one), an hour or so of setup, and a willingness to manage models yourself. You can train a model from as little as five to ten minutes of clean target audio. The catch is the one the diagram flags in amber: the pre-trained celebrity models shared in community repositories carry no licence, so the legal and ethical exposure of using them sits with you, not with the free software.</p>
+
+<p>How to choose, in one line: if your scarce resource is <strong>time and a clean licence</strong>, use a hosted tool with your own or a licensed voice; if it is <strong>control and you already have a GPU</strong>, use RVC. For most producers making their first cover &mdash; especially of their own voice or a licensed one &mdash; a hosted tool is the faster, cleaner start, and you can graduate to RVC later when you want more control than presets allow.</p>
+
+<h2 id="workflow">The Conversion Workflow, Step by Step</h2>
+
+<p>The mechanics are similar whichever route you chose, because both are doing the same job: take your dry vocal, map it onto a target voice model, and render the result. What follows is the shape of the process; the exact buttons differ between Kits.ai&rsquo;s web interface and an RVC WebUI, but the decisions are the same, and understanding the decisions is what separates a clean conversion from a noisy one.</p>
+
+<ol class="action-steps">
+<li><strong>Upload the dry vocal.</strong> Feed in the clean, effect-free vocal you prepared. If the tool offers built-in separation or de-reverb, you can use it, but a vocal you cleaned yourself is almost always better.</li>
+<li><strong>Choose or clone the target voice.</strong> Pick a voice from the library, or upload training audio to clone one (your own, ideally). On RVC this means loading a <code>.pth</code> model and its index file.</li>
+<li><strong>Set the pitch and convert.</strong> Tell the model how far to transpose so your vocal lands in the target voice&rsquo;s natural range &mdash; this single setting fixes most &ldquo;chipmunk&rdquo; or &ldquo;growl&rdquo; results &mdash; then run the conversion and listen.</li>
+<li><strong>Iterate, then bounce.</strong> Adjust pitch, the retrieval/index ratio and any formant control, re-run until the artifacts are minimal, and export the raw converted vocal as a high-quality WAV. This raw output is your starting point, not your finished file.</li>
+</ol>
+
+<p>Two of those steps deserve a companion thought, because they are where conversions go wrong. The <strong>pitch / transpose</strong> setting matters more than any other: a voice model has a comfortable range, and if your guide sits an octave away from it the output will sound unnatural no matter how good the model is. Transpose your input so it lands in the model&rsquo;s sweet spot, and convert there. The <strong>index or retrieval ratio</strong> is the second dial worth understanding &mdash; it controls how strongly the model leans on the target voice&rsquo;s character versus your input&rsquo;s articulation; push it too high and you get the target&rsquo;s timbre but mushy diction, too low and you barely hear the target at all. Find the balance by ear on a short phrase before you render the whole song.</p>
+
+<p>And the rule again, because it lives at this stage too: the file you upload to convert must be dry. If you only remember one thing from this guide, remember that effects go on <em>after</em> the conversion, never before. With the raw converted vocal bounced, the job stops being &ldquo;AI&rdquo; and becomes ordinary production &mdash; which is good news, because that is a problem you already know how to solve.</p>
+
+<h2 id="make-real">Make It Sound Real, Not Robotic</h2>
+
+<p>A raw conversion almost never sounds finished. It tends to be a little harsh on top, slightly synthetic in the consonants, and occasionally glitchy on held notes or breaths &mdash; the tells that make listeners say &ldquo;that&rsquo;s AI.&rdquo; The good news is that every one of those is a known, fixable problem, and fixing them is the difference between a meme and a record. There are four moves, and they happen before you even open a mixer.</p>
+
+<p>First and most important, you already did it: you converted on <strong>dry</strong> audio. This is the rule restated because it is the single biggest cause of robotic output. A model fed reverb treats the tail as part of the voice and prints an artifact you cannot remove; a model fed a clean dry vocal has a clean voice to work with. Second, <strong>match the key and range</strong>. We covered transposing into the model&rsquo;s comfortable range during conversion, but it is worth re-checking here &mdash; if a section still sounds strained or thin, the input is probably sitting at the edge of the model&rsquo;s range, and a small pitch adjustment on that section will relax it.</p>
+
+<p>Third, <strong>fix formants</strong> where the size or gender of the target voice does not match your input. Most tools expose a formant-shift control; nudging it can turn an uncanny, &ldquo;wrong-sized&rdquo; vocal into a believable one without changing the pitch. It is a subtle dial, so move it in small steps and compare. Fourth, <strong>repair the artifacts</strong> &mdash; the clicks, the glitchy breaths, the smeared consonants. Comp the best take from a couple of conversion runs, edit out the obvious glitches, and gently retune or retime anything the model wandered on. This is exactly the editing you would do on a real vocal comp; the AI just gave you the raw takes.</p>
+
+<p>Do these four and the conversion stops fighting you. What is left is a vocal that behaves like any other recorded vocal &mdash; a little raw, a little harsh, but honest material ready for a mix. Which is precisely where it goes next.</p>
+
+<h2 id="mix">Mix the AI Vocal Like a Real Vocal</h2>
+
+<p>Here is the reframe that makes the whole back half of this easy: once it is converted and cleaned, an AI vocal is just a vocal. Every instinct and chain you would use on a sung take applies unchanged, and your DAW&rsquo;s stock plugins are entirely enough. The only thing to keep in mind is that AI conversions tend to arrive slightly harsh and slightly sibilant, so the chain leans subtractive first &mdash; you are mostly removing problems, not adding polish, until the very end.</p>
+
+<div class="diagram-wrap"><picture><source media="(max-width:900px)" srcset="../images/how-to-make-an-ai-cover-song-vocal-chain-m.png"><img src="../images/how-to-make-an-ai-cover-song-vocal-chain.png" alt="Diagram of the AI-cover signal chain shown left to right: a dry vocal with no reverb or effects yet, into the voice-conversion model, to a raw AI output that is usable but harsh, then EQ and de-essing, then compression and pitch or time correction, and finally reverb and delay into the bus - graded loose to tight with the dry-input rule flagged" width="1180" height="380" loading="lazy"></picture></div>
+
+<p>Work the chain left to right, loose to tight. Start with <strong>subtractive EQ</strong>: high-pass away any rumble, then sweep for the glassy, fatiguing band that AI vocals love to park in &mdash; usually somewhere in the 2 to 5 kHz region &mdash; and cut it a couple of dB, preferably with a dynamic EQ that only acts on the spikes. Follow with <strong>de-essing</strong> to control the sibilance the conversion tends to exaggerate. Our <a href="how-to-mix-vocals.html">how to mix vocals</a> guide covers the full chain, the <a href="/bible/de-esser.html">de-esser entry in the Bible</a> explains the tool, and our <a href="/tools/vocal-chain-builder.html">vocal chain builder</a> can lay out a starting chain for you.</p>
+
+<p>Next comes <strong>compression</strong> to even out the level so the vocal sits consistently in the track, followed by any <strong>pitch and timing</strong> repair the conversion still needs &mdash; tighten stray notes and align the phrasing, leaning on a reference like our <a href="/tools/pitch-correction-reference.html">pitch-correction reference</a> if you are unsure how hard to push it. Only now, with the voice clean and controlled, do you add <strong>space</strong>: reverb and delay, last in the chain, to place the vocal in a believable room. Our guide to <a href="how-to-use-vocal-effects.html">using vocal effects</a> covers how to do this tastefully. Adding reverb here, at the end, is the whole reason we insisted on a dry input at the start &mdash; you keep complete control of the space because you, not the model, decided on it.</p>
+
+<p>That is the entire mix: remove the harshness and sibilance, control the dynamics, fix the pitch, then place it in a space. Nothing exotic, no secret plugin &mdash; just the ordinary craft of vocal mixing applied to a vocal that happens to have come from a model instead of a microphone. Get this right and the &ldquo;AI&rdquo; tell disappears, because what people hear is a well-mixed voice.</p>
+
+<h2 id="clone-own">Clone Your Own Voice Properly</h2>
+
+<p>If the safe, professional lane is cloning your own voice, then it is worth doing it well, because a good personal voice model is a tool you will reuse on every project &mdash; for harmonies, doubles, demos and range extension &mdash; long after this one cover is done. The quality of that model is decided almost entirely by the dataset you train it on, not by any clever setting, so this is where to spend your care.</p>
+
+<p>A good dataset is <strong>clean, dry, consistent and varied</strong>. Record several minutes of your voice &mdash; more is better, and hosted tools can start from surprisingly little while a robust model wants ten minutes or more &mdash; in a quiet room, on the same microphone at the same distance throughout, with absolutely no reverb or effects printed. Cover your full range: sing low and high, loud and soft, sustained notes and quick phrasing, so the model learns how your voice behaves everywhere rather than in one narrow band. Consistency of capture and variety of performance are not in tension; you want the <em>conditions</em> identical and the <em>content</em> diverse.</p>
+
+<p>The common mistakes are predictable and worth naming. Training on a noisy or reverberant dataset teaches the model your room instead of your voice; training on too narrow a range gives you a model that sounds great on one phrase and falls apart on the next; training on processed audio bakes the processing into the clone permanently. Strip it all back to a dry, clean, full-range capture and the model will reward you. If you want the full recording discipline behind a clean capture, our <a href="how-to-record-vocals-home-studio.html">home-studio vocal recording guide</a> is the companion piece.</p>
+
+<p>Once you have a solid personal model, the creative uses open up fast. Stack three conversions of a line for an instant harmony group; double your own lead to thicken it; sketch a topline in your own voice before you can sing it cleanly; reach a note that is currently outside your range. None of it raises a rights question, because the voice is yours &mdash; which is exactly why this is the lane worth investing in.</p>
+
+<h2 id="posting">Where You Can &mdash; and Can&rsquo;t &mdash; Post It</h2>
+
+<p>This is the section that decides whether your cover survives contact with the internet, and it carries a hard truth: <strong>platform policy, not the law alone, is the binding gate</strong>, and it shifts roughly every quarter. Something can be arguably legal and still get pulled because a platform&rsquo;s terms forbid it; something can clear a platform today and trip a new rule next month. So the durable skill is not memorising the current rules &mdash; it is knowing to check each platform before every release, and understanding the shape of what they are policing.</p>
+
+<p>On <strong>streaming and distribution</strong>, the pattern in 2026 is consistent even as the details move. Spotify&rsquo;s impersonation policy allows a real artist&rsquo;s voice only with that artist&rsquo;s authorisation, and an industry-wide push (via DDEX) now lets you disclose AI involvement in the credits; Apple Music tags AI use and quietly keeps it out of editorial playlists; Deezer demonetises fully-AI tracks tied to fraud. Distributors diverge sharply &mdash; CD Baby refuses fully-AI material outright, others have restricted or banned it, and the ones that accept it require that you own the rights and disclose AI use honestly, on pain of having your whole account pulled. An own-voice cover of a licensed song, disclosed truthfully, is the clean case; our <a href="how-to-release-ai-music.html">how to release AI music</a> walks the compliant path and <a href="is-ai-music-legal.html">is AI music legal</a> covers the wider weather.</p>
+
+<p><strong>YouTube</strong> deserves its own warning, because it is the strictest of the big platforms on AI voices. Its systems are aggressive enough that even a voice that merely <em>resembles</em> a known artist &mdash; not an exact clone &mdash; can trigger a takedown or a Content ID dispute, and a covered composition can collide with the original rights-holder&rsquo;s claim regardless of the voice. The practical advice that follows: do not enable Content ID on a cover (you do not own the composition), expect monetisation channels like Content ID, TikTok and Meta to be the first to restrict AI material, and treat a celebrity-voice upload as something that can vanish at any time.</p>
+
+<p>On <strong>monetisation</strong>, the two-object model returns one last time. To earn from a cover cleanly you need both objects handled &mdash; the composition licensed and the voice one you are entitled to use &mdash; plus honest disclosure wherever the platform asks for it. The human work you add (your arrangement, your mix, your own singing) is also the part that can carry authorship, which is why your-own-voice covers are the ones that can actually become a monetisable catalogue; the details are in <a href="can-you-copyright-ai-music.html">can you copyright AI music</a> and <a href="how-to-make-money-with-ai-music.html">how to make money with AI music</a>. Clear both objects, disclose honestly, and you have a cover you can post, keep up, and stand behind.</p>
+
+<h2 id="exercises">Make Your First Cover: 3 Exercises</h2>
+
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--beginner">Beginner</span><span class="exercise-title">Convert a guide vocal you sing yourself</span></div>
+<ol>
+<li>Pick a song you have the right to cover (public-domain, your own, or one you have licensed) and record a dry guide vocal &mdash; close mic, quiet room, no effects.</li>
+<li>Run it through a hosted tool&rsquo;s free tier, choosing a licensed library voice, and transpose so your guide lands in that voice&rsquo;s comfortable range.</li>
+<li>Bounce the raw conversion and just listen for the tells &mdash; harshness, sibilance, glitches &mdash; without fixing anything yet. Name what you hear.</li>
+</ol></div>
+
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--intermediate">Intermediate</span><span class="exercise-title">A/B dry-vs-wet before conversion</span></div>
+<ol>
+<li>Take one dry vocal and make a second copy with reverb and delay printed onto it.</li>
+<li>Convert both through the same voice model with identical settings.</li>
+<li>Compare the outputs side by side and write down exactly how the wet-input version degraded. This is the lesson that makes the dry-input rule stick for good.</li>
+</ol></div>
+
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--advanced">Advanced</span><span class="exercise-title">Clone your own voice and mix a finished cover</span></div>
+<ol>
+<li>Record a clean, dry, full-range dataset of your own voice and train a personal model (hosted or RVC).</li>
+<li>Convert your guide with it, then run the full mix chain &mdash; subtractive EQ, de-ess, compression, pitch and timing repair, reverb last &mdash; until the AI tell is gone.</li>
+<li>Document every step you took (song licence, voice = yours, tools, mix decisions) in one file as your provenance and authorship record before you consider posting it.</li>
+</ol></div>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+<div class="faq-accordion">
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Are AI cover songs legal?</span></div></div>
+<div class="faq-accordion-a"><p>It depends on whose voice and whose song. An AI cover is really two rights stacked together: the underlying composition (the melody and lyrics someone wrote) and the voice or likeness being imitated. Covering a copyrighted song generally needs a mechanical or cover licence even when an AI sings it, and imitating a real artist's voice can run into right-of-publicity laws such as Tennessee's ELVIS Act and similar state statutes. Cloning your own voice to sing a song you have licensed is the cleanest case. None of this is legal advice - it is the shape of the risk - so check our dedicated explainers and a professional before you monetise.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Can I make an AI cover for free?</span></div></div>
+<div class="faq-accordion-a"><p>Yes, technically. Open-source RVC (Retrieval-based Voice Conversion) is free and MIT-licensed, and hosted tools like Kits.ai have free tiers. But free hides costs: RVC needs an NVIDIA GPU (or a Google Colab or Hugging Face session) and an hour of setup, and hosted free tiers usually cap conversion minutes and lock downloads behind a paid plan. The bigger hidden cost is legal - the free pre-trained celebrity voice models traded in communities carry no licence, and that exposure rides with you, not the tool.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Is Kits.ai or RVC better for AI covers?</span></div></div>
+<div class="faq-accordion-a"><p>They solve different problems. Kits.ai (and similar hosted tools) is faster, runs in a browser, and ships an ethically-licensed artist-voice library plus your-own-voice cloning, which makes commercial release cleaner - though quality varies by source material and the free tier is download-limited. RVC gives you total control and is free, but you install it, train or download models, and accept that model licensing is on you. Pick hosted if you value speed and a clean licence; pick RVC if you value control and already have a GPU.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">How do I make my AI cover not sound robotic?</span></div></div>
+<div class="faq-accordion-a"><p>Three moves fix most of it. First, convert on dry, clean audio - never feed reverb, delay or effects into the model, because it bakes the artifacts in; add space afterwards. Second, convert in the voice model's comfortable range and match the key, pitching your guide vocal if needed. Third, mix the output like a real vocal: subtractive EQ to tame the 2 to 5 kHz harshness, de-essing, gentle compression, then any pitch or timing repair, and only then reverb and delay.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Can I clone my own voice?</span></div></div>
+<div class="faq-accordion-a"><p>Yes, and it is the underrated professional move. Cloning your own voice means you already hold the likeness, so you sidestep the thorniest rights questions, and it is genuinely useful for stacking harmonies, doubling a lead, building demos, or extending your range. Quality comes from the dataset: feed the model several minutes of clean, dry, consistently-recorded audio that covers your full range, with no reverb or background noise. More good data beats a clever setting every time.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Do I need a clean vocal to start?</span></div></div>
+<div class="faq-accordion-a"><p>You need a dry, isolated vocal - either a true a cappella or a guide vocal you sing yourself. Conversion is only as faithful as its input: a vocal smeared with reverb or buried under a beat produces a smeared, artifacted clone. If all you have is a finished stereo track, run it through a stem-separation tool first to pull the vocal out, accepting some bleed and artifacts, then clean it before you convert.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Will my AI cover get taken down on Spotify or YouTube?</span></div></div>
+<div class="faq-accordion-a"><p>Platform policy - not the law alone - is the binding gate, and it shifts often. As of 2026 Spotify only allows vocal impersonation of a real artist with that artist's authorisation, distributors like CD Baby block fully-AI tracks while others require you to own the rights and disclose AI use, and YouTube is strict enough that even voice-style similarity can trigger a takedown or Content ID dispute. An own-voice cover of a song you have licensed, disclosed honestly, is the postable case; an unlicensed celebrity impression is the one that gets pulled.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Does an AI cover count as my own song?</span></div></div>
+<div class="faq-accordion-a"><p>Partly, and only the human parts. Under the current US human-authorship standard a purely AI-generated element is not registrable, but the composition you wrote or licensed, the arrangement, the mix decisions and any singing you actually did are yours and can carry authorship. The more of your own creative work you layer on - your own voice, your own arrangement, your own production - the more the track is genuinely yours, in both the legal and the artistic sense. This area is unsettled in 2026, so we defer specifics to our dedicated copyright explainers.</p></div></div>
+</div>
+
+      </div>
+<section class="related-section" aria-labelledby="relatedHeading">
+<h2 id="relatedHeading" style="font-size:1.35rem;margin-bottom:1.25rem;">Related Articles</h2>
+<div class="related-grid">
+<a href="how-to-finish-ai-songs-in-your-daw.html" class="related-card"><div class="related-card-tag">AI Music</div><h3 class="related-card-title">How to Finish AI Songs in Your DAW</h3><p class="related-card-desc">Once the cover is converted, this is the finishing workflow that turns a raw output into a real record.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-mix-vocals.html" class="related-card"><div class="related-card-tag">Mixing</div><h3 class="related-card-title">How to Mix Vocals</h3><p class="related-card-desc">The full vocal-mixing chain &mdash; EQ, de-essing, compression and space &mdash; that your AI vocal needs just like a sung one.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-use-vocal-effects.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">How to Use Vocal Effects</h3><p class="related-card-desc">Reverb, delay and modulation done last and done right, so the cover sits in a space instead of sounding pasted on.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="is-ai-voice-cloning-legal.html" class="related-card"><div class="related-card-tag">AI Music</div><h3 class="related-card-title">Is AI Voice Cloning Legal?</h3><p class="related-card-desc">The deep dive on right of publicity, the ELVIS Act and where the line sits between your voice and someone else&rsquo;s.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-release-ai-music.html" class="related-card"><div class="related-card-tag">AI Music</div><h3 class="related-card-title">How to Release AI Music</h3><p class="related-card-desc">The compliant release path: disclosure, ownership and the platform rules that decide whether a cover stays live.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="ai-stem-separation-guide.html" class="related-card"><div class="related-card-tag">AI Music</div><h3 class="related-card-title">AI Stem Separation Guide</h3><p class="related-card-desc">How to pull a clean, dry vocal out of a finished track when an a cappella is all you have to start from.</p><span class="related-card-meta">Read article &rarr;</span></a>
+</div>
+</section>
+    </article>
+    <aside aria-label="Article sidebar">
+      <div class="sidebar-widget toc-widget" aria-labelledby="tocHeading">
+        <div class="sidebar-widget-header"><h2 class="sidebar-widget-title" id="tocHeading">In This Article</h2></div>
+        <div class="sidebar-widget-body"><ul class="toc-list"><li><a href="#what-is">What an AI Cover Actually Is</a></li><li><a href="#two-objects">Two Rights, Glued Together</a></li><li><a href="#own-vs-others">Your Voice vs Someone Else&rsquo;s</a></li><li><a href="#inputs">Gather a Clean, Dry Vocal</a></li><li><a href="#route">Hosted Tool or Open-Source RVC</a></li><li><a href="#workflow">The Conversion Workflow</a></li><li><a href="#make-real">Make It Sound Real</a></li><li><a href="#mix">Mix It Like a Real Vocal</a></li><li><a href="#clone-own">Clone Your Own Voice</a></li><li><a href="#posting">Where You Can Post It</a></li><li><a href="#exercises">3 Exercises</a></li><li><a href="#faq">Frequently Asked Questions</a></li></ul></div>
+      </div>
+      <div class="sidebar-widget" style="background:var(--bg-void);border-color:var(--border-default);">
+        <div class="sidebar-widget-body" style="padding:1.5rem;">
+          <p style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.5rem;">Newsletter</p>
+          <h3 style="font-family:var(--font-display);color:var(--text-primary);font-size:1.1rem;margin-bottom:.5rem;">The Producer&rsquo;s Briefing</h3>
+          <p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:1rem;line-height:1.55;">Weekly tips, gear news, and technique guides. Free.</p>
+          <form class="newsletter-form-js" style="display:flex;flex-direction:column;gap:.5rem;" novalidate>
+            <input type="email" name="email" class="form-input" placeholder="Your email" required />
+            <button type="submit" class="btn-newsletter" style="font-size:.82rem;padding:.65rem 1rem;">Subscribe Free</button>
+          </form>
+        </div>
+      <div class="sidebar-widget" style="margin-top:1.5rem;">
+        <div class="sidebar-widget-header" style="text-align:center;">
+          <h2 class="sidebar-widget-title">Related Articles</h2>
+        </div>
+        <div class="sidebar-widget-body" style="padding:1rem;">
+<ul style="list-style:none;padding:0;margin:0;text-align:center;"><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="is-ai-voice-cloning-legal.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">Is AI Voice Cloning Legal?</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">AI Music</span></li><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="how-to-mix-vocals.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">How to Mix Vocals</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Mixing</span></li><li style="padding:.6rem 0;"><a href="how-to-release-ai-music.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">How to Release AI Music</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">AI Music</span></li></ul>
+        </div>
+      </div>
+      </div>
+    </aside>
+
+  </div>
+</main>
+<section class="newsletter-section" id="newsletter" aria-labelledby="newsletterHeading">
+  <div class="container">
+    <div class="newsletter-inner">
+      <div class="newsletter-content">
+        <p class="newsletter-label">Newsletter</p>
+        <h2 id="newsletterHeading" class="newsletter-title">The Producer's <em>Briefing</em></h2>
+        <p class="newsletter-desc">Weekly techniques, gear news, and music business insights. Free.</p>
+      </div>
+      <div class="newsletter-form-wrap">
+        <form class="newsletter-form-js" novalidate>
+          <input type="email" name="email" class="form-input" placeholder="Your email address" required />
+          <button type="submit" class="btn-newsletter">Subscribe Free</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<footer class="site-footer" role="contentinfo">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="../index.html" class="site-logo"><span class="logo-wordmark">Music<span>Production</span>Wiki</span><span class="logo-tagline">The Producer's Reference</span></a>
+    </div>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <div class="footer-col">
+        <h3 class="footer-col-title">Categories</h3>
+        <ul>
+          <li><a href="../categories/reviews.html">Reviews</a></li>
+          <li><a href="../categories/comparisons.html">Comparisons</a></li>
+          <li><a href="../categories/ai-music.html">AI Music</a></li>
+          <li><a href="../categories/daws.html">DAWs</a></li>
+          <li><a href="../categories/plugins.html">Plugins</a></li>
+          <li><a href="../categories/hardware.html">Gear</a></li>
+          <li><a href="../categories/techniques.html">Techniques</a></li>
+          <li><a href="../categories/music-business.html">Music Business</a></li>
+          <li><a href="../categories/glossary.html">Glossary</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">Popular</h3>
+        <ul>
+          <li><a href="../articles/suno-vs-udio.html">Suno vs Udio</a></li>
+          <li><a href="../articles/best-daw-for-beginners.html">Best DAW for Beginners</a></li>
+          <li><a href="../articles/focusrite-scarlett-2i2-gen-4-review.html">Scarlett 2i2 Review</a></li>
+          <li><a href="../articles/sidechain-compression-guide.html">Sidechain Compression</a></li>
+          <li><a href="../articles/best-compressor-plugins.html">Best Compressor Plugins</a></li>
+          <li><a href="../articles/what-is-gain-staging.html">What Is Gain Staging</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">About</h3>
+        <ul>
+          <li><a href="../about.html">About MPW</a></li>
+          <li><a href="../about.html#team">Our Team</a></li>
+          <li><a href="../about.html#methodology">Review Methodology</a></li>
+          <li><a href="../about.html#affiliate">Affiliate Disclosure</a></li>
+          <li><a href="../about.html#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="footer-bottom"><div class="container"><p>© <span id="copyrightYear"></span> MusicProductionWiki.com. All rights reserved. Content by the Music Production Wiki Team.</p></div></div>
+</footer>
+<script src="../js/main.js"></script>
+<script>document.getElementById('copyrightYear').textContent = new Date().getFullYear();</script>
+
+<button id="mpwBackTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  aria-label="Back to top"
+  style="position:fixed;bottom:1.5rem;right:1.5rem;width:2.5rem;height:2.5rem;border-radius:50%;
+         background:var(--teal);color:#000;border:none;cursor:pointer;display:none;
+         align-items:center;justify-content:center;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3);">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <polyline points="18 15 12 9 6 15"/>
+  </svg>
+</button>
+<script>
+(function(){
+  var btn=document.getElementById('mpwBackTop');
+  var bar=document.getElementById('readingProgress');
+  var art=document.querySelector('.article-body');
+  window.addEventListener('scroll',function(){
+    var st=window.scrollY||document.documentElement.scrollTop;
+    btn.style.display=st>400?'flex':'none';
+    if(bar&&art){
+      var h=art.getBoundingClientRect().height;
+      var top=art.getBoundingClientRect().top+st;
+      var pct=Math.min(100,Math.max(0,(st-top+window.innerHeight)*100/h));
+      bar.style.width=pct+'%';
+      bar.setAttribute('aria-valuenow',Math.round(pct));
+    }
+  });
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<!-- MPW universal search: one overlay, one Fuse index (/search-index.json) -->
+<div class="usearch" id="usearch" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="usearch-box">
+    <div class="usearch-top">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input id="usearchInput" type="text" placeholder="Search tools, articles, the Bible…" autocomplete="off">
+      <kbd>esc</kbd>
+    </div>
+    <div class="usearch-results" id="usearchResults"></div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
+<script>
+(function(){
+  // === production parity: lazy-load index on first open, build Fuse once ===
+  var data=null, fuse=null;
+  var overlay=document.getElementById('usearch');
+  var input=document.getElementById('usearchInput');
+  var box=document.getElementById('usearchResults');
+  var sel=-1, current=[];
+  // article slugs are bare; bible/ and tools/ slugs carry their prefix (verified vs live search-index.json)
+  function urlFor(s){ return (s.indexOf('bible/')===0||s.indexOf('tools/')===0) ? '/'+s : '/articles/'+s; }
+
+  function buildFuse(arr){
+    data=arr;
+    fuse=new Fuse(data,{keys:['title','category','description'],threshold:0.34,ignoreLocation:true,minMatchCharLength:2});
+  }
+  function ensureIndex(cb){
+    if(fuse){cb();return;}
+    // PRODUCTION: one shared index, lazy-loaded on first open.
+    fetch('/search-index.json').then(function(r){return r.json();}).then(function(arr){
+      buildFuse(arr); cb();
+    }).catch(function(){ box.textContent='Search failed to load.'; });
+  }
+
+  function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  function render(results){
+    current=results;
+    while(box.firstChild) box.removeChild(box.firstChild);   // no innerHTML
+    if(!input.value.trim()){ var p=document.createElement('div'); p.className='usearch-empty'; p.textContent='Start typing to search everything.'; box.appendChild(p); return; }
+    if(!results.length){ var n=document.createElement('div'); n.className='usearch-empty'; n.textContent='No results for "'+input.value+'".'; box.appendChild(n); return; }
+    results.slice(0,12).forEach(function(r,i){
+      var e=r.item||r;
+      var a=document.createElement('a'); a.href=urlFor(e.slug); if(i===sel)a.className='sel';
+      var top=document.createElement('div'); top.className='ur-top';
+      var t=document.createElement('span'); t.className='ur-title'; t.textContent=e.title;
+      var c=document.createElement('span'); c.className='ur-cat'; c.setAttribute('data-c',e.category||''); c.textContent=e.category||'';
+      top.appendChild(t); top.appendChild(c); a.appendChild(top);
+      if(e.description){ var d=document.createElement('div'); d.className='ur-desc'; d.textContent=e.description; a.appendChild(d); }
+      box.appendChild(a);
+    });
+  }
+
+  function open(q){ ensureIndex(function(){ overlay.classList.add('open'); input.focus(); if(q!=null){input.value=q;} sel=-1; render(input.value?fuse.search(input.value):[]); }); }
+  function close(){ overlay.classList.remove('open'); }
+
+  // wire every nav's search button to the shared overlay
+  document.querySelectorAll('[data-nav-search]').forEach(function(b){ b.addEventListener('click',function(){open(null);}); });
+  input.addEventListener('input',function(){ sel=-1; render(fuse?fuse.search(input.value):[]); });
+  input.addEventListener('keydown',function(e){
+    if(e.key==='Escape')close();
+    else if(e.key==='ArrowDown'){e.preventDefault(); sel=Math.min(sel+1,Math.min(current.length,12)-1); render(current);}
+    else if(e.key==='ArrowUp'){e.preventDefault(); sel=Math.max(sel-1,0); render(current);}
+    else if(e.key==='Enter'&&current[sel]){ var e2=current[sel].item||current[sel]; location.href=urlFor(e2.slug); }
+  });
+  overlay.addEventListener('click',function(e){ if(e.target===overlay)close(); });
+  document.addEventListener('keydown',function(e){ if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();open(null);} });
+})();
+</script>
+<script id="toc-bar-js">
+(function(){
+  var body=document.querySelector('.article-body');
+  var track=document.getElementById('tocBarTrack');
+  if(!body||!track)return;
+  var heads=[].slice.call(body.querySelectorAll('h2[id]'));
+  if(!heads.length)return;
+  heads.forEach(function(h){
+    var a=document.createElement('a');a.href='#'+h.id;
+    var t=h.textContent.trim();var i=t.indexOf(':');if(i>0)t=t.slice(0,i);
+    a.textContent=t;track.appendChild(a);
+  });
+  var links=[].slice.call(track.querySelectorAll('a'));
+  function onScroll(){
+    var y=window.scrollY+130,cur=heads[0].id;
+    heads.forEach(function(h){if(h.offsetTop<=y)cur=h.id;});
+    links.forEach(function(l){var on=l.getAttribute('href')==='#'+cur;l.classList.toggle('active',on);
+      if(on)l.scrollIntoView({inline:'center',block:'nearest'});});
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+})();
+</script>
+<script>
+function mpwFaqToggle(el){
+  var answer = el.nextElementSibling;
+  if(!answer || !answer.classList.contains('faq-accordion-a')) return;
+  var isOpen = answer.classList.contains('open');
+  document.querySelectorAll('.faq-accordion-a.open').forEach(function(a){
+    a.classList.remove('open');
+    var q = a.previousElementSibling;
+    if(q){ var ic = q.querySelector('.faq-accordion-icon, .faq-plus'); if(ic) ic.classList.remove('open'); }
+  });
+  if(!isOpen){
+    answer.classList.add('open');
+    var icon = el.querySelector('.faq-accordion-icon, .faq-plus');
+    if(icon) icon.classList.add('open');
+  }
+}
+</script>
+<style>.faq-plus.open{transform:rotate(45deg);transition:transform .2s ease}</style>
+</body>
+
+</html>
