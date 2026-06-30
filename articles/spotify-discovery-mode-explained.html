@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Spotify Discovery Mode trades 30% of royalties on Radio, Autoplay and Mixes for a higher slot. The break-even math, eligibility traps, and who should skip it." />
+  <title>Spotify Discovery Mode Explained (2026): The 30% Trade-Off Math</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <style>
+    #readingProgress{position:fixed;top:0;left:0;height:3px;background:var(--teal);width:0%;z-index:200;transition:width 0.1s linear;}
+    .quick-answer{background:linear-gradient(135deg,rgba(0,212,168,0.08),rgba(167,139,250,0.06));border:1px solid rgba(0,212,168,0.3);border-left:4px solid var(--teal);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .quick-answer-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.6rem;}
+    .quick-answer p{font-size:1rem;line-height:1.65;color:var(--text-primary);margin:0;}
+    .skill-badge{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .6rem;border-radius:4px;margin-left:.6rem;vertical-align:middle;position:relative;top:-2px;}
+    .skill-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .skill-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .skill-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .settings-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .settings-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .settings-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .settings-table tr:last-child td{border-bottom:none;}
+    .settings-table tr:hover td{background:var(--bg-surface);}
+    .settings-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .settings-table .mono{font-family:var(--font-mono);font-size:.82rem;color:var(--teal);}
+    .mistake-box{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-left:4px solid #ef4444;border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .mistake-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ef4444;margin-bottom:.4rem;}
+    .mistake-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference{border-left:3px solid var(--purple);padding:.75rem 1.25rem;margin:1.25rem 0;background:rgba(167,139,250,0.05);border-radius:0 6px 6px 0;}
+    .pro-reference-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.35rem;}
+    .pro-reference p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference strong{color:var(--text-primary);}
+    .listening-prescription{background:var(--bg-void);border:1px solid var(--border-default);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;position:relative;}
+    .listening-prescription::before{content:'🎧';position:absolute;top:-14px;left:1.5rem;background:var(--bg-void);padding:0 .4rem;font-size:1.1rem;}
+    .listening-prescription-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:.75rem;}
+    .listening-prescription p{font-size:.9rem;line-height:1.7;color:var(--text-secondary);margin:0 0 .5rem;}
+    .listening-record{font-weight:600;color:var(--text-primary);}
+    .decision-framework{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .decision-framework-title{font-family:var(--font-display);font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:1rem;}
+    .decision-item{display:flex;gap:1rem;padding:.65rem 0;border-bottom:1px solid var(--border-subtle);font-size:.88rem;line-height:1.55;}
+    .decision-item:last-child{border-bottom:none;}
+    .decision-if{color:var(--text-muted);font-style:italic;min-width:2rem;}
+    .decision-then{color:var(--text-primary);}
+    .decision-then strong{color:var(--teal);}
+    .exercise-block{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.25rem 0;}
+    .exercise-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;}
+    .exercise-badge{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .7rem;border-radius:4px;}
+    .exercise-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .exercise-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .exercise-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .exercise-title{font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text-primary);}
+    .exercise-block ol{margin:0;padding-left:1.25rem;color:var(--text-secondary);font-size:.88rem;line-height:1.7;}
+    .exercise-block ol li{margin-bottom:.4rem;}
+    .version-line{font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:4px;padding:.4rem .75rem;margin:.75rem 0 1.5rem;display:inline-block;}
+    .go-deeper{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:10px;padding:1.75rem;margin:2.5rem 0;}
+    .go-deeper-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text-primary);margin-bottom:1.25rem;}
+    .go-deeper-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;}
+    .go-deeper-item{background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:7px;padding:1rem 1.1rem;}
+    .go-deeper-item-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.35rem;}
+    .go-deeper-item a{font-size:.88rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;}
+    .go-deeper-item p{font-size:.78rem;color:var(--text-muted);margin:.3rem 0 0;}
+    .citation{font-size:.78rem;color:var(--text-muted);font-style:italic;margin-top:.25rem;}
+    .diagram-wrap{margin:1.75rem 0;background:var(--bg-void);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem;overflow-x:auto;}
+    .diagram-caption{font-size:.78rem;color:var(--text-muted);text-align:center;margin-top:.75rem;font-style:italic;}
+    .highlight-box{background:rgba(0,212,168,0.06);border:1px solid rgba(0,212,168,0.2);border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .highlight-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.4rem;}
+    .highlight-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin:1.5rem 0;}
+    .stat-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem;text-align:center;}
+    .stat-number{font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--teal);display:block;}
+    .stat-label{font-size:.78rem;color:var(--text-secondary);margin-top:.25rem;}
+    .action-steps{counter-reset:steps;list-style:none;padding:0;margin:1.5rem 0;}
+    .action-steps li{counter-increment:steps;position:relative;padding:.85rem 0 .85rem 2.6rem;border-bottom:1px solid var(--border-subtle);font-size:.9rem;color:var(--text-secondary);line-height:1.6;}
+    .action-steps li:last-child{border-bottom:none;}
+    .action-steps li::before{content:counter(steps);position:absolute;left:0;top:.9rem;background:var(--teal);color:#000;font-weight:800;font-size:.75rem;width:1.6rem;height:1.6rem;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+    .genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:1.5rem 0;}
+    .genre-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem 1.25rem;}
+    .genre-card-name{font-family:var(--font-display);font-size:.85rem;font-weight:700;color:var(--teal);margin-bottom:.4rem;}
+    .genre-card p{font-size:.82rem;color:var(--text-secondary);line-height:1.55;margin:0;}
+    .comparison-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .comparison-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .comparison-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .comparison-table tr:last-child td{border-bottom:none;}
+    .comparison-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .affiliate-cta{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,212,168,0.1);border:1px solid rgba(0,212,168,0.25);color:var(--teal);font-size:.82rem;font-weight:600;padding:.45rem .9rem;border-radius:6px;text-decoration:none;}
+
+    .faq-accordion{margin:1.75rem 0;}
+    .faq-accordion-item{background:var(--bg-surface);border:1px solid var(--border-subtle);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;margin-bottom:8px;overflow:hidden;}
+    .faq-accordion-q{display:flex;align-items:flex-start;padding:1rem 1.25rem;cursor:pointer;gap:.75rem;}
+    .faq-accordion-q:hover{background:var(--bg-elevated);}
+    .faq-accordion-icon{width:16px;height:16px;flex-shrink:0;margin-top:3px;color:var(--purple);transition:transform .2s ease;}
+    .faq-accordion-icon.open{transform:rotate(45deg);}
+    .faq-accordion-q-inner{display:flex;flex-direction:column;}
+    .faq-accordion-label{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin-bottom:.2rem;}
+    .faq-accordion-q-text{font-size:.92rem;font-weight:600;color:var(--text-primary);line-height:1.45;font-family:var(--font-display);}
+    .faq-accordion-a{display:none;padding:0 1.25rem 1rem 2.75rem;font-size:.88rem;color:var(--text-secondary);line-height:1.7;border-top:1px solid var(--border-subtle);padding-top:.85rem;}
+    .faq-accordion-a.open{display:block;}
+    .scorecard-table{display:table;table-layout:fixed;width:100%;border-collapse:collapse;font-size:.88rem;margin:1.5rem 0;border:1px solid var(--border-default);border-radius:8px;overflow:hidden;}
+    .scorecard-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;padding:.7rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .scorecard-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;vertical-align:top;}
+    .scorecard-table tr:last-child td{border-bottom:none;}
+    .scorecard-table td:first-child{color:var(--text-primary);font-weight:600;}
+    .scorecard-table .sc-num{font-family:var(--font-mono);font-weight:600;color:var(--teal);text-align:center;}
+    .scorecard-table .sc-amber{color:var(--purple);}
+    .scorecard-table .sc-overall td{background:rgba(0,212,168,0.06);font-weight:700;}
+    .vs-verdict{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.1rem 0 .4rem;}
+    @media(max-width:560px){.vs-verdict{grid-template-columns:1fr;}}
+    .vs-card{background:var(--bg-void);border:1px solid var(--border-subtle);border-radius:8px;padding:1.2rem 1.35rem;}
+    .vs-card.win{border-color:rgba(0,212,168,0.4);}
+    .vs-name{font-family:var(--font-display);font-size:1.02rem;font-weight:700;color:var(--text-primary);margin-bottom:.35rem;}
+    .vs-score{font-size:2.5rem;font-weight:800;color:var(--teal);line-height:1;font-family:var(--font-display);}
+    .vs-score small{font-size:.95rem;color:var(--text-muted);font-weight:600;}
+    .vs-tag{font-size:.8rem;color:var(--text-secondary);margin:.5rem 0 0;line-height:1.5;}
+    .vs-pc{font-size:.82rem;line-height:1.6;margin-top:.55rem;color:var(--text-secondary);}
+    .vs-pc strong{color:var(--text-primary);}
+    .diagram-wrap img{width:100%;height:auto;display:block;border-radius:6px;}
+</style>
+
+  <link rel="canonical" href="https://musicproductionwiki.com/articles/spotify-discovery-mode-explained.html"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="Spotify Discovery Mode Explained (2026): The 30% Trade-Off Math"/>
+  <meta property="og:description" content="Spotify Discovery Mode trades 30% of royalties on Radio, Autoplay and Mixes for a higher slot. The break-even math, eligibility traps, and who should skip it."/>
+  <meta property="og:url" content="https://musicproductionwiki.com/articles/spotify-discovery-mode-explained.html"/>
+  <meta property="og:site_name" content="Music Production Wiki"/>
+  <meta property="og:image" content="https://musicproductionwiki.com/og-image.png"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="article:author" content="Music Production Wiki Team"/>
+  <meta property="article:section" content="Music Business"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Spotify Discovery Mode Explained (2026): The 30% Trade-Off Math"/>
+  <meta name="twitter:description" content="Spotify Discovery Mode trades 30% of royalties on Radio, Autoplay and Mixes for a higher slot. The break-even math, eligibility traps, and who should skip it."/>
+  <meta name="twitter:image" content="https://musicproductionwiki.com/og-image.png"/>
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="article:published_time" content="2026-06-29T00:00:00+00:00" />
+  <meta property="article:modified_time" content="2026-06-29T00:00:00+00:00" />
+  <meta name="keywords" content="spotify discovery mode, discovery mode explained, spotify discovery mode 30 percent, discovery mode break even, discovery mode eligibility, spotify for artists, discovery mode worth it, spotify discovery mode payola" />
+  <!-- Article schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Spotify Discovery Mode Explained (2026): The 30% Trade-Off Math",
+  "description": "Spotify Discovery Mode trades 30% of royalties on Radio, Autoplay and Mixes for a higher slot. The break-even math, eligibility traps, and who should skip it.",
+  "articleSection": "Music Business",
+  "image": [
+    "https://musicproductionwiki.com/images/spotify-discovery-mode-explained-where-30-applies.png",
+    "https://musicproductionwiki.com/images/spotify-discovery-mode-explained-breakeven.png",
+    "https://musicproductionwiki.com/images/spotify-discovery-mode-explained-position-not-placement.png",
+    "https://musicproductionwiki.com/og-image.png"
+  ],
+  "datePublished": "2026-06-30",
+  "dateModified": "2026-06-30",
+  "author": {
+    "@type": "Organization",
+    "name": "Music Production Wiki",
+    "url": "https://musicproductionwiki.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Music Production Wiki",
+    "url": "https://musicproductionwiki.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://musicproductionwiki.com/og-image.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://musicproductionwiki.com/articles/spotify-discovery-mode-explained.html"
+  }
+}
+</script>
+  <!-- Organization -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Music Production Wiki",
+  "url": "https://musicproductionwiki.com",
+  "logo": {
+    "@type": "ImageObject",
+    "url": "https://musicproductionwiki.com/og-image.png"
+  }
+}
+</script>
+  <!-- WebSite -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Music Production Wiki",
+  "url": "https://musicproductionwiki.com",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://musicproductionwiki.com/?s={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+  <!-- BreadcrumbList -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://musicproductionwiki.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Music Business",
+      "item": "https://musicproductionwiki.com/categories/music-business.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Spotify Discovery Mode Explained",
+      "item": "https://musicproductionwiki.com/articles/spotify-discovery-mode-explained.html"
+    }
+  ]
+}
+</script>
+  <!-- FAQ -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is Spotify Discovery Mode?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Discovery Mode is a Spotify for Artists feature that lets you flag specific tracks as a priority so Spotify&rsquo;s algorithm is more likely to recommend them in personalized listening contexts &mdash; Radio, Autoplay and Mixes. There&rsquo;s no upfront cost; instead Spotify takes a 30% commission on the royalties those boosted streams earn. It increases the likelihood of a recommendation but never guarantees it, and the music still has to perform to keep the boost."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Discovery Mode cost money upfront?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. There is no budget to fund and no per-click charge. The cost is a 30% commission on recording royalties, applied only to streams served in Discovery Mode contexts while the campaign runs, and deducted from your future Spotify statements as a marketing cost. If a boosted track earns nothing, you pay nothing."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Discovery Mode get my song on playlists?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No &mdash; this is the biggest myth about it. Discovery Mode improves your position inside Radio, Autoplay and Mixes; it does not add new placements. It cannot put you in Discover Weekly, Release Radar or editorial playlists, which are earned through listener engagement and editorial decisions. If you have no organic algorithmic reach, there is no feed for it to promote you within."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much does the 30% actually cost me?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It depends on how much extra lift the boost delivers. Because you earn 70% on context streams you might have earned at 100% organically, you need the boost to add roughly 43% more context streams (0.30 &divide; 0.70) just to break even. Below that you earn less than doing nothing; above it the trade is net-positive on streaming &mdash; before the full-rate saves and follows a good test converts into."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Am I eligible for Discovery Mode?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Spotify requires the track to be released at least 30 days, to have at least 20 streams in Discovery Mode contexts in the last 28 days, and to meet its monetization eligibility. That middle rule is the catch: you must already be getting algorithmic streams to qualify, which is why brand-new and very niche tracks usually can&rsquo;t use it. The feature is also still gated for some artists."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Will Discovery Mode hurt my royalties?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It can, if you use it wrong. Leaving it on across your whole catalog, or on tracks that can&rsquo;t clear the ~43% break-even, is a permanent 30% haircut on your context streams for no offsetting gain. Used as a time-boxed test on a track with real momentum, the extra full-rate listening it can convert into often outweighs the discount. The damage comes from set-and-forget, not from the feature itself."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is Discovery Mode payola? Is it legal?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It&rsquo;s a legal, openly documented Spotify product, but its fairness is contested. Critics call it payola-adjacent, and a 2025 class-action alleged it was &ldquo;modern payola.&rdquo; In 2026 a judge sent that case to private arbitration and dismissed the class claims &mdash; but on Spotify&rsquo;s arbitration clause, not on the merits, so the underlying question was never decided. Treat it as legitimate but reputationally contested, and decide your own comfort level."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should a brand-new artist use Discovery Mode?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Almost never. New artists usually can&rsquo;t meet the 20-context-streams eligibility rule, and even if they could, a boost applied to a near-zero baseline is imperceptible because there&rsquo;s no organic reach for it to amplify. The better early move is to build the engagement and audience that earn algorithmic reach in the first place, then revisit Discovery Mode once a track has genuine momentum worth amplifying."
+      }
+    }
+  ]
+}
+</script>
+<style id="toc-skin">
+.toc-widget .sidebar-widget-header{margin-bottom:.35rem}
+.toc-list{counter-reset:tocnum;list-style:none;margin:0;padding:0}
+.toc-list li{counter-increment:tocnum;position:relative;margin:0;border-left:2px solid var(--border-subtle);transition:border-color .15s ease,background .15s ease}
+.toc-list li a{display:flex;gap:.7rem;align-items:baseline;padding:.5rem .85rem .5rem 1rem;font-size:.82rem;line-height:1.45;font-weight:500;color:var(--text-secondary);text-decoration:none;transition:color .15s ease}
+.toc-list li a::before{content:counter(tocnum,decimal-leading-zero);font-family:var(--font-mono,ui-monospace,monospace);font-size:.7rem;font-weight:600;letter-spacing:.04em;color:var(--text-muted);flex:0 0 auto;min-width:1.5em;padding-top:.05rem}
+.toc-list li a:hover{color:var(--text-primary)}
+.toc-list li.active{border-left-color:var(--teal);background:linear-gradient(90deg,rgba(0,212,168,.08),transparent 80%)}
+.toc-list li.active a{color:var(--teal);font-weight:600}
+.toc-list li.active a:hover{color:var(--teal)}
+.toc-list li.active a::before{color:var(--teal)}
+</style>
+<style id="toc-bar-css">
+.toc-bar{display:none}
+@media (max-width: 900px){
+.toc-bar{display:block;position:sticky;top:60px;z-index:400;background:var(--bg-void);border-bottom:1px solid var(--border-default);overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(to right,#000 88%,transparent 100%);mask-image:linear-gradient(to right,#000 88%,transparent 100%)}
+.toc-bar::-webkit-scrollbar{display:none}
+.toc-bar-track{display:flex;gap:4px;padding:9px 10px;min-width:max-content}
+.toc-bar-track a{color:var(--text-secondary);text-decoration:none;font-family:var(--font-mono,ui-monospace,monospace);font-size:10px;text-transform:uppercase;letter-spacing:.05em;padding:6px 10px;border-radius:4px;white-space:nowrap;min-height:30px;display:inline-flex;align-items:center;transition:color .15s,background .15s}
+.toc-bar-track a.active{color:var(--teal);background:var(--bg-elevated)}
+.article-body h2[id]{scroll-margin-top:116px}
+}
+@media (max-width: 900px) and (hover:hover){.toc-bar-track a:hover{color:var(--teal)}}
+</style>
+</head>
+<body>
+<div id="readingProgress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+<style id="mpw-unav-css">
+
+.mnav-wrap,.usearch{--ink:#09090d;--panel:#0f0f18;--panel2:#15151f;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);--amber:#f5a623;--teal:#00e8a2;--teal-d:rgba(0,232,162,.12);--text:#f2f2f7;--t2:#9a9ab2;--t3:#56566f;--sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'DM Mono',ui-monospace,SFMono-Regular,monospace;}
+.mnav-wrap *,.mnav-wrap *::before,.mnav-wrap *::after,.usearch *,.usearch *::before,.usearch *::after{box-sizing:border-box;margin:0;padding:0}
+/* host-CSS shield: a page loading style.css (articles) must not bleed its body font/color/line-height into the bar. Direct rule on .mnav-wrap beats inherited body styles. */
+.mnav-wrap,.usearch{font-family:var(--sans);font-size:14px;font-weight:400;font-style:normal;line-height:1.4;letter-spacing:normal;color:var(--text);text-align:left;text-transform:none}
+/* S91 host-CSS isolation (:where() = zero-specificity; beats style.css bare a/li by source order, LOSES to nav's own .drw-card/.mnav-flat classes) */
+:where(.mnav-wrap,.usearch) a{color:inherit;text-decoration:none;background:none;border:0;font:inherit;letter-spacing:inherit}
+:where(.mnav-wrap,.usearch) ul,:where(.mnav-wrap,.usearch) ol{list-style:none;margin:0;padding:0;border:0}
+:where(.mnav-wrap,.usearch) li{margin:0;padding:0;border:0;font-size:inherit;line-height:inherit;color:inherit;background:none}
+:where(.mnav-wrap,.usearch) h1,:where(.mnav-wrap,.usearch) h2,:where(.mnav-wrap,.usearch) h3,:where(.mnav-wrap,.usearch) h4,:where(.mnav-wrap,.usearch) h5,:where(.mnav-wrap,.usearch) h6,:where(.mnav-wrap,.usearch) p{margin:0;padding:0;border:0;font:inherit;color:inherit;line-height:inherit;letter-spacing:inherit;text-transform:none}
+:where(.mnav-wrap,.usearch) button{font:inherit;color:inherit;background:none;border:0;letter-spacing:inherit;text-align:inherit}
+:where(.mnav-wrap,.usearch) svg{display:inline-block;vertical-align:middle}
+:where(.mnav-wrap,.usearch) img{max-width:none}
+.mnav-wrap{background:var(--ink);border-bottom:1px solid var(--line);position:relative}
+.mnav{height:60px;display:flex;align-items:center}
+.mnav-in{max-width:1180px;margin:0 auto;padding:0 22px;width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.mnav-brand{display:flex;align-items:center;gap:10px;color:var(--text);text-decoration:none;flex:0 0 auto}
+.mnav-word{font-weight:700;font-size:15px;letter-spacing:-.02em}
+.mnav-links{display:flex;align-items:center;gap:6px;margin-left:8px}
+.mnav-flat,.mnav-trigger{color:var(--t2);background:none;border:0;font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;padding:8px 12px;border-radius:8px;display:inline-flex;align-items:center;gap:6px}
+.mnav-flat:hover,.mnav-trigger:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.caret{font-size:9px;color:var(--t3);transition:transform .18s}
+.mnav-right{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.mnav-search{background:none;border:0;color:var(--t2);cursor:pointer;display:flex;padding:6px;border-radius:8px}
+.mnav-search:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.mnav-cta{border:1px solid var(--teal);color:var(--teal);text-decoration:none;padding:7px 15px;border-radius:8px;font-size:13px;font-weight:600;white-space:nowrap}
+.mnav-cta:hover{background:var(--teal-d)}
+.mnav-wrap[data-section="tools"] .mnav-flat[data-nav="tools"]{color:var(--text);font-weight:600}
+.mnav-wrap[data-section="articles"] .mnav-trigger[data-nav="articles"]{color:var(--text);font-weight:600}
+/* Bible = amber brand color, desktop link + mobile drawer */
+.mnav-flat[data-nav="bible"],.drw-link[data-nav="bible"]{color:#f5a623!important;font-weight:600}
+.mnav-flat[data-nav="bible"]:hover,.drw-link[data-nav="bible"]:hover{color:#ffc04d!important}
+.mnav-item{position:relative}
+.mnav-panel,.mnav-panel-wide{position:absolute;top:calc(100% + 6px);left:0;z-index:50;display:none;background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:14px;box-shadow:0 24px 60px -24px rgba(0,0,0,.9);min-width:240px}
+.mnav-panel-wide{grid-template-columns:1fr 1fr;gap:8px 22px;min-width:520px}
+.mnav-item:hover .mnav-panel,.mnav-item:focus-within .mnav-panel,.mnav-item:hover .mnav-panel-wide,.mnav-item:focus-within .mnav-panel-wide{display:grid}
+.mnav-item:hover .caret{transform:rotate(180deg)}
+.mp-col{display:flex;flex-direction:column}
+.mp-head{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);padding:6px 10px 8px}
+.mnav-panel a{display:flex;flex-direction:column;gap:1px;padding:8px 10px;border-radius:9px;text-decoration:none}
+.mnav-panel a:hover{background:rgba(255,255,255,.05)}
+.mp-name{color:var(--text);font-size:13.5px;font-weight:600}.mp-desc{color:var(--t2);font-size:11.5px}
+.mnav-sub{display:none;background:var(--panel);border-bottom:1px solid var(--line)}
+.mnav-wrap[data-section="bible"] .mnav-sub{display:block}
+.mnav-sub-in{max-width:1180px;margin:0 auto;padding:10px 22px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.mnav-sub-in::-webkit-scrollbar{display:none}
+.mnav-sub-in a{flex:0 0 auto;color:var(--t2);text-decoration:none;font-size:12.5px;font-family:var(--mono);border:1px solid var(--line2);border-radius:99px;padding:5px 12px;white-space:nowrap}
+.mnav-sub-in a:hover{color:var(--teal);border-color:rgba(0,232,162,.4)}
+.mnav-toggle{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.mnav-burger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:8px;border-radius:8px}
+.mnav-burger span{display:block;width:20px;height:2px;background:var(--text);border-radius:2px;transition:.2s}
+.mnav-drawer{display:none;flex-direction:column;padding:6px 18px 16px;background:var(--ink);border-bottom:1px solid var(--line)}
+.mnav-drawer details{border-bottom:1px solid var(--line)}
+.mnav-drawer summary{list-style:none;cursor:pointer;padding:13px 2px;font-size:15px;font-weight:600;color:var(--text);display:flex;justify-content:space-between}
+.mnav-drawer summary::-webkit-details-marker{display:none}
+.mnav-drawer summary::after{content:"+";color:var(--t3)}
+.mnav-drawer details[open] summary::after{content:"\2013"}
+.mnav-acc{display:flex;flex-direction:column;padding:0 0 10px 12px}
+.mnav-acc a{color:var(--t2);text-decoration:none;font-size:14px;padding:8px 0}
+.drw-link{color:var(--t2);text-decoration:none;font-size:15px;font-weight:600;padding:13px 2px;border-bottom:1px solid var(--line)}
+.drw-cta{color:var(--teal);text-decoration:none;font-weight:600;font-size:15px;padding:14px 2px}
+.mnav-toggle:checked ~ .mnav-drawer{display:flex}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(2){opacity:0}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+@media(max-width:860px){.mnav-links,.mnav-cta{display:none}.mnav-burger{display:flex}}
+
+/* ===== UNIFIED SEARCH OVERLAY ===== */
+.usearch{position:fixed;inset:0;z-index:10000;display:none;background:rgba(6,6,11,.78);backdrop-filter:blur(6px);padding:80px 20px 20px}
+.usearch.open{display:block}
+.usearch-box{max-width:620px;margin:0 auto;background:var(--panel);border:1px solid var(--line2);border-radius:16px;overflow:hidden;box-shadow:0 40px 90px -30px rgba(0,0,0,.95)}
+.usearch-top{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.usearch-top svg{color:var(--t3);flex:0 0 auto}
+.usearch-top input{flex:1;background:none;border:0;outline:none;color:var(--text);font-family:var(--sans);font-size:17px}
+.usearch-top input::placeholder{color:var(--t3)}
+.usearch-top kbd{font-family:var(--mono);font-size:11px;color:var(--t3);border:1px solid var(--line2);border-radius:6px;padding:2px 7px}
+.usearch-results{max-height:56vh;overflow-y:auto;padding:8px}
+.usearch-results a{display:block;padding:11px 14px;border-radius:10px;text-decoration:none;transition:background .12s}
+.usearch-results a:hover,.usearch-results a.sel{background:rgba(255,255,255,.05)}
+.ur-top{display:flex;align-items:baseline;gap:9px}
+.ur-title{color:var(--text);font-size:14.5px;font-weight:600}
+.ur-cat{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.06);color:var(--t2);flex:0 0 auto}
+.ur-cat[data-c="Tools"]{background:var(--teal-d);color:var(--teal);border:1px solid rgba(0,232,162,.4)}
+.ur-cat[data-c="Bible"]{background:rgba(245,166,35,.18);color:#f5a623;border:1px solid rgba(245,166,35,.4)}
+.ur-desc{color:var(--t2);font-size:12.5px;line-height:1.45;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.usearch-empty{padding:30px;text-align:center;color:var(--t3);font-size:13.5px}
+/* --- sticky-header + entry-page chrome (pilot, refined for density) ---
+   entry nav = 60px main bar only (no category sub-bar). Desktop: hide the horizontal section
+   nav (the sticky sidebar TOC covers sections) and retune offsets to the 60px nav. Mobile: the
+   sidebar is hidden, so SHOW the section nav flush under the bar. All in THIS block. --- */
+.mnav-wrap{position:sticky;top:0;z-index:1000;line-height:1.4}
+.entry-nav{display:none}
+[id].entry-section{scroll-margin-top:90px}
+.entry-main h2{scroll-margin-top:90px}
+.entry-sidebar{top:78px;height:calc(100vh - 98px)}
+@media(max-width:768px){
+  .entry-nav{display:block!important;top:60px!important}
+  [id].entry-section{scroll-margin-top:130px!important}
+  .entry-main h2{scroll-margin-top:130px!important}
+}
+/* dropdown overflow safety */
+.mnav-panel,.mnav-panel-wide{max-height:min(72vh,560px);overflow-y:auto}
+/* mobile drawer: category CARD grid (slick old-nav look), CSS-only */
+.mnav-drawer{padding:10px 18px 18px;gap:0}
+.drw-label{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--t3);margin:12px 2px 8px}
+.drw-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.drw-card{display:flex;align-items:center;padding:12px 14px;border-radius:10px;text-decoration:none;font-size:13.5px;font-weight:600;color:var(--text);background:var(--panel);border:1px solid var(--line2)}
+.drw-card:hover{border-color:var(--teal);color:var(--teal)}
+.drw-feat{display:flex;align-items:center;gap:8px;padding:13px 16px;border-radius:10px;text-decoration:none;font-size:14px;font-weight:700;color:var(--text);background:var(--panel);border:1px solid var(--line2);margin-top:8px}
+.drw-feat-bible{color:#f5a623;background:rgba(245,166,35,.08);border-color:rgba(245,166,35,.30)}
+.drw-feat-bible:hover{border-color:rgba(245,166,35,.6)}
+.drw-cta{display:block;text-align:center;padding:14px;border-radius:10px;background:var(--teal);color:#06281f;font-weight:800;font-size:14px;text-decoration:none;margin-top:12px}
+/* mobile sunlight legibility: lift the intentionally-dim greys in glare (nav + search only), scoped */
+@media(max-width:860px){
+  .mnav-wrap,.usearch{--t2:#c8c8da;--t3:#9696b0}
+  .drw-label{color:#bdbdd0;font-weight:500}
+  .usearch-top input::placeholder{color:#9696b0}
+  .drw-card,.drw-feat{background:#20202e;border:1.5px solid #45455c}
+  .drw-feat-bible{background:rgba(245,166,35,.12);border:1.5px solid rgba(245,166,35,.6)}
+}
+html{overflow-x:clip!important;max-width:none!important}body{overflow-x:clip!important}
+</style>
+<!-- MPW universal nav -->
+<div class="mnav-wrap" data-section="articles">
+  <input type="checkbox" id="mnav-toggle" class="mnav-toggle" aria-hidden="true">
+  <nav class="mnav" aria-label="Main navigation">
+    <div class="mnav-in">
+      <a class="mnav-brand" href="/"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="6" stroke="#f5a623" stroke-width="1.7"/><path d="M7 15V9l3 3 3-5 4 8" stroke="#00e8a2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="mnav-word">MusicProductionWiki</span></a>
+      <div class="mnav-links">
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="articles">Articles <span class="caret">&#9662;</span></button><div class="mnav-panel mnav-panel-wide"><div class="mp-col"><div class="mp-head">Techniques & Analysis</div><a href="/categories/techniques"><span class="mp-name">Techniques</span><span class="mp-desc">Mixing, mastering, sound design</span></a><a href="/categories/reviews"><span class="mp-name">Reviews</span><span class="mp-desc">Honest. No paid placements.</span></a><a href="/categories/comparisons"><span class="mp-name">Comparisons</span><span class="mp-desc">Head-to-head</span></a><a href="/categories/breakdowns"><span class="mp-name">Breakdowns</span><span class="mp-desc">Track-by-track</span></a><a href="/categories/recreations"><span class="mp-name">Recreations</span><span class="mp-desc">Recreate iconic sounds</span></a><a href="/genres"><span class="mp-name">Genres</span><span class="mp-desc">Every genre & style</span></a></div><div class="mp-col"><div class="mp-head">Reference & Business</div><a href="/categories/ai-music"><span class="mp-name">AI Music</span><span class="mp-desc">Suno, Udio, AI tools</span></a><a href="/categories/music-business"><span class="mp-name">Music Business</span><span class="mp-desc">Royalties, licensing, sync</span></a></div></div></div>
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="gear">Gear <span class="caret">&#9662;</span></button><div class="mnav-panel"><div class="mp-col"><a href="/categories/daws"><span class="mp-name">DAWs</span><span class="mp-desc">Every major DAW</span></a><a href="/categories/plugins"><span class="mp-name">Plugins</span><span class="mp-desc">EQ, comp, reverb, synths</span></a><a href="/categories/hardware"><span class="mp-name">Hardware</span><span class="mp-desc">Interfaces, mics, monitors</span></a></div></div></div>
+        <a class="mnav-flat" href="/tools/" data-nav="tools">Tools</a>
+        <a class="mnav-flat" href="/bible/" data-nav="bible">The Bible</a>
+      </div>
+      <div class="mnav-right">
+        <button class="mnav-search" data-nav-search aria-label="Search"><svg width="17" height="17" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <a class="mnav-cta" href="https://theproducersbriefing.beehiiv.com">Sound Better &rarr;</a>
+        <label class="mnav-burger" for="mnav-toggle"><span></span><span></span><span></span></label>
+      </div>
+    </div>
+  </nav>
+  <div class="mnav-drawer">
+    <div class="drw-label">Articles</div>
+    <div class="drw-grid">
+      <a href="/categories/techniques" class="drw-card">Techniques</a><a href="/categories/reviews" class="drw-card">Reviews</a><a href="/categories/comparisons" class="drw-card">Comparisons</a><a href="/categories/breakdowns" class="drw-card">Breakdowns</a><a href="/categories/recreations" class="drw-card">Recreations</a><a href="/genres" class="drw-card">Genres</a><a href="/categories/ai-music" class="drw-card">AI Music</a><a href="/categories/music-business" class="drw-card">Music Business</a>
+    </div>
+    <div class="drw-label">Gear</div>
+    <div class="drw-grid">
+      <a href="/categories/daws" class="drw-card">DAWs</a><a href="/categories/plugins" class="drw-card">Plugins</a><a href="/categories/hardware" class="drw-card">Hardware</a>
+    </div>
+    <a href="/bible/" class="drw-feat drw-feat-bible">&#9670; The Producer's Bible</a>
+    <a href="/tools/" class="drw-feat">The Producer's Tools</a>
+    <a href="https://theproducersbriefing.beehiiv.com" class="drw-cta">Sound Better &rarr;</a>
+  </div>
+</div>
+
+
+<div class="container">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><ol>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../categories/music-business.html">Music Business</a></li>
+    <li><span aria-current="page">Spotify Discovery Mode Explained</span></li>
+  </ol></nav>
+</div>
+
+<nav class="toc-bar" aria-label="Section navigation"><div class="toc-bar-track" id="tocBarTrack"></div></nav>
+<main class="container" id="main-content">
+  <div class="article-layout">
+    <article aria-labelledby="articleTitle">
+      <header class="article-header">
+        <div class="article-tags"><span class="article-tag teal"><a href="../categories/music-business.html" style="color:inherit;text-decoration:none;">Music Business</a></span><span class="article-tag teal"><a href="../categories/music-business/distribution.html" style="color:inherit;text-decoration:none;">Distribution</a></span></div>
+        <h1 id="articleTitle">Spotify Discovery Mode Explained</h1>
+        <div class="article-header-meta">
+          <div class="article-author"><div class="author-avatar" aria-hidden="true">MP</div><span class="author-name">The Music Production Wiki Team</span></div>
+          <span class="meta-divider"></span><span class="meta-item">Updated June 2026&nbsp;&middot;&nbsp;14 min read&nbsp;&middot;&nbsp;<span style="font-size:.78rem;color:var(--text-muted);">Facts verified June 2026</span></span>
+        </div>
+      </header>
+      <div class="article-body">
+<div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.28);border-left:4px solid #f59e0b;border-radius:8px;padding:1.25rem 1.5rem;margin:1.75rem 0;"><p style="margin:0;font-size:.92rem;line-height:1.66;color:var(--text-secondary);"><strong style="color:var(--text-primary);">General information, not financial advice.</strong> The royalty math, break-even figures and earnings ranges here are illustrative and depend entirely on your own catalog and audience. Treat any decision to trade royalties for reach as your own, and confirm the current commission, eligibility rules and reporting in Spotify for Artists before you opt a track in &mdash; the program is still evolving and the numbers move.</p></div>
+
+<div class="quick-answer"><div class="quick-answer-label">The short version</div><p>Discovery Mode is not &ldquo;pay for playlists.&rdquo; It is a <strong>royalty discount in exchange for a higher slot</strong> in algorithmic feeds you already qualify for. Spotify takes a <strong>30% commission on recording royalties</strong>, but only on streams served in <strong>Discovery Mode contexts</strong> &mdash; Radio, Autoplay and your listeners&rsquo; personalized Mixes. Every other stream stays full-rate. It boosts your <strong>position</strong> inside those feeds; it does <strong>not</strong> add Discover Weekly, Release Radar or editorial placements, and it cannot reach listeners the algorithm wouldn&rsquo;t already show you to. Because you now earn 70% on streams you might have earned at 100% anyway, the trade only nets out positive once the extra lift clears roughly <strong>43%</strong> &mdash; a number you can calculate before you opt in. Eligibility needs a track that is at least 30 days old, has already pulled <strong>20+ streams in Discovery Mode contexts in the last 28 days</strong>, and meets Spotify&rsquo;s monetization criteria. New artists with no algorithmic traction are usually ineligible and would see nothing if they weren&rsquo;t. Use it as a per-track test on a song with real momentum &mdash; never as a permanent setting on your whole catalog.</p></div>
+
+<p>Search &ldquo;Spotify Discovery Mode&rdquo; and you get two kinds of page. One sells you playlist promotion and frames Discovery Mode as a way onto editorial lists; the other repeats Spotify&rsquo;s own headline averages &mdash; <em>+50% saves, +44% playlist adds, +37% followers</em> &mdash; and stops there. Both skip the one thing you actually need to decide: whether the trade pays. Discovery Mode is the only Spotify-native lever where you literally hand back a slice of your royalties for reach, which makes it the single most consequential &mdash; and most misunderstood &mdash; promotion decision in the whole <a href="how-to-promote-music-on-spotify.html">promote-your-music-on-Spotify</a> toolkit. It deserves the math, not a sales pitch.</p>
+
+<p>So this guide does the math. We&rsquo;ll pin down exactly what the 30% applies to and what it doesn&rsquo;t, build the honest break-even example that decides the whole thing, kill the &ldquo;it gets you on playlists&rdquo; myth in plain language, walk the eligibility trap that quietly disqualifies most of the people reading guides like this, and treat the payola lawsuit fairly rather than burying it. By the end you&rsquo;ll be able to look at one of your own tracks and say, with a number to back it, whether Discovery Mode is worth switching on.</p>
+
+<p>One framing to fix in place before we start, because every decision below flows from it: Discovery Mode does not buy you <em>new</em> places to appear. It buys you a <em>better position</em> in the algorithmic places you already appear &mdash; and it bills you for the privilege only when it works. That is a narrower, more honest promise than most of the internet makes on Spotify&rsquo;s behalf, and understanding why it is narrower is the difference between a smart test and a slow royalty leak.</p>
+
+<h2 id="what-it-is">What Discovery Mode actually is</h2>
+<p>Discovery Mode is a feature inside Spotify for Artists that lets an artist or label flag specific tracks as a priority. When a track is flagged, Spotify adds that signal to the recommendation algorithms that power its personalized listening surfaces, increasing the likelihood &mdash; never the guarantee &mdash; that the song gets recommended. There is no upfront cost. Instead, Spotify charges a commission on the royalties those prioritized streams earn, deducted from your future statements as a marketing cost. In Spotify&rsquo;s own framing it is a way to &ldquo;turn up&rdquo; a song you&rsquo;re backing, paid for out of the streams it generates rather than a budget you fund in advance.</p>
+
+<p>The crucial word is <em>likelihood</em>. Discovery Mode does not place your song anywhere; it raises the probability that the algorithm chooses it in moments where a listener is already open to discovery. And that probability is conditional on the music performing &mdash; Spotify is explicit that if listeners skip or ignore a Discovery Mode track, the system notes the disengagement and pulls back. You are not buying a placement; you are buying a louder vote in an election the listeners still decide. A song people don&rsquo;t finish will not be rescued by Discovery Mode, because the same engagement signals that gate organic reach &mdash; <a href="how-much-does-spotify-pay-per-stream.html">completion past the 30-second mark</a>, saves, repeat plays &mdash; still gate the boosted reach.</p>
+
+<p>That conditionality is why Discovery Mode is best understood as an <em>amplifier</em>, not an <em>engine</em>. An amplifier makes an existing signal louder; it cannot manufacture a signal that isn&rsquo;t there. If a track is already earning saves and repeat listens in Radio and Autoplay, Discovery Mode turns that momentum up. If a track has no momentum &mdash; no organic algorithmic traction at all &mdash; there is nothing to amplify, and as we&rsquo;ll see, you probably can&rsquo;t even enable it. This single mental model resolves most of the confusion around the feature, including the two biggest misconceptions: that the 30% hits all your streams, and that the boost adds new placements. Both are false, and both matter to the math.</p>
+
+<h2 id="contexts">Where the 30% applies &mdash; and where it doesn&rsquo;t</h2>
+<p>The first misconception to dismantle is that opting a track into Discovery Mode discounts <em>all</em> of that track&rsquo;s royalties. It does not. Spotify applies the 30% commission only to streams served in what it calls <strong>Discovery Mode contexts</strong>, and that is a specific, limited set: <strong>Spotify Radio, Autoplay, and Spotify Mixes</strong> (the Daily, Artist, Mood, Decade and Genre Mixes). Streams from anywhere else &mdash; your own profile, a search, a listener&rsquo;s library or a playlist they made, an editorial playlist, Discover Weekly, Release Radar &mdash; all stay at the full rate. The commission rides the boosted streams only, and only while the campaign is active.</p>
+
+<div class="diagram-wrap"><picture><source media="(max-width:900px)" srcset="../images/spotify-discovery-mode-where-30-applies-m.png" width="540" height="928"><img src="../images/spotify-discovery-mode-where-30-applies.png" alt="A stream-source map dividing where a Spotify stream comes from into two columns. The left column, marked discounted, lists the Discovery Mode contexts where the thirty percent commission applies: Spotify Radio, Autoplay, and the personalized Spotify Mixes such as Daily Mix, Artist Mix, Mood Mix, Decade Mix and Genre Mix, each paying the artist seventy percent. The right column, marked full rate, lists everything else where no commission applies and the artist keeps one hundred percent: streams from the listener's own library and saves, their own playlists, your artist profile and search, and crucially the editorial playlists, Discover Weekly and Release Radar, which Discovery Mode never touches. A footer notes the commission applies only during the campaign and that all other streams remain commission-free." width="1040" height="557" loading="lazy" decoding="async"></picture><div class="diagram-caption" style="text-align:center;font-size:.8rem;color:var(--text-muted);margin-top:.6rem;line-height:1.4;">The 30% commission rides only the streams in Discovery Mode contexts (left). Everything else &mdash; including the editorial and personalized playlists people assume the boost buys &mdash; stays full-rate. Source: Spotify for Artists.</div></div>
+
+<p>This distinction is not a footnote; it is the hinge of the whole decision. A listener who finds you through Autoplay (discounted) and then saves the song, follows you, or adds you to their own playlist generates <em>full-rate</em> royalties on every one of those subsequent plays. The discount applies to the introduction, not the relationship. Framed honestly, Discovery Mode discounts the <em>test</em> &mdash; the moment a stranger first hears you in a lean-back context &mdash; in the hope that the test converts into full-rate, organic listening you keep entirely. That is a genuinely different proposition from &ldquo;a 30% pay cut,&rdquo; and it is the part the headline critics tend to skip.</p>
+
+<p>There is one wrinkle worth flagging so the number you plan around is the real one: the 30% is Spotify&rsquo;s commission, but some distributors and labels administer Discovery Mode on your behalf and may layer their own handling on top, or surface the deduction differently in your statements (often as a negative line item rather than a reduced rate). The headline figure to reason with is 30% to Spotify on context streams. Before you opt in through a distributor&rsquo;s dashboard rather than Spotify&rsquo;s, check whether anything sits on top of it, because that changes your break-even.</p>
+
+<h2 id="the-math">The break-even math: the one number that decides it</h2>
+<p>Here is the calculation almost no guide runs, and it is the entire decision. When you opt a track into Discovery Mode, you start earning 70% instead of 100% on every stream served in a Discovery Mode context. The catch is subtle and decisive: <strong>some of those context streams you would have earned anyway</strong>, organically, at the full rate. By opting in, you take a 30% haircut on your <em>baseline</em> of Radio/Autoplay/Mixes streams in exchange for some quantity of <em>extra</em> streams the boost generates. The question is how much extra you need before the new streams outearn the haircut on the old ones.</p>
+
+<p>Put it in symbols. Let your baseline be the streams you&rsquo;d get in Discovery Mode contexts <em>without</em> opting in, each worth a full unit of royalty. Without Discovery Mode, those streams pay you the baseline in full. With Discovery Mode on, you earn 70% on the baseline <em>plus</em> 70% on whatever lift the boost adds. Break-even is the point where the discounted total equals the full-rate baseline: 0.7 &times; (baseline + lift) = baseline. Solve it and the baseline drops out cleanly &mdash; 0.7 &times; lift = 0.3 &times; baseline, so lift = 0.3 &divide; 0.7 = <strong>0.4286</strong>. You need the boost to add roughly <strong>43% more context streams</strong> than you&rsquo;d have gotten organically, just to break even.</p>
+
+<div class="diagram-wrap"><picture><source media="(max-width:900px)" srcset="../images/spotify-discovery-mode-breakeven-m.png" width="540" height="831"><img src="../images/spotify-discovery-mode-breakeven.png" alt="A break-even curve showing net royalty change on the vertical axis against the incremental stream lift Discovery Mode delivers on the horizontal axis. The line starts well below zero at the left, because at zero extra lift the artist simply takes a thirty percent haircut on the baseline context streams, then rises steadily as lift increases. It crosses the break-even line at roughly forty-three percent lift, marked with an amber crossover dot. To the left of the dot the region is shaded as a net loss, where Discovery Mode costs more in discounted baseline streams than it adds; to the right of the dot the region is a net gain, where the extra streams outweigh the discount. A footer states the curve is illustrative and that break-even equals thirty percent divided by seventy percent, which is about forty-three percent." width="1040" height="711" loading="lazy" decoding="async"></picture><div class="diagram-caption" style="text-align:center;font-size:.8rem;color:var(--text-muted);margin-top:.6rem;line-height:1.4;">Net royalty change vs. the extra lift Discovery Mode adds. Below ~43% lift you lose money; above it you gain. Break-even = 0.30 &divide; 0.70 &asymp; 43% &mdash; illustrative, but the algebra is exact.</div></div>
+
+<p>Make it concrete. Say a track pulls 1,000 Radio/Autoplay/Mixes streams a month organically. Opt in, and those 1,000 now pay 70% &mdash; you&rsquo;ve given up the equivalent of 300 streams&rsquo; worth of royalty. To get back to even, the boost has to add about 430 extra context streams (430 &times; 70% &asymp; 300), bringing you to ~1,430 context streams at 70%. Anything below that 43% lift and you&rsquo;ve paid to earn <em>less</em> than you would have by doing nothing. Anything above it and Discovery Mode is genuinely net-positive on streaming royalties alone &mdash; before you even count the full-rate saves, follows and organic plays a successful test throws off downstream.</p>
+
+<p>This is why the honest answer to &ldquo;is Discovery Mode worth it?&rdquo; is &ldquo;it depends on a number you can estimate.&rdquo; Spotify advertises average lifts well above 43% &mdash; triple-digit increases in monthly listeners for well-chosen tracks &mdash; and if your track genuinely behaves like those averages, the trade clears break-even comfortably. But those are blended averages across big catalogs and established acts; community reports from independent artists are far messier, with raw stream lifts that look huge but don&rsquo;t convert into proportional saves and follows. The discipline is to assume <em>your</em> lift, not Spotify&rsquo;s average, and to remember that the 43% line is the floor for breaking even on streaming &mdash; the real upside, if it comes, is in the full-rate listening a good test converts into. A track that can&rsquo;t plausibly clear 43% extra context lift should not be in Discovery Mode.</p>
+
+<h2 id="position-not-placement">Position, not placement: the central myth</h2>
+<p>The most common and most expensive misunderstanding is that Discovery Mode puts your song <em>on playlists</em> &mdash; that it&rsquo;s a back door into Discover Weekly, Release Radar or Spotify&rsquo;s editorial lists. It is not, and Spotify is unusually direct about this: Discovery Mode &ldquo;won&rsquo;t put your music in more places; it just increases its chances of being discovered&rdquo; in the contexts you already feature in. It changes your <strong>position</strong> inside Radio, Autoplay and Mixes. It does not add a single new <strong>placement</strong>.</p>
+
+<div class="diagram-wrap"><picture><source media="(max-width:900px)" srcset="../images/spotify-discovery-mode-position-not-placement-m.png" width="540" height="1131"><img src="../images/spotify-discovery-mode-position-not-placement.png" alt="A diagram contrasting position with placement. On the left, a single algorithmic feed labelled artist Radio is shown as a vertical queue of song slots; the same track appears once near the bottom around slot eighteen labelled before Discovery Mode, and again near the top around slot four labelled with Discovery Mode, with an upward arrow showing it has moved higher within the same feed. The caption stresses it is the same feed, a better position. On the right, a separate panel lists Discover Weekly, Release Radar and editorial playlists, all struck through and marked not added, to show Discovery Mode never reaches these surfaces no matter how long it runs. A footer states Discovery Mode re-ranks you inside feeds you already qualify for and cannot add new placements." width="1040" height="726" loading="lazy" decoding="async"></picture><div class="diagram-caption" style="text-align:center;font-size:.8rem;color:var(--text-muted);margin-top:.6rem;line-height:1.4;">Discovery Mode moves you up <em>within</em> a feed you already appear in (left). It does not add Discover Weekly, Release Radar or editorial placements (right) &mdash; those are earned by listener behavior and editors.</div></div>
+
+<p>Why does this matter so much in practice? Because it sets a hard ceiling on what Discovery Mode can do for you, and that ceiling is defined by your existing organic reach. If the algorithm already surfaces you in Autoplay to a few thousand listeners a month, Discovery Mode can push you higher in that rotation and reach more of them. If the algorithm surfaces you to almost no one &mdash; because the track is new, niche, or simply hasn&rsquo;t earned the engagement signals that trigger algorithmic reach &mdash; then there is no feed for Discovery Mode to promote you within, and the boost has nothing to act on. It cannot conjure reach from zero. Editorial and the marquee algorithmic playlists remain earned the old way: by saves, completion and repeat listens, which is why <a href="how-to-get-on-spotify-playlists.html">getting onto Spotify playlists</a> is a separate craft Discovery Mode does not shortcut.</p>
+
+<p>This is also the cleanest way to size up the half of the search results that imply Discovery Mode &ldquo;gets you on playlists.&rdquo; They are conflating two different products. Editorial pitching and the algorithmic playlists are about <em>earning a placement</em>; Discovery Mode is about <em>improving your rank</em> in placements you&rsquo;ve already earned. If your goal is to break into Discover Weekly or land an editorial feature, Discovery Mode is the wrong tool and your effort belongs in the work that actually moves those surfaces &mdash; stronger hooks, better metadata, and the engagement-building covered in our guides to <a href="how-to-get-more-streams-on-spotify.html">getting more streams on Spotify</a> and growing your audience off-platform.</p>
+
+<h2 id="eligibility">The eligibility reality &mdash; the criterion everyone omits</h2>
+<p>Most guides list two requirements: the track must be 30 days old and you must meet Spotify&rsquo;s monetization criteria. They leave out the one that actually decides who can use Discovery Mode. Spotify&rsquo;s real eligibility, per its own help docs, is threefold: the track has been released for at least 30 days (the earliest version&rsquo;s date counts if there are several); it has been <strong>streamed at least 20 times in Discovery Mode contexts in the last 28 days</strong>; and it met Spotify&rsquo;s monetization eligibility last month. That middle requirement is the quiet gatekeeper, and almost nobody explains it.</p>
+
+<p>Read it carefully and the implication is stark: to qualify for Discovery Mode, your track must <em>already</em> be getting streams in Radio, Autoplay and Mixes &mdash; which means it must already have organic algorithmic traction. The feature is, by design, only available to tracks the algorithm is already showing to people. This is the exact opposite of the &ldquo;jumpstart my unknown song&rdquo; use case most beginners imagine. A brand-new artist with no algorithmic reach can&rsquo;t hit 20 context streams in 28 days, so they&rsquo;re ineligible &mdash; and even if they could force eligibility, the amplifier would have almost nothing to amplify. Discovery Mode rewards momentum; it does not create it.</p>
+
+<p>So the eligibility rule and the break-even math point at the same conclusion from two directions. The math says you need real lift to justify the discount; the eligibility says you can only enter if you already have the organic base that makes real lift possible. Both are telling you the same thing: Discovery Mode is a tool for amplifying a track that is <em>already working</em>, not a launchpad for one that isn&rsquo;t. If your track isn&rsquo;t eligible yet, the honest path is to build the underlying traction first &mdash; the <a href="how-to-promote-music-independently.html">independent-promotion</a> and <a href="how-to-build-a-fanbase.html">fanbase</a> fundamentals &mdash; and revisit Discovery Mode once the song has something for the boost to lift. It is also worth noting the feature has been rolled out gradually and remains gated for some artists, so &ldquo;eligible&rdquo; and &ldquo;available to you right now&rdquo; are not always the same thing.</p>
+
+<h2 id="measuring">Measuring it honestly: the attribution problem</h2>
+<p>Suppose you opt in. How do you know whether it worked? This is harder than it sounds, and it is the part that makes Discovery Mode genuinely difficult to evaluate. Spotify for Artists gives you a Discovery Mode performance view with <em>lift</em> metrics &mdash; it compares the 28 days a track was enrolled against the 28 days before &mdash; and surfaces the commission as a deduction on your statements. What it does not give you is a clean counterfactual: there is no parallel universe where the same track, in the same month, ran <em>without</em> Discovery Mode for you to compare against. The lift you see is enrollment-vs-prior-period, not boosted-vs-unboosted, so anything else that changed that month &mdash; a release, a TikTok moment, seasonality &mdash; is baked into the number.</p>
+
+<p>The practical workaround is to evaluate Discovery Mode the way you&rsquo;d evaluate any promotion with messy attribution: hold as much else constant as you can, run it on one track at a time rather than your whole catalog, and watch the metrics that actually matter for durable growth &mdash; saves, follows and repeat-listen rate &mdash; not just raw stream count. A campaign that triples your streams but doesn&rsquo;t move saves or followers has bought you a number, not an audience, and under the break-even logic those hollow streams are exactly the ones you overpaid for. The honest scorecard for Discovery Mode isn&rsquo;t &ldquo;did streams go up&rdquo; &mdash; streams almost always go up &mdash; it&rsquo;s &ldquo;did the boost convert into full-rate listening I keep after the campaign ends.&rdquo; If you also run paid ads, note the contrast: external ad platforms buy you targeting and cost-per-fan data, whereas Discovery Mode buys position with no targeting and no clean attribution, which is a real trade-off when you&rsquo;re deciding where a promotion budget goes.</p>
+
+<h2 id="payola">The payola question: ethics, the lawsuit, and arbitration</h2>
+<p>Discovery Mode arrived under a cloud, and it would be dishonest to wave it away. Critics, including voices within the Recording Academy, have called the feature payola-adjacent: a modern, algorithmic version of paying for airplay, dressed up as personalization. The objection is not that artists opt in &mdash; it&rsquo;s that listeners are presented with recommendations as if they were neutral and purely taste-driven, when a commercial incentive is quietly tilting the rankings. Whether you find that persuasive depends partly on how much you think a 30% royalty discount differs from cash-for-play, but the criticism is substantive and worth taking seriously rather than dismissing as noise.</p>
+
+<p>It also reached the courts. In November 2025 a Spotify subscriber, Genevieve Capolongo, filed a class-action in Manhattan federal court alleging that Discovery Mode and Spotify&rsquo;s recommendation surfaces amount to &ldquo;modern payola&rdquo; &mdash; that listeners are charged for a service marketed as personalized while undisclosed commercial arrangements shape what they hear. The case drew wide coverage as the first real legal test of pay-for-position streaming. But in spring 2026 the judge granted Spotify&rsquo;s motion to compel arbitration and dismissed the class claims with prejudice, sending the individual dispute to private arbitration. Crucially, Spotify won on a procedural ground &mdash; the forced-arbitration clause buried in its terms of service &mdash; <em>not</em> on the merits of whether Discovery Mode is deceptive. The payola question itself was never adjudicated; the court simply ruled the plaintiff couldn&rsquo;t pursue it as a class action in open court.</p>
+
+<p>For an artist deciding whether to use the feature, the honest read is this: Discovery Mode is a legitimate, openly documented Spotify product, not a scam or a back-alley service, and millions of streams run through it. But it carries a genuinely contested reputation, the underlying fairness question remains legally unresolved, and the program&rsquo;s own rules keep evolving. None of that makes it wrong to use &mdash; plenty of careful independent artists test it &mdash; but it does mean you should go in clear-eyed, understanding that you are participating in a model some of the industry considers a step toward pay-for-play, and pricing that into your own comfort level alongside the cold break-even math. This sits inside the wider economics every release operates under, which our explainer on <a href="music-streaming-royalties-explained.html">how streaming royalties work</a> lays out in full.</p>
+
+<h2 id="who-should">Who should use Discovery Mode &mdash; and who should never</h2>
+<p>Because Discovery Mode is a per-track campaign decision and not a one-size verdict, the useful output isn&rsquo;t a score &mdash; it&rsquo;s a fit test. Run your situation against these, honestly, and the answer usually picks itself. The throughline is the same one the math and the eligibility rule both point at: amplify momentum you already have; never pay to discount streams you&rsquo;d have earned anyway.</p>
+
+<ul class="dm-fit">
+<li><strong>An established track already pulling organic Radio/Autoplay streams, with a save rate above ~4%:</strong> <span style="color:var(--teal);font-weight:700;">Worth a strategic test.</span> You have real momentum to amplify and a plausible shot at clearing the 43% break-even, with full-rate saves and follows as upside. This is the use case the feature was built for.</li>
+<li><strong>A brand-new artist building from zero:</strong> <span style="color:#ef4444;font-weight:700;">No.</span> You&rsquo;re almost certainly ineligible (no 20 context streams to qualify on), and even if you forced it, a boost on a near-zero baseline is imperceptible. Build traction first.</li>
+<li><strong>A niche or experimental act with little algorithmic traction:</strong> <span style="color:#ef4444;font-weight:700;">No.</span> Discovery Mode can&rsquo;t put you where the algorithm wouldn&rsquo;t. With no feed to promote you within, there&rsquo;s nothing for the amplifier to act on.</li>
+<li><strong>Your whole catalog, switched on and left running:</strong> <span style="color:#ef4444;font-weight:700;">No.</span> That&rsquo;s not a campaign, it&rsquo;s a permanent royalty haircut on every context stream across every track. Discovery Mode is a per-track, time-boxed test, full stop.</li>
+<li><strong>An indie artist with a budget who wants targeting and clean attribution:</strong> <span style="color:var(--text-muted);font-weight:700;">Probably not &mdash; or not alone.</span> Targeted external ads buy you data and cost-per-fan; Discovery Mode buys position with neither. If measurement matters to you, weigh it against paid promotion rather than treating it as equivalent.</li>
+</ul>
+
+<p>Notice that the only clear &ldquo;yes&rdquo; is the artist who already has something working. That is not an accident of how we&rsquo;ve framed it; it&rsquo;s baked into the design of the feature. Discovery Mode is a lever for the artist on the way up who wants to climb faster in feeds they&rsquo;ve already earned a place in &mdash; tested one track at a time, watched for real saves and follows rather than vanity streams, and switched off the moment a track stops clearing its break-even. Used that way it&rsquo;s a legitimate, occasionally powerful tool. Used as a set-and-forget setting on a catalog with no momentum, it&rsquo;s just a slow leak. Where it fits in your wider plan is the same question every promotion choice raises &mdash; our guides to <a href="how-to-make-money-from-music.html">making money from music</a>, <a href="how-to-distribute-music.html">distributing your music</a>, <a href="how-to-get-music-on-spotify.html">getting your music on Spotify</a>, <a href="how-to-promote-music-on-tiktok.html">promoting on TikTok</a> and the <a href="spotify-vs-apple-music-for-artists.html">Spotify-vs-Apple-Music</a> platform trade-off all set the context Discovery Mode plugs into.</p>
+
+<h2 id="exercises">Put it into practice</h2>
+<p>Three exercises, escalating from a yes/no eligibility check to a full break-even estimate built from your own numbers. Do them in order; each one builds the judgement the next one needs.</p>
+
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--beginner">Beginner</span><span class="exercise-title">Check one track&rsquo;s eligibility and traction</span></div>
+<ol>
+<li>Pick one released track at least 30 days old and open its stats in Spotify for Artists.</li>
+<li>Find its streams from Radio, Autoplay and Mixes over the last 28 days. Is it comfortably past 20? If not, the track isn&rsquo;t eligible &mdash; note that, because it also tells you the boost would have little to work with.</li>
+<li>Check the save rate and repeat-listen signals on that track. A save rate above roughly 4% suggests real momentum worth amplifying; well below it suggests fixing the song&rsquo;s hook matters more than any boost.</li>
+<li>Write a one-line verdict: eligible and has momentum, eligible but weak, or not eligible yet &mdash; and what that implies for your next move.</li>
+</ol></div>
+
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--intermediate">Intermediate</span><span class="exercise-title">Run your own break-even number</span></div>
+<ol>
+<li>Take that track&rsquo;s monthly Discovery Mode context streams (Radio + Autoplay + Mixes) as your baseline &mdash; say it&rsquo;s B.</li>
+<li>Compute your break-even lift: you need extra context streams equal to about 0.43 &times; B (that&rsquo;s 0.30 &divide; 0.70) just to match doing nothing.</li>
+<li>Ask honestly whether a boost could plausibly add that many context streams for this song. If B is 1,000, you&rsquo;re betting on roughly 430 extra context streams a month &mdash; is that realistic for this track, or wishful?</li>
+<li>Write down the lift you&rsquo;d need and your honest estimate of the lift you&rsquo;d get. If the estimate is below the need, the answer is no before you even opt in.</li>
+</ol></div>
+
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--advanced">Advanced</span><span class="exercise-title">Design a clean single-track test</span></div>
+<ol>
+<li>Choose one eligible, momentum-having track and commit to testing only that track for one full campaign period &mdash; nothing else changed in the same window, so the lift number means something.</li>
+<li>Record the baseline before you start: monthly context streams, saves, follows and repeat-listen rate for the prior 28 days.</li>
+<li>Run the campaign, then compare not just streams but saves and follows after. Did the boost convert into full-rate listening you keep, or just a stream spike that evaporated?</li>
+<li>Make the keep/kill call: if the track cleared its break-even <em>and</em> moved saves/follows, consider continuing; if streams rose but saves didn&rsquo;t, switch it off &mdash; you were paying for hollow plays.</li>
+</ol></div>
+
+<h2 id="faq">Frequently asked questions</h2>
+<div class="faq-accordion">
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">What is Spotify Discovery Mode?</span></div></div>
+<div class="faq-accordion-a"><p>Discovery Mode is a Spotify for Artists feature that lets you flag specific tracks as a priority so Spotify&rsquo;s algorithm is more likely to recommend them in personalized listening contexts &mdash; Radio, Autoplay and Mixes. There&rsquo;s no upfront cost; instead Spotify takes a 30% commission on the royalties those boosted streams earn. It increases the likelihood of a recommendation but never guarantees it, and the music still has to perform to keep the boost.</p></div>
+</div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Does Discovery Mode cost money upfront?</span></div></div>
+<div class="faq-accordion-a"><p>No. There is no budget to fund and no per-click charge. The cost is a 30% commission on recording royalties, applied only to streams served in Discovery Mode contexts while the campaign runs, and deducted from your future Spotify statements as a marketing cost. If a boosted track earns nothing, you pay nothing.</p></div>
+</div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Does Discovery Mode get my song on playlists?</span></div></div>
+<div class="faq-accordion-a"><p>No &mdash; this is the biggest myth about it. Discovery Mode improves your <em>position</em> inside Radio, Autoplay and Mixes; it does not add new <em>placements</em>. It cannot put you in Discover Weekly, Release Radar or editorial playlists, which are earned through listener engagement and editorial decisions. If you have no organic algorithmic reach, there is no feed for it to promote you within.</p></div>
+</div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">How much does the 30% actually cost me?</span></div></div>
+<div class="faq-accordion-a"><p>It depends on how much extra lift the boost delivers. Because you earn 70% on context streams you might have earned at 100% organically, you need the boost to add roughly 43% more context streams (0.30 &divide; 0.70) just to break even. Below that you earn less than doing nothing; above it the trade is net-positive on streaming &mdash; before the full-rate saves and follows a good test converts into.</p></div>
+</div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Am I eligible for Discovery Mode?</span></div></div>
+<div class="faq-accordion-a"><p>Spotify requires the track to be released at least 30 days, to have at least 20 streams in Discovery Mode contexts in the last 28 days, and to meet its monetization eligibility. That middle rule is the catch: you must already be getting algorithmic streams to qualify, which is why brand-new and very niche tracks usually can&rsquo;t use it. The feature is also still gated for some artists.</p></div>
+</div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Will Discovery Mode hurt my royalties?</span></div></div>
+<div class="faq-accordion-a"><p>It can, if you use it wrong. Leaving it on across your whole catalog, or on tracks that can&rsquo;t clear the ~43% break-even, is a permanent 30% haircut on your context streams for no offsetting gain. Used as a time-boxed test on a track with real momentum, the extra full-rate listening it can convert into often outweighs the discount. The damage comes from set-and-forget, not from the feature itself.</p></div>
+</div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Is Discovery Mode payola? Is it legal?</span></div></div>
+<div class="faq-accordion-a"><p>It&rsquo;s a legal, openly documented Spotify product, but its fairness is contested. Critics call it payola-adjacent, and a 2025 class-action alleged it was &ldquo;modern payola.&rdquo; In 2026 a judge sent that case to private arbitration and dismissed the class claims &mdash; but on Spotify&rsquo;s arbitration clause, not on the merits, so the underlying question was never decided. Treat it as legitimate but reputationally contested, and decide your own comfort level.</p></div>
+</div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Should a brand-new artist use Discovery Mode?</span></div></div>
+<div class="faq-accordion-a"><p>Almost never. New artists usually can&rsquo;t meet the 20-context-streams eligibility rule, and even if they could, a boost applied to a near-zero baseline is imperceptible because there&rsquo;s no organic reach for it to amplify. The better early move is to build the engagement and audience that earn algorithmic reach in the first place, then revisit Discovery Mode once a track has genuine momentum worth amplifying.</p></div>
+</div>
+</div>
+
+
+
+      <section class="related-section" aria-labelledby="relatedHeading">
+        <h2 id="relatedHeading" style="font-size:1.35rem;margin-bottom:1.25rem;">Related Articles</h2>
+        <div class="related-grid">
+<a href="how-to-get-on-spotify-playlists.html" class="related-card"><div class="related-card-tag">Music Business</div><h3 class="related-card-title">How to Get on Spotify Playlists</h3><p class="related-card-desc">Editorial, algorithmic and user playlists &mdash; how placements are actually earned, which Discovery Mode never shortcuts.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-promote-music-on-spotify.html" class="related-card"><div class="related-card-tag">Music Business</div><h3 class="related-card-title">How to Promote Music on Spotify</h3><p class="related-card-desc">The full Spotify promotion toolkit Discovery Mode is one small lever inside &mdash; pitching, pre-saves, ads and more.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-get-more-streams-on-spotify.html" class="related-card"><div class="related-card-tag">Music Business</div><h3 class="related-card-title">How to Get More Streams on Spotify</h3><p class="related-card-desc">The engagement signals &mdash; saves, completion, repeat plays &mdash; that actually drive algorithmic reach.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-much-does-spotify-pay-per-stream.html" class="related-card"><div class="related-card-tag">Music Business</div><h3 class="related-card-title">How Much Does Spotify Pay Per Stream?</h3><p class="related-card-desc">What a Spotify stream is really worth, and why a 30% discount on it is a bigger deal than it sounds.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="music-streaming-royalties-explained.html" class="related-card"><div class="related-card-tag">Music Business</div><h3 class="related-card-title">Music Streaming Royalties Explained</h3><p class="related-card-desc">The full economics every release runs under &mdash; the context that makes the Discovery Mode trade make sense.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-build-a-fanbase.html" class="related-card"><div class="related-card-tag">Music Business</div><h3 class="related-card-title">How to Build a Fanbase</h3><p class="related-card-desc">The durable, full-rate audience-building that earns the algorithmic traction Discovery Mode requires to work.</p><span class="related-card-meta">Read article &rarr;</span></a>
+</div>
+
+</section>
+
+      </div>
+    </article>
+    <aside aria-label="Article sidebar">
+      <div class="sidebar-widget toc-widget" aria-labelledby="tocHeading">
+        <div class="sidebar-widget-header"><h2 class="sidebar-widget-title" id="tocHeading">In This Article</h2></div>
+        <div class="sidebar-widget-body"><ul class="toc-list"><li><a href="#what-it-is">What It Actually Is</a></li><li><a href="#contexts">Where the 30% Applies</a></li><li><a href="#the-math">The Break-Even Math</a></li><li><a href="#position-not-placement">Position, Not Placement</a></li><li><a href="#eligibility">The Eligibility Reality</a></li><li><a href="#measuring">Measuring It Honestly</a></li><li><a href="#payola">The Payola Question</a></li><li><a href="#who-should">Who Should Use It</a></li><li><a href="#exercises">Put It Into Practice</a></li><li><a href="#faq">FAQ</a></li></ul></div>
+      </div>
+      <div class="sidebar-widget" style="background:var(--bg-void);border-color:var(--border-default);">
+        <div class="sidebar-widget-body" style="padding:1.5rem;">
+          <p style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.5rem;">Newsletter</p>
+          <h3 style="font-family:var(--font-display);color:var(--text-primary);font-size:1.1rem;margin-bottom:.5rem;">The Producer&rsquo;s Briefing</h3>
+          <p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:1rem;line-height:1.55;">Weekly tips, gear news, and technique guides. Free.</p>
+          <form class="newsletter-form-js" style="display:flex;flex-direction:column;gap:.5rem;" novalidate>
+            <input type="email" name="email" class="form-input" placeholder="Your email" required />
+            <button type="submit" class="btn-newsletter" style="font-size:.82rem;padding:.65rem 1rem;">Subscribe Free</button>
+          </form>
+        </div>
+      <div class="sidebar-widget" style="margin-top:1.5rem;">
+        <div class="sidebar-widget-header" style="text-align:center;">
+          <h2 class="sidebar-widget-title">Related Articles</h2>
+        </div>
+        <div class="sidebar-widget-body" style="padding:1rem;"><ul style="list-style:none;padding:0;margin:0;text-align:center;"><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="how-to-get-on-spotify-playlists.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">How to Get on Spotify Playlists</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Music Business</span></li><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="how-to-promote-music-on-spotify.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">How to Promote Music on Spotify</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Music Business</span></li><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="how-much-does-spotify-pay-per-stream.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">How Much Does Spotify Pay Per Stream?</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Music Business</span></li></ul>
+        </div>
+      </div>
+      </div>
+    </aside>
+
+  </div>
+</main>
+<section class="newsletter-section" id="newsletter" aria-labelledby="newsletterHeading">
+  <div class="container">
+    <div class="newsletter-inner">
+      <div class="newsletter-content">
+        <p class="newsletter-label">Newsletter</p>
+        <h2 id="newsletterHeading" class="newsletter-title">The Producer's <em>Briefing</em></h2>
+        <p class="newsletter-desc">Weekly techniques, gear news, and music business insights. Free.</p>
+      </div>
+      <div class="newsletter-form-wrap">
+        <form class="newsletter-form-js" novalidate>
+          <input type="email" name="email" class="form-input" placeholder="Your email address" required />
+          <button type="submit" class="btn-newsletter">Subscribe Free</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<footer class="site-footer" role="contentinfo">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="../index.html" class="site-logo"><span class="logo-wordmark">Music<span>Production</span>Wiki</span><span class="logo-tagline">The Producer's Reference</span></a>
+    </div>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <div class="footer-col">
+        <h3 class="footer-col-title">Categories</h3>
+        <ul>
+          <li><a href="../categories/reviews.html">Reviews</a></li>
+          <li><a href="../categories/comparisons.html">Comparisons</a></li>
+          <li><a href="../categories/ai-music.html">AI Music</a></li>
+          <li><a href="../categories/daws.html">DAWs</a></li>
+          <li><a href="../categories/plugins.html">Plugins</a></li>
+          <li><a href="../categories/hardware.html">Gear</a></li>
+          <li><a href="../categories/techniques.html">Techniques</a></li>
+          <li><a href="../categories/music-business.html">Music Business</a></li>
+          <li><a href="../categories/glossary.html">Glossary</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">Popular</h3>
+        <ul>
+          <li><a href="../articles/suno-vs-udio.html">Suno vs Udio</a></li>
+          <li><a href="../articles/best-daw-for-beginners.html">Best DAW for Beginners</a></li>
+          <li><a href="../articles/focusrite-scarlett-2i2-gen-4-review.html">Scarlett 2i2 Review</a></li>
+          <li><a href="../articles/sidechain-compression-guide.html">Sidechain Compression</a></li>
+          <li><a href="../articles/best-compressor-plugins.html">Best Compressor Plugins</a></li>
+          <li><a href="../articles/what-is-gain-staging.html">What Is Gain Staging</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">About</h3>
+        <ul>
+          <li><a href="../about.html">About MPW</a></li>
+          <li><a href="../about.html#team">Our Team</a></li>
+          <li><a href="../about.html#methodology">Review Methodology</a></li>
+          <li><a href="../about.html#affiliate">Affiliate Disclosure</a></li>
+          <li><a href="../about.html#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="footer-bottom"><div class="container"><p>© <span id="copyrightYear"></span> MusicProductionWiki.com. All rights reserved. Content by the Music Production Wiki Team.</p></div></div>
+</footer>
+<script src="../js/main.js"></script>
+<script>document.getElementById('copyrightYear').textContent = new Date().getFullYear();</script>
+
+<button id="mpwBackTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  aria-label="Back to top"
+  style="position:fixed;bottom:1.5rem;right:1.5rem;width:2.5rem;height:2.5rem;border-radius:50%;
+         background:var(--teal);color:#000;border:none;cursor:pointer;display:none;
+         align-items:center;justify-content:center;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3);">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <polyline points="18 15 12 9 6 15"/>
+  </svg>
+</button>
+<script>
+(function(){
+  var btn=document.getElementById('mpwBackTop');
+  var bar=document.getElementById('readingProgress');
+  var art=document.querySelector('.article-body');
+  window.addEventListener('scroll',function(){
+    var st=window.scrollY||document.documentElement.scrollTop;
+    btn.style.display=st>400?'flex':'none';
+    if(bar&&art){
+      var h=art.getBoundingClientRect().height;
+      var top=art.getBoundingClientRect().top+st;
+      var pct=Math.min(100,Math.max(0,(st-top+window.innerHeight)*100/h));
+      bar.style.width=pct+'%';
+      bar.setAttribute('aria-valuenow',Math.round(pct));
+    }
+  });
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<!-- MPW universal search: one overlay, one Fuse index (/search-index.json) -->
+<div class="usearch" id="usearch" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="usearch-box">
+    <div class="usearch-top">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input id="usearchInput" type="text" placeholder="Search tools, articles, the Bible…" autocomplete="off">
+      <kbd>esc</kbd>
+    </div>
+    <div class="usearch-results" id="usearchResults"></div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
+<script>
+(function(){
+  // === production parity: lazy-load index on first open, build Fuse once ===
+  var data=null, fuse=null;
+  var overlay=document.getElementById('usearch');
+  var input=document.getElementById('usearchInput');
+  var box=document.getElementById('usearchResults');
+  var sel=-1, current=[];
+  // article slugs are bare; bible/ and tools/ slugs carry their prefix (verified vs live search-index.json)
+  function urlFor(s){ return (s.indexOf('bible/')===0||s.indexOf('tools/')===0) ? '/'+s : '/articles/'+s; }
+
+  function buildFuse(arr){
+    data=arr;
+    fuse=new Fuse(data,{keys:['title','category','description'],threshold:0.34,ignoreLocation:true,minMatchCharLength:2});
+  }
+  function ensureIndex(cb){
+    if(fuse){cb();return;}
+    // PRODUCTION: one shared index, lazy-loaded on first open.
+    fetch('/search-index.json').then(function(r){return r.json();}).then(function(arr){
+      buildFuse(arr); cb();
+    }).catch(function(){ box.textContent='Search failed to load.'; });
+  }
+
+  function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  function render(results){
+    current=results;
+    while(box.firstChild) box.removeChild(box.firstChild);   // no innerHTML
+    if(!input.value.trim()){ var p=document.createElement('div'); p.className='usearch-empty'; p.textContent='Start typing to search everything.'; box.appendChild(p); return; }
+    if(!results.length){ var n=document.createElement('div'); n.className='usearch-empty'; n.textContent='No results for "'+input.value+'".'; box.appendChild(n); return; }
+    results.slice(0,12).forEach(function(r,i){
+      var e=r.item||r;
+      var a=document.createElement('a'); a.href=urlFor(e.slug); if(i===sel)a.className='sel';
+      var top=document.createElement('div'); top.className='ur-top';
+      var t=document.createElement('span'); t.className='ur-title'; t.textContent=e.title;
+      var c=document.createElement('span'); c.className='ur-cat'; c.setAttribute('data-c',e.category||''); c.textContent=e.category||'';
+      top.appendChild(t); top.appendChild(c); a.appendChild(top);
+      if(e.description){ var d=document.createElement('div'); d.className='ur-desc'; d.textContent=e.description; a.appendChild(d); }
+      box.appendChild(a);
+    });
+  }
+
+  function open(q){ ensureIndex(function(){ overlay.classList.add('open'); input.focus(); if(q!=null){input.value=q;} sel=-1; render(input.value?fuse.search(input.value):[]); }); }
+  function close(){ overlay.classList.remove('open'); }
+
+  // wire every nav's search button to the shared overlay
+  document.querySelectorAll('[data-nav-search]').forEach(function(b){ b.addEventListener('click',function(){open(null);}); });
+  input.addEventListener('input',function(){ sel=-1; render(fuse?fuse.search(input.value):[]); });
+  input.addEventListener('keydown',function(e){
+    if(e.key==='Escape')close();
+    else if(e.key==='ArrowDown'){e.preventDefault(); sel=Math.min(sel+1,Math.min(current.length,12)-1); render(current);}
+    else if(e.key==='ArrowUp'){e.preventDefault(); sel=Math.max(sel-1,0); render(current);}
+    else if(e.key==='Enter'&&current[sel]){ var e2=current[sel].item||current[sel]; location.href=urlFor(e2.slug); }
+  });
+  overlay.addEventListener('click',function(e){ if(e.target===overlay)close(); });
+  document.addEventListener('keydown',function(e){ if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();open(null);} });
+})();
+</script>
+<script id="toc-bar-js">
+(function(){
+  var body=document.querySelector('.article-body');
+  var track=document.getElementById('tocBarTrack');
+  if(!body||!track)return;
+  var heads=[].slice.call(body.querySelectorAll('h2[id]'));
+  if(!heads.length)return;
+  heads.forEach(function(h){
+    var a=document.createElement('a');a.href='#'+h.id;
+    var t=h.textContent.trim();var i=t.indexOf(':');if(i>0)t=t.slice(0,i);
+    a.textContent=t;track.appendChild(a);
+  });
+  var links=[].slice.call(track.querySelectorAll('a'));
+  function onScroll(){
+    var y=window.scrollY+130,cur=heads[0].id;
+    heads.forEach(function(h){if(h.offsetTop<=y)cur=h.id;});
+    links.forEach(function(l){var on=l.getAttribute('href')==='#'+cur;l.classList.toggle('active',on);
+      if(on)l.scrollIntoView({inline:'center',block:'nearest'});});
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+})();
+</script>
+<script>
+function mpwFaqToggle(el){
+  var answer = el.nextElementSibling;
+  if(!answer || !answer.classList.contains('faq-accordion-a')) return;
+  var isOpen = answer.classList.contains('open');
+  document.querySelectorAll('.faq-accordion-a.open').forEach(function(a){
+    a.classList.remove('open');
+    var q = a.previousElementSibling;
+    if(q){ var ic = q.querySelector('.faq-accordion-icon, .faq-plus'); if(ic) ic.classList.remove('open'); }
+  });
+  if(!isOpen){
+    answer.classList.add('open');
+    var icon = el.querySelector('.faq-accordion-icon, .faq-plus');
+    if(icon) icon.classList.add('open');
+  }
+}
+</script>
+<style>.faq-plus.open{transform:rotate(45deg);transition:transform .2s ease}</style>
+</body>
+
+</html>
