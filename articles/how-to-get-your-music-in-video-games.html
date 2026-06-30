@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Get your music into video games in 2026: the producer-side game-sync playbook — audio directors, itch.io and Discord, stems for Wwise/FMOD, paid once." />
+  <title>How to Get Your Music in Video Games (2026 Guide)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <style>
+    #readingProgress{position:fixed;top:0;left:0;height:3px;background:var(--teal);width:0%;z-index:200;transition:width 0.1s linear;}
+    .quick-answer{background:linear-gradient(135deg,rgba(0,212,168,0.08),rgba(167,139,250,0.06));border:1px solid rgba(0,212,168,0.3);border-left:4px solid var(--teal);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .quick-answer-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.6rem;}
+    .quick-answer p{font-size:1rem;line-height:1.65;color:var(--text-primary);margin:0;}
+    .skill-badge{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .6rem;border-radius:4px;margin-left:.6rem;vertical-align:middle;position:relative;top:-2px;}
+    .skill-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .skill-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .skill-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .settings-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .settings-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .settings-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .settings-table tr:last-child td{border-bottom:none;}
+    .settings-table tr:hover td{background:var(--bg-surface);}
+    .settings-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .settings-table .mono{font-family:var(--font-mono);font-size:.82rem;color:var(--teal);}
+    .mistake-box{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-left:4px solid #ef4444;border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .mistake-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ef4444;margin-bottom:.4rem;}
+    .mistake-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference{border-left:3px solid var(--purple);padding:.75rem 1.25rem;margin:1.25rem 0;background:rgba(167,139,250,0.05);border-radius:0 6px 6px 0;}
+    .pro-reference-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.35rem;}
+    .pro-reference p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference strong{color:var(--text-primary);}
+    .listening-prescription{background:var(--bg-void);border:1px solid var(--border-default);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;position:relative;}
+    .listening-prescription::before{content:'🎧';position:absolute;top:-14px;left:1.5rem;background:var(--bg-void);padding:0 .4rem;font-size:1.1rem;}
+    .listening-prescription-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:.75rem;}
+    .listening-prescription p{font-size:.9rem;line-height:1.7;color:var(--text-secondary);margin:0 0 .5rem;}
+    .listening-record{font-weight:600;color:var(--text-primary);}
+    .decision-framework{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .decision-framework-title{font-family:var(--font-display);font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:1rem;}
+    .decision-item{display:flex;gap:1rem;padding:.65rem 0;border-bottom:1px solid var(--border-subtle);font-size:.88rem;line-height:1.55;}
+    .decision-item:last-child{border-bottom:none;}
+    .decision-if{color:var(--text-muted);font-style:italic;min-width:2rem;}
+    .decision-then{color:var(--text-primary);}
+    .decision-then strong{color:var(--teal);}
+    .exercise-block{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.25rem 0;}
+    .exercise-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;}
+    .exercise-badge{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .7rem;border-radius:4px;}
+    .exercise-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .exercise-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .exercise-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .exercise-title{font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text-primary);}
+    .exercise-block ol{margin:0;padding-left:1.25rem;color:var(--text-secondary);font-size:.88rem;line-height:1.7;}
+    .exercise-block ol li{margin-bottom:.4rem;}
+    .version-line{font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:4px;padding:.4rem .75rem;margin:.75rem 0 1.5rem;display:inline-block;}
+    .go-deeper{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:10px;padding:1.75rem;margin:2.5rem 0;}
+    .go-deeper-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text-primary);margin-bottom:1.25rem;}
+    .go-deeper-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;}
+    .go-deeper-item{background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:7px;padding:1rem 1.1rem;}
+    .go-deeper-item-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.35rem;}
+    .go-deeper-item a{font-size:.88rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;}
+    .go-deeper-item p{font-size:.78rem;color:var(--text-muted);margin:.3rem 0 0;}
+    .citation{font-size:.78rem;color:var(--text-muted);font-style:italic;margin-top:.25rem;}
+    .diagram-wrap{margin:1.75rem 0;background:var(--bg-void);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem;overflow-x:auto;}
+    .diagram-caption{font-size:.78rem;color:var(--text-muted);text-align:center;margin-top:.75rem;font-style:italic;}
+    .highlight-box{background:rgba(0,212,168,0.06);border:1px solid rgba(0,212,168,0.2);border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .highlight-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.4rem;}
+    .highlight-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin:1.5rem 0;}
+    .stat-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem;text-align:center;}
+    .stat-number{font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--teal);display:block;}
+    .stat-label{font-size:.78rem;color:var(--text-secondary);margin-top:.25rem;}
+    .action-steps{counter-reset:steps;list-style:none;padding:0;margin:1.5rem 0;}
+    .action-steps li{counter-increment:steps;position:relative;padding:.85rem 0 .85rem 2.6rem;border-bottom:1px solid var(--border-subtle);font-size:.9rem;color:var(--text-secondary);line-height:1.6;}
+    .action-steps li:last-child{border-bottom:none;}
+    .action-steps li::before{content:counter(steps);position:absolute;left:0;top:.9rem;background:var(--teal);color:#000;font-weight:800;font-size:.75rem;width:1.6rem;height:1.6rem;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+    .genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:1.5rem 0;}
+    .genre-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem 1.25rem;}
+    .genre-card-name{font-family:var(--font-display);font-size:.85rem;font-weight:700;color:var(--teal);margin-bottom:.4rem;}
+    .genre-card p{font-size:.82rem;color:var(--text-secondary);line-height:1.55;margin:0;}
+    .comparison-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .comparison-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .comparison-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .comparison-table tr:last-child td{border-bottom:none;}
+    .comparison-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .affiliate-cta{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,212,168,0.1);border:1px solid rgba(0,212,168,0.25);color:var(--teal);font-size:.82rem;font-weight:600;padding:.45rem .9rem;border-radius:6px;text-decoration:none;}
+
+    .faq-accordion{margin:1.75rem 0;}
+    .faq-accordion-item{background:var(--bg-surface);border:1px solid var(--border-subtle);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;margin-bottom:8px;overflow:hidden;}
+    .faq-accordion-q{display:flex;align-items:flex-start;padding:1rem 1.25rem;cursor:pointer;gap:.75rem;}
+    .faq-accordion-q:hover{background:var(--bg-elevated);}
+    .faq-accordion-icon{width:16px;height:16px;flex-shrink:0;margin-top:3px;color:var(--purple);transition:transform .2s ease;}
+    .faq-accordion-icon.open{transform:rotate(45deg);}
+    .faq-accordion-q-inner{display:flex;flex-direction:column;}
+    .faq-accordion-label{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin-bottom:.2rem;}
+    .faq-accordion-q-text{font-size:.92rem;font-weight:600;color:var(--text-primary);line-height:1.45;font-family:var(--font-display);}
+    .faq-accordion-a{display:none;padding:0 1.25rem 1rem 2.75rem;font-size:.88rem;color:var(--text-secondary);line-height:1.7;border-top:1px solid var(--border-subtle);padding-top:.85rem;}
+    .faq-accordion-a.open{display:block;}
+    .scorecard-table{display:table;table-layout:fixed;width:100%;border-collapse:collapse;font-size:.88rem;margin:1.5rem 0;border:1px solid var(--border-default);border-radius:8px;overflow:hidden;}
+    .scorecard-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;padding:.7rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .scorecard-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;vertical-align:top;}
+    .scorecard-table tr:last-child td{border-bottom:none;}
+    .scorecard-table td:first-child{color:var(--text-primary);font-weight:600;}
+    .scorecard-table .sc-num{font-family:var(--font-mono);font-weight:600;color:var(--teal);text-align:center;}
+    .scorecard-table .sc-amber{color:var(--purple);}
+    .scorecard-table .sc-overall td{background:rgba(0,212,168,0.06);font-weight:700;}
+    .vs-verdict{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.1rem 0 .4rem;}
+    @media(max-width:560px){.vs-verdict{grid-template-columns:1fr;}}
+    .vs-card{background:var(--bg-void);border:1px solid var(--border-subtle);border-radius:8px;padding:1.2rem 1.35rem;}
+    .vs-card.win{border-color:rgba(0,212,168,0.4);}
+    .vs-name{font-family:var(--font-display);font-size:1.02rem;font-weight:700;color:var(--text-primary);margin-bottom:.35rem;}
+    .vs-score{font-size:2.5rem;font-weight:800;color:var(--teal);line-height:1;font-family:var(--font-display);}
+    .vs-score small{font-size:.95rem;color:var(--text-muted);font-weight:600;}
+    .vs-tag{font-size:.8rem;color:var(--text-secondary);margin:.5rem 0 0;line-height:1.5;}
+    .vs-pc{font-size:.82rem;line-height:1.6;margin-top:.55rem;color:var(--text-secondary);}
+    .vs-pc strong{color:var(--text-primary);}
+    .diagram-wrap img{width:100%;height:auto;display:block;border-radius:6px;}
+</style>
+
+  <link rel="canonical" href="https://musicproductionwiki.com/articles/how-to-get-your-music-in-video-games.html"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="How to Get Your Music in Video Games (2026 Guide)"/>
+  <meta property="og:description" content="Game sync is not TV sync with a different logo — different gatekeepers, channels, files and a pay-once royalty model. The producer’s game-sync playbook."/>
+  <meta property="og:url" content="https://musicproductionwiki.com/articles/how-to-get-your-music-in-video-games.html"/>
+  <meta property="og:site_name" content="Music Production Wiki"/>
+  <meta property="og:image" content="https://musicproductionwiki.com/og-image.png"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="article:author" content="Music Production Wiki Team"/>
+  <meta property="article:section" content="Music Business"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="How to Get Your Music in Video Games (2026 Guide)"/>
+  <meta name="twitter:description" content="Audio directors not supervisors, itch.io and game jams not film libraries, stems for adaptive engines, and a pay-once royalty reality. The game-sync playbook."/>
+  <meta name="twitter:image" content="https://musicproductionwiki.com/og-image.png"/>
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="article:published_time" content="2026-06-30T00:00:00+00:00" />
+  <meta property="article:modified_time" content="2026-06-30T00:00:00+00:00" />
+  <meta name="keywords" content="how to get your music in video games, game sync licensing, music for video games, video game music licensing, sync licensing games, adaptive music wwise fmod, itch.io composer, game audio director, indie game music" />
+  <!-- Article schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How to Get Your Music in Video Games (2026 Guide)",
+  "description": "How to get your music placed in video games: the producer-side game-sync playbook — gatekeepers, channels, the two licenses, the pay-once royalty reality, and the indie-to-AAA ladder. Education, not legal advice.",
+  "articleSection": "Music Business",
+  "image": [
+    "https://musicproductionwiki.com/images/how-to-get-your-music-in-video-games-game-vs-tv-sync.png",
+    "https://musicproductionwiki.com/images/how-to-get-your-music-in-video-games-two-license-royalty-map.png",
+    "https://musicproductionwiki.com/images/how-to-get-your-music-in-video-games-indie-to-aaa-ladder.png",
+    "https://musicproductionwiki.com/og-image.png"
+  ],
+  "datePublished": "2026-06-30",
+  "dateModified": "2026-06-30",
+  "author": {
+    "@type": "Organization",
+    "name": "Music Production Wiki",
+    "url": "https://musicproductionwiki.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Music Production Wiki",
+    "url": "https://musicproductionwiki.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://musicproductionwiki.com/og-image.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://musicproductionwiki.com/articles/how-to-get-your-music-in-video-games.html"
+  }
+}
+</script>
+  <!-- Organization -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Music Production Wiki",
+  "url": "https://musicproductionwiki.com",
+  "logo": {
+    "@type": "ImageObject",
+    "url": "https://musicproductionwiki.com/og-image.png"
+  }
+}
+</script>
+  <!-- WebSite -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Music Production Wiki",
+  "url": "https://musicproductionwiki.com",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://musicproductionwiki.com/?s={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+  <!-- BreadcrumbList -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://musicproductionwiki.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Music Business",
+      "item": "https://musicproductionwiki.com/categories/music-business.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "How to Get Your Music in Video Games",
+      "item": "https://musicproductionwiki.com/articles/how-to-get-your-music-in-video-games.html"
+    }
+  ]
+}
+</script>
+  <!-- FAQ -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+        "@type": "Question",
+        "name": "How do I get my music into a video game?",
+        "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Treat it as sync licensing aimed at game developers, not TV supervisors. Prepare a sync-ready catalog (clean masters, instrumentals, exportable stems, documented rights), then reach indie developers directly on itch.io, in game jams, on Discord and r/gamedev, and through Steam upcoming releases. Send a personalized pitch with two or three tracks matched to a specific game, state your terms and your sync-readiness, and start with indie placements that build credits and relationships before reaching for bigger budgets through agents and libraries."
+        }
+    },
+    {
+        "@type": "Question",
+        "name": "Do games pay royalties or a one-time fee?",
+        "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Usually a one-time, upfront fee. Music played inside a game is generally not treated as a public performance, so in-game play does not earn a per-play performance royalty the way streaming or broadcast does — developers typically license or buy out the music for a flat fee paid upfront. The exception is broadcast and streamed use: a game trailer that airs on TV, or eSports and Twitch and YouTube streams of gameplay, can generate PRO performance royalties. So price the upfront fee as the whole deal, but register with your PRO anyway to catch any broadcast or streamed royalties."
+        }
+    },
+    {
+        "@type": "Question",
+        "name": "Do I need stems for game music?",
+        "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Often, yes. A large and growing share of games use adaptive (interactive) music, where the score changes in response to gameplay. That is built from stems — the separate layers of your track — and seamless loops, which middleware like Wwise or FMOD fades in and out and transitions based on what the player does. You do not have to be a middleware engineer, but being able to export clean, well-labeled stems and loops (with the BPM noted) and saying so in your pitch makes you far more placeable than someone offering only a finished stereo file."
+        }
+    },
+    {
+        "@type": "Question",
+        "name": "Can my music be on Spotify and in a game at the same time?",
+        "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Sync is a separate right from distribution, so you never have to pull a track from streaming to license it for a game. The same song can earn streams on Spotify and Apple Music while also being placed in a game, a trailer or an ad, each under its own license. A placement often even spikes your streams as new listeners discover the track in context. The only thing to confirm is that your distributor agreement leaves your sync rights with you — most are non-exclusive and do."
+        }
+    },
+    {
+        "@type": "Question",
+        "name": "Should I work for free or credit-only on indie games?",
+        "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Early on, often yes — deliberately. Your first placements buy credits, relationships and a portfolio that the money can’t, and that is the cheapest time to acquire them. But “investment” is not the same as being exploited: even when you discount, negotiate something — a modest fee, a share of sales, a guaranteed minimum, an ironclad credit, and the right to use the music in your own portfolio and releases. Set a private line for when you stop discounting, and don’t let a studio with a real budget convince you your work is worthless."
+        }
+    },
+    {
+        "@type": "Question",
+        "name": "How do I find game developers to pitch?",
+        "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Indie developers are unusually reachable. itch.io hosts thousands of indie games plus “looking for a composer” threads and constant game jams; game jams are the fastest way to a first shipped credit because teams need music fast. Beyond that, Discord servers for game dev and game audio, Reddit’s r/gamedev and r/gamedevclassifieds, developers on X and YouTube, and Steam’s upcoming-releases list are all live channels. At a more advanced stage, GDC and PAX put you in the same room as game-audio professionals. Reach out about specific projects with personalized pitches, never generic blasts."
+        }
+    },
+    {
+        "@type": "Question",
+        "name": "What’s the difference between game sync and TV sync?",
+        "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Four things change. The gatekeeper is an audio director or music lead, not a film music supervisor. The channel is itch.io, Discord, game jams and GDC, not film libraries and supervisor networks. The files are often stems and loops for adaptive engines (Wwise/FMOD), not just a finished stereo master. And the money is usually an upfront fee only, because in-game play earns no per-play royalty, whereas TV sync pays an upfront fee plus ongoing performance royalties when it airs. The two-copyright structure (sync plus master-use license) is the same; how games use, deliver and pay for music is not."
+        }
+    },
+    {
+        "@type": "Question",
+        "name": "Do I need a sync agent for games?",
+        "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not to start — your first placements come from direct outreach to indie developers. An agent becomes useful once you have a track record, because they receive game briefs you’ll never see and negotiate on your behalf. If you pursue one, vet for a documented game track record (not just film and TV), confirm the commission — commonly around 20–35% of the sync fee, sometimes more — and remember a legitimate sync rep only earns when they land you a placement. Anyone calling themselves a sync rep who tries to take a piece of your publishing is a red flag."
+        }
+    }
+]
+}
+</script>
+<style id="toc-skin">
+.toc-widget .sidebar-widget-header{margin-bottom:.35rem}
+.toc-list{counter-reset:tocnum;list-style:none;margin:0;padding:0}
+.toc-list li{counter-increment:tocnum;position:relative;margin:0;border-left:2px solid var(--border-subtle);transition:border-color .15s ease,background .15s ease}
+.toc-list li a{display:flex;gap:.7rem;align-items:baseline;padding:.5rem .85rem .5rem 1rem;font-size:.82rem;line-height:1.45;font-weight:500;color:var(--text-secondary);text-decoration:none;transition:color .15s ease}
+.toc-list li a::before{content:counter(tocnum,decimal-leading-zero);font-family:var(--font-mono,ui-monospace,monospace);font-size:.7rem;font-weight:600;letter-spacing:.04em;color:var(--text-muted);flex:0 0 auto;min-width:1.5em;padding-top:.05rem}
+.toc-list li a:hover{color:var(--text-primary)}
+.toc-list li.active{border-left-color:var(--teal);background:linear-gradient(90deg,rgba(0,212,168,.08),transparent 80%)}
+.toc-list li.active a{color:var(--teal);font-weight:600}
+.toc-list li.active a:hover{color:var(--teal)}
+.toc-list li.active a::before{color:var(--teal)}
+</style>
+<style id="toc-bar-css">
+.toc-bar{display:none}
+@media (max-width: 900px){
+.toc-bar{display:block;position:sticky;top:60px;z-index:400;background:var(--bg-void);border-bottom:1px solid var(--border-default);overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(to right,#000 88%,transparent 100%);mask-image:linear-gradient(to right,#000 88%,transparent 100%)}
+.toc-bar::-webkit-scrollbar{display:none}
+.toc-bar-track{display:flex;gap:4px;padding:9px 10px;min-width:max-content}
+.toc-bar-track a{color:var(--text-secondary);text-decoration:none;font-family:var(--font-mono,ui-monospace,monospace);font-size:10px;text-transform:uppercase;letter-spacing:.05em;padding:6px 10px;border-radius:4px;white-space:nowrap;min-height:30px;display:inline-flex;align-items:center;transition:color .15s,background .15s}
+.toc-bar-track a.active{color:var(--teal);background:var(--bg-elevated)}
+.article-body h2[id]{scroll-margin-top:116px}
+}
+@media (max-width: 900px) and (hover:hover){.toc-bar-track a:hover{color:var(--teal)}}
+</style>
+</head>
+<body>
+<div id="readingProgress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+<style id="mpw-unav-css">
+
+.mnav-wrap,.usearch{--ink:#09090d;--panel:#0f0f18;--panel2:#15151f;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);--amber:#f5a623;--teal:#00e8a2;--teal-d:rgba(0,232,162,.12);--text:#f2f2f7;--t2:#9a9ab2;--t3:#56566f;--sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'DM Mono',ui-monospace,SFMono-Regular,monospace;}
+.mnav-wrap *,.mnav-wrap *::before,.mnav-wrap *::after,.usearch *,.usearch *::before,.usearch *::after{box-sizing:border-box;margin:0;padding:0}
+/* host-CSS shield: a page loading style.css (articles) must not bleed its body font/color/line-height into the bar. Direct rule on .mnav-wrap beats inherited body styles. */
+.mnav-wrap,.usearch{font-family:var(--sans);font-size:14px;font-weight:400;font-style:normal;line-height:1.4;letter-spacing:normal;color:var(--text);text-align:left;text-transform:none}
+/* S91 host-CSS isolation (:where() = zero-specificity; beats style.css bare a/li by source order, LOSES to nav's own .drw-card/.mnav-flat classes) */
+:where(.mnav-wrap,.usearch) a{color:inherit;text-decoration:none;background:none;border:0;font:inherit;letter-spacing:inherit}
+:where(.mnav-wrap,.usearch) ul,:where(.mnav-wrap,.usearch) ol{list-style:none;margin:0;padding:0;border:0}
+:where(.mnav-wrap,.usearch) li{margin:0;padding:0;border:0;font-size:inherit;line-height:inherit;color:inherit;background:none}
+:where(.mnav-wrap,.usearch) h1,:where(.mnav-wrap,.usearch) h2,:where(.mnav-wrap,.usearch) h3,:where(.mnav-wrap,.usearch) h4,:where(.mnav-wrap,.usearch) h5,:where(.mnav-wrap,.usearch) h6,:where(.mnav-wrap,.usearch) p{margin:0;padding:0;border:0;font:inherit;color:inherit;line-height:inherit;letter-spacing:inherit;text-transform:none}
+:where(.mnav-wrap,.usearch) button{font:inherit;color:inherit;background:none;border:0;letter-spacing:inherit;text-align:inherit}
+:where(.mnav-wrap,.usearch) svg{display:inline-block;vertical-align:middle}
+:where(.mnav-wrap,.usearch) img{max-width:none}
+.mnav-wrap{background:var(--ink);border-bottom:1px solid var(--line);position:relative}
+.mnav{height:60px;display:flex;align-items:center}
+.mnav-in{max-width:1180px;margin:0 auto;padding:0 22px;width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.mnav-brand{display:flex;align-items:center;gap:10px;color:var(--text);text-decoration:none;flex:0 0 auto}
+.mnav-word{font-weight:700;font-size:15px;letter-spacing:-.02em}
+.mnav-links{display:flex;align-items:center;gap:6px;margin-left:8px}
+.mnav-flat,.mnav-trigger{color:var(--t2);background:none;border:0;font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;padding:8px 12px;border-radius:8px;display:inline-flex;align-items:center;gap:6px}
+.mnav-flat:hover,.mnav-trigger:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.caret{font-size:9px;color:var(--t3);transition:transform .18s}
+.mnav-right{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.mnav-search{background:none;border:0;color:var(--t2);cursor:pointer;display:flex;padding:6px;border-radius:8px}
+.mnav-search:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.mnav-cta{border:1px solid var(--teal);color:var(--teal);text-decoration:none;padding:7px 15px;border-radius:8px;font-size:13px;font-weight:600;white-space:nowrap}
+.mnav-cta:hover{background:var(--teal-d)}
+.mnav-wrap[data-section="tools"] .mnav-flat[data-nav="tools"]{color:var(--text);font-weight:600}
+.mnav-wrap[data-section="articles"] .mnav-trigger[data-nav="articles"]{color:var(--text);font-weight:600}
+/* Bible = amber brand color, desktop link + mobile drawer */
+.mnav-flat[data-nav="bible"],.drw-link[data-nav="bible"]{color:#f5a623!important;font-weight:600}
+.mnav-flat[data-nav="bible"]:hover,.drw-link[data-nav="bible"]:hover{color:#ffc04d!important}
+.mnav-item{position:relative}
+.mnav-panel,.mnav-panel-wide{position:absolute;top:calc(100% + 6px);left:0;z-index:50;display:none;background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:14px;box-shadow:0 24px 60px -24px rgba(0,0,0,.9);min-width:240px}
+.mnav-panel-wide{grid-template-columns:1fr 1fr;gap:8px 22px;min-width:520px}
+.mnav-item:hover .mnav-panel,.mnav-item:focus-within .mnav-panel,.mnav-item:hover .mnav-panel-wide,.mnav-item:focus-within .mnav-panel-wide{display:grid}
+.mnav-item:hover .caret{transform:rotate(180deg)}
+.mp-col{display:flex;flex-direction:column}
+.mp-head{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);padding:6px 10px 8px}
+.mnav-panel a{display:flex;flex-direction:column;gap:1px;padding:8px 10px;border-radius:9px;text-decoration:none}
+.mnav-panel a:hover{background:rgba(255,255,255,.05)}
+.mp-name{color:var(--text);font-size:13.5px;font-weight:600}.mp-desc{color:var(--t2);font-size:11.5px}
+.mnav-sub{display:none;background:var(--panel);border-bottom:1px solid var(--line)}
+.mnav-wrap[data-section="bible"] .mnav-sub{display:block}
+.mnav-sub-in{max-width:1180px;margin:0 auto;padding:10px 22px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.mnav-sub-in::-webkit-scrollbar{display:none}
+.mnav-sub-in a{flex:0 0 auto;color:var(--t2);text-decoration:none;font-size:12.5px;font-family:var(--mono);border:1px solid var(--line2);border-radius:99px;padding:5px 12px;white-space:nowrap}
+.mnav-sub-in a:hover{color:var(--teal);border-color:rgba(0,232,162,.4)}
+.mnav-toggle{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.mnav-burger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:8px;border-radius:8px}
+.mnav-burger span{display:block;width:20px;height:2px;background:var(--text);border-radius:2px;transition:.2s}
+.mnav-drawer{display:none;flex-direction:column;padding:6px 18px 16px;background:var(--ink);border-bottom:1px solid var(--line)}
+.mnav-drawer details{border-bottom:1px solid var(--line)}
+.mnav-drawer summary{list-style:none;cursor:pointer;padding:13px 2px;font-size:15px;font-weight:600;color:var(--text);display:flex;justify-content:space-between}
+.mnav-drawer summary::-webkit-details-marker{display:none}
+.mnav-drawer summary::after{content:"+";color:var(--t3)}
+.mnav-drawer details[open] summary::after{content:"\2013"}
+.mnav-acc{display:flex;flex-direction:column;padding:0 0 10px 12px}
+.mnav-acc a{color:var(--t2);text-decoration:none;font-size:14px;padding:8px 0}
+.drw-link{color:var(--t2);text-decoration:none;font-size:15px;font-weight:600;padding:13px 2px;border-bottom:1px solid var(--line)}
+.drw-cta{color:var(--teal);text-decoration:none;font-weight:600;font-size:15px;padding:14px 2px}
+.mnav-toggle:checked ~ .mnav-drawer{display:flex}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(2){opacity:0}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+@media(max-width:860px){.mnav-links,.mnav-cta{display:none}.mnav-burger{display:flex}}
+
+/* ===== UNIFIED SEARCH OVERLAY ===== */
+.usearch{position:fixed;inset:0;z-index:10000;display:none;background:rgba(6,6,11,.78);backdrop-filter:blur(6px);padding:80px 20px 20px}
+.usearch.open{display:block}
+.usearch-box{max-width:620px;margin:0 auto;background:var(--panel);border:1px solid var(--line2);border-radius:16px;overflow:hidden;box-shadow:0 40px 90px -30px rgba(0,0,0,.95)}
+.usearch-top{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.usearch-top svg{color:var(--t3);flex:0 0 auto}
+.usearch-top input{flex:1;background:none;border:0;outline:none;color:var(--text);font-family:var(--sans);font-size:17px}
+.usearch-top input::placeholder{color:var(--t3)}
+.usearch-top kbd{font-family:var(--mono);font-size:11px;color:var(--t3);border:1px solid var(--line2);border-radius:6px;padding:2px 7px}
+.usearch-results{max-height:56vh;overflow-y:auto;padding:8px}
+.usearch-results a{display:block;padding:11px 14px;border-radius:10px;text-decoration:none;transition:background .12s}
+.usearch-results a:hover,.usearch-results a.sel{background:rgba(255,255,255,.05)}
+.ur-top{display:flex;align-items:baseline;gap:9px}
+.ur-title{color:var(--text);font-size:14.5px;font-weight:600}
+.ur-cat{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.06);color:var(--t2);flex:0 0 auto}
+.ur-cat[data-c="Tools"]{background:var(--teal-d);color:var(--teal);border:1px solid rgba(0,232,162,.4)}
+.ur-cat[data-c="Bible"]{background:rgba(245,166,35,.18);color:#f5a623;border:1px solid rgba(245,166,35,.4)}
+.ur-desc{color:var(--t2);font-size:12.5px;line-height:1.45;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.usearch-empty{padding:30px;text-align:center;color:var(--t3);font-size:13.5px}
+/* --- sticky-header + entry-page chrome (pilot, refined for density) ---
+   entry nav = 60px main bar only (no category sub-bar). Desktop: hide the horizontal section
+   nav (the sticky sidebar TOC covers sections) and retune offsets to the 60px nav. Mobile: the
+   sidebar is hidden, so SHOW the section nav flush under the bar. All in THIS block. --- */
+.mnav-wrap{position:sticky;top:0;z-index:1000;line-height:1.4}
+.entry-nav{display:none}
+[id].entry-section{scroll-margin-top:90px}
+.entry-main h2{scroll-margin-top:90px}
+.entry-sidebar{top:78px;height:calc(100vh - 98px)}
+@media(max-width:768px){
+  .entry-nav{display:block!important;top:60px!important}
+  [id].entry-section{scroll-margin-top:130px!important}
+  .entry-main h2{scroll-margin-top:130px!important}
+}
+/* dropdown overflow safety */
+.mnav-panel,.mnav-panel-wide{max-height:min(72vh,560px);overflow-y:auto}
+/* mobile drawer: category CARD grid (slick old-nav look), CSS-only */
+.mnav-drawer{padding:10px 18px 18px;gap:0}
+.drw-label{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--t3);margin:12px 2px 8px}
+.drw-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.drw-card{display:flex;align-items:center;padding:12px 14px;border-radius:10px;text-decoration:none;font-size:13.5px;font-weight:600;color:var(--text);background:var(--panel);border:1px solid var(--line2)}
+.drw-card:hover{border-color:var(--teal);color:var(--teal)}
+.drw-feat{display:flex;align-items:center;gap:8px;padding:13px 16px;border-radius:10px;text-decoration:none;font-size:14px;font-weight:700;color:var(--text);background:var(--panel);border:1px solid var(--line2);margin-top:8px}
+.drw-feat-bible{color:#f5a623;background:rgba(245,166,35,.08);border-color:rgba(245,166,35,.30)}
+.drw-feat-bible:hover{border-color:rgba(245,166,35,.6)}
+.drw-cta{display:block;text-align:center;padding:14px;border-radius:10px;background:var(--teal);color:#06281f;font-weight:800;font-size:14px;text-decoration:none;margin-top:12px}
+/* mobile sunlight legibility: lift the intentionally-dim greys in glare (nav + search only), scoped */
+@media(max-width:860px){
+  .mnav-wrap,.usearch{--t2:#c8c8da;--t3:#9696b0}
+  .drw-label{color:#bdbdd0;font-weight:500}
+  .usearch-top input::placeholder{color:#9696b0}
+  .drw-card,.drw-feat{background:#20202e;border:1.5px solid #45455c}
+  .drw-feat-bible{background:rgba(245,166,35,.12);border:1.5px solid rgba(245,166,35,.6)}
+}
+html{overflow-x:clip!important;max-width:none!important}body{overflow-x:clip!important}
+</style>
+<!-- MPW universal nav -->
+<div class="mnav-wrap" data-section="articles">
+  <input type="checkbox" id="mnav-toggle" class="mnav-toggle" aria-hidden="true">
+  <nav class="mnav" aria-label="Main navigation">
+    <div class="mnav-in">
+      <a class="mnav-brand" href="/"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="6" stroke="#f5a623" stroke-width="1.7"/><path d="M7 15V9l3 3 3-5 4 8" stroke="#00e8a2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="mnav-word">MusicProductionWiki</span></a>
+      <div class="mnav-links">
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="articles">Articles <span class="caret">&#9662;</span></button><div class="mnav-panel mnav-panel-wide"><div class="mp-col"><div class="mp-head">Techniques & Analysis</div><a href="/categories/techniques"><span class="mp-name">Techniques</span><span class="mp-desc">Mixing, mastering, sound design</span></a><a href="/categories/reviews"><span class="mp-name">Reviews</span><span class="mp-desc">Honest. No paid placements.</span></a><a href="/categories/comparisons"><span class="mp-name">Comparisons</span><span class="mp-desc">Head-to-head</span></a><a href="/categories/breakdowns"><span class="mp-name">Breakdowns</span><span class="mp-desc">Track-by-track</span></a><a href="/categories/recreations"><span class="mp-name">Recreations</span><span class="mp-desc">Recreate iconic sounds</span></a><a href="/genres"><span class="mp-name">Genres</span><span class="mp-desc">Every genre & style</span></a></div><div class="mp-col"><div class="mp-head">Reference & Business</div><a href="/categories/ai-music"><span class="mp-name">AI Music</span><span class="mp-desc">Suno, Udio, AI tools</span></a><a href="/categories/music-business"><span class="mp-name">Music Business</span><span class="mp-desc">Royalties, licensing, sync</span></a></div></div></div>
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="gear">Gear <span class="caret">&#9662;</span></button><div class="mnav-panel"><div class="mp-col"><a href="/categories/daws"><span class="mp-name">DAWs</span><span class="mp-desc">Every major DAW</span></a><a href="/categories/plugins"><span class="mp-name">Plugins</span><span class="mp-desc">EQ, comp, reverb, synths</span></a><a href="/categories/hardware"><span class="mp-name">Hardware</span><span class="mp-desc">Interfaces, mics, monitors</span></a></div></div></div>
+        <a class="mnav-flat" href="/tools/" data-nav="tools">Tools</a>
+        <a class="mnav-flat" href="/bible/" data-nav="bible">The Bible</a>
+      </div>
+      <div class="mnav-right">
+        <button class="mnav-search" data-nav-search aria-label="Search"><svg width="17" height="17" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <a class="mnav-cta" href="https://theproducersbriefing.beehiiv.com">Sound Better &rarr;</a>
+        <label class="mnav-burger" for="mnav-toggle"><span></span><span></span><span></span></label>
+      </div>
+    </div>
+  </nav>
+  <div class="mnav-drawer">
+    <div class="drw-label">Articles</div>
+    <div class="drw-grid">
+      <a href="/categories/techniques" class="drw-card">Techniques</a><a href="/categories/reviews" class="drw-card">Reviews</a><a href="/categories/comparisons" class="drw-card">Comparisons</a><a href="/categories/breakdowns" class="drw-card">Breakdowns</a><a href="/categories/recreations" class="drw-card">Recreations</a><a href="/genres" class="drw-card">Genres</a><a href="/categories/ai-music" class="drw-card">AI Music</a><a href="/categories/music-business" class="drw-card">Music Business</a>
+    </div>
+    <div class="drw-label">Gear</div>
+    <div class="drw-grid">
+      <a href="/categories/daws" class="drw-card">DAWs</a><a href="/categories/plugins" class="drw-card">Plugins</a><a href="/categories/hardware" class="drw-card">Hardware</a>
+    </div>
+    <a href="/bible/" class="drw-feat drw-feat-bible">&#9670; The Producer's Bible</a>
+    <a href="/tools/" class="drw-feat">The Producer's Tools</a>
+    <a href="https://theproducersbriefing.beehiiv.com" class="drw-cta">Sound Better &rarr;</a>
+  </div>
+</div>
+
+
+<div class="container">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><ol>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../categories/music-business.html">Music Business</a></li>
+    <li><span aria-current="page">How to Get Your Music in Video Games</span></li>
+  </ol></nav>
+</div>
+
+<nav class="toc-bar" aria-label="Section navigation"><div class="toc-bar-track" id="tocBarTrack"></div></nav>
+<main class="container" id="main-content">
+  <div class="article-layout">
+    <article aria-labelledby="articleTitle">
+      <header class="article-header">
+        <div class="article-tags"><span class="article-tag teal"><a href="../categories/music-business.html" style="color:inherit;text-decoration:none;">Music Business</a></span><span class="article-tag teal"><a href="../categories/music-business/licensing-sync.html" style="color:inherit;text-decoration:none;">Licensing &amp; Sync</a></span></div>
+        <h1 id="articleTitle">How to Get Your Music in Video Games</h1>
+        <div class="article-header-meta">
+          <div class="article-author"><div class="author-avatar" aria-hidden="true">MP</div><span class="author-name">The Music Production Wiki Team</span></div>
+          <span class="meta-divider"></span><span class="meta-item">Updated June 2026&nbsp;&middot;&nbsp;16 min read&nbsp;&middot;&nbsp;<span style="font-size:.78rem;color:var(--text-muted);">Facts verified June 2026</span></span>
+        </div>
+      </header>
+      <div class="article-body">
+<div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.28);border-left:4px solid #f59e0b;border-radius:8px;padding:1.25rem 1.5rem;margin:1.75rem 0;"><p style="margin:0;font-size:.92rem;line-height:1.66;color:var(--text-secondary);"><strong style="color:var(--text-primary);">General information, not legal advice.</strong> This is a US-focused, education-first guide to placing your music in games &mdash; how the market works, who decides, what to deliver, and how the money actually flows. Licensing terms, royalty rules, platform programs and agent commissions all change, and they differ outside the US, so treat every figure and term here as accurate as of mid-2026 and a starting point to confirm in writing before you sign anything. Every deal is specific to its contract, and nothing here is a substitute for advice from a music attorney about your own situation.</p></div>
+
+<div class="quick-answer"><div class="quick-answer-label">The short version</div><p>Getting your music into a game is sync licensing, but it is <strong>not</strong> TV sync with a different logo. The gatekeeper is an <strong>audio director</strong>, not a film music supervisor; you reach them on <strong>itch.io, Discord, r/gamedev and at game jams</strong>, not through film libraries; they often want <strong>instrumentals and stems</strong> for adaptive engines (Wwise/FMOD), not a finished stereo track; and you are usually paid an <strong>upfront fee once</strong> &mdash; in-game play earns no per-play performance royalty, though a trailer that airs or streams can. As an indie who controls both the song and the recording you can clear a placement fast, which is your real advantage. Start with indie developers, treat early low-fee or credit-only placements as a deliberate investment in credits and relationships, and let rates climb with your track record.</p></div>
+
+<p>Search &ldquo;music licensing for video games&rdquo; and almost everything you find is written for the wrong person. The top results are guides for <em>developers</em> &mdash; where to buy royalty-free music to drop into a game they are building. That is the opposite side of the transaction from where you are standing. You are a producer or artist who wants <em>your</em> music placed in games as an income and exposure stream, and that flips every section of the advice: who you talk to, where you find them, what you hand over, and how you get paid. This guide is built entirely from the producer&rsquo;s side of the table.</p>
+
+<p>If you already understand sync in general, you have a head start &mdash; but only a partial one. Our <a href="music-sync-licensing-guide.html">music sync licensing guide</a> and <a href="how-to-get-sync-licensing-deals.html">how to get sync licensing deals</a> cover the fundamentals that apply everywhere, and <a href="music-licensing-explained.html">music licensing explained</a> defines the rights themselves. Games sit inside that world but bend its rules in four specific ways. Miss those four differences and you will pitch a game studio exactly the way you would pitch a TV show, and get ignored for reasons you never see. So we will name them precisely, then turn each one into something you can act on this week.</p>
+
+<h2 id="different-beast">Game sync is a different beast than TV and film</h2>
+
+<p>Start with the gatekeeper, because everything downstream follows from who you are actually trying to reach. In film and television, the person who chooses and clears music is a music supervisor &mdash; a specialist hired per production, working from a scene brief that describes the emotional tone, tempo and budget of a specific moment. (If that role is unfamiliar, our piece on <a href="what-is-a-music-sync-supervisor.html">what a music sync supervisor does</a> walks through it.) In games, that role is usually held by an <strong>audio director</strong> or a music lead, in-house at a studio or freelancing across several. Their job is not to score one scene; it is to make a whole interactive system sound coherent, which means they think about your music differently from the first second &mdash; as a component in an engine, not a cue laid over a fixed picture.</p>
+
+<p>The channel changes next, and it changes completely. Film supervisors live inside an ecosystem of libraries, agents and long-standing relationships that an outsider cannot simply walk into. Game developers &mdash; especially the indie developers where almost every newcomer&rsquo;s first placement happens &mdash; are startlingly reachable. They post on <strong>itch.io</strong>, the largest indie game marketplace, often with a public &ldquo;looking for a composer&rdquo; thread and their contact details right there. They run game jams where a team has 48 to 72 hours to build a game and almost always needs original music fast. They congregate on Discord servers and on Reddit in communities like r/gamedev and r/gamedevclassifieds, and they show up in person at GDC and PAX. The barrier to a first conversation is not a gatekeeper&rsquo;s inbox; it is your willingness to do the unglamorous work of finding active projects and writing a real message to a real person.</p>
+
+<p>Then the files change. A TV supervisor wants a finished, mixed, mastered stereo track, plus an instrumental and a clean edit. A game audio director frequently wants something more granular: <strong>stems and loops</strong> built so that music can be layered, triggered and transitioned by gameplay through middleware like <strong>Wwise or FMOD</strong>. This is the single biggest technical gap between the two markets, and the producers who can deliver it &mdash; or at least understand and speak to it &mdash; are dramatically more placeable. We will dig into exactly what that means below, because it is also where most artists either win or quietly disqualify themselves.</p>
+
+<div class="diagram-wrap"><picture><source media="(max-width:900px)" srcset="../images/how-to-get-your-music-in-video-games-game-vs-tv-sync-m.png" width="560" height="1171"><img src="../images/how-to-get-your-music-in-video-games-game-vs-tv-sync.png" alt="A side-by-side comparison of game sync versus TV and film sync across four dimensions. Who decides: a music supervisor hired per production for TV and film, versus an audio director or in-house music lead for games. Where you reach them: libraries, sync agents and supervisor relationships for TV and film, versus itch.io, Steam upcoming releases, Discord and r/gamedev, game jams and GDC or PAX for games. What they ask for: a finished stereo master plus an instrumental and clean edit for TV and film, versus instrumentals and clean masters and often stems and loops for adaptive engines such as Wwise and FMOD for games, which is highlighted as the defining difference. How you are paid: an upfront sync fee plus ongoing PRO royalties when it airs for TV and film, versus usually an upfront fee only for games because in-game play earns no per-play royalty." width="1120" height="542" loading="lazy" decoding="async"></picture><div class="diagram-caption">Game sync changes the gatekeeper, the channel, the files and the money &mdash; the highlighted cell is where most pitches quietly fail.</div></div>
+
+<p>Finally the money changes, and this is the difference most artists get wrong because it is invisible until a check fails to arrive. We will spend a whole section on it below, but hold the headline now: in a game, you are typically paid <strong>once</strong>, upfront, for the right to use your track &mdash; not per play, the way streaming and broadcast work. That one fact reshapes how you price, how you negotiate, and how you decide whether a placement is worth taking. Get the four differences &mdash; gatekeeper, channel, files, money &mdash; into your bones, and the rest of this guide is just execution.</p>
+
+<h2 id="two-licenses">The two licenses every placement needs &mdash; and your one-stop edge</h2>
+
+<p>Every sync placement, in a game or anywhere else, rests on two separate rights, because every song is actually two pieces of property. The first is the <strong>composition</strong> &mdash; the melody, chords and lyrics, the song as written. Licensing that for use against visuals is the <strong>sync license</strong>. The second is the <strong>master</strong> &mdash; the specific recording, the actual audio file you made. Licensing that is the <strong>master-use license</strong>. A developer needs both before your music can legally appear in their game, and if those two rights are owned by different people, all of them have to sign off. This is the same two-copyright structure that underlies all of <a href="how-to-license-your-music.html">licensing your music</a>; it just becomes very concrete when a studio is waiting on a contract.</p>
+
+<p>Here is where independent producers have a genuine, structural advantage that bigger artists often lack. If you wrote the track and recorded it yourself, with no co-writers and no label, you control <strong>both</strong> copyrights. In the trade this is called a &ldquo;one-stop&rdquo; &mdash; one party can clear everything in a single signature. To an audio director on a tight schedule, a one-stop is worth more than a marginally better track that takes three weeks and four signatures to clear. You can say yes immediately, negotiate flexibly, and move at the speed a production schedule demands. Speed and clarity of rights are not paperwork details; they are a selling point, and you should lead with them.</p>
+
+<p>The flip side is the trap that quietly kills placements: a track you cannot actually clear. If you co-wrote the song, you need a written <a href="how-to-fill-out-a-split-sheet.html">split sheet</a> agreeing who owns what and confirming everyone is fine with sync licensing, signed <em>before</em> you pitch &mdash; nobody wants to chase down a collaborator while a brief&rsquo;s deadline passes. If you sampled anything, you either cleared it or you did not, and an uncleared sample makes the whole track unlicensable no matter how good it sounds. The professional habit is blunt: clear the sample, or do not sample at all on tracks you intend to place. A developer who discovers a rights problem mid-deal does not just drop the track; they remember you as the person who wasted their time.</p>
+
+<p>One more distinction is worth fixing in place, because some streamed and competitive uses touch it: a <strong>performance license</strong> can come into play when gameplay is broadcast or streamed publicly &mdash; an eSports event, a Twitch stream, a YouTube Let&rsquo;s Play. That is a different right again from sync and master-use, and it is the thread that connects to the royalty question we turn to next. For now, the takeaway is simple: know exactly what you own, get it in writing, and treat your ability to clear a track instantly as the asset it is.</p>
+
+<h2 id="royalty-reality">The royalty reality nobody states plainly</h2>
+
+<p>This is the section that changes how you value every game offer you will ever get, so read it slowly. In television and film, a sync placement pays you twice: an upfront fee when the deal is signed, and then <strong>performance royalties</strong> &mdash; collected by your performing rights organization every time the content airs or streams &mdash; for as long as it keeps running. A show that goes into syndication can pay backend royalties for years. That two-part structure is the heart of why TV sync is so lucrative, and it is what most artists assume games work like too.</p>
+
+<p>They mostly do not. Music played <em>inside</em> a game is generally not treated as a public performance under the rules PROs operate by. A game is a product someone buys and plays privately, not a broadcast, so in the typical case there is <strong>no per-play royalty</strong> flowing back to you every time a player hears your track. Instead, developers secure the music through a one-time license or buyout and pay you <strong>upfront</strong>. Your track might be heard ten thousand times by one obsessive player, and that generates no additional payment beyond the fee you already negotiated. This is the single most important correction to the &ldquo;put my music in games and earn passive royalties forever&rdquo; fantasy, and internalizing it will make you a sharper negotiator overnight.</p>
+
+<p>The practical consequence is that the upfront fee carries almost the entire value of an in-game deal, so that is where your attention belongs. There is no backend cushion to make up for underpricing the front. Decide what the placement is worth to you as a flat number &mdash; factoring in the game&rsquo;s scope, the prominence of your music, the rights they are asking for, and how much the exposure and the credit are worth to your career at this stage &mdash; and negotiate that number, because for in-game use it is usually the whole deal.</p>
+
+<div class="diagram-wrap"><picture><source media="(max-width:900px)" srcset="../images/how-to-get-your-music-in-video-games-two-license-royalty-map-m.png" width="560" height="809"><img src="../images/how-to-get-your-music-in-video-games-two-license-royalty-map.png" alt="A map of the two licenses and the royalty reality for game sync. At the top, two licenses are needed for every placement: the sync license, covering the composition, plus the master-use license, covering the recording; an indie who owns both is a one-stop who can clear the deal themselves quickly. Below, the money splits two ways. In the game itself, highlighted as the key correction, you are paid an upfront fee once because gameplay is not a public performance, so there is no per-play royalty. In a trailer, stream or eSports broadcast, you can earn the upfront fee plus PRO performance royalties because that use can count as a public performance, so you should register with your PRO anyway. The footer notes you should register both the composition and the master so both lanes are tracked." width="1120" height="479" loading="lazy" decoding="async"></picture><div class="diagram-caption">In-game play pays once; trailers and streams can pay again. Register with your PRO so the second lane is tracked when it appears.</div></div>
+
+<p>But &mdash; and this is the part that justifies still doing the rights hygiene &mdash; there is a meaningful exception. The moment your music leaves the closed system of in-game play and reaches the open world of broadcast and streaming, performance royalties can come back into the picture. A <strong>game trailer that airs on television or streams</strong> can be a public performance. So can the rising tide of <strong>eSports broadcasts, Twitch streams and YouTube Let&rsquo;s Plays</strong> where your in-game music is heard. Those uses can generate PRO royalties even when the in-game placement itself does not. This is precisely why you <a href="how-to-register-with-a-pro.html">register with a PRO</a> and register both the composition and the master regardless: not because the game itself will pay royalties, but because the trailer, the stream and the eSports clip might, and you cannot collect on what you never registered.</p>
+
+<p>So the honest income model for game sync is: price the upfront fee as if it is the whole deal, because for in-game use it usually is &mdash; then keep your registrations clean so that any broadcast or streamed life the music takes on becomes a genuine, if unpredictable, bonus. Treat the royalties as upside you have positioned yourself to catch, never as the foundation of the deal.</p>
+
+<h2 id="what-they-want">What audio directors actually want: instrumentals, clean masters, and stems</h2>
+
+<p>If the money section is what changes your negotiating, this section is what makes you placeable in the first place. Three things separate music that gets used in games from music that gets politely passed over, and none of them is &ldquo;the song is good.&rdquo; Good is the price of entry, not the differentiator.</p>
+
+<p>First, <strong>instrumentals</strong>. In most games, vocals fight the rest of the audio &mdash; dialogue, sound effects, the player&rsquo;s own concentration &mdash; so a huge share of placements use instrumental music or music with vocals used sparingly and texturally. If you produce vocal tracks, having clean instrumental versions ready is not optional; it roughly doubles the number of briefs your catalog can answer. Make the instrumental at the same time you make the song, not six months later when an audio director asks and you have lost the session.</p>
+
+<p>Second, <strong>clean, genuinely professional masters</strong>. Games are played on everything from phone speakers to high-end headsets to surround systems, and that range exposes mix flaws that hide on laptop speakers. A muddy low end or a harsh top that you got away with on streaming will be obvious to an audio director auditioning on good monitors, and it reads as &ldquo;amateur&rdquo; instantly. Your master has to hold up under scrutiny, because the people choosing game music listen critically for a living.</p>
+
+<p>Third &mdash; and this is the modern game-specific skill &mdash; <strong>stems and loops for adaptive music</strong>. A growing share of games, and the overwhelming majority of anything beyond a fixed background loop, use <em>adaptive</em> or interactive music: the score changes in response to what the player does. This is not done by handing over a finished stereo track. It is done by delivering <strong>stems</strong> &mdash; the separate layers of your music, like percussion, bass, harmony and melody &mdash; built so that an engine can fade them in and out, and <strong>loops</strong> that can repeat seamlessly and transition cleanly. At runtime, middleware like Wwise or FMOD watches the game (enemy proximity, player health, location) and mixes those layers live, fading in tension when combat starts, stripping back to a calm bed when it ends. Composers describe this as vertical layering (stacking stems) and horizontal transitions (moving between musical sections), and the practical asks are concrete: stems that line up in key and tempo, loops with clean seams, and a tempo or BPM noted in the file so the implementer can sync it.</p>
+
+<p>You do not need to be a Wwise engineer to benefit from this. You need to (1) be able to export clean, well-labeled stems on request, (2) understand looping and seamless transitions well enough to build music that survives being chopped and rearranged by an engine, and (3) say so in your pitch. An audio director reading &ldquo;I can deliver stems and seamless loops for adaptive implementation&rdquo; hears a producer who understands their world. An artist who offers only a finished MP3 hears like someone pitching a TV show. The same instinct shows up in our guide to <a href="how-to-make-cinematic-music.html">making cinematic music</a>, where writing in separable layers pays off &mdash; in games it is not a nicety, it is frequently the deliverable.</p>
+
+<h2 id="where-to-find">Where to find game developers</h2>
+
+<p>Knowing what developers want is useless until you are standing in front of them, and the good news is that indie game developers are among the most reachable buyers in all of music. The first and best ground is <strong>itch.io</strong>. Beyond hosting tens of thousands of indie games, it runs game jams constantly and hosts forums where developers post &ldquo;looking for a composer&rdquo; threads &mdash; and where composers post &ldquo;available for hire&rdquo; threads of their own. Reading those threads teaches you the going rates, the tone developers use, and which projects are real. Posting a tight, specific offer with a portfolio link puts you directly in the path of people actively staffing a game.</p>
+
+<p>Second, <strong>game jams</strong> are the single fastest way to go from zero credits to a shipped game with your music in it. A jam team has a brutal deadline and almost always needs original music, which means they need <em>you</em>, today, and the bar to joining is low. You will work with real developers, learn how music actually gets implemented, walk away with a finished credit, and meet people who go on to make bigger games &mdash; the repeat-business engine that quietly drives most game-audio careers. Even online-only jams run year-round; there is one starting somewhere this week.</p>
+
+<p>Third, the <strong>communities</strong>: Discord servers for game development and game audio, Reddit&rsquo;s r/gamedev and r/gamedevclassifieds, and developers on X/Twitter and YouTube. These are where relationships form between jams and gigs. Lurk, be useful, learn the vocabulary, and reach out to specific developers about specific projects rather than blasting a generic availability post. Fourth, <strong>Steam&rsquo;s upcoming releases</strong> are a research goldmine: find games still in development whose tone fits your music, identify the team, and reach out before their audio is locked. And fifth, at a more advanced stage, the in-person events &mdash; <strong>GDC and PAX</strong> &mdash; are where game-audio professionals gather and where a real-world conversation can short-circuit months of cold outreach.</p>
+
+<p>Whatever the channel, the message itself decides everything. A pitch that works is personal and specific: you researched (or played) the game, you name why your music fits its particular tone, you attach two or three tracks matched to it &mdash; not twenty &mdash; and you state your terms and your sync-readiness plainly, mentioning that you can supply instrumentals and stems. A generic blast sent to fifty studios reads as exactly that and gets deleted. One genuinely tailored message to a developer whose game you understand is worth more than a hundred copies of the same template.</p>
+
+<h2 id="the-ladder">The ladder runs through indie first</h2>
+
+<p>It is tempting to dream about scoring the next blockbuster franchise, but the AAA studios &mdash; the EAs, Ubisofts and Take-Twos of the world &mdash; run locked, established audio teams and are effectively unreachable with a cold email. That is not a wall to bang your head against; it is simply not where your ladder starts. Your ladder starts in indie, and every rung of it is built from the one below.</p>
+
+<div class="diagram-wrap"><picture><source media="(max-width:900px)" srcset="../images/how-to-get-your-music-in-video-games-indie-to-aaa-ladder-m.png" width="560" height="900"><img src="../images/how-to-get-your-music-in-video-games-indie-to-aaa-ladder.png" alt="An illustrative five-rung ladder showing how a game-sync career compounds from indie to AAA, with a note that AAA teams are locked and indie credits carry you up. Rung one, highlighted as the place to start: game jams and itch.io developers, where credit-only or low-fee work on real shipped games is treated as an investment, not a payday. Rung two: indie credits, a growing list of shipped titles and a reel that proves you can deliver to a brief, which builds proof. Rung three: referrals and repeat clients, because developers talk to developers, so one good collaboration becomes the next three, which builds network. Rung four: sync agents and game libraries, representation that receives briefs you would never see, available once you have a track record, which builds reach. Rung five: AAA and bigger budgets, reached through relationships and agents rather than a cold email, where rates rise with the resume." width="1120" height="620" loading="lazy" decoding="async"></picture><div class="diagram-caption">Each rung is built from the one below it. The credits and relationships compound; the cold email to a AAA studio does not.</div></div>
+
+<p>This reframes a question that trips up a lot of producers: should you ever work for free, or for credit only, or for a fee so small it barely counts? Early in your game-sync path, the answer is often a deliberate yes &mdash; not because your work is worthless, but because your <em>first</em> placements are buying you something the money never could. A credit on a real shipped game, a relationship with a developer who will hire you again and tell their friends, and a portfolio entry that makes the next pitch credible are assets, and the cheapest time to acquire them is now, before you have a track record to charge against. Treat the first few placements as an investment with a clear return, not as a payday, and set a private line for when you stop discounting.</p>
+
+<p>That said, &ldquo;investment&rdquo; is not a license to be exploited. There is a difference between strategically taking a low-fee credit on a promising indie game and letting a studio with a real budget convince you your work is free. Even when you discount, negotiate <em>something</em> &mdash; a modest fee, a share of game sales, a guaranteed minimum on a revenue-share, an ironclad credit and the right to use the music in your own portfolio and releases. The most common indie structures are a simple split like half on agreement and half on delivery, or a revenue share with a guaranteed minimum, and most grant the developer an exclusive or perpetual license to use the tracks in that game while you reserve the right to release and showcase them yourself. Knowing those norms keeps your &ldquo;investment&rdquo; from turning into a giveaway.</p>
+
+<p>As the credits accumulate, the ladder climbs on its own logic. Shipped titles become proof; proof earns referrals and repeat clients, because developers talk to each other and one good collaboration genuinely becomes the next three; a real track record is what makes sync agents and game-focused libraries willing to represent you; and it is through those relationships and that representation &mdash; never a cold email &mdash; that the bigger budgets and eventually AAA-adjacent work become reachable, with your rate rising at every step. The path is slow and it compounds, which is exactly why starting it now, at the bottom, on small games, is the strategy rather than a consolation prize.</p>
+
+<h2 id="not-distribution">Sync is not distribution: your music can be on Spotify and in a game at once</h2>
+
+<p>One persistent myth deserves killing outright, because it stops people from pursuing game placements at all: the belief that to license your music to a game you must first &ldquo;pull it down&rdquo; from Spotify and the other streaming services. You do not. <strong>Sync is a completely separate right from distribution.</strong> Putting your track on streaming platforms grants those platforms the right to stream it; it does nothing to your ability to also license that same track for sync. Your song can be earning streams on Spotify and Apple Music and simultaneously be placed in a game, a trailer, an ad and a YouTube video, all at once, with each use governed by its own license.</p>
+
+<p>In fact the two reinforce each other. A high-profile placement often drives a noticeable spike in streams as new listeners hear your music in context and go looking for it, and a healthy streaming presence increasingly signals to the people choosing music that your catalog is real and active. Far from competing, your <a href="how-to-distribute-music.html">distribution</a> and your sync efforts feed one another &mdash; which is one reason game sync sits naturally inside a broader plan for <a href="how-to-make-money-from-music.html">making money from music</a> rather than apart from it.</p>
+
+<p>The one genuine thing to check is your <strong>distributor agreement</strong>. Most distributors are non-exclusive and leave your sync rights entirely with you, but read the fine print to confirm yours does not claim a cut of, or control over, sync placements. As long as it doesn&rsquo;t &mdash; and usually it doesn&rsquo;t &mdash; nothing about being on streaming stands between you and a game placement. The same logic governs the adjacent question of placing music in online video; our guide to <a href="music-licensing-for-youtube.html">music licensing for YouTube</a> works through how multiple non-exclusive uses coexist.</p>
+
+<h2 id="shortcuts">The shortcut lanes: libraries, agents, and UnitedMasters Select</h2>
+
+<p>Direct outreach to indie developers is the foundation, but three accelerators can put your music in front of game opportunities you could never reach alone. Treat them as amplifiers of a catalog that is already sync-ready, not as a substitute for doing the work &mdash; none of them places music that isn&rsquo;t prepared.</p>
+
+<p>The first is <strong>game-focused sync libraries and marketplaces</strong>. Some sync libraries actively receive game briefs and let your catalog be searched and licensed by developers and supervisors who work in games. The trade-off is the usual one for libraries: enormous reach, but you are one track among thousands, so sharp metadata, clear genre and mood tagging, and ready alternates (instrumentals, loops, stems) are what keep you from disappearing into inventory.</p>
+
+<p>The second is a <strong>sync agent</strong> &mdash; someone who represents your catalog, receives briefs you will never see, and pitches and negotiates on your behalf. Agents are the most direct path to opportunities locked behind relationships, but two cautions matter specifically here. Commissions commonly run around <strong>20&ndash;35%</strong> of the sync fee, and across exclusive and non-exclusive agencies the range stretches roughly 25&ndash;50%, so confirm the number and whether they also take a slice of any backend before you sign. And vet for a documented <em>game</em> track record, not just film and TV; a great TV agent may have no game relationships at all. One bright-line rule from people who do this for a living: a legitimate sync agent takes a commission only when they actually land you a placement &mdash; if anyone calling themselves a sync rep tries to take a piece of your publishing, that is a red flag, not a deal.</p>
+
+<p>The third is <strong>UnitedMasters Select</strong>, which lets independent artists submit their music for sync opportunities that include games, and which has connected independent artists to placements with partners like 2K Sports, ESPN and the NBA. Like the libraries, it is an accelerator: it widens the set of opportunities your music is eligible for without doing the preparation for you.</p>
+
+<p>Across all three, the same preparation wins: a catalog of clean, professional masters with instrumental versions and exportable stems, tagged by mood, tempo and genre; rights you can clear instantly because your splits are documented and your samples are cleared; and registration with a PRO so any broadcast or streamed life your music takes on is tracked. Build that foundation and every lane &mdash; direct, library, agent or platform &mdash; works better. It is also exactly the kind of demonstrable rights and clearance fluency that broader sync work, including <a href="how-to-get-your-music-licensed-for-tv.html">getting your music licensed for TV</a>, rewards. Game sync is its own market, but the discipline that wins it is the discipline that wins all of sync: be excellent, be clearable, and be easy to say yes to.</p>
+
+<h2 id="exercises">Put it into practice</h2>
+
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--beginner">Beginner</span><span class="exercise-title">Build one game-ready track this week</span></div>
+<ol>
+<li>Pick one finished instrumental (or bounce a clean instrumental version of a vocal track). Vocals fight game audio, so this is your most placeable asset.</li>
+<li>Master it properly and check it on headphones <em>and</em> phone speakers &mdash; the playback range games live on. Fix anything that falls apart.</li>
+<li>Export labeled stems (drums, bass, harmony, melody) and note the BPM in the filenames. You now have an adaptive-ready deliverable.</li>
+<li>Tag the track by mood, tempo and genre, and confirm you control both the composition and the master with no uncleared samples.</li>
+</ol></div>
+
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--intermediate">Intermediate</span><span class="exercise-title">Land a real conversation</span></div>
+<ol>
+<li>Join one game jam on itch.io this month, or find three in-development games on Steam or itch.io whose tone matches your music.</li>
+<li>For each, write a personalized pitch: why your music fits <em>this</em> game, two or three matched tracks, and a plain statement of your terms and that you supply instrumentals and stems.</li>
+<li>State your rights clearly &mdash; that you are a one-stop who can clear quickly &mdash; and price the placement as an upfront fee, since in-game use rarely pays per play.</li>
+<li>If it is an early credit-builder, still negotiate a credit and the right to use the music in your portfolio. Treat it as an investment with terms, not a giveaway.</li>
+</ol></div>
+
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--advanced">Advanced</span><span class="exercise-title">Build the system that compounds</span></div>
+<ol>
+<li>Register with a PRO and register both the composition and the master for every track, so trailer, stream and eSports royalties are tracked when they appear.</li>
+<li>Assemble a small game-sync catalog: clean masters, instrumentals, exportable stems and seamless loops, all tagged &mdash; the foundation every library, agent and platform rewards.</li>
+<li>Submit to a game-focused library or UnitedMasters Select, and research sync agents with a documented <em>game</em> track record (commission ~20&ndash;35%; never one who wants your publishing).</li>
+<li>Track which placements lead to referrals and repeat work, and raise your rate as the credits accumulate. The ladder climbs on relationships, not cold emails.</li>
+</ol></div>
+
+<h2 id="faq">Frequently asked questions</h2>
+<div class="faq-accordion">
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">How do I get my music into a video game?</span></div></div>
+<div class="faq-accordion-a"><p>Treat it as sync licensing aimed at game developers, not TV supervisors. Prepare a sync-ready catalog (clean masters, instrumentals, exportable stems, documented rights), then reach indie developers directly on itch.io, in game jams, on Discord and r/gamedev, and through Steam upcoming releases. Send a personalized pitch with two or three tracks matched to a specific game, state your terms and your sync-readiness, and start with indie placements that build credits and relationships before reaching for bigger budgets through agents and libraries.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Do games pay royalties or a one-time fee?</span></div></div>
+<div class="faq-accordion-a"><p>Usually a one-time, upfront fee. Music played inside a game is generally not treated as a public performance, so in-game play does not earn a per-play performance royalty the way streaming or broadcast does &mdash; developers typically license or buy out the music for a flat fee paid upfront. The exception is broadcast and streamed use: a game trailer that airs on TV, or eSports and Twitch and YouTube streams of gameplay, can generate PRO performance royalties. So price the upfront fee as the whole deal, but register with your PRO anyway to catch any broadcast or streamed royalties.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Do I need stems for game music?</span></div></div>
+<div class="faq-accordion-a"><p>Often, yes. A large and growing share of games use adaptive (interactive) music, where the score changes in response to gameplay. That is built from stems &mdash; the separate layers of your track &mdash; and seamless loops, which middleware like Wwise or FMOD fades in and out and transitions based on what the player does. You do not have to be a middleware engineer, but being able to export clean, well-labeled stems and loops (with the BPM noted) and saying so in your pitch makes you far more placeable than someone offering only a finished stereo file.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Can my music be on Spotify and in a game at the same time?</span></div></div>
+<div class="faq-accordion-a"><p>Yes. Sync is a separate right from distribution, so you never have to pull a track from streaming to license it for a game. The same song can earn streams on Spotify and Apple Music while also being placed in a game, a trailer or an ad, each under its own license. A placement often even spikes your streams as new listeners discover the track in context. The only thing to confirm is that your distributor agreement leaves your sync rights with you &mdash; most are non-exclusive and do.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Should I work for free or credit-only on indie games?</span></div></div>
+<div class="faq-accordion-a"><p>Early on, often yes &mdash; deliberately. Your first placements buy credits, relationships and a portfolio that the money can&rsquo;t, and that is the cheapest time to acquire them. But &ldquo;investment&rdquo; is not the same as being exploited: even when you discount, negotiate something &mdash; a modest fee, a share of sales, a guaranteed minimum, an ironclad credit, and the right to use the music in your own portfolio and releases. Set a private line for when you stop discounting, and don&rsquo;t let a studio with a real budget convince you your work is worthless.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">How do I find game developers to pitch?</span></div></div>
+<div class="faq-accordion-a"><p>Indie developers are unusually reachable. itch.io hosts thousands of indie games plus &ldquo;looking for a composer&rdquo; threads and constant game jams; game jams are the fastest way to a first shipped credit because teams need music fast. Beyond that, Discord servers for game dev and game audio, Reddit&rsquo;s r/gamedev and r/gamedevclassifieds, developers on X and YouTube, and Steam&rsquo;s upcoming-releases list are all live channels. At a more advanced stage, GDC and PAX put you in the same room as game-audio professionals. Reach out about specific projects with personalized pitches, never generic blasts.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">What&rsquo;s the difference between game sync and TV sync?</span></div></div>
+<div class="faq-accordion-a"><p>Four things change. The gatekeeper is an audio director or music lead, not a film music supervisor. The channel is itch.io, Discord, game jams and GDC, not film libraries and supervisor networks. The files are often stems and loops for adaptive engines (Wwise/FMOD), not just a finished stereo master. And the money is usually an upfront fee only, because in-game play earns no per-play royalty, whereas TV sync pays an upfront fee plus ongoing performance royalties when it airs. The two-copyright structure (sync plus master-use license) is the same; how games use, deliver and pay for music is not.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Do I need a sync agent for games?</span></div></div>
+<div class="faq-accordion-a"><p>Not to start &mdash; your first placements come from direct outreach to indie developers. An agent becomes useful once you have a track record, because they receive game briefs you&rsquo;ll never see and negotiate on your behalf. If you pursue one, vet for a documented game track record (not just film and TV), confirm the commission &mdash; commonly around 20&ndash;35% of the sync fee, sometimes more &mdash; and remember a legitimate sync rep only earns when they land you a placement. Anyone calling themselves a sync rep who tries to take a piece of your publishing is a red flag.</p></div></div>
+</div>
+
+
+<section class="related-section" aria-labelledby="relatedHeading">
+        <h2 id="relatedHeading" style="font-size:1.35rem;margin-bottom:1.25rem;">Related Articles</h2>
+        <div class="related-grid">
+<a href="how-to-get-sync-licensing-deals.html" class="related-card"><div class="related-card-tag">Music Business</div><h3 class="related-card-title">How to Get Sync Licensing Deals</h3><p class="related-card-desc">The broader sync playbook &mdash; how placements actually happen across TV, film, ads and games.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="music-sync-licensing-guide.html" class="related-card"><div class="related-card-tag">Music Business</div><h3 class="related-card-title">Music Sync Licensing Guide</h3><p class="related-card-desc">The full economics of sync &mdash; fees, the two licenses, supervisors, and building a sync career.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-get-your-music-licensed-for-tv.html" class="related-card"><div class="related-card-tag">Music Business</div><h3 class="related-card-title">How to Get Your Music Licensed for TV</h3><p class="related-card-desc">The sibling market where backend performance royalties, not just the upfront fee, drive the value.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-license-your-music.html" class="related-card"><div class="related-card-tag">Music Business</div><h3 class="related-card-title">How to License Your Music</h3><p class="related-card-desc">The two-copyright foundation under every placement &mdash; what you own and how to clear it.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="what-is-a-music-sync-supervisor.html" class="related-card"><div class="related-card-tag">Music Business</div><h3 class="related-card-title">What Is a Music Sync Supervisor?</h3><p class="related-card-desc">The TV/film gatekeeper &mdash; and the contrast that explains how a game audio director differs.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-register-with-a-pro.html" class="related-card"><div class="related-card-tag">Music Business</div><h3 class="related-card-title">How to Register With a PRO</h3><p class="related-card-desc">Why you register the composition and master anyway &mdash; so trailer and stream royalties get tracked.</p><span class="related-card-meta">Read article &rarr;</span></a>
+</div>
+
+</section>
+      </div>
+    </article>
+    <aside aria-label="Article sidebar">
+      <div class="sidebar-widget toc-widget" aria-labelledby="tocHeading">
+        <div class="sidebar-widget-header"><h2 class="sidebar-widget-title" id="tocHeading">In This Article</h2></div>
+        <div class="sidebar-widget-body"><ul class="toc-list"><li><a href="#different-beast">A Different Beast Than TV Sync</a></li><li><a href="#two-licenses">The Two Licenses</a></li><li><a href="#royalty-reality">The Royalty Reality</a></li><li><a href="#what-they-want">What Audio Directors Want</a></li><li><a href="#where-to-find">Where to Find Developers</a></li><li><a href="#the-ladder">The Indie-to-AAA Ladder</a></li><li><a href="#not-distribution">Sync Is Not Distribution</a></li><li><a href="#shortcuts">The Shortcut Lanes</a></li><li><a href="#exercises">Put It Into Practice</a></li><li><a href="#faq">FAQ</a></li></ul></div>
+      </div>
+      <div class="sidebar-widget" style="background:var(--bg-void);border-color:var(--border-default);">
+        <div class="sidebar-widget-body" style="padding:1.5rem;">
+          <p style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.5rem;">Newsletter</p>
+          <h3 style="font-family:var(--font-display);color:var(--text-primary);font-size:1.1rem;margin-bottom:.5rem;">The Producer&rsquo;s Briefing</h3>
+          <p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:1rem;line-height:1.55;">Weekly tips, gear news, and technique guides. Free.</p>
+          <form class="newsletter-form-js" style="display:flex;flex-direction:column;gap:.5rem;" novalidate>
+            <input type="email" name="email" class="form-input" placeholder="Your email" required />
+            <button type="submit" class="btn-newsletter" style="font-size:.82rem;padding:.65rem 1rem;">Subscribe Free</button>
+          </form>
+        </div>
+      <div class="sidebar-widget" style="margin-top:1.5rem;">
+        <div class="sidebar-widget-header" style="text-align:center;">
+          <h2 class="sidebar-widget-title">Related Articles</h2>
+        </div>
+        <div class="sidebar-widget-body" style="padding:1rem;"><ul style="list-style:none;padding:0;margin:0;text-align:center;"><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="how-to-get-sync-licensing-deals.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">How to Get Sync Licensing Deals</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Music Business</span></li><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="music-sync-licensing-guide.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">Music Sync Licensing Guide</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Music Business</span></li><li style="padding:.6rem 0;"><a href="how-to-register-with-a-pro.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">How to Register With a PRO</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Music Business</span></li></ul>
+        </div>
+      </div>
+      </div>
+    </aside>
+
+  </div>
+</main>
+<section class="newsletter-section" id="newsletter" aria-labelledby="newsletterHeading">
+  <div class="container">
+    <div class="newsletter-inner">
+      <div class="newsletter-content">
+        <p class="newsletter-label">Newsletter</p>
+        <h2 id="newsletterHeading" class="newsletter-title">The Producer's <em>Briefing</em></h2>
+        <p class="newsletter-desc">Weekly techniques, gear news, and music business insights. Free.</p>
+      </div>
+      <div class="newsletter-form-wrap">
+        <form class="newsletter-form-js" novalidate>
+          <input type="email" name="email" class="form-input" placeholder="Your email address" required />
+          <button type="submit" class="btn-newsletter">Subscribe Free</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<footer class="site-footer" role="contentinfo">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="../index.html" class="site-logo"><span class="logo-wordmark">Music<span>Production</span>Wiki</span><span class="logo-tagline">The Producer's Reference</span></a>
+    </div>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <div class="footer-col">
+        <h3 class="footer-col-title">Categories</h3>
+        <ul>
+          <li><a href="../categories/reviews.html">Reviews</a></li>
+          <li><a href="../categories/comparisons.html">Comparisons</a></li>
+          <li><a href="../categories/ai-music.html">AI Music</a></li>
+          <li><a href="../categories/daws.html">DAWs</a></li>
+          <li><a href="../categories/plugins.html">Plugins</a></li>
+          <li><a href="../categories/hardware.html">Gear</a></li>
+          <li><a href="../categories/techniques.html">Techniques</a></li>
+          <li><a href="../categories/music-business.html">Music Business</a></li>
+          <li><a href="../categories/glossary.html">Glossary</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">Popular</h3>
+        <ul>
+          <li><a href="../articles/suno-vs-udio.html">Suno vs Udio</a></li>
+          <li><a href="../articles/best-daw-for-beginners.html">Best DAW for Beginners</a></li>
+          <li><a href="../articles/focusrite-scarlett-2i2-gen-4-review.html">Scarlett 2i2 Review</a></li>
+          <li><a href="../articles/sidechain-compression-guide.html">Sidechain Compression</a></li>
+          <li><a href="../articles/best-compressor-plugins.html">Best Compressor Plugins</a></li>
+          <li><a href="../articles/what-is-gain-staging.html">What Is Gain Staging</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">About</h3>
+        <ul>
+          <li><a href="../about.html">About MPW</a></li>
+          <li><a href="../about.html#team">Our Team</a></li>
+          <li><a href="../about.html#methodology">Review Methodology</a></li>
+          <li><a href="../about.html#affiliate">Affiliate Disclosure</a></li>
+          <li><a href="../about.html#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="footer-bottom"><div class="container"><p>© <span id="copyrightYear"></span> MusicProductionWiki.com. All rights reserved. Content by the Music Production Wiki Team.</p></div></div>
+</footer>
+<script src="../js/main.js"></script>
+<script>document.getElementById('copyrightYear').textContent = new Date().getFullYear();</script>
+
+<button id="mpwBackTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  aria-label="Back to top"
+  style="position:fixed;bottom:1.5rem;right:1.5rem;width:2.5rem;height:2.5rem;border-radius:50%;
+         background:var(--teal);color:#000;border:none;cursor:pointer;display:none;
+         align-items:center;justify-content:center;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3);">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <polyline points="18 15 12 9 6 15"/>
+  </svg>
+</button>
+<script>
+(function(){
+  var btn=document.getElementById('mpwBackTop');
+  var bar=document.getElementById('readingProgress');
+  var art=document.querySelector('.article-body');
+  window.addEventListener('scroll',function(){
+    var st=window.scrollY||document.documentElement.scrollTop;
+    btn.style.display=st>400?'flex':'none';
+    if(bar&&art){
+      var h=art.getBoundingClientRect().height;
+      var top=art.getBoundingClientRect().top+st;
+      var pct=Math.min(100,Math.max(0,(st-top+window.innerHeight)*100/h));
+      bar.style.width=pct+'%';
+      bar.setAttribute('aria-valuenow',Math.round(pct));
+    }
+  });
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<!-- MPW universal search: one overlay, one Fuse index (/search-index.json) -->
+<div class="usearch" id="usearch" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="usearch-box">
+    <div class="usearch-top">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input id="usearchInput" type="text" placeholder="Search tools, articles, the Bible…" autocomplete="off">
+      <kbd>esc</kbd>
+    </div>
+    <div class="usearch-results" id="usearchResults"></div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
+<script>
+(function(){
+  // === production parity: lazy-load index on first open, build Fuse once ===
+  var data=null, fuse=null;
+  var overlay=document.getElementById('usearch');
+  var input=document.getElementById('usearchInput');
+  var box=document.getElementById('usearchResults');
+  var sel=-1, current=[];
+  // article slugs are bare; bible/ and tools/ slugs carry their prefix (verified vs live search-index.json)
+  function urlFor(s){ return (s.indexOf('bible/')===0||s.indexOf('tools/')===0) ? '/'+s : '/articles/'+s; }
+
+  function buildFuse(arr){
+    data=arr;
+    fuse=new Fuse(data,{keys:['title','category','description'],threshold:0.34,ignoreLocation:true,minMatchCharLength:2});
+  }
+  function ensureIndex(cb){
+    if(fuse){cb();return;}
+    // PRODUCTION: one shared index, lazy-loaded on first open.
+    fetch('/search-index.json').then(function(r){return r.json();}).then(function(arr){
+      buildFuse(arr); cb();
+    }).catch(function(){ box.textContent='Search failed to load.'; });
+  }
+
+  function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  function render(results){
+    current=results;
+    while(box.firstChild) box.removeChild(box.firstChild);   // no innerHTML
+    if(!input.value.trim()){ var p=document.createElement('div'); p.className='usearch-empty'; p.textContent='Start typing to search everything.'; box.appendChild(p); return; }
+    if(!results.length){ var n=document.createElement('div'); n.className='usearch-empty'; n.textContent='No results for "'+input.value+'".'; box.appendChild(n); return; }
+    results.slice(0,12).forEach(function(r,i){
+      var e=r.item||r;
+      var a=document.createElement('a'); a.href=urlFor(e.slug); if(i===sel)a.className='sel';
+      var top=document.createElement('div'); top.className='ur-top';
+      var t=document.createElement('span'); t.className='ur-title'; t.textContent=e.title;
+      var c=document.createElement('span'); c.className='ur-cat'; c.setAttribute('data-c',e.category||''); c.textContent=e.category||'';
+      top.appendChild(t); top.appendChild(c); a.appendChild(top);
+      if(e.description){ var d=document.createElement('div'); d.className='ur-desc'; d.textContent=e.description; a.appendChild(d); }
+      box.appendChild(a);
+    });
+  }
+
+  function open(q){ ensureIndex(function(){ overlay.classList.add('open'); input.focus(); if(q!=null){input.value=q;} sel=-1; render(input.value?fuse.search(input.value):[]); }); }
+  function close(){ overlay.classList.remove('open'); }
+
+  // wire every nav's search button to the shared overlay
+  document.querySelectorAll('[data-nav-search]').forEach(function(b){ b.addEventListener('click',function(){open(null);}); });
+  input.addEventListener('input',function(){ sel=-1; render(fuse?fuse.search(input.value):[]); });
+  input.addEventListener('keydown',function(e){
+    if(e.key==='Escape')close();
+    else if(e.key==='ArrowDown'){e.preventDefault(); sel=Math.min(sel+1,Math.min(current.length,12)-1); render(current);}
+    else if(e.key==='ArrowUp'){e.preventDefault(); sel=Math.max(sel-1,0); render(current);}
+    else if(e.key==='Enter'&&current[sel]){ var e2=current[sel].item||current[sel]; location.href=urlFor(e2.slug); }
+  });
+  overlay.addEventListener('click',function(e){ if(e.target===overlay)close(); });
+  document.addEventListener('keydown',function(e){ if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();open(null);} });
+})();
+</script>
+<script id="toc-bar-js">
+(function(){
+  var body=document.querySelector('.article-body');
+  var track=document.getElementById('tocBarTrack');
+  if(!body||!track)return;
+  var heads=[].slice.call(body.querySelectorAll('h2[id]'));
+  if(!heads.length)return;
+  heads.forEach(function(h){
+    var a=document.createElement('a');a.href='#'+h.id;
+    var t=h.textContent.trim();var i=t.indexOf(':');if(i>0)t=t.slice(0,i);
+    a.textContent=t;track.appendChild(a);
+  });
+  var links=[].slice.call(track.querySelectorAll('a'));
+  function onScroll(){
+    var y=window.scrollY+130,cur=heads[0].id;
+    heads.forEach(function(h){if(h.offsetTop<=y)cur=h.id;});
+    links.forEach(function(l){var on=l.getAttribute('href')==='#'+cur;l.classList.toggle('active',on);
+      if(on)l.scrollIntoView({inline:'center',block:'nearest'});});
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+})();
+</script>
+<script>
+function mpwFaqToggle(el){
+  var answer = el.nextElementSibling;
+  if(!answer || !answer.classList.contains('faq-accordion-a')) return;
+  var isOpen = answer.classList.contains('open');
+  document.querySelectorAll('.faq-accordion-a.open').forEach(function(a){
+    a.classList.remove('open');
+    var q = a.previousElementSibling;
+    if(q){ var ic = q.querySelector('.faq-accordion-icon, .faq-plus'); if(ic) ic.classList.remove('open'); }
+  });
+  if(!isOpen){
+    answer.classList.add('open');
+    var icon = el.querySelector('.faq-accordion-icon, .faq-plus');
+    if(icon) icon.classList.add('open');
+  }
+}
+</script>
+<style>.faq-plus.open{transform:rotate(45deg);transition:transform .2s ease}</style>
+</body>
+
+</html>
