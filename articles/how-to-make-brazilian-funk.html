@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Make Brazilian funk (funk carioca) from scratch: program the tamborzao beat, build the gritty 808, pick your sub-style and tempo, and tell it apart from phonk." />
+  <title>How to Make Brazilian Funk — MusicProductionWiki.com</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <style>
+    #readingProgress{position:fixed;top:0;left:0;height:3px;background:var(--teal);width:0%;z-index:200;transition:width 0.1s linear;}
+    .quick-answer{background:linear-gradient(135deg,rgba(0,212,168,0.08),rgba(167,139,250,0.06));border:1px solid rgba(0,212,168,0.3);border-left:4px solid var(--teal);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .quick-answer-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.6rem;}
+    .quick-answer p{font-size:1rem;line-height:1.65;color:var(--text-primary);margin:0;}
+    .skill-badge{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .6rem;border-radius:4px;margin-left:.6rem;vertical-align:middle;position:relative;top:-2px;}
+    .skill-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .skill-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .skill-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .settings-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .settings-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .settings-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .settings-table tr:last-child td{border-bottom:none;}
+    .settings-table tr:hover td{background:var(--bg-surface);}
+    .settings-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .settings-table .mono{font-family:var(--font-mono);font-size:.82rem;color:var(--teal);}
+    .mistake-box{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-left:4px solid #ef4444;border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .mistake-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ef4444;margin-bottom:.4rem;}
+    .mistake-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference{border-left:3px solid var(--purple);padding:.75rem 1.25rem;margin:1.25rem 0;background:rgba(167,139,250,0.05);border-radius:0 6px 6px 0;}
+    .pro-reference-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.35rem;}
+    .pro-reference p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference strong{color:var(--text-primary);}
+    .listening-prescription{background:var(--bg-void);border:1px solid var(--border-default);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;position:relative;}
+    .listening-prescription::before{content:'🎧';position:absolute;top:-14px;left:1.5rem;background:var(--bg-void);padding:0 .4rem;font-size:1.1rem;}
+    .listening-prescription-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:.75rem;}
+    .listening-prescription p{font-size:.9rem;line-height:1.7;color:var(--text-secondary);margin:0 0 .5rem;}
+    .listening-record{font-weight:600;color:var(--text-primary);}
+    .decision-framework{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .decision-framework-title{font-family:var(--font-display);font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:1rem;}
+    .decision-item{display:flex;gap:1rem;padding:.65rem 0;border-bottom:1px solid var(--border-subtle);font-size:.88rem;line-height:1.55;}
+    .decision-item:last-child{border-bottom:none;}
+    .decision-if{color:var(--text-muted);font-style:italic;min-width:2rem;}
+    .decision-then{color:var(--text-primary);}
+    .decision-then strong{color:var(--teal);}
+    .exercise-block{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.25rem 0;}
+    .exercise-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;}
+    .exercise-badge{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .7rem;border-radius:4px;}
+    .exercise-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .exercise-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .exercise-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .exercise-title{font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text-primary);}
+    .exercise-block ol{margin:0;padding-left:1.25rem;color:var(--text-secondary);font-size:.88rem;line-height:1.7;}
+    .exercise-block ol li{margin-bottom:.4rem;}
+    .version-line{font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:4px;padding:.4rem .75rem;margin:.75rem 0 1.5rem;display:inline-block;}
+    .go-deeper{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:10px;padding:1.75rem;margin:2.5rem 0;}
+    .go-deeper-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text-primary);margin-bottom:1.25rem;}
+    .go-deeper-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;}
+    .go-deeper-item{background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:7px;padding:1rem 1.1rem;}
+    .go-deeper-item-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.35rem;}
+    .go-deeper-item a{font-size:.88rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;}
+    .go-deeper-item p{font-size:.78rem;color:var(--text-muted);margin:.3rem 0 0;}
+    .citation{font-size:.78rem;color:var(--text-muted);font-style:italic;margin-top:.25rem;}
+    .diagram-wrap{margin:1.9rem auto;max-width:100%;}
+    .diagram-wrap img{width:100%;height:auto;display:block;border:1px solid var(--border-subtle);border-radius:10px;}
+    .diagram-wrap picture{display:block;}
+    .diagram-caption{font-size:.78rem;color:var(--text-muted);text-align:center;margin-top:.75rem;font-style:italic;}
+    .highlight-box{background:rgba(0,212,168,0.06);border:1px solid rgba(0,212,168,0.2);border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .highlight-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.4rem;}
+    .highlight-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin:1.5rem 0;}
+    .stat-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem;text-align:center;}
+    .stat-number{font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--teal);display:block;}
+    .stat-label{font-size:.78rem;color:var(--text-secondary);margin-top:.25rem;}
+    .action-steps{counter-reset:steps;list-style:none;padding:0;margin:1.5rem 0;}
+    .action-steps li{counter-increment:steps;display:flex;gap:1rem;padding:.85rem 0;border-bottom:1px solid var(--border-subtle);font-size:.9rem;color:var(--text-secondary);line-height:1.6;}
+    .action-steps li:last-child{border-bottom:none;}
+    .action-steps li::before{content:counter(steps);background:var(--teal);color:#000;font-weight:800;font-size:.75rem;width:1.6rem;height:1.6rem;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem;}
+    .genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:1.5rem 0;}
+    .genre-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem 1.25rem;}
+    .genre-card-name{font-family:var(--font-display);font-size:.85rem;font-weight:700;color:var(--teal);margin-bottom:.4rem;}
+    .genre-card p{font-size:.82rem;color:var(--text-secondary);line-height:1.55;margin:0;}
+    .comparison-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .comparison-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .comparison-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .comparison-table tr:last-child td{border-bottom:none;}
+    .comparison-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .affiliate-cta{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,212,168,0.1);border:1px solid rgba(0,212,168,0.25);color:var(--teal);font-size:.82rem;font-weight:600;padding:.45rem .9rem;border-radius:6px;text-decoration:none;}
+
+    .faq-accordion{margin:1.75rem 0;}
+    .faq-accordion-item{background:var(--bg-surface);border:1px solid var(--border-subtle);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;margin-bottom:8px;overflow:hidden;}
+    .faq-accordion-q{display:flex;align-items:flex-start;padding:1rem 1.25rem;cursor:pointer;gap:.75rem;}
+    .faq-accordion-q:hover{background:var(--bg-elevated);}
+    .faq-accordion-icon{width:16px;height:16px;flex-shrink:0;margin-top:3px;color:var(--purple);transition:transform .2s ease;}
+    .faq-accordion-icon.open{transform:rotate(45deg);}
+    .faq-accordion-q-inner{display:flex;flex-direction:column;}
+    .faq-accordion-label{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin-bottom:.2rem;}
+    .faq-accordion-q-text{font-size:.92rem;font-weight:600;color:var(--text-primary);line-height:1.45;font-family:var(--font-display);}
+    .faq-accordion-a{display:none;padding:0 1.25rem 1rem 2.75rem;font-size:.88rem;color:var(--text-secondary);line-height:1.7;border-top:1px solid var(--border-subtle);padding-top:.85rem;}
+    .faq-accordion-a.open{display:block;}
+</style>
+  <link rel="canonical" href="https://musicproductionwiki.com/articles/how-to-make-brazilian-funk.html"/>
+  <!-- Open Graph -->
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="How To Make Brazilian Funk"/>
+  <meta property="og:description" content="Make Brazilian funk (funk carioca) from scratch: program the tamborzao beat, build the gritty 808, pick your sub-style and tempo, and tell it apart from phonk."/>
+  <meta property="og:url" content="https://musicproductionwiki.com/articles/how-to-make-brazilian-funk.html"/>
+  <meta property="og:site_name" content="Music Production Wiki"/>
+  <meta property="og:image" content="https://musicproductionwiki.com/og-image.png"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="article:author" content="Music Production Wiki Team"/>
+  <meta property="article:section" content="Techniques"/>
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="How To Make Brazilian Funk"/>
+  <meta name="twitter:description" content="Make Brazilian funk (funk carioca) from scratch: program the tamborzao beat, build the gritty 808, pick your sub-style and tempo, and tell it apart from phonk."/>
+  <meta name="twitter:image" content="https://musicproductionwiki.com/og-image.png"/>
+  <!-- Article Schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How To Make Brazilian Funk",
+  "description": "Make Brazilian funk (funk carioca) from scratch: program the tamborzao beat, build the gritty 808, pick your sub-style and tempo, and tell it apart from phonk.",
+  "image": [
+    "https://musicproductionwiki.com/images/how-to-make-brazilian-funk-tamborzao-grid.png",
+    "https://musicproductionwiki.com/images/how-to-make-brazilian-funk-sub-style-tempo-map.png",
+    "https://musicproductionwiki.com/images/how-to-make-brazilian-funk-layering-the-low-end.png"
+  ],
+  "datePublished": "2026-07-04",
+  "dateModified": "2026-07-04",
+  "wordCount": 5190,
+  "timeRequired": "PT15M",
+  "keywords": [
+    "funk carioca",
+    "baile funk",
+    "tamborzao",
+    "brazilian funk production",
+    "how to make baile funk",
+    "automotivo funk",
+    "150 bpm funk",
+    "brazilian funk vs phonk"
+  ],
+  "author": {
+    "@type": "Organization",
+    "name": "Music Production Wiki",
+    "url": "https://musicproductionwiki.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Music Production Wiki",
+    "url": "https://musicproductionwiki.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://musicproductionwiki.com/images/og-default.jpg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://musicproductionwiki.com/articles/how-to-make-brazilian-funk.html"
+  },
+  "articleSection": "Techniques",
+  "inLanguage": "en-US"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Program the Tamborzao Beat",
+  "description": "Program the tamborzao, the signature drum pattern of Brazilian funk (funk carioca), step by step in any DAW.",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "Set the tempo and key",
+      "text": "Set your DAW to 130 BPM in 4/4 in a minor key, and load a hard clipped kick, a snappy clap or snare, a shaker or closed hat, and a sine 808 sub."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Program the backbeat skeleton",
+      "text": "Place the kick on beats 1 and 3 and a clap or snare on beats 2 and 4 to establish the backbeat frame."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Add the surdo kick push",
+      "text": "Give the kick a syncopated push just after beat 3 and a pickup near the end of the bar so it rolls forward, the big-drum figure the tamborzao is named for."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Add the off-beat syncopation",
+      "text": "Add extra clap, rimshot or tom hits between the main beats, on the off-beats, to create the tamborzao swing. Do not fully quantise them."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Drive the hats and lock the 808",
+      "text": "Program driving eighth-note hats for momentum, then place the 808 sub in lockstep with the kick, tuned to the root, and saturate and clip it for the gritty low end."
+    }
+  ]
+}
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What BPM is Brazilian funk?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It depends on the sub-style. Classic funk carioca and the tamborz&atilde;o sit around 125&ndash;135 BPM, with 130 as the historical sweet spot. Rasteirinha is slower, roughly 90&ndash;105 BPM. The modern global wave that most non-Brazilian producers mean today runs at about 150 BPM (created around 2017&ndash;2018). Automotivo and mandel&atilde;o live in the 130&ndash;150 range. Pick your sub-style first and the tempo follows."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the tamborz&atilde;o?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The tamborz&atilde;o is funk carioca&rsquo;s signature drum pattern &mdash; the name means &ldquo;big drum.&rdquo; It is a syncopated, surdo-derived groove: a kick anchoring beats 1 and 3 with an off-grid push, clap or snare on 2 and 4, and crucially a layer of off-beat percussion hits that create the swing, all anchored by a deliberately overdriven 808 sub. It crystallised in the late 1990s, fusing Afro-Brazilian percussion traditions with the electronic Miami-bass kit. It is the one rhythm to learn before anything else in the genre."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is the distortion on the bass a mistake?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No &mdash; it is the genre. The blown-out, clipped, gritty low end is funk carioca&rsquo;s sonic fingerprint, inherited from music engineered to hit hard through cheap sound-systems and phone speakers. A clean, hi-fi funk sub sounds wrong. Build the grit deliberately with saturation and hard clipping rather than treating it as something to fix in the mix."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is Brazilian funk the same as Brazilian phonk?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Brazilian funk (funk carioca) is a Rio-born genre built on the tamborz&atilde;o. &ldquo;Brazilian phonk&rdquo; is largely a foreign-made fusion that grafts drift-phonk cowbells and blown-out mixing onto tamborz&atilde;o-style drums at 140&ndash;170 BPM; the label is barely used in Brazil, where the underlying rhythm is more accurately funk automotivo. If you want the cowbell-driven Memphis-descended sound, that is phonk, covered in our separate phonk guide. Know which one you are making before you start."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is it called funk if it doesn&rsquo;t sound like funk?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The Portuguese &ldquo;funk&rdquo; is a false friend. Funk carioca has no connection to James Brown-style American funk. The name comes from the &ldquo;funk parties&rdquo; (bailes) where Rio DJs originally spun imported soul and funk records; the term stuck even as the music evolved into something built on Miami bass, electro and Afro-Brazilian percussion. It is closer to electronic bass music than to anything in the American funk tradition."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need Brazilian percussion samples, or can I program everything?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You can program a functional tamborz&atilde;o from an 808 kit, but layering real Brazilian percussion &mdash; surdo, tamborim, agog&ocirc;, or a &ldquo;Brazilian percussion&rdquo; loop at around 130 BPM &mdash; is the fastest route to authenticity. The best approach is to keep your programmed kick, clap and 808 as the backbone and add live-feel percussion loops on top for texture and swing. Chop and rearrange those loops so they lock to your grid rather than sitting on top as an obvious drop-in."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What DAW is best for making Brazilian funk?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Any modern DAW works &mdash; the genre is about the rhythm and the grit, not a specific tool. FL Studio is popular for its fast step sequencer, which suits the loop-and-chop workflow, but Ableton Live and Logic are equally capable. What matters is a solid step sequencer for programming the tamborz&atilde;o, a good sampler for chopping percussion and vocals, and a saturator plus a clipper for the low end."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I make my Brazilian funk sound authentic rather than generic?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Program the tamborz&atilde;o by hand instead of dropping in a loop, choose a specific sub-style and its tempo on purpose, layer real Brazilian percussion, distort the low end deliberately, and write short chantable hooks with the syllables locked to the drums. Above all, learn the history: funk carioca is a living Afro-Brazilian favela culture, and tracks made with knowledge and respect &mdash; crediting collaborators, paying performers, not exoticising &mdash; are the ones that sound like they belong rather than like a trend clip."
+      }
+    }
+  ]
+}
+</script>
+
+  <!-- SEO meta v6.1 -->
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="article:published_time" content="2026-07-04T00:00:00+00:00" />
+  <meta property="article:modified_time" content="2026-07-04T00:00:00+00:00" />
+  <meta name="keywords" content="how to make brazilian funk, funk carioca, baile funk, tamborzao beat, how to make baile funk, brazilian funk bpm, automotivo funk, 150 bpm funk, brazilian funk vs phonk, funk carioca production" />
+  <!-- Organization schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Music Production Wiki",
+  "url": "https://musicproductionwiki.com",
+  "logo": {
+    "@type": "ImageObject",
+    "url": "https://musicproductionwiki.com/images/og-default.jpg"
+  },
+  "sameAs": []
+}
+</script>
+  <!-- WebSite schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Music Production Wiki",
+  "url": "https://musicproductionwiki.com",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://musicproductionwiki.com/?s={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://musicproductionwiki.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Articles",
+      "item": "https://musicproductionwiki.com/articles.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "How To Make Brazilian Funk",
+      "item": "https://musicproductionwiki.com/articles/how-to-make-brazilian-funk.html"
+    }
+  ]
+}
+</script>
+
+<style id="toc-skin">
+.toc-widget .sidebar-widget-header{margin-bottom:.35rem}
+.toc-list{counter-reset:tocnum;list-style:none;margin:0;padding:0}
+.toc-list li{counter-increment:tocnum;position:relative;margin:0;border-left:2px solid var(--border-subtle);transition:border-color .15s ease,background .15s ease}
+.toc-list li a{display:flex;gap:.7rem;align-items:baseline;padding:.5rem .85rem .5rem 1rem;font-size:.82rem;line-height:1.45;font-weight:500;color:var(--text-secondary);text-decoration:none;transition:color .15s ease}
+.toc-list li a::before{content:counter(tocnum,decimal-leading-zero);font-family:var(--font-mono,ui-monospace,monospace);font-size:.7rem;font-weight:600;letter-spacing:.04em;color:var(--text-muted);flex:0 0 auto;min-width:1.5em;padding-top:.05rem}
+.toc-list li a:hover{color:var(--text-primary)}
+.toc-list li.active{border-left-color:var(--teal);background:linear-gradient(90deg,rgba(0,212,168,.08),transparent 80%)}
+.toc-list li.active a{color:var(--teal);font-weight:600}
+.toc-list li.active a:hover{color:var(--teal)}
+.toc-list li.active a::before{color:var(--teal)}
+</style>
+<style id="toc-bar-css">
+.toc-bar{display:none}
+@media (max-width: 900px){
+.toc-bar{display:block;position:sticky;top:60px;z-index:400;background:var(--bg-void);border-bottom:1px solid var(--border-default);overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(to right,#000 88%,transparent 100%);mask-image:linear-gradient(to right,#000 88%,transparent 100%)}
+.toc-bar::-webkit-scrollbar{display:none}
+.toc-bar-track{display:flex;gap:4px;padding:9px 10px;min-width:max-content}
+.toc-bar-track a{color:var(--text-secondary);text-decoration:none;font-family:var(--font-mono,ui-monospace,monospace);font-size:10px;text-transform:uppercase;letter-spacing:.05em;padding:6px 10px;border-radius:4px;white-space:nowrap;min-height:30px;display:inline-flex;align-items:center;transition:color .15s,background .15s}
+.toc-bar-track a.active{color:var(--teal);background:var(--bg-elevated)}
+.article-body h2[id]{scroll-margin-top:116px}
+}
+@media (max-width: 900px) and (hover:hover){.toc-bar-track a:hover{color:var(--teal)}}
+</style>
+</head>
+<body>
+
+
+
+<style id="mpw-unav-css">
+
+.mnav-wrap,.usearch{--ink:#09090d;--panel:#0f0f18;--panel2:#15151f;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);--amber:#f5a623;--teal:#00e8a2;--teal-d:rgba(0,232,162,.12);--text:#f2f2f7;--t2:#9a9ab2;--t3:#56566f;--sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'DM Mono',ui-monospace,SFMono-Regular,monospace;}
+.mnav-wrap *,.mnav-wrap *::before,.mnav-wrap *::after,.usearch *,.usearch *::before,.usearch *::after{box-sizing:border-box;margin:0;padding:0}
+/* host-CSS shield: a page loading style.css (articles) must not bleed its body font/color/line-height into the bar. Direct rule on .mnav-wrap beats inherited body styles. */
+.mnav-wrap,.usearch{font-family:var(--sans);font-size:14px;font-weight:400;font-style:normal;line-height:1.4;letter-spacing:normal;color:var(--text);text-align:left;text-transform:none}
+/* S91 host-CSS isolation (:where() = zero-specificity; beats style.css bare a/li by source order, LOSES to nav's own .drw-card/.mnav-flat classes) */
+:where(.mnav-wrap,.usearch) a{color:inherit;text-decoration:none;background:none;border:0;font:inherit;letter-spacing:inherit}
+:where(.mnav-wrap,.usearch) ul,:where(.mnav-wrap,.usearch) ol{list-style:none;margin:0;padding:0;border:0}
+:where(.mnav-wrap,.usearch) li{margin:0;padding:0;border:0;font-size:inherit;line-height:inherit;color:inherit;background:none}
+:where(.mnav-wrap,.usearch) h1,:where(.mnav-wrap,.usearch) h2,:where(.mnav-wrap,.usearch) h3,:where(.mnav-wrap,.usearch) h4,:where(.mnav-wrap,.usearch) h5,:where(.mnav-wrap,.usearch) h6,:where(.mnav-wrap,.usearch) p{margin:0;padding:0;border:0;font:inherit;color:inherit;line-height:inherit;letter-spacing:inherit;text-transform:none}
+:where(.mnav-wrap,.usearch) button{font:inherit;color:inherit;background:none;border:0;letter-spacing:inherit;text-align:inherit}
+:where(.mnav-wrap,.usearch) svg{display:inline-block;vertical-align:middle}
+:where(.mnav-wrap,.usearch) img{max-width:none}
+.mnav-wrap{background:var(--ink);border-bottom:1px solid var(--line);position:relative}
+.mnav{height:60px;display:flex;align-items:center}
+.mnav-in{max-width:1180px;margin:0 auto;padding:0 22px;width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.mnav-brand{display:flex;align-items:center;gap:10px;color:var(--text);text-decoration:none;flex:0 0 auto}
+.mnav-word{font-weight:700;font-size:15px;letter-spacing:-.02em}
+.mnav-links{display:flex;align-items:center;gap:6px;margin-left:8px}
+.mnav-flat,.mnav-trigger{color:var(--t2);background:none;border:0;font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;padding:8px 12px;border-radius:8px;display:inline-flex;align-items:center;gap:6px}
+.mnav-flat:hover,.mnav-trigger:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.caret{font-size:9px;color:var(--t3);transition:transform .18s}
+.mnav-right{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.mnav-search{background:none;border:0;color:var(--t2);cursor:pointer;display:flex;padding:6px;border-radius:8px}
+.mnav-search:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.mnav-cta{border:1px solid var(--teal);color:var(--teal);text-decoration:none;padding:7px 15px;border-radius:8px;font-size:13px;font-weight:600;white-space:nowrap}
+.mnav-cta:hover{background:var(--teal-d)}
+.mnav-wrap[data-section="tools"] .mnav-flat[data-nav="tools"]{color:var(--text);font-weight:600}
+.mnav-wrap[data-section="articles"] .mnav-trigger[data-nav="articles"]{color:var(--text);font-weight:600}
+/* Bible = amber brand color, desktop link + mobile drawer */
+.mnav-flat[data-nav="bible"],.drw-link[data-nav="bible"]{color:#f5a623!important;font-weight:600}
+.mnav-flat[data-nav="bible"]:hover,.drw-link[data-nav="bible"]:hover{color:#ffc04d!important}
+.mnav-item{position:relative}
+.mnav-panel,.mnav-panel-wide{position:absolute;top:calc(100% + 6px);left:0;z-index:50;display:none;background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:14px;box-shadow:0 24px 60px -24px rgba(0,0,0,.9);min-width:240px}
+.mnav-panel-wide{grid-template-columns:1fr 1fr;gap:8px 22px;min-width:520px}
+.mnav-item:hover .mnav-panel,.mnav-item:focus-within .mnav-panel,.mnav-item:hover .mnav-panel-wide,.mnav-item:focus-within .mnav-panel-wide{display:grid}
+.mnav-item:hover .caret{transform:rotate(180deg)}
+.mp-col{display:flex;flex-direction:column}
+.mp-head{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);padding:6px 10px 8px}
+.mnav-panel a{display:flex;flex-direction:column;gap:1px;padding:8px 10px;border-radius:9px;text-decoration:none}
+.mnav-panel a:hover{background:rgba(255,255,255,.05)}
+.mp-name{color:var(--text);font-size:13.5px;font-weight:600}.mp-desc{color:var(--t2);font-size:11.5px}
+.mnav-sub{display:none;background:var(--panel);border-bottom:1px solid var(--line)}
+.mnav-wrap[data-section="bible"] .mnav-sub{display:block}
+.mnav-sub-in{max-width:1180px;margin:0 auto;padding:10px 22px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.mnav-sub-in::-webkit-scrollbar{display:none}
+.mnav-sub-in a{flex:0 0 auto;color:var(--t2);text-decoration:none;font-size:12.5px;font-family:var(--mono);border:1px solid var(--line2);border-radius:99px;padding:5px 12px;white-space:nowrap}
+.mnav-sub-in a:hover{color:var(--teal);border-color:rgba(0,232,162,.4)}
+.mnav-toggle{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.mnav-burger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:8px;border-radius:8px}
+.mnav-burger span{display:block;width:20px;height:2px;background:var(--text);border-radius:2px;transition:.2s}
+.mnav-drawer{display:none;flex-direction:column;padding:6px 18px 16px;background:var(--ink);border-bottom:1px solid var(--line)}
+.mnav-drawer details{border-bottom:1px solid var(--line)}
+.mnav-drawer summary{list-style:none;cursor:pointer;padding:13px 2px;font-size:15px;font-weight:600;color:var(--text);display:flex;justify-content:space-between}
+.mnav-drawer summary::-webkit-details-marker{display:none}
+.mnav-drawer summary::after{content:"+";color:var(--t3)}
+.mnav-drawer details[open] summary::after{content:"\2013"}
+.mnav-acc{display:flex;flex-direction:column;padding:0 0 10px 12px}
+.mnav-acc a{color:var(--t2);text-decoration:none;font-size:14px;padding:8px 0}
+.drw-link{color:var(--t2);text-decoration:none;font-size:15px;font-weight:600;padding:13px 2px;border-bottom:1px solid var(--line)}
+.drw-cta{color:var(--teal);text-decoration:none;font-weight:600;font-size:15px;padding:14px 2px}
+.mnav-toggle:checked ~ .mnav-drawer{display:flex}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(2){opacity:0}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+@media(max-width:860px){.mnav-links,.mnav-cta{display:none}.mnav-burger{display:flex}}
+
+/* ===== UNIFIED SEARCH OVERLAY ===== */
+.usearch{position:fixed;inset:0;z-index:10000;display:none;background:rgba(6,6,11,.78);backdrop-filter:blur(6px);padding:80px 20px 20px}
+.usearch.open{display:block}
+.usearch-box{max-width:620px;margin:0 auto;background:var(--panel);border:1px solid var(--line2);border-radius:16px;overflow:hidden;box-shadow:0 40px 90px -30px rgba(0,0,0,.95)}
+.usearch-top{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.usearch-top svg{color:var(--t3);flex:0 0 auto}
+.usearch-top input{flex:1;background:none;border:0;outline:none;color:var(--text);font-family:var(--sans);font-size:17px}
+.usearch-top input::placeholder{color:var(--t3)}
+.usearch-top kbd{font-family:var(--mono);font-size:11px;color:var(--t3);border:1px solid var(--line2);border-radius:6px;padding:2px 7px}
+.usearch-results{max-height:56vh;overflow-y:auto;padding:8px}
+.usearch-results a{display:block;padding:11px 14px;border-radius:10px;text-decoration:none;transition:background .12s}
+.usearch-results a:hover,.usearch-results a.sel{background:rgba(255,255,255,.05)}
+.ur-top{display:flex;align-items:baseline;gap:9px}
+.ur-title{color:var(--text);font-size:14.5px;font-weight:600}
+.ur-cat{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.06);color:var(--t2);flex:0 0 auto}
+.ur-cat[data-c="Tools"]{background:var(--teal-d);color:var(--teal);border:1px solid rgba(0,232,162,.4)}
+.ur-cat[data-c="Bible"]{background:rgba(245,166,35,.18);color:#f5a623;border:1px solid rgba(245,166,35,.4)}
+.ur-desc{color:var(--t2);font-size:12.5px;line-height:1.45;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.usearch-empty{padding:30px;text-align:center;color:var(--t3);font-size:13.5px}
+/* --- sticky-header + entry-page chrome (pilot, refined for density) ---
+   entry nav = 60px main bar only (no category sub-bar). Desktop: hide the horizontal section
+   nav (the sticky sidebar TOC covers sections) and retune offsets to the 60px nav. Mobile: the
+   sidebar is hidden, so SHOW the section nav flush under the bar. All in THIS block. --- */
+.mnav-wrap{position:sticky;top:0;z-index:1000;line-height:1.4}
+.entry-nav{display:none}
+[id].entry-section{scroll-margin-top:90px}
+.entry-main h2{scroll-margin-top:90px}
+.entry-sidebar{top:78px;height:calc(100vh - 98px)}
+@media(max-width:768px){
+  .entry-nav{display:block!important;top:60px!important}
+  [id].entry-section{scroll-margin-top:130px!important}
+  .entry-main h2{scroll-margin-top:130px!important}
+}
+/* dropdown overflow safety */
+.mnav-panel,.mnav-panel-wide{max-height:min(72vh,560px);overflow-y:auto}
+/* mobile drawer: category CARD grid (slick old-nav look), CSS-only */
+.mnav-drawer{padding:10px 18px 18px;gap:0}
+.drw-label{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--t3);margin:12px 2px 8px}
+.drw-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.drw-card{display:flex;align-items:center;padding:12px 14px;border-radius:10px;text-decoration:none;font-size:13.5px;font-weight:600;color:var(--text);background:var(--panel);border:1px solid var(--line2)}
+.drw-card:hover{border-color:var(--teal);color:var(--teal)}
+.drw-feat{display:flex;align-items:center;gap:8px;padding:13px 16px;border-radius:10px;text-decoration:none;font-size:14px;font-weight:700;color:var(--text);background:var(--panel);border:1px solid var(--line2);margin-top:8px}
+.drw-feat-bible{color:#f5a623;background:rgba(245,166,35,.08);border-color:rgba(245,166,35,.30)}
+.drw-feat-bible:hover{border-color:rgba(245,166,35,.6)}
+.drw-cta{display:block;text-align:center;padding:14px;border-radius:10px;background:var(--teal);color:#06281f;font-weight:800;font-size:14px;text-decoration:none;margin-top:12px}
+/* mobile sunlight legibility: lift the intentionally-dim greys in glare (nav + search only), scoped */
+@media(max-width:860px){
+  .mnav-wrap,.usearch{--t2:#c8c8da;--t3:#9696b0}
+  .drw-label{color:#bdbdd0;font-weight:500}
+  .usearch-top input::placeholder{color:#9696b0}
+  .drw-card,.drw-feat{background:#20202e;border:1.5px solid #45455c}
+  .drw-feat-bible{background:rgba(245,166,35,.12);border:1.5px solid rgba(245,166,35,.6)}
+}
+html{overflow-x:clip!important;max-width:none!important}body{overflow-x:clip!important}
+</style>
+<!-- MPW universal nav -->
+<div class="mnav-wrap" data-section="articles">
+  <input type="checkbox" id="mnav-toggle" class="mnav-toggle" aria-hidden="true">
+  <nav class="mnav" aria-label="Main navigation">
+    <div class="mnav-in">
+      <a class="mnav-brand" href="/"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="6" stroke="#f5a623" stroke-width="1.7"/><path d="M7 15V9l3 3 3-5 4 8" stroke="#00e8a2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="mnav-word">MusicProductionWiki</span></a>
+      <div class="mnav-links">
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="articles">Articles <span class="caret">&#9662;</span></button><div class="mnav-panel mnav-panel-wide"><div class="mp-col"><div class="mp-head">Techniques & Analysis</div><a href="/categories/techniques"><span class="mp-name">Techniques</span><span class="mp-desc">Mixing, mastering, sound design</span></a><a href="/categories/reviews"><span class="mp-name">Reviews</span><span class="mp-desc">Honest. No paid placements.</span></a><a href="/categories/comparisons"><span class="mp-name">Comparisons</span><span class="mp-desc">Head-to-head</span></a><a href="/categories/breakdowns"><span class="mp-name">Breakdowns</span><span class="mp-desc">Track-by-track</span></a><a href="/categories/recreations"><span class="mp-name">Recreations</span><span class="mp-desc">Recreate iconic sounds</span></a><a href="/genres"><span class="mp-name">Genres</span><span class="mp-desc">Every genre & style</span></a></div><div class="mp-col"><div class="mp-head">Reference & Business</div><a href="/categories/ai-music"><span class="mp-name">AI Music</span><span class="mp-desc">Suno, Udio, AI tools</span></a><a href="/categories/music-business"><span class="mp-name">Music Business</span><span class="mp-desc">Royalties, licensing, sync</span></a></div></div></div>
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="gear">Gear <span class="caret">&#9662;</span></button><div class="mnav-panel"><div class="mp-col"><a href="/categories/daws"><span class="mp-name">DAWs</span><span class="mp-desc">Every major DAW</span></a><a href="/categories/plugins"><span class="mp-name">Plugins</span><span class="mp-desc">EQ, comp, reverb, synths</span></a><a href="/categories/hardware"><span class="mp-name">Hardware</span><span class="mp-desc">Interfaces, mics, monitors</span></a></div></div></div>
+        <a class="mnav-flat" href="/tools/" data-nav="tools">Tools</a>
+        <a class="mnav-flat" href="/bible/" data-nav="bible">The Bible</a>
+      </div>
+      <div class="mnav-right">
+        <button class="mnav-search" data-nav-search aria-label="Search"><svg width="17" height="17" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <a class="mnav-cta" href="https://theproducersbriefing.beehiiv.com">Sound Better &rarr;</a>
+        <label class="mnav-burger" for="mnav-toggle"><span></span><span></span><span></span></label>
+      </div>
+    </div>
+  </nav>
+  <div class="mnav-drawer">
+    <div class="drw-label">Articles</div>
+    <div class="drw-grid">
+      <a href="/categories/techniques" class="drw-card">Techniques</a><a href="/categories/reviews" class="drw-card">Reviews</a><a href="/categories/comparisons" class="drw-card">Comparisons</a><a href="/categories/breakdowns" class="drw-card">Breakdowns</a><a href="/categories/recreations" class="drw-card">Recreations</a><a href="/genres" class="drw-card">Genres</a><a href="/categories/ai-music" class="drw-card">AI Music</a><a href="/categories/music-business" class="drw-card">Music Business</a>
+    </div>
+    <div class="drw-label">Gear</div>
+    <div class="drw-grid">
+      <a href="/categories/daws" class="drw-card">DAWs</a><a href="/categories/plugins" class="drw-card">Plugins</a><a href="/categories/hardware" class="drw-card">Hardware</a>
+    </div>
+    <a href="/bible/" class="drw-feat drw-feat-bible">&#9670; The Producer's Bible</a>
+    <a href="/tools/" class="drw-feat">The Producer's Tools</a>
+    <a href="https://theproducersbriefing.beehiiv.com" class="drw-cta">Sound Better &rarr;</a>
+  </div>
+</div>
+
+
+<div class="container">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><ol>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../categories/techniques.html">Techniques</a></li>
+    <li><span aria-current="page">How To Make Brazilian Funk</span></li>
+  </ol></nav>
+</div>
+<nav class="toc-bar" aria-label="Section navigation"><div class="toc-bar-track" id="tocBarTrack"></div></nav>
+<main class="container" id="main-content">
+  <div class="article-layout">
+    <article aria-labelledby="articleTitle">
+      <header class="article-header">
+        <div class="article-tags"><span class="article-tag teal"><a href="../categories/techniques.html" style="color:inherit;text-decoration:none;">Techniques</a></span>
+<span class="article-tag teal"><a href="../categories/techniques.html" style="color:inherit;text-decoration:none;">Genre Production</a></span></div>
+        <h1 id="articleTitle">How to Make Brazilian Funk</h1>
+        <div class="article-header-meta">
+          <div class="article-author"><div class="author-avatar" aria-hidden="true">MP</div><span class="author-name">The Music Production Wiki Team</span></div>
+          <span class="meta-divider"></span><span class="meta-item">Updated July 2026&nbsp;&middot;&nbsp;15 min read</span>
+        </div>
+      </header>
+      <div class="article-body">
+<div class="quick-answer">
+<div class="quick-answer-label">The short answer</div>
+<p>Brazilian funk &mdash; <em>funk carioca</em> or baile funk &mdash; is a family of dance music built on one rhythmic cell, the <strong>tamborz&atilde;o</strong>: a syncopated, surdo-derived kick-and-clap groove with a deliberately overdriven sub, born in Rio de Janeiro&rsquo;s favelas. Classic tracks sit around 130 BPM; the modern global wave runs at 150. The single decision that separates an authentic track from a tourist&rsquo;s pastiche is whether you programmed that rhythm yourself and chose your sub-style on purpose. Build the tamborz&atilde;o first; everything else is flavour.</p>
+</div>
+
+<p>You have heard it whether you know the name or not: the punchy, syncopated Brazilian beat under a TikTok edit, a car-window clip, a J Balvin or Anitta crossover, a workout reel. Brazilian funk went from a regional favela sound to one of the fastest-rising production trends on earth, and English-language producers are scrambling to make it. Most of them get it wrong in exactly the same way &mdash; they load a loop pack, drop an 808 under it, and call it done. This guide takes the harder, better road: you will build the beat by hand, understand where its grit comes from, and &mdash; most importantly &mdash; learn <em>which</em> Brazilian funk you are actually making, because the umbrella hides five very different styles at very different tempos.</p>
+
+<p>The history matters here more than in almost any other genre, because the sound <em>is</em> the history. We will cover what funk carioca actually is (and the two genres it is constantly confused with), the map of sub-styles and the tempo each one lives at, how to program the tamborz&atilde;o step by step, how to build the signature distorted low-end on purpose, how to layer real percussion for authenticity, how to write the vocal chops and chants that carry the whole style, and finally how to tell Brazilian funk apart from Brazilian phonk. If you are brand new to beatmaking it is worth reading <a href="how-to-make-a-beat.html">how to make a beat</a> first for the mechanical basics; everything below assumes you can already program a pattern in a DAW.</p>
+
+<h2 id="what-is-brazilian-funk">What Brazilian Funk Actually Is (and Isn&rsquo;t)</h2>
+
+<p>The first thing to clear up is the name, because it is a trap. Brazilian funk has nothing to do with James Brown, Parliament-Funkadelic, or the syncopated bass-and-horn funk that Americans mean when they say the word. The Portuguese &ldquo;funk&rdquo; is a false friend. What you are making is <em>funk carioca</em> &mdash; &ldquo;funk from Rio&rdquo; &mdash; also called baile funk or, in Brazil, simply <em>funk</em>. It is closer to Miami bass and electro than to anything in the American funk lineage, and if you go in expecting slap bass and a wah-wah guitar you will build the wrong record entirely.</p>
+
+<p>The genre was born in the favelas of Rio de Janeiro &mdash; the city&rsquo;s predominantly Afro-Brazilian working-class neighbourhoods &mdash; where DJs threw open-air parties called <em>bailes</em>. Through the late 1970s and 1980s they spun imported soul, electro, freestyle and, crucially, Miami bass: the booming, 808-driven, deliberately sleazy dance music coming out of Florida. DJ Marlboro &mdash; Fernando Lu&iacute;s Mattos de Matta &mdash; is widely credited as the genre&rsquo;s godfather. His 1989 album <em>Funk Brasil</em>, which reworked Miami bass and freestyle with Portuguese lyrics, is usually treated as the moment funk carioca became its own thing rather than a tropicalised import. Marlboro has said his key influence was Afrika Bambaataa&rsquo;s &ldquo;Planet Rock,&rdquo; and you can hear that electro DNA in the earliest tracks.</p>
+
+<p>What turned funk carioca from a localised remix scene into an unmistakable genre was the arrival of its signature rhythm, the tamborz&atilde;o, which crystallised in the late 1990s &mdash; commonly credited to DJ Luciano Oliveira around 1998, building on percussion loops circulating among Rio producers. The word means &ldquo;big drum,&rdquo; and that is the point: producers took the electronic 808 kit and fused it with Afro-Brazilian percussion patterns drawn from capoeira, Candombl&eacute; ritual and the deep <em>surdo</em> drum, giving the beat a fatter, more syncopated, distinctly Brazilian swing. That fusion is the whole genre in miniature &mdash; an imported machine groove re-rooted in Black Brazilian rhythmic tradition. Keep that in mind, because it is also the line between making funk and merely borrowing its surface.</p>
+
+<p>A word on respect, and it is not throwaway framing. Funk carioca is a living culture tied to specific communities that have been marginalised, criminalised, and at times literally policed for making this music &mdash; for decades funk in Rio was handled by the public-security apparatus rather than the culture department, and bailes were shut down and raided. When you make a funk track you are working in a tradition built by poor, mostly Black Brazilians who rarely get credited when the sound goes global. You do not need to be Brazilian to make it, but you do need to make it like someone who learned the history rather than someone who lifted a hat off a stranger. In practice that means learning where the beat comes from, crediting collaborators, paying the performers you work with, and not exoticising the culture. Music that feels like it belongs to a community is also, not coincidentally, the music that community protects and shares &mdash; the opposite of a disposable trend clip.</p>
+
+<h2 id="the-map-of-sub-styles">The Map of Sub-Styles &mdash; Pick Your Tempo First</h2>
+
+<p>Here is the single most useful thing this guide can tell you, and almost no English tutorial says it: &ldquo;Brazilian funk&rdquo; is not one beat. It is an umbrella over a dozen sub-styles that live at wildly different tempos and feel like different genres. Before you program a single hit, decide which one you are making &mdash; because the tempo you pick determines the drum spacing, the vocal cadence, and the entire energy of the track. Getting this wrong is why so many outsider attempts sound generically &ldquo;Brazilian&rdquo; without sounding like anything in particular.</p>
+
+<div class="diagram-wrap">
+<picture>
+<source media="(max-width:900px)" srcset="../images/how-to-make-brazilian-funk-sub-style-tempo-map-m.png">
+<img src="../images/how-to-make-brazilian-funk-sub-style-tempo-map.png" alt="A BPM axis from 60 to 180 placing the funk carioca family in teal — Rasteirinha around 96, classic tamborzao around 130, and the 150-BPM global wave — with two purple neighbours marked off as distinct genres: Memphis phonk around 66 to 72 and the Western so-called Brazilian phonk around 140 to 170, a mostly foreign remix rather than funk carioca" width="1040" height="510" loading="lazy" />
+</picture>
+<div class="diagram-caption">The funk carioca family (teal) versus its two most-confused neighbours (purple). Same neighbourhood, different rhythm.</div>
+</div>
+
+<p><strong>Classic funk carioca / tamborz&atilde;o (~125&ndash;135 BPM).</strong> The anchor. This is the surdo-derived tamborz&atilde;o at its home tempo &mdash; around 130 BPM was the standard for decades. If you want to learn the genre properly, start here; everything else is a variation on this pocket. It is punchy, syncopated, and loop-driven, built to leave space for an MC to command the crowd.</p>
+
+<p><strong>Rasteirinha (~90&ndash;105 BPM).</strong> The slow, sensual branch. Rasteirinha drops the tempo and leans on dembow-adjacent swing, borrowing from reggaeton and Bahian <em>ax&eacute;</em> and layering real hand percussion &mdash; pandeiro, surdo, agog&ocirc;. If the rhythmic feel here reminds you of dancehall, that is not an accident; the same dembow cell underpins a lot of Latin dance music, and it is worth studying <a href="how-to-make-reggaeton.html">how to make reggaeton</a> to hear how the two genres share a heartbeat while diverging in everything else.</p>
+
+<p><strong>The 150-BPM wave (~148&ndash;152 BPM).</strong> This is the tempo most non-Brazilian producers actually mean today. Around 2017&ndash;2018 a new generation of Rio DJs &mdash; Rennan da Penha, Polyvox, Iasmin Turbininha among them &mdash; pushed the classic groove up to 150 BPM because dancers responded to the faster pace. One of its signatures, the &ldquo;tambor Coca-Cola,&rdquo; was born when Polyvox sampled his son hitting a Coca-Cola bottle against a door. The 150 wave is the same tamborz&atilde;o logic with tighter note lengths and more forward momentum, and it powers most of the global crossover moment. Interestingly, the Rio scene has since partly swung back toward 130 for TikTok-optimised tracks, so do not assume faster is automatically more current.</p>
+
+<p><strong>Automotivo, mandel&atilde;o and bruxaria (~130&ndash;150 BPM).</strong> These are the harder, S&atilde;o Paulo-centred strains built for <em>pared&atilde;o</em> car sound-systems and street <em>fluxos</em>. Mandel&atilde;o (also called Ritmo dos Fluxos) is minimalist and raw, with blown-out sub and repetitive chanted lyrics. Bruxaria &mdash; &ldquo;witchcraft funk&rdquo; &mdash; piles on aggressive distortion and piercing high-pitched &ldquo;tuin&rdquo; sounds for a genuinely menacing, horror-adjacent feel. Automotivo overlaps heavily with both and is, confusingly, the style the West often relabels as &ldquo;Brazilian phonk.&rdquo; We will come back to that.</p>
+
+<p><strong>Ostenta&ccedil;&atilde;o, MTG, brega funk and the rest.</strong> There are many more &mdash; ostenta&ccedil;&atilde;o (S&atilde;o Paulo&rsquo;s luxury-flexing branch, bright synths and Auto-Tune), MTG or <em>montagem</em> (sample-collage edits built from chopped vocal snippets and DJ shouts), brega funk from Recife (melodic and off-beat), trap-funk hybrids, and regional scenes in Belo Horizonte and beyond. You do not need to master all of them. You need to know they exist so you can choose deliberately instead of accidentally landing between two of them and sounding like neither. The rising-trend, high-share sound that fills global feeds sits mostly in the automotivo / 150-wave / MTG cluster &mdash; but the tamborz&atilde;o underneath is the same cell in every case, which is exactly why we build that first.</p>
+
+<h2 id="build-the-tamborzao">Build the Tamborz&atilde;o by Hand</h2>
+
+<p>This is the core lesson. If you take one thing from this guide, take the tamborz&atilde;o. It is a one-bar, sixteen-step pattern, and once your ear and your fingers know it you can produce any sub-style by changing tempo and flavour. Set your DAW to 130 BPM in 4/4 in a minor key, open a step sequencer or drum rack, and load a hard, clipped kick, a snappy clap or tight snare, a shaker or closed hat, and an 808 sub.</p>
+
+<div class="diagram-wrap">
+<picture>
+<source media="(max-width:900px)" srcset="../images/how-to-make-brazilian-funk-tamborzao-grid-m.png">
+<img src="../images/how-to-make-brazilian-funk-tamborzao-grid.png" alt="A one-bar sixteen-step sequencer grid for the tamborzao showing the kick anchoring beats one and three with a surdo push, the 808 sub following the kick, clap and snare on beats two and four, an amber-highlighted off-beat percussion row on the syncopated steps that is the signature of the groove, and driving eighth-note hats across the bar" width="1040" height="470" loading="lazy" />
+</picture>
+<div class="diagram-caption">The tamborz&atilde;o as a step grid. The amber off-beat row is the syncopation that separates it from a plain backbeat.</div>
+</div>
+
+<p>Start with the skeleton. Put the <strong>kick on beats 1 and 3</strong> and a <strong>clap or snare on beats 2 and 4</strong>. That is a plain backbeat, and on its own it is not funk &mdash; it is the frame you hang the real rhythm on. The tamborz&atilde;o lives in what you add next. Give the kick a syncopated push: an extra hit just after beat 3 (the surdo &ldquo;and&rdquo;) and a pickup near the end of the bar that leans back into the downbeat. That doubled, off-grid kick figure is the &ldquo;big drum&rdquo; the genre is named for, and it is why a funk carioca beat rolls forward instead of sitting flat.</p>
+
+<p>Now the part that actually makes it a tamborz&atilde;o and not a generic loop: the <strong>off-beat percussion</strong>. Add extra clap, rimshot or tom hits <em>between</em> the main beats &mdash; on the &ldquo;a&rdquo; of the count, in the gaps the backbeat leaves open. In the grid above, that is the amber row, and it is doing the heaviest lifting of any element. This is syncopation in the literal sense: accents landing where the ear does not expect them. It is worth internalising the concept beyond this one genre &mdash; our guide to <a href="how-to-use-groove-and-swing-in-music.html">groove and swing</a> covers why off-grid placement and a little timing looseness are what make a machine pattern feel human. Do not quantise the life out of it. The best funk beats feel slightly messy; a hair of swing or manual nudging on the off-beats is the difference between a groove and a grid.</p>
+
+<p>Finish with the <strong>hats</strong>. Program driving eighth notes across the whole bar for momentum, or push to sixteenths for the more relentless modern feel. Keep them fairly dry and let them ride under everything. Finally, place the <strong>808 sub</strong> in lockstep with your kick &mdash; same hits, tuned to the root of whatever minor key you are working in &mdash; so the low end and the kick read as one weight rather than two competing thumps.</p>
+
+<p>Two things separate a convincing tamborz&atilde;o from a stiff one, and both are about feel rather than notes. The first is swing: nudge the off-beat percussion a few ticks off the grid, or apply a light shuffle, so the pattern breathes. Programmed dead-straight, the tamborz&atilde;o sounds like a drum-machine demo; loosened slightly, it sounds like Rio. The second is timbre. The historical tamborz&atilde;o gets its character from specific sampled hits &mdash; the deep, resonant surdo, the sharp tamborim, the metallic agog&ocirc; &mdash; so even a fully programmed pattern comes alive when you swap generic 808 percussion for samples with that Afro-Brazilian voice. The grid in the figure is a starting voicing, not scripture; every producer bends it, and you should too once it is in your hands. The point is to own the pattern so completely that you can reshape it, not to copy nine lit cells and stop.</p>
+
+<h2 id="the-gritty-low-end">The Gritty Low-End &mdash; Distort It on Purpose</h2>
+
+<p>Here is where most clean, well-behaved productions announce themselves as outsider attempts. In funk carioca, the low end is <em>supposed</em> to be overdriven. The blown-out, clipped, gritty sub is not a mixing accident or a sign of an amateur &mdash; it is the genre&rsquo;s sonic fingerprint, a direct inheritance from decades of music engineered to hit hard through cheap favela sound-systems and, later, through phone speakers on social feeds. A pristine, hi-fi funk sub is the wrong sub. If your low end sounds polite, you have not finished.</p>
+
+<div class="diagram-wrap">
+<picture>
+<source media="(max-width:900px)" srcset="../images/how-to-make-brazilian-funk-layering-the-low-end-m.png">
+<img src="../images/how-to-make-brazilian-funk-layering-the-low-end.png" alt="A five-stage signal chain for building the gritty funk low-end on purpose: start with a clean sine 808 sub tuned to the key, drive it hard with saturation to add harmonics, hard clip to shave the peaks while keeping the weight, layer a real surdo percussion one-shot, and arrive at the gritty distorted low-end that is the genre's fingerprint" width="1040" height="400" loading="lazy" />
+</picture>
+<div class="diagram-caption">The grit is built, not stumbled into. Each stage is a deliberate choice, and the amber clip stage is the character.</div>
+</div>
+
+<p>Build it in stages. Start with a clean sine or triangle 808, tuned precisely to your track&rsquo;s root note so it locks with the melody instead of fighting it. On its own a sine sub is round and dull &mdash; the perfect blank canvas. Then <strong>drive it with saturation</strong>. Saturation adds harmonic content up the spectrum, which does two jobs at once: it gives the bass grit and aggression, and it adds upper harmonics that let the sub cut through on small speakers that cannot physically reproduce the fundamental. If saturation is a new tool for you, our guide to <a href="how-to-use-saturation.html">using saturation</a> walks through drive, character and the difference between warmth and destruction; here you want to lean toward the destructive end.</p>
+
+<p>It helps to know which flavour of distortion you are reaching for, because they colour the sub differently. Gentle tape or tube saturation warms and thickens without changing the shape much &mdash; useful, but rarely enough for funk on its own. A waveshaper or a dedicated distortion pushes harder and adds edge. And a <strong>hard clipper</strong> is the most aggressive of all: it flatly chops the peaks off the waveform. For funk you generally want to stack them &mdash; saturate for harmonic body, then clip for the blown-out wall &mdash; rather than relying on any one. A dedicated saturator or clipper gives you more control than a stock waveshaper, and the round-up of <a href="best-808-plugins.html">the best 808 plugins</a> covers instruments and processors built for exactly this kind of aggressive, tuned low end.</p>
+
+<p>So <strong>hard clip</strong> the sub as the final stage. Clipping shaves off the transient peaks, which lets you push the whole thing louder without the level meter running away from you, and it flattens the sub into a solid wall of low-frequency weight &mdash; the &ldquo;blown-out&rdquo; quality you hear on automotivo and bruxaria tracks especially. Clip more than you think you should; the clip is the character, not a flaw to minimise. This is the same tuning-and-saturation discipline that underpins trap 808s, and if you want to go deeper on shaping a sub from a sine wave up, <a href="how-to-make-trap-808s-from-scratch.html">making 808s from scratch</a> is the companion read &mdash; the difference in funk is simply that you push the distortion further and worry less about pristine sub extension.</p>
+
+<p>One practical note on mixing the grit: keep it deliberate, not accidental. Reach for the distortion as an instrument, automate it, and commit to it &mdash; a track that is uniformly blown out with no dynamics is just loud, whereas a track that rides the grit for impact and pulls back for the drop is arranged. The goal is raw and immediate, dry rather than washed in reverb, and unmistakably designed to move a body across a floor.</p>
+
+<h2 id="layer-real-percussion">Layer Real Percussion for Authenticity</h2>
+
+<p>A programmed 808 kit will get you a functional beat. What makes it sound Brazilian rather than generic-hard is layering <strong>real percussion</strong> over the top. The tamborz&atilde;o&rsquo;s signature timbres come from Afro-Brazilian instruments &mdash; the surdo, the atabaque, the tamborim, the agog&ocirc; &mdash; and the fastest route to authenticity is to layer a genuine percussion sample or loop over your programmed grid rather than trying to synthesise everything from a drum machine.</p>
+
+<p>Each instrument has a job, and knowing the roles helps you place them rather than dumping a loop and hoping. The <strong>surdo</strong> is the deep, booming drum that doubles and reinforces your kick &mdash; the literal &ldquo;big drum&rdquo; of the tamborz&atilde;o. The <strong>tamborim</strong> is a tiny, high, sharp frame drum that cuts through with rapid off-beat accents. The <strong>agog&ocirc;</strong> adds a metallic, bell-like ping that marks the pattern, and shakers and the <em>ganz&aacute;</em> keep a continuous granular motion under the hats. You do not need a full percussion ensemble &mdash; a surdo layered on the kick and a tamborim or agog&ocirc; riding the off-beats will already push a programmed pattern a long way toward sounding genuinely carioca.</p>
+
+<p>The practical method: keep your programmed kick, clap and 808 as the rhythmic and low-end backbone, then add one or two loops of live-feel Brazilian percussion sitting on top for texture and swing. Search sample libraries for &ldquo;Brazilian percussion,&rdquo; &ldquo;tamborz&atilde;o,&rdquo; &ldquo;surdo&rdquo; or &ldquo;baile funk&rdquo; and audition loops around 130 BPM, since drum loops at that tempo will usually already carry the tamborz&atilde;o feel. If you combine loops, treat them like a kit &mdash; one loop carrying shakers and toms, another carrying claps &mdash; so they flesh each other out instead of clashing. When you find a phrase you love but it does not quite fit, chop it: our guide to <a href="how-to-chop-samples.html">chopping samples</a> shows how to slice a loop to your grid and rearrange the hits, which is exactly how you make a borrowed percussion loop feel like your own programming.</p>
+
+<p>Sampling is central to this genre&rsquo;s whole history and worth understanding as a craft in its own right &mdash; funk carioca was built on flipping and re-contextualising records, and a working knowledge of <a href="what-is-sampling-in-music.html">what sampling actually is</a>, legally and technically, will keep you out of trouble as your tracks travel. If you plan to release commercially, clear anything recognisable or use royalty-free packs; a viral funk edit built on an uncleared sample is a takedown waiting to happen. The ambition here is the one that separates a producer from a loop-buyer: even when you start from a sample, understand the pattern well enough that you could rebuild it by hand.</p>
+
+<h2 id="vocals-and-hooks">Vocal Chops, Shouts and Stabs</h2>
+
+<p>Funk carioca is a vocal genre. The MC is not decoration &mdash; across almost every sub-style, a strong vocal presence is what turns a beat into a track, and the same instrumental can become megafunk, brega funk or bruxaria depending on how the voice sits on it. Even if you are producing instrumentals for others, you have to build with vocals in mind: leave space, design for call-and-response, and think in hooks.</p>
+
+<p>The topline language is chant, not verse. Write short, repeatable phrases &mdash; one or two lines that a crowd could shout back after hearing them once. Place the heaviest syllables on the downbeat or on a kick hit so the words and the drums reinforce each other. Portuguese carries this beautifully because of its strong open vowels and clipped, percussive syllables; even if you do not write in Portuguese, study how funk MCs use vowel sounds as rhythmic hits and shorten words for energy. Producers lean heavily on chopped vocal snippets, DJ shouts, stabs and one-liners, especially in MTG and automotivo, where the &ldquo;melody&rdquo; is often just a fragment of a pre-existing vocal reframed into a new hook. This is where sampling craft and vocal production meet: a chopped shout, pitched and gated to the grid, functions as both a hook and a percussion element. Keep the treatment aggressive and dry to match the drums &mdash; heavy reverb and delay will pull the voice out of the pocket and soften the very impact you are building toward.</p>
+
+<p>Structurally, think like a DJ. Tracks are short, loop-driven and functional: a common shape is a quick intro, a short verse, a hook, another verse, a hook, a drop, and an extended hook to close. The hooks are the moments the crowd owns, so build the arrangement around them and give DJs clean loop points to work with. This loop-and-chant logic is common across the modern global-percussion family &mdash; you will recognise the same call-and-response, hook-forward instinct in <a href="how-to-make-amapiano.html">amapiano</a> and <a href="how-to-make-afrobeats.html">afrobeats</a>, which is part of why these styles cross-pollinate so easily on today&rsquo;s dancefloors.</p>
+
+<h2 id="arrangement-and-mixing">Arrangement, DJ-Function and Mixing the Grit</h2>
+
+<p>Arrangement in funk is ruthless and minimal. Because the music is made for bailes and for rapid DJ mixing, tracks favour tight loops, fast drops, and repetition over long evolving structures. Keep your harmony sparse &mdash; often a single minor-mode chord loop, a short stab, or just the tuned 808 carrying the bottom. Add baile signatures for energy and transitions: sirens, air-horns, vocal shouts, sudden mutes and risers that telegraph the drop. The drop itself should arrive quickly and hit hard; the whole track is engineered to be functional on a loud system and instantly legible in a fifteen-second clip.</p>
+
+<p>Think of the arrangement as serving the room rather than the album. A baile DJ needs clean four- or eight-bar loop points to mix in and out, a recognisable hook to bring the crowd in, and a drop that resets the energy &mdash; so structure your track as a sequence of loopable blocks rather than a through-composed piece. Sudden full-bar mutes right before the drop are a genre signature: cut everything for a beat, let the tension hang, then slam back in. These are small arrangement moves, but they are the difference between a loop and a track that actually works on a floor or in a feed.</p>
+
+<p>On the mix, the operating principle is &ldquo;hard, dry, and up-front.&rdquo; Sidechain your supporting elements to the kick so the low end stays punchy and the sub has room to breathe. Keep the hats and percussion crisp and present rather than tucked back &mdash; the driving hats are part of the momentum, and mixing them too politely kills the drive; if you are unsure how much top end to give them, our guide to <a href="how-to-mix-hi-hats.html">mixing hi-hats</a> covers level, EQ and saturation for exactly this kind of forward, energetic percussion. Everything wants to feel immediate: minimal reverb, short tails, and a master that is loud and clipped rather than delicately dynamic. Do not chase audiophile cleanliness. The aesthetic target is a track that sounds like it is being pushed slightly too hard &mdash; because it is, on purpose.</p>
+
+<h2 id="funk-vs-phonk">Brazilian Funk vs Brazilian Phonk &mdash; Know Which One You&rsquo;re Making</h2>
+
+<p>This is the disambiguation that will save you from the most common and most embarrassing mistake, and it is also &mdash; because so many searchers are confused about it &mdash; the knowledge that makes you sound like you actually know the genre. Brazilian funk and &ldquo;Brazilian phonk&rdquo; are not the same thing, and conflating them is the fastest way to mark yourself as a tourist.</p>
+
+<p>Phonk, in its original sense, is an American genre: lo-fi, cassette-grit rap rooted in 1990s Memphis tape culture (Three 6 Mafia, the chopped-and-screwed feel), revived online in the 2010s. Its high-energy offshoot, drift phonk, runs fast and leans on distorted 808 cowbells and horrorcore atmosphere. That whole lineage is a different tradition from funk carioca, and we cover it in full in <a href="how-to-make-phonk-music.html">how to make phonk music</a>. If you are chasing the cowbell-driven, Memphis-descended sound, that is the guide you want &mdash; not this one.</p>
+
+<p>So what is &ldquo;Brazilian phonk&rdquo;? Here the truth is more interesting than the label. What the West markets as Brazilian phonk is, for the most part, a foreign-driven fusion that grafts drift-phonk signatures &mdash; distorted 808 cowbells, blown-out maximalist mixing &mdash; onto tamborz&atilde;o-leaning drum programming, usually running somewhere between 140 and 170 BPM. The style was popularised online from around 2023, notably by a Norwegian producer working under the name Slowboy, and the label is barely used in Brazil at all. In Brazil, the music that outsiders call &ldquo;Brazilian phonk&rdquo; is more accurately <em>funk automotivo</em> &mdash; and Brazilian sources are blunt that the &ldquo;phonk&rdquo; tag is often a misnomer, since the underlying rhythm belongs to funk automotivo, not to phonk or drift phonk. Some Brazilian producers have gone further and called the phonk reframing a whitewashing of their culture &mdash; the pieces picked and polished for a global audience that never had to go to a baile or watch one get shut down by police.</p>
+
+<p>You do not have to take a side in that argument to produce responsibly, but you do have to know which record you are making. If you want the genuine article &mdash; the surdo-derived tamborz&atilde;o, the Portuguese chants, the favela lineage &mdash; you are making funk carioca, and this guide is your map. If you want the cowbell-forward, TikTok-workout hybrid, you are making something closer to funk automotivo dressed as phonk, and you should build it knowingly and credit the funk carioca rhythm you are borrowing rather than pretending it is a phonk invention. Either way, name it honestly to yourself before you start, because the tempo, the drum programming and the sound design all fork from that single decision. Hold the line between the two and you will already be ahead of most of the internet.</p>
+
+<h2 id="exercises">Build the Skill: 3 Drills</h2>
+<p>Run these in order. The first gets the classic tamborz&atilde;o into your hands, the second teaches you to reshape it into a modern hard style, and the third builds a full track for the global wave.</p>
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--beginner">Beginner</span><span class="exercise-title">Build a classic 130-BPM tamborz&atilde;o loop</span></div>
+<ol><li>Set your DAW to 130 BPM in a minor key and load a hard clipped kick, a clap or snare, a shaker or closed hat, and a sine 808.</li><li>Program the skeleton: kick on beats 1 and 3, clap on 2 and 4.</li><li>Add the surdo push (an extra kick just after beat 3) and off-beat percussion hits between the main beats &mdash; the syncopation that makes it a tamborz&atilde;o.</li><li>Add driving eighth-note hats and lock a tuned 808 to the kick.</li><li>Nudge the off-beats off the grid by ear until the loop breathes. Do not fully quantise &mdash; confirm it rolls forward before adding anything else.</li></ol></div>
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--intermediate">Intermediate</span><span class="exercise-title">Flip it into an automotivo / bruxaria beat</span></div>
+<ol><li>Take your 130-BPM loop and push the tempo toward 145&ndash;150 BPM.</li><li>Strip the arrangement down &mdash; fewer elements, more space, harder impact.</li><li>Drive the 808 hard with saturation, then hard clip it until the sub reads as a solid blown-out wall.</li><li>Add a single aggressive high-pitched &ldquo;tuin&rdquo;-style stab or a distorted vocal chop as the hook.</li><li>Sidechain everything to the kick. Aim for menacing, minimal and speaker-shaking, not busy.</li></ol></div>
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--advanced">Advanced</span><span class="exercise-title">Produce a full 150-BPM global-wave track</span></div>
+<ol><li>Set your project to 150 BPM and tighten your tamborz&atilde;o note lengths for forward momentum.</li><li>Layer a real Brazilian percussion loop &mdash; surdo, tamborim, agog&ocirc; &mdash; over your programmed kit.</li><li>Write a short chantable hook from chopped vocal one-shots placed on the kick hits.</li><li>Arrange it DJ-style: an 8-bar intro, a 16-bar build into a fast drop, a 32-bar main loop with an extended hook, and clean loop points. Add sirens and a riser into the drop, and a full-bar mute right before it.</li><li>Master it loud and clipped &mdash; a raw, club-ready, feed-ready result rather than a delicate dynamic mix.</li></ol></div>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+<div class="faq-accordion">
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">What BPM is Brazilian funk?</span></div></div>
+<div class="faq-accordion-a"><p>It depends on the sub-style. Classic funk carioca and the tamborz&atilde;o sit around 125&ndash;135 BPM, with 130 as the historical sweet spot. Rasteirinha is slower, roughly 90&ndash;105 BPM. The modern global wave that most non-Brazilian producers mean today runs at about 150 BPM (created around 2017&ndash;2018). Automotivo and mandel&atilde;o live in the 130&ndash;150 range. Pick your sub-style first and the tempo follows.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">What is the tamborz&atilde;o?</span></div></div>
+<div class="faq-accordion-a"><p>The tamborz&atilde;o is funk carioca&rsquo;s signature drum pattern &mdash; the name means &ldquo;big drum.&rdquo; It is a syncopated, surdo-derived groove: a kick anchoring beats 1 and 3 with an off-grid push, clap or snare on 2 and 4, and crucially a layer of off-beat percussion hits that create the swing, all anchored by a deliberately overdriven 808 sub. It crystallised in the late 1990s, fusing Afro-Brazilian percussion traditions with the electronic Miami-bass kit. It is the one rhythm to learn before anything else in the genre.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Is the distortion on the bass a mistake?</span></div></div>
+<div class="faq-accordion-a"><p>No &mdash; it is the genre. The blown-out, clipped, gritty low end is funk carioca&rsquo;s sonic fingerprint, inherited from music engineered to hit hard through cheap sound-systems and phone speakers. A clean, hi-fi funk sub sounds wrong. Build the grit deliberately with saturation and hard clipping rather than treating it as something to fix in the mix.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Is Brazilian funk the same as Brazilian phonk?</span></div></div>
+<div class="faq-accordion-a"><p>No. Brazilian funk (funk carioca) is a Rio-born genre built on the tamborz&atilde;o. &ldquo;Brazilian phonk&rdquo; is largely a foreign-made fusion that grafts drift-phonk cowbells and blown-out mixing onto tamborz&atilde;o-style drums at 140&ndash;170 BPM; the label is barely used in Brazil, where the underlying rhythm is more accurately funk automotivo. If you want the cowbell-driven Memphis-descended sound, that is phonk, covered in our separate phonk guide. Know which one you are making before you start.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Why is it called funk if it doesn&rsquo;t sound like funk?</span></div></div>
+<div class="faq-accordion-a"><p>The Portuguese &ldquo;funk&rdquo; is a false friend. Funk carioca has no connection to James Brown-style American funk. The name comes from the &ldquo;funk parties&rdquo; (bailes) where Rio DJs originally spun imported soul and funk records; the term stuck even as the music evolved into something built on Miami bass, electro and Afro-Brazilian percussion. It is closer to electronic bass music than to anything in the American funk tradition.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Do I need Brazilian percussion samples, or can I program everything?</span></div></div>
+<div class="faq-accordion-a"><p>You can program a functional tamborz&atilde;o from an 808 kit, but layering real Brazilian percussion &mdash; surdo, tamborim, agog&ocirc;, or a &ldquo;Brazilian percussion&rdquo; loop at around 130 BPM &mdash; is the fastest route to authenticity. The best approach is to keep your programmed kick, clap and 808 as the backbone and add live-feel percussion loops on top for texture and swing. Chop and rearrange those loops so they lock to your grid rather than sitting on top as an obvious drop-in.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">What DAW is best for making Brazilian funk?</span></div></div>
+<div class="faq-accordion-a"><p>Any modern DAW works &mdash; the genre is about the rhythm and the grit, not a specific tool. FL Studio is popular for its fast step sequencer, which suits the loop-and-chop workflow, but Ableton Live and Logic are equally capable. What matters is a solid step sequencer for programming the tamborz&atilde;o, a good sampler for chopping percussion and vocals, and a saturator plus a clipper for the low end.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">How do I make my Brazilian funk sound authentic rather than generic?</span></div></div>
+<div class="faq-accordion-a"><p>Program the tamborz&atilde;o by hand instead of dropping in a loop, choose a specific sub-style and its tempo on purpose, layer real Brazilian percussion, distort the low end deliberately, and write short chantable hooks with the syllables locked to the drums. Above all, learn the history: funk carioca is a living Afro-Brazilian favela culture, and tracks made with knowledge and respect &mdash; crediting collaborators, paying performers, not exoticising &mdash; are the ones that sound like they belong rather than like a trend clip.</p></div></div>
+</div>
+<div class="related-grid">
+<a href="how-to-make-phonk-music.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">How To Make Phonk Music</h3><p class="related-card-desc">Make Memphis-rooted phonk and drift phonk from scratch &mdash; 808 cowbells, distortion, lo-fi grit, and the full DAW workflow.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-make-trap-808s-from-scratch.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">How To Make Trap 808s From Scratch</h3><p class="related-card-desc">Build 808s from a sine wave: pitch envelope, saturation, sidechain, and tuning to key &mdash; the low-end skills funk needs.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-make-amapiano.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">How To Make Amapiano</h3><p class="related-card-desc">Program the log-drum groove, jazzy pads, and shakers of amapiano &mdash; another global-percussion dancefloor sound.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-make-reggaeton.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">How To Make Reggaeton</h3><p class="related-card-desc">Program the dembow, tune the low end, and write the hooks of reggaeton &mdash; the rhythm cousin behind rasteirinha&rsquo;s swing.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-chop-samples.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">How To Chop Samples</h3><p class="related-card-desc">Slice, rearrange, and re-pitch samples to your grid &mdash; the core skill for flipping Brazilian percussion and vocal chops.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="best-808-plugins.html" class="related-card"><div class="related-card-tag">Reviews</div><h3 class="related-card-title">Best 808 Plugins</h3><p class="related-card-desc">The best plugins and instruments for deep, tuned, aggressively saturated 808s &mdash; exactly the low end funk lives on.</p><span class="related-card-meta">Read article &rarr;</span></a>
+</div>
+
+</div>
+
+
+    </article>
+    <aside aria-label="Article sidebar">
+      <div class="sidebar-widget toc-widget" aria-labelledby="tocHeading">
+        <div class="sidebar-widget-header"><h2 class="sidebar-widget-title" id="tocHeading">In This Article</h2></div>
+        <div class="sidebar-widget-body"><ul class="toc-list">
+
+<li><a href="#what-is-brazilian-funk">What Brazilian Funk Actually Is</a></li><li><a href="#the-map-of-sub-styles">The Map of Sub-Styles</a></li><li><a href="#build-the-tamborzao">Build the Tamborzão by Hand</a></li><li><a href="#the-gritty-low-end">The Gritty Low-End</a></li><li><a href="#layer-real-percussion">Layer Real Percussion</a></li><li><a href="#vocals-and-hooks">Vocal Chops, Shouts & Stabs</a></li><li><a href="#arrangement-and-mixing">Arrangement, DJ-Function & Mixing</a></li><li><a href="#funk-vs-phonk">Brazilian Funk vs Brazilian Phonk</a></li></ul></div>
+      </div>
+      <div class="sidebar-widget" style="background:var(--bg-void);border-color:var(--border-default);">
+        <div class="sidebar-widget-body" style="padding:1.5rem;">
+          <p style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.5rem;">Newsletter</p>
+          <h3 style="font-family:var(--font-display);color:var(--text-primary);font-size:1.1rem;margin-bottom:.5rem;">The Producer's Briefing</h3>
+          <p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:1rem;line-height:1.55;">Weekly tips, gear news, and technique guides. Free.</p>
+          <form class="newsletter-form-js" style="display:flex;flex-direction:column;gap:.5rem;" novalidate>
+            <input type="email" name="email" class="form-input" placeholder="Your email" required />
+            <button type="submit" class="btn-newsletter" style="font-size:.82rem;padding:.65rem 1rem;">Subscribe Free</button>
+          </form>
+        </div>
+      <div class="sidebar-widget" style="margin-top:1.5rem;">
+        <div class="sidebar-widget-header" style="text-align:center;">
+          <h2 class="sidebar-widget-title">Related Articles</h2>
+        </div>
+        <div class="sidebar-widget-body" style="padding:1rem;">
+<ul style="list-style:none;padding:0;margin:0;text-align:center;"><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="how-to-make-phonk-music.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">How To Make Phonk Music</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Techniques</span></li><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="how-to-make-trap-808s-from-scratch.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">How To Make Trap 808s From Scratch</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Techniques</span></li><li style="padding:.6rem 0;"><a href="how-to-make-amapiano.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">How To Make Amapiano</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Techniques</span></li></ul>
+        </div>
+      </div>
+      </div>
+    </aside>
+  </div>
+</main>
+<section class="newsletter-section" id="newsletter" aria-labelledby="newsletterHeading">
+  <div class="container">
+    <div class="newsletter-inner">
+      <div class="newsletter-content">
+        <p class="newsletter-label">Newsletter</p>
+        <h2 id="newsletterHeading" class="newsletter-title">The Producer's <em>Briefing</em></h2>
+        <p class="newsletter-desc">Weekly techniques, gear news, and music business insights. Free.</p>
+      </div>
+      <div class="newsletter-form-wrap">
+        <form class="newsletter-form-js" novalidate>
+          <input type="email" name="email" class="form-input" placeholder="Your email address" required />
+          <button type="submit" class="btn-newsletter">Subscribe Free</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<footer class="site-footer" role="contentinfo">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="../index.html" class="site-logo"><span class="logo-wordmark">Music<span>Production</span>Wiki</span><span class="logo-tagline">The Producer's Reference</span></a>
+    </div>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <div class="footer-col">
+        <h3 class="footer-col-title">Categories</h3>
+        <ul>
+          <li><a href="../categories/reviews.html">Reviews</a></li>
+          <li><a href="../categories/comparisons.html">Comparisons</a></li>
+          <li><a href="../categories/ai-music.html">AI Music</a></li>
+          <li><a href="../categories/daws.html">DAWs</a></li>
+          <li><a href="../categories/plugins.html">Plugins</a></li>
+          <li><a href="../categories/hardware.html">Gear</a></li>
+          <li><a href="../categories/techniques.html">Techniques</a></li>
+          <li><a href="../categories/music-business.html">Music Business</a></li>
+          <li><a href="../categories/glossary.html">Glossary</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">Popular</h3>
+        <ul>
+          <li><a href="../articles/suno-vs-udio.html">Suno vs Udio</a></li>
+          <li><a href="../articles/best-daw-for-beginners.html">Best DAW for Beginners</a></li>
+          <li><a href="../articles/focusrite-scarlett-2i2-gen-4-review.html">Scarlett 2i2 Review</a></li>
+          <li><a href="../articles/sidechain-compression-guide.html">Sidechain Compression</a></li>
+          <li><a href="../articles/best-compressor-plugins.html">Best Compressor Plugins</a></li>
+          <li><a href="../articles/what-is-gain-staging.html">What Is Gain Staging</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">About</h3>
+        <ul>
+          <li><a href="../about.html">About MPW</a></li>
+          <li><a href="../about.html#team">Our Team</a></li>
+          <li><a href="../about.html#methodology">Review Methodology</a></li>
+          <li><a href="../about.html#affiliate">Affiliate Disclosure</a></li>
+          <li><a href="../about.html#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="footer-bottom"><div class="container"><p>© <span id="copyrightYear"></span> MusicProductionWiki.com. All rights reserved. Content by the Music Production Wiki Team.</p></div></div>
+</footer>
+<script src="../js/main.js"></script>
+<script>document.getElementById('copyrightYear').textContent = new Date().getFullYear();</script>
+
+<button id="mpwBackTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  aria-label="Back to top"
+  style="position:fixed;bottom:1.5rem;right:1.5rem;width:2.5rem;height:2.5rem;border-radius:50%;
+         background:var(--teal);color:#000;border:none;cursor:pointer;display:none;
+         align-items:center;justify-content:center;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3);">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <polyline points="18 15 12 9 6 15"/>
+  </svg>
+</button>
+<script>
+(function(){
+  var btn=document.getElementById('mpwBackTop');
+  var bar=document.getElementById('readingProgress');
+  var art=document.querySelector('.article-body');
+  window.addEventListener('scroll',function(){
+    var st=window.scrollY||document.documentElement.scrollTop;
+    btn.style.display=st>400?'flex':'none';
+    if(bar&&art){
+      var h=art.getBoundingClientRect().height;
+      var top=art.getBoundingClientRect().top+st;
+      var pct=Math.min(100,Math.max(0,(st-top+window.innerHeight)*100/h));
+      bar.style.width=pct+'%';
+      bar.setAttribute('aria-valuenow',Math.round(pct));
+    }
+  });
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<!-- MPW universal search: one overlay, one Fuse index (/search-index.json) -->
+<div class="usearch" id="usearch" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="usearch-box">
+    <div class="usearch-top">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input id="usearchInput" type="text" placeholder="Search tools, articles, the Bible…" autocomplete="off">
+      <kbd>esc</kbd>
+    </div>
+    <div class="usearch-results" id="usearchResults"></div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
+<script>
+(function(){
+  // === production parity: lazy-load index on first open, build Fuse once ===
+  var data=null, fuse=null;
+  var overlay=document.getElementById('usearch');
+  var input=document.getElementById('usearchInput');
+  var box=document.getElementById('usearchResults');
+  var sel=-1, current=[];
+  // article slugs are bare; bible/ and tools/ slugs carry their prefix (verified vs live search-index.json)
+  function urlFor(s){ return (s.indexOf('bible/')===0||s.indexOf('tools/')===0) ? '/'+s : '/articles/'+s; }
+
+  function buildFuse(arr){
+    data=arr;
+    fuse=new Fuse(data,{keys:['title','category','description'],threshold:0.34,ignoreLocation:true,minMatchCharLength:2});
+  }
+  function ensureIndex(cb){
+    if(fuse){cb();return;}
+    // PRODUCTION: one shared index, lazy-loaded on first open.
+    fetch('/search-index.json').then(function(r){return r.json();}).then(function(arr){
+      buildFuse(arr); cb();
+    }).catch(function(){ box.textContent='Search failed to load.'; });
+  }
+
+  function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  function render(results){
+    current=results;
+    while(box.firstChild) box.removeChild(box.firstChild);   // no innerHTML
+    if(!input.value.trim()){ var p=document.createElement('div'); p.className='usearch-empty'; p.textContent='Start typing to search everything.'; box.appendChild(p); return; }
+    if(!results.length){ var n=document.createElement('div'); n.className='usearch-empty'; n.textContent='No results for "'+input.value+'".'; box.appendChild(n); return; }
+    results.slice(0,12).forEach(function(r,i){
+      var e=r.item||r;
+      var a=document.createElement('a'); a.href=urlFor(e.slug); if(i===sel)a.className='sel';
+      var top=document.createElement('div'); top.className='ur-top';
+      var t=document.createElement('span'); t.className='ur-title'; t.textContent=e.title;
+      var c=document.createElement('span'); c.className='ur-cat'; c.setAttribute('data-c',e.category||''); c.textContent=e.category||'';
+      top.appendChild(t); top.appendChild(c); a.appendChild(top);
+      if(e.description){ var d=document.createElement('div'); d.className='ur-desc'; d.textContent=e.description; a.appendChild(d); }
+      box.appendChild(a);
+    });
+  }
+
+  function open(q){ ensureIndex(function(){ overlay.classList.add('open'); input.focus(); if(q!=null){input.value=q;} sel=-1; render(input.value?fuse.search(input.value):[]); }); }
+  function close(){ overlay.classList.remove('open'); }
+
+  // wire every nav's search button to the shared overlay
+  document.querySelectorAll('[data-nav-search]').forEach(function(b){ b.addEventListener('click',function(){open(null);}); });
+  input.addEventListener('input',function(){ sel=-1; render(fuse?fuse.search(input.value):[]); });
+  input.addEventListener('keydown',function(e){
+    if(e.key==='Escape')close();
+    else if(e.key==='ArrowDown'){e.preventDefault(); sel=Math.min(sel+1,Math.min(current.length,12)-1); render(current);}
+    else if(e.key==='ArrowUp'){e.preventDefault(); sel=Math.max(sel-1,0); render(current);}
+    else if(e.key==='Enter'&&current[sel]){ var e2=current[sel].item||current[sel]; location.href=urlFor(e2.slug); }
+  });
+  overlay.addEventListener('click',function(e){ if(e.target===overlay)close(); });
+  document.addEventListener('keydown',function(e){ if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();open(null);} });
+})();
+</script>
+<script id="toc-bar-js">
+(function(){
+  var body=document.querySelector('.article-body');
+  var track=document.getElementById('tocBarTrack');
+  if(!body||!track)return;
+  var heads=[].slice.call(body.querySelectorAll('h2[id]'));
+  if(!heads.length)return;
+  heads.forEach(function(h){
+    var a=document.createElement('a');a.href='#'+h.id;
+    var t=h.textContent.trim();var i=t.indexOf(':');if(i>0)t=t.slice(0,i);
+    a.textContent=t;track.appendChild(a);
+  });
+  var links=[].slice.call(track.querySelectorAll('a'));
+  function onScroll(){
+    var y=window.scrollY+130,cur=heads[0].id;
+    heads.forEach(function(h){if(h.offsetTop<=y)cur=h.id;});
+    links.forEach(function(l){var on=l.getAttribute('href')==='#'+cur;l.classList.toggle('active',on);
+      if(on)l.scrollIntoView({inline:'center',block:'nearest'});});
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+})();
+</script>
+<script>
+function mpwFaqToggle(el){
+  var answer = el.nextElementSibling;
+  if(!answer || !answer.classList.contains('faq-accordion-a')) return;
+  var isOpen = answer.classList.contains('open');
+  document.querySelectorAll('.faq-accordion-a.open').forEach(function(a){
+    a.classList.remove('open');
+    var q = a.previousElementSibling;
+    if(q){ var ic = q.querySelector('.faq-accordion-icon, .faq-plus'); if(ic) ic.classList.remove('open'); }
+  });
+  if(!isOpen){
+    answer.classList.add('open');
+    var icon = el.querySelector('.faq-accordion-icon, .faq-plus');
+    if(icon) icon.classList.add('open');
+  }
+}
+</script>
+<style>.faq-plus.open{transform:rotate(45deg);transition:transform .2s ease}</style>
+</body>
+</html>
