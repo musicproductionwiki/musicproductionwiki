@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Recreate the JP-8000 supersaw: what it actually is (7 detuned saws + a highpass, no secret chorus) and the stock-synth patch that nails it in any DAW." />
+  <title>How to Recreate the Supersaw (The Trance Lead Sound) (2026)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <style>
+    #readingProgress{position:fixed;top:0;left:0;height:3px;background:var(--teal);width:0%;z-index:200;transition:width 0.1s linear;}
+    .quick-answer{background:linear-gradient(135deg,rgba(0,212,168,0.08),rgba(167,139,250,0.06));border:1px solid rgba(0,212,168,0.3);border-left:4px solid var(--teal);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .quick-answer-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.6rem;}
+    .quick-answer p{font-size:1rem;line-height:1.65;color:var(--text-primary);margin:0;}
+    .skill-badge{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .6rem;border-radius:4px;margin-left:.6rem;vertical-align:middle;position:relative;top:-2px;}
+    .skill-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .skill-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .skill-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .settings-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .settings-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .settings-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .settings-table tr:last-child td{border-bottom:none;}
+    .settings-table tr:hover td{background:var(--bg-surface);}
+    .settings-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .settings-table .mono{font-family:var(--font-mono);font-size:.82rem;color:var(--teal);}
+    .mistake-box{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-left:4px solid #ef4444;border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .mistake-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ef4444;margin-bottom:.4rem;}
+    .mistake-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference{border-left:3px solid var(--purple);padding:.75rem 1.25rem;margin:1.25rem 0;background:rgba(167,139,250,0.05);border-radius:0 6px 6px 0;}
+    .pro-reference-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.35rem;}
+    .pro-reference p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference strong{color:var(--text-primary);}
+    .listening-prescription{background:var(--bg-void);border:1px solid var(--border-default);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;position:relative;}
+    .listening-prescription::before{content:'🎧';position:absolute;top:-14px;left:1.5rem;background:var(--bg-void);padding:0 .4rem;font-size:1.1rem;}
+    .listening-prescription-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:.75rem;}
+    .listening-prescription p{font-size:.9rem;line-height:1.7;color:var(--text-secondary);margin:0 0 .5rem;}
+    .listening-record{font-weight:600;color:var(--text-primary);}
+    .decision-framework{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .decision-framework-title{font-family:var(--font-display);font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:1rem;}
+    .decision-item{display:flex;gap:1rem;padding:.65rem 0;border-bottom:1px solid var(--border-subtle);font-size:.88rem;line-height:1.55;}
+    .decision-item:last-child{border-bottom:none;}
+    .decision-if{color:var(--text-muted);font-style:italic;min-width:2rem;}
+    .decision-then{color:var(--text-primary);}
+    .decision-then strong{color:var(--teal);}
+    .exercise-block{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.25rem 0;}
+    .exercise-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;}
+    .exercise-badge{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .7rem;border-radius:4px;}
+    .exercise-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .exercise-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .exercise-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .exercise-title{font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text-primary);}
+    .exercise-block ol{margin:0;padding-left:1.25rem;color:var(--text-secondary);font-size:.88rem;line-height:1.7;}
+    .exercise-block ol li{margin-bottom:.4rem;}
+    .version-line{font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:4px;padding:.4rem .75rem;margin:.75rem 0 1.5rem;display:inline-block;}
+    .go-deeper{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:10px;padding:1.75rem;margin:2.5rem 0;}
+    .go-deeper-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text-primary);margin-bottom:1.25rem;}
+    .go-deeper-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;}
+    .go-deeper-item{background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:7px;padding:1rem 1.1rem;}
+    .go-deeper-item-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.35rem;}
+    .go-deeper-item a{font-size:.88rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;}
+    .go-deeper-item p{font-size:.78rem;color:var(--text-muted);margin:.3rem 0 0;}
+    .citation{font-size:.78rem;color:var(--text-muted);font-style:italic;margin-top:.25rem;}
+    .diagram-wrap{margin:1.9rem auto;max-width:100%;}
+    .diagram-wrap img{width:100%;height:auto;display:block;border:1px solid var(--border-subtle);border-radius:10px;}
+    .diagram-wrap picture{display:block;}
+    .diagram-caption{font-size:.78rem;color:var(--text-muted);text-align:center;margin-top:.75rem;font-style:italic;}
+    .highlight-box{background:rgba(0,212,168,0.06);border:1px solid rgba(0,212,168,0.2);border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .highlight-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.4rem;}
+    .highlight-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin:1.5rem 0;}
+    .stat-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem;text-align:center;}
+    .stat-number{font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--teal);display:block;}
+    .stat-label{font-size:.78rem;color:var(--text-secondary);margin-top:.25rem;}
+    .action-steps{counter-reset:steps;list-style:none;padding:0;margin:1.5rem 0;}
+    .action-steps li{counter-increment:steps;display:flex;gap:1rem;padding:.85rem 0;border-bottom:1px solid var(--border-subtle);font-size:.9rem;color:var(--text-secondary);line-height:1.6;}
+    .action-steps li:last-child{border-bottom:none;}
+    .action-steps li::before{content:counter(steps);background:var(--teal);color:#000;font-weight:800;font-size:.75rem;width:1.6rem;height:1.6rem;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem;}
+    .genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:1.5rem 0;}
+    .genre-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem 1.25rem;}
+    .genre-card-name{font-family:var(--font-display);font-size:.85rem;font-weight:700;color:var(--teal);margin-bottom:.4rem;}
+    .genre-card p{font-size:.82rem;color:var(--text-secondary);line-height:1.55;margin:0;}
+    .comparison-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .comparison-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .comparison-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .comparison-table tr:last-child td{border-bottom:none;}
+    .comparison-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .affiliate-cta{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,212,168,0.1);border:1px solid rgba(0,212,168,0.25);color:var(--teal);font-size:.82rem;font-weight:600;padding:.45rem .9rem;border-radius:6px;text-decoration:none;}
+
+    .faq-accordion{margin:1.75rem 0;}
+    .faq-accordion-item{background:var(--bg-surface);border:1px solid var(--border-subtle);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;margin-bottom:8px;overflow:hidden;}
+    .faq-accordion-q{display:flex;align-items:flex-start;padding:1rem 1.25rem;cursor:pointer;gap:.75rem;}
+    .faq-accordion-q:hover{background:var(--bg-elevated);}
+    .faq-accordion-icon{width:16px;height:16px;flex-shrink:0;margin-top:3px;color:var(--purple);transition:transform .2s ease;}
+    .faq-accordion-icon.open{transform:rotate(45deg);}
+    .faq-accordion-q-inner{display:flex;flex-direction:column;}
+    .faq-accordion-label{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin-bottom:.2rem;}
+    .faq-accordion-q-text{font-size:.92rem;font-weight:600;color:var(--text-primary);line-height:1.45;font-family:var(--font-display);}
+    .faq-accordion-a{display:none;padding:0 1.25rem 1rem 2.75rem;font-size:.88rem;color:var(--text-secondary);line-height:1.7;border-top:1px solid var(--border-subtle);padding-top:.85rem;}
+    .faq-accordion-a.open{display:block;}
+    .sourcebox{border:1px solid var(--border-default);border-radius:10px;overflow:hidden;margin:1.9rem 0;background:var(--bg-surface);}
+    .sourcebox-head{padding:1.1rem 1.4rem;border-bottom:1px solid var(--border-default);background:var(--bg-void);}
+    .sourcebox-kicker{display:block;font-family:var(--font-display);font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.3rem;}
+    .sourcebox-sub{display:block;font-size:.82rem;color:var(--text-secondary);line-height:1.5;}
+    .sourcebox-row{display:flex;gap:0;border-bottom:1px solid var(--border-subtle);}
+    .sourcebox-row:last-child{border-bottom:none;}
+    .sourcebox-tag{flex:0 0 168px;padding:1.1rem 1.2rem;font-family:var(--font-mono);font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;line-height:1.4;}
+    .sourcebox-body{padding:1.1rem 1.3rem 1.1rem 0;flex:1;}
+    .sourcebox-body p{font-size:.9rem;line-height:1.65;color:var(--text-secondary);margin:0;}
+    .sourcebox-body strong{color:var(--text-primary);}
+    .sourcebox-cite{display:block;margin-top:.55rem;font-size:.76rem;font-style:italic;color:var(--text-muted);line-height:1.5;}
+    .sourcebox-confirmed{border-left:4px solid var(--teal);} .sourcebox-confirmed .sourcebox-tag{color:var(--teal);}
+    .sourcebox-disputed{border-left:4px solid #f59e0b;} .sourcebox-disputed .sourcebox-tag{color:#f59e0b;}
+    .sourcebox-inferred{border-left:4px solid var(--purple);} .sourcebox-inferred .sourcebox-tag{color:var(--purple);}
+    @media(max-width:600px){.sourcebox-row{flex-direction:column;}.sourcebox-tag{flex-basis:auto;padding-bottom:.2rem;}.sourcebox-body{padding:.2rem 1.2rem 1.1rem;}}
+</style>
+  <link rel="canonical" href="https://musicproductionwiki.com/articles/how-to-recreate-the-supersaw.html"/>
+  <!-- Open Graph -->
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="How to Recreate the Supersaw (The Trance Lead Sound)"/>
+  <meta property="og:description" content="Recreate the JP-8000 supersaw: what it actually is (7 detuned saws + a highpass, no secret chorus) and the stock-synth patch that nails it in any DAW."/>
+  <meta property="og:url" content="https://musicproductionwiki.com/articles/how-to-recreate-the-supersaw.html"/>
+  <meta property="og:site_name" content="Music Production Wiki"/>
+  <meta property="og:image" content="https://musicproductionwiki.com/og-image.png"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="article:author" content="Music Production Wiki Team"/>
+  <meta property="article:section" content="Recreations"/>
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="How to Recreate the Supersaw (The Trance Lead Sound)"/>
+  <meta name="twitter:description" content="Recreate the JP-8000 supersaw: what the oscillator actually is (7 detuned saws + a highpass, no secret chorus), and the stock-synth patch that nails it."/>
+  <meta name="twitter:image" content="https://musicproductionwiki.com/og-image.png"/>
+  <!-- Article Schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How to Recreate the Supersaw (The Trance Lead Sound)",
+  "description": "Recreate the JP-8000 supersaw: what it actually is (7 detuned saws + a highpass, no secret chorus) and the stock-synth patch that nails it in any DAW.",
+  "image": [
+    "https://musicproductionwiki.com/og-image.png",
+    "https://musicproductionwiki.com/images/how-to-recreate-the-supersaw-route.png",
+    "https://musicproductionwiki.com/images/how-to-recreate-the-supersaw-hpf.png",
+    "https://musicproductionwiki.com/images/how-to-recreate-the-supersaw-swarm.png"
+  ],
+  "datePublished": "2026-07-05",
+  "dateModified": "2026-07-05",
+  "wordCount": 4934,
+  "timeRequired": "PT15M",
+  "keywords": [
+    "how to make a supersaw",
+    "supersaw sound",
+    "jp-8000 supersaw",
+    "trance lead sound",
+    "supersaw serum",
+    "supersaw vital",
+    "recreate supersaw",
+    "detuned saw synth",
+    "roland supersaw"
+  ],
+  "author": {
+    "@type": "Organization",
+    "name": "Music Production Wiki",
+    "url": "https://musicproductionwiki.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Music Production Wiki",
+    "url": "https://musicproductionwiki.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://musicproductionwiki.com/og-image.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://musicproductionwiki.com/articles/how-to-recreate-the-supersaw.html"
+  },
+  "articleSection": "Recreations",
+  "inLanguage": "en-US"
+}
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to recreate the supersaw with a stock synth",
+  "description": "Rebuild the JP-8000 supersaw in any synth with a saw oscillator, seven detuned unison voices, a highpass filter, and free-running phase.",
+  "image": "https://musicproductionwiki.com/images/how-to-recreate-the-supersaw-route.png",
+  "supply": [
+    { "@type": "HowToSupply", "name": "A synth with a saw oscillator and unison" },
+    { "@type": "HowToSupply", "name": "A highpass filter (built in or a separate EQ)" }
+  ],
+  "tool": [
+    { "@type": "HowToTool", "name": "Saw oscillator with unison / voice stacking" },
+    { "@type": "HowToTool", "name": "Detune control" },
+    { "@type": "HowToTool", "name": "Highpass filter" }
+  ],
+  "step": [
+    { "@type": "HowToStep", "name": "Stack seven saws", "text": "Load a saw oscillator and turn unison up to at least seven voices." },
+    { "@type": "HowToStep", "name": "Detune narrow, then to taste", "text": "Raise the detune only until the separate saws start to smear together, then back off; past a point you gain width but lose power." },
+    { "@type": "HowToStep", "name": "Highpass the low mud", "text": "Roll off the low end with a highpass around the fundamental to clear the mud the stacked saws create. This is the step most recreations skip." },
+    { "@type": "HowToStep", "name": "Free-run the phase", "text": "Turn off phase reset so each note starts at a random point, giving the organic per-note shimmer." },
+    { "@type": "HowToStep", "name": "Mix and add air", "text": "Balance the detuned voices against the fundamental, keep the top bright, and add a touch of saturation or reverb for a modern size." }
+  ]
+}
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the supersaw actually made of?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Seven detuned sawtooth waves running from a single oscillator, passed through a highpass filter and rendered at a doubled sample rate (about 88.2 kHz) to suppress aliasing. That is the whole thing. When the team that reverse-engineered the JP-8000 chip described it, their summary was blunt: no modulation, no phase tricks, no chorus, no magic. The character comes from the highpass, the narrow non-linear detune, the free-running phase, and the aliasing the oversampling controls — not from a hidden effect."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need a special plugin to make a supersaw?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Any synth that can stack at least seven detuned unison saw voices and highpass them will do it, and the free Vital covers all of that. Serum, Serum 2, Sylenth1 and Spire do it trivially too. The dedicated JP-8000 clones — Arturia's Jup-8000 V, or the free chip-accurate JE-8086 — get you closer to the exact original, but they are a shortcut, not a requirement."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does my supersaw sound muddy or weak?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Almost always because you skipped the highpass. Stacking seven detuned saws piles up low-frequency energy that turns to mud, and the JP-8000 hid a highpass inside the oscillator to clear exactly that. Roll off the lows around the fundamental and the patch snaps from thick-and-woolly to bright-and-defined. The second common cause is over-detuning: past a point the voices spread so far that the sound loses power and density."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much should I detune a supersaw?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Start narrow. The original kept the detune fairly tight unless the fader was pushed near maximum, because the more you spread the voices the more width you gain but the more power and density you lose. Raise the detune just until you can start to hear the separate saws smear together into that shimmering fuzz, then back off a touch. For punchy leads you want less detune than you think; for lush pads you can push it wider."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is the supersaw just a chorus on a saw wave?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No, and that shortcut is why so many recreations fall short. A chorus smears one saw with modulated delay; the supersaw is seven separate detuned saws summed and highpassed, with free-running phase so every note is slightly different. A chorus can sound superficially similar but it does not have the density of seven real voices or the organic per-note variation, and it reintroduces the modulation the real oscillator specifically does not use."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many voices do I need for supersaw chords?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The classic supersaw is seven voices per note, so a three-note chord needs around twenty-one voices. Many synths cap their unison count or get expensive on CPU, so if you can only reach seven or eight voices total, keep supersaw patches monophonic and layer them, or use a synth with generous unison like Vital or Serum. Some synths also let you build multiple unison 'sets' to play polyphonically."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What synth is closest to the real JP-8000 supersaw?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For a bit-accurate original, the free JE-8086 by The Usual Suspects emulates the JP-8000/8080 at the chip level — but it requires you to supply a legally-owned ROM, which is a real hurdle. Arturia's Jup-8000 V reverse-engineered the original circuitry and is the easiest buyable route, around $149. For a mix, though, a stock supersaw in Vital or Serum is perceptually indistinguishable to almost any listener; the clones matter more for authenticity than for the finished record."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need to clear any rights to use a supersaw I made?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. If you built the patch yourself in your own synth, the sound is entirely your own production — there is nothing to clear. Recreating a synthesis technique is not sampling a recording. A rights question would only arise if you sampled an actual record that used the sound, which is a different task and not what recreating the supersaw involves."
+      }
+    }
+  ]
+}
+</script>
+  <!-- Organization schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Music Production Wiki",
+  "url": "https://musicproductionwiki.com",
+  "logo": "https://musicproductionwiki.com/og-image.png"
+}
+</script>
+  <!-- WebSite schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Music Production Wiki",
+  "url": "https://musicproductionwiki.com",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://musicproductionwiki.com/search?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://musicproductionwiki.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Recreations",
+      "item": "https://musicproductionwiki.com/categories/recreations"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "The Supersaw",
+      "item": "https://musicproductionwiki.com/articles/how-to-recreate-the-supersaw.html"
+    }
+  ]
+}
+</script>
+<style id="toc-skin"></script>
+<style id="toc-skin">
+.toc-widget .sidebar-widget-header{margin-bottom:.35rem}
+.toc-list{counter-reset:tocnum;list-style:none;margin:0;padding:0}
+.toc-list li{counter-increment:tocnum;position:relative;margin:0;border-left:2px solid var(--border-subtle);transition:border-color .15s ease,background .15s ease}
+.toc-list li a{display:flex;gap:.7rem;align-items:baseline;padding:.5rem .85rem .5rem 1rem;font-size:.82rem;line-height:1.45;font-weight:500;color:var(--text-secondary);text-decoration:none;transition:color .15s ease}
+.toc-list li a::before{content:counter(tocnum,decimal-leading-zero);font-family:var(--font-mono,ui-monospace,monospace);font-size:.7rem;font-weight:600;letter-spacing:.04em;color:var(--text-muted);flex:0 0 auto;min-width:1.5em;padding-top:.05rem}
+.toc-list li a:hover{color:var(--text-primary)}
+.toc-list li.active{border-left-color:var(--teal);background:linear-gradient(90deg,rgba(0,212,168,.08),transparent 80%)}
+.toc-list li.active a{color:var(--teal);font-weight:600}
+.toc-list li.active a:hover{color:var(--teal)}
+.toc-list li.active a::before{color:var(--teal)}
+</style>
+<style id="toc-bar-css">
+.toc-bar{display:none}
+@media (max-width: 900px){
+.toc-bar{display:block;position:sticky;top:60px;z-index:400;background:var(--bg-void);border-bottom:1px solid var(--border-default);overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(to right,#000 88%,transparent 100%);mask-image:linear-gradient(to right,#000 88%,transparent 100%)}
+.toc-bar::-webkit-scrollbar{display:none}
+.toc-bar-track{display:flex;gap:4px;padding:9px 10px;min-width:max-content}
+.toc-bar-track a{color:var(--text-secondary);text-decoration:none;font-family:var(--font-mono,ui-monospace,monospace);font-size:10px;text-transform:uppercase;letter-spacing:.05em;padding:6px 10px;border-radius:4px;white-space:nowrap;min-height:30px;display:inline-flex;align-items:center;transition:color .15s,background .15s}
+.toc-bar-track a.active{color:var(--teal);background:var(--bg-elevated)}
+.article-body h2[id]{scroll-margin-top:116px}
+}
+@media (max-width: 900px) and (hover:hover){.toc-bar-track a:hover{color:var(--teal)}}
+</style>
+</head>
+<body>
+
+
+
+<style id="mpw-unav-css">
+
+.mnav-wrap,.usearch{--ink:#09090d;--panel:#0f0f18;--panel2:#15151f;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);--amber:#f5a623;--teal:#00e8a2;--teal-d:rgba(0,232,162,.12);--text:#f2f2f7;--t2:#9a9ab2;--t3:#56566f;--sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'DM Mono',ui-monospace,SFMono-Regular,monospace;}
+.mnav-wrap *,.mnav-wrap *::before,.mnav-wrap *::after,.usearch *,.usearch *::before,.usearch *::after{box-sizing:border-box;margin:0;padding:0}
+/* host-CSS shield: a page loading style.css (articles) must not bleed its body font/color/line-height into the bar. Direct rule on .mnav-wrap beats inherited body styles. */
+.mnav-wrap,.usearch{font-family:var(--sans);font-size:14px;font-weight:400;font-style:normal;line-height:1.4;letter-spacing:normal;color:var(--text);text-align:left;text-transform:none}
+/* S91 host-CSS isolation (:where() = zero-specificity; beats style.css bare a/li by source order, LOSES to nav's own .drw-card/.mnav-flat classes) */
+:where(.mnav-wrap,.usearch) a{color:inherit;text-decoration:none;background:none;border:0;font:inherit;letter-spacing:inherit}
+:where(.mnav-wrap,.usearch) ul,:where(.mnav-wrap,.usearch) ol{list-style:none;margin:0;padding:0;border:0}
+:where(.mnav-wrap,.usearch) li{margin:0;padding:0;border:0;font-size:inherit;line-height:inherit;color:inherit;background:none}
+:where(.mnav-wrap,.usearch) h1,:where(.mnav-wrap,.usearch) h2,:where(.mnav-wrap,.usearch) h3,:where(.mnav-wrap,.usearch) h4,:where(.mnav-wrap,.usearch) h5,:where(.mnav-wrap,.usearch) h6,:where(.mnav-wrap,.usearch) p{margin:0;padding:0;border:0;font:inherit;color:inherit;line-height:inherit;letter-spacing:inherit;text-transform:none}
+:where(.mnav-wrap,.usearch) button{font:inherit;color:inherit;background:none;border:0;letter-spacing:inherit;text-align:inherit}
+:where(.mnav-wrap,.usearch) svg{display:inline-block;vertical-align:middle}
+:where(.mnav-wrap,.usearch) img{max-width:none}
+.mnav-wrap{background:var(--ink);border-bottom:1px solid var(--line);position:relative}
+.mnav{height:60px;display:flex;align-items:center}
+.mnav-in{max-width:1180px;margin:0 auto;padding:0 22px;width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.mnav-brand{display:flex;align-items:center;gap:10px;color:var(--text);text-decoration:none;flex:0 0 auto}
+.mnav-word{font-weight:700;font-size:15px;letter-spacing:-.02em}
+.mnav-links{display:flex;align-items:center;gap:6px;margin-left:8px}
+.mnav-flat,.mnav-trigger{color:var(--t2);background:none;border:0;font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;padding:8px 12px;border-radius:8px;display:inline-flex;align-items:center;gap:6px}
+.mnav-flat:hover,.mnav-trigger:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.caret{font-size:9px;color:var(--t3);transition:transform .18s}
+.mnav-right{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.mnav-search{background:none;border:0;color:var(--t2);cursor:pointer;display:flex;padding:6px;border-radius:8px}
+.mnav-search:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.mnav-cta{border:1px solid var(--teal);color:var(--teal);text-decoration:none;padding:7px 15px;border-radius:8px;font-size:13px;font-weight:600;white-space:nowrap}
+.mnav-cta:hover{background:var(--teal-d)}
+.mnav-wrap[data-section="tools"] .mnav-flat[data-nav="tools"]{color:var(--text);font-weight:600}
+.mnav-wrap[data-section="articles"] .mnav-trigger[data-nav="articles"]{color:var(--text);font-weight:600}
+/* Bible = amber brand color, desktop link + mobile drawer */
+.mnav-flat[data-nav="bible"],.drw-link[data-nav="bible"]{color:#f5a623!important;font-weight:600}
+.mnav-flat[data-nav="bible"]:hover,.drw-link[data-nav="bible"]:hover{color:#ffc04d!important}
+.mnav-item{position:relative}
+.mnav-panel,.mnav-panel-wide{position:absolute;top:calc(100% + 6px);left:0;z-index:50;display:none;background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:14px;box-shadow:0 24px 60px -24px rgba(0,0,0,.9);min-width:240px}
+.mnav-panel-wide{grid-template-columns:1fr 1fr;gap:8px 22px;min-width:520px}
+.mnav-item:hover .mnav-panel,.mnav-item:focus-within .mnav-panel,.mnav-item:hover .mnav-panel-wide,.mnav-item:focus-within .mnav-panel-wide{display:grid}
+.mnav-item:hover .caret{transform:rotate(180deg)}
+.mp-col{display:flex;flex-direction:column}
+.mp-head{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);padding:6px 10px 8px}
+.mnav-panel a{display:flex;flex-direction:column;gap:1px;padding:8px 10px;border-radius:9px;text-decoration:none}
+.mnav-panel a:hover{background:rgba(255,255,255,.05)}
+.mp-name{color:var(--text);font-size:13.5px;font-weight:600}.mp-desc{color:var(--t2);font-size:11.5px}
+.mnav-sub{display:none;background:var(--panel);border-bottom:1px solid var(--line)}
+.mnav-wrap[data-section="bible"] .mnav-sub{display:block}
+.mnav-sub-in{max-width:1180px;margin:0 auto;padding:10px 22px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.mnav-sub-in::-webkit-scrollbar{display:none}
+.mnav-sub-in a{flex:0 0 auto;color:var(--t2);text-decoration:none;font-size:12.5px;font-family:var(--mono);border:1px solid var(--line2);border-radius:99px;padding:5px 12px;white-space:nowrap}
+.mnav-sub-in a:hover{color:var(--teal);border-color:rgba(0,232,162,.4)}
+.mnav-toggle{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.mnav-burger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:8px;border-radius:8px}
+.mnav-burger span{display:block;width:20px;height:2px;background:var(--text);border-radius:2px;transition:.2s}
+.mnav-drawer{display:none;flex-direction:column;padding:6px 18px 16px;background:var(--ink);border-bottom:1px solid var(--line)}
+.mnav-drawer details{border-bottom:1px solid var(--line)}
+.mnav-drawer summary{list-style:none;cursor:pointer;padding:13px 2px;font-size:15px;font-weight:600;color:var(--text);display:flex;justify-content:space-between}
+.mnav-drawer summary::-webkit-details-marker{display:none}
+.mnav-drawer summary::after{content:"+";color:var(--t3)}
+.mnav-drawer details[open] summary::after{content:"\2013"}
+.mnav-acc{display:flex;flex-direction:column;padding:0 0 10px 12px}
+.mnav-acc a{color:var(--t2);text-decoration:none;font-size:14px;padding:8px 0}
+.drw-link{color:var(--t2);text-decoration:none;font-size:15px;font-weight:600;padding:13px 2px;border-bottom:1px solid var(--line)}
+.drw-cta{color:var(--teal);text-decoration:none;font-weight:600;font-size:15px;padding:14px 2px}
+.mnav-toggle:checked ~ .mnav-drawer{display:flex}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(2){opacity:0}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+@media(max-width:860px){.mnav-links,.mnav-cta{display:none}.mnav-burger{display:flex}}
+
+/* ===== UNIFIED SEARCH OVERLAY ===== */
+.usearch{position:fixed;inset:0;z-index:10000;display:none;background:rgba(6,6,11,.78);backdrop-filter:blur(6px);padding:80px 20px 20px}
+.usearch.open{display:block}
+.usearch-box{max-width:620px;margin:0 auto;background:var(--panel);border:1px solid var(--line2);border-radius:16px;overflow:hidden;box-shadow:0 40px 90px -30px rgba(0,0,0,.95)}
+.usearch-top{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.usearch-top svg{color:var(--t3);flex:0 0 auto}
+.usearch-top input{flex:1;background:none;border:0;outline:none;color:var(--text);font-family:var(--sans);font-size:17px}
+.usearch-top input::placeholder{color:var(--t3)}
+.usearch-top kbd{font-family:var(--mono);font-size:11px;color:var(--t3);border:1px solid var(--line2);border-radius:6px;padding:2px 7px}
+.usearch-results{max-height:56vh;overflow-y:auto;padding:8px}
+.usearch-results a{display:block;padding:11px 14px;border-radius:10px;text-decoration:none;transition:background .12s}
+.usearch-results a:hover,.usearch-results a.sel{background:rgba(255,255,255,.05)}
+.ur-top{display:flex;align-items:baseline;gap:9px}
+.ur-title{color:var(--text);font-size:14.5px;font-weight:600}
+.ur-cat{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.06);color:var(--t2);flex:0 0 auto}
+.ur-cat[data-c="Tools"]{background:var(--teal-d);color:var(--teal);border:1px solid rgba(0,232,162,.4)}
+.ur-cat[data-c="Bible"]{background:rgba(245,166,35,.18);color:#f5a623;border:1px solid rgba(245,166,35,.4)}
+.ur-desc{color:var(--t2);font-size:12.5px;line-height:1.45;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.usearch-empty{padding:30px;text-align:center;color:var(--t3);font-size:13.5px}
+/* --- sticky-header + entry-page chrome (pilot, refined for density) ---
+   entry nav = 60px main bar only (no category sub-bar). Desktop: hide the horizontal section
+   nav (the sticky sidebar TOC covers sections) and retune offsets to the 60px nav. Mobile: the
+   sidebar is hidden, so SHOW the section nav flush under the bar. All in THIS block. --- */
+.mnav-wrap{position:sticky;top:0;z-index:1000;line-height:1.4}
+.entry-nav{display:none}
+[id].entry-section{scroll-margin-top:90px}
+.entry-main h2{scroll-margin-top:90px}
+.entry-sidebar{top:78px;height:calc(100vh - 98px)}
+@media(max-width:768px){
+  .entry-nav{display:block!important;top:60px!important}
+  [id].entry-section{scroll-margin-top:130px!important}
+  .entry-main h2{scroll-margin-top:130px!important}
+}
+/* dropdown overflow safety */
+.mnav-panel,.mnav-panel-wide{max-height:min(72vh,560px);overflow-y:auto}
+/* mobile drawer: category CARD grid (slick old-nav look), CSS-only */
+.mnav-drawer{padding:10px 18px 18px;gap:0}
+.drw-label{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--t3);margin:12px 2px 8px}
+.drw-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.drw-card{display:flex;align-items:center;padding:12px 14px;border-radius:10px;text-decoration:none;font-size:13.5px;font-weight:600;color:var(--text);background:var(--panel);border:1px solid var(--line2)}
+.drw-card:hover{border-color:var(--teal);color:var(--teal)}
+.drw-feat{display:flex;align-items:center;gap:8px;padding:13px 16px;border-radius:10px;text-decoration:none;font-size:14px;font-weight:700;color:var(--text);background:var(--panel);border:1px solid var(--line2);margin-top:8px}
+.drw-feat-bible{color:#f5a623;background:rgba(245,166,35,.08);border-color:rgba(245,166,35,.30)}
+.drw-feat-bible:hover{border-color:rgba(245,166,35,.6)}
+.drw-cta{display:block;text-align:center;padding:14px;border-radius:10px;background:var(--teal);color:#06281f;font-weight:800;font-size:14px;text-decoration:none;margin-top:12px}
+/* mobile sunlight legibility: lift the intentionally-dim greys in glare (nav + search only), scoped */
+@media(max-width:860px){
+  .mnav-wrap,.usearch{--t2:#c8c8da;--t3:#9696b0}
+  .drw-label{color:#bdbdd0;font-weight:500}
+  .usearch-top input::placeholder{color:#9696b0}
+  .drw-card,.drw-feat{background:#20202e;border:1.5px solid #45455c}
+  .drw-feat-bible{background:rgba(245,166,35,.12);border:1.5px solid rgba(245,166,35,.6)}
+}
+html{overflow-x:clip!important;max-width:none!important}body{overflow-x:clip!important}
+</style>
+<!-- MPW universal nav -->
+<div class="mnav-wrap" data-section="articles">
+  <input type="checkbox" id="mnav-toggle" class="mnav-toggle" aria-hidden="true">
+  <nav class="mnav" aria-label="Main navigation">
+    <div class="mnav-in">
+      <a class="mnav-brand" href="/"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="6" stroke="#f5a623" stroke-width="1.7"/><path d="M7 15V9l3 3 3-5 4 8" stroke="#00e8a2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="mnav-word">MusicProductionWiki</span></a>
+      <div class="mnav-links">
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="articles">Articles <span class="caret">&#9662;</span></button><div class="mnav-panel mnav-panel-wide"><div class="mp-col"><div class="mp-head">Techniques & Analysis</div><a href="/categories/techniques"><span class="mp-name">Techniques</span><span class="mp-desc">Mixing, mastering, sound design</span></a><a href="/categories/reviews"><span class="mp-name">Reviews</span><span class="mp-desc">Honest. No paid placements.</span></a><a href="/categories/comparisons"><span class="mp-name">Comparisons</span><span class="mp-desc">Head-to-head</span></a><a href="/categories/breakdowns"><span class="mp-name">Breakdowns</span><span class="mp-desc">Track-by-track</span></a><a href="/categories/recreations"><span class="mp-name">Recreations</span><span class="mp-desc">Recreate iconic sounds</span></a><a href="/genres"><span class="mp-name">Genres</span><span class="mp-desc">Every genre & style</span></a></div><div class="mp-col"><div class="mp-head">Reference & Business</div><a href="/categories/ai-music"><span class="mp-name">AI Music</span><span class="mp-desc">Suno, Udio, AI tools</span></a><a href="/categories/music-business"><span class="mp-name">Music Business</span><span class="mp-desc">Royalties, licensing, sync</span></a></div></div></div>
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="gear">Gear <span class="caret">&#9662;</span></button><div class="mnav-panel"><div class="mp-col"><a href="/categories/daws"><span class="mp-name">DAWs</span><span class="mp-desc">Every major DAW</span></a><a href="/categories/plugins"><span class="mp-name">Plugins</span><span class="mp-desc">EQ, comp, reverb, synths</span></a><a href="/categories/hardware"><span class="mp-name">Hardware</span><span class="mp-desc">Interfaces, mics, monitors</span></a></div></div></div>
+        <a class="mnav-flat" href="/tools/" data-nav="tools">Tools</a>
+        <a class="mnav-flat" href="/bible/" data-nav="bible">The Bible</a>
+      </div>
+      <div class="mnav-right">
+        <button class="mnav-search" data-nav-search aria-label="Search"><svg width="17" height="17" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <a class="mnav-cta" href="https://theproducersbriefing.beehiiv.com">Sound Better &rarr;</a>
+        <label class="mnav-burger" for="mnav-toggle"><span></span><span></span><span></span></label>
+      </div>
+    </div>
+  </nav>
+  <div class="mnav-drawer">
+    <div class="drw-label">Articles</div>
+    <div class="drw-grid">
+      <a href="/categories/techniques" class="drw-card">Techniques</a><a href="/categories/reviews" class="drw-card">Reviews</a><a href="/categories/comparisons" class="drw-card">Comparisons</a><a href="/categories/breakdowns" class="drw-card">Breakdowns</a><a href="/categories/recreations" class="drw-card">Recreations</a><a href="/genres" class="drw-card">Genres</a><a href="/categories/ai-music" class="drw-card">AI Music</a><a href="/categories/music-business" class="drw-card">Music Business</a>
+    </div>
+    <div class="drw-label">Gear</div>
+    <div class="drw-grid">
+      <a href="/categories/daws" class="drw-card">DAWs</a><a href="/categories/plugins" class="drw-card">Plugins</a><a href="/categories/hardware" class="drw-card">Hardware</a>
+    </div>
+    <a href="/bible/" class="drw-feat drw-feat-bible">&#9670; The Producer's Bible</a>
+    <a href="/tools/" class="drw-feat">The Producer's Tools</a>
+    <a href="https://theproducersbriefing.beehiiv.com" class="drw-cta">Sound Better &rarr;</a>
+  </div>
+</div>
+
+
+<div class="container">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><ol>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../categories/recreations.html">Recreations</a></li>
+    <li><span aria-current="page">The Supersaw</span></li>
+  </ol></nav>
+</div>
+<nav class="toc-bar" aria-label="Section navigation"><div class="toc-bar-track" id="tocBarTrack"></div></nav>
+<main class="container" id="main-content">
+  <div class="article-layout">
+    <article aria-labelledby="articleTitle">
+      <header class="article-header">
+        <div class="article-tags"><span class="article-tag teal"><a href="../categories/recreations.html" style="color:inherit;text-decoration:none;">Recreations</a></span>
+<span class="article-tag teal"><a href="../categories/techniques/sound-design.html" style="color:inherit;text-decoration:none;">Sound Design</a></span></div>
+        <h1 id="articleTitle">How to Recreate the Supersaw (The Trance Lead Sound)</h1>
+        <div class="article-header-meta">
+          <div class="article-author"><div class="author-avatar" aria-hidden="true">MP</div><span class="author-name">The Music Production Wiki Team</span></div>
+          <span class="meta-divider"></span><span class="meta-item">Updated July 2026&nbsp;&middot;&nbsp;15 min read</span>
+        </div>
+      </header>
+      <div class="article-body">
+<p style="font-size:1.06rem;line-height:1.7;">The supersaw is the sound of a generation of dance music &mdash; the huge, shimmering, detuned lead that built trance and never really left, turning up now in future bass, hardstyle, hyperpop and pop. It is also one of the most mythologised sounds in synthesis. For the better part of two decades, producers and even DSP engineers argued over what was really happening inside Roland&rsquo;s <a href="../bible/oscillator.html">oscillator</a>: secret chorus, hidden modulation, some proprietary phase trick. At the end of 2025 a team reverse-engineered the actual chip and settled it, and the answer is almost disappointingly plain &mdash; <strong>seven detuned <a href="../bible/waveform.html">sawtooth</a> waves, a highpass filter, and some oversampling.</strong> No magic. This guide separates what the supersaw <em>genuinely</em> is from what the internet keeps repeating, then walks you through rebuilding it from a stock synth first &mdash; with the dedicated JP-8000 clones named only because they are real and confirmable.</p>
+<div class="quick-answer">
+<div class="quick-answer-label">The short answer</div>
+<p>The supersaw is <strong>not a chorus on a saw</strong> and it is <strong>not a secret effect</strong>. It is <strong>seven detuned saw waves from a single oscillator</strong>, run through a <strong>highpass filter</strong> and rendered at a <strong>doubled sample rate (about 88.2&nbsp;kHz)</strong> to tame aliasing. To rebuild it in any synth: load a <strong>saw</strong>, turn <strong>unison up to seven or more voices</strong>, raise the <strong>detune narrow at first</strong> (push it and you gain width but lose power), <strong>highpass the low mud</strong> (the step most recreations skip), and turn on <strong>free-running phase</strong> so each note shimmers differently. The free <strong>Vital</strong> does all of this; the dedicated shortcuts are <strong>Arturia&rsquo;s Jup-8000 V</strong> and the free, chip-accurate <strong>JE-8086</strong> (which needs your own ROM).</p>
+</div>
+<div class="sourcebox">
+<div class="sourcebox-head"><span class="sourcebox-kicker">Where this comes from</span><span class="sourcebox-sub">Confirmed vs. inferred &mdash; so you know which claims are sourced and which are our best estimate.</span></div>
+<div class="sourcebox-row sourcebox-confirmed">
+<div class="sourcebox-tag">Confirmed</div>
+<div class="sourcebox-body"><p>The <strong>supersaw</strong> is a waveform Roland created for the <strong>JP-8000</strong> (released 1996&ndash;97; sources differ on the exact date) and the rackmount <strong>JP-8080</strong> (1998). Reverse-engineering of the original Toshiba DSP chip showed the supersaw to be <strong>seven detuned sawtooth waves from one oscillator, passed through a highpass filter and oversampled to about 88.2&nbsp;kHz</strong> to suppress aliasing &mdash; in the developer&rsquo;s own words, &ldquo;no modulation, no phase tricks, no chorus, no magic.&rdquo; Two performance controls shape it: <strong>Detune</strong> (spreads the six side saws) and <strong>Mix</strong> (level of the side voices against the fundamental), with <strong>free-running</strong> oscillators that don&rsquo;t reset phase on each key press. Darude&rsquo;s &ldquo;Sandstorm&rdquo; used the JP-8080 and is named after its boot-up patch. <span class="sourcebox-cite">Sources: Wikipedia &ldquo;Roland JP-8000&rdquo;; Perfect Circuit &ldquo;Super Saws: History&hellip;&rdquo;; Kulshan Studios; and giulioz&rsquo;s 39C3 Chaos Computer Club talk &ldquo;From Silicon to Darude Sand Storm,&rdquo; reported by gearnews and Synth&nbsp;Anatomy (Jan&nbsp;2026).</span></p></div></div>
+<div class="sourcebox-row sourcebox-disputed">
+<div class="sourcebox-tag">Commonly claimed &mdash; but disputed</div>
+<div class="sourcebox-body"><p>That the supersaw hides <strong>secret chorus, modulation, or phase magic</strong>. For years the standard forum theories ranged from comb filters and comparators to LFO-modulated phase offsets, and the usual home shortcut is &ldquo;just slap a chorus on a saw.&rdquo; The chip teardown shows all of that is wrong: it is only <em>detuned saws + highpass + oversampling</em>. So a chorus misses the actual mechanism &mdash; the character is the highpass, the narrow non-linear detune, the free-running phase, and controlled aliasing, <em>not</em> an effect. <span class="sourcebox-cite">Source: the long-running KVR &ldquo;Roland Supersaw &mdash; how was the original done?&rdquo; DSP thread (2009&ndash;2017), resolved by the 2025&ndash;26 teardown.</span></p></div></div>
+<div class="sourcebox-row sourcebox-inferred">
+<div class="sourcebox-tag">Inferred &mdash; unverified</div>
+<div class="sourcebox-body"><p>The <strong>exact</strong> detune curve. It is known to be <strong>non-linear and asymmetric</strong> &mdash; the side saws are not spread evenly &mdash; and academic reconstructions exist, most notably <strong>Adam Szabo&rsquo;s</strong> thesis <em>How to Emulate the Super Saw</em>, which fits a curve to sampled measurements and states plainly that &ldquo;the detune curve cannot be linear.&rdquo; Treat any specific detune coefficients as <strong>modeled reconstructions</strong>, not Roland&rsquo;s published values. <span class="sourcebox-cite">Source: Adam Szabo, <em>How to Emulate the Super Saw</em> (Bachelor thesis, PDF); corroborating empirical coefficient sets discussed on KVR.</span></p></div></div>
+</div>
+<h2 id="reframe">It isn&rsquo;t a chorus on a saw wave</h2>
+<p>Start here, because the wrong mental model is the single reason most supersaw recreations sound thin. The shortcut everyone reaches for is &ldquo;take a saw, add a chorus, done&rdquo; &mdash; and it gets you something vaguely wide and wobbly that is not the supersaw. A chorus takes <em>one</em> signal and smears copies of it with short, modulated delays; it creates movement, but it is one voice pretending to be many. The supersaw is the opposite: it is <strong>seven genuinely separate saw voices</strong>, each at a slightly different pitch, summed together and then cleaned up with a highpass. The density you hear &mdash; that thick, buzzing curtain of sound &mdash; comes from seven real oscillators beating against each other, not from a delay line modulating one.</p>
+<p>The distinction matters because it changes every decision downstream. Once you stop thinking &ldquo;effect on a saw&rdquo; and start thinking &ldquo;a stack of detuned saws, filtered,&rdquo; the settings that actually make the sound fall into place, and the settings that produce the weak imitation stop tempting you. You reach for <a href="../bible/unison.html">unison</a> and detune instead of a chorus plugin; you remember to highpass; you leave the phase free-running. The producers who nail the supersaw are the ones who understand it as an <em>oscillator</em>, not as a processed single tone.</p>
+<p>It helps to know how thoroughly this was argued over, because it tells you how little you can trust the folklore. On DSP forums, engineers spent years reverse-guessing the algorithm &mdash; theories included comparator-based phase-shifted saws driven by LFOs, two-dimensional wavetable lookups with random sweeps, and nonlinear filtering, all clever, all wrong. The people building emulations couldn&rsquo;t agree either. Then, at the end of 2025, a team that had already reverse-engineered several Roland chips took apart the JP-8000&rsquo;s actual DSP and published the answer. The reason it stayed a mystery so long is that the truth is almost too simple to believe: seven naive saws, a highpass, and oversampling to keep the aliasing musical. As the developer put it, no modulation, no phase tricks, no chorus, no magic. Everything else was people over-thinking a stack of detuned saws.</p>
+<p>There is one more reason the supersaw sounds the way it does, and it is the detail that makes a clean modern recreation subtly miss: <strong>aliasing</strong>. Any digitally generated saw produces aliasing &mdash; unwanted frequencies that fold back down into the audible range &mdash; and most synth designers treat it as a defect to be filtered away. Roland did the opposite. By running the supersaw at a doubled sample rate they kept the aliasing under control without eliminating it, and that faint digital grit is part of what gives the sound its bright, airy shimmer. Szabo&rsquo;s analysis makes the same point: the aliasing that other synths scrub out is exactly what lends the supersaw its brightness. It is why a spotless, heavily anti-aliased modern saw can sound a touch too clean next to the original &mdash; and why a hair of saturation often puts the life back.</p>
+<p>So the reframe, in one sentence: the supersaw is <strong>a detuned saw stack that has been highpassed and oversampled</strong>, and its magic lives in the filter, the shape of the detune, and the free-running phase &mdash; not in any effect you can add afterward. Hold that in your head and the rest of this guide is just detail.</p>
+<h2 id="elements">The five ingredients that actually make the sound</h2>
+<p>Break the supersaw into its load-bearing parts and it stops being mysterious. There are five, and every one is a place a recreation goes wrong. Get all five and even a free stock synth lands it; miss any one and you get a recognisable-but-wrong imitation. Here they are, roughly in order of how badly people underdo them.</p>
+<p><strong>1. Seven detuned saws from one source.</strong> The foundation is a single saw <a href="../bible/waveform.html">waveform</a> stacked in unison &mdash; the original used seven voices, one centre saw kept in tune with six detuned around it. Seven unison saws with <em>no</em> detuning just sound like a louder saw; the stacking is only the raw material. What you need first is a <a href="what-is-a-synthesizer.html">synth</a> that can produce enough unison voices, because this has a real consequence for chords: seven voices per note means a three-note chord wants around twenty-one voices. Many synths cap their unison count or get expensive on CPU there, so if yours only reaches seven or eight voices total, keep supersaw patches monophonic and layer them &mdash; or reach for a synth with generous unison. This is exactly the kind of decision our <a href="best-synth-plugins.html">best synth plugins</a> roundup exists to sort out.</p>
+<p><strong>2. Narrow, non-linear detune &mdash; and knowing when to stop.</strong> Detune is where the supersaw comes alive, and it is where most people overshoot. Push the <a href="../bible/detune.html">detune</a> up from zero and the seven voices gradually drift apart, filling the space between them with that thick, pleasing fuzz that almost seems to modulate on its own. But there is a cost: the more you detune, the further you spread the voices, and past a certain point you gain <em>width</em> while losing <em>power and density</em>. The original supersaw stuck to a fairly narrow detune unless you pushed the fader near its maximum, and the detune curve itself is deliberately non-linear &mdash; it moves slowly at first and steepens later, giving fine control over the subtle pad-like settings. The practical rule: detune just until you can start to hear the separate saws smear together, then back off a touch. For punchy leads you want less detune than instinct suggests; for lush pads you can spread wider.</p>
+<p><strong>3. The internal highpass &mdash; the ingredient nobody talks about.</strong> This is the single most-skipped step, and it is why so many stock recreations sound muddy and weak next to the real thing. The JP-8000 hid a <a href="../bible/high-pass-filter.html">highpass filter</a> <em>inside</em> the supersaw oscillator, rolling off the low end so the stacked saws didn&rsquo;t pile into a woolly mess. Seven detuned saws stack a lot of low-frequency energy, and left alone that energy turns to mud; the highpass clears it, which is exactly why the raw supersaw sounds a touch thinner and brighter than a plain saw straight out of the box. If your supersaw sounds thick-but-lifeless, this is almost always the missing move: highpass it around the fundamental and the patch snaps into focus. We will look at this as a picture in a moment, because it is the fix that fixes the most recreations.</p>
+<p><strong>4. Free-running phase.</strong> Here is the ingredient that gives the supersaw its organic, breathing quality, and it is a single switch. On most synths, every voice resets to the same starting point in the waveform each time you press a key, so every note begins identically. The JP-8000&rsquo;s oscillators were <em>free-running</em> &mdash; they never reset phase &mdash; so each note started at a slightly different point in the cycle, and the seven detuned voices lined up differently every time. That is the subtle per-note shimmer that makes the real thing feel alive rather than static. In modern synths the feature has various names &mdash; free phase, random phase, phase reset off &mdash; but the effect is the same: turn off phase reset and add a little phase randomisation, and your supersaw stops sounding like a machine repeating one note and starts sounding like it was played.</p>
+<p><strong>5. Mix and controlled air.</strong> The last ingredient is balance. The JP-8000&rsquo;s Mix control set the level of the six detuned side voices against the in-tune fundamental, letting you dial anywhere from a sizzling, spaced-out waviness to a buzzing, in-your-face swarm of power. Keeping the centre saw prominent gives you focus and pitch; leaning on the detuned voices gives you size and drama. The other half of &ldquo;air&rdquo; is the oversampling: the original ran the supersaw at double the normal sample rate specifically so its aliasing stayed musical rather than harsh &mdash; the slight digital grit is part of the brightness, not a flaw to remove. Modern synths tend to anti-alias aggressively, so you sometimes have to add a touch of that brightness back with saturation or presence to keep the top alive.</p>
+<h2 id="hpf">The highpass everyone skips, seen as a curve</h2>
+<p>Because the highpass is the ingredient that fixes the most broken recreations, it is worth seeing rather than just reading. A plain saw wave carries strong low-frequency energy and a harmonic series that rolls off gently as frequency rises. Stack seven of them detuned and that low energy multiplies into mud. The supersaw&rsquo;s internal highpass clears the bottom and leaves a bright, dense band up top &mdash; which is why the finished sound cuts through a mix instead of clogging it.</p>
+<p><div class="diagram-wrap">
+<picture>
+<source media="(max-width:900px)" srcset="../images/how-to-recreate-the-supersaw-hpf-m.png">
+<img src="../images/how-to-recreate-the-supersaw-hpf.png" alt="Two illustrative response curves. The purple dashed curve is a raw single saw: strong at the low end near 20 hertz, then declining steadily toward the top so it thins out at high frequencies. The teal filled curve is the supersaw: cut hard at the low end by the internal highpass, marked ‘internal HPF low-cut,’ then rising and staying bright and dense across the mids, presence and air. Caption notes the shapes show the tonal move, not a measured plot." width="1040" height="494" loading="lazy" />
+</picture>
+<div class="diagram-caption">The move that fixes muddy supersaws. A raw saw (purple) keeps its lows; the supersaw (teal) is highpassed so the bottom clears and the top stays bright and dense.</div>
+</div></p>
+<p>Reading the shape tells you exactly what to do in your own synth. If your supersaw looks and sounds like the purple curve &mdash; big and woolly at the bottom, dull up top &mdash; you have skipped the highpass. Add a highpass around the fundamental of the note range you are playing and roll off just enough to clear the mud without hollowing the sound out. The goal is the teal curve: lows under control, mids and highs alive. This one move is the difference between a supersaw that sits proudly in a busy arrangement and one that turns everything to porridge the moment you add a bassline under it.</p>
+<p>It is worth understanding <em>why</em> the lows pile up, because then the fix stops feeling arbitrary. A single saw already carries strong low-frequency content. Stack seven of them at slightly different pitches and those low components don&rsquo;t cancel &mdash; they reinforce and beat against each other, building a thick, rumbling foundation that has nothing to do with the bright detuned character you actually want. Left in, that build-up eats headroom and masks your bass. The highpass simply removes the part of the sound that was never doing any useful work, which is why cutting it makes the supersaw feel <em>louder</em> and clearer even though you took energy away.</p>
+<h2 id="swarm">Seven voices, one thick band</h2>
+<p>The other half of the supersaw&rsquo;s character is density, and density is easiest to understand as where the energy sits. When you stack and detune seven saws, their partials don&rsquo;t stay neatly separated &mdash; they crowd together into a dense, shimmering band, thickest through the mids and presence region and carried up into the air by the oversampling. That crowding is the &ldquo;swarm,&rdquo; the sense of many voices moving at once, and it is what a single saw or a chorus can never quite fake.</p>
+<p><div class="diagram-wrap">
+<picture>
+<source media="(max-width:900px)" srcset="../images/how-to-recreate-the-supersaw-swarm-m.png">
+<img src="../images/how-to-recreate-the-supersaw-swarm.png" alt="An illustrative spectrum drawn as bars across six labelled bands: sub, bass, low-mid, mid, presence and air. The sub and bass bands are very low because the highpass has cut them. Energy rises through low-mid and mid, peaks in a dense amber-highlighted region across the presence band labelled ‘the swarm — where detune thickens,’ and stays present in the air band. Caption notes it is an illustrative spectrum, read band by band, not a measured FFT." width="1040" height="494" loading="lazy" />
+</picture>
+<div class="diagram-caption">Where the seven detuned voices pile up. Lows cut by the highpass, a dense swarm through the mids and presence, air kept alive by the oversampling.</div>
+</div></p>
+<p>This picture also explains the detune trade-off from the other direction. Detune the voices a little and the swarm is tight and powerful. Detune them a lot and the band spreads wider &mdash; broader stereo image, more obvious movement &mdash; but the energy thins as it stretches, and past a point the powerful centre hollows out. That is the audible version of &ldquo;you gain width but lose power.&rdquo; When you are dialling detune, you are really deciding how tightly this swarm holds together: narrow for a punchy lead that hits hard, wider for a lush pad that washes over the track.</p>
+<h2 id="recreate">Recreate it: stock synth first, then the shortcut</h2>
+<p>You do not need to buy anything to make a great supersaw, and building it from a stock synth first is the fastest way to actually understand it. Almost any synth with a saw oscillator, enough unison voices, a highpass, and free-running phase will do it, and the completely free <a href="how-to-use-vital.html">Vital</a> covers all four &mdash; which is why it is the honest starting point for anyone on any budget, and our <a href="best-free-vst-plugins.html">best free VST plugins</a> roundup lists it alongside the other free synths worth grabbing. Here is the whole recipe, with the settings that matter and, more importantly, why each one is set the way it is. Treat exact numbers as starting points and tune by ear.</p>
+<p>Start with a <strong>saw oscillator</strong> and turn <strong>unison up to at least seven voices</strong>. Play a single note: right now it should just sound like a slightly louder, thicker saw, because the voices are all in tune. Now raise the <strong>detune</strong> slowly. Somewhere in the lower half of the control you will hear the voices start to smear apart into that shimmering fuzz &mdash; that is the supersaw arriving. Keep it <strong>narrow for a punchy lead</strong> and only push it wide if you specifically want a broad, washy pad; remember that past a point you are trading power for width. Next, and this is the step that separates a good recreation from a muddy one, <strong>highpass the low end</strong> &mdash; use the synth&rsquo;s built-in filter or a simple EQ, and roll off the mud around the fundamental until the patch tightens up and brightens. Then turn on <strong>free-running or random phase</strong> so every note starts differently and the sound breathes. Finally, balance the detuned voices against the centre with the <strong>mix</strong> or level, keep the top bright, and if it sounds too clean and static compared to the records in your head, add a whisper of saturation for the aliasing-style air the original had built in.</p>
+<p>That is the entire sound: seven saws, detuned narrow, highpassed, free-running, mixed to taste. Everything beyond that &mdash; stacking multiple unison sets for an even bigger modern lead, adding a <a href="../bible/lfo.html">filter LFO</a> for movement, a trance gate, generous reverb &mdash; is a modern extension, not the original. Those extensions are how the supersaw grew from a trance lead into the wall-of-sound found in <a href="how-to-make-future-bass.html">future bass</a>, and it is worth knowing which parts are the real oscillator and which parts are the era&rsquo;s production stacked on top. When you want that maximal modern size, our guide to <a href="how-to-layer-synths.html">layering synths</a> covers stacking sets cleanly without turning the low end back into mush.</p>
+<p>One honest note on the &ldquo;bigger is better&rdquo; instinct: the enormous modern supersaw you hear on festival records is usually <em>several</em> seven-voice stacks layered and spread, not one oscillator pushed harder. That is a legitimate production choice, but it multiplies your voice count fast &mdash; a couple of stacked supersaws playing chords can run into dozens of voices &mdash; so it is worth reaching for a synth with efficient unison like <a href="vital-synth-review.html">Vital</a> rather than choking your CPU. And every layer you add makes the highpass discipline more important, not less: more stacks means more low-end build-up to clear. Build one clean, controlled supersaw first; only then start stacking.</p>
+<p>If you would rather buy a shortcut, there are two worth naming because they are confirmable, and one important caveat. <strong>Arturia&rsquo;s Jup-8000 V</strong> is the easy buyable route: Arturia state they reverse-engineered the circuitry of the original JP-8000, it recreates all seven oscillator modes including the supersaw, and it usually sells for around&nbsp;$149 (often less on sale). The more extreme option is <strong>The Usual Suspects&rsquo; JE-8086</strong>, which is free and emulates the JP-8000/8080 at the <em>chip</em> level &mdash; the most accurate recreation available &mdash; but it is not a plug-and-play purchase: it requires you to supply a legally-owned original ROM, which is a genuine hurdle and not something we can help you around. For a finished record, honestly, a stock supersaw in Vital or <a href="serum-2-vs-vital.html">Serum</a> is perceptually indistinguishable to almost any listener; the clones matter more for authenticity and study than for the mix.</p>
+<p><div class="diagram-wrap">
+<picture>
+<source media="(max-width:900px)" srcset="../images/how-to-recreate-the-supersaw-route-m.png">
+<img src="../images/how-to-recreate-the-supersaw-route.png" alt="A decision router matching what you want to which synth. Top row (teal): want it free and stock, any synth with a saw plus seven unison voices plus a highpass, output Vital free. Middle row (purple): want the dedicated clone, a reverse-engineered JP-8000 circuit with presets, output Arturia Jup-8000 V. Bottom row (amber): want the actual chip, bit-accurate DSP but needs your own ROM, output JE-8086 free with ROM. Caption notes stock first: Vital nails the sound; the clones are shortcuts and JE-8086 needs a legally-owned ROM." width="1040" height="529" loading="lazy" />
+</picture>
+<div class="diagram-caption">Three routes to the same sound. Start from what you actually want; the stock path (Vital) is the one that costs nothing and teaches you the most.</div>
+</div></p>
+<h2 id="beyond">Beyond trance: the same move anywhere</h2>
+<p>The reason it is worth learning the supersaw as a <em>principle</em> rather than a preset is that the move &mdash; detuned unison, highpassed, free-running &mdash; is a general <a href="sound-design-basics.html">sound-design</a> tool, not a one-genre trick. The same stack of detuned saws that built trance leads is the backbone of <a href="how-to-make-trance.html">trance</a>, but it is also the enormous, pitch-bent lead in future bass, the aggressive riff in hardstyle, the bright chord stack in a lot of modern pop, and the screaming build-up in mainstage <a href="how-to-make-edm.html">EDM</a>. Once you can build a supersaw from scratch, you can shape it to any of those simply by changing how much you detune, how hard you highpass, and what you stack on top.</p>
+<p>The principle generalises even further than saws. Detuned unison is what makes a Reese bass growl in drum &amp; bass; it is what thickens a pluck into a wall; it is what turns a thin square lead into something huge. The three ideas underneath the supersaw &mdash; stack voices, detune them without overspreading, and filter the resulting mud &mdash; apply to almost any waveform you want to make big and alive. That is the difference between having recreated <em>one</em> famous sound and having learned a move you can point at anything. And when you drop a supersaw into a track, the same understanding tells you how to make it land: a big detuned lead is a build-and-release instrument, which is exactly what our guide to <a href="how-to-build-tension-and-drops-in-edm.html">building tension and drops</a> is about &mdash; filter it closed through the build, throw the highpass and detune wide open on the drop, and the swarm does the heavy lifting.</p>
+<h2 id="cant-buy">What you can&rsquo;t perfectly clone &mdash; and why it doesn&rsquo;t matter</h2>
+<p>Honesty is the point of this category, so here is the part no plugin ad will tell you: you cannot make a <em>bit-perfect</em> copy of the original in a generic stock synth, and knowing precisely where that limit is will stop you chasing it forever. What you can do is get the perceptual result &mdash; the sound &mdash; completely. The gap is smaller than the marketing implies and, for a finished record, it is inaudible.</p>
+<p>Two things are genuinely hard to reproduce exactly. The first is the JP-8000&rsquo;s <strong>precise non-linear detune curve</strong> &mdash; the specific, asymmetric way it spreads its six side saws. It has been measured and modeled (Szabo&rsquo;s thesis is the best-known attempt), but it is a reconstruction, not Roland&rsquo;s published numbers, and a generic unison detune won&rsquo;t match it coefficient-for-coefficient. The second is the exact character of its <strong>oversampled aliasing</strong> &mdash; the particular digital grit the original chip produced, which most modern synths deliberately filter away in the name of cleanliness. Those two details are the entire reason chip-accurate clones like the JE-8086 exist, and if perfect authenticity is your goal, that is where to get it.</p>
+<p>But for the overwhelming majority of uses, none of that is the difference between a good record and a bad one. The audible supersaw &mdash; the density, the shimmer, the bright detuned swarm &mdash; is fully reachable in a free stock synth, and no listener will ever tell your Vital supersaw from a JP-8000 in the context of a mix. Put plainly: you can absolutely nail the <em>sound</em>; you just can&rsquo;t clone the exact silicon &mdash; and for a track, you don&rsquo;t need to. Chase the technique to the end; don&rsquo;t lose a weekend hunting for the last one percent that no one but you will ever hear.</p>
+<h2 id="rights">Do you need to clear anything?</h2>
+<p>No. Building a supersaw patch in your own synth &mdash; stock or bought &mdash; is entirely your own production. There is nothing to clear and no rights question to worry about, because you are recreating a <em>synthesis technique</em>, not sampling a recording. The moment you dial in your own oscillator, detune, and filter, the sound is yours to use in anything. (A rights conversation would only arrive if you <em>sampled</em> an actual record that used the supersaw &mdash; a completely different task, and not what this is.) Build it freely and put it in whatever you like.</p>
+<h2 id="exercises">Build the skill: 3 drills</h2>
+<p>Run these in order. The first proves the supersaw is a filtered saw stack and nothing exotic; the second trains your ear on the detune trade-off; the third makes you confront the highpass so it becomes automatic.</p>
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--beginner">Beginner</span><span class="exercise-title">Build a supersaw from a free stock synth</span></div>
+<ol><li>Open Vital (or any synth), load a saw oscillator, and turn unison up to seven voices. Play a note &mdash; it should sound like a thick saw, not yet a supersaw.</li><li>Slowly raise the detune until the voices smear into a shimmering fuzz, then stop the moment it starts to lose punch. You have just built the core of the sound.</li><li>Turn on free-running or random phase and play a few notes in a row. Notice how each note now shimmers a little differently &mdash; that is the organic feel of the original.</li></ol></div>
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--intermediate">Intermediate</span><span class="exercise-title">Sweep the detune and hear power turn into width</span></div>
+<ol><li>Keep the patch from drill one. Set detune very narrow and play a lead line &mdash; note how focused and powerful it feels.</li><li>Raise the detune in stages, playing the same line each time, until it is very wide. Hear the sound get broader and more washy but lose its punchy centre.</li><li>Find the setting where it is as wide as possible while still hitting hard. That balance point is the single most useful supersaw dial you own &mdash; narrow for leads, wide for pads.</li></ol></div>
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--advanced">Advanced</span><span class="exercise-title">Prove the highpass by A/B-ing it in a mix</span></div>
+<ol><li>Drop your supersaw into a busy loop with a bassline. With no highpass, listen to how it clogs the low end and fights the bass.</li><li>Add a highpass and roll off the lows around the fundamental. Hear the whole mix open up as the mud clears and the supersaw brightens.</li><li>Bypass and re-engage the highpass a few times so the fix is burned into your ear. From now on, reaching for the highpass on a supersaw should feel automatic.</li></ol></div>
+<h2 id="mistakes">The mistakes that make it sound wrong</h2>
+<p>Nearly every failed supersaw is one of a handful of specific errors, and naming them turns troubleshooting from guesswork into a checklist. If yours is not landing, it is almost certainly one of these.</p>
+<p><strong>Skipping the highpass</strong> is the number-one culprit &mdash; the stacked saws pile up low-frequency mud and the whole thing sounds thick and lifeless; roll off the lows and it snaps into focus. <strong>Over-detuning</strong> is second: spread the voices too far and you trade the powerful centre for hollow width, so keep it narrower than instinct suggests for leads. <strong>Reaching for a chorus instead of real unison</strong> is third &mdash; it fakes the movement but never the density of seven genuine voices, and it reintroduces the very modulation the real oscillator avoids. <strong>Leaving phase reset on</strong> makes every note identical and robotic, when free-running phase is what gives the original its life. And <strong>scrubbing all the brightness away</strong> in the name of a clean sound strips the airy grit that made the JP-8000 cut &mdash; keep the top alive, and add a little saturation back if your synth anti-aliases it out. Run down that list and you will usually find the one setting standing between you and the sound.</p>
+<h2 id="faq">Frequently Asked Questions</h2>
+<div class="faq-accordion">
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">What is the supersaw actually made of?</span></div></div>
+<div class="faq-accordion-a"><p>Seven detuned sawtooth waves running from a single oscillator, passed through a highpass filter and rendered at a doubled sample rate (about 88.2&nbsp;kHz) to suppress aliasing. That is the whole thing. When the team that reverse-engineered the JP-8000 chip described it, their summary was blunt: no modulation, no phase tricks, no chorus, no magic. The character comes from the highpass, the narrow non-linear detune, the free-running phase, and the aliasing the oversampling controls &mdash; not from a hidden effect.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Do I need a special plugin to make a supersaw?</span></div></div>
+<div class="faq-accordion-a"><p>No. Any synth that can stack at least seven detuned unison saw voices and highpass them will do it, and the free Vital covers all of that. Serum, Serum 2, Sylenth1 and Spire do it trivially too. The dedicated JP-8000 clones &mdash; Arturia&rsquo;s Jup-8000 V, or the free chip-accurate JE-8086 &mdash; get you closer to the exact original, but they are a shortcut, not a requirement.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Why does my supersaw sound muddy or weak?</span></div></div>
+<div class="faq-accordion-a"><p>Almost always because you skipped the highpass. Stacking seven detuned saws piles up low-frequency energy that turns to mud, and the JP-8000 hid a highpass inside the oscillator to clear exactly that. Roll off the lows around the fundamental and the patch snaps from thick-and-woolly to bright-and-defined. The second common cause is over-detuning: past a point the voices spread so far that the sound loses power and density.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">How much should I detune a supersaw?</span></div></div>
+<div class="faq-accordion-a"><p>Start narrow. The original kept the detune fairly tight unless the fader was pushed near maximum, because the more you spread the voices the more width you gain but the more power and density you lose. Raise the detune just until you can start to hear the separate saws smear together into that shimmering fuzz, then back off a touch. For punchy leads you want less detune than you think; for lush pads you can push it wider.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Is the supersaw just a chorus on a saw wave?</span></div></div>
+<div class="faq-accordion-a"><p>No, and that shortcut is why so many recreations fall short. A chorus smears one saw with modulated delay; the supersaw is seven separate detuned saws summed and highpassed, with free-running phase so every note is slightly different. A chorus can sound superficially similar but it does not have the density of seven real voices or the organic per-note variation, and it reintroduces the modulation the real oscillator specifically does not use.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">How many voices do I need for supersaw chords?</span></div></div>
+<div class="faq-accordion-a"><p>The classic supersaw is seven voices per note, so a three-note chord needs around twenty-one voices. Many synths cap their unison count or get expensive on CPU, so if you can only reach seven or eight voices total, keep supersaw patches monophonic and layer them, or use a synth with generous unison like Vital or Serum. Some synths also let you build multiple unison &ldquo;sets&rdquo; to play polyphonically.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">What synth is closest to the real JP-8000 supersaw?</span></div></div>
+<div class="faq-accordion-a"><p>For a bit-accurate original, the free JE-8086 by The Usual Suspects emulates the JP-8000/8080 at the chip level &mdash; but it requires you to supply a legally-owned ROM, which is a real hurdle. Arturia&rsquo;s Jup-8000 V reverse-engineered the original circuitry and is the easiest buyable route, around&nbsp;$149. For a mix, though, a stock supersaw in Vital or Serum is perceptually indistinguishable to almost any listener; the clones matter more for authenticity than for the finished record.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Do I need to clear any rights to use a supersaw I made?</span></div></div>
+<div class="faq-accordion-a"><p>No. If you built the patch yourself in your own synth, the sound is entirely your own production &mdash; there is nothing to clear. Recreating a synthesis technique is not sampling a recording. A rights question would only arise if you sampled an actual record that used the sound, which is a different task and not what recreating the supersaw involves.</p></div></div>
+</div>
+<div class="related-grid">
+<a href="serum-2-vs-vital.html" class="related-card"><div class="related-card-tag">Comparisons</div><h3 class="related-card-title">Serum 2 vs Vital</h3><p class="related-card-desc">The two synths most producers reach for to build a supersaw &mdash; one paid, one free, both more than capable.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="best-synth-plugins.html" class="related-card"><div class="related-card-tag">Reviews</div><h3 class="related-card-title">Best Synth Plugins</h3><p class="related-card-desc">The synths worth owning for supersaws and everything else &mdash; unison, filters, and voice counts compared.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-make-trance.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">How to Make Trance</h3><p class="related-card-desc">The genre the supersaw built &mdash; where the detuned lead sits in an arrangement and how to write around it.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-make-future-bass.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">How to Make Future Bass</h3><p class="related-card-desc">Where the modern, pitch-bent supersaw chord stack lives &mdash; the sound&rsquo;s second life after trance.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-use-vital.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">How to Use Vital</h3><p class="related-card-desc">Build the whole supersaw in the free synth from this guide &mdash; unison, detune, filter, and phase.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="../bible/detune.html" class="related-card"><div class="related-card-tag">Bible</div><h3 class="related-card-title">Detune</h3><p class="related-card-desc">The single parameter at the heart of the supersaw &mdash; what detuning does and why narrow beats wide.</p><span class="related-card-meta">Read article &rarr;</span></a>
+</div>
+</div>
+</article>
+
+    <aside aria-label="Article sidebar">
+      <div class="sidebar-widget toc-widget" aria-labelledby="tocHeading">
+        <div class="sidebar-widget-header"><h2 class="sidebar-widget-title" id="tocHeading">In This Article</h2></div>
+        <div class="sidebar-widget-body"><ul class="toc-list">
+
+<li><a href="#reframe">Not a Chorus on a Saw</a></li><li><a href="#elements">The 5 Ingredients</a></li><li><a href="#hpf">The Highpass Fix</a></li><li><a href="#swarm">The Detuned Swarm</a></li><li><a href="#recreate">Recreate It</a></li><li><a href="#beyond">Beyond Trance</a></li><li><a href="#cant-buy">What You Can’t Clone</a></li><li><a href="#rights">Rights?</a></li><li><a href="#exercises">3 Drills</a></li><li><a href="#mistakes">Common Mistakes</a></li><li><a href="#faq">FAQ</a></li>
+
+</ul></div>
+      </div>
+      <div class="sidebar-widget" style="background:var(--bg-void);border-color:var(--border-default);">
+        <div class="sidebar-widget-body" style="padding:1.5rem;">
+          <p style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.5rem;">Newsletter</p>
+          <h3 style="font-family:var(--font-display);color:var(--text-primary);font-size:1.1rem;margin-bottom:.5rem;">The Producer's Briefing</h3>
+          <p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:1rem;line-height:1.55;">Weekly tips, gear news, and technique guides. Free.</p>
+          <form class="newsletter-form-js" style="display:flex;flex-direction:column;gap:.5rem;" novalidate>
+            <input type="email" name="email" class="form-input" placeholder="Your email" required />
+            <button type="submit" class="btn-newsletter" style="font-size:.82rem;padding:.65rem 1rem;">Subscribe Free</button>
+          </form>
+        </div>
+      <div class="sidebar-widget" style="margin-top:1.5rem;">
+        <div class="sidebar-widget-header" style="text-align:center;">
+          <h2 class="sidebar-widget-title">Related Articles</h2>
+        </div>
+        <div class="sidebar-widget-body" style="padding:1rem;">
+<ul style="list-style:none;padding:0;margin:0;text-align:center;"><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="serum-2-vs-vital.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">Serum 2 vs Vital</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Comparisons</span></li><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="how-to-make-trance.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">How to Make Trance</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Techniques</span></li><li style="padding:.6rem 0;"><a href="best-synth-plugins.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">Best Synth Plugins</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Reviews</span></li></ul>
+        </div>
+      </div>
+      </div>
+    </aside>
+  </div>
+</main>
+<section class="newsletter-section" id="newsletter" aria-labelledby="newsletterHeading">
+  <div class="container">
+    <div class="newsletter-inner">
+      <div class="newsletter-content">
+        <p class="newsletter-label">Newsletter</p>
+        <h2 id="newsletterHeading" class="newsletter-title">The Producer's <em>Briefing</em></h2>
+        <p class="newsletter-desc">Weekly techniques, gear news, and music business insights. Free.</p>
+      </div>
+      <div class="newsletter-form-wrap">
+        <form class="newsletter-form-js" novalidate>
+          <input type="email" name="email" class="form-input" placeholder="Your email address" required />
+          <button type="submit" class="btn-newsletter">Subscribe Free</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<footer class="site-footer" role="contentinfo">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="../index.html" class="site-logo"><span class="logo-wordmark">Music<span>Production</span>Wiki</span><span class="logo-tagline">The Producer's Reference</span></a>
+    </div>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <div class="footer-col">
+        <h3 class="footer-col-title">Categories</h3>
+        <ul>
+          <li><a href="../categories/reviews.html">Reviews</a></li>
+          <li><a href="../categories/comparisons.html">Comparisons</a></li>
+          <li><a href="../categories/ai-music.html">AI Music</a></li>
+          <li><a href="../categories/daws.html">DAWs</a></li>
+          <li><a href="../categories/plugins.html">Plugins</a></li>
+          <li><a href="../categories/hardware.html">Gear</a></li>
+          <li><a href="../categories/techniques.html">Techniques</a></li>
+          <li><a href="../categories/music-business.html">Music Business</a></li>
+          <li><a href="../categories/glossary.html">Glossary</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">Popular</h3>
+        <ul>
+          <li><a href="../articles/suno-vs-udio.html">Suno vs Udio</a></li>
+          <li><a href="../articles/best-daw-for-beginners.html">Best DAW for Beginners</a></li>
+          <li><a href="../articles/focusrite-scarlett-2i2-gen-4-review.html">Scarlett 2i2 Review</a></li>
+          <li><a href="../articles/sidechain-compression-guide.html">Sidechain Compression</a></li>
+          <li><a href="../articles/best-compressor-plugins.html">Best Compressor Plugins</a></li>
+          <li><a href="../articles/what-is-gain-staging.html">What Is Gain Staging</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">About</h3>
+        <ul>
+          <li><a href="../about.html">About MPW</a></li>
+          <li><a href="../about.html#team">Our Team</a></li>
+          <li><a href="../about.html#methodology">Review Methodology</a></li>
+          <li><a href="../about.html#affiliate">Affiliate Disclosure</a></li>
+          <li><a href="../about.html#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="footer-bottom"><div class="container"><p>© <span id="copyrightYear"></span> MusicProductionWiki.com. All rights reserved. Content by the Music Production Wiki Team.</p></div></div>
+</footer>
+<script src="../js/main.js"></script>
+<script>document.getElementById('copyrightYear').textContent = new Date().getFullYear();</script>
+
+<button id="mpwBackTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  aria-label="Back to top"
+  style="position:fixed;bottom:1.5rem;right:1.5rem;width:2.5rem;height:2.5rem;border-radius:50%;
+         background:var(--teal);color:#000;border:none;cursor:pointer;display:none;
+         align-items:center;justify-content:center;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3);">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <polyline points="18 15 12 9 6 15"/>
+  </svg>
+</button>
+<script>
+(function(){
+  var btn=document.getElementById('mpwBackTop');
+  var bar=document.getElementById('readingProgress');
+  var art=document.querySelector('.article-body');
+  window.addEventListener('scroll',function(){
+    var st=window.scrollY||document.documentElement.scrollTop;
+    btn.style.display=st>400?'flex':'none';
+    if(bar&&art){
+      var h=art.getBoundingClientRect().height;
+      var top=art.getBoundingClientRect().top+st;
+      var pct=Math.min(100,Math.max(0,(st-top+window.innerHeight)*100/h));
+      bar.style.width=pct+'%';
+      bar.setAttribute('aria-valuenow',Math.round(pct));
+    }
+  });
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<!-- MPW universal search: one overlay, one Fuse index (/search-index.json) -->
+<div class="usearch" id="usearch" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="usearch-box">
+    <div class="usearch-top">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input id="usearchInput" type="text" placeholder="Search tools, articles, the Bible…" autocomplete="off">
+      <kbd>esc</kbd>
+    </div>
+    <div class="usearch-results" id="usearchResults"></div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
+<script>
+(function(){
+  // === production parity: lazy-load index on first open, build Fuse once ===
+  var data=null, fuse=null;
+  var overlay=document.getElementById('usearch');
+  var input=document.getElementById('usearchInput');
+  var box=document.getElementById('usearchResults');
+  var sel=-1, current=[];
+  // article slugs are bare; bible/ and tools/ slugs carry their prefix (verified vs live search-index.json)
+  function urlFor(s){ return (s.indexOf('bible/')===0||s.indexOf('tools/')===0) ? '/'+s : '/articles/'+s; }
+
+  function buildFuse(arr){
+    data=arr;
+    fuse=new Fuse(data,{keys:['title','category','description'],threshold:0.34,ignoreLocation:true,minMatchCharLength:2});
+  }
+  function ensureIndex(cb){
+    if(fuse){cb();return;}
+    // PRODUCTION: one shared index, lazy-loaded on first open.
+    fetch('/search-index.json').then(function(r){return r.json();}).then(function(arr){
+      buildFuse(arr); cb();
+    }).catch(function(){ box.textContent='Search failed to load.'; });
+  }
+
+  function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  function render(results){
+    current=results;
+    while(box.firstChild) box.removeChild(box.firstChild);   // no innerHTML
+    if(!input.value.trim()){ var p=document.createElement('div'); p.className='usearch-empty'; p.textContent='Start typing to search everything.'; box.appendChild(p); return; }
+    if(!results.length){ var n=document.createElement('div'); n.className='usearch-empty'; n.textContent='No results for "'+input.value+'".'; box.appendChild(n); return; }
+    results.slice(0,12).forEach(function(r,i){
+      var e=r.item||r;
+      var a=document.createElement('a'); a.href=urlFor(e.slug); if(i===sel)a.className='sel';
+      var top=document.createElement('div'); top.className='ur-top';
+      var t=document.createElement('span'); t.className='ur-title'; t.textContent=e.title;
+      var c=document.createElement('span'); c.className='ur-cat'; c.setAttribute('data-c',e.category||''); c.textContent=e.category||'';
+      top.appendChild(t); top.appendChild(c); a.appendChild(top);
+      if(e.description){ var d=document.createElement('div'); d.className='ur-desc'; d.textContent=e.description; a.appendChild(d); }
+      box.appendChild(a);
+    });
+  }
+
+  function open(q){ ensureIndex(function(){ overlay.classList.add('open'); input.focus(); if(q!=null){input.value=q;} sel=-1; render(input.value?fuse.search(input.value):[]); }); }
+  function close(){ overlay.classList.remove('open'); }
+
+  // wire every nav's search button to the shared overlay
+  document.querySelectorAll('[data-nav-search]').forEach(function(b){ b.addEventListener('click',function(){open(null);}); });
+  input.addEventListener('input',function(){ sel=-1; render(fuse?fuse.search(input.value):[]); });
+  input.addEventListener('keydown',function(e){
+    if(e.key==='Escape')close();
+    else if(e.key==='ArrowDown'){e.preventDefault(); sel=Math.min(sel+1,Math.min(current.length,12)-1); render(current);}
+    else if(e.key==='ArrowUp'){e.preventDefault(); sel=Math.max(sel-1,0); render(current);}
+    else if(e.key==='Enter'&&current[sel]){ var e2=current[sel].item||current[sel]; location.href=urlFor(e2.slug); }
+  });
+  overlay.addEventListener('click',function(e){ if(e.target===overlay)close(); });
+  document.addEventListener('keydown',function(e){ if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();open(null);} });
+})();
+</script>
+<script id="toc-bar-js">
+(function(){
+  var body=document.querySelector('.article-body');
+  var track=document.getElementById('tocBarTrack');
+  if(!body||!track)return;
+  var heads=[].slice.call(body.querySelectorAll('h2[id]'));
+  if(!heads.length)return;
+  heads.forEach(function(h){
+    var a=document.createElement('a');a.href='#'+h.id;
+    var t=h.textContent.trim();var i=t.indexOf(':');if(i>0)t=t.slice(0,i);
+    a.textContent=t;track.appendChild(a);
+  });
+  var links=[].slice.call(track.querySelectorAll('a'));
+  function onScroll(){
+    var y=window.scrollY+130,cur=heads[0].id;
+    heads.forEach(function(h){if(h.offsetTop<=y)cur=h.id;});
+    links.forEach(function(l){var on=l.getAttribute('href')==='#'+cur;l.classList.toggle('active',on);
+      if(on)l.scrollIntoView({inline:'center',block:'nearest'});});
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+})();
+</script>
+<script>
+function mpwFaqToggle(el){
+  var answer = el.nextElementSibling;
+  if(!answer || !answer.classList.contains('faq-accordion-a')) return;
+  var isOpen = answer.classList.contains('open');
+  document.querySelectorAll('.faq-accordion-a.open').forEach(function(a){
+    a.classList.remove('open');
+    var q = a.previousElementSibling;
+    if(q){ var ic = q.querySelector('.faq-accordion-icon, .faq-plus'); if(ic) ic.classList.remove('open'); }
+  });
+  if(!isOpen){
+    answer.classList.add('open');
+    var icon = el.querySelector('.faq-accordion-icon, .faq-plus');
+    if(icon) icon.classList.add('open');
+  }
+}
+</script>
+<style>.faq-plus.open{transform:rotate(45deg);transition:transform .2s ease}</style>
+</body>
+</html>
