@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Recreate the '80s gated-reverb snare: what Padgham and Collins really did on “Intruder,” the SSL-vs-AMS myth, and the stock chain that nails it in any DAW." />
+  <title>How to Recreate the '80s Gated-Reverb Snare (2026)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <style>
+    #readingProgress{position:fixed;top:0;left:0;height:3px;background:var(--teal);width:0%;z-index:200;transition:width 0.1s linear;}
+    .quick-answer{background:linear-gradient(135deg,rgba(0,212,168,0.08),rgba(167,139,250,0.06));border:1px solid rgba(0,212,168,0.3);border-left:4px solid var(--teal);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .quick-answer-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.6rem;}
+    .quick-answer p{font-size:1rem;line-height:1.65;color:var(--text-primary);margin:0;}
+    .skill-badge{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .6rem;border-radius:4px;margin-left:.6rem;vertical-align:middle;position:relative;top:-2px;}
+    .skill-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .skill-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .skill-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .settings-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .settings-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .settings-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .settings-table tr:last-child td{border-bottom:none;}
+    .settings-table tr:hover td{background:var(--bg-surface);}
+    .settings-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .settings-table .mono{font-family:var(--font-mono);font-size:.82rem;color:var(--teal);}
+    .mistake-box{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-left:4px solid #ef4444;border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .mistake-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ef4444;margin-bottom:.4rem;}
+    .mistake-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference{border-left:3px solid var(--purple);padding:.75rem 1.25rem;margin:1.25rem 0;background:rgba(167,139,250,0.05);border-radius:0 6px 6px 0;}
+    .pro-reference-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.35rem;}
+    .pro-reference p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference strong{color:var(--text-primary);}
+    .listening-prescription{background:var(--bg-void);border:1px solid var(--border-default);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;position:relative;}
+    .listening-prescription::before{content:'🎧';position:absolute;top:-14px;left:1.5rem;background:var(--bg-void);padding:0 .4rem;font-size:1.1rem;}
+    .listening-prescription-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:.75rem;}
+    .listening-prescription p{font-size:.9rem;line-height:1.7;color:var(--text-secondary);margin:0 0 .5rem;}
+    .listening-record{font-weight:600;color:var(--text-primary);}
+    .decision-framework{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .decision-framework-title{font-family:var(--font-display);font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:1rem;}
+    .decision-item{display:flex;gap:1rem;padding:.65rem 0;border-bottom:1px solid var(--border-subtle);font-size:.88rem;line-height:1.55;}
+    .decision-item:last-child{border-bottom:none;}
+    .decision-if{color:var(--text-muted);font-style:italic;min-width:2rem;}
+    .decision-then{color:var(--text-primary);}
+    .decision-then strong{color:var(--teal);}
+    .exercise-block{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.25rem 0;}
+    .exercise-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;}
+    .exercise-badge{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .7rem;border-radius:4px;}
+    .exercise-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .exercise-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .exercise-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .exercise-title{font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text-primary);}
+    .exercise-block ol{margin:0;padding-left:1.25rem;color:var(--text-secondary);font-size:.88rem;line-height:1.7;}
+    .exercise-block ol li{margin-bottom:.4rem;}
+    .version-line{font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:4px;padding:.4rem .75rem;margin:.75rem 0 1.5rem;display:inline-block;}
+    .go-deeper{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:10px;padding:1.75rem;margin:2.5rem 0;}
+    .go-deeper-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text-primary);margin-bottom:1.25rem;}
+    .go-deeper-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;}
+    .go-deeper-item{background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:7px;padding:1rem 1.1rem;}
+    .go-deeper-item-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.35rem;}
+    .go-deeper-item a{font-size:.88rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;}
+    .go-deeper-item p{font-size:.78rem;color:var(--text-muted);margin:.3rem 0 0;}
+    .citation{font-size:.78rem;color:var(--text-muted);font-style:italic;margin-top:.25rem;}
+    .diagram-wrap{margin:1.9rem auto;max-width:100%;}
+    .diagram-wrap img{width:100%;height:auto;display:block;border:1px solid var(--border-subtle);border-radius:10px;}
+    .diagram-wrap picture{display:block;}
+    .diagram-caption{font-size:.78rem;color:var(--text-muted);text-align:center;margin-top:.75rem;font-style:italic;}
+    .highlight-box{background:rgba(0,212,168,0.06);border:1px solid rgba(0,212,168,0.2);border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .highlight-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.4rem;}
+    .highlight-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin:1.5rem 0;}
+    .stat-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem;text-align:center;}
+    .stat-number{font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--teal);display:block;}
+    .stat-label{font-size:.78rem;color:var(--text-secondary);margin-top:.25rem;}
+    .action-steps{counter-reset:steps;list-style:none;padding:0;margin:1.5rem 0;}
+    .action-steps li{counter-increment:steps;display:flex;gap:1rem;padding:.85rem 0;border-bottom:1px solid var(--border-subtle);font-size:.9rem;color:var(--text-secondary);line-height:1.6;}
+    .action-steps li:last-child{border-bottom:none;}
+    .action-steps li::before{content:counter(steps);background:var(--teal);color:#000;font-weight:800;font-size:.75rem;width:1.6rem;height:1.6rem;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem;}
+    .genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:1.5rem 0;}
+    .genre-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem 1.25rem;}
+    .genre-card-name{font-family:var(--font-display);font-size:.85rem;font-weight:700;color:var(--teal);margin-bottom:.4rem;}
+    .genre-card p{font-size:.82rem;color:var(--text-secondary);line-height:1.55;margin:0;}
+    .comparison-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .comparison-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .comparison-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .comparison-table tr:last-child td{border-bottom:none;}
+    .comparison-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .affiliate-cta{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,212,168,0.1);border:1px solid rgba(0,212,168,0.25);color:var(--teal);font-size:.82rem;font-weight:600;padding:.45rem .9rem;border-radius:6px;text-decoration:none;}
+
+    .faq-accordion{margin:1.75rem 0;}
+    .faq-accordion-item{background:var(--bg-surface);border:1px solid var(--border-subtle);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;margin-bottom:8px;overflow:hidden;}
+    .faq-accordion-q{display:flex;align-items:flex-start;padding:1rem 1.25rem;cursor:pointer;gap:.75rem;}
+    .faq-accordion-q:hover{background:var(--bg-elevated);}
+    .faq-accordion-icon{width:16px;height:16px;flex-shrink:0;margin-top:3px;color:var(--purple);transition:transform .2s ease;}
+    .faq-accordion-icon.open{transform:rotate(45deg);}
+    .faq-accordion-q-inner{display:flex;flex-direction:column;}
+    .faq-accordion-label{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin-bottom:.2rem;}
+    .faq-accordion-q-text{font-size:.92rem;font-weight:600;color:var(--text-primary);line-height:1.45;font-family:var(--font-display);}
+    .faq-accordion-a{display:none;padding:0 1.25rem 1rem 2.75rem;font-size:.88rem;color:var(--text-secondary);line-height:1.7;border-top:1px solid var(--border-subtle);padding-top:.85rem;}
+    .faq-accordion-a.open{display:block;}
+    .sourcebox{border:1px solid var(--border-default);border-radius:10px;overflow:hidden;margin:1.9rem 0;background:var(--bg-surface);}
+    .sourcebox-head{padding:1.1rem 1.4rem;border-bottom:1px solid var(--border-default);background:var(--bg-void);}
+    .sourcebox-kicker{display:block;font-family:var(--font-display);font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.3rem;}
+    .sourcebox-sub{display:block;font-size:.82rem;color:var(--text-secondary);line-height:1.5;}
+    .sourcebox-row{display:flex;gap:0;border-bottom:1px solid var(--border-subtle);}
+    .sourcebox-row:last-child{border-bottom:none;}
+    .sourcebox-tag{flex:0 0 168px;padding:1.1rem 1.2rem;font-family:var(--font-mono);font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;line-height:1.4;}
+    .sourcebox-body{padding:1.1rem 1.3rem 1.1rem 0;flex:1;}
+    .sourcebox-body p{font-size:.9rem;line-height:1.65;color:var(--text-secondary);margin:0;}
+    .sourcebox-body strong{color:var(--text-primary);}
+    .sourcebox-cite{display:block;margin-top:.55rem;font-size:.76rem;font-style:italic;color:var(--text-muted);line-height:1.5;}
+    .sourcebox-confirmed{border-left:4px solid var(--teal);} .sourcebox-confirmed .sourcebox-tag{color:var(--teal);}
+    .sourcebox-disputed{border-left:4px solid #f59e0b;} .sourcebox-disputed .sourcebox-tag{color:#f59e0b;}
+    .sourcebox-inferred{border-left:4px solid var(--purple);} .sourcebox-inferred .sourcebox-tag{color:var(--purple);}
+    @media(max-width:600px){.sourcebox-row{flex-direction:column;}.sourcebox-tag{flex-basis:auto;padding-bottom:.2rem;}.sourcebox-body{padding:.2rem 1.2rem 1.1rem;}}
+</style>
+  <link rel="canonical" href="https://musicproductionwiki.com/articles/how-to-recreate-the-80s-gated-reverb-snare.html"/>
+  <!-- Open Graph -->
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="How to Recreate the '80s Gated-Reverb Snare (2026): The Real Phil Collins Sound"/>
+  <meta property="og:description" content="Recreate the '80s gated-reverb snare: what Padgham and Collins really did on “Intruder,” the SSL-vs-AMS myth, and the stock chain that nails it in any DAW."/>
+  <meta property="og:url" content="https://musicproductionwiki.com/articles/how-to-recreate-the-80s-gated-reverb-snare.html"/>
+  <meta property="og:site_name" content="Music Production Wiki"/>
+  <meta property="og:image" content="https://musicproductionwiki.com/og-image.png"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="article:author" content="Music Production Wiki Team"/>
+  <meta property="article:section" content="Recreations"/>
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="How to Recreate the '80s Gated-Reverb Snare (2026): The Real Phil Collins Sound"/>
+  <meta name="twitter:description" content="Recreate the '80s gated-reverb snare: what Padgham and Collins really did on “Intruder,” the SSL-vs-AMS myth, and the stock chain that nails it in any DAW."/>
+  <meta name="twitter:image" content="https://musicproductionwiki.com/og-image.png"/>
+  <!-- Article Schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How to Recreate the '80s Gated-Reverb Snare (2026): The Real Phil Collins Sound",
+  "description": "Recreate the '80s gated-reverb snare: what Padgham and Collins really did on “Intruder,” the SSL-vs-AMS myth, and the stock chain that nails it in any DAW.",
+  "image": [
+    "https://musicproductionwiki.com/og-image.png",
+    "https://musicproductionwiki.com/images/how-to-recreate-the-80s-gated-reverb-snare-route.png",
+    "https://musicproductionwiki.com/images/how-to-recreate-the-80s-gated-reverb-snare-the-gate.png",
+    "https://musicproductionwiki.com/images/how-to-recreate-the-80s-gated-reverb-snare-brightness.png"
+  ],
+  "datePublished": "2026-07-05",
+  "dateModified": "2026-07-05",
+  "wordCount": 5484,
+  "timeRequired": "PT16M",
+  "keywords": [
+    "80s gated reverb snare",
+    "gated reverb drum sound",
+    "phil collins drum sound",
+    "how to recreate gated reverb",
+    "gated snare",
+    "in the air tonight drum sound",
+    "gated reverb tutorial",
+    "ssl listen mic compressor",
+    "recreate 80s snare"
+  ],
+  "author": {
+    "@type": "Organization",
+    "name": "Music Production Wiki",
+    "url": "https://musicproductionwiki.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Music Production Wiki",
+    "url": "https://musicproductionwiki.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://musicproductionwiki.com/og-image.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://musicproductionwiki.com/articles/how-to-recreate-the-80s-gated-reverb-snare.html"
+  },
+  "articleSection": "Recreations",
+  "inLanguage": "en-US"
+}
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to recreate the '80s gated-reverb snare with stock plugins",
+  "description": "Rebuild the Phil Collins gated-snare sound in any DAW with a room reverb, heavy compression, and a noise gate.",
+  "image": "https://musicproductionwiki.com/images/how-to-recreate-the-80s-gated-reverb-snare-route.png",
+  "supply": [
+    {
+      "@type": "HowToSupply",
+      "name": "A punchy snare or cymbal-free drum recording"
+    },
+    {
+      "@type": "HowToSupply",
+      "name": "A DAW with a reverb, a compressor, and a noise gate"
+    }
+  ],
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "Room or convolution reverb"
+    },
+    {
+      "@type": "HowToTool",
+      "name": "Compressor"
+    },
+    {
+      "@type": "HowToTool",
+      "name": "Noise gate"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "Add a bright room",
+      "text": "Send the snare to a short, bright room or convolution reverb with the highs left in."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Compress the room hard",
+      "text": "Put a compressor on the room with fast attack, low threshold and high ratio for heavy gain reduction, dragging the decay up loud."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Gate after the compressor",
+      "text": "Place a noise gate after the compressor with fast attack, short hold and fast release so the compressed tail is cut to silence."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Tune the hold and add brightness",
+      "text": "Audition the gate hold time for the tail length you want, then add a gentle presence lift around 3 kHz so it cuts."
+    }
+  ]
+}
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Did Phil Collins use the AMS RMX16 for the gated snare?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No — not for the original. The RMX16 was released in 1981, after the 1979&ndash;80 “Intruder” sessions where the sound was created, so it could not have made it. The famous drum sound came from the SSL console’s heavily-compressed talkback mic feeding a noise gate. The RMX16’s “NonLin” preset was later voiced to emulate the effect, and Collins himself added to the confusion in a 1984 AMS advertorial — but the technical accounts from Padgham are consistent that the original was console compression and gating, not a reverb unit."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is the gated snare just a reverb with a short tail?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not quite, and thinking of it that way is why most recreations fall short. It is compressed room ambience cut by a gate. A reverb-with-a-short-tail preset gives you the chopped decay but not the brutal upward compression that makes the room enormous, and it does not react to the performance the way a gate on a real room does. Build it as heavy compression plus a gate, in that order, and it lands; reach for a single “gated reverb” preset and you get halfway."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I make the gated snare in FL Studio, Ableton, or Logic?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The same way in every DAW, because they all ship the three tools you need. Send your snare to a short, bright room reverb; put a compressor on that room and drive it hard for a lot of gain reduction; then place a gate after the compressor with a fast attack, short hold, and fast release. Trigger the gate off the hit and tune the hold by ear. Add a small presence lift at the end. Nothing about the chain is DAW-specific — only the plug-in names change."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why did Phil Collins play with no cymbals?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Because cymbals defeat the gate. A gate reacts to level, not to which drum is playing, so a ringing cymbal keeps it held open and destroys the clean cutoff that is the whole point. Collins playing cymbal-free at Gabriel’s request is exactly why the gate produced such a dramatic, sudden silence. If you want the effect on a full kit, remove the cymbals from the gated path or process them separately."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What&rsquo;s the one paid plug-in worth buying for this?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "SSL’s Drumstrip is the honest pick, because it bundles a dedicated drum gate and the “Listen Mic Compressor” — SSL’s model of the actual talkback circuit that created the sound. It lists around $99 and is frequently on deep sale, and it needs a free iLok account. It is a shortcut, not a requirement: the stock-plugin chain gets you the same result. Build it stock first so you understand what the shortcut is doing."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does my gated snare sound thin and cheesy?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Almost always one of two things: you did not compress the room nearly hard enough, so it never became huge, or you rolled off the top end and lost the brightness. The real sound is big and bright, with the 2&ndash;5 kHz attack pushed forward. Crush the room more, keep the highs, and add a gentle presence lift after the gate, and the “bad ’80s” version turns into the real one."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need a real room to recreate it?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No, though a real room or a genuine room impulse gets you the last few percent. A convolution reverb loaded with a real room, or even a short, bright algorithmic room, gives the compressor and gate something to work on, which is all the technique needs. The room is the one part of the sound you cannot fully buy — the original Townhouse Stone Room is gone — but a good bright room gets you a professional, usable result."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I have to clear any rights to use a gated snare I made?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. If you played or programmed your own snare and processed it yourself, the result is entirely your own production — there is nothing to clear. Recreating a technique is not sampling a recording. A rights question would only arise if you sampled the original master itself, which is a different task and not what recreating the sound involves."
+      }
+    }
+  ]
+}
+</script>
+  <!-- Organization schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Music Production Wiki",
+  "url": "https://musicproductionwiki.com",
+  "logo": "https://musicproductionwiki.com/og-image.png"
+}
+</script>
+  <!-- WebSite schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Music Production Wiki",
+  "url": "https://musicproductionwiki.com",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://musicproductionwiki.com/search?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://musicproductionwiki.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Recreations",
+      "item": "https://musicproductionwiki.com/categories/recreations"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "'80s Gated-Reverb Snare",
+      "item": "https://musicproductionwiki.com/articles/how-to-recreate-the-80s-gated-reverb-snare.html"
+    }
+  ]
+}
+</script>
+<style id="toc-skin">
+.toc-widget .sidebar-widget-header{margin-bottom:.35rem}
+.toc-list{counter-reset:tocnum;list-style:none;margin:0;padding:0}
+.toc-list li{counter-increment:tocnum;position:relative;margin:0;border-left:2px solid var(--border-subtle);transition:border-color .15s ease,background .15s ease}
+.toc-list li a{display:flex;gap:.7rem;align-items:baseline;padding:.5rem .85rem .5rem 1rem;font-size:.82rem;line-height:1.45;font-weight:500;color:var(--text-secondary);text-decoration:none;transition:color .15s ease}
+.toc-list li a::before{content:counter(tocnum,decimal-leading-zero);font-family:var(--font-mono,ui-monospace,monospace);font-size:.7rem;font-weight:600;letter-spacing:.04em;color:var(--text-muted);flex:0 0 auto;min-width:1.5em;padding-top:.05rem}
+.toc-list li a:hover{color:var(--text-primary)}
+.toc-list li.active{border-left-color:var(--teal);background:linear-gradient(90deg,rgba(0,212,168,.08),transparent 80%)}
+.toc-list li.active a{color:var(--teal);font-weight:600}
+.toc-list li.active a:hover{color:var(--teal)}
+.toc-list li.active a::before{color:var(--teal)}
+</style>
+<style id="toc-bar-css">
+.toc-bar{display:none}
+@media (max-width: 900px){
+.toc-bar{display:block;position:sticky;top:60px;z-index:400;background:var(--bg-void);border-bottom:1px solid var(--border-default);overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(to right,#000 88%,transparent 100%);mask-image:linear-gradient(to right,#000 88%,transparent 100%)}
+.toc-bar::-webkit-scrollbar{display:none}
+.toc-bar-track{display:flex;gap:4px;padding:9px 10px;min-width:max-content}
+.toc-bar-track a{color:var(--text-secondary);text-decoration:none;font-family:var(--font-mono,ui-monospace,monospace);font-size:10px;text-transform:uppercase;letter-spacing:.05em;padding:6px 10px;border-radius:4px;white-space:nowrap;min-height:30px;display:inline-flex;align-items:center;transition:color .15s,background .15s}
+.toc-bar-track a.active{color:var(--teal);background:var(--bg-elevated)}
+.article-body h2[id]{scroll-margin-top:116px}
+}
+@media (max-width: 900px) and (hover:hover){.toc-bar-track a:hover{color:var(--teal)}}
+</style>
+</head>
+<body>
+
+
+
+<style id="mpw-unav-css">
+
+.mnav-wrap,.usearch{--ink:#09090d;--panel:#0f0f18;--panel2:#15151f;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);--amber:#f5a623;--teal:#00e8a2;--teal-d:rgba(0,232,162,.12);--text:#f2f2f7;--t2:#9a9ab2;--t3:#56566f;--sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'DM Mono',ui-monospace,SFMono-Regular,monospace;}
+.mnav-wrap *,.mnav-wrap *::before,.mnav-wrap *::after,.usearch *,.usearch *::before,.usearch *::after{box-sizing:border-box;margin:0;padding:0}
+/* host-CSS shield: a page loading style.css (articles) must not bleed its body font/color/line-height into the bar. Direct rule on .mnav-wrap beats inherited body styles. */
+.mnav-wrap,.usearch{font-family:var(--sans);font-size:14px;font-weight:400;font-style:normal;line-height:1.4;letter-spacing:normal;color:var(--text);text-align:left;text-transform:none}
+/* S91 host-CSS isolation (:where() = zero-specificity; beats style.css bare a/li by source order, LOSES to nav's own .drw-card/.mnav-flat classes) */
+:where(.mnav-wrap,.usearch) a{color:inherit;text-decoration:none;background:none;border:0;font:inherit;letter-spacing:inherit}
+:where(.mnav-wrap,.usearch) ul,:where(.mnav-wrap,.usearch) ol{list-style:none;margin:0;padding:0;border:0}
+:where(.mnav-wrap,.usearch) li{margin:0;padding:0;border:0;font-size:inherit;line-height:inherit;color:inherit;background:none}
+:where(.mnav-wrap,.usearch) h1,:where(.mnav-wrap,.usearch) h2,:where(.mnav-wrap,.usearch) h3,:where(.mnav-wrap,.usearch) h4,:where(.mnav-wrap,.usearch) h5,:where(.mnav-wrap,.usearch) h6,:where(.mnav-wrap,.usearch) p{margin:0;padding:0;border:0;font:inherit;color:inherit;line-height:inherit;letter-spacing:inherit;text-transform:none}
+:where(.mnav-wrap,.usearch) button{font:inherit;color:inherit;background:none;border:0;letter-spacing:inherit;text-align:inherit}
+:where(.mnav-wrap,.usearch) svg{display:inline-block;vertical-align:middle}
+:where(.mnav-wrap,.usearch) img{max-width:none}
+.mnav-wrap{background:var(--ink);border-bottom:1px solid var(--line);position:relative}
+.mnav{height:60px;display:flex;align-items:center}
+.mnav-in{max-width:1180px;margin:0 auto;padding:0 22px;width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.mnav-brand{display:flex;align-items:center;gap:10px;color:var(--text);text-decoration:none;flex:0 0 auto}
+.mnav-word{font-weight:700;font-size:15px;letter-spacing:-.02em}
+.mnav-links{display:flex;align-items:center;gap:6px;margin-left:8px}
+.mnav-flat,.mnav-trigger{color:var(--t2);background:none;border:0;font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;padding:8px 12px;border-radius:8px;display:inline-flex;align-items:center;gap:6px}
+.mnav-flat:hover,.mnav-trigger:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.caret{font-size:9px;color:var(--t3);transition:transform .18s}
+.mnav-right{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.mnav-search{background:none;border:0;color:var(--t2);cursor:pointer;display:flex;padding:6px;border-radius:8px}
+.mnav-search:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.mnav-cta{border:1px solid var(--teal);color:var(--teal);text-decoration:none;padding:7px 15px;border-radius:8px;font-size:13px;font-weight:600;white-space:nowrap}
+.mnav-cta:hover{background:var(--teal-d)}
+.mnav-wrap[data-section="tools"] .mnav-flat[data-nav="tools"]{color:var(--text);font-weight:600}
+.mnav-wrap[data-section="articles"] .mnav-trigger[data-nav="articles"]{color:var(--text);font-weight:600}
+/* Bible = amber brand color, desktop link + mobile drawer */
+.mnav-flat[data-nav="bible"],.drw-link[data-nav="bible"]{color:#f5a623!important;font-weight:600}
+.mnav-flat[data-nav="bible"]:hover,.drw-link[data-nav="bible"]:hover{color:#ffc04d!important}
+.mnav-item{position:relative}
+.mnav-panel,.mnav-panel-wide{position:absolute;top:calc(100% + 6px);left:0;z-index:50;display:none;background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:14px;box-shadow:0 24px 60px -24px rgba(0,0,0,.9);min-width:240px}
+.mnav-panel-wide{grid-template-columns:1fr 1fr;gap:8px 22px;min-width:520px}
+.mnav-item:hover .mnav-panel,.mnav-item:focus-within .mnav-panel,.mnav-item:hover .mnav-panel-wide,.mnav-item:focus-within .mnav-panel-wide{display:grid}
+.mnav-item:hover .caret{transform:rotate(180deg)}
+.mp-col{display:flex;flex-direction:column}
+.mp-head{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);padding:6px 10px 8px}
+.mnav-panel a{display:flex;flex-direction:column;gap:1px;padding:8px 10px;border-radius:9px;text-decoration:none}
+.mnav-panel a:hover{background:rgba(255,255,255,.05)}
+.mp-name{color:var(--text);font-size:13.5px;font-weight:600}.mp-desc{color:var(--t2);font-size:11.5px}
+.mnav-sub{display:none;background:var(--panel);border-bottom:1px solid var(--line)}
+.mnav-wrap[data-section="bible"] .mnav-sub{display:block}
+.mnav-sub-in{max-width:1180px;margin:0 auto;padding:10px 22px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.mnav-sub-in::-webkit-scrollbar{display:none}
+.mnav-sub-in a{flex:0 0 auto;color:var(--t2);text-decoration:none;font-size:12.5px;font-family:var(--mono);border:1px solid var(--line2);border-radius:99px;padding:5px 12px;white-space:nowrap}
+.mnav-sub-in a:hover{color:var(--teal);border-color:rgba(0,232,162,.4)}
+.mnav-toggle{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.mnav-burger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:8px;border-radius:8px}
+.mnav-burger span{display:block;width:20px;height:2px;background:var(--text);border-radius:2px;transition:.2s}
+.mnav-drawer{display:none;flex-direction:column;padding:6px 18px 16px;background:var(--ink);border-bottom:1px solid var(--line)}
+.mnav-drawer details{border-bottom:1px solid var(--line)}
+.mnav-drawer summary{list-style:none;cursor:pointer;padding:13px 2px;font-size:15px;font-weight:600;color:var(--text);display:flex;justify-content:space-between}
+.mnav-drawer summary::-webkit-details-marker{display:none}
+.mnav-drawer summary::after{content:"+";color:var(--t3)}
+.mnav-drawer details[open] summary::after{content:"\2013"}
+.mnav-acc{display:flex;flex-direction:column;padding:0 0 10px 12px}
+.mnav-acc a{color:var(--t2);text-decoration:none;font-size:14px;padding:8px 0}
+.drw-link{color:var(--t2);text-decoration:none;font-size:15px;font-weight:600;padding:13px 2px;border-bottom:1px solid var(--line)}
+.drw-cta{color:var(--teal);text-decoration:none;font-weight:600;font-size:15px;padding:14px 2px}
+.mnav-toggle:checked ~ .mnav-drawer{display:flex}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(2){opacity:0}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+@media(max-width:860px){.mnav-links,.mnav-cta{display:none}.mnav-burger{display:flex}}
+
+/* ===== UNIFIED SEARCH OVERLAY ===== */
+.usearch{position:fixed;inset:0;z-index:10000;display:none;background:rgba(6,6,11,.78);backdrop-filter:blur(6px);padding:80px 20px 20px}
+.usearch.open{display:block}
+.usearch-box{max-width:620px;margin:0 auto;background:var(--panel);border:1px solid var(--line2);border-radius:16px;overflow:hidden;box-shadow:0 40px 90px -30px rgba(0,0,0,.95)}
+.usearch-top{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.usearch-top svg{color:var(--t3);flex:0 0 auto}
+.usearch-top input{flex:1;background:none;border:0;outline:none;color:var(--text);font-family:var(--sans);font-size:17px}
+.usearch-top input::placeholder{color:var(--t3)}
+.usearch-top kbd{font-family:var(--mono);font-size:11px;color:var(--t3);border:1px solid var(--line2);border-radius:6px;padding:2px 7px}
+.usearch-results{max-height:56vh;overflow-y:auto;padding:8px}
+.usearch-results a{display:block;padding:11px 14px;border-radius:10px;text-decoration:none;transition:background .12s}
+.usearch-results a:hover,.usearch-results a.sel{background:rgba(255,255,255,.05)}
+.ur-top{display:flex;align-items:baseline;gap:9px}
+.ur-title{color:var(--text);font-size:14.5px;font-weight:600}
+.ur-cat{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.06);color:var(--t2);flex:0 0 auto}
+.ur-cat[data-c="Tools"]{background:var(--teal-d);color:var(--teal);border:1px solid rgba(0,232,162,.4)}
+.ur-cat[data-c="Bible"]{background:rgba(245,166,35,.18);color:#f5a623;border:1px solid rgba(245,166,35,.4)}
+.ur-desc{color:var(--t2);font-size:12.5px;line-height:1.45;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.usearch-empty{padding:30px;text-align:center;color:var(--t3);font-size:13.5px}
+/* --- sticky-header + entry-page chrome (pilot, refined for density) ---
+   entry nav = 60px main bar only (no category sub-bar). Desktop: hide the horizontal section
+   nav (the sticky sidebar TOC covers sections) and retune offsets to the 60px nav. Mobile: the
+   sidebar is hidden, so SHOW the section nav flush under the bar. All in THIS block. --- */
+.mnav-wrap{position:sticky;top:0;z-index:1000;line-height:1.4}
+.entry-nav{display:none}
+[id].entry-section{scroll-margin-top:90px}
+.entry-main h2{scroll-margin-top:90px}
+.entry-sidebar{top:78px;height:calc(100vh - 98px)}
+@media(max-width:768px){
+  .entry-nav{display:block!important;top:60px!important}
+  [id].entry-section{scroll-margin-top:130px!important}
+  .entry-main h2{scroll-margin-top:130px!important}
+}
+/* dropdown overflow safety */
+.mnav-panel,.mnav-panel-wide{max-height:min(72vh,560px);overflow-y:auto}
+/* mobile drawer: category CARD grid (slick old-nav look), CSS-only */
+.mnav-drawer{padding:10px 18px 18px;gap:0}
+.drw-label{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--t3);margin:12px 2px 8px}
+.drw-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.drw-card{display:flex;align-items:center;padding:12px 14px;border-radius:10px;text-decoration:none;font-size:13.5px;font-weight:600;color:var(--text);background:var(--panel);border:1px solid var(--line2)}
+.drw-card:hover{border-color:var(--teal);color:var(--teal)}
+.drw-feat{display:flex;align-items:center;gap:8px;padding:13px 16px;border-radius:10px;text-decoration:none;font-size:14px;font-weight:700;color:var(--text);background:var(--panel);border:1px solid var(--line2);margin-top:8px}
+.drw-feat-bible{color:#f5a623;background:rgba(245,166,35,.08);border-color:rgba(245,166,35,.30)}
+.drw-feat-bible:hover{border-color:rgba(245,166,35,.6)}
+.drw-cta{display:block;text-align:center;padding:14px;border-radius:10px;background:var(--teal);color:#06281f;font-weight:800;font-size:14px;text-decoration:none;margin-top:12px}
+/* mobile sunlight legibility: lift the intentionally-dim greys in glare (nav + search only), scoped */
+@media(max-width:860px){
+  .mnav-wrap,.usearch{--t2:#c8c8da;--t3:#9696b0}
+  .drw-label{color:#bdbdd0;font-weight:500}
+  .usearch-top input::placeholder{color:#9696b0}
+  .drw-card,.drw-feat{background:#20202e;border:1.5px solid #45455c}
+  .drw-feat-bible{background:rgba(245,166,35,.12);border:1.5px solid rgba(245,166,35,.6)}
+}
+html{overflow-x:clip!important;max-width:none!important}body{overflow-x:clip!important}
+</style>
+<!-- MPW universal nav -->
+<div class="mnav-wrap" data-section="articles">
+  <input type="checkbox" id="mnav-toggle" class="mnav-toggle" aria-hidden="true">
+  <nav class="mnav" aria-label="Main navigation">
+    <div class="mnav-in">
+      <a class="mnav-brand" href="/"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="6" stroke="#f5a623" stroke-width="1.7"/><path d="M7 15V9l3 3 3-5 4 8" stroke="#00e8a2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="mnav-word">MusicProductionWiki</span></a>
+      <div class="mnav-links">
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="articles">Articles <span class="caret">&#9662;</span></button><div class="mnav-panel mnav-panel-wide"><div class="mp-col"><div class="mp-head">Techniques & Analysis</div><a href="/categories/techniques"><span class="mp-name">Techniques</span><span class="mp-desc">Mixing, mastering, sound design</span></a><a href="/categories/reviews"><span class="mp-name">Reviews</span><span class="mp-desc">Honest. No paid placements.</span></a><a href="/categories/comparisons"><span class="mp-name">Comparisons</span><span class="mp-desc">Head-to-head</span></a><a href="/categories/breakdowns"><span class="mp-name">Breakdowns</span><span class="mp-desc">Track-by-track</span></a><a href="/categories/recreations"><span class="mp-name">Recreations</span><span class="mp-desc">Recreate iconic sounds</span></a><a href="/genres"><span class="mp-name">Genres</span><span class="mp-desc">Every genre & style</span></a></div><div class="mp-col"><div class="mp-head">Reference & Business</div><a href="/categories/ai-music"><span class="mp-name">AI Music</span><span class="mp-desc">Suno, Udio, AI tools</span></a><a href="/categories/music-business"><span class="mp-name">Music Business</span><span class="mp-desc">Royalties, licensing, sync</span></a></div></div></div>
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="gear">Gear <span class="caret">&#9662;</span></button><div class="mnav-panel"><div class="mp-col"><a href="/categories/daws"><span class="mp-name">DAWs</span><span class="mp-desc">Every major DAW</span></a><a href="/categories/plugins"><span class="mp-name">Plugins</span><span class="mp-desc">EQ, comp, reverb, synths</span></a><a href="/categories/hardware"><span class="mp-name">Hardware</span><span class="mp-desc">Interfaces, mics, monitors</span></a></div></div></div>
+        <a class="mnav-flat" href="/tools/" data-nav="tools">Tools</a>
+        <a class="mnav-flat" href="/bible/" data-nav="bible">The Bible</a>
+      </div>
+      <div class="mnav-right">
+        <button class="mnav-search" data-nav-search aria-label="Search"><svg width="17" height="17" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <a class="mnav-cta" href="https://theproducersbriefing.beehiiv.com">Sound Better &rarr;</a>
+        <label class="mnav-burger" for="mnav-toggle"><span></span><span></span><span></span></label>
+      </div>
+    </div>
+  </nav>
+  <div class="mnav-drawer">
+    <div class="drw-label">Articles</div>
+    <div class="drw-grid">
+      <a href="/categories/techniques" class="drw-card">Techniques</a><a href="/categories/reviews" class="drw-card">Reviews</a><a href="/categories/comparisons" class="drw-card">Comparisons</a><a href="/categories/breakdowns" class="drw-card">Breakdowns</a><a href="/categories/recreations" class="drw-card">Recreations</a><a href="/genres" class="drw-card">Genres</a><a href="/categories/ai-music" class="drw-card">AI Music</a><a href="/categories/music-business" class="drw-card">Music Business</a>
+    </div>
+    <div class="drw-label">Gear</div>
+    <div class="drw-grid">
+      <a href="/categories/daws" class="drw-card">DAWs</a><a href="/categories/plugins" class="drw-card">Plugins</a><a href="/categories/hardware" class="drw-card">Hardware</a>
+    </div>
+    <a href="/bible/" class="drw-feat drw-feat-bible">&#9670; The Producer's Bible</a>
+    <a href="/tools/" class="drw-feat">The Producer's Tools</a>
+    <a href="https://theproducersbriefing.beehiiv.com" class="drw-cta">Sound Better &rarr;</a>
+  </div>
+</div>
+
+
+<div class="container">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><ol>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../categories/recreations.html">Recreations</a></li>
+    <li><span aria-current="page">’80s Gated-Reverb Snare</span></li>
+  </ol></nav>
+</div>
+<nav class="toc-bar" aria-label="Section navigation"><div class="toc-bar-track" id="tocBarTrack"></div></nav>
+<main class="container" id="main-content">
+  <div class="article-layout">
+    <article aria-labelledby="articleTitle">
+      <header class="article-header">
+        <div class="article-tags"><span class="article-tag teal"><a href="../categories/recreations.html" style="color:inherit;text-decoration:none;">Recreations</a></span>
+<span class="article-tag teal"><a href="../categories/techniques/mixing.html" style="color:inherit;text-decoration:none;">Mixing</a></span>
+<span class="article-tag teal"><a href="../categories/techniques/sound-design.html" style="color:inherit;text-decoration:none;">Sound Design</a></span></div>
+        <h1 id="articleTitle">How to Recreate the '80s Gated-Reverb Snare (2026): The Real Phil Collins Sound</h1>
+        <div class="article-header-meta">
+          <div class="article-author"><div class="author-avatar" aria-hidden="true">MP</div><span class="author-name">The Music Production Wiki Team</span></div>
+          <span class="meta-divider"></span><span class="meta-item">Updated July 2026&nbsp;&middot;&nbsp;16 min read</span>
+        </div>
+      </header>
+      <div class="article-body">
+<p style="font-size:1.06rem;line-height:1.7;">The &ldquo;&rsquo;80s gated snare&rdquo; is one of the most requested sounds in a producer&rsquo;s bag and one of the most misunderstood. Type it into a search bar and you get a hundred pages telling you to load a reverb, pick a preset called &ldquo;NonLin,&rdquo; and call it done &mdash; which produces the thin, cheesy &ldquo;bad&nbsp;&rsquo;80s&rdquo; snare, not the enormous, frightening crack you actually wanted. The real sound is not a reverb preset at all. It is <strong>heavily-compressed room ambience cut off hard by a noise gate</strong> &mdash; a recording-and-processing move, discovered by accident, that you can rebuild in any DAW once you understand what is actually happening. This guide separates what was <em>genuinely</em> used from what the internet keeps repeating, then walks the recreation from stock plugins first, with the one paid shortcut named only because it is real and buyable.</p>
+<div class="quick-answer">
+<div class="quick-answer-label">The short answer</div>
+<p>The gated snare is <strong>not a reverb preset</strong> &mdash; it is a drum in a live room, its <strong>room mic crushed with heavy compression</strong>, then <strong>chopped off by a fast, hard noise gate</strong>. To rebuild it in any DAW: take a solid snare, add a bright room (real or a convolution/algorithmic reverb), <strong>compress that room brutally</strong>, then put a <strong>gate</strong> after the compression with a fast attack and a short hold so the tail is slammed to silence. Arrange with <strong>no cymbals</strong> (they defeat the gate) and keep the top end <strong>bright</strong> (the real records push 2&ndash;5&nbsp;kHz hard). The one-plugin shortcut is <strong>SSL&rsquo;s Drumstrip</strong>, which bundles the Listen Mic compressor and a gate. And no &mdash; the original was <em>not</em> the AMS&nbsp;RMX16; that unit did not exist yet.</p>
+</div>
+<div class="sourcebox">
+<div class="sourcebox-head"><span class="sourcebox-kicker">Where this comes from</span><span class="sourcebox-sub">Confirmed vs. inferred &mdash; so you know which claims are sourced and which are our best estimate.</span></div>
+<div class="sourcebox-row sourcebox-confirmed">
+<div class="sourcebox-tag">Confirmed</div>
+<div class="sourcebox-body"><p>The sound was born on Peter Gabriel&rsquo;s third solo album (&ldquo;Melt,&rdquo; 1980), on the track <strong>&ldquo;Intruder,&rdquo;</strong> with Phil Collins on drums <strong>playing no cymbals</strong> at Gabriel&rsquo;s request, at Townhouse Studios in London. It came out of the <strong>SSL 4000 B</strong> console&rsquo;s heavily-compressed reverse-talkback &ldquo;Listen Mic,&rdquo; whose signal was then cut by a <strong>noise gate</strong> &mdash; compressed room ambience slammed shut, <em>not</em> a reverb unit. Padgham has told this same story consistently for decades. <span class="sourcebox-cite">Sources: Hugh Padgham interviews in MusicRadar and a 2005 <em>Mix</em> &ldquo;Classic Tracks&rdquo; piece; Sweetwater&rsquo;s teardown; Wikipedia&rsquo;s &ldquo;Gated reverb&rdquo; and &ldquo;Intruder&rdquo; entries.</span></p></div></div>
+<div class="sourcebox-row sourcebox-disputed">
+<div class="sourcebox-tag">Commonly claimed &mdash; but disputed</div>
+<div class="sourcebox-body"><p>That the sound is the <strong>AMS RMX16</strong> reverb&rsquo;s &ldquo;NonLin&nbsp;2&rdquo; preset. The RMX16 was released in <strong>1981</strong> &mdash; <em>after</em> the 1979&ndash;80 &ldquo;Intruder&rdquo; sessions &mdash; so it could not have made the original. The NonLin preset was later voiced to <em>emulate</em> this sound. Collins muddied the water himself in a <strong>1984 AMS advertorial</strong> claiming he used the RMX16 on &ldquo;In the Air Tonight&rdquo;, which contradicts his and Padgham&rsquo;s technical accounts elsewhere (one plausible reconciliation: any AMS use was on the <em>vocal</em>, not the drums). <span class="sourcebox-cite">Sources: RMX16 release date per Wikipedia / Sound&nbsp;on&nbsp;Sound; the 1984 advertorial contradiction documented by Vintage Digital.</span></p></div></div>
+<div class="sourcebox-row sourcebox-inferred">
+<div class="sourcebox-tag">Inferred &mdash; unverified</div>
+<div class="sourcebox-body"><p>The <strong>exact</strong> compression ratio, gate attack/hold/release times, and EQ moves are not published as numbers. The settings we give below are <strong>defensible starting estimates</strong> that reproduce the audible behaviour &mdash; heavy, fast room compression and a fast, hard gate &mdash; not transcriptions of the original session. Treat them as a place to start and tune by ear.</p></div></div>
+</div>
+<h2 id="reframe">Why it isn&rsquo;t a reverb preset</h2>
+<p>Start here, because the wrong mental model is the single reason most recreations fail. When people picture &ldquo;gated reverb&rdquo; they imagine a reverb plug-in with its tail chopped short, and there <em>is</em> a device called a gated-reverb preset that does exactly that. But the sound on the records that made this famous did not come from a reverb unit at all. It came from a microphone in a room, a compressor working far harder than you would ever normally push it, and a gate. Understanding that difference is the whole game: once you are trying to recreate <em>compressed room ambience</em> rather than <em>a reverb effect</em>, every setting that matters falls into place, and the settings that produce the cheesy version stop tempting you.</p>
+<p>The mechanism, in one sentence, is this: put a drum in a live room, listen to it through a distant mic, <a href="../bible/compression.html">compress</a> that room signal so violently that the natural decay is dragged up into a loud, sustained wash, and then hang a <a href="../bible/noise-gate.html">noise gate</a> across it so that the instant the drummer stops hitting, the entire wash is cut to silence. The compression is what makes it enormous; the gate is what makes it tight and controlled instead of a muddy roar. Neither one alone is the sound. It is specifically <em>compress the room, then gate the room</em>, in that order, and the order is not negotiable &mdash; gate first and you have nothing to compress; compress without gating and you have an uncontrollable smear.</p>
+<p>It is worth understanding <em>why</em> heavy compression makes a room enormous, because once the mechanism is clear you will stop being timid with it. A compressor turns down whatever is louder than its threshold; when you then make up the lost level with output gain, everything <em>below</em> the threshold &mdash; the quiet decay of the room, the low-level reflections trailing off &mdash; gets pulled up with it. Push the threshold low and the ratio high, and the difference between the loud initial hit and the quiet tail collapses: the tail comes roaring up to nearly the level of the hit. That is upward compression in effect, and it is the entire reason a modest room turns into a wall of ambience. A normal mix compressor is set to be transparent; here you are deliberately abusing one to make the quiet parts loud. If it sounds tasteful, you have not gone far enough.</p>
+<p>This is why a <a href="../bible/reverb.html">reverb</a> preset called &ldquo;gated&rdquo; only ever gets you halfway. It gives you a reverb with a chopped tail, but it does not give you the brutal upward compression that turns a polite room into a wall, and it does not react to the performance the way a real gate on a real room does. You can absolutely fake the whole thing convincingly with plug-ins &mdash; that is what most of this guide is about &mdash; but you have to build the two halves deliberately, as compression plus gating, rather than reaching for a single effect that claims to do it all. The producers who nail it are the ones who stopped thinking &ldquo;reverb&rdquo; and started thinking &ldquo;a crushed room with a gate on it.&rdquo;</p>
+<p>It is worth knowing the sound was never designed &mdash; it was stumbled into, which is why it feels like a happy accident even now. The microphone that started it was a communication device: the SSL console had a &ldquo;Listen Mic,&rdquo; a talkback mic hung in the live room so the engineer could hear the musicians speak, deliberately and heavily compressed so a quiet voice across the room came through clearly. Nobody meant to record drums through it. When Padgham had it open while Collins played, that savage communication compressor turned the kit into an explosion, and a noise gate already sitting in the signal path chopped the tail. The team recognised what they had, rerouted it so it could be recorded properly, and Gabriel wrote around it. The lesson buried in that story is the same one this whole guide turns on: the magic was the <em>compression and the gate</em>, applied to room sound, discovered on a mic that was never meant to make music. You are not chasing a preset; you are rebuilding a lucky chain of processing.</p>
+<h2 id="elements">The five things that actually make the sound</h2>
+<p>Break the sound into its load-bearing parts and it stops being mysterious. There are five, and every one of them is a place a recreation goes wrong. Get all five and even stock plug-ins land it; miss any one and you get a recognisable-but-wrong imitation. Here they are in order of how badly people underdo them.</p>
+<p><strong>1. The source &mdash; a real drum and a real (or convincing) room.</strong> The effect is applied to <em>ambience</em>, so you need ambience to begin with. On the records that was a hard-hitting drummer in a bright, reflective live room, captured on distant mics. In your DAW that means either a genuine room recording, or a dry, punchy drum sample fed into a room &mdash; a convolution reverb loaded with a real room impulse, or a short, bright algorithmic room. The drum itself should be solid and full; the room should be <em>bright and short</em>, not a long, dark hall. If you start from a lifeless sample in no space at all, there is nothing for the compressor and gate to work on, and no amount of processing conjures a room that was never there.</p>
+<p><strong>2. Heavy compression on the room &mdash; the part everyone underdoes.</strong> This is the single most common failure, and it is a failure of nerve. The compression here is not the gentle 2&ndash;4&nbsp;dB of gain reduction you would use to glue a mix. It is aggressive: a fast attack, a low threshold, and a high ratio, pushing the room mic so hard that the quiet decay of the room is dragged up to nearly the same level as the initial hit. Padgham has described the original talkback mic as savagely compressed by design &mdash; it was built to make a whisper across the room audible, which is exactly why it turned a drum kit into an explosion. The audible signature of doing this right is that the room does not fade away naturally; it <em>swells and sustains</em>, unnaturally loud, right up until something cuts it. If your recreation sounds polite, you have not compressed the room nearly hard enough. A dose of <a href="parallel-compression-explained.html">parallel compression</a> is the safe way to reach for this much crush without losing the transient entirely.</p>
+<p>Two details make the compression sound right rather than merely loud. The first is <strong>attack time</strong>: keep it reasonably fast, but not so instant that it clamps the initial transient flat &mdash; you want the crack of the hit to punch through before the compressor grabs the room behind it. The second is character. The original talkback compressor was a <em>band-limited</em>, coloured circuit, not a clean modern one, and that colour is part of the sound; if you are using a stock compressor, an aggressive FET-style model or anything with obvious character will get you closer than a pristine, transparent one. You are not trying to control dynamics politely here &mdash; you are trying to make the room detonate and take on a personality, so reach for a <a href="best-compressor-plugins.html">compressor</a> that sounds like it is working hard, and let it.</p>
+<p><strong>3. The gate &mdash; the whole trick, and the timing is everything.</strong> Once the room is a loud, sustained wash, the gate is what sculpts it back into a weapon. Set across the compressed room signal, the gate opens the moment the drum is struck and slams shut a fraction of a second later, cutting the swollen tail dead. The parameters that matter are the <a href="../bible/noise-gate.html">gate&rsquo;s</a> attack (fast, so the transient punches through), its hold or duration (short &mdash; this sets how much of the big room you keep before the cutoff), and its release (fast, so the cutoff is abrupt rather than a fade). Longer hold gives you more of the huge room and a slower, more cinematic gate; shorter hold gives you the tight, clipped crack. There is no single &ldquo;correct&rdquo; time &mdash; it is a taste dial &mdash; but the character comes from the cutoff being <em>hard</em>. A soft, slow gate release just gives you back the reverb you were trying to escape.</p>
+<p>There is a smarter way to run the gate that solves a lot of problems at once: <strong>key it from the dry drum, not from the compressed room.</strong> If the gate listens to the loud, sustained room to decide when to open and close, its timing gets vague, because the room never really goes quiet. Feed the gate a sidechain key from the clean, transient-rich dry snare instead, and it opens crisply on every hit and closes cleanly in the gaps &mdash; the same keyed-gate thinking behind a lot of <a href="sidechain-compression-guide.html">sidechain</a> work. That single routing choice is often the difference between a gate that stutters and chatters and one that snaps shut with authority. On a real kit it is also how you keep the gate reacting to the snare and not to a tom bleeding into the room mic.</p>
+<p><strong>4. The no-cymbals arrangement rule.</strong> This one is not a plug-in setting at all, and it is the reason the effect was discovered the way it was: Collins played <em>without cymbals</em>. It matters because a gate cannot tell a snare from a crash &mdash; it reacts to level, not to instrument. Cymbals ring continuously and wash across the whole kit, so a cymbal decaying under the snare keeps the gate held open, and the clean, dramatic cutoff you are working so hard for never happens. The gated sound and a busy cymbal pattern are mutually exclusive. If you want this effect on a real kit, you arrange around it: toms and snare carry the part, and cymbals are either removed entirely or gated and mixed on their own separate path so they do not sabotage the room gate. Ignoring this is why a beginner&rsquo;s gated-drum bus sounds muddy instead of explosive.</p>
+<p><strong>5. The overlooked brightness.</strong> Here is the detail almost every recreation misses, and it is what separates the real, vivid sound from the dull &ldquo;bad&nbsp;&rsquo;80s&rdquo; caricature. Listen to the isolated drums on these records and the <a href="../bible/transient.html">upper mids</a> are pushed hard &mdash; the presence region around 2 to 5&nbsp;kHz is noticeably forward, giving the hits a sharp, defined stick attack rather than a soft thud. People chasing the sound tend to make it big and dark and wonder why it lacks life; the real thing is big <em>and</em> bright. Whether that brightness came from the compressor&rsquo;s own colouration, the room, or deliberate EQ almost does not matter for your purposes: the takeaway is to keep the top end forward. A modest presence lift, or simply not rolling off the highs, is the difference between a snare that cuts through a mix and one that disappears into mud.</p>
+<h2 id="envelope">What the gate actually does, seen as an envelope</h2>
+<p>It helps to picture the sound as a shape over time, because the gate&rsquo;s job becomes obvious the moment you do. A natural room reverb rises with the hit and then decays away slowly, a long tail trailing off into the mix. The gated version starts the same way &mdash; hit, then the compressed room swelling up loud &mdash; but instead of trailing off, it is cut vertically to silence. That hard right-hand edge is the entire effect. Everything to the left of the cutoff is the compressed room; the cutoff itself is the gate.</p>
+<p><div class="diagram-wrap">
+<picture>
+<source media="(max-width:900px)" srcset="../images/how-to-recreate-the-80s-gated-reverb-snare-the-gate-m.png">
+<img src="../images/how-to-recreate-the-80s-gated-reverb-snare-the-gate.png" alt="Amplitude-over-time envelope comparing the gated snare against an ungated room. Both share the same fast attack and a high, sustained body from the heavy room compression, but at the amber “note off” line the gated envelope drops vertically to silence (hard cutoff) while the ungated envelope rings on with a long decay tail. Caption notes the shapes are illustrative, not measured." width="1040" height="494" loading="lazy" />
+</picture>
+<div class="diagram-caption">The gate is the only difference. Same hit, same crushed room &mdash; then the gate (amber line) slams the tail to silence, where an ungated room would just ring on.</div>
+</div></p>
+<p>Reading the shape tells you how to set the gate. The height of the body is set by how hard you compressed the room &mdash; taller means more crush. The position of the cutoff is your hold time &mdash; further right keeps more of the big room before the gate closes. And the steepness of the drop is your release &mdash; you want it near-vertical, not a gentle slope. When a recreation sounds wrong, this picture usually tells you which knob is at fault: a soft, sloping cutoff means your gate release is too slow; a body that is too quiet means your compression is too timid; a cutoff too far to the right means the hold is so long the gate barely does anything.</p>
+<h2 id="recreate">Recreate it: stock plugins first, then the shortcut</h2>
+<p>You do not need a single paid plug-in to build this, and doing it with stock tools first is the fastest way to actually understand it. Every DAW ships a reverb, a compressor, and a gate, and those three in the right order are the whole recipe. Here is the chain, with the settings that matter and, more importantly, why each one is set the way it is. Treat the numbers as starting points &mdash; the exact values are the inferred part &mdash; and tune by ear against a reference.</p>
+<p>Start with your snare (or the whole cymbal-free kit) on a track. Send it to a <strong>room</strong>: your DAW&rsquo;s convolution reverb with a real room impulse if you have one, or a short, bright algorithmic room &mdash; reverb time around a second or less, pre-delay near zero, and do not roll off the highs. This is the ambience the whole effect lives on, so make it present, not subtle. Our guide to <a href="how-to-use-reverb-in-a-mix.html">using reverb in a mix</a> covers choosing and shaping that room, and if you want a dedicated one, the <a href="best-reverb-plugins.html">best reverb plugins</a> roundup points at the rooms worth owning.</p>
+<p>A word on which kind of room to reach for, because it changes the result more than any other single choice. A <strong>convolution</strong> reverb loaded with an impulse of a real, bright, hard room is the most authentic option &mdash; it carries the actual reflection pattern of a physical space, which is exactly what the technique amplifies. A good <strong>algorithmic</strong> room is more flexible and often easier to dial, and it will absolutely get you a professional result; lean toward the brighter, denser room algorithms rather than a smooth hall. What you want to avoid is a long, dark, washy reverb &mdash; it has no early-reflection slap for the compressor to seize on, so it just turns to mud when you crush it. Short, bright, and dense is the target whichever engine you pick.</p>
+<p>Now <strong>compress that room hard.</strong> Put a compressor on the room return (or on a bus carrying the room), fast attack, a low threshold, and a high ratio &mdash; you are aiming for a lot of gain reduction, far more than feels comfortable, until the room&rsquo;s decay is dragged up loud and sustained. This is the step to be fearless on; if in doubt, push it further. Then place the <strong>gate after the compressor</strong> on that same room signal: fast attack so the transient survives, a short hold that keeps a satisfying chunk of the big room, and a fast release so the cutoff is abrupt. Trigger the gate off the drum hit and audition the hold time until the tail is slammed exactly where you want it; you can even <a href="how-to-use-automation-in-your-daw.html">automate</a> the hold to open up on a big fill. Finally, add a touch of <strong>presence</strong> &mdash; a gentle lift around 3&nbsp;kHz &mdash; so the result is bright and cutting rather than dull. That is the entire sound: room, crushed, gated, bright.</p>
+<p>One balance decision separates a convincing result from a cartoon: you are usually <strong>blending the gated room underneath the dry drum, not replacing it.</strong> Keep the original, un-gated snare playing for its attack and definition, and mix the crushed, gated room in behind it as the size and drama &mdash; a parallel arrangement, the gated ambience on its own track or return, ridden up until the hit feels huge but still reads as a snare. Go too far and lean entirely on the gated room and you lose the sharp front of the transient; the dry drum is what keeps the sound articulate. How much room you blend in is the master control for how &ldquo;&rsquo;80s&rdquo; the whole thing sounds: a little for a modern hit with weight, a lot for full-blown period drama.</p>
+<p><div class="diagram-wrap">
+<picture>
+<source media="(max-width:900px)" srcset="../images/how-to-recreate-the-80s-gated-reverb-snare-route-m.png">
+<img src="../images/how-to-recreate-the-80s-gated-reverb-snare-route.png" alt="Decision router matching your situation to the recreation route. Top row (teal): got a real live room, mic it then crush the room mic, output compress then gate. Middle row (purple): only a dry close mic, add a convolution or algorithmic room first, output room then compress then gate. Bottom row (amber): want the shortcut, one plugin with a Listen-Mic compressor plus gate, output SSL Drumstrip. Caption notes amber is the one-plugin shortcut." width="1040" height="529" loading="lazy" />
+</picture>
+<div class="diagram-caption">Three routes to the same sound. Start from what you actually have; the amber path is the one-plugin shortcut.</div>
+</div></p>
+<p>If you would rather buy the shortcut, there is exactly one tool worth naming because it is confirmable and cheap: <strong>SSL&rsquo;s Drumstrip</strong>. It bundles the same processors in one plug-in &mdash; a dedicated drum gate with independent open and close thresholds, and the &ldquo;Listen Mic Compressor,&rdquo; SSL&rsquo;s own recreation of the exact talkback-mic circuit that made the original sound. It lists around&nbsp;$99 (and goes on sale for far less regularly), needs a free iLok account, and puts the crush-then-gate move a couple of clicks away instead of three plug-ins. It is a genuine shortcut, not a magic box: it does the same thing the stock chain does, faster, and with the actual circuit modelled. Use it if you like &mdash; but build it once with stock plug-ins first, because then you will know what every knob on the shortcut is doing.</p>
+<p>Two closing notes on the recreation. First, keep the arrangement honest to the sound: solo drums, no cymbals ringing into the gate, and let the room be the drama. Second, this whole move is a cousin of a lot of everyday <a href="how-to-mix-drums.html">drum mixing</a> and <a href="sidechain-compression-guide.html">sidechain</a> thinking &mdash; you are shaping a signal in time with dynamics, exactly as you do when you carve space for a kick. Once the gated room clicks, you will hear where else a crushed, gated ambience can make a boring drum enormous.</p>
+<h2 id="beyond">Beyond the snare: the same move on the whole kit</h2>
+<p>The reason this is worth learning as a <em>principle</em> and not a preset is that it works on far more than a snare. On the original records the most extreme examples were often the <strong>toms</strong> &mdash; the crushed, gated room turns a tom fill into a series of cannon shots, and the technique arguably sounds even bigger there than on the snare, because toms have more body for the compressor to inflate. Send your toms to the same crushed, gated room and you have an instant &rsquo;80s tom sound. The kick usually wants a lighter touch, or its own shorter room, so it stays tight rather than booming out of control.</p>
+<p>Once you hear it that way, the door opens. A crushed, gated ambience can make a boring clap enormous, add menace to a percussion loop, or give a flat programmed <a href="how-to-make-a-beat.html">beat</a> the sense of being played hard in a real space. The controls are always the same three ideas &mdash; a bright room, brutal compression, a hard gate keyed off the transient &mdash; and only the source changes. That is the difference between having recreated <em>one</em> sound and having learned a move you can point at anything: the moment a dry, lifeless hit needs to feel huge and alive, you now know the chain that does it. The snare is just the most famous place this trick shows up, not the only one.</p>
+<h2 id="cant-buy">What you can&rsquo;t buy &mdash; and where to stop chasing</h2>
+<p>Honesty is the point of this category, so here is the part no tutorial selling you a plug-in will tell you: some of the original sound is not for sale, and knowing that saves you from chasing it forever. You can recreate the <em>technique</em> perfectly &mdash; the crush, the gate, the brightness, the arrangement &mdash; and you can get astonishingly close. What you cannot buy is the specific physics that gave the records their last few percent.</p>
+<p>You cannot buy the actual SSL 4000 B talkback circuit as it existed in that room in 1979 &mdash; you can buy a faithful model of it, which is close, but the original was a quirk of specific analogue hardware. You cannot buy the <strong>Townhouse Stone Room</strong>, the small, hard, hyper-reflective live room that gave the ambience its particular bright slap; that room is gone, converted to housing years ago, and every convolution impulse of it is a snapshot, not the room. And you cannot buy the performance &mdash; a drummer hitting genuinely hard, with intent, into that space. Those three things are the difference between &ldquo;indistinguishable&rdquo; and &ldquo;very, very close,&rdquo; and very close is a completely usable, professional result. Chase the technique to the end; do not lose a weekend trying to buy back 1979.</p>
+<h2 id="rights">Do you need to clear anything?</h2>
+<p>No. Recreating the gated-reverb snare with your own drums, your own room, and stock or bought plug-ins is entirely your own production &mdash; there is nothing to clear and no rights question to worry about. You are rebuilding a <em>technique</em>, not sampling a record; the moment you play or program your own hit and process it, the result is yours. (The rights conversation only arrives if you were to <em>sample</em> the original recording itself &mdash; a different task, and not what this is.) Build it freely and use it in anything you like.</p>
+<h2 id="exercises">Build the skill: 3 drills</h2>
+<p>Run these in order. The first proves the effect is compression-plus-gate and nothing else; the second forces you to hear the timing; the third makes you confront what you cannot recreate, so your ear is honest.</p>
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--beginner">Beginner</span><span class="exercise-title">Build it from three stock plug-ins</span></div>
+<ol><li>Put a punchy snare on a track and send it to a short, bright stock room reverb. Do not roll off the highs.</li><li>Compress the room return hard &mdash; fast attack, low threshold, high ratio &mdash; until the tail swells up loud and sustained. Push it further than feels right.</li><li>Add a gate <em>after</em> the compressor: fast attack, short hold, fast release. Audition the hold time until the tail is slammed. You have just built the &rsquo;80s snare with nothing but stock tools.</li></ol></div>
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--intermediate">Intermediate</span><span class="exercise-title">Sweep the gate hold and hear the record change</span></div>
+<ol><li>Keep the chain from drill one. Set the gate hold as short as it goes and listen &mdash; a tight, clipped crack.</li><li>Lengthen the hold in stages, listening each time, until the tail is long and cinematic. You are hearing the exact dial that separates one &rsquo;80s record from another.</li><li>Now soften the gate release from fast to slow. Notice the moment it stops being &ldquo;gated&rdquo; and turns back into ordinary reverb &mdash; that hard cutoff is the whole effect.</li></ol></div>
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--advanced">Advanced</span><span class="exercise-title">A/B against the real thing and name the gap</span></div>
+<ol><li>Pull up an isolated or well-known example of the real gated drum sound and your recreation side by side, matched in level.</li><li>Write down exactly where yours falls short &mdash; usually brightness, the character of the room, or the weight of the hit. Fix the brightness first; it is the most common miss.</li><li>Add a real room recording or a genuine room impulse in place of the algorithmic reverb and compare again. Note how much of the last gap was the room, not the processing &mdash; that is the part you cannot buy.</li></ol></div>
+<h2 id="brightness">The brightness fingerprint, in one picture</h2>
+<p>Because the brightness is the detail people miss most, it is worth seeing. The real sound pushes the upper-mid attack forward &mdash; the presence region is lifted, giving the hits their sharp, defined edge. The cheap preset does the opposite: it rolls the top off and scoops the presence, which is exactly why it sounds small and dated instead of huge and alive. When your recreation sounds &ldquo;bad&nbsp;&rsquo;80s&rdquo; rather than &ldquo;iconic&nbsp;&rsquo;80s,&rdquo; this curve is almost always why.</p>
+<p><div class="diagram-wrap">
+<picture>
+<source media="(max-width:900px)" srcset="../images/how-to-recreate-the-80s-gated-reverb-snare-brightness-m.png">
+<img src="../images/how-to-recreate-the-80s-gated-reverb-snare-brightness.png" alt="Frequency-response curve comparing two tonal shapes. The teal curve (the real sound) is presence-forward with a lift in the 2 to 5 kHz region marked “2–5 kHz bite,” staying bright up top. The purple dashed curve (the bad-80s preset) is scooped through the presence region and rolls the top end off, reading dull. Caption notes the shapes show tonal intent, not a measured plot." width="1040" height="494" loading="lazy" />
+</picture>
+<div class="diagram-caption">The part every preset misses. The real sound keeps the 2&ndash;5&nbsp;kHz attack forward and bright; the cheap preset scoops it and rolls off the top, which is why it sounds dull.</div>
+</div></p>
+<p>It helps to know where that brightness came from, so you can add it honestly. Part of it is the room itself &mdash; a hard, reflective space is bright by nature. Part is the compressor, which pushes up the high-frequency detail of the room along with everything else. And part, on some records, is deliberate presence EQ. You do not need to reproduce the exact source; you need the <em>result</em>, which is a forward upper-mid. Add it with a broad boost around 3&nbsp;kHz on the gated room, and if the boost brings up harsh sibilant hiss from the room noise, tuck a gentle de-esser after the EQ to tame just that band. The goal is a snare that reads as crisp and present in a busy mix, not one that only sounds big when soloed.</p>
+<p>The fix is small and it is the last step of the recreation: a gentle presence lift, or simply not filtering the highs away, keeps the snare cutting through a mix. Do it after the gate, listen in the context of a full arrangement rather than soloed, and back off the moment it turns harsh. Bright and controlled, not bright and brittle.</p>
+<h2 id="mistakes">The mistakes that make it sound wrong</h2>
+<p>Nearly every failed recreation is one of a handful of specific errors, and naming them turns troubleshooting from guesswork into a checklist. If yours is not landing, it is almost certainly one of these.</p>
+<p><strong>Too little compression</strong> is the number-one culprit &mdash; the room never becomes a wall, so the gate has nothing big to cut and the whole thing sounds polite. Push it much harder. <strong>Rolling off the top end</strong> is second: the sound goes dark and lifeless, the &ldquo;bad&nbsp;&rsquo;80s&rdquo; version, because you stripped the presence that makes it vivid. Keep it bright. <strong>A slow, soft gate release</strong> is third &mdash; it fades the tail instead of cutting it, which just hands you back the reverb you were trying to escape; make the cutoff hard. <strong>Cymbals or long ringing sources feeding the gate</strong> hold it open and murder the drama, so keep them off the gated path. And <strong>a long, dark reverb</strong> instead of a short, bright room turns to mush under compression &mdash; use a tight, reflective space. Run down that list and you will usually find the one knob standing between you and the sound.</p>
+<h2 id="faq">Frequently Asked Questions</h2>
+<div class="faq-accordion">
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Did Phil Collins use the AMS RMX16 for the gated snare?</span></div></div>
+<div class="faq-accordion-a"><p>No &mdash; not for the original. The RMX16 was released in 1981, after the 1979&ndash;80 “Intruder” sessions where the sound was created, so it could not have made it. The famous drum sound came from the SSL console&rsquo;s heavily-compressed talkback mic feeding a noise gate. The RMX16&rsquo;s &ldquo;NonLin&rdquo; preset was later voiced to emulate the effect, and Collins himself added to the confusion in a 1984 AMS advertorial &mdash; but the technical accounts from Padgham are consistent that the original was console compression and gating, not a reverb unit.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Is the gated snare just a reverb with a short tail?</span></div></div>
+<div class="faq-accordion-a"><p>Not quite, and thinking of it that way is why most recreations fall short. It is compressed room ambience cut by a gate. A reverb-with-a-short-tail preset gives you the chopped decay but not the brutal upward compression that makes the room enormous, and it does not react to the performance the way a gate on a real room does. Build it as heavy compression plus a gate, in that order, and it lands; reach for a single “gated reverb” preset and you get halfway.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">How do I make the gated snare in FL Studio, Ableton, or Logic?</span></div></div>
+<div class="faq-accordion-a"><p>The same way in every DAW, because they all ship the three tools you need. Send your snare to a short, bright room reverb; put a compressor on that room and drive it hard for a lot of gain reduction; then place a gate after the compressor with a fast attack, short hold, and fast release. Trigger the gate off the hit and tune the hold by ear. Add a small presence lift at the end. Nothing about the chain is DAW-specific &mdash; only the plug-in names change.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Why did Phil Collins play with no cymbals?</span></div></div>
+<div class="faq-accordion-a"><p>Because cymbals defeat the gate. A gate reacts to level, not to which drum is playing, so a ringing cymbal keeps it held open and destroys the clean cutoff that is the whole point. Collins playing cymbal-free at Gabriel&rsquo;s request is exactly why the gate produced such a dramatic, sudden silence. If you want the effect on a full kit, remove the cymbals from the gated path or process them separately.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">What&rsquo;s the one paid plug-in worth buying for this?</span></div></div>
+<div class="faq-accordion-a"><p>SSL&rsquo;s Drumstrip is the honest pick, because it bundles a dedicated drum gate and the &ldquo;Listen Mic Compressor&rdquo; &mdash; SSL&rsquo;s model of the actual talkback circuit that created the sound. It lists around $99 and is frequently on deep sale, and it needs a free iLok account. It is a shortcut, not a requirement: the stock-plugin chain gets you the same result. Build it stock first so you understand what the shortcut is doing.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Why does my gated snare sound thin and cheesy?</span></div></div>
+<div class="faq-accordion-a"><p>Almost always one of two things: you did not compress the room nearly hard enough, so it never became huge, or you rolled off the top end and lost the brightness. The real sound is big and bright, with the 2&ndash;5 kHz attack pushed forward. Crush the room more, keep the highs, and add a gentle presence lift after the gate, and the &ldquo;bad &rsquo;80s&rdquo; version turns into the real one.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Do I need a real room to recreate it?</span></div></div>
+<div class="faq-accordion-a"><p>No, though a real room or a genuine room impulse gets you the last few percent. A convolution reverb loaded with a real room, or even a short, bright algorithmic room, gives the compressor and gate something to work on, which is all the technique needs. The room is the one part of the sound you cannot fully buy &mdash; the original Townhouse Stone Room is gone &mdash; but a good bright room gets you a professional, usable result.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Do I have to clear any rights to use a gated snare I made?</span></div></div>
+<div class="faq-accordion-a"><p>No. If you played or programmed your own snare and processed it yourself, the result is entirely your own production &mdash; there is nothing to clear. Recreating a technique is not sampling a recording. A rights question would only arise if you sampled the original master itself, which is a different task and not what recreating the sound involves.</p></div></div>
+</div>
+<div class="related-grid">
+<a href="how-to-use-reverb-in-a-mix.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">How to Use Reverb in a Mix</h3><p class="related-card-desc">The room this whole effect lives on &mdash; choosing and shaping the reverb before you crush and gate it.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="best-reverb-plugins.html" class="related-card"><div class="related-card-tag">Reviews</div><h3 class="related-card-title">Best Reverb Plugins</h3><p class="related-card-desc">The rooms worth owning to build the bright ambience the gated snare needs.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-mix-drums.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">How to Mix Drums</h3><p class="related-card-desc">Where the gated snare fits in a full drum mix &mdash; punch, space, and glue around it.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="best-compressor-plugins.html" class="related-card"><div class="related-card-tag">Reviews</div><h3 class="related-card-title">Best Compressor Plugins</h3><p class="related-card-desc">The heavy compression is half the sound. These are the compressors that crush a room best.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="parallel-compression-explained.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">Parallel Compression Explained</h3><p class="related-card-desc">The safe way to reach the brutal room crush without losing the transient of the hit.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="../bible/noise-gate.html" class="related-card"><div class="related-card-tag">Bible</div><h3 class="related-card-title">Noise Gate</h3><p class="related-card-desc">The device that does the actual gating &mdash; how a gate&rsquo;s threshold, hold, and release shape a sound.</p><span class="related-card-meta">Read article &rarr;</span></a>
+</div>
+</div>
+    </article>
+    <aside aria-label="Article sidebar">
+      <div class="sidebar-widget toc-widget" aria-labelledby="tocHeading">
+        <div class="sidebar-widget-header"><h2 class="sidebar-widget-title" id="tocHeading">In This Article</h2></div>
+        <div class="sidebar-widget-body"><ul class="toc-list">
+
+<li><a href="#reframe">Not a Reverb Preset</a></li><li><a href="#elements">The 5 Elements</a></li><li><a href="#envelope">What the Gate Does</a></li><li><a href="#recreate">Recreate It</a></li><li><a href="#beyond">Beyond the Snare</a></li><li><a href="#cant-buy">What You Can’t Buy</a></li><li><a href="#rights">Rights?</a></li><li><a href="#brightness">Brightness</a></li><li><a href="#mistakes">Common Mistakes</a></li><li><a href="#exercises">3 Drills</a></li><li><a href="#faq">FAQ</a></li>
+
+</ul></div>
+      </div>
+      <div class="sidebar-widget" style="background:var(--bg-void);border-color:var(--border-default);">
+        <div class="sidebar-widget-body" style="padding:1.5rem;">
+          <p style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.5rem;">Newsletter</p>
+          <h3 style="font-family:var(--font-display);color:var(--text-primary);font-size:1.1rem;margin-bottom:.5rem;">The Producer's Briefing</h3>
+          <p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:1rem;line-height:1.55;">Weekly tips, gear news, and technique guides. Free.</p>
+          <form class="newsletter-form-js" style="display:flex;flex-direction:column;gap:.5rem;" novalidate>
+            <input type="email" name="email" class="form-input" placeholder="Your email" required />
+            <button type="submit" class="btn-newsletter" style="font-size:.82rem;padding:.65rem 1rem;">Subscribe Free</button>
+          </form>
+        </div>
+      <div class="sidebar-widget" style="margin-top:1.5rem;">
+        <div class="sidebar-widget-header" style="text-align:center;">
+          <h2 class="sidebar-widget-title">Related Articles</h2>
+        </div>
+        <div class="sidebar-widget-body" style="padding:1rem;">
+<ul style="list-style:none;padding:0;margin:0;text-align:center;"><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="how-to-use-reverb-in-a-mix.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">How to Use Reverb in a Mix</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Techniques</span></li><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="best-reverb-plugins.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">Best Reverb Plugins</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Reviews</span></li><li style="padding:.6rem 0;"><a href="best-compressor-plugins.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">Best Compressor Plugins</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Reviews</span></li></ul>
+        </div>
+      </div>
+      </div>
+    </aside>
+  </div>
+</main>
+<section class="newsletter-section" id="newsletter" aria-labelledby="newsletterHeading">
+  <div class="container">
+    <div class="newsletter-inner">
+      <div class="newsletter-content">
+        <p class="newsletter-label">Newsletter</p>
+        <h2 id="newsletterHeading" class="newsletter-title">The Producer's <em>Briefing</em></h2>
+        <p class="newsletter-desc">Weekly techniques, gear news, and music business insights. Free.</p>
+      </div>
+      <div class="newsletter-form-wrap">
+        <form class="newsletter-form-js" novalidate>
+          <input type="email" name="email" class="form-input" placeholder="Your email address" required />
+          <button type="submit" class="btn-newsletter">Subscribe Free</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<footer class="site-footer" role="contentinfo">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="../index.html" class="site-logo"><span class="logo-wordmark">Music<span>Production</span>Wiki</span><span class="logo-tagline">The Producer's Reference</span></a>
+    </div>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <div class="footer-col">
+        <h3 class="footer-col-title">Categories</h3>
+        <ul>
+          <li><a href="../categories/reviews.html">Reviews</a></li>
+          <li><a href="../categories/comparisons.html">Comparisons</a></li>
+          <li><a href="../categories/ai-music.html">AI Music</a></li>
+          <li><a href="../categories/daws.html">DAWs</a></li>
+          <li><a href="../categories/plugins.html">Plugins</a></li>
+          <li><a href="../categories/hardware.html">Gear</a></li>
+          <li><a href="../categories/techniques.html">Techniques</a></li>
+          <li><a href="../categories/music-business.html">Music Business</a></li>
+          <li><a href="../categories/glossary.html">Glossary</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">Popular</h3>
+        <ul>
+          <li><a href="../articles/suno-vs-udio.html">Suno vs Udio</a></li>
+          <li><a href="../articles/best-daw-for-beginners.html">Best DAW for Beginners</a></li>
+          <li><a href="../articles/focusrite-scarlett-2i2-gen-4-review.html">Scarlett 2i2 Review</a></li>
+          <li><a href="../articles/sidechain-compression-guide.html">Sidechain Compression</a></li>
+          <li><a href="../articles/best-compressor-plugins.html">Best Compressor Plugins</a></li>
+          <li><a href="../articles/what-is-gain-staging.html">What Is Gain Staging</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">About</h3>
+        <ul>
+          <li><a href="../about.html">About MPW</a></li>
+          <li><a href="../about.html#team">Our Team</a></li>
+          <li><a href="../about.html#methodology">Review Methodology</a></li>
+          <li><a href="../about.html#affiliate">Affiliate Disclosure</a></li>
+          <li><a href="../about.html#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="footer-bottom"><div class="container"><p>© <span id="copyrightYear"></span> MusicProductionWiki.com. All rights reserved. Content by the Music Production Wiki Team.</p></div></div>
+</footer>
+<script src="../js/main.js"></script>
+<script>document.getElementById('copyrightYear').textContent = new Date().getFullYear();</script>
+
+<button id="mpwBackTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  aria-label="Back to top"
+  style="position:fixed;bottom:1.5rem;right:1.5rem;width:2.5rem;height:2.5rem;border-radius:50%;
+         background:var(--teal);color:#000;border:none;cursor:pointer;display:none;
+         align-items:center;justify-content:center;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3);">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <polyline points="18 15 12 9 6 15"/>
+  </svg>
+</button>
+<script>
+(function(){
+  var btn=document.getElementById('mpwBackTop');
+  var bar=document.getElementById('readingProgress');
+  var art=document.querySelector('.article-body');
+  window.addEventListener('scroll',function(){
+    var st=window.scrollY||document.documentElement.scrollTop;
+    btn.style.display=st>400?'flex':'none';
+    if(bar&&art){
+      var h=art.getBoundingClientRect().height;
+      var top=art.getBoundingClientRect().top+st;
+      var pct=Math.min(100,Math.max(0,(st-top+window.innerHeight)*100/h));
+      bar.style.width=pct+'%';
+      bar.setAttribute('aria-valuenow',Math.round(pct));
+    }
+  });
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<!-- MPW universal search: one overlay, one Fuse index (/search-index.json) -->
+<div class="usearch" id="usearch" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="usearch-box">
+    <div class="usearch-top">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input id="usearchInput" type="text" placeholder="Search tools, articles, the Bible…" autocomplete="off">
+      <kbd>esc</kbd>
+    </div>
+    <div class="usearch-results" id="usearchResults"></div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
+<script>
+(function(){
+  // === production parity: lazy-load index on first open, build Fuse once ===
+  var data=null, fuse=null;
+  var overlay=document.getElementById('usearch');
+  var input=document.getElementById('usearchInput');
+  var box=document.getElementById('usearchResults');
+  var sel=-1, current=[];
+  // article slugs are bare; bible/ and tools/ slugs carry their prefix (verified vs live search-index.json)
+  function urlFor(s){ return (s.indexOf('bible/')===0||s.indexOf('tools/')===0) ? '/'+s : '/articles/'+s; }
+
+  function buildFuse(arr){
+    data=arr;
+    fuse=new Fuse(data,{keys:['title','category','description'],threshold:0.34,ignoreLocation:true,minMatchCharLength:2});
+  }
+  function ensureIndex(cb){
+    if(fuse){cb();return;}
+    // PRODUCTION: one shared index, lazy-loaded on first open.
+    fetch('/search-index.json').then(function(r){return r.json();}).then(function(arr){
+      buildFuse(arr); cb();
+    }).catch(function(){ box.textContent='Search failed to load.'; });
+  }
+
+  function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  function render(results){
+    current=results;
+    while(box.firstChild) box.removeChild(box.firstChild);   // no innerHTML
+    if(!input.value.trim()){ var p=document.createElement('div'); p.className='usearch-empty'; p.textContent='Start typing to search everything.'; box.appendChild(p); return; }
+    if(!results.length){ var n=document.createElement('div'); n.className='usearch-empty'; n.textContent='No results for "'+input.value+'".'; box.appendChild(n); return; }
+    results.slice(0,12).forEach(function(r,i){
+      var e=r.item||r;
+      var a=document.createElement('a'); a.href=urlFor(e.slug); if(i===sel)a.className='sel';
+      var top=document.createElement('div'); top.className='ur-top';
+      var t=document.createElement('span'); t.className='ur-title'; t.textContent=e.title;
+      var c=document.createElement('span'); c.className='ur-cat'; c.setAttribute('data-c',e.category||''); c.textContent=e.category||'';
+      top.appendChild(t); top.appendChild(c); a.appendChild(top);
+      if(e.description){ var d=document.createElement('div'); d.className='ur-desc'; d.textContent=e.description; a.appendChild(d); }
+      box.appendChild(a);
+    });
+  }
+
+  function open(q){ ensureIndex(function(){ overlay.classList.add('open'); input.focus(); if(q!=null){input.value=q;} sel=-1; render(input.value?fuse.search(input.value):[]); }); }
+  function close(){ overlay.classList.remove('open'); }
+
+  // wire every nav's search button to the shared overlay
+  document.querySelectorAll('[data-nav-search]').forEach(function(b){ b.addEventListener('click',function(){open(null);}); });
+  input.addEventListener('input',function(){ sel=-1; render(fuse?fuse.search(input.value):[]); });
+  input.addEventListener('keydown',function(e){
+    if(e.key==='Escape')close();
+    else if(e.key==='ArrowDown'){e.preventDefault(); sel=Math.min(sel+1,Math.min(current.length,12)-1); render(current);}
+    else if(e.key==='ArrowUp'){e.preventDefault(); sel=Math.max(sel-1,0); render(current);}
+    else if(e.key==='Enter'&&current[sel]){ var e2=current[sel].item||current[sel]; location.href=urlFor(e2.slug); }
+  });
+  overlay.addEventListener('click',function(e){ if(e.target===overlay)close(); });
+  document.addEventListener('keydown',function(e){ if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();open(null);} });
+})();
+</script>
+<script id="toc-bar-js">
+(function(){
+  var body=document.querySelector('.article-body');
+  var track=document.getElementById('tocBarTrack');
+  if(!body||!track)return;
+  var heads=[].slice.call(body.querySelectorAll('h2[id]'));
+  if(!heads.length)return;
+  heads.forEach(function(h){
+    var a=document.createElement('a');a.href='#'+h.id;
+    var t=h.textContent.trim();var i=t.indexOf(':');if(i>0)t=t.slice(0,i);
+    a.textContent=t;track.appendChild(a);
+  });
+  var links=[].slice.call(track.querySelectorAll('a'));
+  function onScroll(){
+    var y=window.scrollY+130,cur=heads[0].id;
+    heads.forEach(function(h){if(h.offsetTop<=y)cur=h.id;});
+    links.forEach(function(l){var on=l.getAttribute('href')==='#'+cur;l.classList.toggle('active',on);
+      if(on)l.scrollIntoView({inline:'center',block:'nearest'});});
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+})();
+</script>
+<script>
+function mpwFaqToggle(el){
+  var answer = el.nextElementSibling;
+  if(!answer || !answer.classList.contains('faq-accordion-a')) return;
+  var isOpen = answer.classList.contains('open');
+  document.querySelectorAll('.faq-accordion-a.open').forEach(function(a){
+    a.classList.remove('open');
+    var q = a.previousElementSibling;
+    if(q){ var ic = q.querySelector('.faq-accordion-icon, .faq-plus'); if(ic) ic.classList.remove('open'); }
+  });
+  if(!isOpen){
+    answer.classList.add('open');
+    var icon = el.querySelector('.faq-accordion-icon, .faq-plus');
+    if(icon) icon.classList.add('open');
+  }
+}
+</script>
+<style>.faq-plus.open{transform:rotate(45deg);transition:transform .2s ease}</style>
+</body>
+</html>
