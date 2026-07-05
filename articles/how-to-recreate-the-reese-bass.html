@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Recreate the JP-8000 supersaw: what it actually is (7 detuned saws + a highpass, no secret chorus) and the stock-synth patch that nails it in any DAW." />
+  <title>How to Recreate the Supersaw (The Trance Lead Sound) (2026)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <style>
+    #readingProgress{position:fixed;top:0;left:0;height:3px;background:var(--teal);width:0%;z-index:200;transition:width 0.1s linear;}
+    .quick-answer{background:linear-gradient(135deg,rgba(0,212,168,0.08),rgba(167,139,250,0.06));border:1px solid rgba(0,212,168,0.3);border-left:4px solid var(--teal);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .quick-answer-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.6rem;}
+    .quick-answer p{font-size:1rem;line-height:1.65;color:var(--text-primary);margin:0;}
+    .skill-badge{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .6rem;border-radius:4px;margin-left:.6rem;vertical-align:middle;position:relative;top:-2px;}
+    .skill-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .skill-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .skill-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .settings-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .settings-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .settings-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .settings-table tr:last-child td{border-bottom:none;}
+    .settings-table tr:hover td{background:var(--bg-surface);}
+    .settings-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .settings-table .mono{font-family:var(--font-mono);font-size:.82rem;color:var(--teal);}
+    .mistake-box{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-left:4px solid #ef4444;border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .mistake-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ef4444;margin-bottom:.4rem;}
+    .mistake-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference{border-left:3px solid var(--purple);padding:.75rem 1.25rem;margin:1.25rem 0;background:rgba(167,139,250,0.05);border-radius:0 6px 6px 0;}
+    .pro-reference-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.35rem;}
+    .pro-reference p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference strong{color:var(--text-primary);}
+    .listening-prescription{background:var(--bg-void);border:1px solid var(--border-default);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;position:relative;}
+    .listening-prescription::before{content:'🎧';position:absolute;top:-14px;left:1.5rem;background:var(--bg-void);padding:0 .4rem;font-size:1.1rem;}
+    .listening-prescription-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:.75rem;}
+    .listening-prescription p{font-size:.9rem;line-height:1.7;color:var(--text-secondary);margin:0 0 .5rem;}
+    .listening-record{font-weight:600;color:var(--text-primary);}
+    .decision-framework{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .decision-framework-title{font-family:var(--font-display);font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:1rem;}
+    .decision-item{display:flex;gap:1rem;padding:.65rem 0;border-bottom:1px solid var(--border-subtle);font-size:.88rem;line-height:1.55;}
+    .decision-item:last-child{border-bottom:none;}
+    .decision-if{color:var(--text-muted);font-style:italic;min-width:2rem;}
+    .decision-then{color:var(--text-primary);}
+    .decision-then strong{color:var(--teal);}
+    .exercise-block{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.25rem 0;}
+    .exercise-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;}
+    .exercise-badge{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .7rem;border-radius:4px;}
+    .exercise-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .exercise-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .exercise-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .exercise-title{font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text-primary);}
+    .exercise-block ol{margin:0;padding-left:1.25rem;color:var(--text-secondary);font-size:.88rem;line-height:1.7;}
+    .exercise-block ol li{margin-bottom:.4rem;}
+    .version-line{font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:4px;padding:.4rem .75rem;margin:.75rem 0 1.5rem;display:inline-block;}
+    .go-deeper{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:10px;padding:1.75rem;margin:2.5rem 0;}
+    .go-deeper-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text-primary);margin-bottom:1.25rem;}
+    .go-deeper-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;}
+    .go-deeper-item{background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:7px;padding:1rem 1.1rem;}
+    .go-deeper-item-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.35rem;}
+    .go-deeper-item a{font-size:.88rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;}
+    .go-deeper-item p{font-size:.78rem;color:var(--text-muted);margin:.3rem 0 0;}
+    .citation{font-size:.78rem;color:var(--text-muted);font-style:italic;margin-top:.25rem;}
+    .diagram-wrap{margin:1.9rem auto;max-width:100%;}
+    .diagram-wrap img{width:100%;height:auto;display:block;border:1px solid var(--border-subtle);border-radius:10px;}
+    .diagram-wrap picture{display:block;}
+    .diagram-caption{font-size:.78rem;color:var(--text-muted);text-align:center;margin-top:.75rem;font-style:italic;}
+    .highlight-box{background:rgba(0,212,168,0.06);border:1px solid rgba(0,212,168,0.2);border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .highlight-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.4rem;}
+    .highlight-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin:1.5rem 0;}
+    .stat-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem;text-align:center;}
+    .stat-number{font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--teal);display:block;}
+    .stat-label{font-size:.78rem;color:var(--text-secondary);margin-top:.25rem;}
+    .action-steps{counter-reset:steps;list-style:none;padding:0;margin:1.5rem 0;}
+    .action-steps li{counter-increment:steps;display:flex;gap:1rem;padding:.85rem 0;border-bottom:1px solid var(--border-subtle);font-size:.9rem;color:var(--text-secondary);line-height:1.6;}
+    .action-steps li:last-child{border-bottom:none;}
+    .action-steps li::before{content:counter(steps);background:var(--teal);color:#000;font-weight:800;font-size:.75rem;width:1.6rem;height:1.6rem;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem;}
+    .genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:1.5rem 0;}
+    .genre-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem 1.25rem;}
+    .genre-card-name{font-family:var(--font-display);font-size:.85rem;font-weight:700;color:var(--teal);margin-bottom:.4rem;}
+    .genre-card p{font-size:.82rem;color:var(--text-secondary);line-height:1.55;margin:0;}
+    .comparison-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .comparison-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .comparison-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .comparison-table tr:last-child td{border-bottom:none;}
+    .comparison-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .affiliate-cta{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,212,168,0.1);border:1px solid rgba(0,212,168,0.25);color:var(--teal);font-size:.82rem;font-weight:600;padding:.45rem .9rem;border-radius:6px;text-decoration:none;}
+
+    .faq-accordion{margin:1.75rem 0;}
+    .faq-accordion-item{background:var(--bg-surface);border:1px solid var(--border-subtle);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;margin-bottom:8px;overflow:hidden;}
+    .faq-accordion-q{display:flex;align-items:flex-start;padding:1rem 1.25rem;cursor:pointer;gap:.75rem;}
+    .faq-accordion-q:hover{background:var(--bg-elevated);}
+    .faq-accordion-icon{width:16px;height:16px;flex-shrink:0;margin-top:3px;color:var(--purple);transition:transform .2s ease;}
+    .faq-accordion-icon.open{transform:rotate(45deg);}
+    .faq-accordion-q-inner{display:flex;flex-direction:column;}
+    .faq-accordion-label{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin-bottom:.2rem;}
+    .faq-accordion-q-text{font-size:.92rem;font-weight:600;color:var(--text-primary);line-height:1.45;font-family:var(--font-display);}
+    .faq-accordion-a{display:none;padding:0 1.25rem 1rem 2.75rem;font-size:.88rem;color:var(--text-secondary);line-height:1.7;border-top:1px solid var(--border-subtle);padding-top:.85rem;}
+    .faq-accordion-a.open{display:block;}
+    .sourcebox{border:1px solid var(--border-default);border-radius:10px;overflow:hidden;margin:1.9rem 0;background:var(--bg-surface);}
+    .sourcebox-head{padding:1.1rem 1.4rem;border-bottom:1px solid var(--border-default);background:var(--bg-void);}
+    .sourcebox-kicker{display:block;font-family:var(--font-display);font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.3rem;}
+    .sourcebox-sub{display:block;font-size:.82rem;color:var(--text-secondary);line-height:1.5;}
+    .sourcebox-row{display:flex;gap:0;border-bottom:1px solid var(--border-subtle);}
+    .sourcebox-row:last-child{border-bottom:none;}
+    .sourcebox-tag{flex:0 0 168px;padding:1.1rem 1.2rem;font-family:var(--font-mono);font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;line-height:1.4;}
+    .sourcebox-body{padding:1.1rem 1.3rem 1.1rem 0;flex:1;}
+    .sourcebox-body p{font-size:.9rem;line-height:1.65;color:var(--text-secondary);margin:0;}
+    .sourcebox-body strong{color:var(--text-primary);}
+    .sourcebox-cite{display:block;margin-top:.55rem;font-size:.76rem;font-style:italic;color:var(--text-muted);line-height:1.5;}
+    .sourcebox-confirmed{border-left:4px solid var(--teal);} .sourcebox-confirmed .sourcebox-tag{color:var(--teal);}
+    .sourcebox-disputed{border-left:4px solid #f59e0b;} .sourcebox-disputed .sourcebox-tag{color:#f59e0b;}
+    .sourcebox-inferred{border-left:4px solid var(--purple);} .sourcebox-inferred .sourcebox-tag{color:var(--purple);}
+    @media(max-width:600px){.sourcebox-row{flex-direction:column;}.sourcebox-tag{flex-basis:auto;padding-bottom:.2rem;}.sourcebox-body{padding:.2rem 1.2rem 1.1rem;}}
+</style>
+  <link rel="canonical" href="https://musicproductionwiki.com/articles/how-to-recreate-the-reese-bass.html"/>
+  <!-- Open Graph -->
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="How to Recreate the Reese Bass (Kevin Saunderson's DnB Sound)"/>
+  <meta property="og:description" content="Recreate the Reese bass: what it actually is (two detuned saw-like voices beating against each other, not a Juno preset) and the stock-synth patch that nails it."/>
+  <meta property="og:url" content="https://musicproductionwiki.com/articles/how-to-recreate-the-reese-bass.html"/>
+  <meta property="og:site_name" content="Music Production Wiki"/>
+  <meta property="og:image" content="https://musicproductionwiki.com/og-image.png"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="article:author" content="Music Production Wiki Team"/>
+  <meta property="article:section" content="Recreations"/>
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="How to Recreate the Reese Bass (Kevin Saunderson's DnB Sound)"/>
+  <meta name="twitter:description" content="Recreate the Reese bass: what it actually is (two detuned saw-like voices beating against each other), and the stock-synth patch that nails it in any DAW."/>
+  <meta name="twitter:image" content="https://musicproductionwiki.com/og-image.png"/>
+  <!-- Article Schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How to Recreate the Reese Bass (Kevin Saunderson's DnB Sound)",
+  "description": "Recreate the Reese bass: what it actually is (two detuned saw-like voices beating against each other, not a Juno preset) and the stock-synth patch that nails it in any DAW.",
+  "image": [
+    "https://musicproductionwiki.com/og-image.png",
+    "https://musicproductionwiki.com/images/how-to-recreate-the-reese-bass-route.png",
+    "https://musicproductionwiki.com/images/how-to-recreate-the-reese-bass-comb.png",
+    "https://musicproductionwiki.com/images/how-to-recreate-the-reese-bass-spec.png"
+  ],
+  "datePublished": "2026-07-05",
+  "dateModified": "2026-07-05",
+  "wordCount": 5649,
+  "timeRequired": "PT16M",
+  "keywords": [
+    "how to make a reese bass",
+    "reese bass",
+    "reese bass tutorial",
+    "kevin saunderson reese",
+    "reese bass vital",
+    "reese bass serum",
+    "dnb bass sound",
+    "detuned saw bass",
+    "how to recreate the reese bass"
+  ],
+  "author": {
+    "@type": "Organization",
+    "name": "Music Production Wiki",
+    "url": "https://musicproductionwiki.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Music Production Wiki",
+    "url": "https://musicproductionwiki.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://musicproductionwiki.com/og-image.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://musicproductionwiki.com/articles/how-to-recreate-the-reese-bass.html"
+  },
+  "articleSection": "Recreations",
+  "inLanguage": "en-US"
+}
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to recreate the Reese bass with a stock synth",
+  "description": "Rebuild the Reese bass in any synth: two saw-like oscillators, detuned against each other so they beat, a low-pass filter to tame the top, in mono with the sub centred.",
+  "image": "https://musicproductionwiki.com/images/how-to-recreate-the-reese-bass-route.png",
+  "supply": [
+    { "@type": "HowToSupply", "name": "A synth with two oscillators and a low-pass filter" }
+  ],
+  "tool": [
+    { "@type": "HowToTool", "name": "Two saw (or saw-like) oscillators" },
+    { "@type": "HowToTool", "name": "Detune / fine-tune control" },
+    { "@type": "HowToTool", "name": "Low-pass filter" }
+  ],
+  "step": [
+    { "@type": "HowToStep", "name": "Two saws, one detuned", "text": "Load two saw oscillators at the same pitch, then detune the second by a few cents until you hear a slow beating between them." },
+    { "@type": "HowToStep", "name": "Chase the beating, not the width", "text": "Adjust the detune until the beating pulses at a musical rate down low. This movement is the Reese; if it stops changing as you play up the keyboard, you have a static stacked saw, not a Reese." },
+    { "@type": "HowToStep", "name": "Low-pass the harsh top", "text": "Roll a low-pass filter down until the top loses its rasp and the weight sits in the low-mids and sub. This is the modern route to the tone; the original Casio shaped brightness a different way." },
+    { "@type": "HowToStep", "name": "Mono and centred", "text": "Keep the patch mono and the sub centred so it stays powerful and translates on club and phone speakers alike." },
+    { "@type": "HowToStep", "name": "Optional: drive it", "text": "For the jungle and neuro flavours, add distortion or split the sound into bands and distort the mids, keeping the sub clean underneath." }
+  ]
+}
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What synth made the original Reese bass?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A Casio CZ-series phase-distortion synth. Kevin Saunderson built it for his 1988 track 'Just Want Another Chance,' released under his Reese alias, by layering two detuned saw-like voices. He has named the CZ-5000, the CZ-1000 and the CZ-3000 in different interviews and once referred to a 'CZ-2000,' a model that never existed, so treat the exact model as uncertain; the 1000 and 5000 share the same synthesis engine, so the tone is the same either way. It was not a Roland Juno-106, a widespread misattribution Saunderson himself corrected."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need a special plugin to make a Reese bass?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Any synth with two oscillators, a detune control and a low-pass filter can do it, and the free Vital covers all of that. Serum and Massive do it trivially too. Arturia's CZ V models the actual Casio phase-distortion engine if you want the authentic route, but it is a shortcut, not a requirement. The principle is two detuned voices beating against each other, and that works in any synth."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why doesn't my Reese bass move or 'wobble'?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Because your two oscillators are not actually beating. The Reese movement comes from two detuned voices drifting in and out of phase, and that beating should speed up as you play higher notes. If your sound is static, your detune is either at zero or so wide the voices have separated into an out-of-tune chord instead of one beating tone. Nudge the detune until you hear a slow, musical pulse down low, then check that it changes when you play up the keyboard."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is a Reese bass just a supersaw?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No, and the distinction matters. A supersaw is seven detuned saws from one oscillator through a highpass, tuned so the voices blend into a bright shimmer. A Reese is two detuned voices through a low-pass, tuned so you hear the beating between them, kept dark and sub-heavy in mono. The supersaw hides its detuning; the Reese puts it front and centre. The modern habit of describing a Reese as 'a supersaw with band-reject filters' is the later drum-and-bass evolution, not the 1988 original."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much should I detune a Reese?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Start with just a few cents between the two voices and listen for the beating, not the width. You want a slow pulse at the bottom of the keyboard that quickens as you climb. Too little detune and the sound is a flat, lifeless single tone; too much and the two voices separate into an audibly out-of-tune interval. The sweet spot is where the movement feels alive but the pitch still reads as one note. There is no single correct number because it depends on the octave you play in."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should a Reese bass be mono or stereo?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Keep the sub and the core of the Reese in mono. The whole sound depends on phase relationships between two detuned voices, and spreading them wide in stereo invites phase cancellation that collapses the low end on club systems and phone speakers. If you want width, add it above the fundamental with a separate layer or mid/side processing, and keep the bottom octave centred and mono so it stays powerful and translates everywhere."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do modern producers make aggressive Reese basses?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "By taking the 1988 idea and pushing it. They stack more than two voices with unison detune, distort the sound heavily, and carve moving notches into it with band-reject or comb filtering so the mid-range appears to shift and growl. Many split the signal into bands, distort and widen the mids, and keep a clean mono sub underneath. That is the Noisia-era neuro sound, an evolution of the Reese rather than the original, which was simply two detuned voices and a low-pass filter."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need to clear any rights to use a Reese I made?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "If you built the patch yourself in your own synth, no. Recreating a synthesis technique is your own production and there is nothing to clear. The rights question only appears if you sample the original recording, the way the early jungle producers lifted the bass straight off Saunderson's record. Sampling an actual master is a clearance matter, not a recreation, and it is worth understanding before you release anything built on someone else's recording."
+      }
+    }
+  ]
+}
+</script>
+  <!-- Organization schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Music Production Wiki",
+  "url": "https://musicproductionwiki.com",
+  "logo": "https://musicproductionwiki.com/og-image.png"
+}
+</script>
+  <!-- WebSite schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Music Production Wiki",
+  "url": "https://musicproductionwiki.com",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://musicproductionwiki.com/search?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://musicproductionwiki.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Recreations",
+      "item": "https://musicproductionwiki.com/categories/recreations"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "The Reese Bass",
+      "item": "https://musicproductionwiki.com/articles/how-to-recreate-the-reese-bass.html"
+    }
+  ]
+}
+</script>
+<style id="toc-skin"></script>
+<style id="toc-skin">
+.toc-widget .sidebar-widget-header{margin-bottom:.35rem}
+.toc-list{counter-reset:tocnum;list-style:none;margin:0;padding:0}
+.toc-list li{counter-increment:tocnum;position:relative;margin:0;border-left:2px solid var(--border-subtle);transition:border-color .15s ease,background .15s ease}
+.toc-list li a{display:flex;gap:.7rem;align-items:baseline;padding:.5rem .85rem .5rem 1rem;font-size:.82rem;line-height:1.45;font-weight:500;color:var(--text-secondary);text-decoration:none;transition:color .15s ease}
+.toc-list li a::before{content:counter(tocnum,decimal-leading-zero);font-family:var(--font-mono,ui-monospace,monospace);font-size:.7rem;font-weight:600;letter-spacing:.04em;color:var(--text-muted);flex:0 0 auto;min-width:1.5em;padding-top:.05rem}
+.toc-list li a:hover{color:var(--text-primary)}
+.toc-list li.active{border-left-color:var(--teal);background:linear-gradient(90deg,rgba(0,212,168,.08),transparent 80%)}
+.toc-list li.active a{color:var(--teal);font-weight:600}
+.toc-list li.active a:hover{color:var(--teal)}
+.toc-list li.active a::before{color:var(--teal)}
+</style>
+<style id="toc-bar-css">
+.toc-bar{display:none}
+@media (max-width: 900px){
+.toc-bar{display:block;position:sticky;top:60px;z-index:400;background:var(--bg-void);border-bottom:1px solid var(--border-default);overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(to right,#000 88%,transparent 100%);mask-image:linear-gradient(to right,#000 88%,transparent 100%)}
+.toc-bar::-webkit-scrollbar{display:none}
+.toc-bar-track{display:flex;gap:4px;padding:9px 10px;min-width:max-content}
+.toc-bar-track a{color:var(--text-secondary);text-decoration:none;font-family:var(--font-mono,ui-monospace,monospace);font-size:10px;text-transform:uppercase;letter-spacing:.05em;padding:6px 10px;border-radius:4px;white-space:nowrap;min-height:30px;display:inline-flex;align-items:center;transition:color .15s,background .15s}
+.toc-bar-track a.active{color:var(--teal);background:var(--bg-elevated)}
+.article-body h2[id]{scroll-margin-top:116px}
+}
+@media (max-width: 900px) and (hover:hover){.toc-bar-track a:hover{color:var(--teal)}}
+</style>
+</head>
+<body>
+
+
+
+<style id="mpw-unav-css">
+
+.mnav-wrap,.usearch{--ink:#09090d;--panel:#0f0f18;--panel2:#15151f;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);--amber:#f5a623;--teal:#00e8a2;--teal-d:rgba(0,232,162,.12);--text:#f2f2f7;--t2:#9a9ab2;--t3:#56566f;--sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'DM Mono',ui-monospace,SFMono-Regular,monospace;}
+.mnav-wrap *,.mnav-wrap *::before,.mnav-wrap *::after,.usearch *,.usearch *::before,.usearch *::after{box-sizing:border-box;margin:0;padding:0}
+/* host-CSS shield: a page loading style.css (articles) must not bleed its body font/color/line-height into the bar. Direct rule on .mnav-wrap beats inherited body styles. */
+.mnav-wrap,.usearch{font-family:var(--sans);font-size:14px;font-weight:400;font-style:normal;line-height:1.4;letter-spacing:normal;color:var(--text);text-align:left;text-transform:none}
+/* S91 host-CSS isolation (:where() = zero-specificity; beats style.css bare a/li by source order, LOSES to nav's own .drw-card/.mnav-flat classes) */
+:where(.mnav-wrap,.usearch) a{color:inherit;text-decoration:none;background:none;border:0;font:inherit;letter-spacing:inherit}
+:where(.mnav-wrap,.usearch) ul,:where(.mnav-wrap,.usearch) ol{list-style:none;margin:0;padding:0;border:0}
+:where(.mnav-wrap,.usearch) li{margin:0;padding:0;border:0;font-size:inherit;line-height:inherit;color:inherit;background:none}
+:where(.mnav-wrap,.usearch) h1,:where(.mnav-wrap,.usearch) h2,:where(.mnav-wrap,.usearch) h3,:where(.mnav-wrap,.usearch) h4,:where(.mnav-wrap,.usearch) h5,:where(.mnav-wrap,.usearch) h6,:where(.mnav-wrap,.usearch) p{margin:0;padding:0;border:0;font:inherit;color:inherit;line-height:inherit;letter-spacing:inherit;text-transform:none}
+:where(.mnav-wrap,.usearch) button{font:inherit;color:inherit;background:none;border:0;letter-spacing:inherit;text-align:inherit}
+:where(.mnav-wrap,.usearch) svg{display:inline-block;vertical-align:middle}
+:where(.mnav-wrap,.usearch) img{max-width:none}
+.mnav-wrap{background:var(--ink);border-bottom:1px solid var(--line);position:relative}
+.mnav{height:60px;display:flex;align-items:center}
+.mnav-in{max-width:1180px;margin:0 auto;padding:0 22px;width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.mnav-brand{display:flex;align-items:center;gap:10px;color:var(--text);text-decoration:none;flex:0 0 auto}
+.mnav-word{font-weight:700;font-size:15px;letter-spacing:-.02em}
+.mnav-links{display:flex;align-items:center;gap:6px;margin-left:8px}
+.mnav-flat,.mnav-trigger{color:var(--t2);background:none;border:0;font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;padding:8px 12px;border-radius:8px;display:inline-flex;align-items:center;gap:6px}
+.mnav-flat:hover,.mnav-trigger:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.caret{font-size:9px;color:var(--t3);transition:transform .18s}
+.mnav-right{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.mnav-search{background:none;border:0;color:var(--t2);cursor:pointer;display:flex;padding:6px;border-radius:8px}
+.mnav-search:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.mnav-cta{border:1px solid var(--teal);color:var(--teal);text-decoration:none;padding:7px 15px;border-radius:8px;font-size:13px;font-weight:600;white-space:nowrap}
+.mnav-cta:hover{background:var(--teal-d)}
+.mnav-wrap[data-section="tools"] .mnav-flat[data-nav="tools"]{color:var(--text);font-weight:600}
+.mnav-wrap[data-section="articles"] .mnav-trigger[data-nav="articles"]{color:var(--text);font-weight:600}
+/* Bible = amber brand color, desktop link + mobile drawer */
+.mnav-flat[data-nav="bible"],.drw-link[data-nav="bible"]{color:#f5a623!important;font-weight:600}
+.mnav-flat[data-nav="bible"]:hover,.drw-link[data-nav="bible"]:hover{color:#ffc04d!important}
+.mnav-item{position:relative}
+.mnav-panel,.mnav-panel-wide{position:absolute;top:calc(100% + 6px);left:0;z-index:50;display:none;background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:14px;box-shadow:0 24px 60px -24px rgba(0,0,0,.9);min-width:240px}
+.mnav-panel-wide{grid-template-columns:1fr 1fr;gap:8px 22px;min-width:520px}
+.mnav-item:hover .mnav-panel,.mnav-item:focus-within .mnav-panel,.mnav-item:hover .mnav-panel-wide,.mnav-item:focus-within .mnav-panel-wide{display:grid}
+.mnav-item:hover .caret{transform:rotate(180deg)}
+.mp-col{display:flex;flex-direction:column}
+.mp-head{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);padding:6px 10px 8px}
+.mnav-panel a{display:flex;flex-direction:column;gap:1px;padding:8px 10px;border-radius:9px;text-decoration:none}
+.mnav-panel a:hover{background:rgba(255,255,255,.05)}
+.mp-name{color:var(--text);font-size:13.5px;font-weight:600}.mp-desc{color:var(--t2);font-size:11.5px}
+.mnav-sub{display:none;background:var(--panel);border-bottom:1px solid var(--line)}
+.mnav-wrap[data-section="bible"] .mnav-sub{display:block}
+.mnav-sub-in{max-width:1180px;margin:0 auto;padding:10px 22px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.mnav-sub-in::-webkit-scrollbar{display:none}
+.mnav-sub-in a{flex:0 0 auto;color:var(--t2);text-decoration:none;font-size:12.5px;font-family:var(--mono);border:1px solid var(--line2);border-radius:99px;padding:5px 12px;white-space:nowrap}
+.mnav-sub-in a:hover{color:var(--teal);border-color:rgba(0,232,162,.4)}
+.mnav-toggle{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.mnav-burger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:8px;border-radius:8px}
+.mnav-burger span{display:block;width:20px;height:2px;background:var(--text);border-radius:2px;transition:.2s}
+.mnav-drawer{display:none;flex-direction:column;padding:6px 18px 16px;background:var(--ink);border-bottom:1px solid var(--line)}
+.mnav-drawer details{border-bottom:1px solid var(--line)}
+.mnav-drawer summary{list-style:none;cursor:pointer;padding:13px 2px;font-size:15px;font-weight:600;color:var(--text);display:flex;justify-content:space-between}
+.mnav-drawer summary::-webkit-details-marker{display:none}
+.mnav-drawer summary::after{content:"+";color:var(--t3)}
+.mnav-drawer details[open] summary::after{content:"\2013"}
+.mnav-acc{display:flex;flex-direction:column;padding:0 0 10px 12px}
+.mnav-acc a{color:var(--t2);text-decoration:none;font-size:14px;padding:8px 0}
+.drw-link{color:var(--t2);text-decoration:none;font-size:15px;font-weight:600;padding:13px 2px;border-bottom:1px solid var(--line)}
+.drw-cta{color:var(--teal);text-decoration:none;font-weight:600;font-size:15px;padding:14px 2px}
+.mnav-toggle:checked ~ .mnav-drawer{display:flex}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(2){opacity:0}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+@media(max-width:860px){.mnav-links,.mnav-cta{display:none}.mnav-burger{display:flex}}
+
+/* ===== UNIFIED SEARCH OVERLAY ===== */
+.usearch{position:fixed;inset:0;z-index:10000;display:none;background:rgba(6,6,11,.78);backdrop-filter:blur(6px);padding:80px 20px 20px}
+.usearch.open{display:block}
+.usearch-box{max-width:620px;margin:0 auto;background:var(--panel);border:1px solid var(--line2);border-radius:16px;overflow:hidden;box-shadow:0 40px 90px -30px rgba(0,0,0,.95)}
+.usearch-top{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.usearch-top svg{color:var(--t3);flex:0 0 auto}
+.usearch-top input{flex:1;background:none;border:0;outline:none;color:var(--text);font-family:var(--sans);font-size:17px}
+.usearch-top input::placeholder{color:var(--t3)}
+.usearch-top kbd{font-family:var(--mono);font-size:11px;color:var(--t3);border:1px solid var(--line2);border-radius:6px;padding:2px 7px}
+.usearch-results{max-height:56vh;overflow-y:auto;padding:8px}
+.usearch-results a{display:block;padding:11px 14px;border-radius:10px;text-decoration:none;transition:background .12s}
+.usearch-results a:hover,.usearch-results a.sel{background:rgba(255,255,255,.05)}
+.ur-top{display:flex;align-items:baseline;gap:9px}
+.ur-title{color:var(--text);font-size:14.5px;font-weight:600}
+.ur-cat{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.06);color:var(--t2);flex:0 0 auto}
+.ur-cat[data-c="Tools"]{background:var(--teal-d);color:var(--teal);border:1px solid rgba(0,232,162,.4)}
+.ur-cat[data-c="Bible"]{background:rgba(245,166,35,.18);color:#f5a623;border:1px solid rgba(245,166,35,.4)}
+.ur-desc{color:var(--t2);font-size:12.5px;line-height:1.45;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.usearch-empty{padding:30px;text-align:center;color:var(--t3);font-size:13.5px}
+/* --- sticky-header + entry-page chrome (pilot, refined for density) ---
+   entry nav = 60px main bar only (no category sub-bar). Desktop: hide the horizontal section
+   nav (the sticky sidebar TOC covers sections) and retune offsets to the 60px nav. Mobile: the
+   sidebar is hidden, so SHOW the section nav flush under the bar. All in THIS block. --- */
+.mnav-wrap{position:sticky;top:0;z-index:1000;line-height:1.4}
+.entry-nav{display:none}
+[id].entry-section{scroll-margin-top:90px}
+.entry-main h2{scroll-margin-top:90px}
+.entry-sidebar{top:78px;height:calc(100vh - 98px)}
+@media(max-width:768px){
+  .entry-nav{display:block!important;top:60px!important}
+  [id].entry-section{scroll-margin-top:130px!important}
+  .entry-main h2{scroll-margin-top:130px!important}
+}
+/* dropdown overflow safety */
+.mnav-panel,.mnav-panel-wide{max-height:min(72vh,560px);overflow-y:auto}
+/* mobile drawer: category CARD grid (slick old-nav look), CSS-only */
+.mnav-drawer{padding:10px 18px 18px;gap:0}
+.drw-label{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--t3);margin:12px 2px 8px}
+.drw-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.drw-card{display:flex;align-items:center;padding:12px 14px;border-radius:10px;text-decoration:none;font-size:13.5px;font-weight:600;color:var(--text);background:var(--panel);border:1px solid var(--line2)}
+.drw-card:hover{border-color:var(--teal);color:var(--teal)}
+.drw-feat{display:flex;align-items:center;gap:8px;padding:13px 16px;border-radius:10px;text-decoration:none;font-size:14px;font-weight:700;color:var(--text);background:var(--panel);border:1px solid var(--line2);margin-top:8px}
+.drw-feat-bible{color:#f5a623;background:rgba(245,166,35,.08);border-color:rgba(245,166,35,.30)}
+.drw-feat-bible:hover{border-color:rgba(245,166,35,.6)}
+.drw-cta{display:block;text-align:center;padding:14px;border-radius:10px;background:var(--teal);color:#06281f;font-weight:800;font-size:14px;text-decoration:none;margin-top:12px}
+/* mobile sunlight legibility: lift the intentionally-dim greys in glare (nav + search only), scoped */
+@media(max-width:860px){
+  .mnav-wrap,.usearch{--t2:#c8c8da;--t3:#9696b0}
+  .drw-label{color:#bdbdd0;font-weight:500}
+  .usearch-top input::placeholder{color:#9696b0}
+  .drw-card,.drw-feat{background:#20202e;border:1.5px solid #45455c}
+  .drw-feat-bible{background:rgba(245,166,35,.12);border:1.5px solid rgba(245,166,35,.6)}
+}
+html{overflow-x:clip!important;max-width:none!important}body{overflow-x:clip!important}
+</style>
+<!-- MPW universal nav -->
+<div class="mnav-wrap" data-section="articles">
+  <input type="checkbox" id="mnav-toggle" class="mnav-toggle" aria-hidden="true">
+  <nav class="mnav" aria-label="Main navigation">
+    <div class="mnav-in">
+      <a class="mnav-brand" href="/"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="6" stroke="#f5a623" stroke-width="1.7"/><path d="M7 15V9l3 3 3-5 4 8" stroke="#00e8a2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="mnav-word">MusicProductionWiki</span></a>
+      <div class="mnav-links">
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="articles">Articles <span class="caret">&#9662;</span></button><div class="mnav-panel mnav-panel-wide"><div class="mp-col"><div class="mp-head">Techniques & Analysis</div><a href="/categories/techniques"><span class="mp-name">Techniques</span><span class="mp-desc">Mixing, mastering, sound design</span></a><a href="/categories/reviews"><span class="mp-name">Reviews</span><span class="mp-desc">Honest. No paid placements.</span></a><a href="/categories/comparisons"><span class="mp-name">Comparisons</span><span class="mp-desc">Head-to-head</span></a><a href="/categories/breakdowns"><span class="mp-name">Breakdowns</span><span class="mp-desc">Track-by-track</span></a><a href="/categories/recreations"><span class="mp-name">Recreations</span><span class="mp-desc">Recreate iconic sounds</span></a><a href="/genres"><span class="mp-name">Genres</span><span class="mp-desc">Every genre & style</span></a></div><div class="mp-col"><div class="mp-head">Reference & Business</div><a href="/categories/ai-music"><span class="mp-name">AI Music</span><span class="mp-desc">Suno, Udio, AI tools</span></a><a href="/categories/music-business"><span class="mp-name">Music Business</span><span class="mp-desc">Royalties, licensing, sync</span></a></div></div></div>
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="gear">Gear <span class="caret">&#9662;</span></button><div class="mnav-panel"><div class="mp-col"><a href="/categories/daws"><span class="mp-name">DAWs</span><span class="mp-desc">Every major DAW</span></a><a href="/categories/plugins"><span class="mp-name">Plugins</span><span class="mp-desc">EQ, comp, reverb, synths</span></a><a href="/categories/hardware"><span class="mp-name">Hardware</span><span class="mp-desc">Interfaces, mics, monitors</span></a></div></div></div>
+        <a class="mnav-flat" href="/tools/" data-nav="tools">Tools</a>
+        <a class="mnav-flat" href="/bible/" data-nav="bible">The Bible</a>
+      </div>
+      <div class="mnav-right">
+        <button class="mnav-search" data-nav-search aria-label="Search"><svg width="17" height="17" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <a class="mnav-cta" href="https://theproducersbriefing.beehiiv.com">Sound Better &rarr;</a>
+        <label class="mnav-burger" for="mnav-toggle"><span></span><span></span><span></span></label>
+      </div>
+    </div>
+  </nav>
+  <div class="mnav-drawer">
+    <div class="drw-label">Articles</div>
+    <div class="drw-grid">
+      <a href="/categories/techniques" class="drw-card">Techniques</a><a href="/categories/reviews" class="drw-card">Reviews</a><a href="/categories/comparisons" class="drw-card">Comparisons</a><a href="/categories/breakdowns" class="drw-card">Breakdowns</a><a href="/categories/recreations" class="drw-card">Recreations</a><a href="/genres" class="drw-card">Genres</a><a href="/categories/ai-music" class="drw-card">AI Music</a><a href="/categories/music-business" class="drw-card">Music Business</a>
+    </div>
+    <div class="drw-label">Gear</div>
+    <div class="drw-grid">
+      <a href="/categories/daws" class="drw-card">DAWs</a><a href="/categories/plugins" class="drw-card">Plugins</a><a href="/categories/hardware" class="drw-card">Hardware</a>
+    </div>
+    <a href="/bible/" class="drw-feat drw-feat-bible">&#9670; The Producer's Bible</a>
+    <a href="/tools/" class="drw-feat">The Producer's Tools</a>
+    <a href="https://theproducersbriefing.beehiiv.com" class="drw-cta">Sound Better &rarr;</a>
+  </div>
+</div>
+
+
+<div class="container">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><ol>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../categories/recreations.html">Recreations</a></li>
+    <li><span aria-current="page">The Reese Bass</span></li>
+  </ol></nav>
+</div>
+<nav class="toc-bar" aria-label="Section navigation"><div class="toc-bar-track" id="tocBarTrack"></div></nav>
+<main class="container" id="main-content">
+  <div class="article-layout">
+    <article aria-labelledby="articleTitle">
+      <header class="article-header">
+        <div class="article-tags"><span class="article-tag teal"><a href="../categories/recreations.html" style="color:inherit;text-decoration:none;">Recreations</a></span>
+<span class="article-tag teal"><a href="../categories/techniques/sound-design.html" style="color:inherit;text-decoration:none;">Sound Design</a></span></div>
+        <h1 id="articleTitle">How to Recreate the Reese Bass (Kevin Saunderson&rsquo;s DnB Sound)</h1>
+        <div class="article-header-meta">
+          <div class="article-author"><div class="author-avatar" aria-hidden="true">MP</div><span class="author-name">The Music Production Wiki Team</span></div>
+          <span class="meta-divider"></span><span class="meta-item">Updated July 2026&nbsp;&middot;&nbsp;16 min read</span>
+        </div>
+      </header>
+      <div class="article-body">
+<p style="font-size:1.06rem;line-height:1.7;">The Reese bass is the low end of an entire lineage of British dance music &mdash; the dark, rolling, restless bass that powered <a href="how-to-make-drum-and-bass.html">drum and bass</a> and jungle and then spread into <a href="how-to-make-dubstep.html">dubstep</a>, garage and modern trap. It is also one of the most misremembered sounds in synthesis. Ask around and you will be told it was a Roland Juno-106, or that it is a secret preset, or that a &ldquo;Reese&rdquo; is just a supersaw with some filters on it. None of that is the origin. The real story is simpler and stranger: a Detroit techno pioneer, an obscure Casio synth, two waveforms drifting out of tune with each other, and a happy accident that a UK sampler culture turned into a genre. This guide separates what the Reese <em>actually</em> is from what the internet keeps repeating, then walks you through rebuilding it from a stock synth first, with the buyable shortcut named only because it is real and confirmable.</p>
+<div class="quick-answer">
+<div class="quick-answer-label">The short answer</div>
+<p>The Reese is <strong>not a Juno preset</strong> and it is <strong>not a supersaw</strong>. It is <strong>two detuned oscillators beating against each other</strong> &mdash; the pulsing, vocal movement you hear is the two voices drifting in and out of phase, and that movement <strong>speeds up as you play higher</strong>. To rebuild it in any synth: load <strong>two saw-like oscillators</strong> at the same pitch, <strong>detune one a few cents</strong> until you hear a slow beating, <strong>low-pass the harsh top</strong> so the weight sits low, and keep it <strong>mono with the sub centred</strong>. The free <strong>Vital</strong> does all of this; the authentic shortcut is <strong>Arturia&rsquo;s CZ&nbsp;V</strong>, which models the Casio engine Kevin Saunderson actually used.</p>
+</div>
+<div class="sourcebox">
+<div class="sourcebox-head"><span class="sourcebox-kicker">Where this comes from</span><span class="sourcebox-sub">Confirmed vs. inferred &mdash; so you know which claims are sourced and which are our best estimate.</span></div>
+<div class="sourcebox-row sourcebox-confirmed">
+<div class="sourcebox-tag">Confirmed</div>
+<div class="sourcebox-body"><p>The Reese is named after <strong>Kevin Saunderson&rsquo;s</strong> early alias <strong>Reese</strong>, from the 1988 track <strong>&ldquo;Just Want Another Chance.&rdquo;</strong> The name comes from the <em>alias</em>, not a technical property. Saunderson built the bass on a <strong>Casio CZ-series phase-distortion synth</strong>, layering two detuned saw-like voices whose drifting phase created the dark, vocal-like movement. In 1994 the sound was sampled by <strong>Renegade (Ray Keith, with Nookie engineering)</strong> for the jungle anthem <strong>&ldquo;Terrorist,&rdquo;</strong> which launched it across drum and bass. The transferable mechanism: <strong>two detuned oscillators &rarr; beating that accelerates as the note climbs &rarr; a low-pass filter to tame the top &rarr; mono, sub-centred.</strong> <span class="sourcebox-cite">Sources: Attack Magazine (Saunderson interview and &ldquo;Just Want Another Chance&rdquo; deconstruction); Native Instruments; Soundfly / Splice; Mixmag; Electronic Music Pills.</span></p></div></div>
+<div class="sourcebox-row sourcebox-disputed">
+<div class="sourcebox-tag">Commonly claimed &mdash; but disputed</div>
+<div class="sourcebox-body"><p>Three myths recur. <strong>(1)</strong> That it was a <strong>Roland Juno-106</strong> &mdash; a widespread misattribution Saunderson himself corrected to the Casio CZ. <strong>(2)</strong> <em>Which</em> CZ: he has said the 5000, the 1000 and the 3000 in different interviews, and once named a &ldquo;CZ-2000,&rdquo; a model Casio never made &mdash; so treat the exact model as genuinely uncertain (the 1000 and 5000 share one engine, so the tone is identical regardless). <strong>(3)</strong> That a Reese is <strong>&ldquo;a supersaw with band-reject filters.&rdquo;</strong> That is the later, Noisia-era neuro evolution, not the 1988 origin, which was two detuned voices and a low-pass filter. <span class="sourcebox-cite">Sources: Ali Jamieson (patch breakdown noting the Juno-106 misattribution); MusicRadar (Saunderson gear interview); Attack Magazine (model discrepancies documented).</span></p></div></div>
+<div class="sourcebox-row sourcebox-inferred">
+<div class="sourcebox-tag">Inferred &mdash; unverified</div>
+<div class="sourcebox-body"><p>The <strong>exact CZ patch and settings</strong>. Saunderson has said plainly he was experimenting &mdash; there is no documented preset &mdash; so any specific parameter values here are <strong>modeled reconstructions for a modern synth</strong>, not the Casio&rsquo;s literal settings. One honesty point follows from the hardware: the classic CZ has <strong>no resonant low-pass filter</strong>. It shaped brightness through phase distortion (the DCW amount) and its envelopes, and it produced <em>saw-like</em> waveshapes rather than true sawtooth oscillators. The low-pass filter in the recreation below is the <strong>modern route to the same result</strong>, not something the CZ itself did. <span class="sourcebox-cite">Sources: Saunderson interviews (experimentation, no fixed preset); Arturia CZ&nbsp;V documentation (phase distortion, &ldquo;no filter&rdquo;); Casio CZ engine references.</span></p></div></div>
+</div>
+
+<h2 id="reframe">It isn&rsquo;t a Juno, and it isn&rsquo;t a supersaw</h2>
+<p>Start by throwing out the two things you have probably heard. The Reese was not made on a Roland Juno-106. That myth is so common that Saunderson has spent years correcting it in interviews, and it survives partly because he <em>owned</em> a Juno-106 and used it on other records &mdash; just not for this bass. The bass came out of a Casio CZ, an unglamorous digital synth that most people had written off as a cheap 1980s home keyboard. That is worth sitting with: one of the most influential bass sounds in electronic music came from an instrument nobody was taking seriously, tweaked by someone who was, in his own words, just experimenting until something felt right.</p>
+<p>The second thing to drop is the idea that a Reese is a supersaw. They are cousins &mdash; both are built from detuned saw-like waves &mdash; but they are opposite in intent, and if you build one thinking it is the other you will get neither. We wrote a full guide to the other side of that family, <a href="how-to-recreate-the-supersaw.html">how to recreate the supersaw</a>, and the contrast is the fastest way to understand the Reese. A supersaw stacks <em>seven</em> saws and tunes the detuning so the voices blend into one bright, shimmering wall, then highpasses the low mud away so it sits up top as a lead. A Reese uses <em>two</em> voices and tunes the detuning so you specifically <em>hear</em> the beating between them, then low-passes the top away so it sits down low as a bass. The supersaw hides its detuning inside a smooth blend; the Reese puts the detuning in the spotlight. Same raw ingredient, opposite recipe.</p>
+<p>So the honest one-sentence definition is this: a Reese is <strong>two detuned voices, kept dark and mono, tuned so the phase movement between them becomes the character of the sound.</strong> Everything else &mdash; the distortion, the width, the band-reject notches you hear in modern drum and bass &mdash; is decoration added over the decades. Get the two beating voices right first and the rest is easy. Skip that and no amount of distortion will save it.</p>
+
+<h2 id="history">How an accident became a genre</h2>
+<p>The Reese&rsquo;s journey from a Detroit studio to the foundation of British bass music is a genuinely strange one, and understanding it explains why the sound is built the way it is. Saunderson made &ldquo;Just Want Another Chance&rdquo; as a dark, sensual club record, inspired by his teenage nights at New York&rsquo;s Paradise Garage hearing Larry Levan. He was chasing a mood &mdash; deep, brooding, hypnotic &mdash; and the bass was the first thing he built, the patch that set the direction for the whole track. Crucially, the original pressing included a mix with the bass isolated, a so-called &ldquo;bassapella&rdquo; with the drums stripped away, which made the sound trivially easy to lift onto a sampler. In an era when the Akai and E-mu samplers were reshaping dance music, an isolated, unmistakable bassline sitting on a widely-circulated 12-inch was an open invitation.</p>
+<p>UK producers accepted it. The sound surfaced intermittently through the late 1980s and early 1990s &mdash; Lenny Dee reached for it in 1989, Grooverider by 1993 &mdash; but the moment that fixed it into the genre came in 1994, when Ray Keith, engineered by Nookie and released under his Renegade alias, paired the Reese with the Amen break on &ldquo;Terrorist.&rdquo; That one record turned the Reese from a rare curiosity into a defining texture of jungle and drum and bass, and it is why so many people think the sound <em>is</em> jungle rather than Detroit techno. Producers then did what producers always do: they stopped sampling it and started building their own versions from scratch, which is exactly how a one-off experiment on a Casio became a technique you can be taught. The lesson buried in that history is the one this whole guide turns on &mdash; the sound outlived its source because it was a <em>principle</em> you could rebuild anywhere, not a preset locked to one machine.</p>
+
+<h2 id="elements">The four things that actually make a Reese</h2>
+<p>Break the sound into its load-bearing parts and it stops being mysterious. There are four, and only the first two are non-negotiable.</p>
+<p><strong>1. Two detuned voices.</strong> This is the entire foundation. Take one saw wave and it is inert; take two at very nearly the same pitch and something happens between them. Because they are slightly out of tune, their waveforms slowly slide in and out of alignment, reinforcing and cancelling in a repeating cycle. On the original the two voices were saw-like waveshapes from the Casio&rsquo;s phase-distortion engine; on your synth they are simply two saw oscillators, or one oscillator with a second voice detuned against it. If your synth has a <a href="../bible/detune.html">detune</a> control or a fine-tune knob per oscillator, you already have what you need.</p>
+<p><strong>2. The beating &mdash; and the fact that it speeds up.</strong> The pulsing movement you associate with a Reese is <a href="../bible/phase-cancellation.html">phase cancellation</a>: the two detuned voices periodically cancel and reinforce, and that cycle is what you hear as a slow throb. Here is the detail almost every tutorial misses, and the single best test of whether you have actually built a Reese: <em>the beating gets faster as you play higher up the keyboard.</em> That is not a bug, it is the physics &mdash; detuning is usually set in cents, a musical ratio, so the absolute frequency gap between the two voices widens as the pitch rises, and a wider gap beats faster. If your bass throbs at the same rate whether you play a low D or a high one, you have made a static stacked saw, not a Reese. Chase the beating, not the width.</p>
+<p>There is a second layer of movement worth knowing about, because it is where the classic jungle Reese gets its liquid, sliding feel. Add <a href="../bible/portamento.html">portamento</a> &mdash; glide &mdash; so the pitch slurs between notes instead of jumping, and because the beating rate is tied to pitch, the throb itself accelerates and decelerates as the note slides. The sound seems to strain and breathe, almost vocal, as it moves. That interplay between glide and beating is a huge part of why a well-played Reese feels alive rather than mechanical, and it is entirely a performance decision: same patch, different expression. Program your bassline with overlapping notes and a little glide time and the Reese starts to sing.</p>
+<p><strong>3. A low-pass filter to tame the top.</strong> Two detuned saws stacked together are harsh &mdash; a lot of buzzy high-frequency energy that fights the drums and hurts on a big system. Rolling a <a href="../bible/low-pass-filter.html">low-pass filter</a> down darkens the sound and pushes the weight into the low-mids and sub, which is where a Reese lives. This is the step that turns &ldquo;two annoying saws&rdquo; into &ldquo;a bass.&rdquo; The honesty note from the sourcing box applies here: the original Casio did not have a resonant low-pass filter at all &mdash; it shaped brightness through phase distortion &mdash; so the filter is the <em>modern</em> route to the same tonal result, not a reproduction of the CZ&rsquo;s signal path. It works because the end goal is the same: dark, weighted, controlled.</p>
+<p><strong>4. Mono, with the sub centred.</strong> The Reese is a phase-based sound, and phase is fragile in stereo. Spread the two voices hard left and right and they will sound wide and impressive in your headphones and then partly vanish the moment the track is summed to mono on a club system, a phone speaker or a Bluetooth soundbar. Keep the core of the sound &mdash; especially the sub octave &mdash; in the centre and in mono, and it stays powerful and, more importantly, <a href="how-to-mix-bass.html">translates</a> everywhere. If you want width, add it above the fundamental as a separate layer and leave the bottom alone. This is the discipline that separates a bass that works in the club from one that only works at your desk.</p>
+
+<h2 id="comb">The beating, seen as a comb</h2>
+<p>It helps to see what the detuning is doing to the spectrum. When two saws are detuned against each other and summed, the places where they cancel carve regular notches into the frequency response &mdash; a comb-like pattern of dips. As the pitch moves and the beating cycles, those notches slide, and that movement is exactly what your ear reads as the Reese &ldquo;pulse.&rdquo; A single saw has none of this; it is smooth. Two detuned saws have the comb, and the comb is the sound.</p>
+<p><div class="diagram-wrap">
+<picture>
+<source media="(max-width:900px)" srcset="../images/how-to-recreate-the-reese-bass-comb-m.png">
+<img src="../images/how-to-recreate-the-reese-bass-comb.png" alt="Two response curves. The purple dashed curve is a single saw: a smooth line, strong at the low end and declining steadily toward the top. The teal filled curve is two detuned saws summed: the same overall downward slope, but riddled with evenly spaced dips, one of them labelled ‘a cancellation notch.’ The x-axis runs from 30 hertz to 4 kilohertz. The caption notes the shape shows the cancellation comb, not a measured plot." width="1040" height="494" loading="lazy" />
+</picture>
+<div class="diagram-caption">The two-saw comb: detune two saws and they cancel at evenly-spaced notches. That comb, sliding as the pitch moves, is the wub.</div>
+</div></p>
+<p>You do not need to think about this consciously while you play &mdash; but understanding it explains every practical decision. It is why more detuning means more, faster notches (more movement), why too much detuning turns the comb into an audibly out-of-tune chord, and why the sound is so mono-dependent: the notches are a phase phenomenon, and stereo widening smears the phase relationships that create them. The comb is also why a Reese rewards <a href="../bible/subtractive-synthesis.html">subtractive synthesis</a> thinking &mdash; you are sculpting a moving spectrum, not stacking presets.</p>
+
+<h2 id="spectrum">Where the Reese sits in the mix</h2>
+<p>Tonally, a finished Reese is heavier and darker than most beginners expect. The weight is concentrated in the sub and bass, the interesting movement lives in the low-mids, and the harsh top has been rolled off by the filter. That balance is what lets a Reese carry a whole track&rsquo;s low end without a separate sub layer &mdash; it already contains its own sub &mdash; and it is why the sound reads as menacing rather than bright.</p>
+<p><div class="diagram-wrap">
+<picture>
+<source media="(max-width:900px)" srcset="../images/how-to-recreate-the-reese-bass-spec-m.png">
+<img src="../images/how-to-recreate-the-reese-bass-spec.png" alt="An illustrative spectrum drawn as bars across six labelled bands: sub, bass, low-mid, mid, presence and air. The sub and bass bands are tall, carrying the weight. Energy peaks again in an amber-highlighted region across the low-mid band labelled ‘the movement lives here,’ then rolls off steeply through the mid, presence and air bands because the low-pass filter has cut them. The caption notes it is an illustrative spectrum, read band by band, not a measured FFT." width="1040" height="494" loading="lazy" />
+</picture>
+<div class="diagram-caption">Sub-heavy and low-passed: weight in the sub and bass, the movement in the low-mids, the harsh top rolled off by the filter.</div>
+</div></p>
+<p>Reading a bass this way &mdash; band by band &mdash; is a more useful habit than chasing a preset. When your Reese sounds wrong, you can usually name the band: too thin means not enough sub and bass; too harsh means the filter is open too far and the top band is screaming; lifeless means there is no movement in the low-mids because the two voices are not beating. Fixing the sound becomes a matter of pointing at a band and asking what belongs there.</p>
+<p>This band-by-band weight has a direct practical consequence: a good Reese usually <em>is</em> the entire low end, so you rarely want a second sub layer underneath it. Instead, the job is to make room for the kick. Because the Reese sustains through the bar and the kick is transient, they collide in the sub, and the fix is to carve a small pocket &mdash; either a quick volume duck on the Reese every time the kick hits, or a narrow dip in the Reese around the kick&rsquo;s fundamental so the two are not fighting for the same few hertz. Get that relationship right and the track feels enormous with almost nothing else in the bottom; get it wrong and everything below 200&nbsp;Hz turns to soup no matter how good the patch is. It is the same discipline that governs any dense low end, and it is worth building the habit early, because a Reese is unforgiving about it.</p>
+
+<h2 id="recreate">Recreate it: the free route first, then the shortcut</h2>
+<p>Here is the whole thing, stock-first. You do not need to buy anything &mdash; the free <a href="how-to-use-vital.html">Vital</a> has everything required, and so does any synth with two oscillators and a filter.</p>
+<ol class="action-steps">
+<li><strong>Two saws, same pitch.</strong> Load two saw oscillators (in Vital, turn on oscillator 1 and oscillator 2, both set to a basic saw) tuned to the same note. On one oscillator, keep the detune at zero for now so you can hear the beating appear as you introduce it.</li>
+<li><strong>Detune the second a few cents.</strong> Nudge the fine-tune of the second oscillator up by a small amount until you hear a slow throb. That throb is the whole sound arriving. Adjust until the pulse feels musical at the low end &mdash; slow and deliberate, not a fast warble.</li>
+<li><strong>Confirm it&rsquo;s a Reese.</strong> Play up an octave. The beating should get noticeably faster. If it does, you have the real thing; if it stays the same, increase your detune slightly or check that you are detuning in cents, not by a fixed frequency.</li>
+<li><strong>Low-pass the top.</strong> Route both oscillators through a low-pass filter and pull the cutoff down until the buzz softens and the weight drops into the low-mids and sub. A touch of resonance near the cutoff adds bite; too much and it whistles.</li>
+<li><strong>Mono and centred.</strong> Make sure the patch is mono (or at least that the sub is), keep everything centred, and set the amplitude envelope to a held sustain with a short release so the notes ring like a drone rather than plucking.</li>
+<li><strong>Optional: drive it.</strong> For jungle and neuro flavours, add distortion after the filter, or split the signal into bands and distort only the mids while leaving the sub clean. This is where the modern aggression comes from &mdash; but it is a layer on top of a Reese, not the Reese itself.</li>
+</ol>
+<p>Two details make the difference between a patch that technically works and one that feels like a record. First, the amplitude envelope: a Reese is a sustained, rolling drone, not a plucked note, so set the attack fast, the sustain full, the decay out of the way, and give it a short release so notes ring into each other rather than clicking off. That held quality is what lets the bass carry a groove all on its own. Second, resist the urge to start from a preset. Open an init patch, place the two oscillators yourself, and detune by ear until the beating arrives &mdash; you will learn more in five minutes of that than in an hour of scrolling factory Reeses, and you will own a sound nobody else has. If you are in Vital specifically, the whole thing lives on the oscillator and filter pages: two saws, a few cents of detune on the second, the low-pass filter pulled down, unison left low or off so you keep the honest two-voice beating rather than smearing it into a supersaw.</p>
+<p>That is the free, from-scratch route, and it is genuinely all you need &mdash; the same two-oscillator idea works in <a href="serum-2-vs-vital.html">Serum or Vital</a>, in Massive, in any DAW&rsquo;s stock synth, and in a hundred <a href="best-free-vst-plugins.html">free plugins</a>. If you are shopping for a synth to live in, our roundup of the <a href="best-synth-plugins.html">best synth plugins</a> covers which ones make bass work like this easiest, but none of them is required.</p>
+<p><div class="diagram-wrap">
+<picture>
+<source media="(max-width:900px)" srcset="../images/how-to-recreate-the-reese-bass-route-m.png">
+<img src="../images/how-to-recreate-the-reese-bass-route.png" alt="A decision router matching what you want to which route. Top row, teal: want it free, from scratch — two detuned saws plus a low-pass filter — output Vital, free. Middle row, purple: want the authentic engine — the Casio phase-distortion synth modelled — output Arturia CZ V. Bottom row, amber: sampling the actual record, like the jungle pioneers did — output clear it first, arrow, rights. The caption notes stock first: two detuned saws plus a filter is the whole sound; sampling the original record is where rights begin." width="1040" height="529" loading="lazy" />
+</picture>
+<div class="diagram-caption">Pick your route. The free route nails the sound; the amber route is a clearance question, not a recreation.</div>
+</div></p>
+<p><strong>The authentic shortcut.</strong> If you specifically want the Casio character, <strong>Arturia&rsquo;s CZ&nbsp;V</strong> models the CZ-101 and CZ-1000 &mdash; the same phase-distortion engine family as the synth Saunderson used &mdash; and lets you build the sound the way he did, in the original engine rather than with stacked saws. It is a paid plugin, sold on its own or as part of Arturia&rsquo;s V Collection bundle, and it goes on sale regularly, so check the current price before you buy. It is a shortcut to authenticity, not a requirement for the sound; a stock Reese in Vital is perceptually indistinguishable to almost any listener in a finished mix. The CZ&nbsp;V matters more if you love phase distortion as a synthesis method than if you just need a Reese for one track.</p>
+
+<h2 id="beyond">Beyond 1988: the modern Reese</h2>
+<p>The reason the Reese never went away is that it kept mutating. The 1988 original was restrained &mdash; two voices, a filter, mono. Once UK producers had sampled it off Saunderson&rsquo;s record and then started building their own from scratch, they pushed it in every direction, and the &ldquo;modern Reese&rdquo; you hear in <a href="how-to-make-dubstep.html">dubstep</a>, neurofunk and <a href="how-to-make-uk-garage.html">UK garage</a> is that origin sound plus decades of aggression.</p>
+<p>The main additions are worth naming so you know they are additions, not the essence. Producers stack <em>more</em> than two voices with unison detune for thickness. They distort heavily &mdash; guitar-amp saturation, waveshaping, bit-crushing &mdash; which adds harmonics for the low-pass to then carve. They introduce <em>band-reject</em> or comb filtering that sweeps moving notches through the mid-range, so the bass appears to talk and growl; this is the &ldquo;a Reese is a supersaw with notch filters&rdquo; description, and it is accurate for the modern sound even though it is wrong for the original. And they often split the signal into frequency bands, distorting and widening the mids while keeping a clean mono sub underneath, which is why a neuro Reese can be enormous and detailed without losing its low end. If you want to shape any of this cleanly, understanding how to <a href="how-to-eq-bass.html">EQ bass</a> is more useful than another plugin. All of it, though, sits on top of the same two beating voices. Master the origin and the evolution is just seasoning.</p>
+<p>It is worth tracing that evolution once, because it maps neatly onto the sub-genres. The early jungle and hardcore Reese was mostly the sampled original, filtered and pitched. As drum and bass matured in the mid-1990s, producers like Ed Rush and Optical distorted it into the harder, mid-forward &ldquo;techstep&rdquo; sound. By the 2000s, the neurofunk generation &mdash; Noisia the obvious touchstone &mdash; turned Reese design into a craft of its own, layering, resampling and band-splitting until a single bass note could contain a dozen processed versions of itself. The through-line across all of it is the same two detuned voices; what changed was how violently they were treated afterward. The multiband move in particular is the one worth stealing even for gentler music: split your bass around 150&ndash;200&nbsp;Hz, keep the low band a clean mono sub, and do all your distortion, widening and movement on the band above it. You get the aggression and the detail without ever muddying or de-centring the sub that holds the track together.</p>
+
+<h2 id="cant-buy">What you can&rsquo;t clone &mdash; and why it doesn&rsquo;t matter</h2>
+<p>There is one thing you cannot perfectly reproduce, and it is worth being honest about so you stop chasing it. The exact character of the Casio CZ&rsquo;s phase-distortion engine &mdash; the specific way its digitally-controlled waveforms morph, the slightly gritty converter, the particular envelopes &mdash; is a fingerprint of that hardware. Even Arturia&rsquo;s emulation, which is very good, is a model of it rather than the thing itself, and the stacked-saw route you will use in Vital reaches the same <em>perceptual</em> sound by a different mechanism entirely. Nobody was in that Detroit studio in 1988, there is no documented preset, and Saunderson himself has said he was simply turning knobs until it felt right.</p>
+<p>None of that matters for your music, and here is the freeing part: the Reese was never about the Casio. It was about two detuned voices beating against each other, and that idea is <em>fully</em> reachable in any synth you already own. The producers who built the genre were not trying to reproduce a specific machine &mdash; most of them had never heard the Casio and were sampling a record or building from scratch. What they kept was the <em>principle</em>, and the principle is portable. Spend your energy on the beating and the filter and the mono discipline, not on hunting for the magic synth. There isn&rsquo;t one. There is a technique, and now you have it.</p>
+<p>If you want proof that the machine never mattered, listen to how many different-sounding Reeses exist. The one on &ldquo;Terrorist&rdquo; is not the one on a modern neurofunk record, which is not the one Saunderson pressed in 1988, and yet a listener recognises all three instantly as the same lineage. What they share is not a synth, a preset or a plugin &mdash; it is the identity that survives every re-creation: two voices beating, a dark low-passed body, a mono centre of gravity. That is the part you cannot buy and do not need to, because it is not a product at all. It is a relationship between two detuned oscillators, and it belongs to anyone who understands it. The engineers who could not afford a Casio in a Bristol bedroom in 1993 proved that decades ago. Get the relationship right and the sound is yours, on whatever you happen to own.</p>
+
+<h2 id="rights">Do you need to clear anything?</h2>
+<p>Almost always, no &mdash; but this is the one recreation where the answer has an asterisk, so it is worth being precise. If you build the Reese yourself in your own synth, the sound is entirely your own production. Recreating a synthesis technique is not sampling; there is nothing to clear, and you can release it freely. That covers everything this guide teaches.</p>
+<p>The asterisk is history. The Reese entered drum and bass not because producers rebuilt the patch but because they <em>sampled the actual record</em> &mdash; Renegade lifted the bass straight off Saunderson&rsquo;s &ldquo;Just Want Another Chance&rdquo; for &ldquo;Terrorist,&rdquo; and countless jungle tracks did the same. If you go that route today &mdash; sampling the original master rather than recreating the patch &mdash; that is a clearance question, not a recreation, and it is a genuinely different task with legal exposure. It is worth understanding <a href="how-to-clear-a-sample.html">how to clear a sample</a> before you release anything built on someone else&rsquo;s recording. Recreate the sound and you are free; sample the record and you have paperwork.</p>
+
+<h2 id="exercises">Build the skill: 3 drills</h2>
+<div class="exercise-block">
+<div class="exercise-header"><span class="skill-badge skill-badge--beginner">Beginner</span><span class="exercise-title">Find the beating</span></div>
+<ol>
+<li>Load two saw oscillators at the same pitch in any synth. Play and hold a low note.</li>
+<li>Slowly detune the second oscillator from zero and listen for the moment a throb appears.</li>
+<li>Keep going until the throb is obviously fast, then bring it back to a slow, musical pulse. Memorise how that transition sounds &mdash; that is your ear learning the Reese.</li>
+</ol>
+</div>
+<div class="exercise-block">
+<div class="exercise-header"><span class="skill-badge skill-badge--intermediate">Intermediate</span><span class="exercise-title">Prove it&rsquo;s a Reese</span></div>
+<ol>
+<li>Build the full patch: two detuned saws, low-pass filter pulled down, mono, held sustain.</li>
+<li>Play the same phrase an octave apart and confirm the beating speeds up higher. If it doesn&rsquo;t, fix your detune.</li>
+<li>Now sum your project to mono and check the low end doesn&rsquo;t collapse. If it does, you have stereo width on the sub &mdash; centre it.</li>
+</ol>
+</div>
+<div class="exercise-block">
+<div class="exercise-header"><span class="skill-badge skill-badge--advanced">Advanced</span><span class="exercise-title">From origin to neuro</span></div>
+<ol>
+<li>Start from your clean two-voice Reese. Duplicate the track and split it into a low band (sub) and a mid band.</li>
+<li>Distort and widen only the mid band; keep the sub clean and mono.</li>
+<li>Add a slow band-reject filter sweep on the mids so the sound talks, and A/B it against the untouched origin patch to hear exactly what the modern era added.</li>
+</ol>
+</div>
+
+<h2 id="mistakes">The mistakes that make it sound wrong</h2>
+<div class="mistake-box">
+<div class="mistake-box-label">Mistake 1 &mdash; No real beating</div>
+<p>The most common failure: two oscillators at the same pitch with no detune, or detune so wide the voices split into an out-of-tune interval. Either way there is no beating, so there is no Reese. Set the detune where you hear a living pulse, then confirm it changes as you play up the keyboard.</p>
+</div>
+<div class="mistake-box">
+<div class="mistake-box-label">Mistake 2 &mdash; Leaving it bright</div>
+<p>Skipping the low-pass filter leaves two harsh saws screaming in the top end, fighting the drums and hurting on big systems. A Reese is a dark sound. Pull the filter down until the weight sits in the low-mids and sub.</p>
+</div>
+<div class="mistake-box">
+<div class="mistake-box-label">Mistake 3 &mdash; Wide stereo sub</div>
+<p>Spreading the sound hard in stereo feels impressive in headphones and then collapses in mono on a club system or phone. Keep the sub and the core mono and centred; add width only above the fundamental.</p>
+</div>
+<div class="mistake-box">
+<div class="mistake-box-label">Mistake 4 &mdash; Reaching for a preset</div>
+<p>Hunting for the &ldquo;right&rdquo; Reese preset or the magic synth misses the point &mdash; the sound is a technique, not a product. Two detuned voices, a filter, mono. Build it once from scratch and you will never need a preset again. It&rsquo;s the same lesson as our other recreations, from the <a href="how-to-recreate-the-80s-gated-reverb-snare.html">gated-reverb snare</a> to the supersaw: the principle travels, the preset doesn&rsquo;t.</p>
+</div>
+<p>One last piece of context that makes all of this stick: the Reese came from <a href="how-to-make-techno.html">Detroit techno</a> and only became a bass icon after a UK sampler culture adopted it. It is, in other words, an accident that a community turned into a genre &mdash; which is exactly why understanding the mechanism beats memorising a recipe. You are not copying Saunderson&rsquo;s knob positions; you are learning the move he stumbled into, so you can do it to any sound, in any synth, forever.</p>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+<div class="faq-accordion">
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">What synth made the original Reese bass?</span></div></div>
+<div class="faq-accordion-a"><p>A Casio CZ-series phase-distortion synth. Kevin Saunderson built it for his 1988 track &ldquo;Just Want Another Chance,&rdquo; released under his Reese alias, by layering two detuned saw-like voices. He has named the CZ-5000, the CZ-1000 and the CZ-3000 in different interviews and once referred to a &ldquo;CZ-2000,&rdquo; a model that never existed, so treat the exact model as uncertain; the 1000 and 5000 share the same synthesis engine, so the tone is the same either way. It was not a Roland Juno-106, a widespread misattribution Saunderson himself corrected.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Do I need a special plugin to make a Reese bass?</span></div></div>
+<div class="faq-accordion-a"><p>No. Any synth with two oscillators, a detune control and a low-pass filter can do it, and the free Vital covers all of that. Serum and Massive do it trivially too. Arturia&rsquo;s CZ&nbsp;V models the actual Casio phase-distortion engine if you want the authentic route, but it is a shortcut, not a requirement. The principle is two detuned voices beating against each other, and that works in any synth.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Why doesn&rsquo;t my Reese bass move or &lsquo;wobble&rsquo;?</span></div></div>
+<div class="faq-accordion-a"><p>Because your two oscillators are not actually beating. The Reese movement comes from two detuned voices drifting in and out of phase, and that beating should speed up as you play higher notes. If your sound is static, your detune is either at zero or so wide the voices have separated into an out-of-tune chord instead of one beating tone. Nudge the detune until you hear a slow, musical pulse down low, then check that it changes when you play up the keyboard.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Is a Reese bass just a supersaw?</span></div></div>
+<div class="faq-accordion-a"><p>No, and the distinction matters. A supersaw is seven detuned saws from one oscillator through a highpass, tuned so the voices blend into a bright shimmer. A Reese is two detuned voices through a low-pass, tuned so you hear the beating between them, kept dark and sub-heavy in mono. The supersaw hides its detuning; the Reese puts it front and centre. The modern habit of describing a Reese as &ldquo;a supersaw with band-reject filters&rdquo; is the later drum-and-bass evolution, not the 1988 original.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">How much should I detune a Reese?</span></div></div>
+<div class="faq-accordion-a"><p>Start with just a few cents between the two voices and listen for the beating, not the width. You want a slow pulse at the bottom of the keyboard that quickens as you climb. Too little detune and the sound is a flat, lifeless single tone; too much and the two voices separate into an audibly out-of-tune interval. The sweet spot is where the movement feels alive but the pitch still reads as one note. There is no single correct number because it depends on the octave you play in.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Should a Reese bass be mono or stereo?</span></div></div>
+<div class="faq-accordion-a"><p>Keep the sub and the core of the Reese in mono. The whole sound depends on phase relationships between two detuned voices, and spreading them wide in stereo invites phase cancellation that collapses the low end on club systems and phone speakers. If you want width, add it above the fundamental with a separate layer or mid/side processing, and keep the bottom octave centred and mono so it stays powerful and translates everywhere.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">How do modern producers make aggressive Reese basses?</span></div></div>
+<div class="faq-accordion-a"><p>By taking the 1988 idea and pushing it. They stack more than two voices with unison detune, distort the sound heavily, and carve moving notches into it with band-reject or comb filtering so the mid-range appears to shift and growl. Many split the signal into bands, distort and widen the mids, and keep a clean mono sub underneath. That is the Noisia-era neuro sound, an evolution of the Reese rather than the original, which was simply two detuned voices and a low-pass filter.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Do I need to clear any rights to use a Reese I made?</span></div></div>
+<div class="faq-accordion-a"><p>If you built the patch yourself in your own synth, no. Recreating a synthesis technique is your own production and there is nothing to clear. The rights question only appears if you sample the original recording, the way the early jungle producers lifted the bass straight off Saunderson&rsquo;s record. Sampling an actual master is a clearance matter, not a recreation, and it is worth understanding before you release anything built on someone else&rsquo;s recording.</p></div></div>
+</div>
+<div class="related-grid">
+<a href="serum-2-vs-vital.html" class="related-card"><div class="related-card-tag">Comparisons</div><h3 class="related-card-title">Serum 2 vs Vital</h3><p class="related-card-desc">The two synths most producers reach for to build a Reese &mdash; one paid, one free, both more than capable.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-recreate-the-supersaw.html" class="related-card"><div class="related-card-tag">Recreations</div><h3 class="related-card-title">How to Recreate the Supersaw</h3><p class="related-card-desc">The Reese&rsquo;s bright cousin &mdash; the same detuned-saw ingredient tuned the opposite way. The clearest way to understand both.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-make-drum-and-bass.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">How to Make Drum and Bass</h3><p class="related-card-desc">The genre the Reese built &mdash; where this bass sits against the breaks and how to write a track around it.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-make-dubstep.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">How to Make Dubstep</h3><p class="related-card-desc">Where the aggressive, distorted, band-split Reese found its second life after jungle.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-use-vital.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">How to Use Vital</h3><p class="related-card-desc">Build the whole Reese in the free synth from this guide &mdash; two oscillators, detune, filter, mono.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="../bible/phase-cancellation.html" class="related-card"><div class="related-card-tag">Bible</div><h3 class="related-card-title">Phase Cancellation</h3><p class="related-card-desc">The mechanism at the heart of the Reese &mdash; why two detuned voices beat, and why it stays mono.</p><span class="related-card-meta">Read article &rarr;</span></a>
+</div>
+</div>
+</article>
+
+    <aside aria-label="Article sidebar">
+      <div class="sidebar-widget toc-widget" aria-labelledby="tocHeading">
+        <div class="sidebar-widget-header"><h2 class="sidebar-widget-title" id="tocHeading">In This Article</h2></div>
+        <div class="sidebar-widget-body"><ul class="toc-list">
+
+<li><a href="#reframe">Not a Juno or Supersaw</a></li><li><a href="#history">Accident to Genre</a></li><li><a href="#elements">The 4 Ingredients</a></li><li><a href="#comb">The Two-Saw Comb</a></li><li><a href="#spectrum">Where It Sits</a></li><li><a href="#recreate">Recreate It</a></li><li><a href="#beyond">The Modern Reese</a></li><li><a href="#cant-buy">What You Can’t Clone</a></li><li><a href="#rights">Rights?</a></li><li><a href="#exercises">3 Drills</a></li><li><a href="#mistakes">Common Mistakes</a></li><li><a href="#faq">FAQ</a></li>
+
+</ul></div>
+      </div>
+      <div class="sidebar-widget" style="background:var(--bg-void);border-color:var(--border-default);">
+        <div class="sidebar-widget-body" style="padding:1.5rem;">
+          <p style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.5rem;">Newsletter</p>
+          <h3 style="font-family:var(--font-display);color:var(--text-primary);font-size:1.1rem;margin-bottom:.5rem;">The Producer's Briefing</h3>
+          <p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:1rem;line-height:1.55;">Weekly tips, gear news, and technique guides. Free.</p>
+          <form class="newsletter-form-js" style="display:flex;flex-direction:column;gap:.5rem;" novalidate>
+            <input type="email" name="email" class="form-input" placeholder="Your email" required />
+            <button type="submit" class="btn-newsletter" style="font-size:.82rem;padding:.65rem 1rem;">Subscribe Free</button>
+          </form>
+        </div>
+      <div class="sidebar-widget" style="margin-top:1.5rem;">
+        <div class="sidebar-widget-header" style="text-align:center;">
+          <h2 class="sidebar-widget-title">Related Articles</h2>
+        </div>
+        <div class="sidebar-widget-body" style="padding:1rem;">
+<ul style="list-style:none;padding:0;margin:0;text-align:center;"><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="serum-2-vs-vital.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">Serum 2 vs Vital</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Comparisons</span></li><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="how-to-recreate-the-supersaw.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">Recreate the Supersaw</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Recreations</span></li><li style="padding:.6rem 0;"><a href="how-to-make-drum-and-bass.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">How to Make Drum and Bass</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Techniques</span></li></ul>
+        </div>
+      </div>
+      </div>
+    </aside>
+  </div>
+</main>
+<section class="newsletter-section" id="newsletter" aria-labelledby="newsletterHeading">
+  <div class="container">
+    <div class="newsletter-inner">
+      <div class="newsletter-content">
+        <p class="newsletter-label">Newsletter</p>
+        <h2 id="newsletterHeading" class="newsletter-title">The Producer's <em>Briefing</em></h2>
+        <p class="newsletter-desc">Weekly techniques, gear news, and music business insights. Free.</p>
+      </div>
+      <div class="newsletter-form-wrap">
+        <form class="newsletter-form-js" novalidate>
+          <input type="email" name="email" class="form-input" placeholder="Your email address" required />
+          <button type="submit" class="btn-newsletter">Subscribe Free</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<footer class="site-footer" role="contentinfo">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="../index.html" class="site-logo"><span class="logo-wordmark">Music<span>Production</span>Wiki</span><span class="logo-tagline">The Producer's Reference</span></a>
+    </div>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <div class="footer-col">
+        <h3 class="footer-col-title">Categories</h3>
+        <ul>
+          <li><a href="../categories/reviews.html">Reviews</a></li>
+          <li><a href="../categories/comparisons.html">Comparisons</a></li>
+          <li><a href="../categories/ai-music.html">AI Music</a></li>
+          <li><a href="../categories/daws.html">DAWs</a></li>
+          <li><a href="../categories/plugins.html">Plugins</a></li>
+          <li><a href="../categories/hardware.html">Gear</a></li>
+          <li><a href="../categories/techniques.html">Techniques</a></li>
+          <li><a href="../categories/music-business.html">Music Business</a></li>
+          <li><a href="../categories/glossary.html">Glossary</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">Popular</h3>
+        <ul>
+          <li><a href="../articles/suno-vs-udio.html">Suno vs Udio</a></li>
+          <li><a href="../articles/best-daw-for-beginners.html">Best DAW for Beginners</a></li>
+          <li><a href="../articles/focusrite-scarlett-2i2-gen-4-review.html">Scarlett 2i2 Review</a></li>
+          <li><a href="../articles/sidechain-compression-guide.html">Sidechain Compression</a></li>
+          <li><a href="../articles/best-compressor-plugins.html">Best Compressor Plugins</a></li>
+          <li><a href="../articles/what-is-gain-staging.html">What Is Gain Staging</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">About</h3>
+        <ul>
+          <li><a href="../about.html">About MPW</a></li>
+          <li><a href="../about.html#team">Our Team</a></li>
+          <li><a href="../about.html#methodology">Review Methodology</a></li>
+          <li><a href="../about.html#affiliate">Affiliate Disclosure</a></li>
+          <li><a href="../about.html#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="footer-bottom"><div class="container"><p>© <span id="copyrightYear"></span> MusicProductionWiki.com. All rights reserved. Content by the Music Production Wiki Team.</p></div></div>
+</footer>
+<script src="../js/main.js"></script>
+<script>document.getElementById('copyrightYear').textContent = new Date().getFullYear();</script>
+
+<button id="mpwBackTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  aria-label="Back to top"
+  style="position:fixed;bottom:1.5rem;right:1.5rem;width:2.5rem;height:2.5rem;border-radius:50%;
+         background:var(--teal);color:#000;border:none;cursor:pointer;display:none;
+         align-items:center;justify-content:center;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3);">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <polyline points="18 15 12 9 6 15"/>
+  </svg>
+</button>
+<script>
+(function(){
+  var btn=document.getElementById('mpwBackTop');
+  var bar=document.getElementById('readingProgress');
+  var art=document.querySelector('.article-body');
+  window.addEventListener('scroll',function(){
+    var st=window.scrollY||document.documentElement.scrollTop;
+    btn.style.display=st>400?'flex':'none';
+    if(bar&&art){
+      var h=art.getBoundingClientRect().height;
+      var top=art.getBoundingClientRect().top+st;
+      var pct=Math.min(100,Math.max(0,(st-top+window.innerHeight)*100/h));
+      bar.style.width=pct+'%';
+      bar.setAttribute('aria-valuenow',Math.round(pct));
+    }
+  });
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<!-- MPW universal search: one overlay, one Fuse index (/search-index.json) -->
+<div class="usearch" id="usearch" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="usearch-box">
+    <div class="usearch-top">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input id="usearchInput" type="text" placeholder="Search tools, articles, the Bible…" autocomplete="off">
+      <kbd>esc</kbd>
+    </div>
+    <div class="usearch-results" id="usearchResults"></div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
+<script>
+(function(){
+  // === production parity: lazy-load index on first open, build Fuse once ===
+  var data=null, fuse=null;
+  var overlay=document.getElementById('usearch');
+  var input=document.getElementById('usearchInput');
+  var box=document.getElementById('usearchResults');
+  var sel=-1, current=[];
+  // article slugs are bare; bible/ and tools/ slugs carry their prefix (verified vs live search-index.json)
+  function urlFor(s){ return (s.indexOf('bible/')===0||s.indexOf('tools/')===0) ? '/'+s : '/articles/'+s; }
+
+  function buildFuse(arr){
+    data=arr;
+    fuse=new Fuse(data,{keys:['title','category','description'],threshold:0.34,ignoreLocation:true,minMatchCharLength:2});
+  }
+  function ensureIndex(cb){
+    if(fuse){cb();return;}
+    // PRODUCTION: one shared index, lazy-loaded on first open.
+    fetch('/search-index.json').then(function(r){return r.json();}).then(function(arr){
+      buildFuse(arr); cb();
+    }).catch(function(){ box.textContent='Search failed to load.'; });
+  }
+
+  function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  function render(results){
+    current=results;
+    while(box.firstChild) box.removeChild(box.firstChild);   // no innerHTML
+    if(!input.value.trim()){ var p=document.createElement('div'); p.className='usearch-empty'; p.textContent='Start typing to search everything.'; box.appendChild(p); return; }
+    if(!results.length){ var n=document.createElement('div'); n.className='usearch-empty'; n.textContent='No results for "'+input.value+'".'; box.appendChild(n); return; }
+    results.slice(0,12).forEach(function(r,i){
+      var e=r.item||r;
+      var a=document.createElement('a'); a.href=urlFor(e.slug); if(i===sel)a.className='sel';
+      var top=document.createElement('div'); top.className='ur-top';
+      var t=document.createElement('span'); t.className='ur-title'; t.textContent=e.title;
+      var c=document.createElement('span'); c.className='ur-cat'; c.setAttribute('data-c',e.category||''); c.textContent=e.category||'';
+      top.appendChild(t); top.appendChild(c); a.appendChild(top);
+      if(e.description){ var d=document.createElement('div'); d.className='ur-desc'; d.textContent=e.description; a.appendChild(d); }
+      box.appendChild(a);
+    });
+  }
+
+  function open(q){ ensureIndex(function(){ overlay.classList.add('open'); input.focus(); if(q!=null){input.value=q;} sel=-1; render(input.value?fuse.search(input.value):[]); }); }
+  function close(){ overlay.classList.remove('open'); }
+
+  // wire every nav's search button to the shared overlay
+  document.querySelectorAll('[data-nav-search]').forEach(function(b){ b.addEventListener('click',function(){open(null);}); });
+  input.addEventListener('input',function(){ sel=-1; render(fuse?fuse.search(input.value):[]); });
+  input.addEventListener('keydown',function(e){
+    if(e.key==='Escape')close();
+    else if(e.key==='ArrowDown'){e.preventDefault(); sel=Math.min(sel+1,Math.min(current.length,12)-1); render(current);}
+    else if(e.key==='ArrowUp'){e.preventDefault(); sel=Math.max(sel-1,0); render(current);}
+    else if(e.key==='Enter'&&current[sel]){ var e2=current[sel].item||current[sel]; location.href=urlFor(e2.slug); }
+  });
+  overlay.addEventListener('click',function(e){ if(e.target===overlay)close(); });
+  document.addEventListener('keydown',function(e){ if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();open(null);} });
+})();
+</script>
+<script id="toc-bar-js">
+(function(){
+  var body=document.querySelector('.article-body');
+  var track=document.getElementById('tocBarTrack');
+  if(!body||!track)return;
+  var heads=[].slice.call(body.querySelectorAll('h2[id]'));
+  if(!heads.length)return;
+  heads.forEach(function(h){
+    var a=document.createElement('a');a.href='#'+h.id;
+    var t=h.textContent.trim();var i=t.indexOf(':');if(i>0)t=t.slice(0,i);
+    a.textContent=t;track.appendChild(a);
+  });
+  var links=[].slice.call(track.querySelectorAll('a'));
+  function onScroll(){
+    var y=window.scrollY+130,cur=heads[0].id;
+    heads.forEach(function(h){if(h.offsetTop<=y)cur=h.id;});
+    links.forEach(function(l){var on=l.getAttribute('href')==='#'+cur;l.classList.toggle('active',on);
+      if(on)l.scrollIntoView({inline:'center',block:'nearest'});});
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+})();
+</script>
+<script>
+function mpwFaqToggle(el){
+  var answer = el.nextElementSibling;
+  if(!answer || !answer.classList.contains('faq-accordion-a')) return;
+  var isOpen = answer.classList.contains('open');
+  document.querySelectorAll('.faq-accordion-a.open').forEach(function(a){
+    a.classList.remove('open');
+    var q = a.previousElementSibling;
+    if(q){ var ic = q.querySelector('.faq-accordion-icon, .faq-plus'); if(ic) ic.classList.remove('open'); }
+  });
+  if(!isOpen){
+    answer.classList.add('open');
+    var icon = el.querySelector('.faq-accordion-icon, .faq-plus');
+    if(icon) icon.classList.add('open');
+  }
+}
+</script>
+<style>.faq-plus.open{transform:rotate(45deg);transition:transform .2s ease}</style>
+</body>
+</html>
