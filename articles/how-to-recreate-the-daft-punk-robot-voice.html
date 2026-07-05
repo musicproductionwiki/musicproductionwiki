@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Recreate Daft Punk's robot voice: it's the DigiTech Talker (a vocoder), not Auto-Tune — the free stock-vocoder method that nails it in any DAW." />
+  <title>How to Recreate the Daft Punk Robot Voice (2026)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <style>
+    #readingProgress{position:fixed;top:0;left:0;height:3px;background:var(--teal);width:0%;z-index:200;transition:width 0.1s linear;}
+    .quick-answer{background:linear-gradient(135deg,rgba(0,212,168,0.08),rgba(167,139,250,0.06));border:1px solid rgba(0,212,168,0.3);border-left:4px solid var(--teal);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .quick-answer-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.6rem;}
+    .quick-answer p{font-size:1rem;line-height:1.65;color:var(--text-primary);margin:0;}
+    .skill-badge{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .6rem;border-radius:4px;margin-left:.6rem;vertical-align:middle;position:relative;top:-2px;}
+    .skill-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .skill-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .skill-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .settings-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .settings-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .settings-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .settings-table tr:last-child td{border-bottom:none;}
+    .settings-table tr:hover td{background:var(--bg-surface);}
+    .settings-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .settings-table .mono{font-family:var(--font-mono);font-size:.82rem;color:var(--teal);}
+    .mistake-box{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-left:4px solid #ef4444;border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .mistake-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ef4444;margin-bottom:.4rem;}
+    .mistake-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference{border-left:3px solid var(--purple);padding:.75rem 1.25rem;margin:1.25rem 0;background:rgba(167,139,250,0.05);border-radius:0 6px 6px 0;}
+    .pro-reference-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.35rem;}
+    .pro-reference p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference strong{color:var(--text-primary);}
+    .listening-prescription{background:var(--bg-void);border:1px solid var(--border-default);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;position:relative;}
+    .listening-prescription::before{content:'🎧';position:absolute;top:-14px;left:1.5rem;background:var(--bg-void);padding:0 .4rem;font-size:1.1rem;}
+    .listening-prescription-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:.75rem;}
+    .listening-prescription p{font-size:.9rem;line-height:1.7;color:var(--text-secondary);margin:0 0 .5rem;}
+    .listening-record{font-weight:600;color:var(--text-primary);}
+    .decision-framework{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .decision-framework-title{font-family:var(--font-display);font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:1rem;}
+    .decision-item{display:flex;gap:1rem;padding:.65rem 0;border-bottom:1px solid var(--border-subtle);font-size:.88rem;line-height:1.55;}
+    .decision-item:last-child{border-bottom:none;}
+    .decision-if{color:var(--text-muted);font-style:italic;min-width:2rem;}
+    .decision-then{color:var(--text-primary);}
+    .decision-then strong{color:var(--teal);}
+    .exercise-block{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.25rem 0;}
+    .exercise-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;}
+    .exercise-badge{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .7rem;border-radius:4px;}
+    .exercise-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .exercise-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .exercise-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .exercise-title{font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text-primary);}
+    .exercise-block ol{margin:0;padding-left:1.25rem;color:var(--text-secondary);font-size:.88rem;line-height:1.7;}
+    .exercise-block ol li{margin-bottom:.4rem;}
+    .version-line{font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:4px;padding:.4rem .75rem;margin:.75rem 0 1.5rem;display:inline-block;}
+    .go-deeper{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:10px;padding:1.75rem;margin:2.5rem 0;}
+    .go-deeper-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text-primary);margin-bottom:1.25rem;}
+    .go-deeper-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;}
+    .go-deeper-item{background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:7px;padding:1rem 1.1rem;}
+    .go-deeper-item-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.35rem;}
+    .go-deeper-item a{font-size:.88rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;}
+    .go-deeper-item p{font-size:.78rem;color:var(--text-muted);margin:.3rem 0 0;}
+    .citation{font-size:.78rem;color:var(--text-muted);font-style:italic;margin-top:.25rem;}
+    .diagram-wrap{margin:1.9rem auto;max-width:100%;}
+    .diagram-wrap img{width:100%;height:auto;display:block;border:1px solid var(--border-subtle);border-radius:10px;}
+    .diagram-wrap picture{display:block;}
+    .diagram-caption{font-size:.78rem;color:var(--text-muted);text-align:center;margin-top:.75rem;font-style:italic;}
+    .highlight-box{background:rgba(0,212,168,0.06);border:1px solid rgba(0,212,168,0.2);border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .highlight-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.4rem;}
+    .highlight-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin:1.5rem 0;}
+    .stat-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem;text-align:center;}
+    .stat-number{font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--teal);display:block;}
+    .stat-label{font-size:.78rem;color:var(--text-secondary);margin-top:.25rem;}
+    .action-steps{counter-reset:steps;list-style:none;padding:0;margin:1.5rem 0;}
+    .action-steps li{counter-increment:steps;display:flex;gap:1rem;padding:.85rem 0;border-bottom:1px solid var(--border-subtle);font-size:.9rem;color:var(--text-secondary);line-height:1.6;}
+    .action-steps li:last-child{border-bottom:none;}
+    .action-steps li::before{content:counter(steps);background:var(--teal);color:#000;font-weight:800;font-size:.75rem;width:1.6rem;height:1.6rem;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem;}
+    .genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:1.5rem 0;}
+    .genre-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem 1.25rem;}
+    .genre-card-name{font-family:var(--font-display);font-size:.85rem;font-weight:700;color:var(--teal);margin-bottom:.4rem;}
+    .genre-card p{font-size:.82rem;color:var(--text-secondary);line-height:1.55;margin:0;}
+    .comparison-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .comparison-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .comparison-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .comparison-table tr:last-child td{border-bottom:none;}
+    .comparison-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .affiliate-cta{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,212,168,0.1);border:1px solid rgba(0,212,168,0.25);color:var(--teal);font-size:.82rem;font-weight:600;padding:.45rem .9rem;border-radius:6px;text-decoration:none;}
+
+    .faq-accordion{margin:1.75rem 0;}
+    .faq-accordion-item{background:var(--bg-surface);border:1px solid var(--border-subtle);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;margin-bottom:8px;overflow:hidden;}
+    .faq-accordion-q{display:flex;align-items:flex-start;padding:1rem 1.25rem;cursor:pointer;gap:.75rem;}
+    .faq-accordion-q:hover{background:var(--bg-elevated);}
+    .faq-accordion-icon{width:16px;height:16px;flex-shrink:0;margin-top:3px;color:var(--purple);transition:transform .2s ease;}
+    .faq-accordion-icon.open{transform:rotate(45deg);}
+    .faq-accordion-q-inner{display:flex;flex-direction:column;}
+    .faq-accordion-label{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin-bottom:.2rem;}
+    .faq-accordion-q-text{font-size:.92rem;font-weight:600;color:var(--text-primary);line-height:1.45;font-family:var(--font-display);}
+    .faq-accordion-a{display:none;padding:0 1.25rem 1rem 2.75rem;font-size:.88rem;color:var(--text-secondary);line-height:1.7;border-top:1px solid var(--border-subtle);padding-top:.85rem;}
+    .faq-accordion-a.open{display:block;}
+    .sourcebox{border:1px solid var(--border-default);border-radius:10px;overflow:hidden;margin:1.9rem 0;background:var(--bg-surface);}
+    .sourcebox-head{padding:1.1rem 1.4rem;border-bottom:1px solid var(--border-default);background:var(--bg-void);}
+    .sourcebox-kicker{display:block;font-family:var(--font-display);font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.3rem;}
+    .sourcebox-sub{display:block;font-size:.82rem;color:var(--text-secondary);line-height:1.5;}
+    .sourcebox-row{display:flex;gap:0;border-bottom:1px solid var(--border-subtle);}
+    .sourcebox-row:last-child{border-bottom:none;}
+    .sourcebox-tag{flex:0 0 168px;padding:1.1rem 1.2rem;font-family:var(--font-mono);font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;line-height:1.4;}
+    .sourcebox-body{padding:1.1rem 1.3rem 1.1rem 0;flex:1;}
+    .sourcebox-body p{font-size:.9rem;line-height:1.65;color:var(--text-secondary);margin:0;}
+    .sourcebox-body strong{color:var(--text-primary);}
+    .sourcebox-cite{display:block;margin-top:.55rem;font-size:.76rem;font-style:italic;color:var(--text-muted);line-height:1.5;}
+    .sourcebox-confirmed{border-left:4px solid var(--teal);} .sourcebox-confirmed .sourcebox-tag{color:var(--teal);}
+    .sourcebox-disputed{border-left:4px solid #f59e0b;} .sourcebox-disputed .sourcebox-tag{color:#f59e0b;}
+    .sourcebox-inferred{border-left:4px solid var(--purple);} .sourcebox-inferred .sourcebox-tag{color:var(--purple);}
+    @media(max-width:600px){.sourcebox-row{flex-direction:column;}.sourcebox-tag{flex-basis:auto;padding-bottom:.2rem;}.sourcebox-body{padding:.2rem 1.2rem 1.1rem;}}
+</style>
+  <link rel="canonical" href="https://musicproductionwiki.com/articles/how-to-recreate-the-daft-punk-robot-voice.html"/>
+  <!-- Open Graph -->
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="How to Recreate the Daft Punk Robot Voice (Vocoder vs. Talk Box)"/>
+  <meta property="og:description" content="Recreate Daft Punk's robot voice: it's the DigiTech Talker (a vocoder), not Auto-Tune — the free stock-vocoder method that nails it in any DAW."/>
+  <meta property="og:url" content="https://musicproductionwiki.com/articles/how-to-recreate-the-daft-punk-robot-voice.html"/>
+  <meta property="og:site_name" content="Music Production Wiki"/>
+  <meta property="og:image" content="https://musicproductionwiki.com/og-image.png"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="article:author" content="Music Production Wiki Team"/>
+  <meta property="article:section" content="Recreations"/>
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="How to Recreate the Daft Punk Robot Voice (Vocoder vs. Talk Box)"/>
+  <meta name="twitter:description" content="Recreate Daft Punk's robot voice: it's the DigiTech Talker (a vocoder), not Auto-Tune — the free stock-vocoder method that nails it in any DAW."/>
+  <meta name="twitter:image" content="https://musicproductionwiki.com/og-image.png"/>
+  <!-- Article Schema -->
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How to Recreate the Daft Punk Robot Voice (Vocoder vs. Talk Box)",
+  "description": "Recreate Daft Punk's robot voice: it's the DigiTech Talker (a vocoder), not Auto-Tune — the free stock-vocoder method that nails it in any DAW.",
+  "image": [
+    "https://musicproductionwiki.com/og-image.png",
+    "https://musicproductionwiki.com/images/how-to-recreate-the-daft-punk-robot-voice-route.png",
+    "https://musicproductionwiki.com/images/how-to-recreate-the-daft-punk-robot-voice-signal.png",
+    "https://musicproductionwiki.com/images/how-to-recreate-the-daft-punk-robot-voice-shape.png"
+  ],
+  "datePublished": "2026-07-05",
+  "dateModified": "2026-07-05",
+  "wordCount": 4500,
+  "timeRequired": "PT17M",
+  "keywords": [
+    "how to make the daft punk robot voice",
+    "daft punk vocoder",
+    "digitech talker",
+    "robot voice effect",
+    "vocoder vs talk box",
+    "harder better faster stronger vocoder",
+    "how to sound like daft punk",
+    "stock vocoder daft punk",
+    "recreate daft punk voice"
+  ],
+  "author": { "@type": "Organization", "name": "Music Production Wiki", "url": "https://musicproductionwiki.com" },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Music Production Wiki",
+    "url": "https://musicproductionwiki.com",
+    "logo": { "@type": "ImageObject", "url": "https://musicproductionwiki.com/og-image.png" }
+  },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://musicproductionwiki.com/articles/how-to-recreate-the-daft-punk-robot-voice.html" },
+  "articleSection": "Recreations",
+  "inLanguage": "en-US"
+}
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to recreate the Daft Punk robot voice with a stock vocoder",
+  "description": "Rebuild Daft Punk's robot voice in any DAW: feed a bright saw synth as the carrier and your clear voice as the modulator into a stock vocoder, then chase intelligibility and metallic tone.",
+  "image": "https://musicproductionwiki.com/images/how-to-recreate-the-daft-punk-robot-voice-route.png",
+  "supply": [
+    { "@type": "HowToSupply", "name": "A clear, dry vocal or spoken take" },
+    { "@type": "HowToSupply", "name": "A bright saw or square synth to use as the carrier" }
+  ],
+  "tool": [
+    { "@type": "HowToTool", "name": "A vocoder (stock in most DAWs, e.g. Ableton Vocoder or Logic EVOC 20)" },
+    { "@type": "HowToTool", "name": "A carrier synth held as a chord or drone" }
+  ],
+  "step": [
+    { "@type": "HowToStep", "name": "Set up the carrier", "text": "Load a bright saw or square synth on a muted track and hold a chord or drone; this is the carrier the vocoder will shape." },
+    { "@type": "HowToStep", "name": "Route the vocoder", "text": "Put a vocoder on your vocal track and set its carrier/sidechain input to the synth. Your voice is the modulator; the synth is the carrier." },
+    { "@type": "HowToStep", "name": "Sing clearly and in time", "text": "Perform crisp, over-enunciated consonants. Intelligibility is a performance, not a knob; the clearer your take, the more the robot 'talks'." },
+    { "@type": "HowToStep", "name": "Chase the sibilants", "text": "Let 'S' and 'T' sounds through so words stay readable. Blend a little of the dry voice or unvoiced noise on consonants, which is exactly what the DigiTech Talker's NuVo program did." },
+    { "@type": "HowToStep", "name": "Shape the tone", "text": "Highpass the low mud, keep the top bright and metallic, and add light saturation. Match the vocoder's musical notes to your song's key." }
+  ]
+}
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "What did Daft Punk actually use for the robot voice?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Their signature robot voice is mostly the DigiTech Talker, a digital vocoder pedal designed and built by IVL Technologies and sold under DigiTech's name as a guitar pedal. 'Harder, Better, Faster, Stronger' uses the Talker's NuVo program, which lets sibilant sounds through for intelligibility; other robot-voice tracks use its TalkBox program. In their own 2001 Remix interview, Daft Punk also named an old Roland SVC-350 vocoder, Auto-Tune, and a DigiTech Vocalist harmoniser. So it is not one box for everything, and it is not simply 'Auto-Tune'." } },
+    { "@type": "Question", "name": "Is the Daft Punk robot voice Auto-Tune?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No, that is the most common myth. Auto-Tune is a pitch-correction effect and it shows up on different Daft Punk tracks; 'One More Time' is Auto-Tune combined with a phaser, which is a different, smoother sound. The robotic, metallic 'talking synth' voice on 'Harder, Better, Faster, Stronger' is a vocoder (the DigiTech Talker), where your voice shapes a synth. Pitch-correction and vocoding are entirely different mechanisms." } },
+    { "@type": "Question", "name": "What is the difference between a vocoder and a talk box?",
+      "acceptedAnswer": { "@type": "Answer", "text": "A vocoder is an electronic effect: it analyses your voice (the modulator) and uses its changing frequency shape to filter a synth (the carrier), so the synth appears to sing. A talk box is a physical device: a small speaker pushes a synth signal up a plastic tube into your mouth, and you shape it acoustically with your lips and tongue while a mic picks up the result. They sound similar and robotic, but one is a plugin/pedal and the other is a real-time mouth performance." } },
+    { "@type": "Question", "name": "Can I make the Daft Punk robot voice with free stock plugins?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Most DAWs ship a capable vocoder: Ableton has Vocoder, Logic has EVOC 20, and there is the free TAL-Vocoder for anything else. Feed it a bright saw or square carrier held as a chord, sing a clear take as the modulator, then chase intelligibility and a metallic tone. For a mix, a stock vocoder is perceptually more than close enough; you do not need the rare hardware." } },
+    { "@type": "Question", "name": "How do I keep vocoded vocals intelligible?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Intelligibility is mostly a performance and a consonant problem. Over-enunciate, especially the consonants, because vocoders struggle with unvoiced sounds like 'S', 'F' and 'T' that have no clear pitch. Let those sibilants through by blending a little dry voice or unvoiced noise on them; this is precisely what the DigiTech Talker's NuVo program did to make 'Harder, Better, Faster, Stronger' so readable. More vocoder bands and a bright carrier also help." } },
+    { "@type": "Question", "name": "What carrier synth should I use for the vocoder?",
+      "acceptedAnswer": { "@type": "Answer", "text": "A bright, harmonically rich source works best because the vocoder can only filter frequencies that are already there. A sawtooth held as a sustained chord or drone is the classic choice; a square or a supersaw-style stack also works. Keep it bright and full-band, hold notes so the voice always has something to shape, and match the carrier's notes to your song's key." } },
+    { "@type": "Question", "name": "Is there a plugin that sounds exactly like the DigiTech Talker?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Bjango's Robot Rocket is a plugin built specifically to model the Talker, using the same linear-predictive-coding approach and offering its TalkBox and NuVo programs. It is around $39 (often on sale near $29) as a VST3 and AU. The original DigiTech Talker hardware is long discontinued and now a rare, collectable pedal that sells used for roughly $300 and up, so treat it as a hardware curiosity rather than something to buy new." } },
+    { "@type": "Question", "name": "Do I need to clear any rights to use a robot voice I made?",
+      "acceptedAnswer": { "@type": "Answer", "text": "No. If you recorded your own voice and processed it through your own vocoder or talk box, the result is entirely your own production and there is nothing to clear. Recreating an effect is not sampling a recording. A rights question would only arise if you sampled an actual Daft Punk record, which is a completely different task from recreating the technique." } }
+  ]
+}
+</script>
+  <!-- Organization schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Music Production Wiki",
+  "url": "https://musicproductionwiki.com",
+  "logo": "https://musicproductionwiki.com/og-image.png"
+}
+</script>
+  <!-- WebSite schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Music Production Wiki",
+  "url": "https://musicproductionwiki.com",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": { "@type": "EntryPoint", "urlTemplate": "https://musicproductionwiki.com/search?q={search_term_string}" },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://musicproductionwiki.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Recreations", "item": "https://musicproductionwiki.com/categories/recreations" },
+    { "@type": "ListItem", "position": 3, "name": "The Daft Punk Robot Voice", "item": "https://musicproductionwiki.com/articles/how-to-recreate-the-daft-punk-robot-voice.html" }
+  ]
+}
+</script>
+<style id="toc-skin"></script>
+<style id="toc-skin">
+.toc-widget .sidebar-widget-header{margin-bottom:.35rem}
+.toc-list{counter-reset:tocnum;list-style:none;margin:0;padding:0}
+.toc-list li{counter-increment:tocnum;position:relative;margin:0;border-left:2px solid var(--border-subtle);transition:border-color .15s ease,background .15s ease}
+.toc-list li a{display:flex;gap:.7rem;align-items:baseline;padding:.5rem .85rem .5rem 1rem;font-size:.82rem;line-height:1.45;font-weight:500;color:var(--text-secondary);text-decoration:none;transition:color .15s ease}
+.toc-list li a::before{content:counter(tocnum,decimal-leading-zero);font-family:var(--font-mono,ui-monospace,monospace);font-size:.7rem;font-weight:600;letter-spacing:.04em;color:var(--text-muted);flex:0 0 auto;min-width:1.5em;padding-top:.05rem}
+.toc-list li a:hover{color:var(--text-primary)}
+.toc-list li.active{border-left-color:var(--teal);background:linear-gradient(90deg,rgba(0,212,168,.08),transparent 80%)}
+.toc-list li.active a{color:var(--teal);font-weight:600}
+.toc-list li.active a:hover{color:var(--teal)}
+.toc-list li.active a::before{color:var(--teal)}
+</style>
+<style id="toc-bar-css">
+.toc-bar{display:none}
+@media (max-width: 900px){
+.toc-bar{display:block;position:sticky;top:60px;z-index:400;background:var(--bg-void);border-bottom:1px solid var(--border-default);overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(to right,#000 88%,transparent 100%);mask-image:linear-gradient(to right,#000 88%,transparent 100%)}
+.toc-bar::-webkit-scrollbar{display:none}
+.toc-bar-track{display:flex;gap:4px;padding:9px 10px;min-width:max-content}
+.toc-bar-track a{color:var(--text-secondary);text-decoration:none;font-family:var(--font-mono,ui-monospace,monospace);font-size:10px;text-transform:uppercase;letter-spacing:.05em;padding:6px 10px;border-radius:4px;white-space:nowrap;min-height:30px;display:inline-flex;align-items:center;transition:color .15s,background .15s}
+.toc-bar-track a.active{color:var(--teal);background:var(--bg-elevated)}
+.article-body h2[id]{scroll-margin-top:116px}
+}
+@media (max-width: 900px) and (hover:hover){.toc-bar-track a:hover{color:var(--teal)}}
+</style>
+</head>
+<body>
+
+
+
+<style id="mpw-unav-css">
+
+.mnav-wrap,.usearch{--ink:#09090d;--panel:#0f0f18;--panel2:#15151f;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);--amber:#f5a623;--teal:#00e8a2;--teal-d:rgba(0,232,162,.12);--text:#f2f2f7;--t2:#9a9ab2;--t3:#56566f;--sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'DM Mono',ui-monospace,SFMono-Regular,monospace;}
+.mnav-wrap *,.mnav-wrap *::before,.mnav-wrap *::after,.usearch *,.usearch *::before,.usearch *::after{box-sizing:border-box;margin:0;padding:0}
+/* host-CSS shield: a page loading style.css (articles) must not bleed its body font/color/line-height into the bar. Direct rule on .mnav-wrap beats inherited body styles. */
+.mnav-wrap,.usearch{font-family:var(--sans);font-size:14px;font-weight:400;font-style:normal;line-height:1.4;letter-spacing:normal;color:var(--text);text-align:left;text-transform:none}
+/* S91 host-CSS isolation (:where() = zero-specificity; beats style.css bare a/li by source order, LOSES to nav's own .drw-card/.mnav-flat classes) */
+:where(.mnav-wrap,.usearch) a{color:inherit;text-decoration:none;background:none;border:0;font:inherit;letter-spacing:inherit}
+:where(.mnav-wrap,.usearch) ul,:where(.mnav-wrap,.usearch) ol{list-style:none;margin:0;padding:0;border:0}
+:where(.mnav-wrap,.usearch) li{margin:0;padding:0;border:0;font-size:inherit;line-height:inherit;color:inherit;background:none}
+:where(.mnav-wrap,.usearch) h1,:where(.mnav-wrap,.usearch) h2,:where(.mnav-wrap,.usearch) h3,:where(.mnav-wrap,.usearch) h4,:where(.mnav-wrap,.usearch) h5,:where(.mnav-wrap,.usearch) h6,:where(.mnav-wrap,.usearch) p{margin:0;padding:0;border:0;font:inherit;color:inherit;line-height:inherit;letter-spacing:inherit;text-transform:none}
+:where(.mnav-wrap,.usearch) button{font:inherit;color:inherit;background:none;border:0;letter-spacing:inherit;text-align:inherit}
+:where(.mnav-wrap,.usearch) svg{display:inline-block;vertical-align:middle}
+:where(.mnav-wrap,.usearch) img{max-width:none}
+.mnav-wrap{background:var(--ink);border-bottom:1px solid var(--line);position:relative}
+.mnav{height:60px;display:flex;align-items:center}
+.mnav-in{max-width:1180px;margin:0 auto;padding:0 22px;width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.mnav-brand{display:flex;align-items:center;gap:10px;color:var(--text);text-decoration:none;flex:0 0 auto}
+.mnav-word{font-weight:700;font-size:15px;letter-spacing:-.02em}
+.mnav-links{display:flex;align-items:center;gap:6px;margin-left:8px}
+.mnav-flat,.mnav-trigger{color:var(--t2);background:none;border:0;font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;padding:8px 12px;border-radius:8px;display:inline-flex;align-items:center;gap:6px}
+.mnav-flat:hover,.mnav-trigger:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.caret{font-size:9px;color:var(--t3);transition:transform .18s}
+.mnav-right{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.mnav-search{background:none;border:0;color:var(--t2);cursor:pointer;display:flex;padding:6px;border-radius:8px}
+.mnav-search:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.mnav-cta{border:1px solid var(--teal);color:var(--teal);text-decoration:none;padding:7px 15px;border-radius:8px;font-size:13px;font-weight:600;white-space:nowrap}
+.mnav-cta:hover{background:var(--teal-d)}
+.mnav-wrap[data-section="tools"] .mnav-flat[data-nav="tools"]{color:var(--text);font-weight:600}
+.mnav-wrap[data-section="articles"] .mnav-trigger[data-nav="articles"]{color:var(--text);font-weight:600}
+/* Bible = amber brand color, desktop link + mobile drawer */
+.mnav-flat[data-nav="bible"],.drw-link[data-nav="bible"]{color:#f5a623!important;font-weight:600}
+.mnav-flat[data-nav="bible"]:hover,.drw-link[data-nav="bible"]:hover{color:#ffc04d!important}
+.mnav-item{position:relative}
+.mnav-panel,.mnav-panel-wide{position:absolute;top:calc(100% + 6px);left:0;z-index:50;display:none;background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:14px;box-shadow:0 24px 60px -24px rgba(0,0,0,.9);min-width:240px}
+.mnav-panel-wide{grid-template-columns:1fr 1fr;gap:8px 22px;min-width:520px}
+.mnav-item:hover .mnav-panel,.mnav-item:focus-within .mnav-panel,.mnav-item:hover .mnav-panel-wide,.mnav-item:focus-within .mnav-panel-wide{display:grid}
+.mnav-item:hover .caret{transform:rotate(180deg)}
+.mp-col{display:flex;flex-direction:column}
+.mp-head{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);padding:6px 10px 8px}
+.mnav-panel a{display:flex;flex-direction:column;gap:1px;padding:8px 10px;border-radius:9px;text-decoration:none}
+.mnav-panel a:hover{background:rgba(255,255,255,.05)}
+.mp-name{color:var(--text);font-size:13.5px;font-weight:600}.mp-desc{color:var(--t2);font-size:11.5px}
+.mnav-sub{display:none;background:var(--panel);border-bottom:1px solid var(--line)}
+.mnav-wrap[data-section="bible"] .mnav-sub{display:block}
+.mnav-sub-in{max-width:1180px;margin:0 auto;padding:10px 22px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.mnav-sub-in::-webkit-scrollbar{display:none}
+.mnav-sub-in a{flex:0 0 auto;color:var(--t2);text-decoration:none;font-size:12.5px;font-family:var(--mono);border:1px solid var(--line2);border-radius:99px;padding:5px 12px;white-space:nowrap}
+.mnav-sub-in a:hover{color:var(--teal);border-color:rgba(0,232,162,.4)}
+.mnav-toggle{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.mnav-burger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:8px;border-radius:8px}
+.mnav-burger span{display:block;width:20px;height:2px;background:var(--text);border-radius:2px;transition:.2s}
+.mnav-drawer{display:none;flex-direction:column;padding:6px 18px 16px;background:var(--ink);border-bottom:1px solid var(--line)}
+.mnav-drawer details{border-bottom:1px solid var(--line)}
+.mnav-drawer summary{list-style:none;cursor:pointer;padding:13px 2px;font-size:15px;font-weight:600;color:var(--text);display:flex;justify-content:space-between}
+.mnav-drawer summary::-webkit-details-marker{display:none}
+.mnav-drawer summary::after{content:"+";color:var(--t3)}
+.mnav-drawer details[open] summary::after{content:"\2013"}
+.mnav-acc{display:flex;flex-direction:column;padding:0 0 10px 12px}
+.mnav-acc a{color:var(--t2);text-decoration:none;font-size:14px;padding:8px 0}
+.drw-link{color:var(--t2);text-decoration:none;font-size:15px;font-weight:600;padding:13px 2px;border-bottom:1px solid var(--line)}
+.drw-cta{color:var(--teal);text-decoration:none;font-weight:600;font-size:15px;padding:14px 2px}
+.mnav-toggle:checked ~ .mnav-drawer{display:flex}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(2){opacity:0}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+@media(max-width:860px){.mnav-links,.mnav-cta{display:none}.mnav-burger{display:flex}}
+
+/* ===== UNIFIED SEARCH OVERLAY ===== */
+.usearch{position:fixed;inset:0;z-index:10000;display:none;background:rgba(6,6,11,.78);backdrop-filter:blur(6px);padding:80px 20px 20px}
+.usearch.open{display:block}
+.usearch-box{max-width:620px;margin:0 auto;background:var(--panel);border:1px solid var(--line2);border-radius:16px;overflow:hidden;box-shadow:0 40px 90px -30px rgba(0,0,0,.95)}
+.usearch-top{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.usearch-top svg{color:var(--t3);flex:0 0 auto}
+.usearch-top input{flex:1;background:none;border:0;outline:none;color:var(--text);font-family:var(--sans);font-size:17px}
+.usearch-top input::placeholder{color:var(--t3)}
+.usearch-top kbd{font-family:var(--mono);font-size:11px;color:var(--t3);border:1px solid var(--line2);border-radius:6px;padding:2px 7px}
+.usearch-results{max-height:56vh;overflow-y:auto;padding:8px}
+.usearch-results a{display:block;padding:11px 14px;border-radius:10px;text-decoration:none;transition:background .12s}
+.usearch-results a:hover,.usearch-results a.sel{background:rgba(255,255,255,.05)}
+.ur-top{display:flex;align-items:baseline;gap:9px}
+.ur-title{color:var(--text);font-size:14.5px;font-weight:600}
+.ur-cat{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.06);color:var(--t2);flex:0 0 auto}
+.ur-cat[data-c="Tools"]{background:var(--teal-d);color:var(--teal);border:1px solid rgba(0,232,162,.4)}
+.ur-cat[data-c="Bible"]{background:rgba(245,166,35,.18);color:#f5a623;border:1px solid rgba(245,166,35,.4)}
+.ur-desc{color:var(--t2);font-size:12.5px;line-height:1.45;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.usearch-empty{padding:30px;text-align:center;color:var(--t3);font-size:13.5px}
+/* --- sticky-header + entry-page chrome (pilot, refined for density) ---
+   entry nav = 60px main bar only (no category sub-bar). Desktop: hide the horizontal section
+   nav (the sticky sidebar TOC covers sections) and retune offsets to the 60px nav. Mobile: the
+   sidebar is hidden, so SHOW the section nav flush under the bar. All in THIS block. --- */
+.mnav-wrap{position:sticky;top:0;z-index:1000;line-height:1.4}
+.entry-nav{display:none}
+[id].entry-section{scroll-margin-top:90px}
+.entry-main h2{scroll-margin-top:90px}
+.entry-sidebar{top:78px;height:calc(100vh - 98px)}
+@media(max-width:768px){
+  .entry-nav{display:block!important;top:60px!important}
+  [id].entry-section{scroll-margin-top:130px!important}
+  .entry-main h2{scroll-margin-top:130px!important}
+}
+/* dropdown overflow safety */
+.mnav-panel,.mnav-panel-wide{max-height:min(72vh,560px);overflow-y:auto}
+/* mobile drawer: category CARD grid (slick old-nav look), CSS-only */
+.mnav-drawer{padding:10px 18px 18px;gap:0}
+.drw-label{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--t3);margin:12px 2px 8px}
+.drw-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.drw-card{display:flex;align-items:center;padding:12px 14px;border-radius:10px;text-decoration:none;font-size:13.5px;font-weight:600;color:var(--text);background:var(--panel);border:1px solid var(--line2)}
+.drw-card:hover{border-color:var(--teal);color:var(--teal)}
+.drw-feat{display:flex;align-items:center;gap:8px;padding:13px 16px;border-radius:10px;text-decoration:none;font-size:14px;font-weight:700;color:var(--text);background:var(--panel);border:1px solid var(--line2);margin-top:8px}
+.drw-feat-bible{color:#f5a623;background:rgba(245,166,35,.08);border-color:rgba(245,166,35,.30)}
+.drw-feat-bible:hover{border-color:rgba(245,166,35,.6)}
+.drw-cta{display:block;text-align:center;padding:14px;border-radius:10px;background:var(--teal);color:#06281f;font-weight:800;font-size:14px;text-decoration:none;margin-top:12px}
+/* mobile sunlight legibility: lift the intentionally-dim greys in glare (nav + search only), scoped */
+@media(max-width:860px){
+  .mnav-wrap,.usearch{--t2:#c8c8da;--t3:#9696b0}
+  .drw-label{color:#bdbdd0;font-weight:500}
+  .usearch-top input::placeholder{color:#9696b0}
+  .drw-card,.drw-feat{background:#20202e;border:1.5px solid #45455c}
+  .drw-feat-bible{background:rgba(245,166,35,.12);border:1.5px solid rgba(245,166,35,.6)}
+}
+html{overflow-x:clip!important;max-width:none!important}body{overflow-x:clip!important}
+</style>
+<!-- MPW universal nav -->
+<div class="mnav-wrap" data-section="articles">
+  <input type="checkbox" id="mnav-toggle" class="mnav-toggle" aria-hidden="true">
+  <nav class="mnav" aria-label="Main navigation">
+    <div class="mnav-in">
+      <a class="mnav-brand" href="/"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="6" stroke="#f5a623" stroke-width="1.7"/><path d="M7 15V9l3 3 3-5 4 8" stroke="#00e8a2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="mnav-word">MusicProductionWiki</span></a>
+      <div class="mnav-links">
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="articles">Articles <span class="caret">&#9662;</span></button><div class="mnav-panel mnav-panel-wide"><div class="mp-col"><div class="mp-head">Techniques & Analysis</div><a href="/categories/techniques"><span class="mp-name">Techniques</span><span class="mp-desc">Mixing, mastering, sound design</span></a><a href="/categories/reviews"><span class="mp-name">Reviews</span><span class="mp-desc">Honest. No paid placements.</span></a><a href="/categories/comparisons"><span class="mp-name">Comparisons</span><span class="mp-desc">Head-to-head</span></a><a href="/categories/breakdowns"><span class="mp-name">Breakdowns</span><span class="mp-desc">Track-by-track</span></a><a href="/categories/recreations"><span class="mp-name">Recreations</span><span class="mp-desc">Recreate iconic sounds</span></a><a href="/genres"><span class="mp-name">Genres</span><span class="mp-desc">Every genre & style</span></a></div><div class="mp-col"><div class="mp-head">Reference & Business</div><a href="/categories/ai-music"><span class="mp-name">AI Music</span><span class="mp-desc">Suno, Udio, AI tools</span></a><a href="/categories/music-business"><span class="mp-name">Music Business</span><span class="mp-desc">Royalties, licensing, sync</span></a></div></div></div>
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="gear">Gear <span class="caret">&#9662;</span></button><div class="mnav-panel"><div class="mp-col"><a href="/categories/daws"><span class="mp-name">DAWs</span><span class="mp-desc">Every major DAW</span></a><a href="/categories/plugins"><span class="mp-name">Plugins</span><span class="mp-desc">EQ, comp, reverb, synths</span></a><a href="/categories/hardware"><span class="mp-name">Hardware</span><span class="mp-desc">Interfaces, mics, monitors</span></a></div></div></div>
+        <a class="mnav-flat" href="/tools/" data-nav="tools">Tools</a>
+        <a class="mnav-flat" href="/bible/" data-nav="bible">The Bible</a>
+      </div>
+      <div class="mnav-right">
+        <button class="mnav-search" data-nav-search aria-label="Search"><svg width="17" height="17" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <a class="mnav-cta" href="https://theproducersbriefing.beehiiv.com">Sound Better &rarr;</a>
+        <label class="mnav-burger" for="mnav-toggle"><span></span><span></span><span></span></label>
+      </div>
+    </div>
+  </nav>
+  <div class="mnav-drawer">
+    <div class="drw-label">Articles</div>
+    <div class="drw-grid">
+      <a href="/categories/techniques" class="drw-card">Techniques</a><a href="/categories/reviews" class="drw-card">Reviews</a><a href="/categories/comparisons" class="drw-card">Comparisons</a><a href="/categories/breakdowns" class="drw-card">Breakdowns</a><a href="/categories/recreations" class="drw-card">Recreations</a><a href="/genres" class="drw-card">Genres</a><a href="/categories/ai-music" class="drw-card">AI Music</a><a href="/categories/music-business" class="drw-card">Music Business</a>
+    </div>
+    <div class="drw-label">Gear</div>
+    <div class="drw-grid">
+      <a href="/categories/daws" class="drw-card">DAWs</a><a href="/categories/plugins" class="drw-card">Plugins</a><a href="/categories/hardware" class="drw-card">Hardware</a>
+    </div>
+    <a href="/bible/" class="drw-feat drw-feat-bible">&#9670; The Producer's Bible</a>
+    <a href="/tools/" class="drw-feat">The Producer's Tools</a>
+    <a href="https://theproducersbriefing.beehiiv.com" class="drw-cta">Sound Better &rarr;</a>
+  </div>
+</div>
+
+
+<div class="container">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><ol>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../categories/recreations.html">Recreations</a></li>
+    <li><span aria-current="page">The Daft Punk Robot Voice</span></li>
+  </ol></nav>
+</div>
+<nav class="toc-bar" aria-label="Section navigation"><div class="toc-bar-track" id="tocBarTrack"></div></nav>
+<main class="container" id="main-content">
+  <div class="article-layout">
+    <article aria-labelledby="articleTitle">
+      <header class="article-header">
+        <div class="article-tags"><span class="article-tag teal"><a href="../categories/recreations.html" style="color:inherit;text-decoration:none;">Recreations</a></span>
+<span class="article-tag teal"><a href="../categories/techniques/sound-design.html" style="color:inherit;text-decoration:none;">Sound Design</a></span></div>
+        <h1 id="articleTitle">How to Recreate the Daft Punk Robot Voice (Vocoder vs. Talk Box)</h1>
+        <div class="article-header-meta">
+          <div class="article-author"><div class="author-avatar" aria-hidden="true">MP</div><span class="author-name">The Music Production Wiki Team</span></div>
+          <span class="meta-divider"></span><span class="meta-item">Updated July 2026&nbsp;&middot;&nbsp;17 min read</span>
+        </div>
+      </header>
+      <div class="article-body">
+<p style="font-size:1.06rem;line-height:1.7;">It is one of the most recognisable sounds in modern music: the gleaming, metallic, perfectly-articulated robot voice of Daft Punk &mdash; the &ldquo;work it, make it, do it&rdquo; of &ldquo;Harder, Better, Faster, Stronger.&rdquo; It is also one of the most misunderstood. Search for how it is made and you will be told, confidently and mostly incorrectly, that it is Auto-Tune, or &ldquo;just a vocoder plugin,&rdquo; or a talk box &mdash; usually with no distinction drawn between those very different things. The truth is more specific and far more useful: the signature voice is mostly a <strong>vocoder</strong>, and a particular one at that, the <a href="how-to-use-vocoders-and-talk-boxes.html">DigiTech Talker</a>. Once you understand the mechanism &mdash; your voice reshaping a synth, note by note, consonant by consonant &mdash; you can rebuild the sound in any DAW you already own, with nothing rare and nothing to buy. This guide separates what is <em>confirmed</em> about Daft Punk&rsquo;s gear from what the internet keeps repeating, then walks you through the recreation from a free stock vocoder first, naming the paid shortcut only because it is real.</p>
+<div class="quick-answer">
+<div class="quick-answer-label">The short answer</div>
+<p>Daft Punk&rsquo;s robot voice is <strong>a vocoder, not Auto-Tune</strong> &mdash; mostly the <strong>DigiTech Talker</strong>, a digital vocoder pedal. A vocoder uses your <strong>voice as the modulator</strong> to reshape a bright <strong>synth carrier</strong>, so the synth appears to talk. To rebuild it in any DAW: hold a <strong>bright saw or square chord</strong> on a muted synth as the carrier, put a <strong>stock vocoder</strong> (Ableton Vocoder, Logic EVOC&nbsp;20, or the free TAL-Vocoder) on your vocal, route the synth in as the carrier, then <strong>over-enunciate</strong> and <strong>let the sibilants through</strong> for intelligibility. That last step &mdash; passing the &ldquo;S&rdquo; and &ldquo;T&rdquo; sounds &mdash; is exactly what the Talker&rsquo;s <strong>NuVo</strong> program did on &ldquo;Harder, Better, Faster, Stronger.&rdquo; A real talk box (&ldquo;Around the World&rdquo;-style) is the physical, mouth-performed alternative.</p>
+</div>
+<div class="sourcebox">
+<div class="sourcebox-head"><span class="sourcebox-kicker">Where this comes from</span><span class="sourcebox-sub">Confirmed vs. inferred &mdash; so you know which claims are sourced and which are our best estimate.</span></div>
+<div class="sourcebox-row sourcebox-confirmed">
+<div class="sourcebox-tag">Confirmed</div>
+<div class="sourcebox-body"><p>The signature robot voice is mostly the <strong>DigiTech Talker</strong> &mdash; a <strong>digital vocoder pedal</strong> that carries DigiTech&rsquo;s name but was designed and built by <strong>IVL Technologies</strong>, and sold as a guitar pedal. &ldquo;Harder, Better, Faster, Stronger&rdquo; uses the Talker&rsquo;s <strong>NuVo</strong> program, which lets sibilant sounds through for intelligibility; most other robot-voice tracks use its <strong>TalkBox</strong> program. In their own words &mdash; a May 2001 <em>Remix</em> interview &mdash; Daft Punk said &ldquo;every one of our vocal tracks uses a different vocoder effect,&rdquo; naming an old Roland <strong>SVC-350</strong>, <strong>Auto-Tune</strong>, and a DigiTech <strong>Vocalist</strong> (a harmoniser, distinct from the Talker). And &ldquo;One More Time&rdquo; is <strong>Auto-Tune plus a phaser</strong> &mdash; a different, smoother sound &mdash; <em>not</em> the vocoder. <span class="sourcebox-cite">Sources: Bjango, &ldquo;The vocal effects of Daft Punk&rdquo;; MusicTech on Bjango&rsquo;s Robot Rocket; the May 2001 <em>Remix</em> interview quoted therein; Equipboard/Reverb listings for the Talker.</span></p></div></div>
+<div class="sourcebox-row sourcebox-disputed">
+<div class="sourcebox-tag">Commonly claimed &mdash; but disputed</div>
+<div class="sourcebox-body"><p>Two things. First, that the voice is &ldquo;<strong>just Auto-Tune</strong>&rdquo; or &ldquo;a generic vocoder plugin&rdquo; &mdash; naming one effect for everything is the myth; the robotic <em>talking-synth</em> voice is a specific vocoder, not pitch-correction. Second, the mechanism of &ldquo;<strong>Around the World</strong>&rdquo; is <strong>genuinely contested</strong>: some analysts call it &ldquo;almost certainly a talk box,&rdquo; while others reconstruct it as a <em>square-wave vocoder</em>. Treat &ldquo;Around the World = talk box&rdquo; as a strong-but-unsettled claim, not a fact, and do not state a specific carrier synth for it as gospel. <span class="sourcebox-cite">Sources: Bjango (talk box &ldquo;almost certainly&rdquo;) and Attack Magazine&rsquo;s talk-box tutorial vs. Vochlea/Dubler, which model it as a square-wave vocoder; the recurring Gearspace/KVR threads.</span></p></div></div>
+<div class="sourcebox-row sourcebox-inferred">
+<div class="sourcebox-tag">Inferred &mdash; unverified</div>
+<div class="sourcebox-body"><p>The <strong>exact per-track signal chains</strong> and the <strong>carrier synths and settings</strong>. Beyond the gear Daft Punk named themselves, the specific routing on any given song has been reverse-engineered by fans and never fully documented. Any &ldquo;this exact synth on that exact line&rdquo; claim &mdash; including a particular saw carrier for &ldquo;Around the World&rdquo; &mdash; should be read as a <strong>modeled estimate</strong>, not a confirmed patch. <span class="sourcebox-cite">Source: fan reconstructions across Gearspace and KVR; no primary settings sheet exists.</span></p></div></div>
+</div>
+
+<h2 id="reframe">It isn&rsquo;t Auto-Tune &mdash; and it isn&rsquo;t &ldquo;a vocoder plugin&rdquo;</h2>
+<p>The single most common mistake is naming one effect for the whole catalogue. People hear anything robotic from Daft Punk and reach for the word that is nearest to hand &mdash; usually &ldquo;<a href="how-to-use-autotune.html">Auto-Tune</a>&rdquo; &mdash; and stop there. But Daft Punk themselves said every vocal track used a different effect, and the sounds people lump together are produced by three completely separate technologies: <strong>talk boxes</strong>, <strong>vocoders</strong>, and <strong>harmonisers</strong>. They all sound vaguely robotic and you could be forgiven for confusing them, yet they work in totally different ways, and if you chase the wrong one you will never land the sound.</p>
+<p>Start with what the robot voice is <em>not</em>. It is not pitch-correction. Auto-Tune and Melodyne take a real sung note and snap or glide its pitch onto a target; pushed hard, that produces the glassy &ldquo;Cher effect&rdquo; you hear on &ldquo;One More Time,&rdquo; which is Auto-Tune paired with a phaser. That is a genuinely different sound from the &ldquo;work it, make it&rdquo; robot &mdash; clearer and smoother, without the metallic, banded, talking-synth character. If you want to understand the pitch-correction family on its own terms, the <a href="auto-tune-vs-melodyne.html">Auto-Tune vs Melodyne</a> breakdown and our guide to <a href="how-to-use-autotune-creatively.html">using Auto-Tune creatively</a> are the right places; just know that neither is the mechanism behind the &ldquo;Harder, Better, Faster, Stronger&rdquo; voice.</p>
+<p>The robot voice is a <strong>vocoder</strong> effect. And &ldquo;a vocoder plugin&rdquo; is closer, but still too vague to be useful, because vocoders vary enormously and the specific one Daft Punk leaned on &mdash; the DigiTech Talker &mdash; has a particular, gritty, intelligible character that a generic band-vocoder does not automatically give you. Getting the sound is less about owning a magic box and more about understanding the mechanism, then serving it well. That is what the rest of this guide is about, and it is why we treat this as a <a href="how-to-use-vocal-effects.html">vocal-effects</a> problem, not a plugin-shopping problem.</p>
+<p>You can also learn to tell the three technologies apart by ear, which is the fastest way to stop chasing the wrong effect. A <strong>harmoniser</strong> like the DigiTech Vocalist keeps your natural voice recognisably human and simply adds tuned copies above and below it &mdash; think stacked robotic backing vocals rather than a talking machine. <strong>Auto-Tune</strong> keeps a single voice but glues its pitch to a grid, giving that glassy, sliding, in-tune-to-a-fault quality. A <strong>vocoder</strong> is the one that stops sounding like a person at all: the timbre is the synth&rsquo;s, the notes are the synth&rsquo;s, and only the <em>shape</em> of the words is yours. If you hear a clearly synthetic tone carrying intelligible speech on chosen chords, that is a vocoder, and that is the Daft Punk robot. Once you can name it, you know which door to walk through.</p>
+
+<h2 id="history">A one-minute history: where the robot voice came from</h2>
+<p>The vocoder was not invented for music at all. Homer Dudley built the first one at Bell Labs in the 1930s as a way to compress speech for transmission down telephone lines &mdash; the &ldquo;voice coder&rdquo; that gives the effect its name analysed a voice into a few control signals and rebuilt it at the far end. It escaped into music slowly: Wendy Carlos used one on the <em>A Clockwork Orange</em> score, Kraftwerk turned it into an identity on <em>Autobahn</em> and <em>The Man-Machine</em>, and by the time Zapp&rsquo;s Roger Troutman was bending a talk box around a Minimoog, the &ldquo;robotic funk vocal&rdquo; was a fixture. Daft Punk inherited all of that and pushed it back into the pop mainstream. Knowing the lineage is genuinely useful, because it tells you the sound was always about <em>intelligible machine speech</em> &mdash; the whole history is a chase for words that a listener can understand coming out of a circuit, which is exactly the problem the NuVo trick solves.</p>
+<h2 id="mechanism">Two machines that sound alike: the vocoder and the talk box</h2>
+<p>To recreate the sound, you have to hold two mechanisms in your head at once, because Daft Punk used both across their catalogue and they are constantly confused. Get the mechanism right and the recreation almost designs itself.</p>
+<p>A <strong>vocoder</strong> is an electronic effect with two inputs. One is the <strong>modulator</strong> &mdash; your voice. The other is the <strong>carrier</strong> &mdash; a synth, usually something bright like a <a href="../bible/harmonic.html">harmonically</a>-rich saw. The vocoder analyses the moment-to-moment frequency shape of your voice and imposes that shape onto the carrier, band by band, so the synth appears to speak or sing your words. The voice gives the shape; the synth gives the tone and the notes. This is why a vocoder&rsquo;s pitch comes from the synth you play, not from how high you sing &mdash; you can whisper the words and the &ldquo;melody&rdquo; is whatever chord the carrier holds. The <a href="../bible/vocoder.html">vocoder</a> is the workhorse behind most of Daft Punk&rsquo;s robotic vocals, and it is what a stock DAW vocoder gives you.</p>
+<p>A <strong>talk box</strong> reaches the same destination by a completely different road. There is no band analysis and no electronic modulator. Instead, a small speaker in a box pushes the synth signal up a clear plastic tube that runs into the performer&rsquo;s mouth. The performer then shapes that sound acoustically &mdash; with lips, tongue and jaw &mdash; exactly as they would shape ordinary speech, while a microphone in front of the mouth captures the result. It is a <em>performance</em> instrument: the &ldquo;filter&rdquo; is a real human vocal tract, moved in real time. Roger Troutman of Zapp made it famous with synths; Peter Frampton made it famous with guitar. If &ldquo;Around the World&rdquo; is a talk box &mdash; and reputable analysts think it very likely is, though others reconstruct it as a vocoder &mdash; that is the mechanism at work.</p>
+<p>Here is the crucial practical point: the two <em>sound</em> similar and robotic, but they demand different things from you. A vocoder is a routing-and-mixing job you do at the desk, repeatable and edit-friendly. A talk box is a physical skill you perform, closer to playing an instrument than to loading a plugin. For a recreation aimed at a finished record, the vocoder route is where almost everyone should start, and it is what we build first.</p>
+<p>It also helps to know that not all vocoders are built the same way, because that difference is audible. The classic design splits the voice into a bank of <strong>bandpass filters</strong> &mdash; often eight, sixteen, or more &mdash; measures the level in each band, and applies those levels to the same bands on the carrier. More bands means finer detail and clearer speech; fewer bands means the lo-fi, &ldquo;80s&rdquo; vocoder sound. The DigiTech Talker took a different route entirely: it uses <strong>linear predictive coding</strong>, the speech-modelling maths that phone systems and early speech chips used, which is why it sounds grittier and more &ldquo;spoken&rdquo; than a smooth analogue band-vocoder. You do not need LPC to get close &mdash; a stock band-vocoder with enough bands is plenty &mdash; but knowing the Talker is an LPC device explains why it has that particular chewy, intelligible edge, and why a plugin like Robot Rocket that also uses LPC gets nearer than a generic one.</p>
+
+<h2 id="gear">What Daft Punk actually used</h2>
+<p>Because so much of the internet guesses, it is worth being precise about the confirmed layer. In that 2001 <em>Remix</em> interview, Daft Punk named three of their own vocal tools: an old Roland <strong>SVC-350</strong> vocoder, <strong>Auto-Tune</strong>, and a DigiTech <strong>Vocalist</strong>. Note that the Vocalist is a pitch-shifting <strong>harmoniser</strong> &mdash; it is not the same box as the Talker, and mixing the two names up is a frequent error. That interview covered only their first two albums and, tellingly, did not mention a talk box despite &ldquo;Around the World&rdquo; almost certainly using one, or the DigiTech Talker that later analysis places all over <em>Discovery</em> and <em>Human After All</em>.</p>
+<p>The <strong>DigiTech Talker</strong> is the box most responsible for the sound people mean when they say &ldquo;the Daft Punk robot voice.&rdquo; It is a digital vocoder pedal &mdash; carrying DigiTech&rsquo;s branding but engineered by IVL Technologies, a company that specialised in vocal processing and later became part of TC-Helicon. Rather than the classic bank of bandpass filters, the Talker uses <strong>linear predictive coding</strong> (LPC), the same speech-modelling maths behind a lot of voice technology, which is a big part of why it sounds gritty and intelligible rather than smooth and glassy. Crucially for the recreation, the Talker offers named programs, two of which matter: <strong>TalkBox</strong>, the lo-fi program you have probably heard the most, and <strong>NuVo</strong>, which passes sibilant sounds through so words stay readable. &ldquo;Harder, Better, Faster, Stronger&rdquo; uses NuVo &mdash; and that single design choice, letting the consonants through, is most of why that vocal is so unusually clear.</p>
+<div class="highlight-box"><div class="highlight-box-label">The one detail that unlocks it</div><p>Vocoders are bad at unvoiced consonants &mdash; the &ldquo;S&rdquo;, &ldquo;F&rdquo; and &ldquo;T&rdquo; sounds that have no pitch. The Talker&rsquo;s NuVo program fixed that by letting a little of the real voice or noise through on those sounds. Reproduce <em>that</em> behaviour in your DAW and vocoded gibberish turns into a robot that actually talks.</p></div>
+<p>The Talker&rsquo;s pedigree is worth a sentence because it explains the sound. IVL Technologies, the Canadian firm that actually engineered it, specialised in voice processing and later merged into TC-Helicon &mdash; the same lineage behind a lot of respected vocal hardware. That heritage is why the Talker is unusually good at keeping words legible for a device sold to guitarists. The Roland <strong>SVC-350</strong> that Daft Punk also named is a different flavour again: a classic rack vocoder with the lush, wide, distinctly analogue voice you hear on a lot of their smoother robotic passages. And the DigiTech <strong>Vocalist</strong> from that same interview is not a vocoder at all &mdash; it is a pitch-tracking harmoniser, the tool behind the stacked, tuned backing-vocal robots rather than the talking lead. Keeping those three straight is most of what separates an accurate recreation from a guess.</p>
+<p>The one place to stay honest is &ldquo;Around the World.&rdquo; Its vocal is frequently held up as the definitive talk-box example, and respected analysis calls it &ldquo;almost certainly&rdquo; a talk box &mdash; but other careful reconstructions rebuild it convincingly as a square-wave vocoder, and the exact carrier has never been documented. Both routes can get you a faithful version, which is the practical takeaway; just resist any source that states the mechanism, or a specific synth, as settled fact. That uncertainty is exactly why our sourcing box above files it under &ldquo;disputed&rdquo; rather than &ldquo;confirmed.&rdquo;</p>
+<p>It is worth dwelling on why &ldquo;Harder, Better, Faster, Stronger&rdquo; became the reference for this sound rather than any other vocoded track. Most vocoders, faced with a lyric, turn the consonants to mush &mdash; the very sounds that carry meaning are the ones with no pitch for the effect to grab. The Talker&rsquo;s NuVo program was an unusually clever answer: instead of vocoding everything, it detects the unvoiced moments and lets the real voice or a burst of noise through on them, so the &ldquo;s&rdquo; in &ldquo;faster&rdquo; and the &ldquo;t&rdquo; in &ldquo;better&rdquo; survive. The result is a robot that is fully synthetic in tone yet almost perfectly legible &mdash; a combination that was rare before and is the entire reason the hook lodges in your head. When you rebuild the sound, that single behaviour is the highest-leverage thing to copy; get the consonants through and you are most of the way to the record, regardless of which vocoder you own.</p>
+<p>Understanding the signal flow is easier as a picture than as a paragraph. Below, the vocoder path (your voice modulating a bright synth carrier) sits next to the talk-box path (a synth driven up a tube into your mouth), so you can see why they land in the same place from opposite directions.</p>
+<p><div class="diagram-wrap">
+<picture>
+<source media="(max-width:900px)" srcset="../images/how-to-recreate-the-daft-punk-robot-voice-signal-m.png">
+<img src="../images/how-to-recreate-the-daft-punk-robot-voice-signal.png" alt="A signal-path diagram titled “The robot voice as a signal path.” A source jack labelled THE ROBOT VOICE fans out by cable to three cards. The teal card, “The vocoder route,” reads “your voice reshapes a bright synth” and routes to “most tracks.” The purple card, “The talk-box route,” reads “synth up a tube, shaped in your mouth” and routes to “Around the World?” The amber card, “Either mechanism,” reads “the synth owns the notes, you own the words” and routes to “robot voice.” Caption: the synth carries the pitch and your performance carries the words." width="1040" height="529" loading="lazy" />
+</picture>
+<div class="diagram-caption">Two mechanisms, one destination: the vocoder shapes a synth electronically with your voice; the talk box shapes it acoustically in your mouth.</div>
+</div></p>
+
+<h2 id="shape">How your voice shapes the synth</h2>
+<p>The heart of the vocoder &mdash; and the thing that tells you how to perform for it &mdash; is that your voice&rsquo;s changing <strong>formants</strong> are what carve the synth into words. When you say &ldquo;ah&rdquo; versus &ldquo;ee,&rdquo; your vocal tract emphasises different frequency regions; the vocoder measures those regions many times a second and opens the matching bands on the carrier. So the synth is loud only where your voice is loud, in frequency. That is the whole trick, and it has direct consequences for how you sing into one.</p>
+<p>First, <strong>the carrier must be bright and full-band</strong>. A vocoder can only pass frequencies that already exist in the carrier &mdash; it filters, it does not add. Feed it a dull sine and there is nothing for the high formants to reveal; feed it a bright saw, a square, or a <a href="how-to-layer-synths.html">layered</a> stack and the consonants and airy vowels have something to bite into. Second, <strong>the carrier supplies the notes</strong>: hold a chord or a drone and your words ride that harmony; change the chord and the &ldquo;melody&rdquo; of the robot changes, regardless of your own pitch. Third, and most important for intelligibility, <strong>consonants are a performance problem</strong>. Over-enunciate. Push the &ldquo;t&rdquo; and the &ldquo;k,&rdquo; hiss the &ldquo;s,&rdquo; and where the vocoder still swallows a sibilant, blend a touch of the dry voice or a little noise back in on that syllable &mdash; the NuVo move.</p>
+<p>The diagram below shows this as a spectrum: the voice&rsquo;s formant peaks (the shape of the word) gating the carrier&rsquo;s bands, so the output is bright where the voice is bright and dark where it is not.</p>
+<p>A little EQ discipline on the carrier goes a long way here. Because the vocoder can only pass what the carrier contains, it pays to make sure the carrier is not just bright but <em>evenly</em> bright &mdash; a saw with a gentle high shelf gives the sibilant region something to reveal, while a carrier that is scooped in the presence range will sound muffled no matter how clearly you enunciate. If your DAW&rsquo;s vocoder lets you set the number of bands, treat it as a legibility-versus-vintage dial: raise it when you need the lyric understood, lower it when you want the effect to feel more like a machine and less like a person. And remember the carrier can be more than one oscillator &mdash; a <a href="how-to-layer-synths.html">layered</a> pair of a bright saw and a square, or a full detuned stack, gives the robot a thicker, more modern body while still leaving the formants room to carve words.</p>
+<p>Two more performance choices shape how human-or-machine the result reads. The first is the vocoder&rsquo;s band count, if it is adjustable: sixteen or more bands renders speech crisply and modern, while eight or fewer gives the vintage, blocky, unmistakably-vocoded sound of the 70s and 80s records. The second is your own register. Because the vocoder reads the <em>shape</em> of your speech and not its pitch, you can talk rather than sing and let the carrier supply every note &mdash; which is why so many vocoded parts are performed almost deadpan. If you want the robot to feel colder and more mechanical, flatten your delivery; if you want it warmer, let a little natural inflection through. None of this touches a plugin parameter; it is all in the take.</p>
+<p><div class="diagram-wrap">
+<picture>
+<source media="(max-width:900px)" srcset="../images/how-to-recreate-the-daft-punk-robot-voice-shape-m.png">
+<img src="../images/how-to-recreate-the-daft-punk-robot-voice-shape.png" alt="An illustrative spectrum titled “Formants gate the carrier,” drawn as teal bars rising and falling across five labelled bands: low, vowels, mid, presence and sibilance. Energy peaks in the vowels and presence bands. The sibilance band on the right is highlighted amber and labelled “let the S and T through — the NuVo move.” Caption notes it is an illustrative spectrum read band by band, not a measured FFT." width="1040" height="494" loading="lazy" />
+</picture>
+<div class="diagram-caption">The voice&rsquo;s formants gate the carrier band by band. The consonant region (amber) is where intelligibility is won or lost.</div>
+</div></p>
+
+<h2 id="recreate">Recreate it: stock vocoder first, then the shortcut</h2>
+<p>You almost certainly already own everything you need. Nearly every DAW ships a competent vocoder &mdash; Ableton has <strong>Vocoder</strong>, Logic has <strong>EVOC&nbsp;20</strong>, and for anything without one the free <strong>TAL-Vocoder</strong> is excellent. The synth can be anything bright; the free <a href="vital-synth-review.html">Vital</a> or any stock synth in your DAW is more than enough for the carrier. Here is the full recreation, stock-first.</p>
+<table class="settings-table">
+<thead><tr><th>Step</th><th>What to do</th><th>Why it matters</th></tr></thead>
+<tbody>
+<tr><td>Carrier synth</td><td class="mono">Bright saw/square, held chord, track muted</td><td>The vocoder filters this; dull carrier = dull robot. Muted so you only hear the vocoded result.</td></tr>
+<tr><td>Vocoder</td><td class="mono">On the vocal; carrier input = the synth track</td><td>Your voice is the modulator, the synth the carrier. This routing is the whole effect.</td></tr>
+<tr><td>Bands</td><td class="mono">More bands = more intelligible</td><td>Few bands sound lo-fi and vintage; many bands read words more clearly.</td></tr>
+<tr><td>Sibilance</td><td class="mono">Blend dry voice/noise on S, T, F</td><td>The NuVo move &mdash; unvoiced consonants have no pitch, so pass them through.</td></tr>
+<tr><td>Tone</td><td class="mono">Highpass lows, keep top bright, light drive</td><td>Clears mud, keeps the metallic sheen, adds the gritty Talker character.</td></tr>
+<tr><td>Notes</td><td class="mono">Carrier chord = your song&rsquo;s key</td><td>The robot&rsquo;s &ldquo;melody&rdquo; is the carrier, not your voice.</td></tr>
+</tbody>
+</table>
+<p>Perform the take like you mean it. Vocoded vocals live or die on enunciation, so record a clear, close, dry take &mdash; the same discipline you would bring to any <a href="how-to-mix-vocals.html">vocal</a> that has to sit forward in a mix &mdash; and do not be afraid to sound theatrical. Then chase the tone: a <a href="../bible/high-pass-filter.html">highpass</a> to clear the low mud, brightness up top, and a little <a href="../bible/distortion.html">saturation</a> for that hardware grit. If you want the honest paid shortcut, Bjango&rsquo;s <strong>Robot Rocket</strong> is a plugin built specifically to model the DigiTech Talker &mdash; same LPC approach, with its TalkBox and NuVo programs on tap &mdash; and it runs around <strong>$39</strong> (often on sale near $29) as a VST3 and AU. It is the closest you will get to the Talker without hunting down the hardware.</p>
+<p>The routing is the one place people get stuck, and it differs slightly by DAW. In <strong>Ableton</strong>, drop Vocoder on the vocal, set its Carrier to &ldquo;External,&rdquo; and point the audio-from menu at your muted synth track &mdash; the synth feeds the vocoder even while its own output is silenced. In <strong>Logic</strong>, the EVOC&nbsp;20 works from a side-chain: place it on the vocal and select the synth track as the side-chain source. The free <strong>TAL-Vocoder</strong> takes the voice as audio and the notes as MIDI, so you play the carrier chords straight into the plugin. The principle is identical everywhere &mdash; voice in as modulator, synth in as carrier &mdash; only the menu names change. Once it is wired, everything else is performance and tone.</p>
+<p>If it is specifically the &ldquo;Around the World&rdquo; talk-box character you want, and you are willing to perform it, the hardware route is real and cheap enough to try: a self-contained talk box such as a <strong>Rocktron Banshee</strong> or a <strong>Heil Talk Box</strong> feeds a synth up a tube into your mouth, and you shape the words with your lips while a mic captures them. It takes practice &mdash; it is a physical skill, not a preset &mdash; but nothing digital fully replaces the way a real mouth articulates a tube, and for that particular sound it is the authentic path.</p>
+<p>Whichever route you take, the finishing chain is what sells it. After the vocoder, a gentle <a href="../bible/high-pass-filter.html">highpass</a> clears the boxy low end that stacked carriers pile up; a touch of <a href="../bible/distortion.html">saturation</a> or bit-crushing adds the gritty, hardware-converter edge that a clean plugin lacks; and a high shelf keeps the top metallic and present so the words cut. A short, bright reverb or a slap delay places the robot in a space without smearing the consonants. Keep it restrained &mdash; the effect is already dramatic, and the most common way a good vocoder take goes wrong at the mix is over-processing that buries the very intelligibility you worked to win. Compress lightly, ride the level so every line reads, and let the sound&rsquo;s inherent character do the rest.</p>
+<p>Which route is right depends on what you are after, so the router below maps the want to the tool &mdash; and it is deliberately honest about the one option you should <em>not</em> treat as buyable.</p>
+<p><div class="diagram-wrap">
+<picture>
+<source media="(max-width:900px)" srcset="../images/how-to-recreate-the-daft-punk-robot-voice-route-m.png">
+<img src="../images/how-to-recreate-the-daft-punk-robot-voice-route.png" alt="A signal-path decision diagram titled “The recreation as a signal path.” A source jack labelled WHAT YOU WANT fans by cable to three cards. Teal, “Want it free and stock?” — Ableton Vocoder, Logic EVOC 20 or TAL — routes to “DAW vocoder.” Purple, “Want a Talker model?” — an LPC plugin with TalkBox and NuVo programs — routes to “Robot Rocket, about thirty-nine dollars.” Amber, “Want the real hardware?” — discontinued and rare, not a new buy — routes to “Talker, about three hundred dollars and up.” Caption notes the talk-box route uses a hardware talk box such as a Rocktron Banshee or Heil." width="1040" height="529" loading="lazy" />
+</picture>
+<div class="diagram-caption">Stock first. A DAW vocoder nails it for free; Robot Rocket is the dedicated shortcut; the Talker hardware is a rare collectable, not a purchase.</div>
+</div></p>
+
+<h2 id="beyond">Beyond Daft Punk: the same move anywhere</h2>
+<p>The reason this technique is worth learning properly is that it is not a one-song trick. Once you can route a voice and a carrier into a vocoder and perform for intelligibility, you own a whole family of sounds. Kraftwerk, Zapp, ELO, Herbie Hancock&rsquo;s &ldquo;Rockit,&rdquo; countless hip-hop hooks, and most modern robotic ad-libs are the same mechanism with different carriers and different performances. Swap the saw carrier for a pad and you get a lush, choir-like robot; feed it a drum loop instead of a synth and you get rhythmic, pitched talking; push the drive and reduce the bands and you get the crunchy, lo-fi TalkBox-program grit.</p>
+<p>The most creative move is to stop thinking of the carrier as &ldquo;a synth&rdquo; at all. Any bright, sustained source works: a shimmering pad turns a lyric into a ghostly chorus; white noise as the carrier gives the whispered, breathy robot that the Talker&rsquo;s TazMania program was built for; and a busy drum or percussion loop as the carrier produces the rhythmic, chattering vocoded texture that fills modern electronic drops. Because the carrier owns the pitch and rhythm and your voice owns the words, changing the carrier is the single most powerful creative lever you have &mdash; the same vocal take can become a pad choir, a robotic lead, or a percussive stutter without you re-recording a syllable.</p>
+<p>The last piece is arrangement, because a robot voice is a strong flavour and it works best when the track makes room for it. Daft Punk almost always give the vocoded hook its own clear space &mdash; a repeated phrase, a simple chord bed, and few competing midrange elements &mdash; so the ear can lock onto the words. When you drop a vocoder into a busy mix it tends to disappear into the synths, precisely because it <em>is</em> a synth wearing your words. Carve a pocket for it: thin the pads underneath, mute clashing leads while it speaks, and let its carrier chords double as the song&rsquo;s harmony rather than fighting a separate chord part. Treated as a feature rather than a garnish, it becomes a hook; buried as an afterthought, it becomes mud.</p>
+<p>It also pairs naturally with the other recreations in this series. The bright, detuned carriers that make a vocoder shimmer are exactly the sounds covered in <a href="how-to-recreate-the-supersaw.html">how to recreate the supersaw</a>, and the same &ldquo;understand the real mechanism before you reach for a preset&rdquo; discipline runs through <a href="how-to-recreate-the-80s-gated-reverb-snare.html">recreating the 80s gated-reverb snare</a>. If you are still building a synth vocabulary, our primer on <a href="what-is-a-synthesizer.html">what a synthesizer is</a> and the roundup of the <a href="best-synth-plugins.html">best synth plugins</a> will make choosing a carrier second nature.</p>
+
+<h2 id="cant-buy">What you can&rsquo;t perfectly clone &mdash; and why it doesn&rsquo;t matter</h2>
+<p>Two things about the original are genuinely out of reach, and it is worth naming them honestly. The first is the <strong>exact voicing of the DigiTech Talker chip</strong> &mdash; its particular LPC grit, the specific way it mangles and reconstitutes a voice. Robot Rocket gets impressively close because it models that behaviour directly, but a generic band-vocoder will always sound a little cleaner and less characterful. The second, if you are chasing the &ldquo;Around the World&rdquo; sound specifically, is the <strong>physical talk-box performance</strong>: the tiny, human, real-time articulations of a mouth shaping a tube. A plugin cannot fully replace that, because it is not really an effect &mdash; it is a performance on an instrument.</p>
+<p>Here is why neither matters for a finished record. The <em>perceptual</em> result &mdash; a bright, banded, intelligible robot voice reading your lyrics on the notes you choose &mdash; is completely reachable in a stock vocoder. In a full mix, with a beat and other elements around it, the last few percent of chip-accurate grit is inaudible to essentially everyone. The character that listeners actually recognise comes from the things you fully control: a bright carrier, real enunciation, sibilants let through, and a metallic, slightly distorted tone. Nail those and you have the sound. Chase the exact chip and you are collecting, not producing.</p>
+<p>This is the honest promise of the whole recreation approach: you are not trying to forge a fingerprint, you are trying to reproduce a <em>result</em>, and results live in perception. A blind listener cannot tell a well-made stock vocoder from a Talker inside a busy arrangement; they can, instantly, tell a mumbled take from a crisp one, or a dull carrier from a bright one. So spend your effort where the ear actually is &mdash; performance, carrier, and tone &mdash; and treat the rare hardware as a nice-to-have for the wall, not a requirement for the record.</p>
+
+<h2 id="rights">Do you need to clear anything?</h2>
+<p>No. If you recorded your own voice and ran it through your own vocoder or talk box, the result is entirely your own production, and there is nothing to license or clear. Recreating an <em>effect</em> is not sampling a <em>recording</em> &mdash; a technique is not copyrightable, and reproducing a vocal-processing method has never required anyone&rsquo;s permission. You can make a robot voice that sounds unmistakably Daft-Punk-adjacent and release it freely, the same way you can play a power chord that sounds like a thousand rock records.</p>
+<p>The only place a rights question would ever arise is if you took the opposite route and <strong>sampled an actual Daft Punk recording</strong> &mdash; lifting a snippet of their vocal from the master. That is a different task entirely, and it would be a clearance matter, not a recreation. But that is not what any part of this guide involves: everything here starts from <em>your</em> voice and <em>your</em> synth, which keeps the whole thing clean.</p>
+
+<h2 id="exercises">Build the skill: 3 drills</h2>
+<div class="exercise-block">
+<div class="exercise-header"><span class="skill-badge skill-badge--beginner">Beginner</span><span class="exercise-title">Route and read one word</span></div>
+<ol>
+<li>Load a stock vocoder on a vocal track and a bright saw synth on a second, muted track.</li>
+<li>Set the vocoder&rsquo;s carrier input to the synth track and hold a single low chord.</li>
+<li>Say one clear word &mdash; &ldquo;robot&rdquo; &mdash; and adjust bands until you can read it.</li>
+<li>Goal: get from &ldquo;muffled buzz&rdquo; to &ldquo;legible word&rdquo; using only band count and enunciation.</li>
+</ol>
+</div>
+<div class="exercise-block">
+<div class="exercise-header"><span class="skill-badge skill-badge--intermediate">Intermediate</span><span class="exercise-title">Win the sibilants (the NuVo move)</span></div>
+<ol>
+<li>Record a phrase heavy in &ldquo;S&rdquo; and &ldquo;T&rdquo; sounds (&ldquo;best faster stronger&rdquo;).</li>
+<li>Duplicate the dry vocal and gate it so only the consonants pass.</li>
+<li>Blend that consonant layer under the vocoded voice until words snap into focus.</li>
+<li>Goal: hear how intelligibility is a consonant problem, not a bands problem.</li>
+</ol>
+</div>
+<div class="exercise-block">
+<div class="exercise-header"><span class="skill-badge skill-badge--advanced">Advanced</span><span class="exercise-title">Change the melody without singing</span></div>
+<ol>
+<li>Keep your vocoded take exactly as is.</li>
+<li>Rewrite only the carrier synth&rsquo;s chords under it &mdash; try a minor progression.</li>
+<li>Notice the robot&rsquo;s &ldquo;melody&rdquo; follows the synth, not your voice.</li>
+<li>Goal: internalise that the carrier owns the pitch and the voice owns the words.</li>
+</ol>
+</div>
+
+<h2 id="mistakes">The mistakes that make it sound wrong</h2>
+<div class="mistake-box"><div class="mistake-box-label">Mistake 1 &mdash; reaching for Auto-Tune</div><p>Pitch-correction cannot make this sound. If you are automating retune speed and hearing glassy glides, you are building &ldquo;One More Time,&rdquo; not the robot. The talking-synth voice is a vocoder; start there.</p></div>
+<div class="mistake-box"><div class="mistake-box-label">Mistake 2 &mdash; a dull carrier</div><p>A vocoder can only reveal frequencies the carrier already has. A sine or a soft pad gives the effect nothing to work with. Use a bright saw or square and the words appear.</p></div>
+<div class="mistake-box"><div class="mistake-box-label">Mistake 3 &mdash; mumbling the take</div><p>Vocoders punish lazy enunciation. A close, dry, over-articulated performance is worth more than any plugin choice. Perform it like a robot news anchor.</p></div>
+<div class="mistake-box"><div class="mistake-box-label">Mistake 4 &mdash; ignoring the consonants</div><p>If your robot sounds like buzzing vowels with the words smeared out, you skipped the sibilants. Let the &ldquo;S&rdquo; and &ldquo;T&rdquo; through &mdash; the NuVo move &mdash; and it starts to talk.</p></div>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+<div class="faq-accordion">
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">What did Daft Punk actually use for the robot voice?</span></div></div>
+<div class="faq-accordion-a"><p>Their signature robot voice is mostly the DigiTech Talker, a digital vocoder pedal designed and built by IVL Technologies and sold under DigiTech&rsquo;s name as a guitar pedal. &ldquo;Harder, Better, Faster, Stronger&rdquo; uses the Talker&rsquo;s NuVo program, which lets sibilant sounds through for intelligibility; other robot-voice tracks use its TalkBox program. In their own 2001 <em>Remix</em> interview, Daft Punk also named an old Roland SVC-350 vocoder, Auto-Tune, and a DigiTech Vocalist harmoniser. So it is not one box for everything, and it is not simply &ldquo;Auto-Tune.&rdquo;</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Is the Daft Punk robot voice Auto-Tune?</span></div></div>
+<div class="faq-accordion-a"><p>No, that is the most common myth. Auto-Tune is a pitch-correction effect and it shows up on different Daft Punk tracks; &ldquo;One More Time&rdquo; is Auto-Tune combined with a phaser, which is a different, smoother sound. The robotic, metallic talking-synth voice on &ldquo;Harder, Better, Faster, Stronger&rdquo; is a vocoder &mdash; the DigiTech Talker &mdash; where your voice shapes a synth. Pitch-correction and vocoding are entirely different mechanisms.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">What is the difference between a vocoder and a talk box?</span></div></div>
+<div class="faq-accordion-a"><p>A vocoder is an electronic effect: it analyses your voice (the modulator) and uses its changing frequency shape to filter a synth (the carrier), so the synth appears to sing. A talk box is a physical device: a small speaker pushes a synth signal up a plastic tube into your mouth, and you shape it acoustically with your lips and tongue while a mic picks up the result. They sound similar and robotic, but one is a plugin or pedal and the other is a real-time mouth performance.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Can I make the Daft Punk robot voice with free stock plugins?</span></div></div>
+<div class="faq-accordion-a"><p>Yes. Most DAWs ship a capable vocoder: Ableton has Vocoder, Logic has EVOC 20, and there is the free TAL-Vocoder for anything else. Feed it a bright saw or square carrier held as a chord, sing a clear take as the modulator, then chase intelligibility and a metallic tone. For a mix, a stock vocoder is perceptually more than close enough; you do not need the rare hardware.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">How do I keep vocoded vocals intelligible?</span></div></div>
+<div class="faq-accordion-a"><p>Intelligibility is mostly a performance and a consonant problem. Over-enunciate, especially the consonants, because vocoders struggle with unvoiced sounds like &ldquo;S&rdquo;, &ldquo;F&rdquo; and &ldquo;T&rdquo; that have no clear pitch. Let those sibilants through by blending a little dry voice or unvoiced noise on them; this is precisely what the DigiTech Talker&rsquo;s NuVo program did to make &ldquo;Harder, Better, Faster, Stronger&rdquo; so readable. More vocoder bands and a bright carrier also help.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">What carrier synth should I use for the vocoder?</span></div></div>
+<div class="faq-accordion-a"><p>A bright, harmonically rich source works best because the vocoder can only filter frequencies that are already there. A sawtooth held as a sustained chord or drone is the classic choice; a square or a supersaw-style stack also works. Keep it bright and full-band, hold notes so the voice always has something to shape, and match the carrier&rsquo;s notes to your song&rsquo;s key.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Is there a plugin that sounds exactly like the DigiTech Talker?</span></div></div>
+<div class="faq-accordion-a"><p>Bjango&rsquo;s Robot Rocket is a plugin built specifically to model the Talker, using the same linear-predictive-coding approach and offering its TalkBox and NuVo programs. It is around $39 (often on sale near $29) as a VST3 and AU. The original DigiTech Talker hardware is long discontinued and now a rare, collectable pedal that sells used for roughly $300 and up, so treat it as a hardware curiosity rather than something to buy new.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Do I need to clear any rights to use a robot voice I made?</span></div></div>
+<div class="faq-accordion-a"><p>No. If you recorded your own voice and processed it through your own vocoder or talk box, the result is entirely your own production and there is nothing to clear. Recreating an effect is not sampling a recording. A rights question would only arise if you sampled an actual Daft Punk record, which is a completely different task from recreating the technique.</p></div></div>
+</div>
+
+<div class="go-deeper">
+<div class="go-deeper-title">Keep going</div>
+<div class="related-grid">
+<a href="how-to-use-vocoders-and-talk-boxes.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">Vocoders &amp; Talk Boxes</h3><p class="related-card-desc">The full guide to both machines behind this sound &mdash; setup, carriers, and intelligibility, start to finish.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-use-autotune.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">How to Use Auto-Tune</h3><p class="related-card-desc">The effect everyone confuses with the robot voice &mdash; what it really does, and when it&rsquo;s the right tool.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-recreate-the-supersaw.html" class="related-card"><div class="related-card-tag">Recreations</div><h3 class="related-card-title">Recreate the Supersaw</h3><p class="related-card-desc">The bright, detuned carrier that makes a vocoder shimmer &mdash; and a sibling recreation with the same method.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-recreate-the-80s-gated-reverb-snare.html" class="related-card"><div class="related-card-tag">Recreations</div><h3 class="related-card-title">80s Gated-Reverb Snare</h3><p class="related-card-desc">Another iconic sound rebuilt from the real mechanism up &mdash; no myth, no magic preset.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="best-plugins-for-vocals.html" class="related-card"><div class="related-card-tag">Reviews</div><h3 class="related-card-title">Best Plugins for Vocals</h3><p class="related-card-desc">Vocoders, tuners, and effects worth owning to build robot voices and everything else in the booth.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-use-pitch-shifting-creatively.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">Creative Pitch-Shifting</h3><p class="related-card-desc">The other family of robotic and formant tricks &mdash; harmonisers, formant shifts, and where they fit.</p><span class="related-card-meta">Read article &rarr;</span></a>
+</div>
+</div>
+</div>
+</article>
+
+
+    <aside aria-label="Article sidebar">
+      <div class="sidebar-widget toc-widget" aria-labelledby="tocHeading">
+        <div class="sidebar-widget-header"><h2 class="sidebar-widget-title" id="tocHeading">In This Article</h2></div>
+        <div class="sidebar-widget-body"><ul class="toc-list">
+
+<li><a href="#reframe">It Isn’t Auto-Tune</a></li><li><a href="#history">A One-Minute History</a></li><li><a href="#mechanism">Vocoder vs Talk Box</a></li><li><a href="#gear">What They Used</a></li><li><a href="#shape">Voice Shapes Synth</a></li><li><a href="#recreate">Recreate It</a></li><li><a href="#beyond">Beyond Daft Punk</a></li><li><a href="#cant-buy">What You Can’t Clone</a></li><li><a href="#rights">Rights?</a></li><li><a href="#exercises">3 Drills</a></li><li><a href="#mistakes">Common Mistakes</a></li><li><a href="#faq">FAQ</a></li>
+
+</ul></div>
+      </div>
+      <div class="sidebar-widget" style="background:var(--bg-void);border-color:var(--border-default);">
+        <div class="sidebar-widget-body" style="padding:1.5rem;">
+          <p style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.5rem;">Newsletter</p>
+          <h3 style="font-family:var(--font-display);color:var(--text-primary);font-size:1.1rem;margin-bottom:.5rem;">The Producer's Briefing</h3>
+          <p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:1rem;line-height:1.55;">Weekly tips, gear news, and technique guides. Free.</p>
+          <form class="newsletter-form-js" style="display:flex;flex-direction:column;gap:.5rem;" novalidate>
+            <input type="email" name="email" class="form-input" placeholder="Your email" required />
+            <button type="submit" class="btn-newsletter" style="font-size:.82rem;padding:.65rem 1rem;">Subscribe Free</button>
+          </form>
+        </div>
+      <div class="sidebar-widget" style="margin-top:1.5rem;">
+        <div class="sidebar-widget-header" style="text-align:center;">
+          <h2 class="sidebar-widget-title">Related Articles</h2>
+        </div>
+        <div class="sidebar-widget-body" style="padding:1rem;">
+<ul style="list-style:none;padding:0;margin:0;text-align:center;"><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="how-to-use-vocoders-and-talk-boxes.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">Vocoders &amp; Talk Boxes</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Techniques</span></li><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="how-to-use-autotune.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">How to Use Auto-Tune</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Techniques</span></li><li style="padding:.6rem 0;"><a href="how-to-recreate-the-supersaw.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">Recreate the Supersaw</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Recreations</span></li></ul>
+        </div>
+      </div>
+      </div>
+    </aside>
+  </div>
+</main>
+<section class="newsletter-section" id="newsletter" aria-labelledby="newsletterHeading">
+  <div class="container">
+    <div class="newsletter-inner">
+      <div class="newsletter-content">
+        <p class="newsletter-label">Newsletter</p>
+        <h2 id="newsletterHeading" class="newsletter-title">The Producer's <em>Briefing</em></h2>
+        <p class="newsletter-desc">Weekly techniques, gear news, and music business insights. Free.</p>
+      </div>
+      <div class="newsletter-form-wrap">
+        <form class="newsletter-form-js" novalidate>
+          <input type="email" name="email" class="form-input" placeholder="Your email address" required />
+          <button type="submit" class="btn-newsletter">Subscribe Free</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<footer class="site-footer" role="contentinfo">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="../index.html" class="site-logo"><span class="logo-wordmark">Music<span>Production</span>Wiki</span><span class="logo-tagline">The Producer's Reference</span></a>
+    </div>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <div class="footer-col">
+        <h3 class="footer-col-title">Categories</h3>
+        <ul>
+          <li><a href="../categories/reviews.html">Reviews</a></li>
+          <li><a href="../categories/comparisons.html">Comparisons</a></li>
+          <li><a href="../categories/ai-music.html">AI Music</a></li>
+          <li><a href="../categories/daws.html">DAWs</a></li>
+          <li><a href="../categories/plugins.html">Plugins</a></li>
+          <li><a href="../categories/hardware.html">Gear</a></li>
+          <li><a href="../categories/techniques.html">Techniques</a></li>
+          <li><a href="../categories/music-business.html">Music Business</a></li>
+          <li><a href="../categories/glossary.html">Glossary</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">Popular</h3>
+        <ul>
+          <li><a href="../articles/suno-vs-udio.html">Suno vs Udio</a></li>
+          <li><a href="../articles/best-daw-for-beginners.html">Best DAW for Beginners</a></li>
+          <li><a href="../articles/focusrite-scarlett-2i2-gen-4-review.html">Scarlett 2i2 Review</a></li>
+          <li><a href="../articles/sidechain-compression-guide.html">Sidechain Compression</a></li>
+          <li><a href="../articles/best-compressor-plugins.html">Best Compressor Plugins</a></li>
+          <li><a href="../articles/what-is-gain-staging.html">What Is Gain Staging</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">About</h3>
+        <ul>
+          <li><a href="../about.html">About MPW</a></li>
+          <li><a href="../about.html#team">Our Team</a></li>
+          <li><a href="../about.html#methodology">Review Methodology</a></li>
+          <li><a href="../about.html#affiliate">Affiliate Disclosure</a></li>
+          <li><a href="../about.html#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="footer-bottom"><div class="container"><p>© <span id="copyrightYear"></span> MusicProductionWiki.com. All rights reserved. Content by the Music Production Wiki Team.</p></div></div>
+</footer>
+<script src="../js/main.js"></script>
+<script>document.getElementById('copyrightYear').textContent = new Date().getFullYear();</script>
+
+<button id="mpwBackTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  aria-label="Back to top"
+  style="position:fixed;bottom:1.5rem;right:1.5rem;width:2.5rem;height:2.5rem;border-radius:50%;
+         background:var(--teal);color:#000;border:none;cursor:pointer;display:none;
+         align-items:center;justify-content:center;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3);">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <polyline points="18 15 12 9 6 15"/>
+  </svg>
+</button>
+<script>
+(function(){
+  var btn=document.getElementById('mpwBackTop');
+  var bar=document.getElementById('readingProgress');
+  var art=document.querySelector('.article-body');
+  window.addEventListener('scroll',function(){
+    var st=window.scrollY||document.documentElement.scrollTop;
+    btn.style.display=st>400?'flex':'none';
+    if(bar&&art){
+      var h=art.getBoundingClientRect().height;
+      var top=art.getBoundingClientRect().top+st;
+      var pct=Math.min(100,Math.max(0,(st-top+window.innerHeight)*100/h));
+      bar.style.width=pct+'%';
+      bar.setAttribute('aria-valuenow',Math.round(pct));
+    }
+  });
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<!-- MPW universal search: one overlay, one Fuse index (/search-index.json) -->
+<div class="usearch" id="usearch" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="usearch-box">
+    <div class="usearch-top">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input id="usearchInput" type="text" placeholder="Search tools, articles, the Bible…" autocomplete="off">
+      <kbd>esc</kbd>
+    </div>
+    <div class="usearch-results" id="usearchResults"></div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
+<script>
+(function(){
+  // === production parity: lazy-load index on first open, build Fuse once ===
+  var data=null, fuse=null;
+  var overlay=document.getElementById('usearch');
+  var input=document.getElementById('usearchInput');
+  var box=document.getElementById('usearchResults');
+  var sel=-1, current=[];
+  // article slugs are bare; bible/ and tools/ slugs carry their prefix (verified vs live search-index.json)
+  function urlFor(s){ return (s.indexOf('bible/')===0||s.indexOf('tools/')===0) ? '/'+s : '/articles/'+s; }
+
+  function buildFuse(arr){
+    data=arr;
+    fuse=new Fuse(data,{keys:['title','category','description'],threshold:0.34,ignoreLocation:true,minMatchCharLength:2});
+  }
+  function ensureIndex(cb){
+    if(fuse){cb();return;}
+    // PRODUCTION: one shared index, lazy-loaded on first open.
+    fetch('/search-index.json').then(function(r){return r.json();}).then(function(arr){
+      buildFuse(arr); cb();
+    }).catch(function(){ box.textContent='Search failed to load.'; });
+  }
+
+  function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  function render(results){
+    current=results;
+    while(box.firstChild) box.removeChild(box.firstChild);   // no innerHTML
+    if(!input.value.trim()){ var p=document.createElement('div'); p.className='usearch-empty'; p.textContent='Start typing to search everything.'; box.appendChild(p); return; }
+    if(!results.length){ var n=document.createElement('div'); n.className='usearch-empty'; n.textContent='No results for "'+input.value+'".'; box.appendChild(n); return; }
+    results.slice(0,12).forEach(function(r,i){
+      var e=r.item||r;
+      var a=document.createElement('a'); a.href=urlFor(e.slug); if(i===sel)a.className='sel';
+      var top=document.createElement('div'); top.className='ur-top';
+      var t=document.createElement('span'); t.className='ur-title'; t.textContent=e.title;
+      var c=document.createElement('span'); c.className='ur-cat'; c.setAttribute('data-c',e.category||''); c.textContent=e.category||'';
+      top.appendChild(t); top.appendChild(c); a.appendChild(top);
+      if(e.description){ var d=document.createElement('div'); d.className='ur-desc'; d.textContent=e.description; a.appendChild(d); }
+      box.appendChild(a);
+    });
+  }
+
+  function open(q){ ensureIndex(function(){ overlay.classList.add('open'); input.focus(); if(q!=null){input.value=q;} sel=-1; render(input.value?fuse.search(input.value):[]); }); }
+  function close(){ overlay.classList.remove('open'); }
+
+  // wire every nav's search button to the shared overlay
+  document.querySelectorAll('[data-nav-search]').forEach(function(b){ b.addEventListener('click',function(){open(null);}); });
+  input.addEventListener('input',function(){ sel=-1; render(fuse?fuse.search(input.value):[]); });
+  input.addEventListener('keydown',function(e){
+    if(e.key==='Escape')close();
+    else if(e.key==='ArrowDown'){e.preventDefault(); sel=Math.min(sel+1,Math.min(current.length,12)-1); render(current);}
+    else if(e.key==='ArrowUp'){e.preventDefault(); sel=Math.max(sel-1,0); render(current);}
+    else if(e.key==='Enter'&&current[sel]){ var e2=current[sel].item||current[sel]; location.href=urlFor(e2.slug); }
+  });
+  overlay.addEventListener('click',function(e){ if(e.target===overlay)close(); });
+  document.addEventListener('keydown',function(e){ if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();open(null);} });
+})();
+</script>
+<script id="toc-bar-js">
+(function(){
+  var body=document.querySelector('.article-body');
+  var track=document.getElementById('tocBarTrack');
+  if(!body||!track)return;
+  var heads=[].slice.call(body.querySelectorAll('h2[id]'));
+  if(!heads.length)return;
+  heads.forEach(function(h){
+    var a=document.createElement('a');a.href='#'+h.id;
+    var t=h.textContent.trim();var i=t.indexOf(':');if(i>0)t=t.slice(0,i);
+    a.textContent=t;track.appendChild(a);
+  });
+  var links=[].slice.call(track.querySelectorAll('a'));
+  function onScroll(){
+    var y=window.scrollY+130,cur=heads[0].id;
+    heads.forEach(function(h){if(h.offsetTop<=y)cur=h.id;});
+    links.forEach(function(l){var on=l.getAttribute('href')==='#'+cur;l.classList.toggle('active',on);
+      if(on)l.scrollIntoView({inline:'center',block:'nearest'});});
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+})();
+</script>
+<script>
+function mpwFaqToggle(el){
+  var answer = el.nextElementSibling;
+  if(!answer || !answer.classList.contains('faq-accordion-a')) return;
+  var isOpen = answer.classList.contains('open');
+  document.querySelectorAll('.faq-accordion-a.open').forEach(function(a){
+    a.classList.remove('open');
+    var q = a.previousElementSibling;
+    if(q){ var ic = q.querySelector('.faq-accordion-icon, .faq-plus'); if(ic) ic.classList.remove('open'); }
+  });
+  if(!isOpen){
+    answer.classList.add('open');
+    var icon = el.querySelector('.faq-accordion-icon, .faq-plus');
+    if(icon) icon.classList.add('open');
+  }
+}
+</script>
+<style>.faq-plus.open{transform:rotate(45deg);transition:transform .2s ease}</style>
+</body>
+</html>
