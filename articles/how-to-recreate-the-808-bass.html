@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Recreate the 808 bass: what it really is (a tuned, stretched TR-808 kick that doubles as your bassline), why it works, and the stock-synth patch that nails it." />
+  <title>How to Recreate the 808 Bass (The Tuned Sub Kick) (2026)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <style>
+    #readingProgress{position:fixed;top:0;left:0;height:3px;background:var(--teal);width:0%;z-index:200;transition:width 0.1s linear;}
+    .quick-answer{background:linear-gradient(135deg,rgba(0,212,168,0.08),rgba(167,139,250,0.06));border:1px solid rgba(0,212,168,0.3);border-left:4px solid var(--teal);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .quick-answer-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.6rem;}
+    .quick-answer p{font-size:1rem;line-height:1.65;color:var(--text-primary);margin:0;}
+    .skill-badge{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .6rem;border-radius:4px;margin-left:.6rem;vertical-align:middle;position:relative;top:-2px;}
+    .skill-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .skill-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .skill-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .settings-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .settings-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .settings-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .settings-table tr:last-child td{border-bottom:none;}
+    .settings-table tr:hover td{background:var(--bg-surface);}
+    .settings-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .settings-table .mono{font-family:var(--font-mono);font-size:.82rem;color:var(--teal);}
+    .mistake-box{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-left:4px solid #ef4444;border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .mistake-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ef4444;margin-bottom:.4rem;}
+    .mistake-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference{border-left:3px solid var(--purple);padding:.75rem 1.25rem;margin:1.25rem 0;background:rgba(167,139,250,0.05);border-radius:0 6px 6px 0;}
+    .pro-reference-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.35rem;}
+    .pro-reference p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference strong{color:var(--text-primary);}
+    .listening-prescription{background:var(--bg-void);border:1px solid var(--border-default);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;position:relative;}
+    .listening-prescription::before{content:'🎧';position:absolute;top:-14px;left:1.5rem;background:var(--bg-void);padding:0 .4rem;font-size:1.1rem;}
+    .listening-prescription-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:.75rem;}
+    .listening-prescription p{font-size:.9rem;line-height:1.7;color:var(--text-secondary);margin:0 0 .5rem;}
+    .listening-record{font-weight:600;color:var(--text-primary);}
+    .decision-framework{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .decision-framework-title{font-family:var(--font-display);font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:1rem;}
+    .decision-item{display:flex;gap:1rem;padding:.65rem 0;border-bottom:1px solid var(--border-subtle);font-size:.88rem;line-height:1.55;}
+    .decision-item:last-child{border-bottom:none;}
+    .decision-if{color:var(--text-muted);font-style:italic;min-width:2rem;}
+    .decision-then{color:var(--text-primary);}
+    .decision-then strong{color:var(--teal);}
+    .exercise-block{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.25rem 0;}
+    .exercise-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;}
+    .exercise-badge{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .7rem;border-radius:4px;}
+    .exercise-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .exercise-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .exercise-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .exercise-title{font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text-primary);}
+    .exercise-block ol{margin:0;padding-left:1.25rem;color:var(--text-secondary);font-size:.88rem;line-height:1.7;}
+    .exercise-block ol li{margin-bottom:.4rem;}
+    .version-line{font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:4px;padding:.4rem .75rem;margin:.75rem 0 1.5rem;display:inline-block;}
+    .go-deeper{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:10px;padding:1.75rem;margin:2.5rem 0;}
+    .go-deeper-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text-primary);margin-bottom:1.25rem;}
+    .go-deeper-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;}
+    .go-deeper-item{background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:7px;padding:1rem 1.1rem;}
+    .go-deeper-item-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.35rem;}
+    .go-deeper-item a{font-size:.88rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;}
+    .go-deeper-item p{font-size:.78rem;color:var(--text-muted);margin:.3rem 0 0;}
+    .citation{font-size:.78rem;color:var(--text-muted);font-style:italic;margin-top:.25rem;}
+    .diagram-wrap{margin:1.9rem auto;max-width:100%;}
+    .diagram-wrap img{width:100%;height:auto;display:block;border:1px solid var(--border-subtle);border-radius:10px;background:#0a0d12;}
+    .diagram-wrap picture{display:block;}
+    .diagram-caption{font-size:.78rem;color:var(--text-muted);text-align:center;margin-top:.75rem;font-style:italic;}
+    .highlight-box{background:rgba(0,212,168,0.06);border:1px solid rgba(0,212,168,0.2);border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .highlight-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.4rem;}
+    .highlight-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin:1.5rem 0;}
+    .stat-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem;text-align:center;}
+    .stat-number{font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--teal);display:block;}
+    .stat-label{font-size:.78rem;color:var(--text-secondary);margin-top:.25rem;}
+    .action-steps{counter-reset:steps;list-style:none;padding:0;margin:1.5rem 0;}
+    .action-steps li{counter-increment:steps;display:flex;gap:1rem;padding:.85rem 0;border-bottom:1px solid var(--border-subtle);font-size:.9rem;color:var(--text-secondary);line-height:1.6;}
+    .action-steps li:last-child{border-bottom:none;}
+    .action-steps li::before{content:counter(steps);background:var(--teal);color:#000;font-weight:800;font-size:.75rem;width:1.6rem;height:1.6rem;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem;}
+    .genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:1.5rem 0;}
+    .genre-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem 1.25rem;}
+    .genre-card-name{font-family:var(--font-display);font-size:.85rem;font-weight:700;color:var(--teal);margin-bottom:.4rem;}
+    .genre-card p{font-size:.82rem;color:var(--text-secondary);line-height:1.55;margin:0;}
+    .comparison-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .comparison-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .comparison-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .comparison-table tr:last-child td{border-bottom:none;}
+    .comparison-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .affiliate-cta{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,212,168,0.1);border:1px solid rgba(0,212,168,0.25);color:var(--teal);font-size:.82rem;font-weight:600;padding:.45rem .9rem;border-radius:6px;text-decoration:none;}
+
+    .faq-accordion{margin:1.75rem 0;}
+    .faq-accordion-item{background:var(--bg-surface);border:1px solid var(--border-subtle);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;margin-bottom:8px;overflow:hidden;}
+    .faq-accordion-q{display:flex;align-items:flex-start;padding:1rem 1.25rem;cursor:pointer;gap:.75rem;}
+    .faq-accordion-q:hover{background:var(--bg-elevated);}
+    .faq-accordion-icon{width:16px;height:16px;flex-shrink:0;margin-top:3px;color:var(--purple);transition:transform .2s ease;}
+    .faq-accordion-icon.open{transform:rotate(45deg);}
+    .faq-accordion-q-inner{display:flex;flex-direction:column;}
+    .faq-accordion-label{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin-bottom:.2rem;}
+    .faq-accordion-q-text{font-size:.92rem;font-weight:600;color:var(--text-primary);line-height:1.45;font-family:var(--font-display);}
+    .faq-accordion-a{display:none;padding:0 1.25rem 1rem 2.75rem;font-size:.88rem;color:var(--text-secondary);line-height:1.7;border-top:1px solid var(--border-subtle);padding-top:.85rem;}
+    .faq-accordion-a.open{display:block;}
+    .sourcebox{border:1px solid var(--border-default);border-radius:10px;overflow:hidden;margin:1.9rem 0;background:var(--bg-surface);}
+    .sourcebox-head{padding:1.1rem 1.4rem;border-bottom:1px solid var(--border-default);background:var(--bg-void);}
+    .sourcebox-kicker{display:block;font-family:var(--font-display);font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.3rem;}
+    .sourcebox-sub{display:block;font-size:.82rem;color:var(--text-secondary);line-height:1.5;}
+    .sourcebox-row{display:flex;gap:0;border-bottom:1px solid var(--border-subtle);}
+    .sourcebox-row:last-child{border-bottom:none;}
+    .sourcebox-tag{flex:0 0 168px;padding:1.1rem 1.2rem;font-family:var(--font-mono);font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;line-height:1.4;}
+    .sourcebox-body{padding:1.1rem 1.3rem 1.1rem 0;flex:1;}
+    .sourcebox-body p{font-size:.9rem;line-height:1.65;color:var(--text-secondary);margin:0;}
+    .sourcebox-body strong{color:var(--text-primary);}
+    .sourcebox-cite{display:block;margin-top:.55rem;font-size:.76rem;font-style:italic;color:var(--text-muted);line-height:1.5;}
+    .sourcebox-confirmed{border-left:4px solid var(--teal);} .sourcebox-confirmed .sourcebox-tag{color:var(--teal);}
+    .sourcebox-disputed{border-left:4px solid #f59e0b;} .sourcebox-disputed .sourcebox-tag{color:#f59e0b;}
+    .sourcebox-inferred{border-left:4px solid var(--purple);} .sourcebox-inferred .sourcebox-tag{color:var(--purple);}
+    @media(max-width:600px){.sourcebox-row{flex-direction:column;}.sourcebox-tag{flex-basis:auto;padding-bottom:.2rem;}.sourcebox-body{padding:.2rem 1.2rem 1.1rem;}}
+</style>
+  <link rel="canonical" href="https://musicproductionwiki.com/articles/how-to-recreate-the-808-bass.html"/>
+  <!-- Open Graph -->
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="How to Recreate the 808 Bass (The Tuned Sub Kick)"/>
+  <meta property="og:description" content="Recreate the 808 bass: what it really is (a tuned, stretched TR-808 kick that doubles as your bassline), why it works, and the stock-synth patch that nails it."/>
+  <meta property="og:url" content="https://musicproductionwiki.com/articles/how-to-recreate-the-808-bass.html"/>
+  <meta property="og:site_name" content="Music Production Wiki"/>
+  <meta property="og:image" content="https://musicproductionwiki.com/og-image.png"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="article:author" content="Music Production Wiki Team"/>
+  <meta property="article:section" content="Recreations"/>
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="How to Recreate the 808 Bass (The Tuned Sub Kick)"/>
+  <meta name="twitter:description" content="Recreate the 808 bass: what it really is (a tuned, stretched TR-808 kick that doubles as your bassline), why it works, and the stock-synth patch that nails it."/>
+  <meta name="twitter:image" content="https://musicproductionwiki.com/og-image.png"/>
+  <!-- Article Schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How to Recreate the 808 Bass (The Tuned Sub Kick)",
+  "description": "Recreate the 808 bass: what it really is (a tuned, stretched TR-808 kick that doubles as your bassline), why it works, and the stock-synth patch that nails it.",
+  "image": [
+    "https://musicproductionwiki.com/images/how-to-recreate-the-808-bass-anatomy.svg",
+    "https://musicproductionwiki.com/images/how-to-recreate-the-808-bass-spectrum.svg",
+    "https://musicproductionwiki.com/images/how-to-recreate-the-808-bass-flow.svg"
+  ],
+  "datePublished": "2026-07-06",
+  "dateModified": "2026-07-06",
+  "wordCount": 5315,
+  "timeRequired": "PT16M",
+  "articleSection": "Recreations",
+  "keywords": [
+    "how to make an 808",
+    "808 bass",
+    "how to make 808s",
+    "tr-808 bass",
+    "808 sub bass",
+    "tuned 808",
+    "melodic 808",
+    "how to recreate the 808",
+    "808 kick",
+    "808 in any daw"
+  ],
+  "author": {
+    "@type": "Organization",
+    "name": "The Music Production Wiki Team",
+    "url": "https://musicproductionwiki.com/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Music Production Wiki",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://musicproductionwiki.com/og-image.png",
+      "width": 1200,
+      "height": 630
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://musicproductionwiki.com/articles/how-to-recreate-the-808-bass.html"
+  }
+}
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Recreate the 808 Bass in Any DAW",
+  "description": "Build the 808 from a stock synth: a sine oscillator with a fast pitch envelope and a stretched amplitude decay, tuned to your key, given a click for translation, then saturated and sidechained against the kick.",
+  "image": "https://musicproductionwiki.com/images/how-to-recreate-the-808-bass-anatomy.svg",
+  "totalTime": "PT20M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "Any synth with a sine oscillator and pitch + amplitude envelopes (Vital, Serum, or stock)"
+    },
+    {
+      "@type": "HowToTool",
+      "name": "A saturation or distortion plugin"
+    }
+  ],
+  "supply": [
+    {
+      "@type": "HowToSupply",
+      "name": "A DAW"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "Start with a sine",
+      "text": "Load a single sine oscillator. This is the pure low fundamental that carries the sub."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Add a fast pitch envelope",
+      "text": "Route a short, fast-decaying pitch envelope to the oscillator so the note blips up in pitch for a few milliseconds at the attack, then settles. That blip is the kick punch."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Stretch the amplitude decay",
+      "text": "Set the amplitude envelope to a fast attack and a long decay with little or no sustain, so the note rings out as a sustained bass tone instead of a short kick."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Tune it to your key",
+      "text": "Set the root note to the key of your track and write the 808 as a melodic, monophonic bassline. Add a short glide on the notes you want to slide between."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Add a click and saturate",
+      "text": "Layer a short click or punchy kick at the front so the 808 translates on small speakers, then saturate or distort the 808 to add harmonics, and sidechain it against the kick so they do not fight."
+    }
+  ]
+}
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What actually makes the 808 bass sound?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "An 808 is the Roland TR-808's synthesized kick drum with its decay stretched long and its pitch tuned to a note, so a single voice works as both the kick and the bassline. The character is a pure low sine fundamental plus a short click at the front; the 'melodic 808' is that sound played across a keyboard."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is an 808 a kick drum or a bass?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Both, at once — that is the whole point. On the original machine it was a bass drum; producers lengthened its decay and tuned it to a pitch so it became a sustained bass instrument that still lands like a kick on the downbeat. You write it like a bassline, but it hits like a kick."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I make a convincing 808 with free plugins?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Any synth with a sine oscillator, a pitch envelope, and an amplitude decay will build one — Vital (free) does it from scratch, and free dedicated tools like BD-808 or the circuit-modelled DB-808 give you an 808 in one click. The paid instruments are conveniences, not requirements."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I tune an 808 to my song?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "An 808 is monophonic and pitched, so set its root note to your track's key and write the bassline melodically. Most 808 tools and samplers have a tune control; you can also play an initialized synth alongside to find the key by ear. Matching the key is what stops the 808 from clashing with the rest of the mix."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does my 808 disappear on phone speakers?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Small speakers cannot reproduce sub-bass, so a pure sine 808 vanishes on them. The fix is harmonics: add a short click or a punchy kick layer at the front, and saturate or distort the 808 so it generates upper harmonics your ear reads as 'bass' even when the fundamental is inaudible."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should the kick and the 808 be sidechained?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Usually, yes — when a kick and an 808 occupy the same low frequencies they fight and lose punch. Ducking the 808 briefly under the kick with sidechain compression, or tuning and timing them to share space, lets both hit cleanly. Keeping the sub mono below about 100 Hz helps too."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need a real TR-808?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Original units are rare collector items. A stock synth or a free plugin gets the perceptual 808 sound; Roland's own ACB-modelled TR-8S and Cloud TR-808, or dedicated instruments like SubLab, get you closer to the hardware feel if you want it."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is the 808 in a famous old song the same as a modern trap 808?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not always. The word '808' means two things — the original drum machine and the tuned sub-bass it inspired. Many early hits use the 808 machine's percussion; the melodic, stretched, tuned 808 bassline is a later evolution. When a song list calls something 'an 808,' check whether it means the box or the bass."
+      }
+    }
+  ]
+}
+</script>
+  <!-- Organization schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Music Production Wiki",
+  "url": "https://musicproductionwiki.com",
+  "logo": "https://musicproductionwiki.com/og-image.png"
+}
+</script>
+  <!-- WebSite schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Music Production Wiki",
+  "url": "https://musicproductionwiki.com",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://musicproductionwiki.com/search?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://musicproductionwiki.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Recreations",
+      "item": "https://musicproductionwiki.com/categories/recreations"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "The 808 Bass",
+      "item": "https://musicproductionwiki.com/articles/how-to-recreate-the-808-bass.html"
+    }
+  ]
+}
+</script>
+<style id="toc-skin">
+.toc-widget .sidebar-widget-header{margin-bottom:.35rem}
+.toc-list{counter-reset:tocnum;list-style:none;margin:0;padding:0}
+.toc-list li{counter-increment:tocnum;position:relative;margin:0;border-left:2px solid var(--border-subtle);transition:border-color .15s ease,background .15s ease}
+.toc-list li a{display:flex;gap:.7rem;align-items:baseline;padding:.5rem .85rem .5rem 1rem;font-size:.82rem;line-height:1.45;font-weight:500;color:var(--text-secondary);text-decoration:none;transition:color .15s ease}
+.toc-list li a::before{content:counter(tocnum,decimal-leading-zero);font-family:var(--font-mono,ui-monospace,monospace);font-size:.7rem;font-weight:600;letter-spacing:.04em;color:var(--text-muted);flex:0 0 auto;min-width:1.5em;padding-top:.05rem}
+.toc-list li a:hover{color:var(--text-primary)}
+.toc-list li.active{border-left-color:var(--teal);background:linear-gradient(90deg,rgba(0,212,168,.08),transparent 80%)}
+.toc-list li.active a{color:var(--teal);font-weight:600}
+.toc-list li.active a:hover{color:var(--teal)}
+.toc-list li.active a::before{color:var(--teal)}
+</style>
+<style id="toc-bar-css">
+.toc-bar{display:none}
+@media (max-width: 900px){
+.toc-bar{display:block;position:sticky;top:60px;z-index:400;background:var(--bg-void);border-bottom:1px solid var(--border-default);overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(to right,#000 88%,transparent 100%);mask-image:linear-gradient(to right,#000 88%,transparent 100%)}
+.toc-bar::-webkit-scrollbar{display:none}
+.toc-bar-track{display:flex;gap:4px;padding:9px 10px;min-width:max-content}
+.toc-bar-track a{color:var(--text-secondary);text-decoration:none;font-family:var(--font-mono,ui-monospace,monospace);font-size:10px;text-transform:uppercase;letter-spacing:.05em;padding:6px 10px;border-radius:4px;white-space:nowrap;min-height:30px;display:inline-flex;align-items:center;transition:color .15s,background .15s}
+.toc-bar-track a.active{color:var(--teal);background:var(--bg-elevated)}
+.article-body h2[id]{scroll-margin-top:116px}
+}
+@media (max-width: 900px) and (hover:hover){.toc-bar-track a:hover{color:var(--teal)}}
+</style>
+</head>
+<body>
+<!-- MPW universal nav -->
+<style id="mpw-unav-css">
+
+.mnav-wrap,.usearch{--ink:#09090d;--panel:#0f0f18;--panel2:#15151f;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);--amber:#f5a623;--teal:#00e8a2;--teal-d:rgba(0,232,162,.12);--text:#f2f2f7;--t2:#9a9ab2;--t3:#56566f;--sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'DM Mono',ui-monospace,SFMono-Regular,monospace;}
+.mnav-wrap *,.mnav-wrap *::before,.mnav-wrap *::after,.usearch *,.usearch *::before,.usearch *::after{box-sizing:border-box;margin:0;padding:0}
+/* host-CSS shield: a page loading style.css (articles) must not bleed its body font/color/line-height into the bar. Direct rule on .mnav-wrap beats inherited body styles. */
+.mnav-wrap,.usearch{font-family:var(--sans);font-size:14px;font-weight:400;font-style:normal;line-height:1.4;letter-spacing:normal;color:var(--text);text-align:left;text-transform:none}
+/* S91 host-CSS isolation (:where() = zero-specificity; beats style.css bare a/li by source order, LOSES to nav's own .drw-card/.mnav-flat classes) */
+:where(.mnav-wrap,.usearch) a{color:inherit;text-decoration:none;background:none;border:0;font:inherit;letter-spacing:inherit}
+:where(.mnav-wrap,.usearch) ul,:where(.mnav-wrap,.usearch) ol{list-style:none;margin:0;padding:0;border:0}
+:where(.mnav-wrap,.usearch) li{margin:0;padding:0;border:0;font-size:inherit;line-height:inherit;color:inherit;background:none}
+:where(.mnav-wrap,.usearch) h1,:where(.mnav-wrap,.usearch) h2,:where(.mnav-wrap,.usearch) h3,:where(.mnav-wrap,.usearch) h4,:where(.mnav-wrap,.usearch) h5,:where(.mnav-wrap,.usearch) h6,:where(.mnav-wrap,.usearch) p{margin:0;padding:0;border:0;font:inherit;color:inherit;line-height:inherit;letter-spacing:inherit;text-transform:none}
+:where(.mnav-wrap,.usearch) button{font:inherit;color:inherit;background:none;border:0;letter-spacing:inherit;text-align:inherit}
+:where(.mnav-wrap,.usearch) svg{display:inline-block;vertical-align:middle}
+:where(.mnav-wrap,.usearch) img{max-width:none}
+.mnav-wrap{background:var(--ink);border-bottom:1px solid var(--line);position:relative}
+.mnav{height:60px;display:flex;align-items:center}
+.mnav-in{max-width:1180px;margin:0 auto;padding:0 22px;width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.mnav-brand{display:flex;align-items:center;gap:10px;color:var(--text);text-decoration:none;flex:0 0 auto}
+.mnav-word{font-weight:700;font-size:15px;letter-spacing:-.02em}
+.mnav-links{display:flex;align-items:center;gap:6px;margin-left:8px}
+.mnav-flat,.mnav-trigger{color:var(--t2);background:none;border:0;font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;padding:8px 12px;border-radius:8px;display:inline-flex;align-items:center;gap:6px}
+.mnav-flat:hover,.mnav-trigger:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.caret{font-size:9px;color:var(--t3);transition:transform .18s}
+.mnav-right{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.mnav-search{background:none;border:0;color:var(--t2);cursor:pointer;display:flex;padding:6px;border-radius:8px}
+.mnav-search:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.mnav-cta{border:1px solid var(--teal);color:var(--teal);text-decoration:none;padding:7px 15px;border-radius:8px;font-size:13px;font-weight:600;white-space:nowrap}
+.mnav-cta:hover{background:var(--teal-d)}
+.mnav-wrap[data-section="tools"] .mnav-flat[data-nav="tools"]{color:var(--text);font-weight:600}
+.mnav-wrap[data-section="articles"] .mnav-trigger[data-nav="articles"]{color:var(--text);font-weight:600}
+/* Bible = amber brand color, desktop link + mobile drawer */
+.mnav-flat[data-nav="bible"],.drw-link[data-nav="bible"]{color:#f5a623!important;font-weight:600}
+.mnav-flat[data-nav="bible"]:hover,.drw-link[data-nav="bible"]:hover{color:#ffc04d!important}
+.mnav-item{position:relative}
+.mnav-panel,.mnav-panel-wide{position:absolute;top:calc(100% + 6px);left:0;z-index:50;display:none;background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:14px;box-shadow:0 24px 60px -24px rgba(0,0,0,.9);min-width:240px}
+.mnav-panel-wide{grid-template-columns:1fr 1fr;gap:8px 22px;min-width:520px}
+.mnav-item:hover .mnav-panel,.mnav-item:focus-within .mnav-panel,.mnav-item:hover .mnav-panel-wide,.mnav-item:focus-within .mnav-panel-wide{display:grid}
+.mnav-item:hover .caret{transform:rotate(180deg)}
+.mp-col{display:flex;flex-direction:column}
+.mp-head{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);padding:6px 10px 8px}
+.mnav-panel a{display:flex;flex-direction:column;gap:1px;padding:8px 10px;border-radius:9px;text-decoration:none}
+.mnav-panel a:hover{background:rgba(255,255,255,.05)}
+.mp-name{color:var(--text);font-size:13.5px;font-weight:600}.mp-desc{color:var(--t2);font-size:11.5px}
+.mnav-sub{display:none;background:var(--panel);border-bottom:1px solid var(--line)}
+.mnav-wrap[data-section="bible"] .mnav-sub{display:block}
+.mnav-sub-in{max-width:1180px;margin:0 auto;padding:10px 22px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.mnav-sub-in::-webkit-scrollbar{display:none}
+.mnav-sub-in a{flex:0 0 auto;color:var(--t2);text-decoration:none;font-size:12.5px;font-family:var(--mono);border:1px solid var(--line2);border-radius:99px;padding:5px 12px;white-space:nowrap}
+.mnav-sub-in a:hover{color:var(--teal);border-color:rgba(0,232,162,.4)}
+.mnav-toggle{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.mnav-burger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:8px;border-radius:8px}
+.mnav-burger span{display:block;width:20px;height:2px;background:var(--text);border-radius:2px;transition:.2s}
+.mnav-drawer{display:none;flex-direction:column;padding:6px 18px 16px;background:var(--ink);border-bottom:1px solid var(--line)}
+.mnav-drawer details{border-bottom:1px solid var(--line)}
+.mnav-drawer summary{list-style:none;cursor:pointer;padding:13px 2px;font-size:15px;font-weight:600;color:var(--text);display:flex;justify-content:space-between}
+.mnav-drawer summary::-webkit-details-marker{display:none}
+.mnav-drawer summary::after{content:"+";color:var(--t3)}
+.mnav-drawer details[open] summary::after{content:"\2013"}
+.mnav-acc{display:flex;flex-direction:column;padding:0 0 10px 12px}
+.mnav-acc a{color:var(--t2);text-decoration:none;font-size:14px;padding:8px 0}
+.drw-link{color:var(--t2);text-decoration:none;font-size:15px;font-weight:600;padding:13px 2px;border-bottom:1px solid var(--line)}
+.drw-cta{color:var(--teal);text-decoration:none;font-weight:600;font-size:15px;padding:14px 2px}
+.mnav-toggle:checked ~ .mnav-drawer{display:flex}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(2){opacity:0}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+@media(max-width:860px){.mnav-links,.mnav-cta{display:none}.mnav-burger{display:flex}}
+
+/* ===== UNIFIED SEARCH OVERLAY ===== */
+.usearch{position:fixed;inset:0;z-index:10000;display:none;background:rgba(6,6,11,.78);backdrop-filter:blur(6px);padding:80px 20px 20px}
+.usearch.open{display:block}
+.usearch-box{max-width:620px;margin:0 auto;background:var(--panel);border:1px solid var(--line2);border-radius:16px;overflow:hidden;box-shadow:0 40px 90px -30px rgba(0,0,0,.95)}
+.usearch-top{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.usearch-top svg{color:var(--t3);flex:0 0 auto}
+.usearch-top input{flex:1;background:none;border:0;outline:none;color:var(--text);font-family:var(--sans);font-size:17px}
+.usearch-top input::placeholder{color:var(--t3)}
+.usearch-top kbd{font-family:var(--mono);font-size:11px;color:var(--t3);border:1px solid var(--line2);border-radius:6px;padding:2px 7px}
+.usearch-results{max-height:56vh;overflow-y:auto;padding:8px}
+.usearch-results a{display:block;padding:11px 14px;border-radius:10px;text-decoration:none;transition:background .12s}
+.usearch-results a:hover,.usearch-results a.sel{background:rgba(255,255,255,.05)}
+.ur-top{display:flex;align-items:baseline;gap:9px}
+.ur-title{color:var(--text);font-size:14.5px;font-weight:600}
+.ur-cat{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.06);color:var(--t2);flex:0 0 auto}
+.ur-cat[data-c="Tools"]{background:var(--teal-d);color:var(--teal);border:1px solid rgba(0,232,162,.4)}
+.ur-cat[data-c="Bible"]{background:rgba(245,166,35,.18);color:#f5a623;border:1px solid rgba(245,166,35,.4)}
+.ur-desc{color:var(--t2);font-size:12.5px;line-height:1.45;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.usearch-empty{padding:30px;text-align:center;color:var(--t3);font-size:13.5px}
+/* --- sticky-header + entry-page chrome (pilot, refined for density) ---
+   entry nav = 60px main bar only (no category sub-bar). Desktop: hide the horizontal section
+   nav (the sticky sidebar TOC covers sections) and retune offsets to the 60px nav. Mobile: the
+   sidebar is hidden, so SHOW the section nav flush under the bar. All in THIS block. --- */
+.mnav-wrap{position:sticky;top:0;z-index:1000;line-height:1.4}
+.entry-nav{display:none}
+[id].entry-section{scroll-margin-top:90px}
+.entry-main h2{scroll-margin-top:90px}
+.entry-sidebar{top:78px;height:calc(100vh - 98px)}
+@media(max-width:768px){
+  .entry-nav{display:block!important;top:60px!important}
+  [id].entry-section{scroll-margin-top:130px!important}
+  .entry-main h2{scroll-margin-top:130px!important}
+}
+/* dropdown overflow safety */
+.mnav-panel,.mnav-panel-wide{max-height:min(72vh,560px);overflow-y:auto}
+/* mobile drawer: category CARD grid (slick old-nav look), CSS-only */
+.mnav-drawer{padding:10px 18px 18px;gap:0}
+.drw-label{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--t3);margin:12px 2px 8px}
+.drw-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.drw-card{display:flex;align-items:center;padding:12px 14px;border-radius:10px;text-decoration:none;font-size:13.5px;font-weight:600;color:var(--text);background:var(--panel);border:1px solid var(--line2)}
+.drw-card:hover{border-color:var(--teal);color:var(--teal)}
+.drw-feat{display:flex;align-items:center;gap:8px;padding:13px 16px;border-radius:10px;text-decoration:none;font-size:14px;font-weight:700;color:var(--text);background:var(--panel);border:1px solid var(--line2);margin-top:8px}
+.drw-feat-bible{color:#f5a623;background:rgba(245,166,35,.08);border-color:rgba(245,166,35,.30)}
+.drw-feat-bible:hover{border-color:rgba(245,166,35,.6)}
+.drw-cta{display:block;text-align:center;padding:14px;border-radius:10px;background:var(--teal);color:#06281f;font-weight:800;font-size:14px;text-decoration:none;margin-top:12px}
+/* mobile sunlight legibility: lift the intentionally-dim greys in glare (nav + search only), scoped */
+@media(max-width:860px){
+  .mnav-wrap,.usearch{--t2:#c8c8da;--t3:#9696b0}
+  .drw-label{color:#bdbdd0;font-weight:500}
+  .usearch-top input::placeholder{color:#9696b0}
+  .drw-card,.drw-feat{background:#20202e;border:1.5px solid #45455c}
+  .drw-feat-bible{background:rgba(245,166,35,.12);border:1.5px solid rgba(245,166,35,.6)}
+}
+html{overflow-x:clip!important;max-width:none!important}body{overflow-x:clip!important}
+</style>
+<div class="mnav-wrap" data-section="articles">
+  <input type="checkbox" id="mnav-toggle" class="mnav-toggle" aria-hidden="true">
+  <nav class="mnav" aria-label="Main navigation">
+    <div class="mnav-in">
+      <a class="mnav-brand" href="/"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="6" stroke="#f5a623" stroke-width="1.7"/><path d="M7 15V9l3 3 3-5 4 8" stroke="#00e8a2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="mnav-word">MusicProductionWiki</span></a>
+      <div class="mnav-links">
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="articles">Articles <span class="caret">&#9662;</span></button><div class="mnav-panel mnav-panel-wide"><div class="mp-col"><div class="mp-head">Techniques & Analysis</div><a href="/categories/techniques"><span class="mp-name">Techniques</span><span class="mp-desc">Mixing, mastering, sound design</span></a><a href="/categories/reviews"><span class="mp-name">Reviews</span><span class="mp-desc">Honest. No paid placements.</span></a><a href="/categories/comparisons"><span class="mp-name">Comparisons</span><span class="mp-desc">Head-to-head</span></a><a href="/categories/breakdowns"><span class="mp-name">Breakdowns</span><span class="mp-desc">Track-by-track</span></a><a href="/categories/recreations"><span class="mp-name">Recreations</span><span class="mp-desc">Recreate iconic sounds</span></a><a href="/genres"><span class="mp-name">Genres</span><span class="mp-desc">Every genre & style</span></a></div><div class="mp-col"><div class="mp-head">Reference & Business</div><a href="/categories/ai-music"><span class="mp-name">AI Music</span><span class="mp-desc">Suno, Udio, AI tools</span></a><a href="/categories/music-business"><span class="mp-name">Music Business</span><span class="mp-desc">Royalties, licensing, sync</span></a></div></div></div>
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="gear">Gear <span class="caret">&#9662;</span></button><div class="mnav-panel"><div class="mp-col"><a href="/categories/daws"><span class="mp-name">DAWs</span><span class="mp-desc">Every major DAW</span></a><a href="/categories/plugins"><span class="mp-name">Plugins</span><span class="mp-desc">EQ, comp, reverb, synths</span></a><a href="/categories/hardware"><span class="mp-name">Hardware</span><span class="mp-desc">Interfaces, mics, monitors</span></a></div></div></div>
+        <a class="mnav-flat" href="/tools/" data-nav="tools">Tools</a>
+        <a class="mnav-flat" href="/bible/" data-nav="bible">The Bible</a>
+      </div>
+      <div class="mnav-right">
+        <button class="mnav-search" data-nav-search aria-label="Search"><svg width="17" height="17" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <a class="mnav-cta" href="https://theproducersbriefing.beehiiv.com">Sound Better &rarr;</a>
+        <label class="mnav-burger" for="mnav-toggle"><span></span><span></span><span></span></label>
+      </div>
+    </div>
+  </nav>
+  <div class="mnav-drawer">
+    <div class="drw-label">Articles</div>
+    <div class="drw-grid">
+      <a href="/categories/techniques" class="drw-card">Techniques</a><a href="/categories/reviews" class="drw-card">Reviews</a><a href="/categories/comparisons" class="drw-card">Comparisons</a><a href="/categories/breakdowns" class="drw-card">Breakdowns</a><a href="/categories/recreations" class="drw-card">Recreations</a><a href="/genres" class="drw-card">Genres</a><a href="/categories/ai-music" class="drw-card">AI Music</a><a href="/categories/music-business" class="drw-card">Music Business</a>
+    </div>
+    <div class="drw-label">Gear</div>
+    <div class="drw-grid">
+      <a href="/categories/daws" class="drw-card">DAWs</a><a href="/categories/plugins" class="drw-card">Plugins</a><a href="/categories/hardware" class="drw-card">Hardware</a>
+    </div>
+    <a href="/bible/" class="drw-feat drw-feat-bible">&#9670; The Producer's Bible</a>
+    <a href="/tools/" class="drw-feat">The Producer's Tools</a>
+    <a href="https://theproducersbriefing.beehiiv.com" class="drw-cta">Sound Better &rarr;</a>
+  </div>
+</div>
+
+
+
+<div class="container">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><ol>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../categories/recreations.html">Recreations</a></li>
+    <li><span aria-current="page">The 808 Bass</span></li>
+  </ol></nav>
+</div>
+<nav class="toc-bar" aria-label="Section navigation"><div class="toc-bar-track" id="tocBarTrack"></div></nav>
+<main class="container" id="main-content">
+  <div class="article-layout">
+    <article aria-labelledby="articleTitle">
+      <header class="article-header">
+        <div class="article-tags"><span class="article-tag teal"><a href="../categories/recreations.html" style="color:inherit;text-decoration:none;">Recreations</a></span>
+<span class="article-tag teal"><a href="../categories/techniques/sound-design.html" style="color:inherit;text-decoration:none;">Sound Design</a></span></div>
+        <h1 id="articleTitle">How to Recreate the 808 Bass (The Tuned Sub Kick)</h1>
+        <div class="article-header-meta">
+          <div class="article-author"><div class="author-avatar" aria-hidden="true">MP</div><span class="author-name">The Music Production Wiki Team</span></div>
+          <span class="meta-divider"></span><span class="meta-item">Updated July 2026&nbsp;&middot;&nbsp;16 min read</span>
+        </div>
+      </header>
+      <div class="article-body">
+<p style="font-size:1.06rem;line-height:1.7;">Ask ten producers what an 808 is and you will get two answers, both correct. One points at a machine: the Roland TR-808, a drum machine from 1980 that sold badly and was left for dead. The other points at a sound: the deep, sustained, tuned kick that carries the low end of almost every trap, drill and modern pop record. The word does double duty because the sound came out of the machine &mdash; and the single most useful thing you can learn about it is that an 808 is not a bass patch at all. It is a kick drum, stretched long and tuned to a note, so that one voice is the kick and the bassline at the same time. This guide rebuilds that sound honestly: what the TR-808 actually does, which parts carry the character, and how to get all of it from a stock synth you already own. Like the <a href="how-to-recreate-the-reese-bass.html">reese bass</a> and the <a href="how-to-recreate-the-303-acid-sound.html">303 acid line</a>, the 808 turns out to be far more obvious than mysterious once you know where the sound lives.</p>
+
+<div class="sourcebox">
+<div class="sourcebox-head"><span class="sourcebox-kicker">Where this comes from</span><span class="sourcebox-sub">Confirmed vs. inferred &mdash; so you know which claims are sourced and which are our best estimate.</span></div>
+<div class="sourcebox-row sourcebox-confirmed">
+<div class="sourcebox-tag">Confirmed</div>
+<div class="sourcebox-body"><p>The <strong>Roland TR-808 Rhythm Composer</strong> was built by Roland between <strong>1980 and 1983</strong> under founder <strong>Ikutaro Kakehashi</strong>. &ldquo;TR&rdquo; stands for Transistor Rhythm: unlike its rival the Linn LM-1, it <strong>synthesises</strong> its sounds from analog circuits rather than playing samples, and Kakehashi deliberately used <strong>faulty transistors</strong> for its distinctive sizzle. It was a commercial failure &mdash; roughly <strong>12,000 units</strong> before it was discontinued when its semiconductors became impossible to restock, succeeded by the TR-909 in 1983 &mdash; then found a cult following on the cheap used market. Its bass drum is a single voice: a trigger pulse excites a <strong>bridged-T filter network into self-oscillation</strong>, ringing as a decaying near-<strong>sine</strong> whose length is set by a <strong>decay</strong> control, with a brief pitch blip at the attack and a low-pass filter and VCA after it. Producer <strong>Rick Rubin</strong> popularised lengthening that decay and tuning it to pitches to play basslines; because the hardware could not transpose directly, the tuned-bassline move came from <strong>sampling one note and playing it across a keyboard</strong>. <span class="sourcebox-cite">Sources: Wikipedia &ldquo;Roland TR-808&rdquo;; Werner, Abel &amp; Smith, &ldquo;A Physically-Informed&hellip; Model of the Roland TR-808 Bass Drum Circuit,&rdquo; DAFx-14 (CCRMA, Stanford); Baratatronix TR-808 circuit analysis.</span></p></div></div>
+<div class="sourcebox-row sourcebox-disputed">
+<div class="sourcebox-tag">Commonly claimed &mdash; but disputed</div>
+<div class="sourcebox-body"><p><strong>Who engineered it.</strong> The 808 is very often credited to a single &ldquo;chief engineer,&rdquo; usually <strong>Tadao Kikumoto</strong> (who did design the later TB-303 and TR-909). Roland&rsquo;s own accounts credit chief engineer <strong>Makoto Muroi</strong>, with the analog voice circuits attributed to &ldquo;Mr. Nakamura&rdquo; and the software to &ldquo;Mr. Matsuoka.&rdquo; Treat any single-name attribution with care. Also disputed: <strong>which famous records are &ldquo;808s.&rdquo;</strong> Song lists routinely blur the two meanings of the word &mdash; Whitney Houston&rsquo;s &ldquo;I Wanna Dance With Somebody,&rdquo; for instance, uses the 808 machine&rsquo;s percussion, not the tuned melodic 808 bass this guide is about. And the idea that <strong>&ldquo;an 808&rdquo; is one specific plugin or preset</strong> is simply false: it is a technique, reproducible many ways. <span class="sourcebox-cite">Sources: Roland TR-808 development history; Wikipedia &ldquo;Roland TR-808&rdquo; references; Dubspot &ldquo;What Is an 808?&rdquo;</span></p></div></div>
+<div class="sourcebox-row sourcebox-inferred">
+<div class="sourcebox-tag">Inferred &mdash; unverified</div>
+<div class="sourcebox-body"><p>The exact tuning, decay length and processing of the 808 on any specific record. No official patch sheets exist; a modern melodic 808 typically lives around <strong>30&ndash;50 Hz</strong> at its fundamental, but that is a defensible general range, not a documented per-song value. Any &ldquo;the 808 in this track is tuned to X with Y milliseconds of decay&rdquo; you see online &mdash; including the settings in this guide &mdash; is a starting point for your ear, not a measured fact.</p></div></div>
+</div>
+
+<h2 id="reframe">It&rsquo;s a pitched drum, not a bass patch</h2>
+<p>The reframe that makes everything else click is this: an 808 is a drum you tuned. On the original machine, the bass drum was meant to be a drum &mdash; a short, punchy thud on the downbeat. Producers discovered that if you lengthen its decay and set it to a musical pitch, it stops being percussion and becomes a bass instrument that happens to land like a kick. That is the entire idea, and it is why the same sound is spoken about as both a kick and a bassline. You program it melodically, moving it up and down to notes like a bassline, but every note still hits with the weight and transient of a kick drum. One voice, two jobs.</p>
+<p>This matters because it tells you exactly where to spend your effort and where not to. Producers who go hunting for a magic 808 preset, or who stack oscillators and layers trying to make it &ldquo;bigger,&rdquo; are working against the sound. The 808 is defined by simplicity: a pure low fundamental and a short click, tuned and stretched. Everything that makes it powerful &mdash; the tuning, the decay, the translation click, the way it shares space with the kick &mdash; is a decision about that one simple voice, not a hunt for a secret ingredient. If you have recreated a signature sound with us before, you already know the pattern: the famous part is rarely the part people obsess over. The <a href="how-to-recreate-the-80s-gated-reverb-snare.html">gated snare</a> turned out to be about compression and a gate, not a reverb preset; the 808 turns out to be about a decay knob and a tuning knob, not a plugin.</p>
+<p>It is also worth being precise about the word itself, because it causes real confusion. &ldquo;808&rdquo; means both the drum machine and the tuned sub-bass sound it inspired, and those are not the same thing. The machine has a whole kit of voices &mdash; cowbell, hi-hats, snare, claps &mdash; and plenty of classic records use its percussion without any melodic bass at all. When most people say &ldquo;the 808&rdquo; today, though, they mean the boom: the deep, sustained, tuned kick that plays the bassline. This guide is about that second meaning &mdash; the melodic 808 &mdash; while being honest that it grew out of the first.</p>
+
+<h2 id="origin">From a failed drum machine to the sound of modern low end</h2>
+<p>The 808 was never designed to make the sound it is now famous for. Roland&rsquo;s founder Ikutaro Kakehashi wanted an affordable box that let songwriters build a rhythm track without hiring a drummer or booking studio time. To keep the price down, the engineers skipped the sampling route their rivals were taking and generated every sound from analog circuitry &mdash; no recordings, just transistors, filters and envelopes. That decision is the whole reason the 808 sounds like nothing else: it does not imitate a real kit so much as offer a set of electronic caricatures of drums, and its bass drum in particular is a synthesiser voice pretending to be a kick. Kakehashi even bought deliberately faulty transistors to get the machine&rsquo;s characteristic sizzle, a detail that tells you how much of its charm is happy accident.</p>
+<p>When it launched in 1980 it was a flop. Electronic music had not gone mainstream, and most producers wanted realistic drums, which the 808 conspicuously did not provide &mdash; its sounds were called clicky, robotic, toy-like and spacey. Roland built around 12,000 units and discontinued it in 1983 once the semiconductors it relied on ran out, replacing it with the more realistic TR-909. And exactly like the <a href="how-to-recreate-the-303-acid-sound.html">TB-303</a> that followed it, that failure is the reason the sound exists. Because nobody wanted them, 808s were cheap on the used market, and cheap gear is what emerging hip-hop, electro and dance producers could afford. What sounded &ldquo;wrong&rdquo; to a rock engineer sounded like the future to a kid making beats in a bedroom.</p>
+<p>The pivotal move &mdash; the one that turned a drum machine into a bass instrument &mdash; is generally credited to producer Rick Rubin, who popularised stretching the bass drum&rsquo;s decay and tuning it to different pitches to play actual basslines. There is a wrinkle worth knowing: the original hardware could not transpose its bass drum directly, so the technique really took hold once producers sampled a single 808 kick and played that sample across a keyboard, letting its long sine tail become a pitched instrument. From tracks like &ldquo;Planet Rock&rdquo; in 1982 onward, the 808 spread from electro into Miami bass, then into hip-hop at large, and eventually became the foundational low end of trap, drill and a huge amount of pop. The machine that failed as a fake drummer became the most-used drum machine in the history of hit records, almost entirely on the strength of one voice used the wrong way.</p>
+
+<h2 id="anatomy">How the bass drum actually makes its tone</h2>
+<p>To recreate the 808 well it helps to know, in plain terms, what its bass drum circuit is doing, because the modern sound is a direct descendant of it. Inside the machine, a trigger pulse briefly kicks a small analog circuit &mdash; a bridged-T network &mdash; into <a href="../bible/oscillator.html">self-oscillation</a>. Like pushing a pendulum once and watching it swing, the circuit rings on its own at a low frequency and then dies away, and the shape it rings in is very close to a pure <strong>sine wave</strong>. That decaying sine is the body of the 808: a clean, deep, round low tone with almost no harmonics of its own. Everything modern producers do to an 808 is, at heart, shaping that one decaying sine.</p>
+<p>Two smaller details give the sound its punch and its life. First, at the very start of the note there is a fast <a href="../bible/transient.html">transient</a> where the pitch blips upward for just a few milliseconds before settling &mdash; too brief to hear as a pitch change, but enough to add a snap to the attack. That is the &ldquo;click&rdquo; you feel at the front of a good 808 kick. Second, as the note decays, the pitch drifts very slightly downward &mdash; a gentle &ldquo;sigh&rdquo; that some engineers believe was not even intentional, a quirk of the circuit leaking a little voltage over time. Both of these are reproducible in a modern synth with a short pitch envelope, and both are part of why a naive sine bass sounds sterile next to a real 808. After the oscillating core, the signal passes through a low-pass <a href="../bible/filter.html">filter</a> for tone and a VCA for level &mdash; the same simple shaping any subtractive synth voice gets.</p>
+<p>The one control that changed music is the decay. On the machine, turning up the bass drum&rsquo;s decay lengthens how long that sine rings before fading &mdash; and it is precisely this knob that lets the kick become a bass. Circuit analyses of the 808 put its bass-drum decay range at roughly fifty milliseconds at the short end to several hundred at the long end; stretch it past that in a sampler or synth and the sine simply keeps ringing as a sustained bass note. Understanding this is the difference between fighting the sound and working with it: an 808 is not a kick with a bass layered under it, it is a kick whose own tail has been extended until the tail <em>is</em> the bass.</p>
+<div class="diagram-wrap">
+<picture><source media="(max-width:600px)" srcset="../images/how-to-recreate-the-808-bass-anatomy-m.svg"><img src="../images/how-to-recreate-the-808-bass-anatomy.svg" alt="Anatomy of an 808: one sine voice shown with two decay lengths. A short amber decay is a kick drum; the same waveform with a long decay, cooling from amber to purple, is a sustained 808 bassline. Both share one attack. Callouts explain the click (a roughly 6 millisecond pitch blip), that it is one sine tuned to key, and that the decay control is the whole trick." width="1200" height="760" loading="lazy" /></picture>
+<div class="diagram-caption">One sine voice, two jobs. Turn the decay down and it&rsquo;s a kick; turn it up and the same voice rings out as a sustained 808. The click is what makes it translate on phones and laptops. Illustrative, not calibrated milliseconds.</div>
+</div>
+<p>The diagram above is the entire &ldquo;kick becomes bass&rdquo; idea in one picture. Both notes start identically &mdash; the same instant attack, the same punch. The teal shape is a drum: it falls away fast, so you hear a thud. The purple shape is an 808: the same note, but the decay is stretched so the tone rings on as a sustained bass. Nothing else about the sound has changed. That single parameter is why an 808 can be both percussion and a melodic bassline depending on how far you turn one knob, and it is the first thing to reach for when you build one from scratch.</p>
+
+<h2 id="tune">Tuning it to the key: the melodic 808</h2>
+<p>Once the decay is long enough to sustain, the second defining move is tuning. A short kick has a pitch, but it is over so fast that the pitch barely registers; stretch that same note out and suddenly its pitch is doing musical work, holding under your chords for a whole beat or more. That is what makes a modern 808 a &ldquo;melodic&rdquo; instrument: you set its root note to the key of your track and then write it up and down like a bassline, choosing notes that support the harmony. Get the tuning wrong &mdash; leave the 808 on some arbitrary pitch &mdash; and it will clash with everything, sounding muddy and out of tune even if every other element is perfect. Tuning to key is not optional polish; it is the difference between a bassline and a low-frequency problem.</p>
+<p>Because a real 808 is one voice, you write it monophonically: one note at a time, never a chord. This is a feature, not a limitation. A single sustained low note is clean and powerful; two low notes at once turn to mud almost instantly because the sub frequencies interfere. When you want movement &mdash; a note that bends up or down into the next, the way modern trap and drill 808s glide &mdash; you use a short glide or <a href="../bible/oscillator.html">portamento</a> between overlapping notes, which is the direct descendant of the way producers slid sampled 808s around a keyboard. Those glides are a huge part of the contemporary sound, and they are trivial to add: set a short glide time and let two notes overlap, and the 808 slides from one pitch to the next instead of restarting.</p>
+<p>There is a useful parallel to the <a href="how-to-recreate-the-reese-bass.html">reese bass</a> here, and it is worth stating plainly because producers mix them up: an 808 is not a reese. A reese is a detuned, moving, mid-heavy sound built from beating oscillators; an 808 is a single clean sine tuned to a note. They live in different parts of the spectrum and are built on opposite principles. If your &ldquo;808&rdquo; sounds buzzy and wide, you have drifted toward a reese; a true 808 is narrow, deep and centred. Keeping that distinction clear is half of getting the sound right.</p>
+
+<h2 id="click">The click: why an 808 needs an attack to translate</h2>
+<p>A pure tuned sine has a problem: it lives almost entirely in the sub, and most speakers cannot reproduce the sub. On a laptop, a phone or a pair of earbuds, a bare sine 808 more or less disappears, because there is nothing in the audible range for those speakers to move. The records solve this with a short, sharp attack at the front &mdash; the click &mdash; that sits well above the sub and gives small speakers something to reproduce. Your ear then does something clever: it hears the click and infers the sub even when it cannot physically hear it, so the 808 still reads as &ldquo;bass&rdquo; on a phone. Getting this click right is what makes an 808 translate across every playback system instead of only booming on a subwoofer.</p>
+<p>There are two ways to supply that click, and most producers use both. The first is the 808&rsquo;s own attack transient &mdash; the fast pitch blip and the initial snap of the note, which you can emphasise with a touch of <a href="../bible/saturation.html">saturation</a> or a slightly faster amplitude attack. The second is to layer a separate short, punchy kick on top of the 808, tuned and timed so its transient lands exactly with the 808&rsquo;s attack. That layered kick handles the punch and the high-frequency click, while the 808 handles the sustained sub &mdash; a division of labour that is standard in trap and drill. The two must be tightly aligned or you get a flabby double-hit; when they lock together, the result is a single sound that punches on small speakers and rumbles on big ones.</p>
+
+<h2 id="spectrum">Where an 808 lives: almost all sub, plus a click</h2>
+<p>It is worth seeing the 808&rsquo;s tonal balance next to a normal acoustic kick, because they are shaped completely differently, and that difference explains most of what you have to do to make an 808 sit in a mix. An acoustic kick spreads its energy across the spectrum: some sub, a lot of low-mid &ldquo;body,&rdquo; and a bright beater click up top. An 808 is lopsided by design &mdash; a towering peak of sub-bass energy down around thirty to fifty hertz, very little in the mids, and a small spike of high-frequency click. It is almost all fundamental. That is why it is so powerful and so easy to get wrong: there is enormous energy in a region you can barely hear, and almost nothing in the region where small speakers and cheap headphones actually live.</p>
+<div class="diagram-wrap">
+<picture><source media="(max-width:600px)" srcset="../images/how-to-recreate-the-808-bass-spectrum-m.svg"><img src="../images/how-to-recreate-the-808-bass-spectrum.svg" alt="Where the 808 lives: a frequency map from 20 hertz to 20 kilohertz. The 808, drawn amber to purple, is a towering wall of sub energy at the low end with a small click peak up top and scooped mids. An acoustic kick, in teal, is spread more evenly across the band. Callouts advise monoing the sub below about 100 hertz and protecting the click. Illustrative, not a measured plot." width="1200" height="680" loading="lazy" /></picture>
+<div class="diagram-caption">An 808 is lopsided on purpose &mdash; a wall of sub, scooped mids, and a small click up top, against an acoustic kick spread across the band. That shape is the mixing plan: mono the sub, protect the click. Illustrative, not a measured plot.</div>
+</div>
+<p>Read practically, this picture is a to-do list. Because almost all the 808&rsquo;s energy is sub, you have to protect that region &mdash; nothing else in the mix should be competing down there, which means <a href="how-to-eq-bass.html">high-passing</a> your other elements so the 808 owns the low end alone. Because it has almost nothing in the mids, you add harmonics with saturation so it has a presence that survives on small speakers. And because its one loud region is inaudible on most devices, you rely on the click and on those added harmonics to carry the sense of bass everywhere else. Every standard 808 mixing move follows directly from this lopsided shape.</p>
+
+<h2 id="mix">Making it sit: kick, sidechain, saturation, mono sub</h2>
+<p>An 808 that sounds huge in solo can vanish or turn to mud in a full mix, and the fixes are consistent enough to treat as a checklist. The first and most important is space: because the 808 dominates the low end, everything else needs room made for it. High-pass pads, keys and even some percussion so they stop crowding the sub, and the 808 immediately sounds bigger without you touching it. This is the same discipline you would apply when you <a href="how-to-mix-bass.html">mix any bassline</a>, just more extreme, because an 808&rsquo;s sub is more dominant than most.</p>
+<p>The second is the relationship between the kick and the 808, which is the classic low-end conflict. When a punchy kick and a sustained 808 hit at the same time in the same frequencies, they fight and both lose weight. The usual solution is <a href="../bible/sidechain-compression.html">sidechain compression</a>: duck the 808 briefly each time the kick hits, so the kick&rsquo;s transient punches through cleanly and the 808 rushes back in behind it. Alternatively, some producers simply tune the kick and 808 to complement each other and time them so they interleave rather than collide. Either way, the goal is that you hear both the punch and the sustain, not a muddy lump.</p>
+<p>The third is harmonics, and it is where a lot of &ldquo;why is my 808 weak&rdquo; problems are solved. A little <a href="../bible/distortion.html">distortion</a> or saturation on the 808 generates upper harmonics from that pure sine, which does two things at once: it thickens the sound and, crucially, it gives the 808 a presence that survives on speakers that cannot reproduce the sub. Start gentle and push until the 808 reads clearly on your laptop speakers, then back off slightly. Finally, keep the sub itself mono &mdash; below roughly a hundred hertz, stereo information wastes energy and can cause phase problems on club systems &mdash; so collapse the low end to mono and let width live higher up. Space, sidechain, saturation, mono sub: get those four right and a plain 808 becomes a record-ready one.</p>
+
+<h2 id="recreate">Recreate it: stock synth first, then the shortcuts</h2>
+<p>You do not need any special software to build a convincing 808. Any synth with a sine oscillator, a pitch envelope and an amplitude envelope will do it, and the result is genuinely as good as a dedicated plugin because the sound is so simple. The route diagram below lays out the honest options in order of cost, and the top row &mdash; free and in the box &mdash; is the recommended default, not a fallback.</p>
+<div class="diagram-wrap">
+<picture><source media="(max-width:600px)" srcset="../images/how-to-recreate-the-808-bass-flow-m.svg"><img src="../images/how-to-recreate-the-808-bass-flow.svg" alt="How the 808 voice is made: a signal-flow diagram. A trigger pulse hits a bridged-T filter that self-oscillates into a decaying sine, with no sample involved. A pitch envelope adds a roughly 6 millisecond attack blip and a decay feedback control sets how long it rings, from a kick to an 808. The signal then passes through a tone low-pass and a level stage out to the 808. Waveform thumbnails show the sound transforming from a click to a decaying sine to a rounded sine." width="1200" height="720" loading="lazy" /></picture>
+<div class="diagram-caption">No sample anywhere. A trigger rings a bridged-T filter into a sine; the decay feedback sets how long it sustains (kick to 808), then tone and level shape it out. This is the actual circuit behind the TR-808&rsquo;s bass drum.</div>
+</div>
+<p>To build one in a stock or free synth, the steps are short. Load a single sine oscillator. Route a fast, short pitch envelope to it so the note blips up a little at the very start and settles &mdash; that is your attack punch and the ghost of the 808&rsquo;s pitch sigh. Set the amplitude envelope to an instant attack and a long decay with little or no sustain, so the note rings out as a sustained bass rather than a short kick. Tune the oscillator low, set its root to your key, and write a monophonic bassline, adding a short glide on the notes you want to slide between. Then add a click &mdash; either by emphasising the attack or layering a short kick &mdash; saturate for harmonics, and sidechain against your kick. <a href="how-to-use-vital.html">Vital</a>, which is free, does all of this cleanly; if you own <a href="how-to-use-serum-2.html">Serum 2</a> it is equally capable, and our <a href="serum-2-vs-vital.html">Serum 2 versus Vital comparison</a> covers which suits you. Any of the instruments in our <a href="best-synth-plugins.html">best synth plugins</a> roundup will get there.</p>
+<p>If you would rather not build from scratch, dedicated 808 instruments exist and they are a real convenience. On the free side, <strong>BD-808</strong> and the circuit-modelled <strong>DB-808</strong> give you a tunable 808 bass drum in one click, and <strong>Vital</strong> covers the from-scratch route at no cost. On the paid side, <strong>SubLab</strong> and <strong>SubLab XL</strong> are built specifically around the modern 808 &mdash; a sub synth plus a sample layer plus an attack, which is exactly the anatomy above &mdash; and <strong>808 Studio</strong> is a focused alternative with glide and distortion baked in; our <a href="best-808-plugins.html">best 808 plugins</a> roundup compares them properly, and many producers simply build custom 808s in <a href="best-synth-plugins.html">a good synth</a> instead. For the hardware feel, Roland&rsquo;s own <strong>TR-8S</strong> and <strong>Cloud TR-808</strong> use ACB modelling of the original circuit, giving you tune and decay controls straight from the machine. Whichever you pick, the technique is identical &mdash; the tool is a matter of budget and workflow, as our <a href="vital-synth-review.html">Vital review</a> makes clear for the free end of the spectrum.</p>
+
+<h2 id="beyond">The same move, anywhere</h2>
+<p>The reason it pays to learn the 808 as a technique rather than a preset is that the technique travels. &ldquo;A tuned, stretched, pitched drum&rdquo; is not only an 808 idea &mdash; it is a way of thinking that unlocks a whole family of sounds. Any percussive sample with a pitch can be stretched and tuned into a bass: a tuned tom, a tuned clap tail, a resonant snare. The 808 is the most famous example of the principle, but the principle is what you actually want to own, because it lets you invent low-end sounds nobody has a preset for.</p>
+<p>Within its own lane, the melodic 808 is now the backbone of an enormous amount of music. It drives the low end of trap and drill, where the glides and the tuning carry the melody as much as the lead does. It anchors a great deal of modern <a href="how-to-make-a-beat.html">beat-making</a> and pop, where a clean sub 808 sits under everything. It appears, softer and rounder, in <a href="how-to-make-lo-fi-hip-hop.html">lo-fi hip-hop</a> and R&amp;B. Learning to build and tune one well is one of the highest-leverage skills in contemporary production, precisely because so many genres lean on it. And the mixing lessons &mdash; carving space, taming the kick relationship, translating with harmonics &mdash; transfer to every bass sound you will ever place in a mix, not just this one.</p>
+<p>There is a compositional lesson hiding in here too. Because an 808 is both rhythm and pitch, writing one teaches you to think about a bassline and a kick pattern as a single decision rather than two. Where the 808 lands is the groove; what note it lands on is the harmony; how it glides between notes is the phrasing. That fusion &mdash; treating the lowest voice in the track as one instrument that is drum and bass at once &mdash; is a genuinely modern way of writing, and once you internalise it you hear it everywhere. The 808 is the most famous teacher of that idea, but the idea outlasts the sound.</p>
+
+<h2 id="cant-buy">What you can&rsquo;t perfectly clone &mdash; and why it barely matters</h2>
+<p>Honesty demands a limit. A couple of things about an original TR-808 will not come out of a stock synth exactly. The most cited is the sizzle from those deliberately faulty transistors &mdash; a specific analog grit that came from imperfect components Roland could not even restock, which is part of why the machine was discontinued. Real units also vary from one to the next: component tolerances and age mean no two original 808s sound quite identical, so even &ldquo;the real thing&rdquo; is not a single fixed sound. And the exact processing chains on the classic records &mdash; the specific saturation, compression and EQ each producer used &mdash; are undocumented and were often idiosyncratic.</p>
+<p>But here is why none of that should stop you. The perceptual 808 &mdash; the tuned sub, the click, the glide, the weight &mdash; is fully reachable in a stock synth, and in a busy mix nobody alive can tell a well-made 808 from a &ldquo;real&rdquo; one, because the thing carrying the sound is a sine wave and a decay, both of which are trivial to reproduce. More importantly, the part that actually matters &mdash; the tuning, the writing, the mixing decisions &mdash; is entirely transferable and entirely yours. The faulty transistors are unrepeatable; the musicianship of placing a tuned sub under a track is a skill you keep for life, on any instrument. That is a far better trade than chasing a grit that even two original 808s do not share.</p>
+
+<h2 id="rights">Do you need to clear anything?</h2>
+<p>No. Recreating the 808 sound from scratch &mdash; your own synth, your own tuning, your own bassline &mdash; is entirely your own production, and there is nothing to clear. The only time rights would enter the picture is if you sampled an actual record that used an 808, which is a completely different task and not what this is. Build and tune 808s freely and put them in whatever you like.</p>
+
+<h2 id="exercises">Build the skill: 3 drills</h2>
+<p>Run these in order. The first proves the 808 is a trivially simple synth so you stop hunting for a preset; the second trains the tuning and glide that make it musical; the third forces you to confront translation and the kick relationship so they become automatic.</p>
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--beginner">Beginner</span><span class="exercise-title">Turn a kick into a bass from scratch</span></div>
+<ol><li>Open Vital (or any synth). Load one sine oscillator &mdash; just one. Set the amplitude envelope to instant attack, no sustain, and a very short decay. Play a low note: you have a kick.</li><li>Now lengthen the decay until the note rings out for a beat or more. Play the same note: it is now a bass. That single change is the entire &ldquo;kick becomes 808&rdquo; idea, done with one knob.</li><li>Add a fast, small pitch envelope so the very start of the note blips up in pitch. Listen to the snap it adds at the front &mdash; that is your attack click, and the ghost of the real 808&rsquo;s pitch sigh.</li></ol></div>
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--intermediate">Intermediate</span><span class="exercise-title">Tune it and make it glide</span></div>
+<ol><li>Set the oscillator&rsquo;s root note to the key of a beat you are working on. Write a short, monophonic 808 bassline &mdash; one note at a time, moving to notes that support your chords. Notice how wrong it sounds the moment a note is out of key.</li><li>Turn on a short glide (portamento) and let two notes overlap. Hear the 808 slide from one pitch into the next &mdash; the signature modern trap and drill move.</li><li>Try to play two notes at once. Listen to the mud. Confirm for yourself why an 808 is monophonic, then go back to one note at a time.</li></ol></div>
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--advanced">Advanced</span><span class="exercise-title">Make it translate and share space with the kick</span></div>
+<ol><li>Play your 808 through your laptop or phone speakers. It probably vanishes. Add saturation until it reads clearly on those speakers, then layer a short punchy kick on the attack and align them tightly.</li><li>Sidechain the 808 to duck briefly under the kick. A/B it: with the ducking, both the punch and the sustain are audible; without it, they fight.</li><li>Collapse everything below about 100 Hz to mono and high-pass your other elements off the sub. Check the mix on both small and large speakers &mdash; the 808 should now punch everywhere and rumble on the big system.</li></ol></div>
+
+<h2 id="mistakes">The mistakes that make it sound wrong</h2>
+<p>The most common failure is leaving the 808 out of key. Because it is almost pure sub, an out-of-tune 808 does not sound &ldquo;a little off&rdquo; &mdash; it turns the whole low end to mud and makes an otherwise good beat feel broken. Always set the root to your track&rsquo;s key and write melodically. The second failure is stacking: reaching for extra oscillators, chords or layers to make the 808 &ldquo;bigger,&rdquo; when a single tuned sine is correct and thickness comes from saturation, not from more voices.</p>
+<p>The third failure is a pure sine with no click, which sounds enormous on a subwoofer and disappears on everything else &mdash; add an attack transient or a layered kick so it translates. The fourth is letting the kick and 808 fight: two sustained low sounds hitting together with no sidechain or tuning relationship will always rob each other of punch. And the last is neglecting mix space &mdash; if pads, keys and percussion are allowed to crowd the sub, the 808 has nowhere to sit. When you <a href="how-to-mix-bass.html">mix the low end</a>, give the 808 the sub to itself, keep it mono down low, and let harmonics carry it up top. Fix those five and a thin, muddy 808 becomes a clean, powerful one.</p>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+<div class="faq-accordion">
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">What actually makes the 808 bass sound?</span></div></div>
+<div class="faq-accordion-a"><p>An 808 is the Roland TR-808&rsquo;s synthesized kick drum with its decay stretched long and its pitch tuned to a note, so a single voice works as both the kick and the bassline. The character is a pure low sine fundamental plus a short click at the front; the &ldquo;melodic 808&rdquo; is that sound played across a keyboard.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Is an 808 a kick drum or a bass?</span></div></div>
+<div class="faq-accordion-a"><p>Both, at once &mdash; that is the whole point. On the original machine it was a bass drum; producers lengthened its decay and tuned it to a pitch so it became a sustained bass instrument that still lands like a kick on the downbeat. You write it like a bassline, but it hits like a kick.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Can I make a convincing 808 with free plugins?</span></div></div>
+<div class="faq-accordion-a"><p>Yes. Any synth with a sine oscillator, a pitch envelope, and an amplitude decay will build one &mdash; Vital (free) does it from scratch, and free dedicated tools like BD-808 or the circuit-modelled DB-808 give you an 808 in one click. The paid instruments are conveniences, not requirements.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">How do I tune an 808 to my song?</span></div></div>
+<div class="faq-accordion-a"><p>An 808 is monophonic and pitched, so set its root note to your track&rsquo;s key and write the bassline melodically. Most 808 tools and samplers have a tune control; you can also play an initialized synth alongside to find the key by ear. Matching the key is what stops the 808 from clashing with the rest of the mix.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Why does my 808 disappear on phone speakers?</span></div></div>
+<div class="faq-accordion-a"><p>Small speakers cannot reproduce sub-bass, so a pure sine 808 vanishes on them. The fix is harmonics: add a short click or a punchy kick layer at the front, and saturate or distort the 808 so it generates upper harmonics your ear reads as &ldquo;bass&rdquo; even when the fundamental is inaudible.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Should the kick and the 808 be sidechained?</span></div></div>
+<div class="faq-accordion-a"><p>Usually, yes &mdash; when a kick and an 808 occupy the same low frequencies they fight and lose punch. Ducking the 808 briefly under the kick with sidechain compression, or tuning and timing them to share space, lets both hit cleanly. Keeping the sub mono below about 100 Hz helps too.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Do I need a real TR-808?</span></div></div>
+<div class="faq-accordion-a"><p>No. Original units are rare collector items. A stock synth or a free plugin gets the perceptual 808 sound; Roland&rsquo;s own ACB-modelled TR-8S and Cloud TR-808, or dedicated instruments like SubLab, get you closer to the hardware feel if you want it.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Is the 808 in a famous old song the same as a modern trap 808?</span></div></div>
+<div class="faq-accordion-a"><p>Not always. The word &ldquo;808&rdquo; means two things &mdash; the original drum machine and the tuned sub-bass it inspired. Many early hits use the 808 machine&rsquo;s percussion; the melodic, stretched, tuned 808 bassline is a later evolution. When a song list calls something &ldquo;an 808,&rdquo; check whether it means the box or the bass.</p></div></div>
+</div>
+
+<div class="related-grid">
+<a href="best-808-plugins.html" class="related-card"><div class="related-card-tag">Reviews</div><h3 class="related-card-title">Best 808 Plugins</h3><p class="related-card-desc">The dedicated 808 instruments, compared &mdash; when a plugin beats building one from scratch.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-recreate-the-reese-bass.html" class="related-card"><div class="related-card-tag">Recreations</div><h3 class="related-card-title">How to Recreate the Reese Bass</h3><p class="related-card-desc">The other great synth bass &mdash; and why an 808 is emphatically not a reese.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-recreate-the-303-acid-sound.html" class="related-card"><div class="related-card-tag">Recreations</div><h3 class="related-card-title">How to Recreate the 303 Acid Sound</h3><p class="related-card-desc">Another failed Roland box that accidentally defined a genre &mdash; the same honest teardown.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-mix-bass.html" class="related-card"><div class="related-card-tag">Techniques</div><h3 class="related-card-title">How to Mix Bass</h3><p class="related-card-desc">Carving space, sidechaining the kick, and keeping the sub mono &mdash; the 808&rsquo;s next step.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="best-synth-plugins.html" class="related-card"><div class="related-card-tag">Reviews</div><h3 class="related-card-title">Best Synth Plugins</h3><p class="related-card-desc">Every synth here has the sine, pitch envelope and glide a custom 808 needs.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="serum-2-vs-vital.html" class="related-card"><div class="related-card-tag">Comparisons</div><h3 class="related-card-title">Serum 2 vs Vital</h3><p class="related-card-desc">Free or paid, both build a clean tuned 808 with ease &mdash; which one belongs in your rig.</p><span class="related-card-meta">Read article &rarr;</span></a>
+</div>
+
+</div>
+</article>
+
+    <aside aria-label="Article sidebar">
+      <div class="sidebar-widget toc-widget" aria-labelledby="tocHeading">
+        <div class="sidebar-widget-header"><h2 class="sidebar-widget-title" id="tocHeading">In This Article</h2></div>
+        <div class="sidebar-widget-body"><ul class="toc-list">
+
+<li><a href="#reframe">A Pitched Drum</a></li><li><a href="#origin">Failed Machine</a></li><li><a href="#anatomy">How It Makes Tone</a></li><li><a href="#tune">Tuning to Key</a></li><li><a href="#click">The Click</a></li><li><a href="#spectrum">Where It Lives</a></li><li><a href="#mix">Making It Sit</a></li><li><a href="#recreate">Recreate It</a></li><li><a href="#beyond">The Same Move</a></li><li><a href="#cant-buy">What You Can&rsquo;t Clone</a></li><li><a href="#rights">Rights?</a></li><li><a href="#exercises">3 Drills</a></li><li><a href="#mistakes">Common Mistakes</a></li><li><a href="#faq">FAQ</a></li>
+
+</ul></div>
+      </div>
+      <div class="sidebar-widget" style="background:var(--bg-void);border-color:var(--border-default);">
+        <div class="sidebar-widget-body" style="padding:1.5rem;">
+          <p style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.5rem;">Newsletter</p>
+          <h3 style="font-family:var(--font-display);color:var(--text-primary);font-size:1.1rem;margin-bottom:.5rem;">The Producer's Briefing</h3>
+          <p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:1rem;line-height:1.55;">Weekly tips, gear news, and technique guides. Free.</p>
+          <form class="newsletter-form-js" style="display:flex;flex-direction:column;gap:.5rem;" novalidate>
+            <input type="email" name="email" class="form-input" placeholder="Your email" required />
+            <button type="submit" class="btn-newsletter" style="font-size:.82rem;padding:.65rem 1rem;">Subscribe Free</button>
+          </form>
+        </div>
+      <div class="sidebar-widget" style="margin-top:1.5rem;">
+        <div class="sidebar-widget-header" style="text-align:center;">
+          <h2 class="sidebar-widget-title">Related Articles</h2>
+        </div>
+        <div class="sidebar-widget-body" style="padding:1rem;">
+<ul style="list-style:none;padding:0;margin:0;text-align:center;"><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="best-808-plugins.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">Best 808 Plugins</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Reviews</span></li><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="how-to-recreate-the-reese-bass.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">How to Recreate the Reese Bass</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Recreations</span></li><li style="padding:.6rem 0;"><a href="how-to-mix-bass.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">How to Mix Bass</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Techniques</span></li></ul>
+        </div>
+      </div>
+      </div>
+    </aside>
+  </div>
+</main>
+<section class="newsletter-section" id="newsletter" aria-labelledby="newsletterHeading">
+  <div class="container">
+    <div class="newsletter-inner">
+      <div class="newsletter-content">
+        <p class="newsletter-label">Newsletter</p>
+        <h2 id="newsletterHeading" class="newsletter-title">The Producer's <em>Briefing</em></h2>
+        <p class="newsletter-desc">Weekly techniques, gear news, and music business insights. Free.</p>
+      </div>
+      <div class="newsletter-form-wrap">
+        <form class="newsletter-form-js" novalidate>
+          <input type="email" name="email" class="form-input" placeholder="Your email address" required />
+          <button type="submit" class="btn-newsletter">Subscribe Free</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<footer class="site-footer" role="contentinfo">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="../index.html" class="site-logo"><span class="logo-wordmark">Music<span>Production</span>Wiki</span><span class="logo-tagline">The Producer's Reference</span></a>
+    </div>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <div class="footer-col">
+        <h3 class="footer-col-title">Categories</h3>
+        <ul>
+          <li><a href="../categories/reviews.html">Reviews</a></li>
+          <li><a href="../categories/comparisons.html">Comparisons</a></li>
+          <li><a href="../categories/ai-music.html">AI Music</a></li>
+          <li><a href="../categories/daws.html">DAWs</a></li>
+          <li><a href="../categories/plugins.html">Plugins</a></li>
+          <li><a href="../categories/hardware.html">Gear</a></li>
+          <li><a href="../categories/techniques.html">Techniques</a></li>
+          <li><a href="../categories/music-business.html">Music Business</a></li>
+          <li><a href="../categories/glossary.html">Glossary</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">Popular</h3>
+        <ul>
+          <li><a href="../articles/suno-vs-udio.html">Suno vs Udio</a></li>
+          <li><a href="../articles/best-daw-for-beginners.html">Best DAW for Beginners</a></li>
+          <li><a href="../articles/focusrite-scarlett-2i2-gen-4-review.html">Scarlett 2i2 Review</a></li>
+          <li><a href="../articles/sidechain-compression-guide.html">Sidechain Compression</a></li>
+          <li><a href="../articles/best-compressor-plugins.html">Best Compressor Plugins</a></li>
+          <li><a href="../articles/what-is-gain-staging.html">What Is Gain Staging</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">About</h3>
+        <ul>
+          <li><a href="../about.html">About MPW</a></li>
+          <li><a href="../about.html#team">Our Team</a></li>
+          <li><a href="../about.html#methodology">Review Methodology</a></li>
+          <li><a href="../about.html#affiliate">Affiliate Disclosure</a></li>
+          <li><a href="../about.html#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="footer-bottom"><div class="container"><p>© <span id="copyrightYear"></span> MusicProductionWiki.com. All rights reserved. Content by the Music Production Wiki Team.</p></div></div>
+</footer>
+<script src="../js/main.js"></script>
+<script>document.getElementById('copyrightYear').textContent = new Date().getFullYear();</script>
+
+<button id="mpwBackTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  aria-label="Back to top"
+  style="position:fixed;bottom:1.5rem;right:1.5rem;width:2.5rem;height:2.5rem;border-radius:50%;
+         background:var(--teal);color:#000;border:none;cursor:pointer;display:none;
+         align-items:center;justify-content:center;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3);">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <polyline points="18 15 12 9 6 15"/>
+  </svg>
+</button>
+<script>
+(function(){
+  var btn=document.getElementById('mpwBackTop');
+  var bar=document.getElementById('readingProgress');
+  var art=document.querySelector('.article-body');
+  window.addEventListener('scroll',function(){
+    var st=window.scrollY||document.documentElement.scrollTop;
+    btn.style.display=st>400?'flex':'none';
+    if(bar&&art){
+      var h=art.getBoundingClientRect().height;
+      var top=art.getBoundingClientRect().top+st;
+      var pct=Math.min(100,Math.max(0,(st-top+window.innerHeight)*100/h));
+      bar.style.width=pct+'%';
+      bar.setAttribute('aria-valuenow',Math.round(pct));
+    }
+  });
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<!-- MPW universal search: one overlay, one Fuse index (/search-index.json) -->
+<div class="usearch" id="usearch" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="usearch-box">
+    <div class="usearch-top">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input id="usearchInput" type="text" placeholder="Search tools, articles, the Bible…" autocomplete="off">
+      <kbd>esc</kbd>
+    </div>
+    <div class="usearch-results" id="usearchResults"></div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
+<script>
+(function(){
+  // === production parity: lazy-load index on first open, build Fuse once ===
+  var data=null, fuse=null;
+  var overlay=document.getElementById('usearch');
+  var input=document.getElementById('usearchInput');
+  var box=document.getElementById('usearchResults');
+  var sel=-1, current=[];
+  // article slugs are bare; bible/ and tools/ slugs carry their prefix (verified vs live search-index.json)
+  function urlFor(s){ return (s.indexOf('bible/')===0||s.indexOf('tools/')===0) ? '/'+s : '/articles/'+s; }
+
+  function buildFuse(arr){
+    data=arr;
+    fuse=new Fuse(data,{keys:['title','category','description'],threshold:0.34,ignoreLocation:true,minMatchCharLength:2});
+  }
+  function ensureIndex(cb){
+    if(fuse){cb();return;}
+    // PRODUCTION: one shared index, lazy-loaded on first open.
+    fetch('/search-index.json').then(function(r){return r.json();}).then(function(arr){
+      buildFuse(arr); cb();
+    }).catch(function(){ box.textContent='Search failed to load.'; });
+  }
+
+  function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  function render(results){
+    current=results;
+    while(box.firstChild) box.removeChild(box.firstChild);   // no innerHTML
+    if(!input.value.trim()){ var p=document.createElement('div'); p.className='usearch-empty'; p.textContent='Start typing to search everything.'; box.appendChild(p); return; }
+    if(!results.length){ var n=document.createElement('div'); n.className='usearch-empty'; n.textContent='No results for "'+input.value+'".'; box.appendChild(n); return; }
+    results.slice(0,12).forEach(function(r,i){
+      var e=r.item||r;
+      var a=document.createElement('a'); a.href=urlFor(e.slug); if(i===sel)a.className='sel';
+      var top=document.createElement('div'); top.className='ur-top';
+      var t=document.createElement('span'); t.className='ur-title'; t.textContent=e.title;
+      var c=document.createElement('span'); c.className='ur-cat'; c.setAttribute('data-c',e.category||''); c.textContent=e.category||'';
+      top.appendChild(t); top.appendChild(c); a.appendChild(top);
+      if(e.description){ var d=document.createElement('div'); d.className='ur-desc'; d.textContent=e.description; a.appendChild(d); }
+      box.appendChild(a);
+    });
+  }
+
+  function open(q){ ensureIndex(function(){ overlay.classList.add('open'); input.focus(); if(q!=null){input.value=q;} sel=-1; render(input.value?fuse.search(input.value):[]); }); }
+  function close(){ overlay.classList.remove('open'); }
+
+  // wire every nav's search button to the shared overlay
+  document.querySelectorAll('[data-nav-search]').forEach(function(b){ b.addEventListener('click',function(){open(null);}); });
+  input.addEventListener('input',function(){ sel=-1; render(fuse?fuse.search(input.value):[]); });
+  input.addEventListener('keydown',function(e){
+    if(e.key==='Escape')close();
+    else if(e.key==='ArrowDown'){e.preventDefault(); sel=Math.min(sel+1,Math.min(current.length,12)-1); render(current);}
+    else if(e.key==='ArrowUp'){e.preventDefault(); sel=Math.max(sel-1,0); render(current);}
+    else if(e.key==='Enter'&&current[sel]){ var e2=current[sel].item||current[sel]; location.href=urlFor(e2.slug); }
+  });
+  overlay.addEventListener('click',function(e){ if(e.target===overlay)close(); });
+  document.addEventListener('keydown',function(e){ if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();open(null);} });
+})();
+</script>
+<script id="toc-bar-js">
+(function(){
+  var body=document.querySelector('.article-body');
+  var track=document.getElementById('tocBarTrack');
+  if(!body||!track)return;
+  var heads=[].slice.call(body.querySelectorAll('h2[id]'));
+  if(!heads.length)return;
+  heads.forEach(function(h){
+    var a=document.createElement('a');a.href='#'+h.id;
+    var t=h.textContent.trim();var i=t.indexOf(':');if(i>0)t=t.slice(0,i);
+    a.textContent=t;track.appendChild(a);
+  });
+  var links=[].slice.call(track.querySelectorAll('a'));
+  function onScroll(){
+    var y=window.scrollY+130,cur=heads[0].id;
+    heads.forEach(function(h){if(h.offsetTop<=y)cur=h.id;});
+    links.forEach(function(l){var on=l.getAttribute('href')==='#'+cur;l.classList.toggle('active',on);
+      if(on)l.scrollIntoView({inline:'center',block:'nearest'});});
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+})();
+</script>
+<script>
+function mpwFaqToggle(el){
+  var answer = el.nextElementSibling;
+  if(!answer || !answer.classList.contains('faq-accordion-a')) return;
+  var isOpen = answer.classList.contains('open');
+  document.querySelectorAll('.faq-accordion-a.open').forEach(function(a){
+    a.classList.remove('open');
+    var q = a.previousElementSibling;
+    if(q){ var ic = q.querySelector('.faq-accordion-icon, .faq-plus'); if(ic) ic.classList.remove('open'); }
+  });
+  if(!isOpen){
+    answer.classList.add('open');
+    var icon = el.querySelector('.faq-accordion-icon, .faq-plus');
+    if(icon) icon.classList.add('open');
+  }
+}
+</script>
+<style>.faq-plus.open{transform:rotate(45deg);transition:transform .2s ease}</style>
+</body>
