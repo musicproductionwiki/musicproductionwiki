@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acid Filter Explorer — Free TB-303 / Resonant Filter Tool | MusicProductionWiki</title>
+<meta name="description" content="Sweep a TB-303-style resonant low-pass filter in real time. Drag cutoff and resonance, hear a live acid engine, load presets, and copy the settings into your DAW. Free.">
+<meta property="og:title" content="Acid Filter Explorer — MusicProductionWiki">
+<meta property="og:description" content="Drag a live TB-303-style resonant filter, hear the squelch, and copy the settings into your synth.">
+<meta property="og:url" content="https://musicproductionwiki.com/tools/acid-filter-explorer.html">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://musicproductionwiki.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://musicproductionwiki.com/tools/acid-filter-explorer.html">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-79VB543KCT"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-79VB543KCT');</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What makes the TB-303 filter sound like acid?","acceptedAnswer":{"@type":"Answer","text":"A resonant low-pass filter whose peak climbs sharply as you raise resonance, plus an envelope that sweeps the cutoff on every note. High resonance with a short decay and note slides gives the squelchy acid character."}},
+{"@type":"Question","name":"What filter slope does the 303 use?","acceptedAnswer":{"@type":"Answer","text":"A diode-ladder low-pass. Its nominal slope is often quoted at 24 dB per octave, but the ladder topology makes the effective slope near cutoff behave closer to 18 dB per octave, which is the character modelled here."}},
+{"@type":"Question","name":"How do I recreate this in my own synth?","acceptedAnswer":{"@type":"Answer","text":"Use a sawtooth oscillator into a resonant low-pass filter. Set the cutoff, resonance and amp decay to the values shown in the copy chips, add a little drive, and slide between notes for the classic glide."}},
+{"@type":"Question","name":"Is the audio a real 303?","acceptedAnswer":{"@type":"Answer","text":"No. It is a Web Audio recreation running live in your browser, built to behave like a 303-style resonant filter. The response curve is illustrative, but the passband, resonant peak and rolloff track a real ladder low-pass."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
+{"@type":"ListItem","position":1,"name":"Home","item":"https://musicproductionwiki.com"},
+{"@type":"ListItem","position":2,"name":"Tools","item":"https://musicproductionwiki.com/tools/"},
+{"@type":"ListItem","position":3,"name":"Acid Filter Explorer","item":"https://musicproductionwiki.com/tools/acid-filter-explorer.html"}
+]}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="../js/main.js" defer></script>
+<style id="mpw-unav-css">
+
+.mnav-wrap,.usearch{--ink:#09090d;--panel:#0f0f18;--panel2:#15151f;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);--amber:#f5a623;--teal:#00e8a2;--teal-d:rgba(0,232,162,.12);--text:#f2f2f7;--t2:#9a9ab2;--t3:#56566f;--sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'DM Mono',ui-monospace,SFMono-Regular,monospace;}
+.mnav-wrap *,.mnav-wrap *::before,.mnav-wrap *::after,.usearch *,.usearch *::before,.usearch *::after{box-sizing:border-box;margin:0;padding:0}
+.mnav-wrap{background:var(--ink);border-bottom:1px solid var(--line);position:relative}
+.mnav{height:60px;display:flex;align-items:center}
+.mnav-in{max-width:1180px;margin:0 auto;padding:0 22px;width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.mnav-brand{display:flex;align-items:center;gap:10px;color:var(--text);text-decoration:none;flex:0 0 auto}
+.mnav-word{font-weight:700;font-size:15px;letter-spacing:-.02em}
+.mnav-links{display:flex;align-items:center;gap:6px;margin-left:8px}
+.mnav-flat,.mnav-trigger{color:var(--t2);background:none;border:0;font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;padding:8px 12px;border-radius:8px;display:inline-flex;align-items:center;gap:6px}
+.mnav-flat:hover,.mnav-trigger:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.caret{font-size:9px;color:var(--t3);transition:transform .18s}
+.mnav-right{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.mnav-search{background:none;border:0;color:var(--t2);cursor:pointer;display:flex;padding:6px;border-radius:8px}
+.mnav-search:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.mnav-cta{border:1px solid var(--teal);color:var(--teal);text-decoration:none;padding:7px 15px;border-radius:8px;font-size:13px;font-weight:600;white-space:nowrap}
+.mnav-cta:hover{background:var(--teal-d)}
+.mnav-wrap[data-section="tools"] .mnav-flat[data-nav="tools"]{color:var(--text);font-weight:600}
+.mnav-wrap[data-section="articles"] .mnav-trigger[data-nav="articles"]{color:var(--text);font-weight:600}
+/* Bible = amber brand color, desktop link + mobile drawer */
+.mnav-flat[data-nav="bible"],.drw-link[data-nav="bible"]{color:#f5a623!important;font-weight:600}
+.mnav-flat[data-nav="bible"]:hover,.drw-link[data-nav="bible"]:hover{color:#ffc04d!important}
+.mnav-item{position:relative}
+.mnav-panel,.mnav-panel-wide{position:absolute;top:calc(100% + 6px);left:0;z-index:50;display:none;background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:14px;box-shadow:0 24px 60px -24px rgba(0,0,0,.9);min-width:240px}
+.mnav-panel-wide{grid-template-columns:1fr 1fr;gap:8px 22px;min-width:520px}
+.mnav-item:hover .mnav-panel,.mnav-item:focus-within .mnav-panel,.mnav-item:hover .mnav-panel-wide,.mnav-item:focus-within .mnav-panel-wide{display:grid}
+.mnav-item:hover .caret{transform:rotate(180deg)}
+.mp-col{display:flex;flex-direction:column}
+.mp-head{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);padding:6px 10px 8px}
+.mnav-panel a{display:flex;flex-direction:column;gap:1px;padding:8px 10px;border-radius:9px;text-decoration:none}
+.mnav-panel a:hover{background:rgba(255,255,255,.05)}
+.mp-name{color:var(--text);font-size:13.5px;font-weight:600}.mp-desc{color:var(--t2);font-size:11.5px}
+.mnav-sub{display:none;background:var(--panel);border-bottom:1px solid var(--line)}
+.mnav-wrap[data-section="bible"] .mnav-sub{display:block}
+.mnav-sub-in{max-width:1180px;margin:0 auto;padding:10px 22px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.mnav-sub-in::-webkit-scrollbar{display:none}
+.mnav-sub-in a{flex:0 0 auto;color:var(--t2);text-decoration:none;font-size:12.5px;font-family:var(--mono);border:1px solid var(--line2);border-radius:99px;padding:5px 12px;white-space:nowrap}
+.mnav-sub-in a:hover{color:var(--teal);border-color:rgba(0,232,162,.4)}
+.mnav-toggle{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.mnav-burger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:8px;border-radius:8px}
+.mnav-burger span{display:block;width:20px;height:2px;background:var(--text);border-radius:2px;transition:.2s}
+.mnav-drawer{display:none;flex-direction:column;padding:6px 18px 16px;background:var(--ink);border-bottom:1px solid var(--line)}
+.mnav-drawer details{border-bottom:1px solid var(--line)}
+.mnav-drawer summary{list-style:none;cursor:pointer;padding:13px 2px;font-size:15px;font-weight:600;color:var(--text);display:flex;justify-content:space-between}
+.mnav-drawer summary::-webkit-details-marker{display:none}
+.mnav-drawer summary::after{content:"+";color:var(--t3)}
+.mnav-drawer details[open] summary::after{content:"\2013"}
+.mnav-acc{display:flex;flex-direction:column;padding:0 0 10px 12px}
+.mnav-acc a{color:var(--t2);text-decoration:none;font-size:14px;padding:8px 0}
+.drw-link{color:var(--t2);text-decoration:none;font-size:15px;font-weight:600;padding:13px 2px;border-bottom:1px solid var(--line)}
+.drw-cta{color:var(--teal);text-decoration:none;font-weight:600;font-size:15px;padding:14px 2px}
+.mnav-toggle:checked ~ .mnav-drawer{display:flex}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(2){opacity:0}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+@media(max-width:860px){.mnav-links,.mnav-cta{display:none}.mnav-burger{display:flex}}
+
+/* ===== UNIFIED SEARCH OVERLAY ===== */
+.usearch{position:fixed;inset:0;z-index:10000;display:none;background:rgba(6,6,11,.78);backdrop-filter:blur(6px);padding:80px 20px 20px}
+.usearch.open{display:block}
+.usearch-box{max-width:620px;margin:0 auto;background:var(--panel);border:1px solid var(--line2);border-radius:16px;overflow:hidden;box-shadow:0 40px 90px -30px rgba(0,0,0,.95)}
+.usearch-top{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.usearch-top svg{color:var(--t3);flex:0 0 auto}
+.usearch-top input{flex:1;background:none;border:0;outline:none;color:var(--text);font-family:var(--sans);font-size:17px}
+.usearch-top input::placeholder{color:var(--t3)}
+.usearch-top kbd{font-family:var(--mono);font-size:11px;color:var(--t3);border:1px solid var(--line2);border-radius:6px;padding:2px 7px}
+.usearch-results{max-height:56vh;overflow-y:auto;padding:8px}
+.usearch-results a{display:block;padding:11px 14px;border-radius:10px;text-decoration:none;transition:background .12s}
+.usearch-results a:hover,.usearch-results a.sel{background:rgba(255,255,255,.05)}
+.ur-top{display:flex;align-items:baseline;gap:9px}
+.ur-title{color:var(--text);font-size:14.5px;font-weight:600}
+.ur-cat{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.06);color:var(--t2);flex:0 0 auto}
+.ur-cat[data-c="Tools"]{background:var(--teal-d);color:var(--teal);border:1px solid rgba(0,232,162,.4)}
+.ur-cat[data-c="Bible"]{background:rgba(245,166,35,.18);color:#f5a623;border:1px solid rgba(245,166,35,.4)}
+.ur-desc{color:var(--t2);font-size:12.5px;line-height:1.45;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.usearch-empty{padding:30px;text-align:center;color:var(--t3);font-size:13.5px}
+/* --- sticky-header + entry-page chrome (pilot, refined for density) ---
+   entry nav = 60px main bar only (no category sub-bar). Desktop: hide the horizontal section
+   nav (the sticky sidebar TOC covers sections) and retune offsets to the 60px nav. Mobile: the
+   sidebar is hidden, so SHOW the section nav flush under the bar. All in THIS block. --- */
+.mnav-wrap{position:sticky;top:0;z-index:1000;line-height:1.4}
+.entry-nav{display:none}
+[id].entry-section{scroll-margin-top:90px}
+.entry-main h2{scroll-margin-top:90px}
+.entry-sidebar{top:78px;height:calc(100vh - 98px)}
+@media(max-width:768px){
+  .entry-nav{display:block!important;top:60px!important}
+  [id].entry-section{scroll-margin-top:130px!important}
+  .entry-main h2{scroll-margin-top:130px!important}
+}
+/* dropdown overflow safety */
+.mnav-panel,.mnav-panel-wide{max-height:min(72vh,560px);overflow-y:auto}
+/* mobile drawer: category CARD grid (slick old-nav look), CSS-only */
+.mnav-drawer{padding:10px 18px 18px;gap:0}
+.drw-label{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--t3);margin:12px 2px 8px}
+.drw-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.drw-card{display:flex;align-items:center;padding:12px 14px;border-radius:10px;text-decoration:none;font-size:13.5px;font-weight:600;color:var(--text);background:var(--panel);border:1px solid var(--line2)}
+.drw-card:hover{border-color:var(--teal);color:var(--teal)}
+.drw-feat{display:flex;align-items:center;gap:8px;padding:13px 16px;border-radius:10px;text-decoration:none;font-size:14px;font-weight:700;color:var(--text);background:var(--panel);border:1px solid var(--line2);margin-top:8px}
+.drw-feat-bible{color:#f5a623;background:rgba(245,166,35,.08);border-color:rgba(245,166,35,.30)}
+.drw-feat-bible:hover{border-color:rgba(245,166,35,.6)}
+.drw-cta{display:block;text-align:center;padding:14px;border-radius:10px;background:var(--teal);color:#06281f;font-weight:800;font-size:14px;text-decoration:none;margin-top:12px}
+/* mobile sunlight legibility: lift the intentionally-dim greys in glare (nav + search only), scoped */
+@media(max-width:860px){
+  .mnav-wrap,.usearch{--t2:#c8c8da;--t3:#9696b0}
+  .drw-label{color:#bdbdd0;font-weight:500}
+  .usearch-top input::placeholder{color:#9696b0}
+  .drw-card,.drw-feat{background:#20202e;border:1.5px solid #45455c}
+  .drw-feat-bible{background:rgba(245,166,35,.12);border:1.5px solid rgba(245,166,35,.6)}
+}
+html{overflow-x:clip!important;max-width:none!important}body{overflow-x:clip!important}
+</style>
+
+<style>
+:root{
+  --bg:#0d0d1a;--bg2:#111120;--bg3:#16162a;--bg4:#1c1c32;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--border3:rgba(255,255,255,0.18);
+  --amber:#f5a623;--amber2:rgba(245,166,35,0.12);--amber3:rgba(245,166,35,0.06);
+  --teal:#00e8a2;--teal2:rgba(0,232,162,0.1);--red:#ff3d5a;
+  --text:#f0f0f4;--text2:#a0a0b8;--text3:#5a5a7a;
+  --mono:'DM Mono',monospace;--sans:'DM Sans',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;
+  background-image:radial-gradient(900px 500px at 15% -5%,rgba(245,166,35,0.06),transparent 60%),
+                   radial-gradient(800px 500px at 100% 0%,rgba(0,232,162,0.05),transparent 55%);}
+.tool-page{max-width:980px;margin:0 auto;padding:32px 20px 80px}
+@media(max-width:600px){.tool-page{padding:22px 16px 60px}}
+
+.tool-breadcrumb{font-size:12px;color:var(--text3);margin-bottom:18px;font-family:var(--mono)}
+.tool-breadcrumb a{color:var(--text2);text-decoration:none}
+.tool-breadcrumb a:hover{color:var(--teal)}
+.tool-breadcrumb-sep{margin:0 7px;opacity:.5}
+
+.tool-page-title{margin-bottom:18px}
+.tool-page-title h1{font-size:clamp(27px,5vw,38px);font-weight:900;letter-spacing:-0.03em;line-height:1.05;margin-bottom:10px}
+.tool-page-title h1 .acc{color:var(--amber)}
+.tool-page-desc{font-size:16px;color:var(--text2);line-height:1.6;max-width:640px}
+
+/* how-to 3-step (below hero) */
+.thow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0 24px}
+.thow-step{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.thow-n{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--amber);letter-spacing:.1em;margin-bottom:5px}
+.thow-t{font-size:13px;color:var(--text2);line-height:1.45}
+@media(max-width:640px){.thow{grid-template-columns:1fr;gap:8px}}
+
+/* branded header card */
+.thc{background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:14px 18px;
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:12px}
+.thc-brand{display:flex;align-items:center;gap:12px}
+.thc-mark{width:32px;height:32px;border-radius:8px;background:var(--teal);display:flex;align-items:center;justify-content:center}
+.thc-name{font-size:14px;font-weight:600;color:var(--text)}
+.thc-sub{font-size:11px;color:var(--amber);font-family:var(--mono);letter-spacing:.04em}
+.thc-right{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.thc-badge{font-size:10px;font-family:var(--mono);font-weight:700;color:var(--amber);
+  border:1px solid rgba(245,166,35,0.4);border-radius:4px;padding:4px 10px;letter-spacing:0.1em}
+.thc-related{font-size:13px;color:var(--text2);text-decoration:none;transition:color .15s}
+.thc-related:hover{color:var(--teal)}
+
+/* main layout: viz left / controls right on desktop */
+.acid-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:16px;align-items:start}
+@media(max-width:920px){.acid-grid{grid-template-columns:1fr}}
+
+.tsec{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px}
+.tsec-label{font-size:9px;font-family:var(--mono);font-weight:700;color:var(--amber);
+  letter-spacing:0.18em;text-transform:uppercase;margin-bottom:14px}
+
+/* canvas viz */
+.acid-canvas-wrap{position:relative}
+#acidCanvas{width:100%;height:300px;display:block;border-radius:8px;background:#0a0a12;
+  border:1px solid var(--border);cursor:crosshair;touch-action:none}
+.acid-hud{position:absolute;top:12px;left:14px;font-family:var(--mono);font-size:11px;color:var(--text3);pointer-events:none}
+.acid-hud b{color:var(--teal)}
+.acid-transport{display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap}
+
+/* sliders */
+.tfield{margin-bottom:14px}
+.tlabel{font-size:9px;font-family:var(--mono);color:var(--text3);letter-spacing:0.12em;text-transform:uppercase;display:block;margin-bottom:7px}
+.tslider-row{display:flex;align-items:center;gap:12px}
+.tslider{flex:1;-webkit-appearance:none;appearance:none;height:4px;background:var(--border2);outline:none;border-radius:2px;cursor:pointer}
+.tslider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--amber);cursor:pointer;box-shadow:0 0 6px rgba(245,166,35,0.4)}
+.tslider::-moz-range-thumb{width:16px;height:16px;border:none;border-radius:50%;background:var(--amber);cursor:pointer}
+.tslider-val{font-size:13px;font-family:var(--mono);color:var(--amber);min-width:56px;text-align:right;font-weight:600}
+
+/* segmented (waveform) */
+.tseg{display:inline-flex;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;overflow:hidden}
+.tseg button{background:none;border:none;color:var(--text2);font-family:var(--mono);font-size:12px;font-weight:600;padding:7px 14px;cursor:pointer}
+.tseg button[aria-pressed="true"]{background:var(--amber);color:#000}
+
+/* primary play button */
+.tbtn{background:linear-gradient(135deg,var(--amber),#e08000);color:#000;font-family:var(--sans);font-size:14px;font-weight:700;
+  border:none;cursor:pointer;border-radius:8px;padding:11px 24px;transition:transform .12s,box-shadow .12s;box-shadow:0 0 20px rgba(245,166,35,0.2)}
+.tbtn:hover{transform:translateY(-1px);box-shadow:0 0 30px rgba(245,166,35,0.35)}
+.tbtn.playing{background:linear-gradient(135deg,var(--teal),#00b37c)}
+
+/* presets */
+.preset-row{display:flex;flex-wrap:wrap;gap:8px}
+.preset{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:9px 13px;cursor:pointer;
+  font-family:var(--sans);font-size:13px;font-weight:600;color:var(--text2);transition:all .12s}
+.preset:hover{border-color:var(--amber);color:var(--text)}
+.preset[aria-pressed="true"]{background:var(--amber2);border-color:var(--amber);color:var(--amber)}
+.preset small{display:block;font-family:var(--mono);font-size:10px;font-weight:400;color:var(--text3);margin-top:2px}
+
+/* readout */
+.tinsight{border-left:3px solid var(--teal);background:var(--teal2);border-radius:0 8px 8px 0;padding:15px 17px;font-size:14.5px;color:var(--text);line-height:1.65;margin-top:4px}
+.tinsight .rd-head{font-weight:700;color:var(--teal);margin-bottom:5px}
+.tinsight .rd-era{display:block;margin-top:8px;font-size:12.5px;color:var(--text2);font-style:italic}
+
+/* copy chips */
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.tchip{display:inline-flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;
+  padding:6px 11px;font-family:var(--mono);font-size:12.5px;font-weight:600;color:var(--amber);cursor:pointer;transition:all .12s}
+.tchip:hover{border-color:var(--amber);background:var(--amber2)}
+.tchip span.k{color:var(--text3);font-weight:400}
+
+/* step viz */
+.steps{display:grid;grid-template-columns:repeat(16,1fr);gap:3px;margin-top:12px}
+.step{height:22px;border-radius:3px;background:var(--bg3);border:1px solid var(--border);position:relative}
+.step.on{background:rgba(245,166,35,0.28);border-color:rgba(245,166,35,0.5)}
+.step.acc{background:rgba(245,166,35,0.55)}
+.step.cur{box-shadow:0 0 0 2px var(--teal)}
+
+/* share + embed */
+.share-embed{margin-top:26px}
+.embed-box{margin-top:12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
+.embed-box code{font-family:var(--mono);font-size:11.5px;color:var(--text2);word-break:break-all;display:block;line-height:1.5}
+.embed-copy{margin-top:8px;background:var(--bg4);border:1px solid var(--border2);color:var(--text2);font-family:var(--mono);
+  font-size:11px;font-weight:600;padding:6px 12px;border-radius:6px;cursor:pointer}
+.embed-copy:hover{border-color:var(--teal);color:var(--teal)}
+
+/* faq */
+.tfaq{margin-top:30px}
+.tfaq h2{font-size:20px;font-weight:800;letter-spacing:-0.02em;margin-bottom:14px}
+.tfaq-q{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px}
+.tfaq-q h3{font-size:14.5px;font-weight:700;color:var(--text);margin-bottom:6px}
+.tfaq-q p{font-size:13.5px;color:var(--text2);line-height:1.6}
+
+/* related */
+.trelated{margin-top:44px;padding-top:30px;border-top:1px solid var(--border)}
+.trelated-label{font-size:9px;font-family:var(--mono);font-weight:700;color:var(--text3);letter-spacing:0.15em;margin-bottom:14px}
+.trelated-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.trelated-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;text-decoration:none;transition:border-color .15s}
+.trelated-card:hover{border-color:var(--border2)}
+.trelated-name{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
+.trelated-desc{display:block;font-size:12px;color:var(--text3)}
+</style>
+
+</head>
+<body>
+<div class="mnav-wrap" data-section="tools">
+  <input type="checkbox" id="mnav-toggle" class="mnav-toggle" aria-hidden="true">
+  <nav class="mnav" aria-label="Main navigation">
+    <div class="mnav-in">
+      <a class="mnav-brand" href="/"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="6" stroke="#f5a623" stroke-width="1.7"/><path d="M7 15V9l3 3 3-5 4 8" stroke="#00e8a2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="mnav-word">MusicProductionWiki</span></a>
+      <div class="mnav-links">
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="articles">Articles <span class="caret">&#9662;</span></button><div class="mnav-panel mnav-panel-wide"><div class="mp-col"><div class="mp-head">Techniques & Analysis</div><a href="/categories/techniques"><span class="mp-name">Techniques</span><span class="mp-desc">Mixing, mastering, sound design</span></a><a href="/categories/reviews"><span class="mp-name">Reviews</span><span class="mp-desc">Honest. No paid placements.</span></a><a href="/categories/comparisons"><span class="mp-name">Comparisons</span><span class="mp-desc">Head-to-head</span></a><a href="/categories/breakdowns"><span class="mp-name">Breakdowns</span><span class="mp-desc">Track-by-track</span></a><a href="/categories/recreations"><span class="mp-name">Recreations</span><span class="mp-desc">Recreate iconic sounds</span></a><a href="/genres"><span class="mp-name">Genres</span><span class="mp-desc">Every genre & style</span></a></div><div class="mp-col"><div class="mp-head">Reference & Business</div><a href="/categories/ai-music"><span class="mp-name">AI Music</span><span class="mp-desc">Suno, Udio, AI tools</span></a><a href="/categories/music-business"><span class="mp-name">Music Business</span><span class="mp-desc">Royalties, licensing, sync</span></a></div></div></div>
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="gear">Gear <span class="caret">&#9662;</span></button><div class="mnav-panel"><div class="mp-col"><a href="/categories/daws"><span class="mp-name">DAWs</span><span class="mp-desc">Every major DAW</span></a><a href="/categories/plugins"><span class="mp-name">Plugins</span><span class="mp-desc">EQ, comp, reverb, synths</span></a><a href="/categories/hardware"><span class="mp-name">Hardware</span><span class="mp-desc">Interfaces, mics, monitors</span></a></div></div></div>
+        <a class="mnav-flat" href="/tools/" data-nav="tools">Tools</a>
+        <a class="mnav-flat" href="/bible/" data-nav="bible">The Bible</a>
+      </div>
+      <div class="mnav-right">
+        <button class="mnav-search" data-nav-search aria-label="Search"><svg width="17" height="17" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <a class="mnav-cta" href="https://theproducersbriefing.beehiiv.com">Sound Better &rarr;</a>
+        <label class="mnav-burger" for="mnav-toggle"><span></span><span></span><span></span></label>
+      </div>
+    </div>
+  </nav>
+  <div class="mnav-drawer">
+    <div class="drw-label">Articles</div>
+    <div class="drw-grid">
+      <a href="/categories/techniques" class="drw-card">Techniques</a><a href="/categories/reviews" class="drw-card">Reviews</a><a href="/categories/comparisons" class="drw-card">Comparisons</a><a href="/categories/breakdowns" class="drw-card">Breakdowns</a><a href="/categories/recreations" class="drw-card">Recreations</a><a href="/genres" class="drw-card">Genres</a><a href="/categories/ai-music" class="drw-card">AI Music</a><a href="/categories/music-business" class="drw-card">Music Business</a>
+    </div>
+    <div class="drw-label">Gear</div>
+    <div class="drw-grid">
+      <a href="/categories/daws" class="drw-card">DAWs</a><a href="/categories/plugins" class="drw-card">Plugins</a><a href="/categories/hardware" class="drw-card">Hardware</a>
+    </div>
+    <a href="/bible/" class="drw-feat drw-feat-bible">&#9670; The Producer's Bible</a>
+    <a href="/tools/" class="drw-feat">The Producer's Tools</a>
+    <a href="https://theproducersbriefing.beehiiv.com" class="drw-cta">Sound Better &rarr;</a>
+  </div>
+</div>
+
+<main id="main-content">
+<div class="tool-page">
+
+  <nav class="tool-breadcrumb" aria-label="Breadcrumb">
+    <a href="/">Home</a><span class="tool-breadcrumb-sep">&#8250;</span>
+    <a href="/tools/">Tools</a><span class="tool-breadcrumb-sep">&#8250;</span>
+    <span aria-current="page">Acid Filter Explorer</span>
+  </nav>
+
+  <div class="tool-page-title">
+    <h1>Acid <span class="acc">Filter</span> Explorer</h1>
+    <p class="tool-page-desc">Sweep a TB&#8209;303&#8209;style resonant low&#8209;pass in real time &mdash; drag the cutoff, crank the resonance toward self&#8209;oscillation, and hear the squelch through a live acid engine. Then copy the settings straight into your own synth.</p>
+  </div>
+
+  <!-- how-to (3-step, below hero) -->
+  <div class="thow">
+    <div class="thow-step"><div class="thow-n">01 &middot; DRAG</div><div class="thow-t">Drag on the response graph &mdash; left/right moves cutoff, up/down cranks resonance.</div></div>
+    <div class="thow-step"><div class="thow-n">02 &middot; PLAY</div><div class="thow-t">Hit play to loop an acid pattern through the filter and hear every move.</div></div>
+    <div class="thow-step"><div class="thow-n">03 &middot; COPY</div><div class="thow-t">Load a preset, then copy the cutoff, resonance and decay into your DAW.</div></div>
+  </div>
+
+  <!-- branded header card -->
+  <div class="thc">
+    <div class="thc-brand">
+      <div class="thc-mark">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <rect x="1.5" y="7" width="2.5" height="9" rx="1.2" fill="#0a0a0b"/>
+          <rect x="6" y="4" width="2.5" height="12" rx="1.2" fill="#0a0a0b"/>
+          <rect x="10.5" y="1" width="2.5" height="16" rx="1.2" fill="#0a0a0b"/>
+          <rect x="15" y="5" width="2.5" height="9" rx="1.2" fill="#0a0a0b"/>
+        </svg>
+      </div>
+      <div>
+        <div class="thc-name">MusicProductionWiki.com</div>
+        <div class="thc-sub">&#9670; The Producer's Tools</div>
+      </div>
+    </div>
+    <div class="thc-right">
+      <span class="thc-badge">INTERACTIVE TOOL</span>
+      <a href="/tools/" class="thc-related">All Tools &rarr;</a>
+    </div>
+  </div>
+
+  <!-- MAIN TOOL -->
+  <div class="acid-grid">
+
+    <!-- viz -->
+    <div class="tsec">
+      <div class="tsec-label">Filter Response &mdash; drag to sweep</div>
+      <div class="acid-canvas-wrap">
+        <canvas id="acidCanvas" aria-label="Interactive 303 filter frequency response. Drag to change cutoff and resonance."></canvas>
+        <div class="acid-hud">CUTOFF <b id="hudCut">600 Hz</b> &nbsp;RES <b id="hudRes">50%</b></div>
+      </div>
+      <div class="steps" id="stepViz" aria-hidden="true"></div>
+      <div class="acid-transport">
+        <button class="tbtn" id="playBtn" type="button">&#9654;&nbsp; Play</button>
+        <div class="tseg" role="group" aria-label="Waveform">
+          <button id="waveSaw" type="button" aria-pressed="true">SAW</button>
+          <button id="waveSqr" type="button" aria-pressed="false">SQR</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- controls -->
+    <div class="tsec">
+      <div class="tsec-label">Shape the sound</div>
+
+      <div class="tfield"><label class="tlabel" for="cutoff">Cutoff</label>
+        <div class="tslider-row"><input type="range" class="tslider" id="cutoff" min="0" max="1000" value="500"><span class="tslider-val" id="cutoffVal">600 Hz</span></div></div>
+
+      <div class="tfield"><label class="tlabel" for="reso">Resonance</label>
+        <div class="tslider-row"><input type="range" class="tslider" id="reso" min="0" max="1000" value="500"><span class="tslider-val" id="resoVal">50%</span></div></div>
+
+      <div class="tfield"><label class="tlabel" for="envmod">Env Mod</label>
+        <div class="tslider-row"><input type="range" class="tslider" id="envmod" min="0" max="1000" value="420"><span class="tslider-val" id="envmodVal">42%</span></div></div>
+
+      <div class="tfield"><label class="tlabel" for="decay">Decay</label>
+        <div class="tslider-row"><input type="range" class="tslider" id="decay" min="0" max="1000" value="360"><span class="tslider-val" id="decayVal">150 ms</span></div></div>
+
+      <div class="tfield"><label class="tlabel" for="accent">Accent</label>
+        <div class="tslider-row"><input type="range" class="tslider" id="accent" min="0" max="1000" value="500"><span class="tslider-val" id="accentVal">50%</span></div></div>
+
+      <div class="tfield"><label class="tlabel" for="drive">Drive</label>
+        <div class="tslider-row"><input type="range" class="tslider" id="drive" min="0" max="1000" value="300"><span class="tslider-val" id="driveVal">30%</span></div></div>
+
+      <div class="tfield" style="margin-bottom:0"><label class="tlabel" for="tempo">Tempo</label>
+        <div class="tslider-row"><input type="range" class="tslider" id="tempo" min="90" max="160" value="128"><span class="tslider-val" id="tempoVal">128 BPM</span></div></div>
+    </div>
+  </div>
+
+  <!-- presets -->
+  <div class="tsec" style="margin-top:16px">
+    <div class="tsec-label">Presets &mdash; one-click character starting points</div>
+    <div class="preset-row" id="presetRow"></div>
+  </div>
+
+  <!-- readout -->
+  <div class="tsec" style="margin-top:16px">
+    <div class="tsec-label">What you're hearing &mdash; and how to get there</div>
+    <div class="tinsight" id="readout"></div>
+    <div class="chip-row" id="chipRow"></div>
+  </div>
+
+  <!-- share + embed -->
+  <div class="share-embed">
+    <div class="tsec-label">Share this tool</div>
+    <div style="display:flex;gap:8px;flex-wrap:nowrap">
+  <button id="toolCopyBtn" onclick="(function(b){navigator.clipboard.writeText(window.location.href).then(function(){var t=b.textContent;b.textContent='Copied!';setTimeout(function(){b.textContent=t},2000)}).catch(function(){});})(this)" style="flex:1;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:700;padding:9px 12px;border-radius:8px;background:#f5a623;color:#000;border:none;cursor:pointer;font-family:inherit;white-space:nowrap;box-sizing:border-box"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy Link</button>
+  <a id="toolShareX" href="#" target="_blank" rel="noopener" style="flex:1;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:700;padding:9px 12px;border-radius:8px;background:#000;color:#fff;border:1px solid #333;text-decoration:none;white-space:nowrap;box-sizing:border-box"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.26 5.632 5.905-5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>Share on X</a>
+  <a id="toolShareReddit" href="#" target="_blank" rel="noopener" style="flex:1;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:700;padding:9px 12px;border-radius:8px;background:#ff4500;color:#fff;border:none;text-decoration:none;white-space:nowrap;box-sizing:border-box"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>Reddit</a>
+    </div>
+    <div class="embed-box">
+      <div class="tsec-label" style="margin-bottom:8px">Embed on your site</div>
+      <code id="embedCode">&lt;iframe src="https://musicproductionwiki.com/tools/acid-filter-explorer.html?embed=true" width="100%" height="720" style="border:0;border-radius:12px" title="Acid Filter Explorer" loading="lazy"&gt;&lt;/iframe&gt;</code>
+      <button class="embed-copy" id="embedCopy" type="button">Copy embed code</button>
+    </div>
+  </div>
+
+  <!-- FAQ (mirrors schema) -->
+  <div class="tfaq">
+    <h2>Acid filter FAQ</h2>
+    <div class="tfaq-q"><h3>What makes the TB&#8209;303 filter sound like &ldquo;acid&rdquo;?</h3><p>Two things: a resonant low&#8209;pass filter whose peak climbs sharply as you raise resonance, and an envelope that sweeps the cutoff on every note. High resonance plus a short, punchy decay and note slides gives the squelchy, vocal &ldquo;acid&rdquo; character. This tool lets you hear each of those move independently.</p></div>
+    <div class="tfaq-q"><h3>What filter slope does the 303 use?</h3><p>The 303 uses a diode&#8209;ladder low&#8209;pass. Its nominal slope is often quoted at 24&nbsp;dB/oct, but because of the ladder topology the effective slope near the cutoff behaves closer to 18&nbsp;dB/oct &mdash; which is the character modelled in this tool's response curve.</p></div>
+    <div class="tfaq-q"><h3>How do I recreate this in my own synth?</h3><p>Use a sawtooth oscillator into a resonant low&#8209;pass filter. Set the cutoff, resonance and amp decay to the values shown in the copy chips, add a touch of drive, and slide between notes for the classic glide. Any synth with a resonant filter and an envelope will get close.</p></div>
+    <div class="tfaq-q"><h3>Is the audio a real 303?</h3><p>No &mdash; it's a Web Audio recreation running live in your browser, built to behave like a 303&#8209;style resonant filter for learning and sound&#8209;design. The response curve is illustrative (the shape, not a lab measurement), but the passband, resonant peak and rolloff all track a real ladder low&#8209;pass.</p></div>
+  </div>
+
+  <!-- related -->
+  <div class="trelated">
+    <div class="trelated-label">RELATED TOOLS</div>
+    <div class="trelated-grid">
+      <a href="/tools/mix-fingerprint.html" class="trelated-card"><span class="trelated-name">Mix Fingerprint Analyzer</span><span class="trelated-desc">See your mix's spectral signature</span></a>
+      <a href="/tools/loudness-penalty.html" class="trelated-card"><span class="trelated-name">Loudness Penalty Calculator</span><span class="trelated-desc">How streaming turns your master down</span></a>
+      <a href="/articles/how-to-recreate-the-303-acid-sound.html" class="trelated-card"><span class="trelated-name">Recreate the 303 Acid Sound</span><span class="trelated-desc">The full step-by-step guide</span></a>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<footer style="border-top:1px solid var(--border);padding:24px 20px;text-align:center;margin-top:40px">
+  <p style="font-size:12px;color:var(--text3)">
+    &copy; 2026 <a href="https://www.musicproductionwiki.com" style="color:var(--amber);text-decoration:none">MusicProductionWiki.com</a>
+    &nbsp;&middot;&nbsp; <a href="/tools/" style="color:var(--text2);text-decoration:none">All Tools</a>
+    &nbsp;&middot;&nbsp; <a href="/bible/" style="color:var(--text2);text-decoration:none">Producer's Bible</a>
+    &nbsp;&middot;&nbsp; <a href="https://theproducersbriefing.beehiiv.com" style="color:var(--text2);text-decoration:none">Newsletter</a>
+  </p>
+</footer>
+<script>
+(function(){
+  var title=document.title;
+  var url=window.location.href;
+  var xBtn=document.getElementById('toolShareX');
+  var rdBtn=document.getElementById('toolShareReddit');
+  if(xBtn)xBtn.href='https://x.com/intent/tweet?text='+encodeURIComponent(title)+' via @mpwikiofficial&url='+encodeURIComponent(url);
+  if(rdBtn)rdBtn.href='https://www.reddit.com/submit?url='+encodeURIComponent(url)+'&title='+encodeURIComponent(title);
+})();
+</script>
+<script>
+(function(){if(new URLSearchParams(location.search).get('embed')==='true'){document.body.classList.add('embed-mode');}})();
+</script>
+
+<div class="usearch" id="usearch" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="usearch-box">
+    <div class="usearch-top">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input id="usearchInput" type="text" placeholder="Search tools, articles, the Bible…" autocomplete="off">
+      <kbd>esc</kbd>
+    </div>
+    <div class="usearch-results" id="usearchResults"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
+<script>
+(function(){
+  // === production parity: lazy-load index on first open, build Fuse once ===
+  var data=null, fuse=null;
+  var overlay=document.getElementById('usearch');
+  var input=document.getElementById('usearchInput');
+  var box=document.getElementById('usearchResults');
+  var sel=-1, current=[];
+  // article slugs are bare; bible/ and tools/ slugs carry their prefix (verified vs live search-index.json)
+  function urlFor(s){ return (s.indexOf('bible/')===0||s.indexOf('tools/')===0) ? '/'+s : '/articles/'+s; }
+
+  function buildFuse(arr){
+    data=arr;
+    fuse=new Fuse(data,{keys:['title','category','description'],threshold:0.34,ignoreLocation:true,minMatchCharLength:2});
+  }
+  function ensureIndex(cb){
+    if(fuse){cb();return;}
+    // PRODUCTION: one shared index, lazy-loaded on first open.
+    fetch('/search-index.json').then(function(r){return r.json();}).then(function(arr){
+      buildFuse(arr); cb();
+    }).catch(function(){ box.textContent='Search failed to load.'; });
+  }
+
+  function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  function render(results){
+    current=results;
+    while(box.firstChild) box.removeChild(box.firstChild);   // no innerHTML
+    if(!input.value.trim()){ var p=document.createElement('div'); p.className='usearch-empty'; p.textContent='Start typing to search everything.'; box.appendChild(p); return; }
+    if(!results.length){ var n=document.createElement('div'); n.className='usearch-empty'; n.textContent='No results for "'+input.value+'".'; box.appendChild(n); return; }
+    results.slice(0,12).forEach(function(r,i){
+      var e=r.item||r;
+      var a=document.createElement('a'); a.href=urlFor(e.slug); if(i===sel)a.className='sel';
+      var top=document.createElement('div'); top.className='ur-top';
+      var t=document.createElement('span'); t.className='ur-title'; t.textContent=e.title;
+      var c=document.createElement('span'); c.className='ur-cat'; c.setAttribute('data-c',e.category||''); c.textContent=e.category||'';
+      top.appendChild(t); top.appendChild(c); a.appendChild(top);
+      if(e.description){ var d=document.createElement('div'); d.className='ur-desc'; d.textContent=e.description; a.appendChild(d); }
+      box.appendChild(a);
+    });
+  }
+
+  function open(q){ ensureIndex(function(){ overlay.classList.add('open'); input.focus(); if(q!=null){input.value=q;} sel=-1; render(input.value?fuse.search(input.value):[]); }); }
+  function close(){ overlay.classList.remove('open'); }
+
+  // wire every nav's search button to the shared overlay
+  document.querySelectorAll('[data-nav-search]').forEach(function(b){ b.addEventListener('click',function(){open(null);}); });
+  input.addEventListener('input',function(){ sel=-1; render(fuse?fuse.search(input.value):[]); });
+  input.addEventListener('keydown',function(e){
+    if(e.key==='Escape')close();
+    else if(e.key==='ArrowDown'){e.preventDefault(); sel=Math.min(sel+1,Math.min(current.length,12)-1); render(current);}
+    else if(e.key==='ArrowUp'){e.preventDefault(); sel=Math.max(sel-1,0); render(current);}
+    else if(e.key==='Enter'&&current[sel]){ var e2=current[sel].item||current[sel]; location.href=urlFor(e2.slug); }
+  });
+  overlay.addEventListener('click',function(e){ if(e.target===overlay)close(); });
+  document.addEventListener('keydown',function(e){ if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();open(null);} });
+})();
+</script>
+
+<script>
+(function(){
+  "use strict";
+
+  // ============ shared, verified DSP (identical model to the article figure) ============
+  var L10=Math.log(10), lg=function(x){return Math.log(x)/L10;};
+  function magDB(f,fc,Q){
+    var r=f/fc;
+    var core=1/Math.sqrt((1-r*r)*(1-r*r)+(r/Q)*(r/Q));
+    var extra=1/Math.sqrt(1+(r/1.6)*(r/1.6));
+    return 20*lg(core*extra);
+  }
+  function resToQ(res){ return 0.7*Math.pow(10,res*1.3); }   // 0..1 -> Q 0.7..~14
+
+  // freq axis
+  var FMIN=20, FMAX=20000, DBTOP=18, DBBOT=-42;
+  var fmin=lg(FMIN), fspan=lg(FMAX)-lg(FMIN);
+  // cutoff range for the control (realistic 303)
+  var CMIN=60, CMAX=8000, cspan=lg(CMAX)-lg(CMIN);
+
+  // ============ state ============
+  var S={ fc:600, res:0.5, envMod:0.42, decay:150, accent:0.5, drive:0.30, wave:'sawtooth', tempo:128 };
+
+  // ============ patterns (16 steps: n=semitone from base or null rest; acc; slide) ============
+  var BASS=55; // A1
+  function P(list){ return list.map(function(s){return {n:s[0],acc:!!s[1],slide:!!s[2]};}); }
+  var PATTERNS={
+    bass:  P([[0,1,0],[0,0,0],[12,0,1],[0,0,0],[0,1,0],[3,0,0],[0,0,1],[10,0,0],[0,1,0],[0,0,0],[7,0,1],[0,0,0],[12,1,0],[0,0,0],[3,0,1],[0,0,0]]),
+    lead:  P([[12,1,0],[15,0,1],[12,0,0],[10,0,0],[12,1,0],[19,0,1],[15,0,0],[12,0,0],[10,1,0],[12,0,1],[15,0,0],[17,0,0],[19,1,0],[15,0,1],[12,0,0],[10,0,0]]),
+    sparse:P([[0,1,0],[null,0,0],[7,0,0],[null,0,0],[12,1,0],[null,0,0],[null,0,0],[10,0,0],[0,1,0],[null,0,0],[7,0,1],[null,0,0],[3,0,0],[null,0,0],[null,0,0],[null,0,0]]),
+    chord: P([[12,1,0],[null,0,0],[12,0,0],[null,0,0],[15,1,0],[null,0,0],[10,0,0],[null,0,0],[12,1,0],[null,0,0],[12,0,0],[null,0,0],[17,1,0],[null,0,0],[15,0,0],[null,0,0]])
+  };
+  var pattern=PATTERNS.bass, patKey='bass';
+
+  // ============ presets (character-named — starting points, not claimed patches) ============
+  var PRESETS=[
+    {name:'Deep Squelch', tag:'fat & rubbery', fc:380, res:0.82, envMod:0.55, decay:120, accent:0.70, drive:0.45, wave:'sawtooth', tempo:126, pat:'bass'},
+    {name:'Screaming Lead', tag:'bright & vocal', fc:1600, res:0.90, envMod:0.40, decay:180, accent:0.80, drive:0.60, wave:'sawtooth', tempo:138, pat:'lead'},
+    {name:'Rubber Bassline', tag:'sliding & round', fc:520, res:0.60, envMod:0.52, decay:100, accent:0.55, drive:0.30, wave:'sawtooth', tempo:128, pat:'bass'},
+    {name:'Open Sweep', tag:'soft & airy', fc:2400, res:0.45, envMod:0.30, decay:240, accent:0.30, drive:0.15, wave:'sawtooth', tempo:122, pat:'sparse'},
+    {name:'Dub Chord', tag:'square & offbeat', fc:900, res:0.55, envMod:0.35, decay:200, accent:0.40, drive:0.25, wave:'square', tempo:140, pat:'chord'}
+  ];
+
+  // ============ elements ============
+  var cv=document.getElementById('acidCanvas'), ctx=cv.getContext('2d');
+  var hudCut=document.getElementById('hudCut'), hudRes=document.getElementById('hudRes');
+  var stepViz=document.getElementById('stepViz'), presetRow=document.getElementById('presetRow');
+  var readout=document.getElementById('readout'), chipRow=document.getElementById('chipRow');
+  var playBtn=document.getElementById('playBtn');
+
+  // slider map helpers
+  function tOf(el){ return (+el.value - +el.min)/(+el.max - +el.min); }
+  function fcFromT(t){ return CMIN*Math.pow(10, t*cspan); }
+  function tFromFc(fc){ return lg(fc/CMIN)/cspan; }
+  function decayFromT(t){ return Math.round(30 + t*370); }
+  function fmtHz(f){ return f>=1000 ? (f/1000).toFixed(2).replace(/0$/,'').replace(/\.$/,'')+' kHz' : Math.round(f)+' Hz'; }
+
+  var sl={ cutoff:document.getElementById('cutoff'), reso:document.getElementById('reso'),
+    envmod:document.getElementById('envmod'), decay:document.getElementById('decay'),
+    accent:document.getElementById('accent'), drive:document.getElementById('drive'),
+    tempo:document.getElementById('tempo') };
+  var vv={ cutoff:document.getElementById('cutoffVal'), reso:document.getElementById('resoVal'),
+    envmod:document.getElementById('envmodVal'), decay:document.getElementById('decayVal'),
+    accent:document.getElementById('accentVal'), drive:document.getElementById('driveVal'),
+    tempo:document.getElementById('tempoVal') };
+
+  // ============ canvas render ============
+  function resize(){
+    var r=cv.getBoundingClientRect(), dpr=window.devicePixelRatio||1;
+    cv.width=Math.round(r.width*dpr); cv.height=Math.round(r.height*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0); draw();
+  }
+  function px(w){ return cv.getBoundingClientRect().width; }
+  function drawGrid(W,H,gx0,gx1,gy0,gy1){
+    ctx.strokeStyle='rgba(255,255,255,0.06)'; ctx.lineWidth=1; ctx.font="10px 'DM Mono',monospace"; ctx.fillStyle='#5a5a7a';
+    var dbs=[[18,'+18'],[0,'0'],[-12,'-12'],[-24,'-24'],[-36,'-36']];
+    dbs.forEach(function(d){ var y=gy0+(DBTOP-d[0])/(DBTOP-DBBOT)*(gy1-gy0);
+      ctx.globalAlpha=d[0]===0?0.5:0.28; ctx.beginPath(); ctx.moveTo(gx0,y); ctx.lineTo(gx1,y); ctx.stroke(); ctx.globalAlpha=1;
+      ctx.textAlign='right'; ctx.fillText(d[1], gx0-6, y+3); });
+    var fs=[[100,'100'],[1000,'1k'],[10000,'10k']];
+    ctx.textAlign='center';
+    fs.forEach(function(f){ var x=gx0+(lg(f[0])-fmin)/fspan*(gx1-gx0);
+      ctx.globalAlpha=0.22; ctx.beginPath(); ctx.moveTo(x,gy0); ctx.lineTo(x,gy1); ctx.stroke(); ctx.globalAlpha=1;
+      ctx.fillText(f[1]+' Hz', x, gy1+16); });
+  }
+  function draw(){
+    var W=cv.getBoundingClientRect().width, H=cv.getBoundingClientRect().height;
+    var gx0=46, gx1=W-14, gy0=16, gy1=H-30;
+    ctx.clearRect(0,0,W,H);
+    drawGrid(W,H,gx0,gx1,gy0,gy1);
+    var Q=resToQ(S.res);
+    function X(f){ return gx0+(lg(f)-fmin)/fspan*(gx1-gx0); }
+    function Y(d){ d=Math.max(DBBOT,Math.min(DBTOP,d)); return gy0+(DBTOP-d)/(DBTOP-DBBOT)*(gy1-gy0); }
+    // curve + fill
+    var N=200, i, f, xp, yp, first=true;
+    ctx.beginPath();
+    for(i=0;i<=N;i++){ f=Math.pow(10, fmin+(i/N)*fspan); xp=X(f); yp=Y(magDB(f,S.fc,Q));
+      if(first){ctx.moveTo(xp,yp);first=false;} else ctx.lineTo(xp,yp); }
+    // fill under
+    ctx.lineTo(gx1,gy1); ctx.lineTo(gx0,gy1); ctx.closePath();
+    var grd=ctx.createLinearGradient(0,gy0,0,gy1);
+    grd.addColorStop(0,'rgba(0,232,162,0.22)'); grd.addColorStop(1,'rgba(0,232,162,0)');
+    ctx.fillStyle=grd; ctx.fill();
+    // stroke curve
+    ctx.beginPath(); first=true;
+    for(i=0;i<=N;i++){ f=Math.pow(10, fmin+(i/N)*fspan); xp=X(f); yp=Y(magDB(f,S.fc,Q));
+      if(first){ctx.moveTo(xp,yp);first=false;} else ctx.lineTo(xp,yp); }
+    ctx.strokeStyle='#00e8a2'; ctx.lineWidth=2.5; ctx.lineJoin='round';
+    ctx.shadowColor='rgba(0,232,162,0.5)'; ctx.shadowBlur=8; ctx.stroke(); ctx.shadowBlur=0;
+    // puck at peak
+    var pkx=X(S.fc), pky=Y(magDB(S.fc,S.fc,Q));
+    ctx.strokeStyle='rgba(245,166,35,0.55)'; ctx.setLineDash([3,3]); ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(pkx,pky); ctx.lineTo(pkx,gy1); ctx.stroke(); ctx.setLineDash([]);
+    ctx.beginPath(); ctx.arc(pkx,pky,14,0,6.283); ctx.strokeStyle='rgba(245,166,35,0.35)'; ctx.stroke();
+    ctx.beginPath(); ctx.arc(pkx,pky,7,0,6.283); ctx.fillStyle='#f5a623';
+    ctx.shadowColor='rgba(245,166,35,0.7)'; ctx.shadowBlur=10; ctx.fill(); ctx.shadowBlur=0;
+    ctx.lineWidth=2; ctx.strokeStyle='#0a0a12'; ctx.stroke();
+  }
+
+  // canvas drag -> cutoff/res
+  var dragging=false;
+  function fromXY(e){
+    var r=cv.getBoundingClientRect();
+    var gx0=46, gx1=r.width-14, gy0=16, gy1=r.height-30;
+    var x=Math.max(gx0,Math.min(gx1,(e.clientX!=null?e.clientX:e.touches[0].clientX)-r.left));
+    var y=Math.max(gy0,Math.min(gy1,(e.clientY!=null?e.clientY:e.touches[0].clientY)-r.top));
+    var f=Math.pow(10, fmin+(x-gx0)/(gx1-gx0)*fspan);
+    S.fc=Math.max(CMIN,Math.min(CMAX,f));
+    S.res=Math.max(0,Math.min(1,(gy1-y)/(gy1-gy0)));
+    sl.cutoff.value=Math.round(tFromFc(S.fc)*1000);
+    sl.reso.value=Math.round(S.res*1000);
+    syncLabels(); draw(); applyAudio(); updateReadout(); clearPreset();
+  }
+  cv.addEventListener('pointerdown',function(e){ dragging=true; cv.setPointerCapture(e.pointerId); fromXY(e); e.preventDefault(); });
+  cv.addEventListener('pointermove',function(e){ if(dragging) fromXY(e); });
+  cv.addEventListener('pointerup',function(){ dragging=false; });
+  cv.addEventListener('pointercancel',function(){ dragging=false; });
+
+  // ============ slider wiring ============
+  function syncLabels(){
+    vv.cutoff.textContent=fmtHz(S.fc); vv.reso.textContent=Math.round(S.res*100)+'%';
+    vv.envmod.textContent=Math.round(S.envMod*100)+'%'; vv.decay.textContent=S.decay+' ms';
+    vv.accent.textContent=Math.round(S.accent*100)+'%'; vv.drive.textContent=Math.round(S.drive*100)+'%';
+    vv.tempo.textContent=S.tempo+' BPM';
+    hudCut.textContent=fmtHz(S.fc); hudRes.textContent=Math.round(S.res*100)+'%';
+  }
+  sl.cutoff.addEventListener('input',function(){ S.fc=fcFromT(tOf(sl.cutoff)); onParam(); });
+  sl.reso.addEventListener('input',function(){ S.res=tOf(sl.reso); onParam(); });
+  sl.envmod.addEventListener('input',function(){ S.envMod=tOf(sl.envmod); onParam(true); });
+  sl.decay.addEventListener('input',function(){ S.decay=decayFromT(tOf(sl.decay)); onParam(true); });
+  sl.accent.addEventListener('input',function(){ S.accent=tOf(sl.accent); onParam(true); });
+  sl.drive.addEventListener('input',function(){ S.drive=tOf(sl.drive); onParam(true); });
+  sl.tempo.addEventListener('input',function(){ S.tempo=+sl.tempo.value; onParam(true); });
+  function onParam(noDraw){ syncLabels(); if(!noDraw) draw(); applyAudio(); updateReadout(); clearPreset(); }
+
+  // waveform
+  var wS=document.getElementById('waveSaw'), wQ=document.getElementById('waveSqr');
+  wS.addEventListener('click',function(){ S.wave='sawtooth'; wS.setAttribute('aria-pressed','true'); wQ.setAttribute('aria-pressed','false'); if(osc)osc.type='sawtooth'; updateReadout(); clearPreset(); });
+  wQ.addEventListener('click',function(){ S.wave='square'; wQ.setAttribute('aria-pressed','true'); wS.setAttribute('aria-pressed','false'); if(osc)osc.type='square'; updateReadout(); clearPreset(); });
+
+  // ============ presets ============
+  var activePreset=-1;
+  PRESETS.forEach(function(p,idx){
+    var b=document.createElement('button'); b.className='preset'; b.type='button'; b.setAttribute('aria-pressed','false');
+    var strong=document.createTextNode(p.name); b.appendChild(strong);
+    var s=document.createElement('small'); s.textContent=p.tag; b.appendChild(s);
+    b.addEventListener('click',function(){ loadPreset(idx); });
+    presetRow.appendChild(b);
+  });
+  function clearPreset(){ if(activePreset>=0){ presetRow.children[activePreset].setAttribute('aria-pressed','false'); activePreset=-1; } }
+  function loadPreset(idx){
+    var p=PRESETS[idx];
+    S.fc=p.fc; S.res=p.res; S.envMod=p.envMod; S.decay=p.decay; S.accent=p.accent; S.drive=p.drive; S.wave=p.wave; S.tempo=p.tempo;
+    pattern=PATTERNS[p.pat]; patKey=p.pat;
+    sl.cutoff.value=Math.round(tFromFc(S.fc)*1000); sl.reso.value=Math.round(S.res*1000);
+    sl.envmod.value=Math.round(S.envMod*1000); sl.decay.value=Math.round((S.decay-30)/370*1000);
+    sl.accent.value=Math.round(S.accent*1000); sl.drive.value=Math.round(S.drive*1000); sl.tempo.value=S.tempo;
+    wS.setAttribute('aria-pressed', S.wave==='sawtooth'?'true':'false'); wQ.setAttribute('aria-pressed', S.wave==='square'?'true':'false');
+    syncLabels(); draw(); applyAudio(); updateReadout(); renderSteps();
+    for(var k=0;k<presetRow.children.length;k++) presetRow.children[k].setAttribute('aria-pressed','false');
+    presetRow.children[idx].setAttribute('aria-pressed','true'); activePreset=idx;
+  }
+
+  // ============ readout + copy chips ============
+  function updateReadout(){
+    var res=S.res, decHi=S.decay<150, bright=S.fc>1200, low=S.fc<600, slides=(patKey==='bass'||patKey==='lead');
+    var head, body, era='';
+    if(res>0.75 && bright){ head='Screaming acid lead.';
+      body='A near-self-oscillating peak on a bright cutoff is the vocal, whistling lead tone. Short decay + accents give it bite.';
+      era='In the spirit of the late-\u201980s Chicago acid house that Phuture pushed into clubs \u2014 a character, not a specific patch.'; }
+    else if(res>0.6 && low){ head='Deep rubbery squelch.';
+      body='High resonance sitting low, with a quick decay, gives that fat, elastic bassline squelch that slides between notes.';
+      era='The backbone of acid techno and acid house basslines \u2014 think rolling, hypnotic 303 lines.'; }
+    else if(res<0.4){ head='Open, gentle sweep.';
+      body='Low resonance keeps the peak tame \u2014 more of a soft tonal shaping than a squelch. Good for pads and subtle movement.';
+      era='Closer to a classic subtractive-synth low-pass than a screaming acid line.'; }
+    else{ head='Classic 303 territory.';
+      body='Moderate resonance with envelope movement is the everyday acid sound \u2014 present, punchy, and easy to sit in a mix.';
+      era='The versatile middle of the 303 palette \u2014 where most acid basslines actually live.'; }
+    // build DOM (no innerHTML for generated text)
+    readout.textContent='';
+    var h=document.createElement('span'); h.className='rd-head'; h.textContent=head; readout.appendChild(h);
+    var recipe=' In your DAW: '+S.wave+' oscillator \u2192 resonant low-pass at '+fmtHz(S.fc)+', resonance '+Math.round(res*100)+'%, amp decay '+S.decay+' ms'+(S.drive>0.35?', a touch of drive':'')+(slides?', and slide between notes.':'.');
+    readout.appendChild(document.createTextNode(body+recipe));
+    var e=document.createElement('span'); e.className='rd-era'; e.textContent=era; readout.appendChild(e);
+    // chips
+    chipRow.textContent='';
+    [['CUTOFF',fmtHz(S.fc),(''+Math.round(S.fc))],['RESONANCE',Math.round(res*100)+'%',(''+Math.round(res*100))],
+     ['DECAY',S.decay+' ms',(''+S.decay)],['TEMPO',S.tempo+' BPM',(''+S.tempo)]].forEach(function(c){
+      var chip=document.createElement('span'); chip.className='tchip'; chip.setAttribute('role','button'); chip.tabIndex=0;
+      var k=document.createElement('span'); k.className='k'; k.textContent=c[0]+' '; chip.appendChild(k);
+      chip.appendChild(document.createTextNode(c[1]));
+      chip.dataset.copy=c[2];
+      var cp=function(){ navigator.clipboard.writeText(chip.dataset.copy).then(function(){ var o=chip.childNodes[1].textContent; chip.childNodes[1].textContent='copied \u2713'; chip.style.color='var(--teal)'; setTimeout(function(){ chip.childNodes[1].textContent=o; chip.style.color=''; },1200); }).catch(function(){}); };
+      chip.addEventListener('click',cp); chip.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){e.preventDefault();cp();} });
+      chipRow.appendChild(chip);
+    });
+  }
+
+  // ============ step viz ============
+  function renderSteps(){
+    stepViz.textContent='';
+    for(var i=0;i<16;i++){ var d=document.createElement('div'); d.className='step'+(pattern[i].n!=null?(pattern[i].acc?' on acc':' on'):''); stepViz.appendChild(d); }
+  }
+  function markStep(idx){
+    for(var i=0;i<16;i++) stepViz.children[i].classList.toggle('cur', i===idx);
+  }
+
+  // ============ audio engine ============
+  var audio=null, osc=null, biq1=null, biq2=null, shaper=null, amp=null, raf=0, nextT=0, step=0;
+  function makeCurve(amount){ var n=1024, c=new Float32Array(n), k=amount*60; for(var i=0;i<n;i++){ var x=i*2/n-1; c[i]=(1+k)*x/(1+k*Math.abs(x)); } return c; }
+  function applyAudio(){
+    if(!audio) return; var t=audio.currentTime;
+    biq1.Q.setTargetAtTime(Math.min(20,resToQ(S.res)*1.5), t, 0.02);
+    biq2.frequency.setTargetAtTime(Math.min(18000,S.fc*1.6), t, 0.02);
+    shaper.curve=makeCurve(S.drive);
+    if(osc) osc.type=S.wave;
+  }
+  function startAudio(){
+    var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
+    audio=new AC();
+    osc=audio.createOscillator(); osc.type=S.wave;
+    biq1=audio.createBiquadFilter(); biq1.type='lowpass';
+    biq2=audio.createBiquadFilter(); biq2.type='lowpass'; biq2.Q.value=0.4;
+    shaper=audio.createWaveShaper(); shaper.curve=makeCurve(S.drive); shaper.oversample='2x';
+    amp=audio.createGain(); amp.gain.value=0.0001;
+    var out=audio.createGain(); out.gain.value=0.9;
+    osc.connect(biq1); biq1.connect(biq2); biq2.connect(shaper); shaper.connect(amp); amp.connect(out); out.connect(audio.destination);
+    applyAudio(); osc.start();
+    step=0; nextT=audio.currentTime+0.06; loop();
+  }
+  function stepDur(){ return (60/S.tempo)/4; }   // 16th
+  function schedule(){
+    var now=audio.currentTime;
+    while(nextT < now+0.12){
+      var s=pattern[step%16], t=nextT;
+      if(s.n!=null){
+        var f=BASS*Math.pow(2, s.n/12);
+        if(s.slide){ osc.frequency.setTargetAtTime(f,t,0.05); } else { osc.frequency.setValueAtTime(f,t); }
+        var acck=s.acc?(0.6+S.accent*0.9):1;
+        // filter envelope: open above cutoff, decay back
+        var openTo=Math.min(16000, S.fc*(1+ S.envMod*4*acck));
+        biq1.frequency.cancelScheduledValues(t);
+        biq1.frequency.setValueAtTime(openTo,t);
+        biq1.frequency.setTargetAtTime(S.fc, t+0.005, Math.max(0.02,S.decay/1000));
+        // amp envelope
+        var peak=s.acc?(0.55+S.accent*0.35):0.34;
+        amp.gain.cancelScheduledValues(t);
+        amp.gain.setValueAtTime(0.0001,t);
+        amp.gain.exponentialRampToValueAtTime(peak, t+0.005);
+        amp.gain.exponentialRampToValueAtTime(0.0001, t+Math.max(0.05,S.decay/1000)+0.02);
+      }
+      var cur=step%16; requestAnimationFrame(function(){ markStep(cur); });
+      nextT+=stepDur(); step++;
+    }
+  }
+  function loop(){ if(!audio) return; schedule(); raf=requestAnimationFrame(loop); }
+  function stopAudio(){
+    if(raf) cancelAnimationFrame(raf), raf=0;
+    if(osc){ try{osc.stop();}catch(e){} }
+    if(audio){ audio.close(); audio=null; osc=null; }
+    markStep(-1);
+  }
+  playBtn.addEventListener('click',function(){
+    if(audio){ stopAudio(); playBtn.classList.remove('playing'); playBtn.textContent='\u25B6  Play'; }
+    else { startAudio(); playBtn.classList.add('playing'); playBtn.textContent='\u25A0  Stop'; }
+  });
+
+  // embed copy
+  var ec=document.getElementById('embedCopy');
+  if(ec) ec.addEventListener('click',function(){ var code=document.getElementById('embedCode').textContent; navigator.clipboard.writeText(code).then(function(){ var o=ec.textContent; ec.textContent='Copied \u2713'; setTimeout(function(){ec.textContent=o;},1500); }).catch(function(){}); });
+
+  // ============ init ============
+  window.addEventListener('resize', resize);
+  renderSteps(); syncLabels(); updateReadout(); resize();
+})();
+</script>
+
+</body>
+</html>
