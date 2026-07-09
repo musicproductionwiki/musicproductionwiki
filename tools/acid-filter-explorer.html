@@ -790,6 +790,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:
   function startAudio(){
     var AC=window.AudioContext||window.webkitAudioContext; if(!AC) return;
     audio=new AC();
+    // iOS Safari: context starts suspended — must resume inside the tap, plus a
+    // silent-buffer "unlock" so the audio clock actually advances on iPhone.
+    if(audio.resume) audio.resume();
+    try{ var _b=audio.createBuffer(1,1,22050),_s=audio.createBufferSource(); _s.buffer=_b; _s.connect(audio.destination); _s.start(0); }catch(e){}
     osc=audio.createOscillator(); osc.type=S.wave;
     biq1=audio.createBiquadFilter(); biq1.type='lowpass';
     biq2=audio.createBiquadFilter(); biq2.type='lowpass'; biq2.Q.value=0.4;
@@ -798,7 +802,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:
     var out=audio.createGain(); out.gain.value=0.9;
     osc.connect(biq1); biq1.connect(biq2); biq2.connect(shaper); shaper.connect(amp); amp.connect(out); out.connect(audio.destination);
     applyAudio(); osc.start();
-    step=0; nextT=audio.currentTime+0.06; loop();
+    step=0; nextT=audio.currentTime+0.14; loop();
   }
   function stepDur(){ return (60/S.tempo)/4; }   // 16th
   function schedule(){
