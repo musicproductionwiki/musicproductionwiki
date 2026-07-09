@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Recreate the Yamaha DX7 electric piano: what really makes that glassy '80s ballad sound (FM carrier-and-modulator bells) and the free-synth patch that nails it." />
+  <title>How to Recreate the DX7 Electric Piano (The '80s Ballad Sound)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <style>
+    #readingProgress{position:fixed;top:0;left:0;height:3px;background:var(--teal);width:0%;z-index:200;transition:width 0.1s linear;}
+    .quick-answer{background:linear-gradient(135deg,rgba(0,212,168,0.08),rgba(167,139,250,0.06));border:1px solid rgba(0,212,168,0.3);border-left:4px solid var(--teal);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .quick-answer-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.6rem;}
+    .quick-answer p{font-size:1rem;line-height:1.65;color:var(--text-primary);margin:0;}
+    .skill-badge{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .6rem;border-radius:4px;margin-left:.6rem;vertical-align:middle;position:relative;top:-2px;}
+    .skill-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .skill-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .skill-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .settings-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .settings-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .settings-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .settings-table tr:last-child td{border-bottom:none;}
+    .settings-table tr:hover td{background:var(--bg-surface);}
+    .settings-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .settings-table .mono{font-family:var(--font-mono);font-size:.82rem;color:var(--teal);}
+    .mistake-box{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-left:4px solid #ef4444;border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .mistake-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ef4444;margin-bottom:.4rem;}
+    .mistake-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference{border-left:3px solid var(--purple);padding:.75rem 1.25rem;margin:1.25rem 0;background:rgba(167,139,250,0.05);border-radius:0 6px 6px 0;}
+    .pro-reference-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.35rem;}
+    .pro-reference p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference strong{color:var(--text-primary);}
+    .listening-prescription{background:var(--bg-void);border:1px solid var(--border-default);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;position:relative;}
+    .listening-prescription::before{content:'🎧';position:absolute;top:-14px;left:1.5rem;background:var(--bg-void);padding:0 .4rem;font-size:1.1rem;}
+    .listening-prescription-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:.75rem;}
+    .listening-prescription p{font-size:.9rem;line-height:1.7;color:var(--text-secondary);margin:0 0 .5rem;}
+    .listening-record{font-weight:600;color:var(--text-primary);}
+    .decision-framework{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .decision-framework-title{font-family:var(--font-display);font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:1rem;}
+    .decision-item{display:flex;gap:1rem;padding:.65rem 0;border-bottom:1px solid var(--border-subtle);font-size:.88rem;line-height:1.55;}
+    .decision-item:last-child{border-bottom:none;}
+    .decision-if{color:var(--text-muted);font-style:italic;min-width:2rem;}
+    .decision-then{color:var(--text-primary);}
+    .decision-then strong{color:var(--teal);}
+    .exercise-block{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.25rem 0;}
+    .exercise-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;}
+    .exercise-badge{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .7rem;border-radius:4px;}
+    .exercise-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .exercise-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .exercise-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .exercise-title{font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text-primary);}
+    .exercise-block ol{margin:0;padding-left:1.25rem;color:var(--text-secondary);font-size:.88rem;line-height:1.7;}
+    .exercise-block ol li{margin-bottom:.4rem;}
+    .version-line{font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:4px;padding:.4rem .75rem;margin:.75rem 0 1.5rem;display:inline-block;}
+    .go-deeper{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:10px;padding:1.75rem;margin:2.5rem 0;}
+    .go-deeper-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text-primary);margin-bottom:1.25rem;}
+    .go-deeper-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;}
+    .go-deeper-item{background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:7px;padding:1rem 1.1rem;}
+    .go-deeper-item-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.35rem;}
+    .go-deeper-item a{font-size:.88rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;}
+    .go-deeper-item p{font-size:.78rem;color:var(--text-muted);margin:.3rem 0 0;}
+    .citation{font-size:.78rem;color:var(--text-muted);font-style:italic;margin-top:.25rem;}
+    .diagram-wrap{margin:1.9rem auto;max-width:100%;}
+    .diagram-wrap img{width:100%;height:auto;display:block;border:1px solid var(--border-subtle);border-radius:10px;}
+    .diagram-wrap picture{display:block;}
+    .diagram-caption{font-size:.78rem;color:var(--text-muted);text-align:center;margin-top:.75rem;font-style:italic;}
+    .highlight-box{background:rgba(0,212,168,0.06);border:1px solid rgba(0,212,168,0.2);border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .highlight-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.4rem;}
+    .highlight-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin:1.5rem 0;}
+    .stat-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem;text-align:center;}
+    .stat-number{font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--teal);display:block;}
+    .stat-label{font-size:.78rem;color:var(--text-secondary);margin-top:.25rem;}
+    .action-steps{counter-reset:steps;list-style:none;padding:0;margin:1.5rem 0;}
+    .action-steps li{counter-increment:steps;display:flex;gap:1rem;padding:.85rem 0;border-bottom:1px solid var(--border-subtle);font-size:.9rem;color:var(--text-secondary);line-height:1.6;}
+    .action-steps li:last-child{border-bottom:none;}
+    .action-steps li::before{content:counter(steps);background:var(--teal);color:#000;font-weight:800;font-size:.75rem;width:1.6rem;height:1.6rem;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem;}
+    .genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:1.5rem 0;}
+    .genre-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem 1.25rem;}
+    .genre-card-name{font-family:var(--font-display);font-size:.85rem;font-weight:700;color:var(--teal);margin-bottom:.4rem;}
+    .genre-card p{font-size:.82rem;color:var(--text-secondary);line-height:1.55;margin:0;}
+    .comparison-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .comparison-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .comparison-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .comparison-table tr:last-child td{border-bottom:none;}
+    .comparison-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .affiliate-cta{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,212,168,0.1);border:1px solid rgba(0,212,168,0.25);color:var(--teal);font-size:.82rem;font-weight:600;padding:.45rem .9rem;border-radius:6px;text-decoration:none;}
+
+    .faq-accordion{margin:1.75rem 0;}
+    .faq-accordion-item{background:var(--bg-surface);border:1px solid var(--border-subtle);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;margin-bottom:8px;overflow:hidden;}
+    .faq-accordion-q{display:flex;align-items:flex-start;padding:1rem 1.25rem;cursor:pointer;gap:.75rem;}
+    .faq-accordion-q:hover{background:var(--bg-elevated);}
+    .faq-accordion-icon{width:16px;height:16px;flex-shrink:0;margin-top:3px;color:var(--purple);transition:transform .2s ease;}
+    .faq-accordion-icon.open{transform:rotate(45deg);}
+    .faq-accordion-q-inner{display:flex;flex-direction:column;}
+    .faq-accordion-label{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin-bottom:.2rem;}
+    .faq-accordion-q-text{font-size:.92rem;font-weight:600;color:var(--text-primary);line-height:1.45;font-family:var(--font-display);}
+    .faq-accordion-a{display:none;padding:0 1.25rem 1rem 2.75rem;font-size:.88rem;color:var(--text-secondary);line-height:1.7;border-top:1px solid var(--border-subtle);padding-top:.85rem;}
+    .faq-accordion-a.open{display:block;}
+    .sourcebox{border:1px solid var(--border-default);border-radius:10px;overflow:hidden;margin:1.9rem 0;background:var(--bg-surface);}
+    .sourcebox-head{padding:1.1rem 1.4rem;border-bottom:1px solid var(--border-default);background:var(--bg-void);}
+    .sourcebox-kicker{display:block;font-family:var(--font-display);font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.3rem;}
+    .sourcebox-sub{display:block;font-size:.82rem;color:var(--text-secondary);line-height:1.5;}
+    .sourcebox-row{display:flex;gap:0;border-bottom:1px solid var(--border-subtle);}
+    .sourcebox-row:last-child{border-bottom:none;}
+    .sourcebox-tag{flex:0 0 168px;padding:1.1rem 1.2rem;font-family:var(--font-mono);font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;line-height:1.4;}
+    .sourcebox-body{padding:1.1rem 1.3rem 1.1rem 0;flex:1;}
+    .sourcebox-body p{font-size:.9rem;line-height:1.65;color:var(--text-secondary);margin:0;}
+    .sourcebox-body strong{color:var(--text-primary);}
+    .sourcebox-cite{display:block;margin-top:.55rem;font-size:.76rem;font-style:italic;color:var(--text-muted);line-height:1.5;}
+    .sourcebox-confirmed{border-left:4px solid var(--teal);} .sourcebox-confirmed .sourcebox-tag{color:var(--teal);}
+    .sourcebox-disputed{border-left:4px solid #f59e0b;} .sourcebox-disputed .sourcebox-tag{color:#f59e0b;}
+    .sourcebox-inferred{border-left:4px solid var(--purple);} .sourcebox-inferred .sourcebox-tag{color:var(--purple);}
+    @media(max-width:600px){.sourcebox-row{flex-direction:column;}.sourcebox-tag{flex-basis:auto;padding-bottom:.2rem;}.sourcebox-body{padding:.2rem 1.2rem 1.1rem;}}
+</style>
+  <link rel="canonical" href="https://musicproductionwiki.com/articles/how-to-recreate-the-dx7-electric-piano.html"/>
+  <!-- Open Graph -->
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="How to Recreate the DX7 Electric Piano (The '80s Ballad Sound)"/>
+  <meta property="og:description" content="Recreate the Yamaha DX7 electric piano: what really makes that glassy '80s ballad sound (FM carrier-and-modulator bells) and the free-synth patch that nails it."/>
+  <meta property="og:url" content="https://musicproductionwiki.com/articles/how-to-recreate-the-dx7-electric-piano.html"/>
+  <meta property="og:site_name" content="Music Production Wiki"/>
+  <meta property="og:image" content="https://musicproductionwiki.com/og-image.png"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="article:author" content="Music Production Wiki Team"/>
+  <meta property="article:section" content="Recreations"/>
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="How to Recreate the DX7 Electric Piano (The '80s Ballad Sound)"/>
+  <meta name="twitter:description" content="Recreate the Yamaha DX7 electric piano: what really makes that glassy '80s ballad sound (FM carrier-and-modulator bells) and the free-synth patch that nails it."/>
+  <meta name="twitter:image" content="https://musicproductionwiki.com/og-image.png"/>
+  <!-- Article Schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How to Recreate the DX7 Electric Piano (The '80s Ballad Sound)",
+  "description": "Recreate the Yamaha DX7 electric piano: what really makes that glassy '80s ballad sound (FM carrier-and-modulator bells) and the free-synth patch that nails it.",
+  "image": [
+    "https://musicproductionwiki.com/images/how-to-recreate-the-dx7-electric-piano-fm.png",
+    "https://musicproductionwiki.com/images/how-to-recreate-the-dx7-electric-piano-patch.png",
+    "https://musicproductionwiki.com/images/how-to-recreate-the-dx7-electric-piano-velocity.png"
+  ],
+  "datePublished": "2026-07-06",
+  "dateModified": "2026-07-06",
+  "wordCount": 5392,
+  "timeRequired": "PT16M",
+  "articleSection": "Recreations",
+  "keywords": [
+    "dx7 electric piano",
+    "how to recreate the dx7 sound",
+    "fm electric piano",
+    "e.piano 1 preset",
+    "80s ballad piano sound",
+    "yamaha dx7 recreation",
+    "fm synthesis electric piano",
+    "dexed electric piano",
+    "dx7 rhodes sound",
+    "how to make an fm piano"
+  ],
+  "author": {
+    "@type": "Organization",
+    "name": "The Music Production Wiki Team",
+    "url": "https://musicproductionwiki.com/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Music Production Wiki",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://musicproductionwiki.com/og-image.png",
+      "width": 1200,
+      "height": 630
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://musicproductionwiki.com/articles/how-to-recreate-the-dx7-electric-piano.html"
+  }
+}
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "How to Recreate the DX7 Electric Piano in Any FM Synth",
+  "description": "Rebuild the DX7 E.PIANO 1 sound in a free FM synth: a body operator pair at a 1:1 ratio, a second slightly detuned body pair, and a high-ratio pair for the bell attack, then set velocity to control brightness and add a light chorus.",
+  "image": "https://musicproductionwiki.com/images/how-to-recreate-the-dx7-electric-piano-patch.png",
+  "totalTime": "PT20M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "Any FM synth (Dexed, Ableton Operator, Arturia DX7 V, or NI FM8)"
+    },
+    {
+      "@type": "HowToTool",
+      "name": "A chorus effect"
+    }
+  ],
+  "supply": [
+    {
+      "@type": "HowToSupply",
+      "name": "A DAW"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "Load an FM synth",
+      "text": "Open a free FM instrument such as Dexed (an open-source DX7 emulation) or Ableton Operator. Dexed can load the original E.PIANO 1 patch directly, so start there and reverse-engineer what you hear."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Build the body pair",
+      "text": "Set one carrier and its modulator to a 1:1 frequency ratio with a slow, piano-like decay. This makes the warm, hollow body of the tone."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Add a detuned second body pair",
+      "text": "Add a second carrier-modulator pair at nearly the same ratio, very slightly detuned. The two pairs beating against each other give the sound width and life."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Add the bell-attack pair",
+      "text": "Add a third pair with the modulator tuned to a high ratio (roughly 14:1) and a fast-decaying envelope. This is the bright, metallic tine 'ping' at the start of each note."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Route velocity to brightness",
+      "text": "Set velocity to raise the level of the bell-attack modulator. Now soft playing sounds mellow and Rhodes-like, hard playing sounds bright and bell-like. This dynamic is the expressive core of the patch."
+    },
+    {
+      "@type": "HowToStep",
+      "name": "Add chorus",
+      "text": "Put a light stereo chorus after the synth (mix around 25 percent). It widens and animates the sound into the classic wet, shimmering ballad EP."
+    }
+  ]
+}
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What actually makes the DX7 electric piano sound?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "FM synthesis, not a sampled Rhodes. A warm body tone (a carrier and modulator at a 1:1 ratio) is combined with a bright, fast-decaying metallic 'tine' attack (a modulator at a high ratio), and velocity is wired to control how much of that bright attack you hear. A light chorus finishes it. That is the whole recipe behind the factory preset E.PIANO 1."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is the DX7 electric piano a Fender Rhodes?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. It is generated by FM synthesis and contains no recorded Rhodes at all. It was reportedly intended as an FM replacement for the (Dyno-My-Piano-modified) Rhodes and filled the same role in arrangements, but it is brighter and glassier, and it became loved precisely for not sounding like a real Rhodes. On some famous '80s ballads it is genuinely debated whether the electric piano is a DX7, a modified Rhodes, or a layer of both."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which DX7 preset is the '80s electric piano?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The factory preset named E.PIANO 1, which sits at patch position 11 and is built on the DX7's algorithm 5 (three carrier-and-modulator pairs). It is the single most recognisable sound the DX7 made and the one heard across a decade of ballads."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I make the DX7 electric piano with free plugins?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, more completely than almost any other classic sound. Dexed is a free, open-source DX7 emulation that loads the original patches directly, and Ableton's Operator or any FM instrument can rebuild the tone from scratch. The free route is not a compromise here — it is the authentic instrument."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a carrier and a modulator in FM synthesis?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In FM synthesis every 'operator' is a sine wave. A carrier is the operator you hear; a modulator is an operator that rapidly varies the carrier's pitch. When the modulator's frequency is close to or a whole-number multiple of the carrier's, that rapid variation adds new harmonics, producing metallic and bell-like partials that subtractive synthesis cannot easily make."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does velocity matter so much on the DX7 piano?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Because velocity is wired to brightness. On the DX7 electric piano, playing softly hides the bright metallic attack and leaves a mellow, Rhodes-like tone; playing hard brings the bell-like 'ping' forward. That dynamic response is what makes the patch feel expressive and alive rather than static, so recreating the velocity routing matters as much as the tone itself."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How important is the chorus effect?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Very. The dry FM patch is a little thin and static; a light stereo chorus is what gives the classic sound its wide, shimmering, wet quality. Most records add it, and adding a modest chorus (around a 25 percent mix) is usually the difference between a patch that sounds close and one that sounds right."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How ubiquitous was the DX7 in '80s music?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Extremely. The DX7 was used on around 40 percent of the number-one singles on the 1986 US Billboard Hot 100, and a peer-reviewed study (Lavengood, 2019) found its E.PIANO 1 setting specifically on 61 percent of that year's R&B number ones and 42 percent of the top country hits. It genuinely soundtracked a decade."
+      }
+    }
+  ]
+}
+</script>
+  <!-- Organization schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Music Production Wiki",
+  "url": "https://musicproductionwiki.com",
+  "logo": "https://musicproductionwiki.com/og-image.png"
+}
+</script>
+  <!-- WebSite schema -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Music Production Wiki",
+  "url": "https://musicproductionwiki.com",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://musicproductionwiki.com/search?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://musicproductionwiki.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Recreations",
+      "item": "https://musicproductionwiki.com/categories/recreations"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "The DX7 Electric Piano",
+      "item": "https://musicproductionwiki.com/articles/how-to-recreate-the-dx7-electric-piano.html"
+    }
+  ]
+}
+</script>
+<style id="toc-skin"></script>
+<style id="toc-skin">
+.toc-widget .sidebar-widget-header{margin-bottom:.35rem}
+.toc-list{counter-reset:tocnum;list-style:none;margin:0;padding:0}
+.toc-list li{counter-increment:tocnum;position:relative;margin:0;border-left:2px solid var(--border-subtle);transition:border-color .15s ease,background .15s ease}
+.toc-list li a{display:flex;gap:.7rem;align-items:baseline;padding:.5rem .85rem .5rem 1rem;font-size:.82rem;line-height:1.45;font-weight:500;color:var(--text-secondary);text-decoration:none;transition:color .15s ease}
+.toc-list li a::before{content:counter(tocnum,decimal-leading-zero);font-family:var(--font-mono,ui-monospace,monospace);font-size:.7rem;font-weight:600;letter-spacing:.04em;color:var(--text-muted);flex:0 0 auto;min-width:1.5em;padding-top:.05rem}
+.toc-list li a:hover{color:var(--text-primary)}
+.toc-list li.active{border-left-color:var(--teal);background:linear-gradient(90deg,rgba(0,212,168,.08),transparent 80%)}
+.toc-list li.active a{color:var(--teal);font-weight:600}
+.toc-list li.active a:hover{color:var(--teal)}
+.toc-list li.active a::before{color:var(--teal)}
+</style>
+<style id="toc-bar-css">
+.toc-bar{display:none}
+@media (max-width: 900px){
+.toc-bar{display:block;position:sticky;top:60px;z-index:400;background:var(--bg-void);border-bottom:1px solid var(--border-default);overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(to right,#000 88%,transparent 100%);mask-image:linear-gradient(to right,#000 88%,transparent 100%)}
+.toc-bar::-webkit-scrollbar{display:none}
+.toc-bar-track{display:flex;gap:4px;padding:9px 10px;min-width:max-content}
+.toc-bar-track a{color:var(--text-secondary);text-decoration:none;font-family:var(--font-mono,ui-monospace,monospace);font-size:10px;text-transform:uppercase;letter-spacing:.05em;padding:6px 10px;border-radius:4px;white-space:nowrap;min-height:30px;display:inline-flex;align-items:center;transition:color .15s,background .15s}
+.toc-bar-track a.active{color:var(--teal);background:var(--bg-elevated)}
+.article-body h2[id]{scroll-margin-top:116px}
+}
+@media (max-width: 900px) and (hover:hover){.toc-bar-track a:hover{color:var(--teal)}}
+</style>
+</head>
+<body>
+
+
+
+<style id="mpw-unav-css">
+
+.mnav-wrap,.usearch{--ink:#09090d;--panel:#0f0f18;--panel2:#15151f;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);--amber:#f5a623;--teal:#00e8a2;--teal-d:rgba(0,232,162,.12);--text:#f2f2f7;--t2:#9a9ab2;--t3:#56566f;--sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'DM Mono',ui-monospace,SFMono-Regular,monospace;}
+.mnav-wrap *,.mnav-wrap *::before,.mnav-wrap *::after,.usearch *,.usearch *::before,.usearch *::after{box-sizing:border-box;margin:0;padding:0}
+/* host-CSS shield: a page loading style.css (articles) must not bleed its body font/color/line-height into the bar. Direct rule on .mnav-wrap beats inherited body styles. */
+.mnav-wrap,.usearch{font-family:var(--sans);font-size:14px;font-weight:400;font-style:normal;line-height:1.4;letter-spacing:normal;color:var(--text);text-align:left;text-transform:none}
+/* S91 host-CSS isolation (:where() = zero-specificity; beats style.css bare a/li by source order, LOSES to nav's own .drw-card/.mnav-flat classes) */
+:where(.mnav-wrap,.usearch) a{color:inherit;text-decoration:none;background:none;border:0;font:inherit;letter-spacing:inherit}
+:where(.mnav-wrap,.usearch) ul,:where(.mnav-wrap,.usearch) ol{list-style:none;margin:0;padding:0;border:0}
+:where(.mnav-wrap,.usearch) li{margin:0;padding:0;border:0;font-size:inherit;line-height:inherit;color:inherit;background:none}
+:where(.mnav-wrap,.usearch) h1,:where(.mnav-wrap,.usearch) h2,:where(.mnav-wrap,.usearch) h3,:where(.mnav-wrap,.usearch) h4,:where(.mnav-wrap,.usearch) h5,:where(.mnav-wrap,.usearch) h6,:where(.mnav-wrap,.usearch) p{margin:0;padding:0;border:0;font:inherit;color:inherit;line-height:inherit;letter-spacing:inherit;text-transform:none}
+:where(.mnav-wrap,.usearch) button{font:inherit;color:inherit;background:none;border:0;letter-spacing:inherit;text-align:inherit}
+:where(.mnav-wrap,.usearch) svg{display:inline-block;vertical-align:middle}
+:where(.mnav-wrap,.usearch) img{max-width:none}
+.mnav-wrap{background:var(--ink);border-bottom:1px solid var(--line);position:relative}
+.mnav{height:60px;display:flex;align-items:center}
+.mnav-in{max-width:1180px;margin:0 auto;padding:0 22px;width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.mnav-brand{display:flex;align-items:center;gap:10px;color:var(--text);text-decoration:none;flex:0 0 auto}
+.mnav-word{font-weight:700;font-size:15px;letter-spacing:-.02em}
+.mnav-links{display:flex;align-items:center;gap:6px;margin-left:8px}
+.mnav-flat,.mnav-trigger{color:var(--t2);background:none;border:0;font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;padding:8px 12px;border-radius:8px;display:inline-flex;align-items:center;gap:6px}
+.mnav-flat:hover,.mnav-trigger:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.caret{font-size:9px;color:var(--t3);transition:transform .18s}
+.mnav-right{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.mnav-search{background:none;border:0;color:var(--t2);cursor:pointer;display:flex;padding:6px;border-radius:8px}
+.mnav-search:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.mnav-cta{border:1px solid var(--teal);color:var(--teal);text-decoration:none;padding:7px 15px;border-radius:8px;font-size:13px;font-weight:600;white-space:nowrap}
+.mnav-cta:hover{background:var(--teal-d)}
+.mnav-wrap[data-section="tools"] .mnav-flat[data-nav="tools"]{color:var(--text);font-weight:600}
+.mnav-wrap[data-section="articles"] .mnav-trigger[data-nav="articles"]{color:var(--text);font-weight:600}
+/* Bible = amber brand color, desktop link + mobile drawer */
+.mnav-flat[data-nav="bible"],.drw-link[data-nav="bible"]{color:#f5a623!important;font-weight:600}
+.mnav-flat[data-nav="bible"]:hover,.drw-link[data-nav="bible"]:hover{color:#ffc04d!important}
+.mnav-item{position:relative}
+.mnav-panel,.mnav-panel-wide{position:absolute;top:calc(100% + 6px);left:0;z-index:50;display:none;background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:14px;box-shadow:0 24px 60px -24px rgba(0,0,0,.9);min-width:240px}
+.mnav-panel-wide{grid-template-columns:1fr 1fr;gap:8px 22px;min-width:520px}
+.mnav-item:hover .mnav-panel,.mnav-item:focus-within .mnav-panel,.mnav-item:hover .mnav-panel-wide,.mnav-item:focus-within .mnav-panel-wide{display:grid}
+.mnav-item:hover .caret{transform:rotate(180deg)}
+.mp-col{display:flex;flex-direction:column}
+.mp-head{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);padding:6px 10px 8px}
+.mnav-panel a{display:flex;flex-direction:column;gap:1px;padding:8px 10px;border-radius:9px;text-decoration:none}
+.mnav-panel a:hover{background:rgba(255,255,255,.05)}
+.mp-name{color:var(--text);font-size:13.5px;font-weight:600}.mp-desc{color:var(--t2);font-size:11.5px}
+.mnav-sub{display:none;background:var(--panel);border-bottom:1px solid var(--line)}
+.mnav-wrap[data-section="bible"] .mnav-sub{display:block}
+.mnav-sub-in{max-width:1180px;margin:0 auto;padding:10px 22px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.mnav-sub-in::-webkit-scrollbar{display:none}
+.mnav-sub-in a{flex:0 0 auto;color:var(--t2);text-decoration:none;font-size:12.5px;font-family:var(--mono);border:1px solid var(--line2);border-radius:99px;padding:5px 12px;white-space:nowrap}
+.mnav-sub-in a:hover{color:var(--teal);border-color:rgba(0,232,162,.4)}
+.mnav-toggle{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.mnav-burger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:8px;border-radius:8px}
+.mnav-burger span{display:block;width:20px;height:2px;background:var(--text);border-radius:2px;transition:.2s}
+.mnav-drawer{display:none;flex-direction:column;padding:6px 18px 16px;background:var(--ink);border-bottom:1px solid var(--line)}
+.mnav-drawer details{border-bottom:1px solid var(--line)}
+.mnav-drawer summary{list-style:none;cursor:pointer;padding:13px 2px;font-size:15px;font-weight:600;color:var(--text);display:flex;justify-content:space-between}
+.mnav-drawer summary::-webkit-details-marker{display:none}
+.mnav-drawer summary::after{content:"+";color:var(--t3)}
+.mnav-drawer details[open] summary::after{content:"\2013"}
+.mnav-acc{display:flex;flex-direction:column;padding:0 0 10px 12px}
+.mnav-acc a{color:var(--t2);text-decoration:none;font-size:14px;padding:8px 0}
+.drw-link{color:var(--t2);text-decoration:none;font-size:15px;font-weight:600;padding:13px 2px;border-bottom:1px solid var(--line)}
+.drw-cta{color:var(--teal);text-decoration:none;font-weight:600;font-size:15px;padding:14px 2px}
+.mnav-toggle:checked ~ .mnav-drawer{display:flex}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(2){opacity:0}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+@media(max-width:860px){.mnav-links,.mnav-cta{display:none}.mnav-burger{display:flex}}
+
+/* ===== UNIFIED SEARCH OVERLAY ===== */
+.usearch{position:fixed;inset:0;z-index:10000;display:none;background:rgba(6,6,11,.78);backdrop-filter:blur(6px);padding:80px 20px 20px}
+.usearch.open{display:block}
+.usearch-box{max-width:620px;margin:0 auto;background:var(--panel);border:1px solid var(--line2);border-radius:16px;overflow:hidden;box-shadow:0 40px 90px -30px rgba(0,0,0,.95)}
+.usearch-top{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.usearch-top svg{color:var(--t3);flex:0 0 auto}
+.usearch-top input{flex:1;background:none;border:0;outline:none;color:var(--text);font-family:var(--sans);font-size:17px}
+.usearch-top input::placeholder{color:var(--t3)}
+.usearch-top kbd{font-family:var(--mono);font-size:11px;color:var(--t3);border:1px solid var(--line2);border-radius:6px;padding:2px 7px}
+.usearch-results{max-height:56vh;overflow-y:auto;padding:8px}
+.usearch-results a{display:block;padding:11px 14px;border-radius:10px;text-decoration:none;transition:background .12s}
+.usearch-results a:hover,.usearch-results a.sel{background:rgba(255,255,255,.05)}
+.ur-top{display:flex;align-items:baseline;gap:9px}
+.ur-title{color:var(--text);font-size:14.5px;font-weight:600}
+.ur-cat{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.06);color:var(--t2);flex:0 0 auto}
+.ur-cat[data-c="Tools"]{background:var(--teal-d);color:var(--teal);border:1px solid rgba(0,232,162,.4)}
+.ur-cat[data-c="Bible"]{background:rgba(245,166,35,.18);color:#f5a623;border:1px solid rgba(245,166,35,.4)}
+.ur-desc{color:var(--t2);font-size:12.5px;line-height:1.45;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.usearch-empty{padding:30px;text-align:center;color:var(--t3);font-size:13.5px}
+/* --- sticky-header + entry-page chrome (pilot, refined for density) ---
+   entry nav = 60px main bar only (no category sub-bar). Desktop: hide the horizontal section
+   nav (the sticky sidebar TOC covers sections) and retune offsets to the 60px nav. Mobile: the
+   sidebar is hidden, so SHOW the section nav flush under the bar. All in THIS block. --- */
+.mnav-wrap{position:sticky;top:0;z-index:1000;line-height:1.4}
+.entry-nav{display:none}
+[id].entry-section{scroll-margin-top:90px}
+.entry-main h2{scroll-margin-top:90px}
+.entry-sidebar{top:78px;height:calc(100vh - 98px)}
+@media(max-width:768px){
+  .entry-nav{display:block!important;top:60px!important}
+  [id].entry-section{scroll-margin-top:130px!important}
+  .entry-main h2{scroll-margin-top:130px!important}
+}
+/* dropdown overflow safety */
+.mnav-panel,.mnav-panel-wide{max-height:min(72vh,560px);overflow-y:auto}
+/* mobile drawer: category CARD grid (slick old-nav look), CSS-only */
+.mnav-drawer{padding:10px 18px 18px;gap:0}
+.drw-label{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--t3);margin:12px 2px 8px}
+.drw-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.drw-card{display:flex;align-items:center;padding:12px 14px;border-radius:10px;text-decoration:none;font-size:13.5px;font-weight:600;color:var(--text);background:var(--panel);border:1px solid var(--line2)}
+.drw-card:hover{border-color:var(--teal);color:var(--teal)}
+.drw-feat{display:flex;align-items:center;gap:8px;padding:13px 16px;border-radius:10px;text-decoration:none;font-size:14px;font-weight:700;color:var(--text);background:var(--panel);border:1px solid var(--line2);margin-top:8px}
+.drw-feat-bible{color:#f5a623;background:rgba(245,166,35,.08);border-color:rgba(245,166,35,.30)}
+.drw-feat-bible:hover{border-color:rgba(245,166,35,.6)}
+.drw-cta{display:block;text-align:center;padding:14px;border-radius:10px;background:var(--teal);color:#06281f;font-weight:800;font-size:14px;text-decoration:none;margin-top:12px}
+/* mobile sunlight legibility: lift the intentionally-dim greys in glare (nav + search only), scoped */
+@media(max-width:860px){
+  .mnav-wrap,.usearch{--t2:#c8c8da;--t3:#9696b0}
+  .drw-label{color:#bdbdd0;font-weight:500}
+  .usearch-top input::placeholder{color:#9696b0}
+  .drw-card,.drw-feat{background:#20202e;border:1.5px solid #45455c}
+  .drw-feat-bible{background:rgba(245,166,35,.12);border:1.5px solid rgba(245,166,35,.6)}
+}
+html{overflow-x:clip!important;max-width:none!important}body{overflow-x:clip!important}
+</style>
+<!-- MPW universal nav -->
+<div class="mnav-wrap" data-section="articles">
+  <input type="checkbox" id="mnav-toggle" class="mnav-toggle" aria-hidden="true">
+  <nav class="mnav" aria-label="Main navigation">
+    <div class="mnav-in">
+      <a class="mnav-brand" href="/"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="6" stroke="#f5a623" stroke-width="1.7"/><path d="M7 15V9l3 3 3-5 4 8" stroke="#00e8a2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="mnav-word">MusicProductionWiki</span></a>
+      <div class="mnav-links">
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="articles">Articles <span class="caret">&#9662;</span></button><div class="mnav-panel mnav-panel-wide"><div class="mp-col"><div class="mp-head">Techniques & Analysis</div><a href="/categories/techniques"><span class="mp-name">Techniques</span><span class="mp-desc">Mixing, mastering, sound design</span></a><a href="/categories/reviews"><span class="mp-name">Reviews</span><span class="mp-desc">Honest. No paid placements.</span></a><a href="/categories/comparisons"><span class="mp-name">Comparisons</span><span class="mp-desc">Head-to-head</span></a><a href="/categories/breakdowns"><span class="mp-name">Breakdowns</span><span class="mp-desc">Track-by-track</span></a><a href="/categories/recreations"><span class="mp-name">Recreations</span><span class="mp-desc">Recreate iconic sounds</span></a><a href="/genres"><span class="mp-name">Genres</span><span class="mp-desc">Every genre & style</span></a></div><div class="mp-col"><div class="mp-head">Reference & Business</div><a href="/categories/ai-music"><span class="mp-name">AI Music</span><span class="mp-desc">Suno, Udio, AI tools</span></a><a href="/categories/music-business"><span class="mp-name">Music Business</span><span class="mp-desc">Royalties, licensing, sync</span></a></div></div></div>
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="gear">Gear <span class="caret">&#9662;</span></button><div class="mnav-panel"><div class="mp-col"><a href="/categories/daws"><span class="mp-name">DAWs</span><span class="mp-desc">Every major DAW</span></a><a href="/categories/plugins"><span class="mp-name">Plugins</span><span class="mp-desc">EQ, comp, reverb, synths</span></a><a href="/categories/hardware"><span class="mp-name">Hardware</span><span class="mp-desc">Interfaces, mics, monitors</span></a></div></div></div>
+        <a class="mnav-flat" href="/tools/" data-nav="tools">Tools</a>
+        <a class="mnav-flat" href="/bible/" data-nav="bible">The Bible</a>
+      </div>
+      <div class="mnav-right">
+        <button class="mnav-search" data-nav-search aria-label="Search"><svg width="17" height="17" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <a class="mnav-cta" href="https://theproducersbriefing.beehiiv.com">Sound Better &rarr;</a>
+        <label class="mnav-burger" for="mnav-toggle"><span></span><span></span><span></span></label>
+      </div>
+    </div>
+  </nav>
+  <div class="mnav-drawer">
+    <div class="drw-label">Articles</div>
+    <div class="drw-grid">
+      <a href="/categories/techniques" class="drw-card">Techniques</a><a href="/categories/reviews" class="drw-card">Reviews</a><a href="/categories/comparisons" class="drw-card">Comparisons</a><a href="/categories/breakdowns" class="drw-card">Breakdowns</a><a href="/categories/recreations" class="drw-card">Recreations</a><a href="/genres" class="drw-card">Genres</a><a href="/categories/ai-music" class="drw-card">AI Music</a><a href="/categories/music-business" class="drw-card">Music Business</a>
+    </div>
+    <div class="drw-label">Gear</div>
+    <div class="drw-grid">
+      <a href="/categories/daws" class="drw-card">DAWs</a><a href="/categories/plugins" class="drw-card">Plugins</a><a href="/categories/hardware" class="drw-card">Hardware</a>
+    </div>
+    <a href="/bible/" class="drw-feat drw-feat-bible">&#9670; The Producer's Bible</a>
+    <a href="/tools/" class="drw-feat">The Producer's Tools</a>
+    <a href="https://theproducersbriefing.beehiiv.com" class="drw-cta">Sound Better &rarr;</a>
+  </div>
+</div>
+
+
+<div class="container">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><ol>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../categories/recreations.html">Recreations</a></li>
+    <li><span aria-current="page">The DX7 Electric Piano</span></li>
+  </ol></nav>
+</div>
+<nav class="toc-bar" aria-label="Section navigation"><div class="toc-bar-track" id="tocBarTrack"></div></nav>
+<main class="container" id="main-content">
+  <div class="article-layout">
+    <article aria-labelledby="articleTitle">
+      <header class="article-header">
+        <div class="article-tags"><span class="article-tag teal"><a href="../categories/recreations.html" style="color:inherit;text-decoration:none;">Recreations</a></span>
+<span class="article-tag teal"><a href="../categories/techniques/sound-design.html" style="color:inherit;text-decoration:none;">Sound Design</a></span></div>
+        <h1 id="articleTitle">How to Recreate the DX7 Electric Piano (The &rsquo;80s Ballad Sound)</h1>
+        <div class="article-header-meta">
+          <div class="article-author"><div class="author-avatar" aria-hidden="true">MP</div><span class="author-name">The Music Production Wiki Team</span></div>
+          <span class="meta-divider"></span><span class="meta-item">Updated July 2026&nbsp;&middot;&nbsp;16 min read</span>
+        </div>
+      </header>
+      <div class="article-body">
+<p style="font-size:1.06rem;line-height:1.7;">Close your eyes during almost any power ballad from the mid-1980s and you will hear it: a glassy, bell-tinged electric piano, soft and breathy under the verses, chiming and bright when the singer leans in. It sounds like a Fender Rhodes that has been polished until it sparkles &mdash; and it is not a Rhodes at all. It is a single factory preset, called E.PIANO 1, on the Yamaha DX7, and it is made entirely with a kind of synthesis almost nobody understood at the time. This guide rebuilds that sound honestly: what the DX7 actually is, why FM makes bells where analog synths made buzzes, how the famous patch is put together, and how to get all of it out of a free synth you can download in five minutes. Like the <a href="how-to-recreate-the-supersaw.html">supersaw</a> and the <a href="how-to-recreate-the-80s-gated-reverb-snare.html">80s gated-reverb snare</a>, the DX7 piano is far more myth than mystery once you know where to look.</p>
+
+<div class="sourcebox">
+<div class="sourcebox-head"><span class="sourcebox-kicker">Where this comes from</span><span class="sourcebox-sub">Confirmed vs. inferred &mdash; so you know which claims are sourced and which are our best estimate.</span></div>
+<div class="sourcebox-row sourcebox-confirmed">
+<div class="sourcebox-tag">Confirmed</div>
+<div class="sourcebox-body"><p>The <strong>Yamaha DX7</strong> (released <strong>1983</strong>) was the first commercially successful digital synthesizer, and it generated its sound with <strong>FM synthesis</strong>, a technique developed by <strong>John Chowning</strong> at Stanford University and licensed to Yamaha. Its most famous sound is the factory preset <strong>E.PIANO 1</strong>, which sits at <strong>patch position 11</strong> and is built on the DX7&rsquo;s <strong>algorithm 5</strong> (three carrier-and-modulator pairs). The DX7 was used on roughly <strong>40% of the number-one singles</strong> on the 1986 US Billboard Hot 100; a peer-reviewed study (<strong>Lavengood, 2019</strong>) found the E.PIANO 1 setting specifically on <strong>61% of that year&rsquo;s R&amp;B #1s</strong> and <strong>42% of the top country hits</strong>. Playing <strong>softer sounds mellow and Rhodes-like, harder sounds brighter and bell-like</strong> (velocity controls brightness), and a <strong>chorus</strong> is commonly added to bring it to life. The electric piano in the <em>Twin Peaks</em> theme was confirmed as a DX7/TX7 by its player, <strong>Kinny Landrum</strong>, in a public Q&amp;A. <span class="sourcebox-cite">Sources: Wikipedia &ldquo;Yamaha DX7&rdquo;; Lavengood, <em>Journal of Popular Music Studies</em> 31(3), 2019; Reverb Machine &ldquo;Exploring the Yamaha DX7&rdquo;; Computer History Museum profile of John Chowning.</span></p></div></div>
+<div class="sourcebox-row sourcebox-disputed">
+<div class="sourcebox-tag">Commonly claimed &mdash; but disputed</div>
+<div class="sourcebox-body"><p>That E.PIANO 1 was simply &ldquo;designed to emulate a Fender Rhodes.&rdquo; The honest picture is subtler: it was reportedly conceived as an <strong>FM replacement for the Dyno-My-Piano&ndash;modified (brightened) Rhodes</strong> and filled the same role in arrangements &mdash; but it is brighter and glassier than a real Rhodes, and by several accounts it became popular <em>precisely because it does not sound like one</em>. Also genuinely disputed: on several famous ballads &mdash; including Whitney Houston&rsquo;s &ldquo;Greatest Love of All,&rdquo; &ldquo;Saving All My Love for You&rdquo; and &ldquo;I Have Nothing&rdquo; &mdash; sources <strong>disagree over whether the electric piano is a DX7, a Dyno-modified real Rhodes, or a layer of both</strong>. We name the debate rather than pretend it is settled. <span class="sourcebox-cite">Sources: Reverb Machine &ldquo;Exploring the DX7, Part Two&rdquo;; MusicRadar; CultureSonar; Vintage Synth Explorer forums.</span></p></div></div>
+<div class="sourcebox-row sourcebox-inferred">
+<div class="sourcebox-tag">Inferred &mdash; unverified</div>
+<div class="sourcebox-body"><p>The exact operator ratios, output levels and envelope times used on any <em>specific</em> record beyond the stock patch. Whenever a producer edited E.PIANO 1, those edits are undocumented; so any per-record patch sheet you find online &mdash; and any specific number in this guide &mdash; is a <strong>modelled reconstruction</strong>, a defensible estimate rather than a documented setting. Treat it as a starting point for your ear, not gospel.</p></div></div>
+</div>
+
+<h2 id="reframe">It&rsquo;s FM, not a warmed-up Rhodes</h2>
+<p>The single most useful thing to understand about the DX7 electric piano is that there is no piano in it, and no Rhodes either. There is no recording of a tine being struck, no sample of a felt hammer, nothing acoustic at all. The entire sound is built from a handful of pure sine waves bent into shape by a process most keyboard players in 1983 found completely baffling. Producers who go hunting for the &ldquo;right Rhodes plugin&rdquo; to nail this sound are looking in the wrong family of instruments, because the character does not come from an electromechanical piano &mdash; it comes from <a href="../bible/fm-synthesis.html">FM synthesis</a>, and once you grasp the one idea underneath it, the sound stops being mysterious.</p>
+<p>This is the opposite of a sound like the <a href="how-to-recreate-the-reese-bass.html">reese bass</a>, where the character lives in detuned oscillators beating against each other, or the acid squelch of a <a href="how-to-recreate-the-303-acid-sound.html">303</a>, where it lives in a resonant filter played live. The DX7 piano has no filter doing the work and no detuned analog swarm. Its brightness and its bell-like ring are baked into how the tone is generated in the first place. That is why a subtractive synth &mdash; the kind that starts with a rich waveform and carves it down &mdash; struggles to imitate it convincingly: you are trying to sculpt, with a chisel, a shape that was grown a completely different way. Reach for an FM instrument instead and the sound almost falls out of the box.</p>
+<p>So this guide is structured around that reframe. We will spend a little time on where the sound came from, because the history explains why it sounds the way it does, and then we will learn the one FM principle that unlocks it. After that the famous patch itself &mdash; three simple ingredients &mdash; becomes obvious, and recreating it is genuinely quick. If you have rebuilt a signature sound with us before, you know the pattern: the part everyone obsesses over is rarely the part that matters, and the real secret is usually simpler and stranger than the folklore.</p>
+
+<h2 id="origin">From Chowning&rsquo;s equation to a decade of ballads</h2>
+<p>The story begins not in a music studio but in a lab. In the late 1960s, John Chowning, a composer and researcher at Stanford, was experimenting with digital sound and noticed that when he used one oscillator to rapidly modulate the pitch of another, he did not get vibrato as expected &mdash; he got entirely new harmonics, and with them, metallic and bell-like timbres that were extraordinarily hard to make any other way. Stanford patented the technique, shopped it to American organ makers who turned it down, and eventually licensed it to Yamaha, who spent roughly a decade turning the maths into an affordable instrument. The result, released in 1983, was the DX7.</p>
+<p>It changed everything almost overnight. It was digital when the market was analog, it sounded like nothing else, and at under two thousand dollars it was within reach of working musicians. It sold in numbers no synth had approached before. But it had a catch: programming it was famously opaque &mdash; a tiny screen, a membrane keypad, six &ldquo;operators&rdquo; wired together in thirty-two &ldquo;algorithms&rdquo; that few people understood. So the vast majority of players did the obvious thing and reached for the factory presets. And the most irresistible of those was the electric piano, a sound so evocative and so easy to drop into a ballad that it spread through pop, R&amp;B and country like wildfire.</p>
+<p>The ubiquity is genuinely documented, not folklore. The DX7 appears on around 40 percent of the number-one singles on the 1986 US Billboard Hot 100. A peer-reviewed study by Megan Lavengood went further and tracked the E.PIANO 1 setting specifically, finding it on 61 percent of that year&rsquo;s R&amp;B number ones and 42 percent of the top country hits. Phil Collins, Whitney Houston, Chicago, Tina Turner&rsquo;s comeback records, the <em>Twin Peaks</em> theme, and much later Bruno Mars all reached for it. That is the sound you are recreating: not an obscure patch, but arguably the most-heard electric piano in the history of recorded pop &mdash; and, like the <a href="how-to-recreate-the-daft-punk-robot-voice.html">Daft Punk robot voice</a>, one whose real mechanism is far less mystical than its cultural weight suggests.</p>
+
+<p>It is worth pausing on the Rhodes question, because it is the most persistent myth about this sound. The DX7 electric piano was not chasing a plain Fender Rhodes; by several accounts it was modelled on the <em>Dyno-My-Piano</em> &mdash; a popular early-&rsquo;80s modification that brightened a Rhodes&rsquo;s tines and ran it through chorus, giving it a sparklier, more hi-fi voice than the mellow instrument of the &rsquo;70s. That is why the DX7 version sounds so crystalline: its reference point was already a brightened Rhodes, and FM then pushed the brightness further still. The confusion this created runs deep &mdash; on several landmark ballads, engineers and enthusiasts still disagree over whether a given electric piano is a DX7, a Dyno-modified Rhodes, or the two layered together, because on a finished, chorused record the fingerprints blur. For a producer, the practical takeaway is freeing: you are not trying to match one instrument exactly, you are trying to land in a well-populated family of bright, chorused electric pianos, and an FM patch puts you squarely inside it.</p>
+
+<h2 id="fm">How FM makes a bell: carrier and modulator</h2>
+<p>Here is the one idea that unlocks everything, and it is worth reading slowly because it is the actual transferable skill. In FM synthesis, every building block is a plain sine wave, called an <strong>operator</strong>. Some operators you hear directly &mdash; those are <strong>carriers</strong>. Some operators you do not hear on their own; instead they are wired to rapidly wobble the pitch of a carrier &mdash; those are <strong>modulators</strong>. That is the whole vocabulary: a carrier is the voice, a modulator is what shakes it.</p>
+<p>When a modulator wobbles a carrier <em>slowly</em>, you hear vibrato &mdash; a gentle waver in pitch. But when the modulator wobbles the carrier <em>very fast</em> &mdash; at audio rate, thousands of times a second &mdash; something else happens entirely. The ear stops hearing the wobble as pitch movement and starts hearing new frequencies that were not in either <a href="../bible/oscillator.html">oscillator</a> to begin with. Feed a carrier a modulator and you conjure a whole family of extra harmonics out of two simple sine waves. Crucially, <strong>the ratio between the modulator&rsquo;s frequency and the carrier&rsquo;s decides which harmonics appear.</strong> When the modulator sits at a low whole-number ratio to the carrier, you get warm, harmonic, musical tones. When it sits at a high or non-integer ratio, you get clangorous, metallic, bell-like partials &mdash; the sound analog synths could never quite manage. That single relationship is why FM excels at bells, tines, glass, mallets and electric pianos.</p>
+
+<div class="diagram-wrap">
+<picture><source media="(max-width:900px)" srcset="../images/how-to-recreate-the-dx7-electric-piano-fm-m.png"><img src="../images/how-to-recreate-the-dx7-electric-piano-fm.png" alt="Diagram of how FM synthesis makes a bell: a purple modulator sine wave bends the pitch of a teal carrier sine wave at audio rate, producing one richer waveform whose spectrum gains new amber FM-added partials that form the metallic, bell-like tone. Illustrative, not a measured spectrum." width="1180" height="600" loading="lazy" /></picture>
+<div class="diagram-caption">How FM makes a bell. A modulator bending a carrier fast adds new partials (amber) a plain oscillator can&rsquo;t &mdash; that&rsquo;s the metallic ring. Ratio picks which partials appear; level picks how many. Illustrative, not a measured spectrum.</div>
+</div>
+<p>And there is a second control that matters as much as the ratio: <strong>how loud the modulator is</strong>. Turn a modulator&rsquo;s output up and it adds more harmonics, making the tone brighter and more complex; turn it down and the tone softens back toward a pure sine. This is the lever the DX7 piano leans on hardest, because if you can make the modulator&rsquo;s level rise and fall &mdash; over the course of a note, or with how hard you play &mdash; you get a sound that brightens and mellows dynamically, exactly like a struck string. Grasp those two ideas &mdash; ratio chooses the flavour of harmonics, level chooses how many &mdash; and you have not learned one patch. You have learned every FM bell, mallet and electric piano there is, which is the entire point of learning it as a principle rather than a preset.</p>
+
+<p>If the maths still feels abstract, here is a way to feel it rather than calculate it. Imagine bending a single note&rsquo;s pitch up and down by hand, faster and faster. Slowly, you hear a wobble. Speed it up past the point your ear can track the individual movements and the wobble stops being movement and becomes <em>colour</em> &mdash; a shimmer of new tones around the original. FM does exactly that, thousands of times a second, with mathematical precision, and the &ldquo;how far&rdquo; you bend is the modulator&rsquo;s level while the &ldquo;in what proportion&rdquo; is the ratio. This is also why FM sounds can turn harsh so easily: push the modulator level high and you generate a dense thicket of harmonics that quickly becomes clangorous. The electric piano stays musical because its body pair uses a gentle 1:1 ratio and only the brief attack pair is allowed to get bright &mdash; and even then, only for a fraction of a second. Restraint, not intensity, is what makes FM sound expensive.</p>
+
+<h2 id="patch">Inside E.PIANO 1: three operator pairs</h2>
+<p>Now the famous patch itself makes sense. E.PIANO 1 is built on the DX7&rsquo;s algorithm 5, which is simply three independent carrier-and-modulator pairs stacked together and summed. Think of it as three little FM voices playing at once, each contributing one part of the sound. You do not need a DX7 to build this; any FM synth with a few operators will do, and understanding the three jobs is what lets you rebuild it anywhere.</p>
+
+<div class="diagram-wrap">
+<picture><source media="(max-width:900px)" srcset="../images/how-to-recreate-the-dx7-electric-piano-patch-m.png"><img src="../images/how-to-recreate-the-dx7-electric-piano-patch.png" alt="Diagram of the DX7 E.PIANO 1 patch on algorithm 5: three carrier-and-modulator operator pairs — a 1:1 body pair, a slightly detuned near-1:1 body pair, and a high-ratio 14:1 bell-attack pair (amber) with a fast decay — summed together into the output electric-piano sound. Illustrative; ratios are starting values." width="1180" height="640" loading="lazy" /></picture>
+<div class="diagram-caption">E.PIANO 1 is three operator pairs (algorithm 5): a warm body, a detuned body for width, and a high-ratio bell attack (amber) &mdash; summed into one sound. Ratios are the classic starting points, tuned by ear.</div>
+</div>
+<p>The <strong>first pair is the body</strong>. A carrier and its modulator sit at roughly a 1:1 ratio &mdash; the modulator matched to the carrier &mdash; with a slow, piano-like decay. A 1:1 ratio adds harmonics that stay musical and warm rather than clangy, so this pair produces the mellow, slightly hollow, sustaining tone that forms the heart of the sound. On its own it already reads as a soft electric piano. The <strong>second pair is a near-copy of the first, very slightly detuned</strong>. Two body voices at almost the same pitch beat gently against each other, and that beating is what gives the patch its subtle width and movement even before any effects &mdash; the same principle that fattens a <a href="../bible/detune.html">detuned</a> analog stack, used here with restraint.</p>
+<p>The <strong>third pair is the magic: the tine attack</strong>. Its modulator is tuned to a high ratio &mdash; famously around 14:1 &mdash; and given a fast-decaying <a href="../bible/envelope.html">envelope</a>, so it produces a bright, metallic, bell-like &ldquo;ping&rdquo; that appears at the very start of each note and dies away quickly. That short high-ratio burst is the glassy strike you picture when you think of this sound; it is the electronic equivalent of a hammer catching a tine. Body plus body plus a fast metallic ping &mdash; that is the entire architecture, and it is why the sound feels like a piano that has been dipped in glass. If you are working in a modern FM synth like Ableton&rsquo;s Operator, you set up exactly these three relationships; the numbers are a starting point to tune by ear, not sacred values, because as the sourcing box notes, the exact per-record settings were never published.</p>
+
+<p>One subtlety is worth calling out, because it trips people up and it is where the folklore gets messy. There is more than one way to build an electric piano on a DX7 &mdash; Yamaha&rsquo;s own clinicians sometimes taught the idea using a different algorithm as a blackboard example &mdash; but the specific factory patch that soundtracked the decade, E.PIANO 1, is the algorithm-5 arrangement of three pairs described above. When you are recreating <em>the</em> sound rather than merely <em>an</em> FM piano, that distinction matters: aim for the three-pair structure, and treat the deep-editing rabbit hole as optional. The authentic target here is genuinely the factory preset, not a heavily reprogrammed variant, which is unusual and rather liberating &mdash; for once the &ldquo;correct&rdquo; version of a legendary sound is the one that came in the box, and your job is to understand it well enough to rebuild it, not to out-clever it.</p>
+
+<h2 id="velocity">Velocity is the whole expression</h2>
+<p>If there is one thing that separates a convincing recreation from a lifeless one, it is this section, and most tutorials skip it. On the DX7 electric piano, <strong>how hard you play controls how bright the note is</strong> &mdash; and that dynamic is not a nice extra, it is the soul of the sound. The mechanism is exactly the FM lever from two sections ago: <a href="../bible/velocity.html">velocity</a> is wired to the <em>level</em> of that third, high-ratio tine-attack modulator. Play softly and the tine modulator stays quiet, so you hear mostly the warm 1:1 body &mdash; mellow, rounded, genuinely Rhodes-like. Play hard and the tine modulator jumps up, flooding the note with bright metallic partials &mdash; the bell-like strike snaps forward.</p>
+
+<div class="diagram-wrap">
+<picture><source media="(max-width:900px)" srcset="../images/how-to-recreate-the-dx7-electric-piano-velocity-m.png"><img src="../images/how-to-recreate-the-dx7-electric-piano-velocity.png" alt="Diagram of how velocity controls brightness on the DX7 electric piano: played soft, the spectrum is low and sparse (mellow, Rhodes-like); played hard, tall amber high partials appear (bright, bell-like). A gradient ramp shows velocity driving the bell-attack modulator's level. Illustrative, not a measured spectrum." width="1180" height="600" loading="lazy" /></picture>
+<div class="diagram-caption">Velocity is the expression. Soft playing stays mellow; hard playing brings out the bright, bell-like partials (amber) &mdash; the harder you play, the more the bell-attack modulator opens. Illustrative, not a measured spectrum.</div>
+</div>
+<p>This is why the real thing feels alive across a performance and why a static &ldquo;DX7 piano&rdquo; sample so often sounds flat and dated by comparison: the sample froze one brightness, but the instrument breathes between mellow and bright with every touch of the hand. It is also, incidentally, why the sound survived long enough to be reappraised &mdash; players who dismissed it as cheesy were often reacting to lazy, one-dynamic use, not to the expressive instrument underneath. When you recreate it, spend real time here. In your FM synth, route velocity to raise the output of the bright attack operator, and set the amount generously enough that a soft-to-hard sweep audibly travels from dull to gleaming.</p>
+<p>Then, crucially, <em>play it like a piano</em>. Program or perform genuine dynamics &mdash; softer under the verses, harder in the chorus &mdash; and the patch will do the emotional work for you, brightening as the song lifts. A ballad accompaniment built this way needs almost no automation; the expression is already in the velocities. Get this wiring right and even a rough approximation of the three operator pairs will sound &ldquo;right,&rdquo; because the ear reads the dynamic brightness as authenticity. Get it wrong &mdash; a fixed, uniform brightness &mdash; and even a perfect static patch will sound like a cardboard imitation.</p>
+
+<h2 id="chorus">The chorus that brings it to life</h2>
+<p>There is one finishing touch that nearly every record adds and that transforms the dry patch from &ldquo;close&rdquo; to &ldquo;that&rsquo;s it&rdquo;: a <a href="../bible/chorus.html">chorus</a> effect. The raw FM electric piano, straight out of the synth, is a little thin and a little static &mdash; clean, but two-dimensional. A light stereo chorus widens it, adds a slow shimmer, and gives it the wet, glossy, floating quality that defines the sound in your memory. It is such a consistent part of the finished tone that many people effectively hear the chorus <em>as</em> the DX7 piano, without realising the two are separable.</p>
+<p>The setting that matters is restraint. You are not trying to make an obvious swirling effect; you are trying to add width and a gentle animation. A modest mix &mdash; somewhere around a quarter of the signal &mdash; with a slow-to-moderate rate is the classic territory, enough to hear movement without it becoming seasick. Keep the stereo width sensible so the sound still holds together in mono, since a chorus pushed too wide can hollow out the centre and cause problems when the mix folds down. If your DAW has a stock chorus, it will do this perfectly; this is not a place that rewards a boutique plugin.</p>
+<p>It is worth noting that chorus is where a lot of the era&rsquo;s sound blur together, which is part of why the Rhodes-versus-DX7 debates in the sourcing box are so hard to settle: a chorused, EQ&rsquo;d electric piano on a finished record hides many of the fingerprints that would tell you which instrument made it. For your purposes, that is liberating rather than frustrating &mdash; it means a well-built FM patch with a tasteful chorus will sit in a mix indistinguishably from the records, and nobody will ever run a forensic analysis on your ballad. Build the tone, add the shimmer, and move on.</p>
+
+<h2 id="recreate">Recreate it: a free FM synth first, then the shortcuts</h2>
+<p>Here is the genuinely good news, and it is unusual for a classic sound: the free route is not a compromise, it is arguably the <em>most</em> authentic route. <strong>Dexed</strong> is a free, open-source emulation of the DX7 that loads original DX7 patch files directly, which means you can call up something equivalent to E.PIANO 1 and then reverse-engineer what you are hearing operator by operator. It is the best learning tool there is for this sound, because you can see the exact three-pair structure laid out in front of you. Download it, load an electric-piano patch, and poke at the operators until the anatomy above clicks.</p>
+<p>To build the sound from scratch &mdash; which is where the real understanding lives &mdash; the steps are simple in any FM synth, including <strong>Ableton&rsquo;s Operator</strong> or any instrument with a few operators and adjustable ratios. Set up a carrier-and-modulator pair at a 1:1 ratio with a slow, piano-like decay for the body. Duplicate it and detune the copy very slightly for width. Add a third pair with the modulator at a high ratio &mdash; start around 14:1 &mdash; and a fast-decaying envelope for the bright tine attack. Then route velocity to the level of that third modulator so playing harder brings out the ping. Finally, add a light chorus after the synth. That is the whole recipe, and it maps one-to-one onto the anatomy sections above. Tune every number by ear; the ratios are launch points, not law.</p>
+<p>If you want a paid shortcut with a friendlier interface and modern extras, <strong>Arturia&rsquo;s DX7 V</strong> and <strong>Native Instruments&rsquo; FM8</strong> both model the DX7 engine and come loaded with ready-made electric pianos, and hardware like the compact <strong>Korg Volca FM</strong> or <strong>Korg Opsix</strong> gives you knobs to shape FM in real time. But none of them will sound more &ldquo;real&rdquo; than Dexed does, because Dexed <em>is</em> the engine. This is the rare case where the correct advice is to start free and stay free unless you specifically want the workflow. Any of the instruments in our <a href="best-synth-plugins.html">best synth plugins</a> roundup that offers FM will get you there, and if you are choosing between the two most popular soft synths, our <a href="serum-2-vs-vital.html">Serum 2 vs Vital</a> comparison covers which one suits you &mdash; both can do FM, though a dedicated FM instrument makes this particular sound easier. Our <a href="how-to-use-serum-2.html">Serum 2</a> and <a href="how-to-use-vital.html">Vital</a> walkthroughs show how to reach the FM controls in each.</p>
+
+<h2 id="beyond">The same idea anywhere: you now own every FM bell</h2>
+<p>The reason it is worth learning this as a principle rather than a preset is that the principle is enormous and the preset is tiny. Once you can hear FM &mdash; a carrier voiced by a modulator, brightness rising and falling with modulator level &mdash; you own far more than one ballad piano. Nudge the ratios and envelopes and the very same architecture gives you tubular bells, marimbas and vibraphones, glassy synth pads, harp-like plucks, tuned percussion, and the crystalline lead and bell tones that define whole genres. The DX7 electric piano is simply the most famous member of an entire family you can now build at will.</p>
+<p>That transfer is exactly why FM is having a renaissance in modern production. The bright, digital, slightly nostalgic sheen of FM sits at the centre of <a href="how-to-make-synthwave.html">synthwave</a> and retro-leaning <a href="how-to-make-pop-music.html">pop</a>, where producers deliberately reach for that 1980s digital character; and lighter FM electric pianos still roll through modern R&amp;B and <a href="how-to-make-house-music.html">house</a> ballads and soulful <a href="how-to-make-trance.html">trance</a> breakdowns. Learn the mechanism and you can deploy it deliberately across all of them, rather than hunting for a preset that only ever gives you one flavour.</p>
+<p>There is a compositional lesson tucked inside the technical one, too. The DX7 piano taught a generation that a sound could be <em>expressive through dynamics alone</em> &mdash; that wiring brightness to touch turns a static timbre into an instrument that responds. That idea travels far beyond FM: any time you connect how hard a part is played to how bright or open it sounds, you get music that breathes. It is the difference between a synth line that feels typed in and one that feels performed. The DX7 piano is the most famous teacher of that lesson, but the lesson outlives the instrument &mdash; which is precisely why it is worth more than the patch.</p>
+
+<h2 id="cant-buy">What you can&rsquo;t buy &mdash; and the taste question</h2>
+<p>Honesty demands two limits, and neither is technical. The first is small: an original DX7&rsquo;s early digital converters and its exact factory calibration add a faint character that emulations approximate rather than clone bit-for-bit &mdash; but this is genuinely inaudible in a mix, and even devoted owners disagree about whether it matters. Unlike some recreations, there is essentially nothing physical here you cannot buy or download, because the instrument was digital from the start. Dexed running the same patch data is about as close to &ldquo;the real thing&rdquo; as a recreation ever gets.</p>
+<p>The second limit is the honest one, and it is about taste rather than gear. This sound was so overused in the 1980s that it triggered a backlash; for years the DX7 electric piano was shorthand for everything cheesy about the decade&rsquo;s production. That reputation has softened as producers mined the era for inspiration, but the caution still stands: the patch is a cliché if you lean on it, and a beautiful, evocative colour if you use it deliberately. The thing you cannot download is judgment about <em>when</em> to reach for it &mdash; when its nostalgic sheen serves the song and when it dates it.</p>
+<p>Our advice is to treat it the way the best records did: as a specific emotional colour, not a default piano. Used with genuine dynamics, a tasteful chorus, and a reason to be there, it is one of the most instantly moving sounds in pop. Used as wallpaper on every track because it is easy, it becomes the thing people mock. The instrument is free; the restraint is the part you develop yourself, and it is worth more than any operator setting.</p>
+
+<h2 id="rights">Do you need to clear anything?</h2>
+<p>No. Recreating the DX7 electric piano from scratch &mdash; your own FM patch, your own performance, your own chorus &mdash; is entirely your own production, and there is nothing to clear. You are not sampling a record; you are rebuilding a sound using a synthesis technique and, often, an instrument (Dexed) that is free and open-source. (The only time rights would enter the picture is if you sampled an actual recording that used a DX7, which is a completely different task and not what this is.) Build FM electric pianos freely and put them in whatever you like.</p>
+
+<h2 id="exercises">Build the skill: 3 drills</h2>
+<p>Run these in order. The first proves how few ingredients the sound really has; the second trains the velocity-to-brightness wiring that carries the expression; the third forces you to build the tine from raw operators so FM stops being mysterious.</p>
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--beginner">Beginner</span><span class="exercise-title">Load E.PIANO 1 in Dexed and take it apart</span></div>
+<ol><li>Download Dexed (free) and load a factory electric-piano patch. Play it with soft and hard dynamics and listen to how the brightness changes with your touch.</li><li>Find the six operators. Mute them one at a time and listen. Identify the warm body pair and the bright, fast-decaying attack pair &mdash; you should be able to hear the tine &ldquo;ping&rdquo; disappear when you mute it.</li><li>Turn the bright attack operator&rsquo;s level all the way down, then all the way up. Notice that you are sliding between &ldquo;dull Rhodes&rdquo; and &ldquo;glassy bell&rdquo; with a single control. That control is the whole sound.</li></ol></div>
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--intermediate">Intermediate</span><span class="exercise-title">Wire velocity to brightness until it breathes</span></div>
+<ol><li>In Dexed or any FM synth, route velocity to the output level of the bright attack operator. Set the amount high enough that soft notes are mellow and hard notes gleam.</li><li>Play a slow chord progression, deliberately softer in the verses and harder in a &ldquo;chorus.&rdquo; Hear the patch brighten as you dig in, with no automation at all.</li><li>Now disconnect the velocity routing and play the same thing. Notice how flat and dated it sounds with a fixed brightness. That comparison is the entire lesson of this sound.</li></ol></div>
+<div class="exercise-block"><div class="exercise-header"><span class="skill-badge skill-badge--advanced">Advanced</span><span class="exercise-title">Build the patch from scratch in Operator</span></div>
+<ol><li>In Ableton&rsquo;s Operator (or any from-scratch FM synth), build a carrier-and-modulator pair at a 1:1 ratio with a slow decay. This is your body &mdash; it should already read as a soft EP.</li><li>Add a second body pair, detuned very slightly, for width. Then add a third pair with the modulator at roughly 14:1 and a fast-decaying envelope for the metallic attack.</li><li>Route velocity to that third modulator&rsquo;s level, add a light chorus, and tune every ratio and time by ear until it sits next to a reference. You have now built a decade of ballads from six sine waves.</li></ol></div>
+
+<h2 id="mistakes">The mistakes that make it sound wrong</h2>
+<p>The most common failure is treating it as a subtractive-synth problem &mdash; reaching for a sampled Rhodes or a saw-and-filter patch and trying to EQ it into an FM sound. It will never quite arrive, because the bell-like partials are made by FM and cannot be carved into a subtractive tone. Start in an FM instrument and the sound is easy; start in the wrong family and it is impossible. The second failure is a fixed, uniform brightness &mdash; skipping the velocity-to-brightness wiring &mdash; which leaves you with a lifeless, one-dimensional patch that sounds like the cheesiest use of the original rather than the expressive instrument underneath.</p>
+<p>The third failure is a dry signal with no chorus, which sounds thin and static next to the records; add a modest stereo chorus and it blooms. The fourth is overusing it &mdash; putting the unmistakable patch on everything until it stops being evocative and starts being a cliché. And the last is chasing exact operator numbers from a forum post as though they were gospel; as the sourcing box explains, the per-record settings were never published, so tune by ear against a reference instead. When you place the finished sound in a mix, treat it like any electric piano: carve a little room for the vocal, keep the chorus sensible in mono, and let its dynamics do the emotional work rather than fighting them with compression. The <a href="how-to-recreate-the-80s-gated-reverb-snare.html">gated snare</a> and the DX7 piano often share a record; together they are practically a decade in two sounds.</p>
+
+<h2 id="faq">Frequently asked questions</h2>
+<div class="faq-accordion">
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">What actually makes the DX7 electric piano sound?</span></div></div>
+<div class="faq-accordion-a"><p>FM synthesis, not a sampled Rhodes. A warm body tone (a carrier and modulator at a 1:1 ratio) is combined with a bright, fast-decaying metallic &ldquo;tine&rdquo; attack (a modulator at a high ratio), and velocity is wired to control how much of that bright attack you hear. A light chorus finishes it. That is the whole recipe behind the factory preset E.PIANO 1.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Is the DX7 electric piano a Fender Rhodes?</span></div></div>
+<div class="faq-accordion-a"><p>No. It is generated by FM synthesis and contains no recorded Rhodes at all. It was reportedly intended as an FM replacement for the (Dyno-My-Piano&ndash;modified) Rhodes and filled the same role in arrangements, but it is brighter and glassier, and it became loved precisely for not sounding like a real Rhodes. On some famous &rsquo;80s ballads it is genuinely debated whether the electric piano is a DX7, a modified Rhodes, or a layer of both.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Which DX7 preset is the &rsquo;80s electric piano?</span></div></div>
+<div class="faq-accordion-a"><p>The factory preset named E.PIANO 1, which sits at patch position 11 and is built on the DX7&rsquo;s algorithm 5 (three carrier-and-modulator pairs). It is the single most recognisable sound the DX7 made and the one heard across a decade of ballads.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Can I make the DX7 electric piano with free plugins?</span></div></div>
+<div class="faq-accordion-a"><p>Yes, more completely than almost any other classic sound. Dexed is a free, open-source DX7 emulation that loads the original patches directly, and Ableton&rsquo;s Operator or any FM instrument can rebuild the tone from scratch. The free route is not a compromise here &mdash; it is the authentic instrument.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">What is a carrier and a modulator in FM synthesis?</span></div></div>
+<div class="faq-accordion-a"><p>In FM synthesis every &ldquo;operator&rdquo; is a sine wave. A carrier is the operator you hear; a modulator is an operator that rapidly varies the carrier&rsquo;s pitch. When the modulator&rsquo;s frequency is close to or a whole-number multiple of the carrier&rsquo;s, that rapid variation adds new harmonics, producing metallic and bell-like partials that subtractive synthesis cannot easily make.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Why does velocity matter so much on the DX7 piano?</span></div></div>
+<div class="faq-accordion-a"><p>Because velocity is wired to brightness. On the DX7 electric piano, playing softly hides the bright metallic attack and leaves a mellow, Rhodes-like tone; playing hard brings the bell-like &ldquo;ping&rdquo; forward. That dynamic response is what makes the patch feel expressive and alive rather than static, so recreating the velocity routing matters as much as the tone itself.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">How important is the chorus effect?</span></div></div>
+<div class="faq-accordion-a"><p>Very. The dry FM patch is a little thin and static; a light stereo chorus is what gives the classic sound its wide, shimmering, wet quality. Most records add it, and adding a modest chorus (around a 25 percent mix) is usually the difference between a patch that sounds close and one that sounds right.</p></div></div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">How ubiquitous was the DX7 in &rsquo;80s music?</span></div></div>
+<div class="faq-accordion-a"><p>Extremely. The DX7 was used on around 40 percent of the number-one singles on the 1986 US Billboard Hot 100, and a peer-reviewed study (Lavengood, 2019) found its E.PIANO 1 setting specifically on 61 percent of that year&rsquo;s R&amp;B number ones and 42 percent of the top country hits. It genuinely soundtracked a decade.</p></div></div>
+</div>
+
+<div class="related-grid">
+<a href="best-synth-plugins.html" class="related-card"><div class="related-card-tag">Reviews</div><h3 class="related-card-title">Best Synth Plugins</h3><p class="related-card-desc">The FM instruments that build this sound &mdash; and every other patch worth owning.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="serum-2-vs-vital.html" class="related-card"><div class="related-card-tag">Comparisons</div><h3 class="related-card-title">Serum 2 vs Vital</h3><p class="related-card-desc">Both do FM &mdash; which of the two most popular soft synths belongs in your rig.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-recreate-the-supersaw.html" class="related-card"><div class="related-card-tag">Recreations</div><h3 class="related-card-title">How to Recreate the Supersaw</h3><p class="related-card-desc">Another great myth of synthesis &mdash; a detuned saw stack, demystified the same honest way.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-recreate-the-80s-gated-reverb-snare.html" class="related-card"><div class="related-card-tag">Recreations</div><h3 class="related-card-title">How to Recreate the 80s Gated-Reverb Snare</h3><p class="related-card-desc">The DX7 piano&rsquo;s constant companion on &rsquo;80s records &mdash; compression and a gate, not a preset.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-recreate-the-reese-bass.html" class="related-card"><div class="related-card-tag">Recreations</div><h3 class="related-card-title">How to Recreate the Reese Bass</h3><p class="related-card-desc">Detuned oscillators instead of FM &mdash; the other way a signature sound is built.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-recreate-the-303-acid-sound.html" class="related-card"><div class="related-card-tag">Recreations</div><h3 class="related-card-title">How to Recreate the 303 Acid Sound</h3><p class="related-card-desc">A resonant filter played live &mdash; the same honest, sourced treatment for the acid squelch.</p><span class="related-card-meta">Read article &rarr;</span></a>
+</div>
+
+</div>
+</article>
+
+    <aside aria-label="Article sidebar">
+      <div class="sidebar-widget toc-widget" aria-labelledby="tocHeading">
+        <div class="sidebar-widget-header"><h2 class="sidebar-widget-title" id="tocHeading">In This Article</h2></div>
+        <div class="sidebar-widget-body"><ul class="toc-list">
+
+<li><a href="#reframe">It&rsquo;s FM, Not a Rhodes</a></li><li><a href="#origin">From Chowning to the &rsquo;80s</a></li><li><a href="#fm">How FM Makes a Bell</a></li><li><a href="#patch">Inside E.PIANO 1</a></li><li><a href="#velocity">Velocity Is the Expression</a></li><li><a href="#chorus">The Chorus</a></li><li><a href="#recreate">Recreate It</a></li><li><a href="#beyond">The Same Idea Anywhere</a></li><li><a href="#cant-buy">What You Can&rsquo;t Buy</a></li><li><a href="#rights">Rights?</a></li><li><a href="#exercises">3 Drills</a></li><li><a href="#mistakes">Common Mistakes</a></li><li><a href="#faq">FAQ</a></li>
+
+</ul></div>
+      </div>
+      <div class="sidebar-widget" style="background:var(--bg-void);border-color:var(--border-default);">
+        <div class="sidebar-widget-body" style="padding:1.5rem;">
+          <p style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.5rem;">Newsletter</p>
+          <h3 style="font-family:var(--font-display);color:var(--text-primary);font-size:1.1rem;margin-bottom:.5rem;">The Producer's Briefing</h3>
+          <p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:1rem;line-height:1.55;">Weekly tips, gear news, and technique guides. Free.</p>
+          <form class="newsletter-form-js" style="display:flex;flex-direction:column;gap:.5rem;" novalidate>
+            <input type="email" name="email" class="form-input" placeholder="Your email" required />
+            <button type="submit" class="btn-newsletter" style="font-size:.82rem;padding:.65rem 1rem;">Subscribe Free</button>
+          </form>
+        </div>
+      <div class="sidebar-widget" style="margin-top:1.5rem;">
+        <div class="sidebar-widget-header" style="text-align:center;">
+          <h2 class="sidebar-widget-title">Related Articles</h2>
+        </div>
+        <div class="sidebar-widget-body" style="padding:1rem;">
+<ul style="list-style:none;padding:0;margin:0;text-align:center;"><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="how-to-recreate-the-supersaw.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">How to Recreate the Supersaw</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Recreations</span></li><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="best-synth-plugins.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">Best Synth Plugins</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Reviews</span></li><li style="padding:.6rem 0;"><a href="how-to-make-synthwave.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">How to Make Synthwave</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Techniques</span></li></ul>
+        </div>
+      </div>
+      </div>
+    </aside>
+  </div>
+</main>
+<section class="newsletter-section" id="newsletter" aria-labelledby="newsletterHeading">
+  <div class="container">
+    <div class="newsletter-inner">
+      <div class="newsletter-content">
+        <p class="newsletter-label">Newsletter</p>
+        <h2 id="newsletterHeading" class="newsletter-title">The Producer's <em>Briefing</em></h2>
+        <p class="newsletter-desc">Weekly techniques, gear news, and music business insights. Free.</p>
+      </div>
+      <div class="newsletter-form-wrap">
+        <form class="newsletter-form-js" novalidate>
+          <input type="email" name="email" class="form-input" placeholder="Your email address" required />
+          <button type="submit" class="btn-newsletter">Subscribe Free</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<footer class="site-footer" role="contentinfo">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="../index.html" class="site-logo"><span class="logo-wordmark">Music<span>Production</span>Wiki</span><span class="logo-tagline">The Producer's Reference</span></a>
+    </div>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <div class="footer-col">
+        <h3 class="footer-col-title">Categories</h3>
+        <ul>
+          <li><a href="../categories/reviews.html">Reviews</a></li>
+          <li><a href="../categories/comparisons.html">Comparisons</a></li>
+          <li><a href="../categories/ai-music.html">AI Music</a></li>
+          <li><a href="../categories/daws.html">DAWs</a></li>
+          <li><a href="../categories/plugins.html">Plugins</a></li>
+          <li><a href="../categories/hardware.html">Gear</a></li>
+          <li><a href="../categories/techniques.html">Techniques</a></li>
+          <li><a href="../categories/music-business.html">Music Business</a></li>
+          <li><a href="../categories/glossary.html">Glossary</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">Popular</h3>
+        <ul>
+          <li><a href="../articles/suno-vs-udio.html">Suno vs Udio</a></li>
+          <li><a href="../articles/best-daw-for-beginners.html">Best DAW for Beginners</a></li>
+          <li><a href="../articles/focusrite-scarlett-2i2-gen-4-review.html">Scarlett 2i2 Review</a></li>
+          <li><a href="../articles/sidechain-compression-guide.html">Sidechain Compression</a></li>
+          <li><a href="../articles/best-compressor-plugins.html">Best Compressor Plugins</a></li>
+          <li><a href="../articles/what-is-gain-staging.html">What Is Gain Staging</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">About</h3>
+        <ul>
+          <li><a href="../about.html">About MPW</a></li>
+          <li><a href="../about.html#team">Our Team</a></li>
+          <li><a href="../about.html#methodology">Review Methodology</a></li>
+          <li><a href="../about.html#affiliate">Affiliate Disclosure</a></li>
+          <li><a href="../about.html#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="footer-bottom"><div class="container"><p>© <span id="copyrightYear"></span> MusicProductionWiki.com. All rights reserved. Content by the Music Production Wiki Team.</p></div></div>
+</footer>
+<script src="../js/main.js"></script>
+<script>document.getElementById('copyrightYear').textContent = new Date().getFullYear();</script>
+
+<button id="mpwBackTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  aria-label="Back to top"
+  style="position:fixed;bottom:1.5rem;right:1.5rem;width:2.5rem;height:2.5rem;border-radius:50%;
+         background:var(--teal);color:#000;border:none;cursor:pointer;display:none;
+         align-items:center;justify-content:center;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3);">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <polyline points="18 15 12 9 6 15"/>
+  </svg>
+</button>
+<script>
+(function(){
+  var btn=document.getElementById('mpwBackTop');
+  var bar=document.getElementById('readingProgress');
+  var art=document.querySelector('.article-body');
+  window.addEventListener('scroll',function(){
+    var st=window.scrollY||document.documentElement.scrollTop;
+    btn.style.display=st>400?'flex':'none';
+    if(bar&&art){
+      var h=art.getBoundingClientRect().height;
+      var top=art.getBoundingClientRect().top+st;
+      var pct=Math.min(100,Math.max(0,(st-top+window.innerHeight)*100/h));
+      bar.style.width=pct+'%';
+      bar.setAttribute('aria-valuenow',Math.round(pct));
+    }
+  });
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<!-- MPW universal search: one overlay, one Fuse index (/search-index.json) -->
+<div class="usearch" id="usearch" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="usearch-box">
+    <div class="usearch-top">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input id="usearchInput" type="text" placeholder="Search tools, articles, the Bible…" autocomplete="off">
+      <kbd>esc</kbd>
+    </div>
+    <div class="usearch-results" id="usearchResults"></div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
+<script>
+(function(){
+  // === production parity: lazy-load index on first open, build Fuse once ===
+  var data=null, fuse=null;
+  var overlay=document.getElementById('usearch');
+  var input=document.getElementById('usearchInput');
+  var box=document.getElementById('usearchResults');
+  var sel=-1, current=[];
+  // article slugs are bare; bible/ and tools/ slugs carry their prefix (verified vs live search-index.json)
+  function urlFor(s){ return (s.indexOf('bible/')===0||s.indexOf('tools/')===0) ? '/'+s : '/articles/'+s; }
+
+  function buildFuse(arr){
+    data=arr;
+    fuse=new Fuse(data,{keys:['title','category','description'],threshold:0.34,ignoreLocation:true,minMatchCharLength:2});
+  }
+  function ensureIndex(cb){
+    if(fuse){cb();return;}
+    // PRODUCTION: one shared index, lazy-loaded on first open.
+    fetch('/search-index.json').then(function(r){return r.json();}).then(function(arr){
+      buildFuse(arr); cb();
+    }).catch(function(){ box.textContent='Search failed to load.'; });
+  }
+
+  function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  function render(results){
+    current=results;
+    while(box.firstChild) box.removeChild(box.firstChild);   // no innerHTML
+    if(!input.value.trim()){ var p=document.createElement('div'); p.className='usearch-empty'; p.textContent='Start typing to search everything.'; box.appendChild(p); return; }
+    if(!results.length){ var n=document.createElement('div'); n.className='usearch-empty'; n.textContent='No results for "'+input.value+'".'; box.appendChild(n); return; }
+    results.slice(0,12).forEach(function(r,i){
+      var e=r.item||r;
+      var a=document.createElement('a'); a.href=urlFor(e.slug); if(i===sel)a.className='sel';
+      var top=document.createElement('div'); top.className='ur-top';
+      var t=document.createElement('span'); t.className='ur-title'; t.textContent=e.title;
+      var c=document.createElement('span'); c.className='ur-cat'; c.setAttribute('data-c',e.category||''); c.textContent=e.category||'';
+      top.appendChild(t); top.appendChild(c); a.appendChild(top);
+      if(e.description){ var d=document.createElement('div'); d.className='ur-desc'; d.textContent=e.description; a.appendChild(d); }
+      box.appendChild(a);
+    });
+  }
+
+  function open(q){ ensureIndex(function(){ overlay.classList.add('open'); input.focus(); if(q!=null){input.value=q;} sel=-1; render(input.value?fuse.search(input.value):[]); }); }
+  function close(){ overlay.classList.remove('open'); }
+
+  // wire every nav's search button to the shared overlay
+  document.querySelectorAll('[data-nav-search]').forEach(function(b){ b.addEventListener('click',function(){open(null);}); });
+  input.addEventListener('input',function(){ sel=-1; render(fuse?fuse.search(input.value):[]); });
+  input.addEventListener('keydown',function(e){
+    if(e.key==='Escape')close();
+    else if(e.key==='ArrowDown'){e.preventDefault(); sel=Math.min(sel+1,Math.min(current.length,12)-1); render(current);}
+    else if(e.key==='ArrowUp'){e.preventDefault(); sel=Math.max(sel-1,0); render(current);}
+    else if(e.key==='Enter'&&current[sel]){ var e2=current[sel].item||current[sel]; location.href=urlFor(e2.slug); }
+  });
+  overlay.addEventListener('click',function(e){ if(e.target===overlay)close(); });
+  document.addEventListener('keydown',function(e){ if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();open(null);} });
+})();
+</script>
+<script id="toc-bar-js">
+(function(){
+  var body=document.querySelector('.article-body');
+  var track=document.getElementById('tocBarTrack');
+  if(!body||!track)return;
+  var heads=[].slice.call(body.querySelectorAll('h2[id]'));
+  if(!heads.length)return;
+  heads.forEach(function(h){
+    var a=document.createElement('a');a.href='#'+h.id;
+    var t=h.textContent.trim();var i=t.indexOf(':');if(i>0)t=t.slice(0,i);
+    a.textContent=t;track.appendChild(a);
+  });
+  var links=[].slice.call(track.querySelectorAll('a'));
+  function onScroll(){
+    var y=window.scrollY+130,cur=heads[0].id;
+    heads.forEach(function(h){if(h.offsetTop<=y)cur=h.id;});
+    links.forEach(function(l){var on=l.getAttribute('href')==='#'+cur;l.classList.toggle('active',on);
+      if(on)l.scrollIntoView({inline:'center',block:'nearest'});});
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+})();
+</script>
+<script>
+function mpwFaqToggle(el){
+  var answer = el.nextElementSibling;
+  if(!answer || !answer.classList.contains('faq-accordion-a')) return;
+  var isOpen = answer.classList.contains('open');
+  document.querySelectorAll('.faq-accordion-a.open').forEach(function(a){
+    a.classList.remove('open');
+    var q = a.previousElementSibling;
+    if(q){ var ic = q.querySelector('.faq-accordion-icon, .faq-plus'); if(ic) ic.classList.remove('open'); }
+  });
+  if(!isOpen){
+    answer.classList.add('open');
+    var icon = el.querySelector('.faq-accordion-icon, .faq-plus');
+    if(icon) icon.classList.add('open');
+  }
+}
+</script>
+<style>.faq-plus.open{transform:rotate(45deg);transition:transform .2s ease}</style>
+</body>
+</html>
