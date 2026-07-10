@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>Hard-Tune Explorer — Free Auto-Tune / Cher &amp; T-Pain Vocal Tool | MusicProductionWiki</title>
+<meta name="description" content="Hear the Cher and T-Pain auto-tune effect live: drag Retune Speed to 0, pick a key, watch a sung line snap into the robotic staircase, then copy the exact settings into your tuner. Free.">
+<meta property="og:title" content="Hard-Tune Explorer — MusicProductionWiki">
+<meta property="og:description" content="Drag Retune Speed to 0, hear the Cher/T-Pain robotic vocal effect, and copy the exact settings into your tuner.">
+<meta property="og:url" content="https://musicproductionwiki.com/tools/hard-tune-explorer.html">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://musicproductionwiki.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://musicproductionwiki.com/tools/hard-tune-explorer.html">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-79VB543KCT"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-79VB543KCT');</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What makes the Cher and T-Pain auto-tune sound?","acceptedAnswer":{"@type":"Answer","text":"A pitch corrector with its retune speed set to zero, so the voice is snapped instantly to the nearest note in a chosen key with no glide. The hard jumps between notes are the robotic warble. The scale must be key-locked or it sounds atonal."}},
+{"@type":"Question","name":"What exact settings should I copy into my tuner?","acceptedAnswer":{"@type":"Answer","text":"Retune speed 0 (fastest), scale locked to your song key, humanize and flex-tune off. The tool prints the precise values for Auto-Tune, Graillon 2 and MAutoPitch as you move the controls, plus an optional octave-up double."}},
+{"@type":"Question","name":"Do I need Auto-Tune, or will free plugins work?","acceptedAnswer":{"@type":"Answer","text":"Free plugins work. Graillon 2 and MAutoPitch both hard-tune, and most DAWs include a stock tuner. Set retune speed to its fastest value and lock the scale to your key. Paid tools buy tracking quality and low latency, not a secret ingredient."}},
+{"@type":"Question","name":"Is the audio a real vocal?","acceptedAnswer":{"@type":"Answer","text":"No. It is a Web Audio synth running live in your browser, playing a melodic phrase through a real pitch-quantiser so you can hear how retune speed, scale and key change the effect. Nothing is downloaded and no recording is used."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
+{"@type":"ListItem","position":1,"name":"Home","item":"https://musicproductionwiki.com"},
+{"@type":"ListItem","position":2,"name":"Tools","item":"https://musicproductionwiki.com/tools/"},
+{"@type":"ListItem","position":3,"name":"Hard-Tune Explorer","item":"https://musicproductionwiki.com/tools/hard-tune-explorer.html"}
+]}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="../js/main.js" defer></script>
+<style id="mpw-unav-css">
+
+.mnav-wrap,.usearch{--ink:#09090d;--panel:#0f0f18;--panel2:#15151f;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);--amber:#f5a623;--teal:#00e8a2;--teal-d:rgba(0,232,162,.12);--text:#f2f2f7;--t2:#9a9ab2;--t3:#56566f;--sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'DM Mono',ui-monospace,SFMono-Regular,monospace;}
+.mnav-wrap *,.mnav-wrap *::before,.mnav-wrap *::after,.usearch *,.usearch *::before,.usearch *::after{box-sizing:border-box;margin:0;padding:0}
+.mnav-wrap{background:var(--ink);border-bottom:1px solid var(--line);position:relative}
+.mnav{height:60px;display:flex;align-items:center}
+.mnav-in{max-width:1180px;margin:0 auto;padding:0 22px;width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.mnav-brand{display:flex;align-items:center;gap:10px;color:var(--text);text-decoration:none;flex:0 0 auto}
+.mnav-word{font-weight:700;font-size:15px;letter-spacing:-.02em}
+.mnav-links{display:flex;align-items:center;gap:6px;margin-left:8px}
+.mnav-flat,.mnav-trigger{color:var(--t2);background:none;border:0;font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;padding:8px 12px;border-radius:8px;display:inline-flex;align-items:center;gap:6px}
+.mnav-flat:hover,.mnav-trigger:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.caret{font-size:9px;color:var(--t3);transition:transform .18s}
+.mnav-right{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.mnav-search{background:none;border:0;color:var(--t2);cursor:pointer;display:flex;padding:6px;border-radius:8px}
+.mnav-search:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.mnav-cta{border:1px solid var(--teal);color:var(--teal);text-decoration:none;padding:7px 15px;border-radius:8px;font-size:13px;font-weight:600;white-space:nowrap}
+.mnav-cta:hover{background:var(--teal-d)}
+.mnav-wrap[data-section="tools"] .mnav-flat[data-nav="tools"]{color:var(--text);font-weight:600}
+.mnav-wrap[data-section="articles"] .mnav-trigger[data-nav="articles"]{color:var(--text);font-weight:600}
+/* Bible = amber brand color, desktop link + mobile drawer */
+.mnav-flat[data-nav="bible"],.drw-link[data-nav="bible"]{color:#f5a623!important;font-weight:600}
+.mnav-flat[data-nav="bible"]:hover,.drw-link[data-nav="bible"]:hover{color:#ffc04d!important}
+.mnav-item{position:relative}
+.mnav-panel,.mnav-panel-wide{position:absolute;top:calc(100% + 6px);left:0;z-index:50;display:none;background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:14px;box-shadow:0 24px 60px -24px rgba(0,0,0,.9);min-width:240px}
+.mnav-panel-wide{grid-template-columns:1fr 1fr;gap:8px 22px;min-width:520px}
+.mnav-item:hover .mnav-panel,.mnav-item:focus-within .mnav-panel,.mnav-item:hover .mnav-panel-wide,.mnav-item:focus-within .mnav-panel-wide{display:grid}
+.mnav-item:hover .caret{transform:rotate(180deg)}
+.mp-col{display:flex;flex-direction:column}
+.mp-head{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);padding:6px 10px 8px}
+.mnav-panel a{display:flex;flex-direction:column;gap:1px;padding:8px 10px;border-radius:9px;text-decoration:none}
+.mnav-panel a:hover{background:rgba(255,255,255,.05)}
+.mp-name{color:var(--text);font-size:13.5px;font-weight:600}.mp-desc{color:var(--t2);font-size:11.5px}
+.mnav-sub{display:none;background:var(--panel);border-bottom:1px solid var(--line)}
+.mnav-wrap[data-section="bible"] .mnav-sub{display:block}
+.mnav-sub-in{max-width:1180px;margin:0 auto;padding:10px 22px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.mnav-sub-in::-webkit-scrollbar{display:none}
+.mnav-sub-in a{flex:0 0 auto;color:var(--t2);text-decoration:none;font-size:12.5px;font-family:var(--mono);border:1px solid var(--line2);border-radius:99px;padding:5px 12px;white-space:nowrap}
+.mnav-sub-in a:hover{color:var(--teal);border-color:rgba(0,232,162,.4)}
+.mnav-toggle{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.mnav-burger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:8px;border-radius:8px}
+.mnav-burger span{display:block;width:20px;height:2px;background:var(--text);border-radius:2px;transition:.2s}
+.mnav-drawer{display:none;flex-direction:column;padding:6px 18px 16px;background:var(--ink);border-bottom:1px solid var(--line)}
+.mnav-drawer details{border-bottom:1px solid var(--line)}
+.mnav-drawer summary{list-style:none;cursor:pointer;padding:13px 2px;font-size:15px;font-weight:600;color:var(--text);display:flex;justify-content:space-between}
+.mnav-drawer summary::-webkit-details-marker{display:none}
+.mnav-drawer summary::after{content:"+";color:var(--t3)}
+.mnav-drawer details[open] summary::after{content:"\2013"}
+.mnav-acc{display:flex;flex-direction:column;padding:0 0 10px 12px}
+.mnav-acc a{color:var(--t2);text-decoration:none;font-size:14px;padding:8px 0}
+.drw-link{color:var(--t2);text-decoration:none;font-size:15px;font-weight:600;padding:13px 2px;border-bottom:1px solid var(--line)}
+.drw-cta{color:var(--teal);text-decoration:none;font-weight:600;font-size:15px;padding:14px 2px}
+.mnav-toggle:checked ~ .mnav-drawer{display:flex}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(2){opacity:0}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+@media(max-width:860px){.mnav-links,.mnav-cta{display:none}.mnav-burger{display:flex}}
+
+/* ===== UNIFIED SEARCH OVERLAY ===== */
+.usearch{position:fixed;inset:0;z-index:10000;display:none;background:rgba(6,6,11,.78);backdrop-filter:blur(6px);padding:80px 20px 20px}
+.usearch.open{display:block}
+.usearch-box{max-width:620px;margin:0 auto;background:var(--panel);border:1px solid var(--line2);border-radius:16px;overflow:hidden;box-shadow:0 40px 90px -30px rgba(0,0,0,.95)}
+.usearch-top{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.usearch-top svg{color:var(--t3);flex:0 0 auto}
+.usearch-top input{flex:1;background:none;border:0;outline:none;color:var(--text);font-family:var(--sans);font-size:17px}
+.usearch-top input::placeholder{color:var(--t3)}
+.usearch-top kbd{font-family:var(--mono);font-size:11px;color:var(--t3);border:1px solid var(--line2);border-radius:6px;padding:2px 7px}
+.usearch-results{max-height:56vh;overflow-y:auto;padding:8px}
+.usearch-results a{display:block;padding:11px 14px;border-radius:10px;text-decoration:none;transition:background .12s}
+.usearch-results a:hover,.usearch-results a.sel{background:rgba(255,255,255,.05)}
+.ur-top{display:flex;align-items:baseline;gap:9px}
+.ur-title{color:var(--text);font-size:14.5px;font-weight:600}
+.ur-cat{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.06);color:var(--t2);flex:0 0 auto}
+.ur-cat[data-c="Tools"]{background:var(--teal-d);color:var(--teal);border:1px solid rgba(0,232,162,.4)}
+.ur-cat[data-c="Bible"]{background:rgba(245,166,35,.18);color:#f5a623;border:1px solid rgba(245,166,35,.4)}
+.ur-desc{color:var(--t2);font-size:12.5px;line-height:1.45;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.usearch-empty{padding:30px;text-align:center;color:var(--t3);font-size:13.5px}
+/* --- sticky-header + entry-page chrome (pilot, refined for density) ---
+   entry nav = 60px main bar only (no category sub-bar). Desktop: hide the horizontal section
+   nav (the sticky sidebar TOC covers sections) and retune offsets to the 60px nav. Mobile: the
+   sidebar is hidden, so SHOW the section nav flush under the bar. All in THIS block. --- */
+.mnav-wrap{position:sticky;top:0;z-index:1000;line-height:1.4}
+.entry-nav{display:none}
+[id].entry-section{scroll-margin-top:90px}
+.entry-main h2{scroll-margin-top:90px}
+.entry-sidebar{top:78px;height:calc(100vh - 98px)}
+@media(max-width:768px){
+  .entry-nav{display:block!important;top:60px!important}
+  [id].entry-section{scroll-margin-top:130px!important}
+  .entry-main h2{scroll-margin-top:130px!important}
+}
+/* dropdown overflow safety */
+.mnav-panel,.mnav-panel-wide{max-height:min(72vh,560px);overflow-y:auto}
+/* mobile drawer: category CARD grid (slick old-nav look), CSS-only */
+.mnav-drawer{padding:10px 18px 18px;gap:0}
+.drw-label{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--t3);margin:12px 2px 8px}
+.drw-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.drw-card{display:flex;align-items:center;padding:12px 14px;border-radius:10px;text-decoration:none;font-size:13.5px;font-weight:600;color:var(--text);background:var(--panel);border:1px solid var(--line2)}
+.drw-card:hover{border-color:var(--teal);color:var(--teal)}
+.drw-feat{display:flex;align-items:center;gap:8px;padding:13px 16px;border-radius:10px;text-decoration:none;font-size:14px;font-weight:700;color:var(--text);background:var(--panel);border:1px solid var(--line2);margin-top:8px}
+.drw-feat-bible{color:#f5a623;background:rgba(245,166,35,.08);border-color:rgba(245,166,35,.30)}
+.drw-feat-bible:hover{border-color:rgba(245,166,35,.6)}
+.drw-cta{display:block;text-align:center;padding:14px;border-radius:10px;background:var(--teal);color:#06281f;font-weight:800;font-size:14px;text-decoration:none;margin-top:12px}
+/* mobile sunlight legibility: lift the intentionally-dim greys in glare (nav + search only), scoped */
+@media(max-width:860px){
+  .mnav-wrap,.usearch{--t2:#c8c8da;--t3:#9696b0}
+  .drw-label{color:#bdbdd0;font-weight:500}
+  .usearch-top input::placeholder{color:#9696b0}
+  .drw-card,.drw-feat{background:#20202e;border:1.5px solid #45455c}
+  .drw-feat-bible{background:rgba(245,166,35,.12);border:1.5px solid rgba(245,166,35,.6)}
+}
+html{overflow-x:clip!important;max-width:none!important}body{overflow-x:clip!important}
+</style>
+
+<style>
+:root{
+  --bg:#0d0d1a;--bg2:#111120;--bg3:#16162a;--bg4:#1c1c32;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--border3:rgba(255,255,255,0.18);
+  --amber:#f5a623;--amber2:rgba(245,166,35,0.12);--amber3:rgba(245,166,35,0.06);
+  --teal:#00e8a2;--teal2:rgba(0,232,162,0.1);--red:#ff3d5a;
+  --text:#f0f0f4;--text2:#a0a0b8;--text3:#5a5a7a;
+  --mono:'DM Mono',monospace;--sans:'DM Sans',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;
+  background-image:radial-gradient(900px 500px at 15% -5%,rgba(245,166,35,0.06),transparent 60%),
+                   radial-gradient(800px 500px at 100% 0%,rgba(0,232,162,0.05),transparent 55%);}
+.tool-page{max-width:980px;margin:0 auto;padding:32px 20px 80px}
+@media(max-width:600px){.tool-page{padding:22px 16px 60px}}
+
+.tool-breadcrumb{font-size:12px;color:var(--text3);margin-bottom:18px;font-family:var(--mono)}
+.tool-breadcrumb a{color:var(--text2);text-decoration:none}
+.tool-breadcrumb a:hover{color:var(--teal)}
+.tool-breadcrumb-sep{margin:0 7px;opacity:.5}
+
+.tool-page-title{margin-bottom:18px}
+.tool-page-title h1{font-size:clamp(27px,5vw,38px);font-weight:900;letter-spacing:-0.03em;line-height:1.05;margin-bottom:10px}
+.tool-page-title h1 .acc{color:var(--amber)}
+.tool-page-desc{font-size:16px;color:var(--text2);line-height:1.6;max-width:640px}
+
+/* how-to 3-step (below hero) */
+.thow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0 24px}
+.thow-step{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.thow-n{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--amber);letter-spacing:.1em;margin-bottom:5px}
+.thow-t{font-size:13px;color:var(--text2);line-height:1.45}
+@media(max-width:640px){.thow{grid-template-columns:1fr;gap:8px}}
+
+/* branded header card */
+.thc{background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:14px 18px;
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:12px}
+.thc-brand{display:flex;align-items:center;gap:12px}
+.thc-mark{width:32px;height:32px;border-radius:8px;background:var(--teal);display:flex;align-items:center;justify-content:center}
+.thc-name{font-size:14px;font-weight:600;color:var(--text)}
+.thc-sub{font-size:11px;color:var(--amber);font-family:var(--mono);letter-spacing:.04em}
+.thc-right{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.thc-badge{font-size:10px;font-family:var(--mono);font-weight:700;color:var(--amber);
+  border:1px solid rgba(245,166,35,0.4);border-radius:4px;padding:4px 10px;letter-spacing:0.1em}
+.thc-related{font-size:13px;color:var(--text2);text-decoration:none;transition:color .15s}
+.thc-related:hover{color:var(--teal)}
+
+/* main layout: viz left / controls right on desktop */
+.acid-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:16px;align-items:start}
+@media(max-width:920px){.acid-grid{grid-template-columns:1fr}}
+
+.tsec{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px}
+.tsec-label{font-size:9px;font-family:var(--mono);font-weight:700;color:var(--amber);
+  letter-spacing:0.18em;text-transform:uppercase;margin-bottom:14px}
+
+/* canvas viz */
+.acid-canvas-wrap{position:relative}
+#acidCanvas{width:100%;height:300px;display:block;border-radius:8px;background:#0a0a12;
+  border:1px solid var(--border);cursor:crosshair;touch-action:none}
+.acid-hud{position:absolute;top:12px;left:14px;font-family:var(--mono);font-size:11px;color:var(--text3);pointer-events:none}
+.acid-hud b{color:var(--teal)}
+.acid-transport{display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap}
+
+/* sliders */
+.tfield{margin-bottom:14px}
+.tlabel{font-size:9px;font-family:var(--mono);color:var(--text3);letter-spacing:0.12em;text-transform:uppercase;display:block;margin-bottom:7px}
+.tslider-row{display:flex;align-items:center;gap:12px}
+.tslider{flex:1;-webkit-appearance:none;appearance:none;height:4px;background:var(--border2);outline:none;border-radius:2px;cursor:pointer}
+.tslider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--amber);cursor:pointer;box-shadow:0 0 6px rgba(245,166,35,0.4)}
+.tslider::-moz-range-thumb{width:16px;height:16px;border:none;border-radius:50%;background:var(--amber);cursor:pointer}
+.tslider-val{font-size:13px;font-family:var(--mono);color:var(--amber);min-width:56px;text-align:right;font-weight:600}
+
+/* segmented (waveform) */
+.tseg{display:inline-flex;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;overflow:hidden}
+.tseg button{background:none;border:none;color:var(--text2);font-family:var(--mono);font-size:12px;font-weight:600;padding:7px 14px;cursor:pointer}
+.tseg button[aria-pressed="true"]{background:var(--amber);color:#000}
+
+/* primary play button */
+.tbtn{background:linear-gradient(135deg,var(--amber),#e08000);color:#000;font-family:var(--sans);font-size:14px;font-weight:700;
+  border:none;cursor:pointer;border-radius:8px;padding:11px 24px;transition:transform .12s,box-shadow .12s;box-shadow:0 0 20px rgba(245,166,35,0.2)}
+.tbtn:hover{transform:translateY(-1px);box-shadow:0 0 30px rgba(245,166,35,0.35)}
+.tbtn.playing{background:linear-gradient(135deg,var(--teal),#00b37c)}
+
+/* presets */
+.preset-row{display:flex;flex-wrap:wrap;gap:8px}
+.preset{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:9px 13px;cursor:pointer;
+  font-family:var(--sans);font-size:13px;font-weight:600;color:var(--text2);transition:all .12s}
+.preset:hover{border-color:var(--amber);color:var(--text)}
+.preset[aria-pressed="true"]{background:var(--amber2);border-color:var(--amber);color:var(--amber)}
+.preset small{display:block;font-family:var(--mono);font-size:10px;font-weight:400;color:var(--text3);margin-top:2px}
+
+/* readout */
+.tinsight{border-left:3px solid var(--teal);background:var(--teal2);border-radius:0 8px 8px 0;padding:15px 17px;font-size:14.5px;color:var(--text);line-height:1.65;margin-top:4px}
+.tinsight .rd-head{font-weight:700;color:var(--teal);margin-bottom:5px}
+.tinsight .rd-era{display:block;margin-top:8px;font-size:12.5px;color:var(--text2);font-style:italic}
+
+/* copy chips */
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.tchip{display:inline-flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;
+  padding:6px 11px;font-family:var(--mono);font-size:12.5px;font-weight:600;color:var(--amber);cursor:pointer;transition:all .12s}
+.tchip:hover{border-color:var(--amber);background:var(--amber2)}
+.tchip span.k{color:var(--text3);font-weight:400}
+
+/* step viz */
+.steps{display:grid;grid-template-columns:repeat(16,1fr);gap:3px;margin-top:12px}
+.step{height:22px;border-radius:3px;background:var(--bg3);border:1px solid var(--border);position:relative}
+.step.on{background:rgba(245,166,35,0.28);border-color:rgba(245,166,35,0.5)}
+.step.acc{background:rgba(245,166,35,0.55)}
+.step.cur{box-shadow:0 0 0 2px var(--teal)}
+
+/* share + embed */
+.share-embed{margin-top:26px}
+.embed-box{margin-top:12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
+.embed-box code{font-family:var(--mono);font-size:11.5px;color:var(--text2);word-break:break-all;display:block;line-height:1.5}
+.embed-copy{margin-top:8px;background:var(--bg4);border:1px solid var(--border2);color:var(--text2);font-family:var(--mono);
+  font-size:11px;font-weight:600;padding:6px 12px;border-radius:6px;cursor:pointer}
+.embed-copy:hover{border-color:var(--teal);color:var(--teal)}
+
+/* faq */
+.tfaq{margin-top:30px}
+.tfaq h2{font-size:20px;font-weight:800;letter-spacing:-0.02em;margin-bottom:14px}
+.tfaq-q{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px}
+.tfaq-q h3{font-size:14.5px;font-weight:700;color:var(--text);margin-bottom:6px}
+.tfaq-q p{font-size:13.5px;color:var(--text2);line-height:1.6}
+
+/* related */
+.trelated{margin-top:44px;padding-top:30px;border-top:1px solid var(--border)}
+.trelated-label{font-size:9px;font-family:var(--mono);font-weight:700;color:var(--text3);letter-spacing:0.15em;margin-bottom:14px}
+.trelated-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.trelated-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;text-decoration:none;transition:border-color .15s}
+.trelated-card:hover{border-color:var(--border2)}
+.trelated-name{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
+.trelated-desc{display:block;font-size:12px;color:var(--text3)}
+</style>
+
+<style id="mpw-embed-css">
+body.embed-mode .mnav,body.embed-mode footer,body.embed-mode .tool-breadcrumb,body.embed-mode .thow,body.embed-mode .thc,body.embed-mode .tfaq,body.embed-mode .trelated,body.embed-mode .share-embed{display:none!important;}
+body.embed-mode{background:#0a0a0f;}
+body.embed-mode .tool-page{max-width:100%;padding:14px 16px 20px;margin:0;}
+body.embed-mode .tool-page-title h1{font-size:24px;margin-bottom:6px;}
+body.embed-mode .tool-page-desc{display:none;}
+</style>
+</head>
+<body>
+<div class="mnav-wrap" data-section="tools">
+  <input type="checkbox" id="mnav-toggle" class="mnav-toggle" aria-hidden="true">
+  <nav class="mnav" aria-label="Main navigation">
+    <div class="mnav-in">
+      <a class="mnav-brand" href="/"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="6" stroke="#f5a623" stroke-width="1.7"/><path d="M7 15V9l3 3 3-5 4 8" stroke="#00e8a2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="mnav-word">MusicProductionWiki</span></a>
+      <div class="mnav-links">
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="articles">Articles <span class="caret">&#9662;</span></button><div class="mnav-panel mnav-panel-wide"><div class="mp-col"><div class="mp-head">Techniques & Analysis</div><a href="/categories/techniques"><span class="mp-name">Techniques</span><span class="mp-desc">Mixing, mastering, sound design</span></a><a href="/categories/reviews"><span class="mp-name">Reviews</span><span class="mp-desc">Honest. No paid placements.</span></a><a href="/categories/comparisons"><span class="mp-name">Comparisons</span><span class="mp-desc">Head-to-head</span></a><a href="/categories/breakdowns"><span class="mp-name">Breakdowns</span><span class="mp-desc">Track-by-track</span></a><a href="/categories/recreations"><span class="mp-name">Recreations</span><span class="mp-desc">Recreate iconic sounds</span></a><a href="/genres"><span class="mp-name">Genres</span><span class="mp-desc">Every genre & style</span></a></div><div class="mp-col"><div class="mp-head">Reference & Business</div><a href="/categories/ai-music"><span class="mp-name">AI Music</span><span class="mp-desc">Suno, Udio, AI tools</span></a><a href="/categories/music-business"><span class="mp-name">Music Business</span><span class="mp-desc">Royalties, licensing, sync</span></a></div></div></div>
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="gear">Gear <span class="caret">&#9662;</span></button><div class="mnav-panel"><div class="mp-col"><a href="/categories/daws"><span class="mp-name">DAWs</span><span class="mp-desc">Every major DAW</span></a><a href="/categories/plugins"><span class="mp-name">Plugins</span><span class="mp-desc">EQ, comp, reverb, synths</span></a><a href="/categories/hardware"><span class="mp-name">Hardware</span><span class="mp-desc">Interfaces, mics, monitors</span></a></div></div></div>
+        <a class="mnav-flat" href="/tools/" data-nav="tools">Tools</a>
+        <a class="mnav-flat" href="/bible/" data-nav="bible">The Bible</a>
+      </div>
+      <div class="mnav-right">
+        <button class="mnav-search" data-nav-search aria-label="Search"><svg width="17" height="17" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <a class="mnav-cta" href="https://theproducersbriefing.beehiiv.com">Sound Better &rarr;</a>
+        <label class="mnav-burger" for="mnav-toggle"><span></span><span></span><span></span></label>
+      </div>
+    </div>
+  </nav>
+  <div class="mnav-drawer">
+    <div class="drw-label">Articles</div>
+    <div class="drw-grid">
+      <a href="/categories/techniques" class="drw-card">Techniques</a><a href="/categories/reviews" class="drw-card">Reviews</a><a href="/categories/comparisons" class="drw-card">Comparisons</a><a href="/categories/breakdowns" class="drw-card">Breakdowns</a><a href="/categories/recreations" class="drw-card">Recreations</a><a href="/genres" class="drw-card">Genres</a><a href="/categories/ai-music" class="drw-card">AI Music</a><a href="/categories/music-business" class="drw-card">Music Business</a>
+    </div>
+    <div class="drw-label">Gear</div>
+    <div class="drw-grid">
+      <a href="/categories/daws" class="drw-card">DAWs</a><a href="/categories/plugins" class="drw-card">Plugins</a><a href="/categories/hardware" class="drw-card">Hardware</a>
+    </div>
+    <a href="/bible/" class="drw-feat drw-feat-bible">&#9670; The Producer's Bible</a>
+    <a href="/tools/" class="drw-feat">The Producer's Tools</a>
+    <a href="https://theproducersbriefing.beehiiv.com" class="drw-cta">Sound Better &rarr;</a>
+  </div>
+</div>
+
+<main id="main-content">
+<div class="tool-page">
+  <nav class="tool-breadcrumb" aria-label="Breadcrumb">
+    <a href="/">Home</a><span class="tool-breadcrumb-sep">&#8250;</span>
+    <a href="/tools/">Tools</a><span class="tool-breadcrumb-sep">&#8250;</span>
+    <span aria-current="page">Hard-Tune Explorer</span>
+  </nav>
+  <div class="tool-page-title">
+    <h1>Hard-Tune <span class="acc">Explorer</span></h1>
+    <p class="tool-page-desc">Hear the Cher &ldquo;Believe&rdquo; and T-Pain auto-tune effect live &mdash; drag <b>Retune Speed</b> to 0, choose a key, and a sung line snaps into the robotic staircase. Then copy the exact retune, scale and humanize values straight into Auto&#8209;Tune, Graillon&nbsp;2 or MAutoPitch.</p>
+  </div>
+  <div class="thow">
+    <div class="thow-step"><div class="thow-n">01 &middot; SET</div><div class="thow-t">Pick a key and scale, then drag Retune Speed toward 0 for the hard snap.</div></div>
+    <div class="thow-step"><div class="thow-n">02 &middot; PLAY</div><div class="thow-t">Hit play to loop a vocal line through the tuner and hear every setting.</div></div>
+    <div class="thow-step"><div class="thow-n">03 &middot; COPY</div><div class="thow-t">Copy the exact retune / scale / humanize values into your own plugin.</div></div>
+  </div>
+  <div class="thc">
+    <div class="thc-brand">
+      <div class="thc-mark"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7.2" fill="none" stroke="#0a0a0b" stroke-width="1.6"/><path d="M9 9 L9 3.4" stroke="#0a0a0b" stroke-width="1.8" stroke-linecap="round"/><circle cx="9" cy="9" r="1.4" fill="#0a0a0b"/></svg></div>
+      <div><div class="thc-name">MusicProductionWiki.com</div><div class="thc-sub">&#9670; The Producer's Tools</div></div>
+    </div>
+    <div class="thc-right"><span class="thc-badge">INTERACTIVE TOOL</span><a href="/tools/" class="thc-related">All Tools &rarr;</a></div>
+  </div>
+  <div class="acid-grid">
+    <div class="tsec">
+      <div class="tsec-label">Pitch over time &mdash; sung vs. tuned</div>
+      <div class="acid-canvas-wrap">
+        <canvas id="acidCanvas" aria-label="Live pitch-vs-time display. A sung line and its hard-tuned staircase output, updating as you change retune speed, scale and key."></canvas>
+        <div class="acid-hud">RETUNE <b id="hudRetune">0 ms</b> &nbsp;&middot;&nbsp; KEY <b id="hudKey">A minor</b></div>
+      </div>
+      <div class="acid-transport">
+        <button class="tbtn" id="playBtn" type="button">&#9654;&nbsp; Play</button>
+        <div class="tseg" role="group" aria-label="Waveform"><button id="waveSaw" type="button" aria-pressed="true">SAW</button><button id="waveSqr" type="button" aria-pressed="false">SQR</button></div>
+        <div class="tseg" role="group" aria-label="Octave double"><button id="octOff" type="button" aria-pressed="true">1 VOICE</button><button id="octOn" type="button" aria-pressed="false">+OCTAVE</button></div>
+      </div>
+    </div>
+    <div class="tsec">
+      <div class="tsec-label">Shape the effect</div>
+      <div class="tfield"><label class="tlabel" for="retune">Retune Speed <span style="color:var(--amber)">&larr; the effect</span></label>
+        <div class="tslider-row"><input type="range" class="tslider" id="retune" min="0" max="1000" value="1000"><span class="tslider-val" id="retuneVal">0 ms (hard)</span></div></div>
+      <div class="tfield"><label class="tlabel">Scale</label>
+        <div class="tseg" role="group" aria-label="Scale" style="width:100%"><button id="scMaj" type="button" aria-pressed="false">MAJOR</button><button id="scMin" type="button" aria-pressed="true">MINOR</button><button id="scChr" type="button" aria-pressed="false">CHROMATIC</button></div></div>
+      <div class="tfield"><label class="tlabel" for="keySel">Key</label>
+        <div class="tslider-row"><select id="keySel" style="flex:1;background:var(--bg4,#15151f);color:var(--text,#f2f2f7);border:1px solid var(--border2,rgba(255,255,255,.12));border-radius:8px;padding:8px 10px;font-family:inherit;font-size:13px"><option value="0">C</option><option value="1">C#</option><option value="2">D</option><option value="3">D#</option><option value="4">E</option><option value="5">F</option><option value="6">F#</option><option value="7">G</option><option value="8">G#</option><option value="9" selected>A</option><option value="10">A#</option><option value="11">B</option></select></div></div>
+      <div class="tfield"><label class="tlabel" for="vibrato">Vibrato (feeds the warble)</label>
+        <div class="tslider-row"><input type="range" class="tslider" id="vibrato" min="0" max="1000" value="450"><span class="tslider-val" id="vibratoVal">45%</span></div></div>
+      <div class="tfield" style="margin-bottom:0"><label class="tlabel" for="tempo">Tempo</label>
+        <div class="tslider-row"><input type="range" class="tslider" id="tempo" min="80" max="150" value="104"><span class="tslider-val" id="tempoVal">104 BPM</span></div></div>
+    </div>
+  </div>
+  <div class="tsec" style="margin-top:16px">
+    <div class="tsec-label">Presets &mdash; real records, one click</div>
+    <div class="preset-row" id="presetRow"></div>
+  </div>
+  <div class="tsec" style="margin-top:16px">
+    <div class="tsec-label">Copy this into your tuner</div>
+    <div class="tinsight" id="readout"></div>
+    <div class="chip-row" id="chipRow"></div>
+  </div>
+  <div class="share-embed">
+    <div class="tsec-label">Share this tool</div>
+    <div style="display:flex;gap:8px;flex-wrap:nowrap">
+      <button id="toolCopyBtn" onclick="(function(b){navigator.clipboard.writeText(window.location.href).then(function(){var t=b.textContent;b.textContent='Copied!';setTimeout(function(){b.textContent=t},2000)}).catch(function(){});})(this)" style="flex:1;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:700;padding:9px 12px;border-radius:8px;background:#f5a623;color:#000;border:none;cursor:pointer;font-family:inherit;white-space:nowrap;box-sizing:border-box">Copy Link</button>
+      <a id="toolShareX" href="#" target="_blank" rel="noopener" style="flex:1;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:700;padding:9px 12px;border-radius:8px;background:#000;color:#fff;border:1px solid #333;text-decoration:none;white-space:nowrap;box-sizing:border-box">Share on X</a>
+      <a id="toolShareReddit" href="#" target="_blank" rel="noopener" style="flex:1;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:700;padding:9px 12px;border-radius:8px;background:#ff4500;color:#fff;border:none;text-decoration:none;white-space:nowrap;box-sizing:border-box"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>Reddit</a>
+    </div>
+    <div class="embed-box">
+      <div class="tsec-label" style="margin-bottom:8px">Embed on your site</div>
+      <code id="embedCode">&lt;iframe src="https://musicproductionwiki.com/tools/hard-tune-explorer.html?embed=true" width="100%" height="1000" style="border:0;border-radius:12px" title="Hard-Tune Explorer" loading="lazy"&gt;&lt;/iframe&gt;</code>
+      <button class="embed-copy" id="embedCopy" type="button">Copy embed code</button>
+    </div>
+  </div>
+  <div class="tfaq">
+    <h2>Hard-tune FAQ</h2>
+    <div class="tfaq-q"><h3>What makes the Cher and T&#8209;Pain auto&#8209;tune sound?</h3><p>A pitch corrector with retune speed set to 0, so the voice snaps instantly to the nearest note in a chosen key with no glide. Those hard jumps are the robotic warble. Lock the scale to your key or it turns atonal &mdash; try the CHROMATIC setting here to hear exactly that.</p></div>
+    <div class="tfaq-q"><h3>What exact settings should I copy into my tuner?</h3><p>Retune speed 0 (fastest), scale locked to your song key, humanize and flex&#8209;tune off. The readout above prints the precise values for Auto&#8209;Tune, Graillon&nbsp;2 and MAutoPitch as you move the controls, plus the optional octave&#8209;up double that thickens the T&#8209;Pain sound.</p></div>
+    <div class="tfaq-q"><h3>Do I need Auto&#8209;Tune, or will free plugins work?</h3><p>Free plugins work. Graillon&nbsp;2 and MAutoPitch both hard&#8209;tune, and most DAWs bundle a stock tuner. Set retune speed to its fastest value and lock the scale to your key. Paid tools buy tracking quality and low latency, not a secret ingredient.</p></div>
+    <div class="tfaq-q"><h3>Is the audio a real vocal?</h3><p>No &mdash; it's a Web Audio synth running live in your browser, playing a melodic phrase through a real pitch&#8209;quantiser so you can hear how retune speed, scale and key change the effect. Nothing is downloaded and no recording is used.</p></div>
+  </div>
+  <div class="trelated">
+    <div class="trelated-label">RELATED</div>
+    <div class="trelated-grid">
+      <a href="/articles/how-to-recreate-the-cher-believe-autotune.html" class="trelated-card"><span class="trelated-name">Recreate the Cher / T-Pain Vocal</span><span class="trelated-desc">The full step-by-step guide</span></a>
+      <a href="/tools/acid-filter-explorer.html" class="trelated-card"><span class="trelated-name">Acid Filter Explorer</span><span class="trelated-desc">Sweep a live TB-303 resonant filter</span></a>
+      <a href="/articles/how-to-recreate-the-daft-punk-robot-voice.html" class="trelated-card"><span class="trelated-name">Daft Punk Robot Voice</span><span class="trelated-desc">The vocoder / talkbox robot sound</span></a>
+    </div>
+  </div>
+</div>
+</main>
+
+<footer style="border-top:1px solid var(--border);padding:24px 20px;text-align:center;margin-top:40px">
+  <p style="font-size:12px;color:var(--text3)">
+    &copy; 2026 <a href="https://www.musicproductionwiki.com" style="color:var(--amber);text-decoration:none">MusicProductionWiki.com</a>
+    &nbsp;&middot;&nbsp; <a href="/tools/" style="color:var(--text2);text-decoration:none">All Tools</a>
+    &nbsp;&middot;&nbsp; <a href="/bible/" style="color:var(--text2);text-decoration:none">Producer's Bible</a>
+    &nbsp;&middot;&nbsp; <a href="https://theproducersbriefing.beehiiv.com" style="color:var(--text2);text-decoration:none">Newsletter</a>
+  </p>
+</footer>
+<script>
+(function(){
+  var title=document.title;
+  var url=window.location.href;
+  var xBtn=document.getElementById('toolShareX');
+  var rdBtn=document.getElementById('toolShareReddit');
+  if(xBtn)xBtn.href='https://x.com/intent/tweet?text='+encodeURIComponent(title)+' via @mpwikiofficial&url='+encodeURIComponent(url);
+  if(rdBtn)rdBtn.href='https://www.reddit.com/submit?url='+encodeURIComponent(url)+'&title='+encodeURIComponent(title);
+})();
+</script>
+<script>
+(function(){if(new URLSearchParams(location.search).get('embed')==='true'){document.body.classList.add('embed-mode');}})();
+</script>
+
+<div class="usearch" id="usearch" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="usearch-box">
+    <div class="usearch-top">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input id="usearchInput" type="text" placeholder="Search tools, articles, the Bible…" autocomplete="off">
+      <kbd>esc</kbd>
+    </div>
+    <div class="usearch-results" id="usearchResults"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
+<script>
+(function(){
+  // === production parity: lazy-load index on first open, build Fuse once ===
+  var data=null, fuse=null;
+  var overlay=document.getElementById('usearch');
+  var input=document.getElementById('usearchInput');
+  var box=document.getElementById('usearchResults');
+  var sel=-1, current=[];
+  // article slugs are bare; bible/ and tools/ slugs carry their prefix (verified vs live search-index.json)
+  function urlFor(s){ return (s.indexOf('bible/')===0||s.indexOf('tools/')===0) ? '/'+s : '/articles/'+s; }
+
+  function buildFuse(arr){
+    data=arr;
+    fuse=new Fuse(data,{keys:['title','category','description'],threshold:0.34,ignoreLocation:true,minMatchCharLength:2});
+  }
+  function ensureIndex(cb){
+    if(fuse){cb();return;}
+    // PRODUCTION: one shared index, lazy-loaded on first open.
+    fetch('/search-index.json').then(function(r){return r.json();}).then(function(arr){
+      buildFuse(arr); cb();
+    }).catch(function(){ box.textContent='Search failed to load.'; });
+  }
+
+  function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  function render(results){
+    current=results;
+    while(box.firstChild) box.removeChild(box.firstChild);   // no innerHTML
+    if(!input.value.trim()){ var p=document.createElement('div'); p.className='usearch-empty'; p.textContent='Start typing to search everything.'; box.appendChild(p); return; }
+    if(!results.length){ var n=document.createElement('div'); n.className='usearch-empty'; n.textContent='No results for "'+input.value+'".'; box.appendChild(n); return; }
+    results.slice(0,12).forEach(function(r,i){
+      var e=r.item||r;
+      var a=document.createElement('a'); a.href=urlFor(e.slug); if(i===sel)a.className='sel';
+      var top=document.createElement('div'); top.className='ur-top';
+      var t=document.createElement('span'); t.className='ur-title'; t.textContent=e.title;
+      var c=document.createElement('span'); c.className='ur-cat'; c.setAttribute('data-c',e.category||''); c.textContent=e.category||'';
+      top.appendChild(t); top.appendChild(c); a.appendChild(top);
+      if(e.description){ var d=document.createElement('div'); d.className='ur-desc'; d.textContent=e.description; a.appendChild(d); }
+      box.appendChild(a);
+    });
+  }
+
+  function open(q){ ensureIndex(function(){ overlay.classList.add('open'); input.focus(); if(q!=null){input.value=q;} sel=-1; render(input.value?fuse.search(input.value):[]); }); }
+  function close(){ overlay.classList.remove('open'); }
+
+  // wire every nav's search button to the shared overlay
+  document.querySelectorAll('[data-nav-search]').forEach(function(b){ b.addEventListener('click',function(){open(null);}); });
+  input.addEventListener('input',function(){ sel=-1; render(fuse?fuse.search(input.value):[]); });
+  input.addEventListener('keydown',function(e){
+    if(e.key==='Escape')close();
+    else if(e.key==='ArrowDown'){e.preventDefault(); sel=Math.min(sel+1,Math.min(current.length,12)-1); render(current);}
+    else if(e.key==='ArrowUp'){e.preventDefault(); sel=Math.max(sel-1,0); render(current);}
+    else if(e.key==='Enter'&&current[sel]){ var e2=current[sel].item||current[sel]; location.href=urlFor(e2.slug); }
+  });
+  overlay.addEventListener('click',function(e){ if(e.target===overlay)close(); });
+  document.addEventListener('keydown',function(e){ if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();open(null);} });
+})();
+</script>
+
+<script>
+(function(){
+  "use strict";
+  var $=function(id){return document.getElementById(id);};
+  var cv=$('acidCanvas'); if(!cv) return;
+  var ctx2d=cv.getContext('2d');
+  var KEYS=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+  var SCALES={major:[0,2,4,5,7,9,11],minor:[0,2,3,5,7,8,10],chromatic:[0,1,2,3,4,5,6,7,8,9,10,11]};
+  var SCALE_NAME={major:"major",minor:"minor",chromatic:"chromatic"};
+  // sung melody (semitones relative to key root), 8 beats; some off-scale passing notes
+  var MELODY=[0,3,7,5,10,8,3,-2];
+  var DRIFT=[0.28,-0.35,0.22,-0.30,0.40,-0.22,0.30,-0.38];
+  var N=MELODY.length;
+
+  var state={retune:0,scale:'minor',key:9,vib:0.45,tempo:104,wave:'sawtooth',oct:false};
+
+  function clamp(v,a,b){return v<a?a:(v>b?b:v);}
+  function scaleArr(){return SCALES[state.scale];}
+  function rootFreq(){return 220*Math.pow(2,(state.key-9)/12);}
+  function freqFor(semi){return rootFreq()*Math.pow(2,semi/12);}
+  function quant(semi){
+    var arr=scaleArr(), best=null, bd=1e9;
+    for(var oct=-2;oct<=3;oct++){
+      for(var i=0;i<arr.length;i++){
+        var cand=oct*12+arr[i], d=Math.abs(cand-semi);
+        if(d<bd){bd=d;best=cand;}
+      }
+    }
+    return best;
+  }
+  function targetAt(beat){return quant(MELODY[beat]+DRIFT[beat]);}
+
+  // ---------- canvas viz ----------
+  var W=0,H=0,DPR=Math.max(1,Math.min(2,window.devicePixelRatio||1));
+  function resize(){
+    var r=cv.getBoundingClientRect(); W=Math.max(320,r.width); H=300;
+    cv.width=W*DPR; cv.height=H*DPR; ctx2d.setTransform(DPR,0,0,DPR,0,0);
+    draw();
+  }
+  function ymap(semi,lo,hi){return 24+(hi-semi)/(hi-lo)*(H-56);}
+  function draw(playT){
+    ctx2d.clearRect(0,0,W,H);
+    ctx2d.fillStyle="#0a0a12"; ctx2d.fillRect(0,0,W,H);
+    // range
+    var lo=-4, hi=12;
+    // grid lanes for allowed notes
+    var arr=scaleArr();
+    for(var s=lo;s<=hi;s++){
+      var inScale=arr.indexOf(((s%12)+12)%12)>=0;
+      ctx2d.strokeStyle=inScale?"rgba(245,158,11,0.10)":"rgba(255,255,255,0.04)";
+      ctx2d.lineWidth=1; var y=ymap(s,lo,hi);
+      ctx2d.beginPath();ctx2d.moveTo(40,y);ctx2d.lineTo(W-8,y);ctx2d.stroke();
+    }
+    ctx2d.fillStyle="#56566f";ctx2d.font="10px ui-monospace,monospace";ctx2d.textAlign="right";
+    ctx2d.fillText(KEYS[state.key],36,ymap(0,lo,hi)+3);
+    ctx2d.fillText(KEYS[state.key]+"'",36,ymap(12,lo,hi)+3);
+    var x0=44,x1=W-8;
+    function xt(t){return x0+t*(x1-x0);}
+    // sung line (faint) + tuned staircase (amber) sampled across the loop
+    var M=240, retSec=state.retune/1000, beatFrac=1/N;
+    var sungPts=[],outPts=[];
+    for(var i=0;i<=M;i++){
+      var t=i/M; var b=Math.min(N-1,Math.floor(t*N)); var within=(t*N-b);
+      var sung=MELODY[b]+DRIFT[b]+state.vib*1.1*Math.sin(2*Math.PI*5.5*t*N);
+      sungPts.push([xt(t),ymap(clamp(sung,lo,hi),lo,hi)]);
+      // output: glide toward target over retune time at each beat boundary
+      var tgt=targetAt(b), prev=targetAt((b-1+N)%N);
+      var out;
+      if(retSec<=0.001){ out=tgt; }
+      else { var k=Math.min(1,(within*(60/state.tempo))/retSec); out=prev+(tgt-prev)*k; }
+      outPts.push([xt(t),ymap(clamp(out,lo,hi),lo,hi)]);
+    }
+    // sung
+    ctx2d.strokeStyle="rgba(120,140,165,0.55)";ctx2d.lineWidth=1.6;ctx2d.beginPath();
+    sungPts.forEach(function(p,i){i?ctx2d.lineTo(p[0],p[1]):ctx2d.moveTo(p[0],p[1]);});ctx2d.stroke();
+    // tuned fill + line
+    ctx2d.beginPath();ctx2d.moveTo(outPts[0][0],H-28);
+    outPts.forEach(function(p){ctx2d.lineTo(p[0],p[1]);});
+    ctx2d.lineTo(outPts[outPts.length-1][0],H-28);ctx2d.closePath();
+    var g=ctx2d.createLinearGradient(0,0,0,H);g.addColorStop(0,"rgba(245,158,11,0.20)");g.addColorStop(1,"rgba(245,158,11,0)");
+    ctx2d.fillStyle=g;ctx2d.fill();
+    ctx2d.strokeStyle="#f59e0b";ctx2d.lineWidth=2.8;ctx2d.lineJoin="round";ctx2d.beginPath();
+    outPts.forEach(function(p,i){i?ctx2d.lineTo(p[0],p[1]):ctx2d.moveTo(p[0],p[1]);});ctx2d.stroke();
+    // playhead
+    if(typeof playT==='number'){var px=xt(playT%1);ctx2d.strokeStyle="rgba(0,232,162,0.9)";ctx2d.lineWidth=1.4;ctx2d.beginPath();ctx2d.moveTo(px,20);ctx2d.lineTo(px,H-28);ctx2d.stroke();}
+  }
+
+  // ---------- audio ----------
+  var actx=null,master=null,playing=false,raf=null,vlfo=null,vgain=null;
+  var voices=[]; var startTime=0,loopDur=0,nextBeat=0,beatIdx=0,schedTo=0;
+  function ensureCtx(){var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return false;if(!actx){actx=new AC();master=actx.createGain();master.gain.value=0.0001;master.connect(actx.destination);}if(actx.state==='suspended')actx.resume();return true;}
+  function makeVoice(semiOffset){
+    var o=actx.createOscillator();o.type=state.wave;
+    var g=actx.createGain();g.gain.value=semiOffset?0.10:0.16;
+    o.connect(g);g.connect(master);
+    if(vgain)vgain.connect(o.detune);
+    return {o:o,g:g,off:semiOffset};
+  }
+  function scheduleBeat(idx,when){
+    var tgt=targetAt(idx), prev=targetAt((idx-1+N)%N), retSec=state.retune/1000;
+    voices.forEach(function(v){
+      var f=freqFor(tgt+v.off), pf=freqFor(prev+v.off);
+      if(retSec<=0.001){v.o.frequency.setValueAtTime(f,when);}
+      else{v.o.frequency.setValueAtTime(pf,when);v.o.frequency.exponentialRampToValueAtTime(Math.max(20,f),when+Math.min(retSec,loopDur/N*0.9));}
+    });
+  }
+  function tick(){
+    if(!playing)return;
+    var beatDur=60/state.tempo;
+    while(nextBeat<actx.currentTime+0.18){scheduleBeat(beatIdx,nextBeat);nextBeat+=beatDur;beatIdx=(beatIdx+1)%N;}
+    var elapsed=(actx.currentTime-startTime);
+    draw((elapsed/ (beatDur*N)) );
+    raf=requestAnimationFrame(tick);
+  }
+  function stop(){
+    playing=false;if(raf)cancelAnimationFrame(raf);
+    if(master){master.gain.cancelScheduledValues(actx.currentTime);master.gain.linearRampToValueAtTime(0.0001,actx.currentTime+0.05);}
+    voices.forEach(function(v){try{v.o.stop(actx.currentTime+0.08);}catch(e){}});
+    if(vlfo){try{vlfo.stop(actx.currentTime+0.08);}catch(e){}vlfo=null;}
+    voices=[];
+    var b=$('playBtn');if(b)b.textContent="\u25B6 Play";
+    draw();
+  }
+  function play(){
+    if(!ensureCtx())return;
+    // vibrato LFO -> detune
+    vlfo=actx.createOscillator();vlfo.type='sine';vlfo.frequency.value=5.5;
+    vgain=actx.createGain();vgain.gain.value=state.vib*45; // cents
+    vlfo.connect(vgain);
+    voices=[makeVoice(0)]; if(state.oct)voices.push(makeVoice(12));
+    var t0=actx.currentTime+0.06;startTime=t0;beatIdx=0;nextBeat=t0;loopDur=(60/state.tempo)*N;
+    voices.forEach(function(v){v.o.start(t0);});vlfo.start(t0);
+    master.gain.cancelScheduledValues(t0);master.gain.setValueAtTime(0.0001,t0);master.gain.exponentialRampToValueAtTime(0.3,t0+0.05);
+    playing=true;var b=$('playBtn');if(b)b.textContent="\u25A0 Stop";
+    raf=requestAnimationFrame(tick);
+  }
+
+  // ---------- readout ("copy into your DAW") ----------
+  function retuneWord(){return state.retune<=0?"0 ms (hardest)":state.retune<200?state.retune+" ms (fast)":state.retune+" ms (soft-tune)";}
+  function setText(el,t){if(el)el.textContent=t;}
+  function updateReadout(){
+    var keyName=KEYS[state.key]+" "+SCALE_NAME[state.scale];
+    setText($('hudRetune'),state.retune<=0?"0 ms":state.retune+" ms");
+    setText($('hudKey'),keyName);
+    var ro=$('readout');
+    if(ro){
+      ro.textContent="In Auto-Tune Pro, Graillon 2 or MAutoPitch: set Retune Speed to "+retuneWord()
+        +", lock the Scale to "+keyName+", and turn Humanize and Flex-Tune OFF. "
+        +(state.scale==='chromatic'?"Chromatic is deliberately allowing every note — great for hyperpop chaos, wrong for a clean Cher/T-Pain hook. ":"")
+        +(state.oct?"Stack a tuned +1 octave double for the thick T-Pain layer. ":"Add a tuned octave-up double to thicken it. ")
+        +"Leave formants untouched for the classic \u2018gerbil\u2019 edge.";
+    }
+    var cr=$('chipRow');
+    if(cr){
+      while(cr.firstChild)cr.removeChild(cr.firstChild);
+      [["Retune",state.retune<=0?"0 ms":state.retune+" ms"],["Scale",keyName],
+       ["Humanize","OFF"],["Flex-Tune","OFF"],["Double",state.oct?"+1 oct":"off"]].forEach(function(kv){
+        var c=document.createElement('span');
+        c.style.cssText="display:inline-flex;gap:6px;align-items:center;font-family:ui-monospace,monospace;font-size:11px;font-weight:700;color:#f59e0b;background:#17120a;border:1px solid rgba(245,158,11,.5);border-radius:999px;padding:5px 11px;margin:0 8px 8px 0";
+        var k=document.createElement('span');k.style.color="#8a9bb0";k.style.fontWeight="400";k.textContent=kv[0];
+        var val=document.createElement('span');val.textContent=kv[1];
+        c.appendChild(k);c.appendChild(val);cr.appendChild(c);
+      });
+    }
+  }
+
+  // ---------- controls ----------
+  function seg(ids,on){ids.forEach(function(id){var b=$(id);if(b)b.setAttribute('aria-pressed', id===on?'true':'false');});}
+  function syncLabels(){
+    setText($('retuneVal'),state.retune<=0?"0 ms (hard)":state.retune+" ms");
+    setText($('vibratoVal'),Math.round(state.vib*100)+"%");
+    setText($('tempoVal'),state.tempo+" BPM");
+    seg(['waveSaw','waveSqr'],state.wave==='sawtooth'?'waveSaw':'waveSqr');
+    seg(['octOff','octOn'],state.oct?'octOn':'octOff');
+    seg(['scMaj','scMin','scChr'],state.scale==='major'?'scMaj':(state.scale==='minor'?'scMin':'scChr'));
+    var ks=$('keySel');if(ks)ks.value=String(state.key);
+  }
+  function refresh(){voices.forEach(function(v){v.o.type=state.wave;});if(vgain)vgain.gain.value=state.vib*45;syncLabels();updateReadout();draw(playing?undefined:0);}
+
+  function bindRange(id,fn){var e=$(id);if(e)e.addEventListener('input',function(){fn(parseInt(e.value,10));refresh();});}
+  bindRange('retune',function(v){state.retune=Math.round((1000-v)*0.4);}); // right=hard(0ms), left=~400ms
+  bindRange('vibrato',function(v){state.vib=v/1000;});
+  bindRange('tempo',function(v){state.tempo=v;});
+  function bindBtn(id,fn){var e=$(id);if(e)e.addEventListener('click',function(){fn();refresh();});}
+  bindBtn('waveSaw',function(){state.wave='sawtooth';});
+  bindBtn('waveSqr',function(){state.wave='square';});
+  bindBtn('octOff',function(){state.oct=false;});
+  bindBtn('octOn',function(){state.oct=true;});
+  bindBtn('scMaj',function(){state.scale='major';});
+  bindBtn('scMin',function(){state.scale='minor';});
+  bindBtn('scChr',function(){state.scale='chromatic';});
+  var ks=$('keySel');if(ks)ks.addEventListener('change',function(){state.key=parseInt(ks.value,10);refresh();});
+  var pb=$('playBtn');if(pb)pb.addEventListener('click',function(){playing?stop():play();});
+  var ec=$('embedCopy');if(ec)ec.addEventListener('click',function(){var c=$('embedCode');if(c&&navigator.clipboard){navigator.clipboard.writeText(c.textContent).then(function(){ec.textContent="Copied!";setTimeout(function(){ec.textContent="Copy embed code";},1800);}).catch(function(){});}});
+  var sx=$('toolShareX');if(sx)sx.href="https://twitter.com/intent/tweet?text="+encodeURIComponent("The Hard-Tune Explorer \u2014 hear the Cher/T-Pain auto-tune effect and copy the settings")+"&url="+encodeURIComponent(location.href);
+  var srd=$('toolShareReddit');if(srd)srd.href="https://www.reddit.com/submit?url="+encodeURIComponent(location.href)+"&title="+encodeURIComponent("Hard-Tune Explorer \u2014 hear the Cher/T-Pain auto-tune effect and copy the exact settings");
+
+  // ---------- presets (created via DOM, no innerHTML) ----------
+  var PRESETS=[
+    {name:"Cher \u2014 Believe",st:{retune:0,scale:'minor',key:9,vib:0.5,oct:false,wave:'sawtooth',tempo:104}},
+    {name:"T-Pain",st:{retune:0,scale:'minor',key:5,vib:0.55,oct:true,wave:'sawtooth',tempo:96}},
+    {name:"Soft-tune",st:{retune:180,scale:'major',key:0,vib:0.25,oct:false,wave:'sawtooth',tempo:88}},
+    {name:"Hyperpop chaos",st:{retune:0,scale:'chromatic',key:9,vib:0.8,oct:true,wave:'square',tempo:150}}
+  ];
+  (function buildPresets(){
+    var row=$('presetRow');if(!row)return;
+    PRESETS.forEach(function(p){
+      var b=document.createElement('button');
+      b.type="button";b.className="tbtn";b.style.cssText="font-size:12px;padding:8px 12px";
+      b.textContent=p.name;
+      b.addEventListener('click',function(){for(var k in p.st)state[k]=p.st[k];refresh();});
+      row.appendChild(b);
+    });
+  })();
+
+  window.addEventListener('resize',resize);
+  syncLabels();updateReadout();resize();
+})();
+
+</script>
+
+</body>
+</html>
