@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>Growl Bass Designer — Free Dubstep / Skrillex Growl Synth Tool | MusicProductionWiki</title>
+<meta name="description" content="Design a dubstep growl bass live in your browser: drag the XY pad for wavetable morph and drive, raise the LFO to hear a static bass turn into a Skrillex-style growl, then copy the recipe into Serum, Vital or Massive. Free.">
+<meta property="og:title" content="Growl Bass Designer — MusicProductionWiki">
+<meta property="og:description" content="Drag the XY pad, raise the LFO, and hear a static bass turn into a dubstep growl. Copy the recipe into Serum, Vital or Massive.">
+<meta property="og:url" content="https://musicproductionwiki.com/tools/growl-bass-designer.html">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://musicproductionwiki.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://musicproductionwiki.com/tools/growl-bass-designer.html">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-79VB543KCT"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-79VB543KCT');</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What makes a dubstep growl bass sound like it is talking?","acceptedAnswer":{"@type":"Answer","text":"Three things stacked: a harmonically dense source (a wavetable, FM or detuned saws), rhythmic movement of the timbre from an LFO or automation, and heavy distortion. A comb or formant filter then notches vowel-like resonances into it, which is the talking quality. The single most important part is the movement — a static distorted bass is not a growl."}},
+{"@type":"Question","name":"What synth did Skrillex use for the Scary Monsters growl?","acceptedAnswer":{"@type":"Answer","text":"In a 2011 MusicRadar interview Skrillex named Native Instruments Massive and FM8 as his two go-to synths and said he leans on FM synthesis. The widely reproduced community technique for the Scary Monsters growl uses a moving wavetable in Massive plus heavy distortion, but the exact preset was never officially published, so treat specific settings as a defensible recreation rather than a fact about the session."}},
+{"@type":"Question","name":"Can I make a growl bass with free plugins?","acceptedAnswer":{"@type":"Answer","text":"Yes. Vital is a free wavetable synth that does everything needed, and any synth with an LFO you can route to wavetable position or a filter plus a distortion unit will work. Paid tools like Serum or Massive are shortcuts, not a secret ingredient. This tool runs the same idea live in your browser."}},
+{"@type":"Question","name":"Is the sound in this tool a sample?","acceptedAnswer":{"@type":"Answer","text":"No. It is a Web Audio synth generating the growl live in your browser — a wavetable oscillator through a waveshaper and an LFO-swept formant filter. Nothing is recorded, downloaded or uploaded."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
+{"@type":"ListItem","position":1,"name":"Home","item":"https://musicproductionwiki.com"},
+{"@type":"ListItem","position":2,"name":"Tools","item":"https://musicproductionwiki.com/tools/"},
+{"@type":"ListItem","position":3,"name":"Growl Bass Designer","item":"https://musicproductionwiki.com/tools/growl-bass-designer.html"}
+]}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="../js/main.js" defer></script>
+<style id="mpw-unav-css">
+
+.mnav-wrap,.usearch{--ink:#09090d;--panel:#0f0f18;--panel2:#15151f;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);--amber:#f5a623;--teal:#00e8a2;--teal-d:rgba(0,232,162,.12);--text:#f2f2f7;--t2:#9a9ab2;--t3:#56566f;--sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'DM Mono',ui-monospace,SFMono-Regular,monospace;}
+.mnav-wrap *,.mnav-wrap *::before,.mnav-wrap *::after,.usearch *,.usearch *::before,.usearch *::after{box-sizing:border-box;margin:0;padding:0}
+.mnav-wrap{background:var(--ink);border-bottom:1px solid var(--line);position:relative}
+.mnav{height:60px;display:flex;align-items:center}
+.mnav-in{max-width:1180px;margin:0 auto;padding:0 22px;width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.mnav-brand{display:flex;align-items:center;gap:10px;color:var(--text);text-decoration:none;flex:0 0 auto}
+.mnav-word{font-weight:700;font-size:15px;letter-spacing:-.02em}
+.mnav-links{display:flex;align-items:center;gap:6px;margin-left:8px}
+.mnav-flat,.mnav-trigger{color:var(--t2);background:none;border:0;font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;padding:8px 12px;border-radius:8px;display:inline-flex;align-items:center;gap:6px}
+.mnav-flat:hover,.mnav-trigger:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.caret{font-size:9px;color:var(--t3);transition:transform .18s}
+.mnav-right{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.mnav-search{background:none;border:0;color:var(--t2);cursor:pointer;display:flex;padding:6px;border-radius:8px}
+.mnav-search:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.mnav-cta{border:1px solid var(--teal);color:var(--teal);text-decoration:none;padding:7px 15px;border-radius:8px;font-size:13px;font-weight:600;white-space:nowrap}
+.mnav-cta:hover{background:var(--teal-d)}
+.mnav-wrap[data-section="tools"] .mnav-flat[data-nav="tools"]{color:var(--text);font-weight:600}
+.mnav-wrap[data-section="articles"] .mnav-trigger[data-nav="articles"]{color:var(--text);font-weight:600}
+/* Bible = amber brand color, desktop link + mobile drawer */
+.mnav-flat[data-nav="bible"],.drw-link[data-nav="bible"]{color:#f5a623!important;font-weight:600}
+.mnav-flat[data-nav="bible"]:hover,.drw-link[data-nav="bible"]:hover{color:#ffc04d!important}
+.mnav-item{position:relative}
+.mnav-panel,.mnav-panel-wide{position:absolute;top:calc(100% + 6px);left:0;z-index:50;display:none;background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:14px;box-shadow:0 24px 60px -24px rgba(0,0,0,.9);min-width:240px}
+.mnav-panel-wide{grid-template-columns:1fr 1fr;gap:8px 22px;min-width:520px}
+.mnav-item:hover .mnav-panel,.mnav-item:focus-within .mnav-panel,.mnav-item:hover .mnav-panel-wide,.mnav-item:focus-within .mnav-panel-wide{display:grid}
+.mnav-item:hover .caret{transform:rotate(180deg)}
+.mp-col{display:flex;flex-direction:column}
+.mp-head{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);padding:6px 10px 8px}
+.mnav-panel a{display:flex;flex-direction:column;gap:1px;padding:8px 10px;border-radius:9px;text-decoration:none}
+.mnav-panel a:hover{background:rgba(255,255,255,.05)}
+.mp-name{color:var(--text);font-size:13.5px;font-weight:600}.mp-desc{color:var(--t2);font-size:11.5px}
+.mnav-sub{display:none;background:var(--panel);border-bottom:1px solid var(--line)}
+.mnav-wrap[data-section="bible"] .mnav-sub{display:block}
+.mnav-sub-in{max-width:1180px;margin:0 auto;padding:10px 22px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.mnav-sub-in::-webkit-scrollbar{display:none}
+.mnav-sub-in a{flex:0 0 auto;color:var(--t2);text-decoration:none;font-size:12.5px;font-family:var(--mono);border:1px solid var(--line2);border-radius:99px;padding:5px 12px;white-space:nowrap}
+.mnav-sub-in a:hover{color:var(--teal);border-color:rgba(0,232,162,.4)}
+.mnav-toggle{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.mnav-burger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:8px;border-radius:8px}
+.mnav-burger span{display:block;width:20px;height:2px;background:var(--text);border-radius:2px;transition:.2s}
+.mnav-drawer{display:none;flex-direction:column;padding:6px 18px 16px;background:var(--ink);border-bottom:1px solid var(--line)}
+.mnav-drawer details{border-bottom:1px solid var(--line)}
+.mnav-drawer summary{list-style:none;cursor:pointer;padding:13px 2px;font-size:15px;font-weight:600;color:var(--text);display:flex;justify-content:space-between}
+.mnav-drawer summary::-webkit-details-marker{display:none}
+.mnav-drawer summary::after{content:"+";color:var(--t3)}
+.mnav-drawer details[open] summary::after{content:"\2013"}
+.mnav-acc{display:flex;flex-direction:column;padding:0 0 10px 12px}
+.mnav-acc a{color:var(--t2);text-decoration:none;font-size:14px;padding:8px 0}
+.drw-link{color:var(--t2);text-decoration:none;font-size:15px;font-weight:600;padding:13px 2px;border-bottom:1px solid var(--line)}
+.drw-cta{color:var(--teal);text-decoration:none;font-weight:600;font-size:15px;padding:14px 2px}
+.mnav-toggle:checked ~ .mnav-drawer{display:flex}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(2){opacity:0}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+@media(max-width:860px){.mnav-links,.mnav-cta{display:none}.mnav-burger{display:flex}}
+
+/* ===== UNIFIED SEARCH OVERLAY ===== */
+.usearch{position:fixed;inset:0;z-index:10000;display:none;background:rgba(6,6,11,.78);backdrop-filter:blur(6px);padding:80px 20px 20px}
+.usearch.open{display:block}
+.usearch-box{max-width:620px;margin:0 auto;background:var(--panel);border:1px solid var(--line2);border-radius:16px;overflow:hidden;box-shadow:0 40px 90px -30px rgba(0,0,0,.95)}
+.usearch-top{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.usearch-top svg{color:var(--t3);flex:0 0 auto}
+.usearch-top input{flex:1;background:none;border:0;outline:none;color:var(--text);font-family:var(--sans);font-size:17px}
+.usearch-top input::placeholder{color:var(--t3)}
+.usearch-top kbd{font-family:var(--mono);font-size:11px;color:var(--t3);border:1px solid var(--line2);border-radius:6px;padding:2px 7px}
+.usearch-results{max-height:56vh;overflow-y:auto;padding:8px}
+.usearch-results a{display:block;padding:11px 14px;border-radius:10px;text-decoration:none;transition:background .12s}
+.usearch-results a:hover,.usearch-results a.sel{background:rgba(255,255,255,.05)}
+.ur-top{display:flex;align-items:baseline;gap:9px}
+.ur-title{color:var(--text);font-size:14.5px;font-weight:600}
+.ur-cat{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.06);color:var(--t2);flex:0 0 auto}
+.ur-cat[data-c="Tools"]{background:var(--teal-d);color:var(--teal);border:1px solid rgba(0,232,162,.4)}
+.ur-cat[data-c="Bible"]{background:rgba(245,166,35,.18);color:#f5a623;border:1px solid rgba(245,166,35,.4)}
+.ur-desc{color:var(--t2);font-size:12.5px;line-height:1.45;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.usearch-empty{padding:30px;text-align:center;color:var(--t3);font-size:13.5px}
+/* --- sticky-header + entry-page chrome (pilot, refined for density) ---
+   entry nav = 60px main bar only (no category sub-bar). Desktop: hide the horizontal section
+   nav (the sticky sidebar TOC covers sections) and retune offsets to the 60px nav. Mobile: the
+   sidebar is hidden, so SHOW the section nav flush under the bar. All in THIS block. --- */
+.mnav-wrap{position:sticky;top:0;z-index:1000;line-height:1.4}
+.entry-nav{display:none}
+[id].entry-section{scroll-margin-top:90px}
+.entry-main h2{scroll-margin-top:90px}
+.entry-sidebar{top:78px;height:calc(100vh - 98px)}
+@media(max-width:768px){
+  .entry-nav{display:block!important;top:60px!important}
+  [id].entry-section{scroll-margin-top:130px!important}
+  .entry-main h2{scroll-margin-top:130px!important}
+}
+/* dropdown overflow safety */
+.mnav-panel,.mnav-panel-wide{max-height:min(72vh,560px);overflow-y:auto}
+/* mobile drawer: category CARD grid (slick old-nav look), CSS-only */
+.mnav-drawer{padding:10px 18px 18px;gap:0}
+.drw-label{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--t3);margin:12px 2px 8px}
+.drw-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.drw-card{display:flex;align-items:center;padding:12px 14px;border-radius:10px;text-decoration:none;font-size:13.5px;font-weight:600;color:var(--text);background:var(--panel);border:1px solid var(--line2)}
+.drw-card:hover{border-color:var(--teal);color:var(--teal)}
+.drw-feat{display:flex;align-items:center;gap:8px;padding:13px 16px;border-radius:10px;text-decoration:none;font-size:14px;font-weight:700;color:var(--text);background:var(--panel);border:1px solid var(--line2);margin-top:8px}
+.drw-feat-bible{color:#f5a623;background:rgba(245,166,35,.08);border-color:rgba(245,166,35,.30)}
+.drw-feat-bible:hover{border-color:rgba(245,166,35,.6)}
+.drw-cta{display:block;text-align:center;padding:14px;border-radius:10px;background:var(--teal);color:#06281f;font-weight:800;font-size:14px;text-decoration:none;margin-top:12px}
+/* mobile sunlight legibility: lift the intentionally-dim greys in glare (nav + search only), scoped */
+@media(max-width:860px){
+  .mnav-wrap,.usearch{--t2:#c8c8da;--t3:#9696b0}
+  .drw-label{color:#bdbdd0;font-weight:500}
+  .usearch-top input::placeholder{color:#9696b0}
+  .drw-card,.drw-feat{background:#20202e;border:1.5px solid #45455c}
+  .drw-feat-bible{background:rgba(245,166,35,.12);border:1.5px solid rgba(245,166,35,.6)}
+}
+html{overflow-x:clip!important;max-width:none!important}body{overflow-x:clip!important}
+</style>
+
+<style>
+:root{
+  --bg:#0d0d1a;--bg2:#111120;--bg3:#16162a;--bg4:#1c1c32;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--border3:rgba(255,255,255,0.18);
+  --amber:#f5a623;--amber2:rgba(245,166,35,0.12);--amber3:rgba(245,166,35,0.06);
+  --teal:#00e8a2;--teal2:rgba(0,232,162,0.1);--red:#ff3d5a;
+  --text:#f0f0f4;--text2:#a0a0b8;--text3:#5a5a7a;
+  --mono:'DM Mono',monospace;--sans:'DM Sans',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;
+  background-image:radial-gradient(900px 500px at 15% -5%,rgba(245,166,35,0.06),transparent 60%),
+                   radial-gradient(800px 500px at 100% 0%,rgba(0,232,162,0.05),transparent 55%);}
+.tool-page{max-width:980px;margin:0 auto;padding:32px 20px 80px}
+@media(max-width:600px){.tool-page{padding:22px 16px 60px}}
+
+.tool-breadcrumb{font-size:12px;color:var(--text3);margin-bottom:18px;font-family:var(--mono)}
+.tool-breadcrumb a{color:var(--text2);text-decoration:none}
+.tool-breadcrumb a:hover{color:var(--teal)}
+.tool-breadcrumb-sep{margin:0 7px;opacity:.5}
+
+.tool-page-title{margin-bottom:18px}
+.tool-page-title h1{font-size:clamp(27px,5vw,38px);font-weight:900;letter-spacing:-0.03em;line-height:1.05;margin-bottom:10px}
+.tool-page-title h1 .acc{color:var(--amber)}
+.tool-page-desc{font-size:16px;color:var(--text2);line-height:1.6;max-width:640px}
+
+/* how-to 3-step (below hero) */
+.thow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0 24px}
+.thow-step{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.thow-n{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--amber);letter-spacing:.1em;margin-bottom:5px}
+.thow-t{font-size:13px;color:var(--text2);line-height:1.45}
+@media(max-width:640px){.thow{grid-template-columns:1fr;gap:8px}}
+
+/* branded header card */
+.thc{background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:14px 18px;
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:12px}
+.thc-brand{display:flex;align-items:center;gap:12px}
+.thc-mark{width:32px;height:32px;border-radius:8px;background:var(--teal);display:flex;align-items:center;justify-content:center}
+.thc-name{font-size:14px;font-weight:600;color:var(--text)}
+.thc-sub{font-size:11px;color:var(--amber);font-family:var(--mono);letter-spacing:.04em}
+.thc-right{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.thc-badge{font-size:10px;font-family:var(--mono);font-weight:700;color:var(--amber);
+  border:1px solid rgba(245,166,35,0.4);border-radius:4px;padding:4px 10px;letter-spacing:0.1em}
+.thc-related{font-size:13px;color:var(--text2);text-decoration:none;transition:color .15s}
+.thc-related:hover{color:var(--teal)}
+
+/* main layout: viz left / controls right on desktop */
+.acid-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:16px;align-items:start}
+@media(max-width:920px){.acid-grid{grid-template-columns:1fr}}
+
+.tsec{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px}
+.tsec-label{font-size:9px;font-family:var(--mono);font-weight:700;color:var(--amber);
+  letter-spacing:0.18em;text-transform:uppercase;margin-bottom:14px}
+
+/* canvas viz */
+.acid-canvas-wrap{position:relative}
+#acidCanvas{width:100%;height:300px;display:block;border-radius:8px;background:#0a0a12;
+  border:1px solid var(--border);cursor:crosshair;touch-action:none}
+.acid-hud{position:absolute;top:12px;left:14px;font-family:var(--mono);font-size:11px;color:var(--text3);pointer-events:none}
+.acid-hud b{color:var(--teal)}
+.acid-transport{display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap}
+
+/* sliders */
+.tfield{margin-bottom:14px}
+.tlabel{font-size:9px;font-family:var(--mono);color:var(--text3);letter-spacing:0.12em;text-transform:uppercase;display:block;margin-bottom:7px}
+.tslider-row{display:flex;align-items:center;gap:12px}
+.tslider{flex:1;-webkit-appearance:none;appearance:none;height:4px;background:var(--border2);outline:none;border-radius:2px;cursor:pointer}
+.tslider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--amber);cursor:pointer;box-shadow:0 0 6px rgba(245,166,35,0.4)}
+.tslider::-moz-range-thumb{width:16px;height:16px;border:none;border-radius:50%;background:var(--amber);cursor:pointer}
+.tslider-val{font-size:13px;font-family:var(--mono);color:var(--amber);min-width:56px;text-align:right;font-weight:600}
+
+/* segmented (waveform) */
+.tseg{display:inline-flex;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;overflow:hidden}
+.tseg button{background:none;border:none;color:var(--text2);font-family:var(--mono);font-size:12px;font-weight:600;padding:7px 14px;cursor:pointer}
+.tseg button[aria-pressed="true"]{background:var(--amber);color:#000}
+
+/* primary play button */
+.tbtn{background:linear-gradient(135deg,var(--amber),#e08000);color:#000;font-family:var(--sans);font-size:14px;font-weight:700;
+  border:none;cursor:pointer;border-radius:8px;padding:11px 24px;transition:transform .12s,box-shadow .12s;box-shadow:0 0 20px rgba(245,166,35,0.2)}
+.tbtn:hover{transform:translateY(-1px);box-shadow:0 0 30px rgba(245,166,35,0.35)}
+.tbtn.playing{background:linear-gradient(135deg,var(--teal),#00b37c)}
+
+/* presets */
+.preset-row{display:flex;flex-wrap:wrap;gap:8px}
+.preset{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:9px 13px;cursor:pointer;
+  font-family:var(--sans);font-size:13px;font-weight:600;color:var(--text2);transition:all .12s}
+.preset:hover{border-color:var(--amber);color:var(--text)}
+.preset[aria-pressed="true"]{background:var(--amber2);border-color:var(--amber);color:var(--amber)}
+.preset small{display:block;font-family:var(--mono);font-size:10px;font-weight:400;color:var(--text3);margin-top:2px}
+
+/* readout */
+.tinsight{border-left:3px solid var(--teal);background:var(--teal2);border-radius:0 8px 8px 0;padding:15px 17px;font-size:14.5px;color:var(--text);line-height:1.65;margin-top:4px}
+.tinsight .rd-head{font-weight:700;color:var(--teal);margin-bottom:5px}
+.tinsight .rd-era{display:block;margin-top:8px;font-size:12.5px;color:var(--text2);font-style:italic}
+
+/* copy chips */
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.tchip{display:inline-flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;
+  padding:6px 11px;font-family:var(--mono);font-size:12.5px;font-weight:600;color:var(--amber);cursor:pointer;transition:all .12s}
+.tchip:hover{border-color:var(--amber);background:var(--amber2)}
+.tchip span.k{color:var(--text3);font-weight:400}
+
+/* step viz */
+.steps{display:grid;grid-template-columns:repeat(16,1fr);gap:3px;margin-top:12px}
+.step{height:22px;border-radius:3px;background:var(--bg3);border:1px solid var(--border);position:relative}
+.step.on{background:rgba(245,166,35,0.28);border-color:rgba(245,166,35,0.5)}
+.step.acc{background:rgba(245,166,35,0.55)}
+.step.cur{box-shadow:0 0 0 2px var(--teal)}
+
+/* share + embed */
+.share-embed{margin-top:26px}
+.embed-box{margin-top:12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
+.embed-box code{font-family:var(--mono);font-size:11.5px;color:var(--text2);word-break:break-all;display:block;line-height:1.5}
+.embed-copy{margin-top:8px;background:var(--bg4);border:1px solid var(--border2);color:var(--text2);font-family:var(--mono);
+  font-size:11px;font-weight:600;padding:6px 12px;border-radius:6px;cursor:pointer}
+.embed-copy:hover{border-color:var(--teal);color:var(--teal)}
+
+/* faq */
+.tfaq{margin-top:30px}
+.tfaq h2{font-size:20px;font-weight:800;letter-spacing:-0.02em;margin-bottom:14px}
+.tfaq-q{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px}
+.tfaq-q h3{font-size:14.5px;font-weight:700;color:var(--text);margin-bottom:6px}
+.tfaq-q p{font-size:13.5px;color:var(--text2);line-height:1.6}
+
+/* related */
+.trelated{margin-top:44px;padding-top:30px;border-top:1px solid var(--border)}
+.trelated-label{font-size:9px;font-family:var(--mono);font-weight:700;color:var(--text3);letter-spacing:0.15em;margin-bottom:14px}
+.trelated-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.trelated-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;text-decoration:none;transition:border-color .15s}
+.trelated-card:hover{border-color:var(--border2)}
+.trelated-name{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
+.trelated-desc{display:block;font-size:12px;color:var(--text3)}
+</style>
+
+<style id="mpw-embed-css">
+body.embed-mode .mnav,body.embed-mode footer,body.embed-mode .tool-breadcrumb,body.embed-mode .thow,body.embed-mode .thc,body.embed-mode .tfaq,body.embed-mode .trelated,body.embed-mode .share-embed{display:none!important;}
+body.embed-mode{background:#0a0a0f;}
+body.embed-mode .tool-page{max-width:100%;padding:14px 16px 20px;margin:0;}
+body.embed-mode .tool-page-title h1{font-size:24px;margin-bottom:6px;}
+body.embed-mode .tool-page-desc{display:none;}
+</style>
+<style>
+.growl-recipe{border:1px solid var(--border,rgba(255,255,255,.1));border-radius:10px;overflow:hidden;margin-top:6px}
+.gr-row{display:flex;gap:14px;padding:11px 14px;border-bottom:1px solid var(--border,rgba(255,255,255,.07));font-size:13.5px;line-height:1.5}
+.gr-row:last-child{border-bottom:none}
+.gr-k{flex:0 0 92px;font-family:var(--mono,monospace);font-weight:700;color:var(--teal,#00e8a2);text-transform:uppercase;font-size:11.5px;letter-spacing:.04em;padding-top:1px}
+.gr-v{color:var(--text2,#9a9ab2)}
+.gr-note{font-size:12.5px;color:var(--text2,#9a9ab2);margin-top:10px;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="mnav-wrap" data-section="tools">
+  <input type="checkbox" id="mnav-toggle" class="mnav-toggle" aria-hidden="true">
+  <nav class="mnav" aria-label="Main navigation">
+    <div class="mnav-in">
+      <a class="mnav-brand" href="/"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="6" stroke="#f5a623" stroke-width="1.7"/><path d="M7 15V9l3 3 3-5 4 8" stroke="#00e8a2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="mnav-word">MusicProductionWiki</span></a>
+      <div class="mnav-links">
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="articles">Articles <span class="caret">&#9662;</span></button><div class="mnav-panel mnav-panel-wide"><div class="mp-col"><div class="mp-head">Techniques & Analysis</div><a href="/categories/techniques"><span class="mp-name">Techniques</span><span class="mp-desc">Mixing, mastering, sound design</span></a><a href="/categories/reviews"><span class="mp-name">Reviews</span><span class="mp-desc">Honest. No paid placements.</span></a><a href="/categories/comparisons"><span class="mp-name">Comparisons</span><span class="mp-desc">Head-to-head</span></a><a href="/categories/breakdowns"><span class="mp-name">Breakdowns</span><span class="mp-desc">Track-by-track</span></a><a href="/categories/recreations"><span class="mp-name">Recreations</span><span class="mp-desc">Recreate iconic sounds</span></a><a href="/genres"><span class="mp-name">Genres</span><span class="mp-desc">Every genre & style</span></a></div><div class="mp-col"><div class="mp-head">Reference & Business</div><a href="/categories/ai-music"><span class="mp-name">AI Music</span><span class="mp-desc">Suno, Udio, AI tools</span></a><a href="/categories/music-business"><span class="mp-name">Music Business</span><span class="mp-desc">Royalties, licensing, sync</span></a></div></div></div>
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="gear">Gear <span class="caret">&#9662;</span></button><div class="mnav-panel"><div class="mp-col"><a href="/categories/daws"><span class="mp-name">DAWs</span><span class="mp-desc">Every major DAW</span></a><a href="/categories/plugins"><span class="mp-name">Plugins</span><span class="mp-desc">EQ, comp, reverb, synths</span></a><a href="/categories/hardware"><span class="mp-name">Hardware</span><span class="mp-desc">Interfaces, mics, monitors</span></a></div></div></div>
+        <a class="mnav-flat" href="/tools/" data-nav="tools">Tools</a>
+        <a class="mnav-flat" href="/bible/" data-nav="bible">The Bible</a>
+      </div>
+      <div class="mnav-right">
+        <button class="mnav-search" data-nav-search aria-label="Search"><svg width="17" height="17" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <a class="mnav-cta" href="https://theproducersbriefing.beehiiv.com">Sound Better &rarr;</a>
+        <label class="mnav-burger" for="mnav-toggle"><span></span><span></span><span></span></label>
+      </div>
+    </div>
+  </nav>
+  <div class="mnav-drawer">
+    <div class="drw-label">Articles</div>
+    <div class="drw-grid">
+      <a href="/categories/techniques" class="drw-card">Techniques</a><a href="/categories/reviews" class="drw-card">Reviews</a><a href="/categories/comparisons" class="drw-card">Comparisons</a><a href="/categories/breakdowns" class="drw-card">Breakdowns</a><a href="/categories/recreations" class="drw-card">Recreations</a><a href="/genres" class="drw-card">Genres</a><a href="/categories/ai-music" class="drw-card">AI Music</a><a href="/categories/music-business" class="drw-card">Music Business</a>
+    </div>
+    <div class="drw-label">Gear</div>
+    <div class="drw-grid">
+      <a href="/categories/daws" class="drw-card">DAWs</a><a href="/categories/plugins" class="drw-card">Plugins</a><a href="/categories/hardware" class="drw-card">Hardware</a>
+    </div>
+    <a href="/bible/" class="drw-feat drw-feat-bible">&#9670; The Producer's Bible</a>
+    <a href="/tools/" class="drw-feat">The Producer's Tools</a>
+    <a href="https://theproducersbriefing.beehiiv.com" class="drw-cta">Sound Better &rarr;</a>
+  </div>
+</div>
+
+<main id="main-content">
+<div class="tool-page">
+  <nav class="tool-breadcrumb" aria-label="Breadcrumb">
+    <a href="/">Home</a><span class="tool-breadcrumb-sep">&#8250;</span>
+    <a href="/tools/">Tools</a><span class="tool-breadcrumb-sep">&#8250;</span>
+    <span aria-current="page">Growl Bass Designer</span>
+  </nav>
+  <div class="tool-page-title">
+    <h1>Growl Bass <span class="acc">Designer</span></h1>
+    <p class="tool-page-desc">Design a dubstep <b>growl bass</b> live &mdash; drag the XY pad for wavetable morph and drive, then raise the <b>LFO rate</b> and hear a static bass turn into a Skrillex&#8209;style growl. The movement of the timbre, not the note, is the whole sound. Copy the recipe into Serum, Vital or Massive.</p>
+  </div>
+  <div class="thow">
+    <div class="thow-step"><div class="thow-n">01 &middot; DRAG</div><div class="thow-t">Drag the pad right for a denser wavetable, up for more drive.</div></div>
+    <div class="thow-step"><div class="thow-n">02 &middot; MOVE</div><div class="thow-t">Raise the LFO rate &mdash; the static bass starts to growl.</div></div>
+    <div class="thow-step"><div class="thow-n">03 &middot; BUILD</div><div class="thow-t">Copy the recipe below into Serum, Vital or Massive.</div></div>
+  </div>
+  <div class="thc">
+    <div class="thc-brand">
+      <div class="thc-mark"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7.2" fill="none" stroke="#0a0a0b" stroke-width="1.6"/><path d="M9 9 L9 3.4" stroke="#0a0a0b" stroke-width="1.8" stroke-linecap="round"/><circle cx="9" cy="9" r="1.4" fill="#0a0a0b"/></svg></div>
+      <div><div class="thc-name">MusicProductionWiki.com</div><div class="thc-sub">&#9670; The Producer's Tools</div></div>
+    </div>
+    <div class="thc-right"><span class="thc-badge">INTERACTIVE TOOL</span><a href="/tools/" class="thc-related">All Tools &rarr;</a></div>
+  </div>
+<div class="dgb-live" id="dgb-live">
+<style>
+#dgb-live{position:relative;background:radial-gradient(120% 80% at 12% 0%,rgba(0,212,168,.10),transparent 60%),#0a0f0d;border:1px solid rgba(0,212,168,.35);border-radius:16px;margin:2rem 0;overflow:hidden;box-shadow:0 24px 60px -30px rgba(0,212,168,.35),inset 0 1px 0 rgba(255,255,255,.03);}
+#dgb-live *{box-sizing:border-box;}
+#dgb-live .dl-bar{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.9rem 1.15rem;background:linear-gradient(135deg,rgba(0,212,168,.14),rgba(0,212,168,.02));border-bottom:1px solid rgba(0,212,168,.22);}
+#dgb-live .dl-title{display:flex;flex-direction:column;gap:2px;}
+#dgb-live .dl-kick{font-family:var(--font-mono,ui-monospace,monospace);font-size:.7rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#00d4a8;}
+#dgb-live .dl-sub{font-family:var(--font-mono,ui-monospace,monospace);font-size:.66rem;letter-spacing:.04em;color:#5f7183;}
+#dgb-live .dl-live{display:flex;align-items:center;gap:7px;font-family:var(--font-mono,ui-monospace,monospace);font-size:.62rem;font-weight:700;letter-spacing:.12em;color:#5f7183;text-transform:uppercase;}
+#dgb-live .dl-dot{width:8px;height:8px;border-radius:50%;background:#2a3a44;box-shadow:0 0 0 0 rgba(0,212,168,.5);transition:background .2s;}
+#dgb-live.is-on .dl-dot{background:#00d4a8;animation:dgbpulse 1.4s ease-out infinite;}
+#dgb-live.is-on .dl-live{color:#00d4a8;}
+@keyframes dgbpulse{0%{box-shadow:0 0 0 0 rgba(0,212,168,.55)}100%{box-shadow:0 0 0 9px rgba(0,212,168,0)}}
+#dgb-live .dl-body{padding:16px 18px 20px;}
+#dgb-live .dl-stage{position:relative;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.06);}
+#dgb-live #dgbCanvas{width:100%;height:340px;display:block;background:#080b0f;cursor:grab;touch-action:none;}
+#dgb-live #dgbCanvas:active{cursor:grabbing;}
+#dgb-live .dl-tag{position:absolute;font-family:var(--font-mono,ui-monospace,monospace);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#5f7183;pointer-events:none;}
+#dgb-live .dl-charwrap{position:absolute;top:12px;right:14px;text-align:right;pointer-events:none;}
+#dgb-live .dl-char{font-family:var(--font-mono,ui-monospace,monospace);font-size:15px;font-weight:700;color:#00d4a8;letter-spacing:.04em;}
+#dgb-live .dl-charsub{font-family:var(--font-mono,ui-monospace,monospace);font-size:10.5px;color:#8a9bb0;margin-top:2px;}
+#dgb-live .dl-hint{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;font-family:var(--font-mono,ui-monospace,monospace);font-size:12px;color:#7d8 da0;color:#7d8da0;pointer-events:none;transition:opacity .3s;}
+#dgb-live.is-on .dl-hint{opacity:0;}
+#dgb-live .dl-scope{margin-top:10px;position:relative;border-radius:10px;border:1px solid rgba(255,255,255,.06);overflow:hidden;background:#080b0f;}
+#dgb-live #dgbScope{width:100%;height:58px;display:block;}
+#dgb-live .dl-scope-lab{position:absolute;top:6px;left:10px;font-family:var(--font-mono,ui-monospace,monospace);font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#5f7183;pointer-events:none;}
+#dgb-live .dl-controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:16px;}
+#dgb-live .dl-play{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(180deg,#00e6b6,#00c39a);color:#04211a;border:none;font-weight:800;font-size:14px;padding:11px 20px;border-radius:10px;cursor:pointer;font-family:inherit;box-shadow:0 8px 20px -8px rgba(0,212,168,.7);transition:transform .08s;}
+#dgb-live .dl-play:active{transform:translateY(1px);}
+#dgb-live .dl-seg{display:inline-flex;border:1px solid rgba(255,255,255,.14);border-radius:10px;overflow:hidden;}
+#dgb-live .dl-seg button{background:transparent;color:#8a9bb0;border:none;font-family:var(--font-mono,ui-monospace,monospace);font-size:12px;font-weight:700;padding:9px 14px;cursor:pointer;transition:background .15s;}
+#dgb-live .dl-seg button[aria-pressed=true]{background:#00d4a8;color:#04211a;}
+#dgb-live .dl-knobs{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;margin-top:16px;}
+#dgb-live .dl-field{display:flex;align-items:center;gap:12px;}
+#dgb-live .dl-field label{font-family:var(--font-mono,ui-monospace,monospace);font-size:11.5px;font-weight:700;color:#00d4a8;white-space:nowrap;min-width:72px;letter-spacing:.02em;}
+#dgb-live .dl-field input[type=range]{flex:1;accent-color:#00d4a8;height:4px;}
+#dgb-live .dl-val{font-family:var(--font-mono,ui-monospace,monospace);font-size:11.5px;color:#c8d2de;min-width:60px;text-align:right;}
+#dgb-live .dl-presets{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;}
+#dgb-live .dl-plabel{width:100%;font-family:var(--font-mono,ui-monospace,monospace);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#5f7183;margin-bottom:2px;}
+#dgb-live .dl-tbtn{background:#0e1a16;color:#00d4a8;border:1px solid rgba(0,212,168,.35);border-radius:20px;font-family:var(--font-mono,ui-monospace,monospace);font-weight:700;cursor:pointer;padding:8px 15px;font-size:12px;transition:background .15s,box-shadow .15s;}
+#dgb-live .dl-tbtn:hover{background:rgba(0,212,168,.14);box-shadow:0 0 0 1px rgba(0,212,168,.5);}
+#dgb-live .dl-read{margin-top:16px;font-size:.86rem;line-height:1.55;color:#c8d2de;background:rgba(0,212,168,.05);border-left:3px solid #00d4a8;border-radius:0 8px 8px 0;padding:.7rem .95rem;}
+#dgb-live .dl-footer{margin-top:18px;display:flex;justify-content:center;}
+#dgb-live .dl-open{display:inline-block;font-family:var(--font-mono,ui-monospace,monospace);font-size:13px;font-weight:700;color:#00d4a8;text-decoration:none;border:1px solid rgba(0,212,168,.5);border-radius:10px;padding:12px 22px;transition:background .15s;}
+#dgb-live .dl-open:hover{background:rgba(0,212,168,.12);}
+#dgb-live .dl-note{font-size:.72rem;color:#4d5c6b;margin:12px 0 0;font-style:italic;text-align:center;}
+@media(max-width:600px){#dgb-live .dl-knobs{grid-template-columns:1fr;}#dgb-live #dgbCanvas{height:300px;}}
+</style>
+<div class="dl-bar">
+  <div class="dl-title"><span class="dl-kick">&#9654;&nbsp;Growl Bass Designer</span><span class="dl-sub">drag &middot; listen &middot; the movement is the sound</span></div>
+  <div class="dl-live"><span class="dl-dot"></span><span>Live</span></div>
+</div>
+<div class="dl-body">
+<div class="dl-stage">
+  <canvas id="dgbCanvas" aria-label="An interactive XY pad. Drag left to right for wavetable morph, and up for drive. A live spectrum shows the harmonics moving as the LFO sweeps the timbre. Press play to hear it."></canvas>
+  <span class="dl-tag" style="left:12px;bottom:10px;">clean &middot; closed</span>
+  <span class="dl-tag" style="right:12px;bottom:10px;">bright &middot; open</span>
+  <span class="dl-tag" style="right:12px;top:44px;">mangled</span>
+  <span class="dl-tag" style="left:12px;bottom:26px;transform:rotate(-90deg);transform-origin:left bottom;">drive &uarr;</span>
+  <span class="dl-tag" style="left:50%;bottom:10px;transform:translateX(-50%);">morph &rarr;</span>
+  <div class="dl-charwrap"><div class="dl-char" id="dgbChar">SLOW WOB</div><div class="dl-charsub" id="dgbCharSub">morph 0.35 &middot; drive 0.42</div></div>
+  <div class="dl-hint" id="dgbHint">&#9654;&nbsp; press play, then drag the pad</div>
+</div>
+<div class="dl-scope"><canvas id="dgbScope" aria-hidden="true"></canvas><span class="dl-scope-lab">Movement &middot; LFO</span></div>
+<div class="dl-controls">
+  <button class="dl-play" id="dgbPlay" type="button">&#9654;&nbsp;Play</button>
+  <div class="dl-seg" role="group" aria-label="Source wave"><button id="dgbSaw" type="button" aria-pressed="true">SAW</button><button id="dgbSq" type="button" aria-pressed="false">SQUARE</button></div>
+</div>
+<div class="dl-knobs">
+  <div class="dl-field"><label for="dgbLfo">LFO rate</label><input type="range" id="dgbLfo" min="0" max="140" value="52"><span class="dl-val" id="dgbLfoVal">5.2 Hz</span></div>
+  <div class="dl-field"><label for="dgbNote">Note</label><input type="range" id="dgbNote" min="24" max="48" value="36"><span class="dl-val" id="dgbNoteVal">A1</span></div>
+</div>
+<div class="dl-presets"><span class="dl-plabel">Presets</span></div>
+<div class="dl-read" id="dgbRead">Drag right for a brighter, denser wavetable; drag up for more drive. Then raise the LFO rate &mdash; a static bass turns into a growl. That rhythmic movement of the timbre, not the note, is the whole sound.</div>
+<div class="dl-footer"><a class="dl-open" href="/articles/how-to-recreate-the-dubstep-growl-bass.html">Read the full recreation guide &rarr;</a></div>
+<p class="dl-note">Sound is generated live in your browser &mdash; nothing is recorded or uploaded. Press Play once to allow audio.</p>
+</div>
+<script>
+/* MPW Growl Engine — shared by the article centerpiece and the standalone tool.
+   Vanilla JS, no innerHTML, gesture-gated WebAudio. id-scoped by the host block. */
+(function(global){
+  "use strict";
+  function GrowlEngine(){
+    this.ac=null; this.started=false; this.nodes=null;
+    this.p={morph:0.35, drive:0.42, lfoRate:5.2, lfoDepth:0.7, note:36, wave:'saw', formant:0.5, running:false};
+  }
+  // waveshaper curve: soft->hard clip, k in 0..1
+  GrowlEngine.prototype._curve=function(k){
+    var n=1024, c=new Float32Array(n), amt=1+k*40;
+    for(var i=0;i<n;i++){var x=i/(n-1)*2-1; c[i]=(1+amt)*x/(1+amt*Math.abs(x));}
+    return c;
+  };
+  // build a periodic wave whose harmonic content grows with morph (0=few partials,1=dense)
+  GrowlEngine.prototype._wave=function(ac,morph){
+    var H=26, real=new Float32Array(H), imag=new Float32Array(H);
+    for(var h=1;h<H;h++){
+      var base = (this.p.wave==='square' && h%2===0) ? 0 : 1/h;
+      // morph opens up upper partials
+      var open = Math.pow(morph, 0.6);
+      var w = base * (0.25 + 1.6*open*Math.exp(-(h-1)*(1-open)*0.5));
+      imag[h]=w;
+    }
+    return ac.createPeriodicWave(real,imag,{disableNormalization:false});
+  };
+  GrowlEngine.prototype.noteHz=function(semi){return 55*Math.pow(2,(semi-33)/12);};
+  GrowlEngine.prototype.start=function(){
+    if(this.started) return;
+    var AC=global.AudioContext||global.webkitAudioContext; if(!AC) return;
+    var ac=new AC(); this.ac=ac;
+    var osc=ac.createOscillator(); osc.setPeriodicWave(this._wave(ac,this.p.morph));
+    osc.frequency.value=this.noteHz(this.p.note);
+    var shaper=ac.createWaveShaper(); shaper.curve=this._curve(this.p.drive); shaper.oversample='4x';
+    var preGain=ac.createGain(); preGain.gain.value=0.9;
+    // formant / comb: two bandpass peaks summed with the dry path
+    var bp1=ac.createBiquadFilter(); bp1.type='bandpass'; bp1.Q.value=6;
+    var bp2=ac.createBiquadFilter(); bp2.type='bandpass'; bp2.Q.value=9;
+    var dry=ac.createGain(); dry.gain.value=0.5;
+    var wet1=ac.createGain(); wet1.gain.value=0.55;
+    var wet2=ac.createGain(); wet2.gain.value=0.4;
+    // gentle lowpass to tame fizz + master
+    var lp=ac.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=8000; lp.Q.value=0.6;
+    var master=ac.createGain(); master.gain.value=0.0;
+    // LFO drives filter cutoff (the "movement")
+    var lfo=ac.createOscillator(); lfo.type='sine'; lfo.frequency.value=this.p.lfoRate;
+    var lfoGain=ac.createGain(); lfoGain.gain.value=this.p.lfoDepth*1400;
+    lfo.connect(lfoGain); lfoGain.connect(bp1.frequency); lfoGain.connect(bp2.frequency);
+    var an=ac.createAnalyser(); an.fftSize=2048;
+    osc.connect(preGain); preGain.connect(shaper);
+    shaper.connect(dry); shaper.connect(bp1); shaper.connect(bp2);
+    bp1.connect(wet1); bp2.connect(wet2);
+    dry.connect(lp); wet1.connect(lp); wet2.connect(lp);
+    lp.connect(master); master.connect(an); an.connect(ac.destination);
+    osc.start(); lfo.start();
+    this.nodes={osc:osc,shaper:shaper,bp1:bp1,bp2:bp2,lp:lp,master:master,lfo:lfo,lfoGain:lfoGain,an:an,ac:ac};
+    this.started=true; this.apply();
+  };
+  GrowlEngine.prototype.apply=function(){
+    if(!this.nodes) return; var n=this.nodes, ac=this.ac, t=ac.currentTime;
+    n.osc.setPeriodicWave(this._wave(ac,this.p.morph));
+    n.osc.frequency.setTargetAtTime(this.noteHz(this.p.note),t,0.02);
+    n.shaper.curve=this._curve(this.p.drive);
+    var fc=180+this.p.formant*2600+this.p.morph*1200;
+    n.bp1.frequency.setTargetAtTime(fc,t,0.03);
+    n.bp2.frequency.setTargetAtTime(fc*2.4,t,0.03);
+    n.lfo.frequency.setTargetAtTime(this.p.lfoRate,t,0.02);
+    n.lfoGain.gain.setTargetAtTime(this.p.lfoDepth*1400,t,0.02);
+  };
+  GrowlEngine.prototype.play=function(){
+    this.start(); if(!this.nodes) return;
+    if(this.ac.state==='suspended') this.ac.resume();
+    this.nodes.master.gain.setTargetAtTime(0.22,this.ac.currentTime,0.02);
+    this.p.running=true;
+  };
+  GrowlEngine.prototype.stop=function(){
+    if(!this.nodes) return;
+    this.nodes.master.gain.setTargetAtTime(0.0,this.ac.currentTime,0.02);
+    this.p.running=false;
+  };
+  GrowlEngine.prototype.set=function(k,v){ this.p[k]=v; this.apply(); };
+  global.MPWGrowlEngine=GrowlEngine;
+})(typeof window!=='undefined'?window:this);
+
+</script>
+<script>
+(function(){
+  "use strict";
+  var root=document.getElementById('dgb-live'); if(!root) return;
+  var $=function(id){return document.getElementById(id);};
+  var cv=$('dgbCanvas'), sc=$('dgbScope');
+  if(!cv||!window.MPWGrowlEngine) return;
+  var ctx=cv.getContext('2d'), sctx=sc.getContext('2d');
+  var eng=new window.MPWGrowlEngine();
+  var NOTES=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+  function noteName(s){return NOTES[((s%12)+12)%12]+(Math.floor(s/12)-1);}
+  var dpr=Math.min(window.devicePixelRatio||1,2);
+  function resize(){
+    [cv,sc].forEach(function(c){var r=c.getBoundingClientRect();c.width=r.width*dpr;c.height=r.height*dpr;});
+  }
+  function charOf(){
+    var m=eng.p.morph,d=eng.p.drive,l=eng.p.lfoRate;
+    var t = m<0.3?"CLOSED":(m<0.55?"OPENING":(m<0.78?"VOWEL":"BRIGHT"));
+    var g = d<0.3?"CLEAN":(d<0.6?"DRIVEN":"MANGLED");
+    if(l<0.4) return {a:"STATIC BASS",b:t+" \u00b7 "+g};
+    if(l<3.5) return {a:"SLOW WOB",b:t+" \u00b7 "+g};
+    if(l<7) return {a:"FULL GROWL",b:t+" \u00b7 "+g};
+    return {a:"TALKING",b:t+" \u00b7 "+g};
+  }
+  function drawPad(){
+    var w=cv.width,h=cv.height;
+    ctx.clearRect(0,0,w,h);
+    // energy gradient (calm bottom-left -> hot top-right)
+    var g=ctx.createLinearGradient(0,h,w,0);
+    g.addColorStop(0,"#080b0f");g.addColorStop(0.6,"#0a1512");g.addColorStop(1,"rgba(0,212,168,0.10)");
+    ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+    // radial glow top-right
+    var rg=ctx.createRadialGradient(w*0.85,h*0.15,0,w*0.85,h*0.15,w*0.6);
+    rg.addColorStop(0,"rgba(0,212,168,0.12)");rg.addColorStop(1,"transparent");
+    ctx.fillStyle=rg;ctx.fillRect(0,0,w,h);
+    // grid
+    ctx.strokeStyle="rgba(255,255,255,0.045)";ctx.lineWidth=1*dpr;
+    for(var i=1;i<8;i++){var X=i/8*w;ctx.beginPath();ctx.moveTo(X,0);ctx.lineTo(X,h);ctx.stroke();}
+    for(var j=1;j<5;j++){var Y=j/5*h;ctx.beginPath();ctx.moveTo(0,Y);ctx.lineTo(w,Y);ctx.stroke();}
+    // live spectrum envelope
+    if(eng.nodes&&eng.p.running){
+      var an=eng.nodes.an,bins=an.frequencyBinCount,data=new Uint8Array(bins);
+      an.getByteFrequencyData(data);
+      var used=Math.floor(bins*0.5);
+      ctx.beginPath();ctx.moveTo(0,h);
+      for(var k=0;k<used;k++){var x=k/(used-1)*w,v=data[k]/255,y=h-v*h*0.9;ctx.lineTo(x,y);}
+      ctx.lineTo(w,h);ctx.closePath();
+      var sg=ctx.createLinearGradient(0,0,0,h);
+      sg.addColorStop(0,"rgba(0,212,168,0.30)");sg.addColorStop(1,"rgba(0,212,168,0.02)");
+      ctx.fillStyle=sg;ctx.fill();
+      ctx.save();ctx.shadowColor="rgba(0,212,168,0.8)";ctx.shadowBlur=10*dpr;
+      ctx.beginPath();
+      for(var k2=0;k2<used;k2++){var x2=k2/(used-1)*w,v2=data[k2]/255,y2=h-v2*h*0.9;if(k2===0)ctx.moveTo(x2,y2);else ctx.lineTo(x2,y2);}
+      ctx.strokeStyle="rgba(0,212,168,0.75)";ctx.lineWidth=2*dpr;ctx.stroke();ctx.restore();
+    }
+    // puck + guides + LFO pulse ring
+    var px=eng.p.morph*w, py=(1-eng.p.drive)*h;
+    ctx.strokeStyle="rgba(0,212,168,0.18)";ctx.lineWidth=1*dpr;ctx.setLineDash([4*dpr,5*dpr]);
+    ctx.beginPath();ctx.moveTo(px,0);ctx.lineTo(px,h);ctx.moveTo(0,py);ctx.lineTo(w,py);ctx.stroke();ctx.setLineDash([]);
+    if(eng.p.running&&eng.p.lfoRate>0.05){
+      var phase=(performance.now()/1000)*eng.p.lfoRate;
+      var r=(20+8*Math.sin(phase*2*Math.PI))*dpr;
+      ctx.beginPath();ctx.arc(px,py,r,0,7);ctx.strokeStyle="rgba(0,212,168,0.35)";ctx.lineWidth=2*dpr;ctx.stroke();
+    }
+    ctx.save();ctx.shadowColor="rgba(0,212,168,0.9)";ctx.shadowBlur=16*dpr;
+    ctx.beginPath();ctx.arc(px,py,11*dpr,0,7);ctx.fillStyle="#00e6b6";ctx.fill();ctx.restore();
+    ctx.beginPath();ctx.arc(px,py,11*dpr,0,7);ctx.strokeStyle="#eafff9";ctx.lineWidth=1.5*dpr;ctx.stroke();
+  }
+  var scx=0;
+  function drawScope(){
+    var w=sc.width,h=sc.height;
+    sctx.clearRect(0,0,w,h);
+    sctx.fillStyle="#080b0f";sctx.fillRect(0,0,w,h);
+    sctx.strokeStyle="rgba(255,255,255,0.05)";sctx.lineWidth=1*dpr;
+    sctx.beginPath();sctx.moveTo(0,h/2);sctx.lineTo(w,h/2);sctx.stroke();
+    var rate=eng.p.lfoRate, run=eng.p.running;
+    if(run) scx+=rate*0.06;
+    sctx.beginPath();
+    for(var x=0;x<=w;x+=2*dpr){
+      var t=x/w, cycles=Math.max(0.0,rate)*1.4;
+      var y=h/2 - (rate<0.05?0:Math.sin((t*cycles+scx)*2*Math.PI))*(h*0.34);
+      if(x===0)sctx.moveTo(x,y);else sctx.lineTo(x,y);
+    }
+    sctx.strokeStyle=rate<0.05?"rgba(120,140,150,0.5)":"rgba(0,212,168,0.85)";
+    sctx.lineWidth=2*dpr;sctx.stroke();
+  }
+  function loop(){drawPad();drawScope();raf=requestAnimationFrame(loop);}
+  var raf=requestAnimationFrame(loop);
+  function setFromXY(clientX,clientY){
+    var r=cv.getBoundingClientRect();
+    var mx=Math.max(0,Math.min(1,(clientX-r.left)/r.width));
+    var dy=Math.max(0,Math.min(1,1-(clientY-r.top)/r.height));
+    eng.set('morph',mx);eng.set('drive',dy);syncHud();
+  }
+  function syncHud(){
+    var c=charOf();$('dgbChar').textContent=c.a;
+    $('dgbCharSub').textContent="morph "+eng.p.morph.toFixed(2)+" \u00b7 drive "+eng.p.drive.toFixed(2);
+  }
+  var dragging=false;
+  cv.addEventListener('pointerdown',function(e){dragging=true;try{cv.setPointerCapture(e.pointerId);}catch(x){}eng.play();on(true);setFromXY(e.clientX,e.clientY);e.preventDefault();});
+  cv.addEventListener('pointermove',function(e){if(dragging)setFromXY(e.clientX,e.clientY);});
+  cv.addEventListener('pointerup',function(){dragging=false;});
+  cv.addEventListener('pointercancel',function(){dragging=false;});
+  function on(state){root.classList.toggle('is-on',state);$('dgbPlay').innerHTML=state?"&#9632;&nbsp;Stop":"&#9654;&nbsp;Play";}
+  $('dgbPlay').addEventListener('click',function(){if(eng.p.running){eng.stop();on(false);}else{eng.play();on(true);}});
+  $('dgbLfo').addEventListener('input',function(){var v=(+this.value)/10;eng.set('lfoRate',v);$('dgbLfoVal').textContent=v.toFixed(1)+" Hz";syncHud();});
+  $('dgbNote').addEventListener('input',function(){var v=+this.value;eng.set('note',v);$('dgbNoteVal').textContent=noteName(v);});
+  function pressWave(saw){eng.set('wave',saw?'saw':'square');$('dgbSaw').setAttribute('aria-pressed',saw);$('dgbSq').setAttribute('aria-pressed',!saw);}
+  $('dgbSaw').addEventListener('click',function(){pressWave(true);});
+  $('dgbSq').addEventListener('click',function(){pressWave(false);});
+  var PRESETS=[
+    {name:"Static bass",st:{morph:0.18,drive:0.15,lfoRate:0.0}},
+    {name:"Slow wob",st:{morph:0.45,drive:0.4,lfoRate:2.8}},
+    {name:"Reese-ish",st:{morph:0.35,drive:0.55,lfoRate:0.6}},
+    {name:"Full growl",st:{morph:0.72,drive:0.68,lfoRate:6.4}},
+    {name:"Talking",st:{morph:0.6,drive:0.6,lfoRate:8.4}}
+  ];
+  (function(){
+    var row=root.querySelector('.dl-presets'); if(!row) return;
+    PRESETS.forEach(function(p){
+      var b=document.createElement('button');b.type="button";b.className="dl-tbtn";b.textContent=p.name;
+      b.addEventListener('click',function(){
+        for(var k in p.st){eng.set(k,p.st[k]);}
+        $('dgbLfo').value=Math.round(eng.p.lfoRate*10);$('dgbLfoVal').textContent=eng.p.lfoRate.toFixed(1)+" Hz";
+        eng.play();on(true);syncHud();
+      });
+      row.appendChild(b);
+    });
+  })();
+  window.addEventListener('resize',resize);
+  resize();syncHud();
+})();
+</script>
+</div>
+
+  <div class="tsec" style="margin-top:16px">
+    <div class="tsec-label">Copy the recipe into your synth</div>
+    <div class="growl-recipe">
+      <div class="gr-row"><span class="gr-k">Source</span><span class="gr-v">Wavetable (or 2&ndash;3 detuned saws / FM). Start on a bright, harmonically rich frame.</span></div>
+      <div class="gr-row"><span class="gr-k">Movement</span><span class="gr-v">LFO &rarr; wavetable position (or filter cutoff). Tempo-sync it: 1/4 for a slow wob, 1/8&ndash;1/16 for a fast growl.</span></div>
+      <div class="gr-row"><span class="gr-k">Formant</span><span class="gr-v">Comb or bandpass/formant filter for the vowel. Modulate it too for the &ldquo;talking&rdquo; motion.</span></div>
+      <div class="gr-row"><span class="gr-k">Distortion</span><span class="gr-v">Waveshaper / drive after the filter. Stack two gentle stages rather than one extreme one.</span></div>
+      <div class="gr-row"><span class="gr-k">Glue</span><span class="gr-v">Multiband / OTT to even it out, then a low-pass to tame fizz. Resample and repeat to taste.</span></div>
+      <div class="gr-row"><span class="gr-k">Tempo</span><span class="gr-v">140 BPM, half-time feel &mdash; the classic dubstep grid.</span></div>
+    </div>
+    <p class="gr-note">Free route: <b>Vital</b> (wavetable) + any distortion. Paid shortcuts: <b>Serum</b>, <b>Massive</b>, <b>Phase Plant</b>. The moving timbre matters more than the plugin.</p>
+  </div>
+  <div class="share-embed">
+    <div class="tsec-label">Share this tool</div>
+    <div style="display:flex;gap:8px;flex-wrap:nowrap">
+      <button id="toolCopyBtn" onclick="(function(b){navigator.clipboard.writeText(window.location.href).then(function(){var t=b.textContent;b.textContent='Copied!';setTimeout(function(){b.textContent=t},2000)}).catch(function(){});})(this)" style="flex:1;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:700;padding:9px 12px;border-radius:8px;background:#f5a623;color:#000;border:none;cursor:pointer;font-family:inherit;white-space:nowrap;box-sizing:border-box">Copy Link</button>
+      <a id="toolShareX" href="#" target="_blank" rel="noopener" style="flex:1;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:700;padding:9px 12px;border-radius:8px;background:#000;color:#fff;border:1px solid #333;text-decoration:none;white-space:nowrap;box-sizing:border-box">Share on X</a>
+      <a id="toolShareReddit" href="#" target="_blank" rel="noopener" style="flex:1;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:700;padding:9px 12px;border-radius:8px;background:#ff4500;color:#fff;border:none;text-decoration:none;white-space:nowrap;box-sizing:border-box"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>Reddit</a>
+    </div>
+    <div class="embed-box">
+      <div class="tsec-label" style="margin-bottom:8px">Embed on your site</div>
+      <code id="embedCode">&lt;iframe src="https://musicproductionwiki.com/tools/hard-tune-explorer.html?embed=true" width="100%" height="1000" style="border:0;border-radius:12px" title="Hard-Tune Explorer" loading="lazy"&gt;&lt;/iframe&gt;</code>
+      <button class="embed-copy" id="embedCopy" type="button">Copy embed code</button>
+    </div>
+  </div>
+  <div class="tfaq">
+    <h2>Growl bass FAQ</h2>
+    <div class="tfaq-q"><h3>What actually makes a dubstep growl?</h3><p>A harmonically dense source, rhythmic <b>movement</b> of the timbre from an LFO or automation, and distortion &mdash; with a comb or formant filter carving the vowel. The movement is the part beginners miss: a static distorted bass is just a distorted bass. Raise the LFO here and you hear it become a growl.</p></div>
+    <div class="tfaq-q"><h3>What did Skrillex use for &ldquo;Scary Monsters&rdquo;?</h3><p>In a 2011 MusicRadar interview he named <b>Native Instruments Massive</b> and <b>FM8</b> as his two synths and said he leans on FM synthesis. The community technique uses a moving wavetable in Massive plus heavy distortion, but the exact preset was never officially published &mdash; so treat specific settings as a solid recreation, not a claim about the session.</p></div>
+    <div class="tfaq-q"><h3>Can I do this with free plugins?</h3><p>Yes. <b>Vital</b> is a free wavetable synth that covers everything here. Any synth with an LFO you can route to wavetable position or filter cutoff, plus a distortion unit, will make a growl. Paid tools like Serum or Massive are shortcuts, not a secret ingredient.</p></div>
+    <div class="tfaq-q"><h3>Is the audio a sample?</h3><p>No &mdash; it's a Web Audio synth generating the growl live in your browser: a wavetable oscillator through a waveshaper and an LFO-swept formant filter. Nothing is recorded, downloaded or uploaded.</p></div>
+  </div>
+  <div class="trelated">
+    <div class="trelated-label">RELATED</div>
+    <div class="trelated-grid">
+      <a href="/articles/how-to-recreate-the-dubstep-growl-bass.html" class="trelated-card"><span class="trelated-name">Recreate the Dubstep Growl Bass</span><span class="trelated-desc">The full step-by-step guide</span></a>
+      <a href="/tools/acid-filter-explorer.html" class="trelated-card"><span class="trelated-name">Acid Filter Explorer</span><span class="trelated-desc">Sweep a live TB-303 resonant filter</span></a>
+      <a href="/articles/how-to-recreate-the-reese-bass.html" class="trelated-card"><span class="trelated-name">Recreate the Reese Bass</span><span class="trelated-desc">The detuned-saw D&amp;B monster</span></a>
+    </div>
+  </div>
+  </div>
+</main>
+
+<footer style="border-top:1px solid var(--border);padding:24px 20px;text-align:center;margin-top:40px">
+  <p style="font-size:12px;color:var(--text3)">
+    &copy; 2026 <a href="https://www.musicproductionwiki.com" style="color:var(--amber);text-decoration:none">MusicProductionWiki.com</a>
+    &nbsp;&middot;&nbsp; <a href="/tools/" style="color:var(--text2);text-decoration:none">All Tools</a>
+    &nbsp;&middot;&nbsp; <a href="/bible/" style="color:var(--text2);text-decoration:none">Producer's Bible</a>
+    &nbsp;&middot;&nbsp; <a href="https://theproducersbriefing.beehiiv.com" style="color:var(--text2);text-decoration:none">Newsletter</a>
+  </p>
+</footer>
+<script>
+(function(){
+  var title=document.title;
+  var url=window.location.href;
+  var xBtn=document.getElementById('toolShareX');
+  var rdBtn=document.getElementById('toolShareReddit');
+  if(xBtn)xBtn.href='https://x.com/intent/tweet?text='+encodeURIComponent(title)+' via @mpwikiofficial&url='+encodeURIComponent(url);
+  if(rdBtn)rdBtn.href='https://www.reddit.com/submit?url='+encodeURIComponent(url)+'&title='+encodeURIComponent(title);
+})();
+</script>
+<script>
+(function(){if(new URLSearchParams(location.search).get('embed')==='true'){document.body.classList.add('embed-mode');}})();
+</script>
+
+<div class="usearch" id="usearch" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="usearch-box">
+    <div class="usearch-top">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input id="usearchInput" type="text" placeholder="Search tools, articles, the Bible…" autocomplete="off">
+      <kbd>esc</kbd>
+    </div>
+    <div class="usearch-results" id="usearchResults"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
+<script>
+(function(){
+  // === production parity: lazy-load index on first open, build Fuse once ===
+  var data=null, fuse=null;
+  var overlay=document.getElementById('usearch');
+  var input=document.getElementById('usearchInput');
+  var box=document.getElementById('usearchResults');
+  var sel=-1, current=[];
+  // article slugs are bare; bible/ and tools/ slugs carry their prefix (verified vs live search-index.json)
+  function urlFor(s){ return (s.indexOf('bible/')===0||s.indexOf('tools/')===0) ? '/'+s : '/articles/'+s; }
+
+  function buildFuse(arr){
+    data=arr;
+    fuse=new Fuse(data,{keys:['title','category','description'],threshold:0.34,ignoreLocation:true,minMatchCharLength:2});
+  }
+  function ensureIndex(cb){
+    if(fuse){cb();return;}
+    // PRODUCTION: one shared index, lazy-loaded on first open.
+    fetch('/search-index.json').then(function(r){return r.json();}).then(function(arr){
+      buildFuse(arr); cb();
+    }).catch(function(){ box.textContent='Search failed to load.'; });
+  }
+
+  function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  function render(results){
+    current=results;
+    while(box.firstChild) box.removeChild(box.firstChild);   // no innerHTML
+    if(!input.value.trim()){ var p=document.createElement('div'); p.className='usearch-empty'; p.textContent='Start typing to search everything.'; box.appendChild(p); return; }
+    if(!results.length){ var n=document.createElement('div'); n.className='usearch-empty'; n.textContent='No results for "'+input.value+'".'; box.appendChild(n); return; }
+    results.slice(0,12).forEach(function(r,i){
+      var e=r.item||r;
+      var a=document.createElement('a'); a.href=urlFor(e.slug); if(i===sel)a.className='sel';
+      var top=document.createElement('div'); top.className='ur-top';
+      var t=document.createElement('span'); t.className='ur-title'; t.textContent=e.title;
+      var c=document.createElement('span'); c.className='ur-cat'; c.setAttribute('data-c',e.category||''); c.textContent=e.category||'';
+      top.appendChild(t); top.appendChild(c); a.appendChild(top);
+      if(e.description){ var d=document.createElement('div'); d.className='ur-desc'; d.textContent=e.description; a.appendChild(d); }
+      box.appendChild(a);
+    });
+  }
+
+  function open(q){ ensureIndex(function(){ overlay.classList.add('open'); input.focus(); if(q!=null){input.value=q;} sel=-1; render(input.value?fuse.search(input.value):[]); }); }
+  function close(){ overlay.classList.remove('open'); }
+
+  // wire every nav's search button to the shared overlay
+  document.querySelectorAll('[data-nav-search]').forEach(function(b){ b.addEventListener('click',function(){open(null);}); });
+  input.addEventListener('input',function(){ sel=-1; render(fuse?fuse.search(input.value):[]); });
+  input.addEventListener('keydown',function(e){
+    if(e.key==='Escape')close();
+    else if(e.key==='ArrowDown'){e.preventDefault(); sel=Math.min(sel+1,Math.min(current.length,12)-1); render(current);}
+    else if(e.key==='ArrowUp'){e.preventDefault(); sel=Math.max(sel-1,0); render(current);}
+    else if(e.key==='Enter'&&current[sel]){ var e2=current[sel].item||current[sel]; location.href=urlFor(e2.slug); }
+  });
+  overlay.addEventListener('click',function(e){ if(e.target===overlay)close(); });
+  document.addEventListener('keydown',function(e){ if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();open(null);} });
+})();
+</script>
+
+
+
+</body>
+</html>
