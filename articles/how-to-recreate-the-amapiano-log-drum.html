@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Recreate the amapiano log drum from scratch: the FM tone, the fast pitch and amp envelopes, and the portamento glide that makes it walk - in any DAW, free tools included." />
+  <title>How to Recreate the Amapiano Log Drum (The Bass That Walks)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <style>
+    #readingProgress{position:fixed;top:0;left:0;height:3px;background:var(--teal);width:0%;z-index:200;transition:width 0.1s linear;}
+    .quick-answer{background:linear-gradient(135deg,rgba(0,212,168,0.08),rgba(167,139,250,0.06));border:1px solid rgba(0,212,168,0.3);border-left:4px solid var(--teal);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .quick-answer-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.6rem;}
+    .quick-answer p{font-size:1rem;line-height:1.65;color:var(--text-primary);margin:0;}
+    .skill-badge{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .6rem;border-radius:4px;margin-left:.6rem;vertical-align:middle;position:relative;top:-2px;}
+    .skill-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .skill-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .skill-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .settings-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .settings-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .settings-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .settings-table tr:last-child td{border-bottom:none;}
+    .settings-table tr:hover td{background:var(--bg-surface);}
+    .settings-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .settings-table .mono{font-family:var(--font-mono);font-size:.82rem;color:var(--teal);}
+    .mistake-box{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-left:4px solid #ef4444;border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .mistake-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ef4444;margin-bottom:.4rem;}
+    .mistake-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference{border-left:3px solid var(--purple);padding:.75rem 1.25rem;margin:1.25rem 0;background:rgba(167,139,250,0.05);border-radius:0 6px 6px 0;}
+    .pro-reference-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.35rem;}
+    .pro-reference p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference strong{color:var(--text-primary);}
+    .listening-prescription{background:var(--bg-void);border:1px solid var(--border-default);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;position:relative;}
+    .listening-prescription::before{content:'🎧';position:absolute;top:-14px;left:1.5rem;background:var(--bg-void);padding:0 .4rem;font-size:1.1rem;}
+    .listening-prescription-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:.75rem;}
+    .listening-prescription p{font-size:.9rem;line-height:1.7;color:var(--text-secondary);margin:0 0 .5rem;}
+    .listening-record{font-weight:600;color:var(--text-primary);}
+    .decision-framework{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .decision-framework-title{font-family:var(--font-display);font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:1rem;}
+    .decision-item{display:flex;gap:1rem;padding:.65rem 0;border-bottom:1px solid var(--border-subtle);font-size:.88rem;line-height:1.55;}
+    .decision-item:last-child{border-bottom:none;}
+    .decision-if{color:var(--text-muted);font-style:italic;min-width:2rem;}
+    .decision-then{color:var(--text-primary);}
+    .decision-then strong{color:var(--teal);}
+    .exercise-block{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.25rem 0;}
+    .exercise-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;}
+    .exercise-badge{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .7rem;border-radius:4px;}
+    .exercise-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .exercise-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .exercise-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .exercise-title{font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text-primary);}
+    .exercise-block ol{margin:0;padding-left:1.25rem;color:var(--text-secondary);font-size:.88rem;line-height:1.7;}
+    .exercise-block ol li{margin-bottom:.4rem;}
+    .version-line{font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:4px;padding:.4rem .75rem;margin:.75rem 0 1.5rem;display:inline-block;}
+    .go-deeper{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:10px;padding:1.75rem;margin:2.5rem 0;}
+    .go-deeper-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text-primary);margin-bottom:1.25rem;}
+    .go-deeper-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;}
+    .go-deeper-item{background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:7px;padding:1rem 1.1rem;}
+    .go-deeper-item-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.35rem;}
+    .go-deeper-item a{font-size:.88rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;}
+    .go-deeper-item p{font-size:.78rem;color:var(--text-muted);margin:.3rem 0 0;}
+    .citation{font-size:.78rem;color:var(--text-muted);font-style:italic;margin-top:.25rem;}
+    .diagram-wrap{margin:1.9rem auto;max-width:100%;}
+    .diagram-wrap img{width:100%;height:auto;display:block;border:1px solid var(--border-subtle);border-radius:10px;}
+    .diagram-wrap picture{display:block;}
+    .diagram-caption{font-size:.78rem;color:var(--text-muted);text-align:center;margin-top:.75rem;font-style:italic;}
+    .highlight-box{background:rgba(0,212,168,0.06);border:1px solid rgba(0,212,168,0.2);border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .highlight-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.4rem;}
+    .highlight-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin:1.5rem 0;}
+    .stat-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem;text-align:center;}
+    .stat-number{font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--teal);display:block;}
+    .stat-label{font-size:.78rem;color:var(--text-secondary);margin-top:.25rem;}
+    .action-steps{counter-reset:steps;list-style:none;padding:0;margin:1.5rem 0;}
+    .action-steps li{counter-increment:steps;display:flex;gap:1rem;padding:.85rem 0;border-bottom:1px solid var(--border-subtle);font-size:.9rem;color:var(--text-secondary);line-height:1.6;}
+    .action-steps li:last-child{border-bottom:none;}
+    .action-steps li::before{content:counter(steps);background:var(--teal);color:#000;font-weight:800;font-size:.75rem;width:1.6rem;height:1.6rem;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem;}
+    .genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:1.5rem 0;}
+    .genre-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem 1.25rem;}
+    .genre-card-name{font-family:var(--font-display);font-size:.85rem;font-weight:700;color:var(--teal);margin-bottom:.4rem;}
+    .genre-card p{font-size:.82rem;color:var(--text-secondary);line-height:1.55;margin:0;}
+    .comparison-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .comparison-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .comparison-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .comparison-table tr:last-child td{border-bottom:none;}
+    .comparison-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .affiliate-cta{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,212,168,0.1);border:1px solid rgba(0,212,168,0.25);color:var(--teal);font-size:.82rem;font-weight:600;padding:.45rem .9rem;border-radius:6px;text-decoration:none;}
+
+    .faq-accordion{margin:1.75rem 0;}
+    .faq-accordion-item{background:var(--bg-surface);border:1px solid var(--border-subtle);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;margin-bottom:8px;overflow:hidden;}
+    .faq-accordion-q{display:flex;align-items:flex-start;padding:1rem 1.25rem;cursor:pointer;gap:.75rem;}
+    .faq-accordion-q:hover{background:var(--bg-elevated);}
+    .faq-accordion-icon{width:16px;height:16px;flex-shrink:0;margin-top:3px;color:var(--purple);transition:transform .2s ease;}
+    .faq-accordion-icon.open{transform:rotate(45deg);}
+    .faq-accordion-q-inner{display:flex;flex-direction:column;}
+    .faq-accordion-label{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin-bottom:.2rem;}
+    .faq-accordion-q-text{font-size:.92rem;font-weight:600;color:var(--text-primary);line-height:1.45;font-family:var(--font-display);}
+    .faq-accordion-a{display:none;padding:0 1.25rem 1rem 2.75rem;font-size:.88rem;color:var(--text-secondary);line-height:1.7;border-top:1px solid var(--border-subtle);padding-top:.85rem;}
+    .faq-accordion-a.open{display:block;}
+    .sourcebox{border:1px solid var(--border-default);border-radius:10px;overflow:hidden;margin:1.9rem 0;background:var(--bg-surface);}
+    .sourcebox-head{padding:1.1rem 1.4rem;border-bottom:1px solid var(--border-default);background:var(--bg-void);}
+    .sourcebox-kicker{display:block;font-family:var(--font-display);font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.3rem;}
+    .sourcebox-sub{display:block;font-size:.82rem;color:var(--text-secondary);line-height:1.5;}
+    .sourcebox-row{display:flex;gap:0;border-bottom:1px solid var(--border-subtle);}
+    .sourcebox-row:last-child{border-bottom:none;}
+    .sourcebox-tag{flex:0 0 168px;padding:1.1rem 1.2rem;font-family:var(--font-mono);font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;line-height:1.4;}
+    .sourcebox-body{padding:1.1rem 1.3rem 1.1rem 0;flex:1;}
+    .sourcebox-body p{font-size:.9rem;line-height:1.65;color:var(--text-secondary);margin:0;}
+    .sourcebox-body strong{color:var(--text-primary);}
+    .sourcebox-cite{display:block;margin-top:.55rem;font-size:.76rem;font-style:italic;color:var(--text-muted);line-height:1.5;}
+    .sourcebox-confirmed{border-left:4px solid var(--teal);} .sourcebox-confirmed .sourcebox-tag{color:var(--teal);}
+    .sourcebox-disputed{border-left:4px solid #f59e0b;} .sourcebox-disputed .sourcebox-tag{color:#f59e0b;}
+    .sourcebox-inferred{border-left:4px solid var(--purple);} .sourcebox-inferred .sourcebox-tag{color:var(--purple);}
+    @media(max-width:600px){.sourcebox-row{flex-direction:column;}.sourcebox-tag{flex-basis:auto;padding-bottom:.2rem;}.sourcebox-body{padding:.2rem 1.2rem 1.1rem;}}
+    .diagram-wrap svg{display:block;width:100%;height:auto;border-radius:8px;}
+    .fig-m{display:none;}
+    @media(max-width:600px){.fig-d{display:none;}.fig-m{display:block;}}
+    .tool-embed{margin:1.9rem 0;border:1px solid rgba(245,158,11,0.35);border-radius:12px;overflow:hidden;background:#0a0a0f;}
+    .tool-embed-bar{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.7rem 1rem;background:linear-gradient(135deg,rgba(245,158,11,0.12),rgba(245,158,11,0.03));border-bottom:1px solid rgba(245,158,11,0.28);}
+    .tool-embed-kicker{font-family:var(--font-mono);font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#f59e0b;}
+    .tool-embed-open{flex-shrink:0;font-family:var(--font-mono);font-size:.72rem;font-weight:700;color:#f59e0b;text-decoration:none;}
+    .tool-embed-open:hover{text-decoration:underline;}
+    .tool-embed-frame{width:100%;height:1000px;border:0;display:block;background:#0a0a0f;}
+    @media(max-width:600px){.tool-embed-frame{height:1080px;}}
+    .tool-embed-note{font-size:.82rem;line-height:1.5;color:var(--text-secondary);margin:0;padding:.7rem 1rem;border-top:1px solid rgba(255,255,255,0.06);}
+  </style>
+  <link rel="canonical" href="https://musicproductionwiki.com/articles/how-to-recreate-the-amapiano-log-drum.html"/>
+  <!-- Open Graph -->
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="How to Recreate the Amapiano Log Drum"/>
+  <meta property="og:description" content="Recreate the amapiano log drum from scratch: the FM tone, the fast pitch and amp envelopes, and the portamento glide that makes it walk - in any DAW, free tools included."/>
+  <meta property="og:url" content="https://musicproductionwiki.com/articles/how-to-recreate-the-amapiano-log-drum.html"/>
+  <meta property="og:site_name" content="Music Production Wiki"/>
+  <meta property="og:image" content="https://musicproductionwiki.com/images/how-to-recreate-the-amapiano-log-drum-poster.png"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="article:author" content="Music Production Wiki Team"/>
+  <meta property="article:section" content="Recreations"/>
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="How to Recreate the Amapiano Log Drum"/>
+  <meta name="twitter:description" content="Recreate the amapiano log drum from scratch: the FM tone, the fast pitch and amp envelopes, and the portamento glide that makes it walk - in any DAW, free tools included."/>
+  <meta name="twitter:image" content="https://musicproductionwiki.com/images/how-to-recreate-the-amapiano-log-drum-poster.png"/>
+  <!-- Organization schema -->
+  <!-- WebSite schema -->
+<style id="toc-skin">
+.toc-widget .sidebar-widget-header{margin-bottom:.35rem}
+.toc-list{counter-reset:tocnum;list-style:none;margin:0;padding:0}
+.toc-list li{counter-increment:tocnum;position:relative;margin:0;border-left:2px solid var(--border-subtle);transition:border-color .15s ease,background .15s ease}
+.toc-list li a{display:flex;gap:.7rem;align-items:baseline;padding:.5rem .85rem .5rem 1rem;font-size:.82rem;line-height:1.45;font-weight:500;color:var(--text-secondary);text-decoration:none;transition:color .15s ease}
+.toc-list li a::before{content:counter(tocnum,decimal-leading-zero);font-family:var(--font-mono,ui-monospace,monospace);font-size:.7rem;font-weight:600;letter-spacing:.04em;color:var(--text-muted);flex:0 0 auto;min-width:1.5em;padding-top:.05rem}
+.toc-list li a:hover{color:var(--text-primary)}
+.toc-list li.active{border-left-color:var(--teal);background:linear-gradient(90deg,rgba(0,212,168,.08),transparent 80%)}
+.toc-list li.active a{color:var(--teal);font-weight:600}
+.toc-list li.active a:hover{color:var(--teal)}
+.toc-list li.active a::before{color:var(--teal)}
+</style>
+<style id="toc-bar-css">
+.toc-bar{display:none}
+@media (max-width: 900px){
+.toc-bar{display:block;position:sticky;top:60px;z-index:400;background:var(--bg-void);border-bottom:1px solid var(--border-default);overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(to right,#000 88%,transparent 100%);mask-image:linear-gradient(to right,#000 88%,transparent 100%)}
+.toc-bar::-webkit-scrollbar{display:none}
+.toc-bar-track{display:flex;gap:4px;padding:9px 10px;min-width:max-content}
+.toc-bar-track a{color:var(--text-secondary);text-decoration:none;font-family:var(--font-mono,ui-monospace,monospace);font-size:10px;text-transform:uppercase;letter-spacing:.05em;padding:6px 10px;border-radius:4px;white-space:nowrap;min-height:30px;display:inline-flex;align-items:center;transition:color .15s,background .15s}
+.toc-bar-track a.active{color:var(--teal);background:var(--bg-elevated)}
+.article-body h2[id]{scroll-margin-top:116px}
+}
+@media (max-width: 900px) and (hover:hover){.toc-bar-track a:hover{color:var(--teal)}}
+</style>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How to Recreate the Amapiano Log Drum",
+  "description": "Recreate the amapiano log drum from scratch: the FM tone, the fast pitch and amp envelopes, and the portamento glide that makes it walk - in any DAW, free tools included.",
+  "image": [
+    "https://musicproductionwiki.com/images/how-to-recreate-the-amapiano-log-drum-poster.png"
+  ],
+  "author": {
+    "@type": "Organization",
+    "name": "Music Production Wiki"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Music Production Wiki",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://musicproductionwiki.com/og-image.png"
+    }
+  },
+  "datePublished": "2026-07-11",
+  "dateModified": "2026-07-11",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://musicproductionwiki.com/articles/how-to-recreate-the-amapiano-log-drum.html"
+  },
+  "articleSection": "Recreations"
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://musicproductionwiki.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Recreations",
+      "item": "https://musicproductionwiki.com/categories/recreations.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Amapiano Log Drum",
+      "item": "https://musicproductionwiki.com/articles/how-to-recreate-the-amapiano-log-drum.html"
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What actually makes the amapiano log drum sound?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A hybrid tone - part kick, part 808, part synth bass, part woody knock - shaped by a fast pitch envelope and a percussive amp envelope, and above all the portamento glide between notes. The part beginners miss is the glide: the movement is the sound, not the tone alone."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What synth should I use to make a log drum?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "FM synthesis gives the most authentic result - Logic's EFM-1, FL's DX10, or an FM patch in Serum or Vital. A triangle or sine layered with a marimba/kalimba sample also works. Famously, the sound is widely understood to have started life as a stock bass preset inside FL Studio."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I make a log drum with free plugins?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Vital is a free synth that does FM and wavetable, and any synth with glide, a fast envelope and a saturation unit will get you there. Paid tools are shortcuts, not a secret ingredient."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does my log drum sound flat and stiff?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Almost always missing glide. A log drum leans out of one note and slides into the next; with portamento at zero you get a stepped bass that's technically correct and emotionally dead. Turn the glide up until it walks."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What tempo is amapiano?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Typically around 108 to 115 BPM - slow enough to feel heavy, with earlier tracks nearer the bottom of that range and newer, faster \"private school\" styles pushing past it."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How is a log drum different from an 808?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "They're cousins. An 808 is prized for being a clean, static sub. A log drum is a pitched, percussive, gliding hybrid that acts as the kick and the bass at once and moves melodically around the beat rather than just holding a root."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need to clear anything to release a log-drum track?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Building a log drum is your own synthesis, so there's nothing to sample and nothing to clear - just don't sample an actual record. Beyond the law, treat the tradition with respect: you're borrowing from a living South African culture."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does a good log drum sound \"woody\"?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "FM synthesis adds inharmonic overtones, and saturation emphasises an upper-mid knock - together they read to the ear like a mallet striking a hollow log, which is exactly where the instrument gets its name."
+      }
+    }
+  ]
+}
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Music Production Wiki",
+  "url": "https://musicproductionwiki.com/",
+  "logo": "https://musicproductionwiki.com/og-image.png"
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Music Production Wiki",
+  "url": "https://musicproductionwiki.com/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://musicproductionwiki.com/search.html?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+  </script>
+</head>
+<body>
+
+
+
+<style id="mpw-unav-css">
+
+.mnav-wrap,.usearch{--ink:#09090d;--panel:#0f0f18;--panel2:#15151f;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);--amber:#f5a623;--teal:#00e8a2;--teal-d:rgba(0,232,162,.12);--text:#f2f2f7;--t2:#9a9ab2;--t3:#56566f;--sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'DM Mono',ui-monospace,SFMono-Regular,monospace;}
+.mnav-wrap *,.mnav-wrap *::before,.mnav-wrap *::after,.usearch *,.usearch *::before,.usearch *::after{box-sizing:border-box;margin:0;padding:0}
+/* host-CSS shield: a page loading style.css (articles) must not bleed its body font/color/line-height into the bar. Direct rule on .mnav-wrap beats inherited body styles. */
+.mnav-wrap,.usearch{font-family:var(--sans);font-size:14px;font-weight:400;font-style:normal;line-height:1.4;letter-spacing:normal;color:var(--text);text-align:left;text-transform:none}
+/* S91 host-CSS isolation (:where() = zero-specificity; beats style.css bare a/li by source order, LOSES to nav's own .drw-card/.mnav-flat classes) */
+:where(.mnav-wrap,.usearch) a{color:inherit;text-decoration:none;background:none;border:0;font:inherit;letter-spacing:inherit}
+:where(.mnav-wrap,.usearch) ul,:where(.mnav-wrap,.usearch) ol{list-style:none;margin:0;padding:0;border:0}
+:where(.mnav-wrap,.usearch) li{margin:0;padding:0;border:0;font-size:inherit;line-height:inherit;color:inherit;background:none}
+:where(.mnav-wrap,.usearch) h1,:where(.mnav-wrap,.usearch) h2,:where(.mnav-wrap,.usearch) h3,:where(.mnav-wrap,.usearch) h4,:where(.mnav-wrap,.usearch) h5,:where(.mnav-wrap,.usearch) h6,:where(.mnav-wrap,.usearch) p{margin:0;padding:0;border:0;font:inherit;color:inherit;line-height:inherit;letter-spacing:inherit;text-transform:none}
+:where(.mnav-wrap,.usearch) button{font:inherit;color:inherit;background:none;border:0;letter-spacing:inherit;text-align:inherit}
+:where(.mnav-wrap,.usearch) svg{display:inline-block;vertical-align:middle}
+:where(.mnav-wrap,.usearch) img{max-width:none}
+.mnav-wrap{background:var(--ink);border-bottom:1px solid var(--line);position:relative}
+.mnav{height:60px;display:flex;align-items:center}
+.mnav-in{max-width:1180px;margin:0 auto;padding:0 22px;width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.mnav-brand{display:flex;align-items:center;gap:10px;color:var(--text);text-decoration:none;flex:0 0 auto}
+.mnav-word{font-weight:700;font-size:15px;letter-spacing:-.02em}
+.mnav-links{display:flex;align-items:center;gap:6px;margin-left:8px}
+.mnav-flat,.mnav-trigger{color:var(--t2);background:none;border:0;font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;padding:8px 12px;border-radius:8px;display:inline-flex;align-items:center;gap:6px}
+.mnav-flat:hover,.mnav-trigger:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.caret{font-size:9px;color:var(--t3);transition:transform .18s}
+.mnav-right{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.mnav-search{background:none;border:0;color:var(--t2);cursor:pointer;display:flex;padding:6px;border-radius:8px}
+.mnav-search:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.mnav-cta{border:1px solid var(--teal);color:var(--teal);text-decoration:none;padding:7px 15px;border-radius:8px;font-size:13px;font-weight:600;white-space:nowrap}
+.mnav-cta:hover{background:var(--teal-d)}
+.mnav-wrap[data-section="tools"] .mnav-flat[data-nav="tools"]{color:var(--text);font-weight:600}
+.mnav-wrap[data-section="articles"] .mnav-trigger[data-nav="articles"]{color:var(--text);font-weight:600}
+/* Bible = amber brand color, desktop link + mobile drawer */
+.mnav-flat[data-nav="bible"],.drw-link[data-nav="bible"]{color:#f5a623!important;font-weight:600}
+.mnav-flat[data-nav="bible"]:hover,.drw-link[data-nav="bible"]:hover{color:#ffc04d!important}
+.mnav-item{position:relative}
+.mnav-panel,.mnav-panel-wide{position:absolute;top:calc(100% + 6px);left:0;z-index:50;display:none;background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:14px;box-shadow:0 24px 60px -24px rgba(0,0,0,.9);min-width:240px}
+.mnav-panel-wide{grid-template-columns:1fr 1fr;gap:8px 22px;min-width:520px}
+.mnav-item:hover .mnav-panel,.mnav-item:focus-within .mnav-panel,.mnav-item:hover .mnav-panel-wide,.mnav-item:focus-within .mnav-panel-wide{display:grid}
+.mnav-item:hover .caret{transform:rotate(180deg)}
+.mp-col{display:flex;flex-direction:column}
+.mp-head{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);padding:6px 10px 8px}
+.mnav-panel a{display:flex;flex-direction:column;gap:1px;padding:8px 10px;border-radius:9px;text-decoration:none}
+.mnav-panel a:hover{background:rgba(255,255,255,.05)}
+.mp-name{color:var(--text);font-size:13.5px;font-weight:600}.mp-desc{color:var(--t2);font-size:11.5px}
+.mnav-sub{display:none;background:var(--panel);border-bottom:1px solid var(--line)}
+.mnav-wrap[data-section="bible"] .mnav-sub{display:block}
+.mnav-sub-in{max-width:1180px;margin:0 auto;padding:10px 22px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.mnav-sub-in::-webkit-scrollbar{display:none}
+.mnav-sub-in a{flex:0 0 auto;color:var(--t2);text-decoration:none;font-size:12.5px;font-family:var(--mono);border:1px solid var(--line2);border-radius:99px;padding:5px 12px;white-space:nowrap}
+.mnav-sub-in a:hover{color:var(--teal);border-color:rgba(0,232,162,.4)}
+.mnav-toggle{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.mnav-burger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:8px;border-radius:8px}
+.mnav-burger span{display:block;width:20px;height:2px;background:var(--text);border-radius:2px;transition:.2s}
+.mnav-drawer{display:none;flex-direction:column;padding:6px 18px 16px;background:var(--ink);border-bottom:1px solid var(--line)}
+.mnav-drawer details{border-bottom:1px solid var(--line)}
+.mnav-drawer summary{list-style:none;cursor:pointer;padding:13px 2px;font-size:15px;font-weight:600;color:var(--text);display:flex;justify-content:space-between}
+.mnav-drawer summary::-webkit-details-marker{display:none}
+.mnav-drawer summary::after{content:"+";color:var(--t3)}
+.mnav-drawer details[open] summary::after{content:"\2013"}
+.mnav-acc{display:flex;flex-direction:column;padding:0 0 10px 12px}
+.mnav-acc a{color:var(--t2);text-decoration:none;font-size:14px;padding:8px 0}
+.drw-link{color:var(--t2);text-decoration:none;font-size:15px;font-weight:600;padding:13px 2px;border-bottom:1px solid var(--line)}
+.drw-cta{color:var(--teal);text-decoration:none;font-weight:600;font-size:15px;padding:14px 2px}
+.mnav-toggle:checked ~ .mnav-drawer{display:flex}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(2){opacity:0}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+@media(max-width:860px){.mnav-links,.mnav-cta{display:none}.mnav-burger{display:flex}}
+
+/* ===== UNIFIED SEARCH OVERLAY ===== */
+.usearch{position:fixed;inset:0;z-index:10000;display:none;background:rgba(6,6,11,.78);backdrop-filter:blur(6px);padding:80px 20px 20px}
+.usearch.open{display:block}
+.usearch-box{max-width:620px;margin:0 auto;background:var(--panel);border:1px solid var(--line2);border-radius:16px;overflow:hidden;box-shadow:0 40px 90px -30px rgba(0,0,0,.95)}
+.usearch-top{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.usearch-top svg{color:var(--t3);flex:0 0 auto}
+.usearch-top input{flex:1;background:none;border:0;outline:none;color:var(--text);font-family:var(--sans);font-size:17px}
+.usearch-top input::placeholder{color:var(--t3)}
+.usearch-top kbd{font-family:var(--mono);font-size:11px;color:var(--t3);border:1px solid var(--line2);border-radius:6px;padding:2px 7px}
+.usearch-results{max-height:56vh;overflow-y:auto;padding:8px}
+.usearch-results a{display:block;padding:11px 14px;border-radius:10px;text-decoration:none;transition:background .12s}
+.usearch-results a:hover,.usearch-results a.sel{background:rgba(255,255,255,.05)}
+.ur-top{display:flex;align-items:baseline;gap:9px}
+.ur-title{color:var(--text);font-size:14.5px;font-weight:600}
+.ur-cat{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.06);color:var(--t2);flex:0 0 auto}
+.ur-cat[data-c="Tools"]{background:var(--teal-d);color:var(--teal);border:1px solid rgba(0,232,162,.4)}
+.ur-cat[data-c="Bible"]{background:rgba(245,166,35,.18);color:#f5a623;border:1px solid rgba(245,166,35,.4)}
+.ur-desc{color:var(--t2);font-size:12.5px;line-height:1.45;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.usearch-empty{padding:30px;text-align:center;color:var(--t3);font-size:13.5px}
+/* --- sticky-header + entry-page chrome (pilot, refined for density) ---
+   entry nav = 60px main bar only (no category sub-bar). Desktop: hide the horizontal section
+   nav (the sticky sidebar TOC covers sections) and retune offsets to the 60px nav. Mobile: the
+   sidebar is hidden, so SHOW the section nav flush under the bar. All in THIS block. --- */
+.mnav-wrap{position:sticky;top:0;z-index:1000;line-height:1.4}
+.entry-nav{display:none}
+[id].entry-section{scroll-margin-top:90px}
+.entry-main h2{scroll-margin-top:90px}
+.entry-sidebar{top:78px;height:calc(100vh - 98px)}
+@media(max-width:768px){
+  .entry-nav{display:block!important;top:60px!important}
+  [id].entry-section{scroll-margin-top:130px!important}
+  .entry-main h2{scroll-margin-top:130px!important}
+}
+/* dropdown overflow safety */
+.mnav-panel,.mnav-panel-wide{max-height:min(72vh,560px);overflow-y:auto}
+/* mobile drawer: category CARD grid (slick old-nav look), CSS-only */
+.mnav-drawer{padding:10px 18px 18px;gap:0}
+.drw-label{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--t3);margin:12px 2px 8px}
+.drw-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.drw-card{display:flex;align-items:center;padding:12px 14px;border-radius:10px;text-decoration:none;font-size:13.5px;font-weight:600;color:var(--text);background:var(--panel);border:1px solid var(--line2)}
+.drw-card:hover{border-color:var(--teal);color:var(--teal)}
+.drw-feat{display:flex;align-items:center;gap:8px;padding:13px 16px;border-radius:10px;text-decoration:none;font-size:14px;font-weight:700;color:var(--text);background:var(--panel);border:1px solid var(--line2);margin-top:8px}
+.drw-feat-bible{color:#f5a623;background:rgba(245,166,35,.08);border-color:rgba(245,166,35,.30)}
+.drw-feat-bible:hover{border-color:rgba(245,166,35,.6)}
+.drw-cta{display:block;text-align:center;padding:14px;border-radius:10px;background:var(--teal);color:#06281f;font-weight:800;font-size:14px;text-decoration:none;margin-top:12px}
+/* mobile sunlight legibility: lift the intentionally-dim greys in glare (nav + search only), scoped */
+@media(max-width:860px){
+  .mnav-wrap,.usearch{--t2:#c8c8da;--t3:#9696b0}
+  .drw-label{color:#bdbdd0;font-weight:500}
+  .usearch-top input::placeholder{color:#9696b0}
+  .drw-card,.drw-feat{background:#20202e;border:1.5px solid #45455c}
+  .drw-feat-bible{background:rgba(245,166,35,.12);border:1.5px solid rgba(245,166,35,.6)}
+}
+html{overflow-x:clip!important;max-width:none!important}body{overflow-x:clip!important}
+</style>
+<!-- MPW universal nav -->
+<div class="mnav-wrap" data-section="articles">
+  <input type="checkbox" id="mnav-toggle" class="mnav-toggle" aria-hidden="true">
+  <nav class="mnav" aria-label="Main navigation">
+    <div class="mnav-in">
+      <a class="mnav-brand" href="/"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="6" stroke="#f5a623" stroke-width="1.7"/><path d="M7 15V9l3 3 3-5 4 8" stroke="#00e8a2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="mnav-word">MusicProductionWiki</span></a>
+      <div class="mnav-links">
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="articles">Articles <span class="caret">&#9662;</span></button><div class="mnav-panel mnav-panel-wide"><div class="mp-col"><div class="mp-head">Techniques & Analysis</div><a href="/categories/techniques"><span class="mp-name">Techniques</span><span class="mp-desc">Mixing, mastering, sound design</span></a><a href="/categories/reviews"><span class="mp-name">Reviews</span><span class="mp-desc">Honest. No paid placements.</span></a><a href="/categories/comparisons"><span class="mp-name">Comparisons</span><span class="mp-desc">Head-to-head</span></a><a href="/categories/breakdowns"><span class="mp-name">Breakdowns</span><span class="mp-desc">Track-by-track</span></a><a href="/categories/recreations"><span class="mp-name">Recreations</span><span class="mp-desc">Recreate iconic sounds</span></a><a href="/genres"><span class="mp-name">Genres</span><span class="mp-desc">Every genre & style</span></a></div><div class="mp-col"><div class="mp-head">Reference & Business</div><a href="/categories/ai-music"><span class="mp-name">AI Music</span><span class="mp-desc">Suno, Udio, AI tools</span></a><a href="/categories/music-business"><span class="mp-name">Music Business</span><span class="mp-desc">Royalties, licensing, sync</span></a></div></div></div>
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="gear">Gear <span class="caret">&#9662;</span></button><div class="mnav-panel"><div class="mp-col"><a href="/categories/daws"><span class="mp-name">DAWs</span><span class="mp-desc">Every major DAW</span></a><a href="/categories/plugins"><span class="mp-name">Plugins</span><span class="mp-desc">EQ, comp, reverb, synths</span></a><a href="/categories/hardware"><span class="mp-name">Hardware</span><span class="mp-desc">Interfaces, mics, monitors</span></a></div></div></div>
+        <a class="mnav-flat" href="/tools/" data-nav="tools">Tools</a>
+        <a class="mnav-flat" href="/bible/" data-nav="bible">The Bible</a>
+      </div>
+      <div class="mnav-right">
+        <button class="mnav-search" data-nav-search aria-label="Search"><svg width="17" height="17" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <a class="mnav-cta" href="https://theproducersbriefing.beehiiv.com">Sound Better &rarr;</a>
+        <label class="mnav-burger" for="mnav-toggle"><span></span><span></span><span></span></label>
+      </div>
+    </div>
+  </nav>
+  <div class="mnav-drawer">
+    <div class="drw-label">Articles</div>
+    <div class="drw-grid">
+      <a href="/categories/techniques" class="drw-card">Techniques</a><a href="/categories/reviews" class="drw-card">Reviews</a><a href="/categories/comparisons" class="drw-card">Comparisons</a><a href="/categories/breakdowns" class="drw-card">Breakdowns</a><a href="/categories/recreations" class="drw-card">Recreations</a><a href="/genres" class="drw-card">Genres</a><a href="/categories/ai-music" class="drw-card">AI Music</a><a href="/categories/music-business" class="drw-card">Music Business</a>
+    </div>
+    <div class="drw-label">Gear</div>
+    <div class="drw-grid">
+      <a href="/categories/daws" class="drw-card">DAWs</a><a href="/categories/plugins" class="drw-card">Plugins</a><a href="/categories/hardware" class="drw-card">Hardware</a>
+    </div>
+    <a href="/bible/" class="drw-feat drw-feat-bible">&#9670; The Producer's Bible</a>
+    <a href="/tools/" class="drw-feat">The Producer's Tools</a>
+    <a href="https://theproducersbriefing.beehiiv.com" class="drw-cta">Sound Better &rarr;</a>
+  </div>
+</div>
+
+
+<div class="container">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><ol>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../categories/recreations.html">Recreations</a></li>
+    <li><span aria-current="page">Dubstep Growl Bass</span></li>
+  </ol></nav>
+</div>
+<nav class="toc-bar" aria-label="Section navigation"><div class="toc-bar-track" id="tocBarTrack"></div></nav>
+<main class="container" id="main-content">
+  <div class="article-layout">
+    <article aria-labelledby="articleTitle">
+      <header class="article-header">
+        <div class="article-tags"><span class="article-tag teal"><a href="../categories/recreations.html" style="color:inherit;text-decoration:none;">Recreations</a></span>
+<span class="article-tag teal"><a href="../categories/techniques/sound-design.html" style="color:inherit;text-decoration:none;">Sound Design</a></span></div>
+        <h1 id="articleTitle">How to Recreate the Amapiano Log Drum</h1>
+        <div class="article-header-meta">
+          <div class="article-author"><div class="author-avatar" aria-hidden="true">MP</div><span class="author-name">The Music Production Wiki Team</span></div>
+          <span class="meta-divider"></span><span class="meta-item">Updated July 2026&nbsp;&middot;&nbsp;16 min read</span>
+        </div>
+      </header>
+      <div class="article-body">
+<!-- ================= ARTICLE BODY (prose sections) — woven figure/centerpiece markers inline ================= -->
+
+<p class="lede">There is a sound in amapiano that seems to walk. It doesn't sit under the beat the way a normal bassline does, holding down a root note while everything else moves. It strides — leaning forward, sliding between pitches, landing with a soft wooden thud and then bending away toward the next note before you've finished hearing the last one. That sound is the log drum, and once you can hear it, you can't stop hearing it. It is the spine of a genre that has walked out of the townships of South Africa and onto dancefloors on every continent.</p>
+
+<p>Most guides will hand you a preset and a screenshot and call it a day. This one won't, because the log drum isn't really a preset — it's a behaviour. Understanding the behaviour is what lets you build it in any synth you own, tune it to any track, and know why it's working instead of praying that it does. By the end of this piece you'll understand the one idea that makes a log drum a log drum, you'll have a signal chain you can rebuild from memory, and you'll have played the thing yourself in the instrument built into this page. Let's earn the sound.</p>
+
+
+<div class="sourcebox">
+  <div class="sourcebox-head">
+    <span class="sourcebox-kicker">What we actually know</span>
+    <span class="sourcebox-sub">This category cites its sources instead of guessing. Here is what is documented, what is community technique, and what is an honest estimate &mdash; before you read a word of method.</span>
+  </div>
+  <div class="sourcebox-row sourcebox-confirmed">
+    <div class="sourcebox-tag">Confirmed</div>
+    <div class="sourcebox-body">
+      <p>Amapiano &mdash; the word means &ldquo;the pianos&rdquo; in Zulu &mdash; emerged from the townships of <strong>Gauteng</strong> (Johannesburg and Pretoria) in the <strong>first half of the 2010s</strong>, out of kwaito, deep house and Bacardi house. The genre, once called &ldquo;number,&rdquo; was renamed by the duo <strong>MFR Souls</strong>. The <strong>log drum</strong> is a hybrid bass that serves as kick and bass at once; its invention is frequently credited to <strong>MDU aka TRP</strong>, and it was popularised by <strong>Kabza De Small, DJ Maphorisa, MFR Souls and Vigro Deep</strong>, among others. Amapiano typically sits around <strong>108&ndash;115&nbsp;BPM</strong>.</p>
+      <span class="sourcebox-cite">Sources: published genre histories and music-press profiles of amapiano and its pioneers; no single founder &mdash; the style grew collectively.</span>
+    </div>
+  </div>
+  <div class="sourcebox-row sourcebox-disputed">
+    <div class="sourcebox-tag">Community technique (not an official recipe)</div>
+    <div class="sourcebox-body">
+      <p>The widely reproduced way to build a log drum is <strong>FM synthesis</strong> &mdash; a low carrier, a modulator a couple of ratios up, and a fast envelope on the modulation index &mdash; or a <strong>triangle/sine layered with a percussion sample</strong>, then a fast pitch envelope, <strong>portamento glide</strong>, a percussive amp envelope, saturation and tight EQ. The sound is widely understood to have originated as a <strong>bass preset inside FL Studio</strong>. These are well-established producer methods, <em>not</em> patches published by the originators.</p>
+      <span class="sourcebox-cite">Sources: long-standing producer tutorials and forum threads; presented here as technique, not fact.</span>
+    </div>
+  </div>
+  <div class="sourcebox-row sourcebox-inferred">
+    <div class="sourcebox-tag">Inferred (labelled)</div>
+    <div class="sourcebox-body">
+      <p>The exact glide times, envelope milliseconds, FM ratios and the key of any specific track were never officially published. Where this guide gives a number &mdash; a roughly 70&nbsp;ms amp decay, a fast pitch blip, a tempo near 112&nbsp;BPM &mdash; it is a <strong>defensible starting point</strong> for your own build, labelled as such, not a reconstruction of anyone&rsquo;s session.</p>
+    </div>
+  </div>
+</div>
+<h2 id="s-what">What a log drum actually is</h2>
+
+<p>Start with the honest answer, because it will save you a lot of wasted patch-tweaking: the log drum is a hybrid. It lives in the space between a kick drum, an 808, a synth bass, and the woody knock of an actual struck log. It is not one of those things pretending to be the others — it is genuinely all of them at once, which is exactly why it can carry a whole track by itself. It supplies the sub-weight of a bass, the transient of a kick, and a pitched, percussive "pock" that reads like a mallet hitting hollow wood. If you have ever built an <a href="how-to-recreate-the-808-bass.html">808 bass</a>, you already know its closest cousin; the log drum is what happens when an 808 learns to sing.</p>
+
+<p>Here is the piece of history that reframes everything, and it is worth sitting with. The iconic amapiano log drum did not begin life as a boutique sound-design achievement. By the most widely repeated account, it started as a bass preset sitting inside a copy of FL Studio — a stock sound that a generation of young producers, working with whatever they had, discovered could do something no one intended. They found that this one bold, pulsing tone could serve as the kick and the bass simultaneously, freeing the shakers to keep time while the bass darted in and out of the mix like the beat itself was taking a solo. That origin matters. It tells you the log drum was never about expensive tools. It was about hearing a possibility in an ordinary sound, and that is a mindset you can adopt tonight.</p>
+
+<p>So when you set out to "recreate" it, drop the idea that there is a secret patch. There is a technique, and the technique is reproducible in Serum, Vital, Ableton's Operator, Logic's EFM-1, a stock FM synth, or the very preset it came from. What you are actually recreating is a set of decisions about pitch, envelope, and movement.</p>
+
+<h2 id="s-idea">The one idea: the punch is the glide, not the hit</h2>
+
+<p>If you take a single thing from this article, take this. The power of a log drum does not come from hitting it harder. It comes from the pitch <em>gliding</em> between notes. A normal bass plays a note, stops, and plays the next note. A log drum leans out of one note and slides into the next, and that slide — that portamento — is the entire feeling. Producers describe the log-drum bassline as conversational: it dances around the beat rather than simply anchoring it, and the momentum you feel is the pitch in motion, not the volume.</p>
+
+<p>This is why so many first attempts sound flat. People nail the tone, program a tight pattern, turn it up, and wonder why it thuds instead of grooves. They've built the body and forgotten the walk. Look at the contour of a real log-drum line over a single bar and the secret is obvious in the shape itself.</p>
+
+<figure class="diagram-wrap" id="amld-fig-contour" style="background:#080b0f;border:1px solid #1a2332;border-radius:12px;padding:16px 14px 12px;"><div class="fig-d"><svg id="amld-contour-d" viewBox="0 0 780 432" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Amapiano log-drum pitch contour over one bar at about 112 BPM in E-flat minor. Teal held notes are connected by amber portamento glides; the punch is the glide between notes, not the hit." style="display:block;width:100%;height:auto;"><defs><radialGradient id="wash" cx="16%" cy="-6%" r="118%"><stop offset="0%" stop-color="#00d4a8" stop-opacity="0.09"/><stop offset="52%" stop-color="#080b0f" stop-opacity="0"/></radialGradient><linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#00d4a8" stop-opacity="0.22"/><stop offset="100%" stop-color="#00d4a8" stop-opacity="0"/></linearGradient><radialGradient id="node" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00d4a8" stop-opacity="0.55"/><stop offset="100%" stop-color="#00d4a8" stop-opacity="0"/></radialGradient></defs><rect width="780" height="432" fill="#080b0f"/><rect width="780" height="432" fill="url(#wash)"/><text x="36.0" y="34.0" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="#f5a623" text-anchor="start" letter-spacing="0.18em">THE AMAPIANO LOG DRUM</text><text x="36.0" y="66.0" font-family="Lora" font-size="24" font-weight="600" fill="#f0f4f8" text-anchor="start">The groove is the glide, not the hit.</text><rect x="60.0" y="96.0" width="684.0" height="268.0" rx="14" fill="#0c121a" stroke="#1b2735" stroke-width="1.2"/><rect x="60.0" y="96.0" width="684.0" height="2.5" rx="14" fill="#ffffff" opacity="0.03"/><line x1="142.0" y1="140.3" x2="744.0" y2="140.3" stroke="#151f2b" stroke-width="1" stroke-linecap="round" stroke-dasharray="1 7"/><text x="130.0" y="144.4" font-family="JetBrains Mono" font-size="12" font-weight="600" fill="#5b6b7e" text-anchor="end">Db2</text><line x1="142.0" y1="191.1" x2="744.0" y2="191.1" stroke="#151f2b" stroke-width="1" stroke-linecap="round" stroke-dasharray="1 7"/><text x="130.0" y="195.2" font-family="JetBrains Mono" font-size="12" font-weight="600" fill="#5b6b7e" text-anchor="end">Bb1</text><line x1="142.0" y1="225.0" x2="744.0" y2="225.0" stroke="#151f2b" stroke-width="1" stroke-linecap="round" stroke-dasharray="1 7"/><text x="130.0" y="229.1" font-family="JetBrains Mono" font-size="12" font-weight="600" fill="#5b6b7e" text-anchor="end">Ab1</text><line x1="142.0" y1="258.9" x2="744.0" y2="258.9" stroke="#151f2b" stroke-width="1" stroke-linecap="round" stroke-dasharray="1 7"/><text x="130.0" y="263.0" font-family="JetBrains Mono" font-size="12" font-weight="600" fill="#5b6b7e" text-anchor="end">Gb1</text><line x1="142.0" y1="309.7" x2="744.0" y2="309.7" stroke="#151f2b" stroke-width="1" stroke-linecap="round" stroke-dasharray="1 7"/><text x="130.0" y="313.8" font-family="JetBrains Mono" font-size="12" font-weight="600" fill="#5b6b7e" text-anchor="end">Eb1</text><line x1="150.0" y1="116.0" x2="150.0" y2="334.0" stroke="#151f2b" stroke-width="1" stroke-linecap="round" opacity="0.9"/><line x1="298.5" y1="116.0" x2="298.5" y2="334.0" stroke="#151f2b" stroke-width="1" stroke-linecap="round" stroke-dasharray="1 7" opacity="0.9"/><line x1="447.0" y1="116.0" x2="447.0" y2="334.0" stroke="#151f2b" stroke-width="1" stroke-linecap="round" stroke-dasharray="1 7" opacity="0.9"/><line x1="595.5" y1="116.0" x2="595.5" y2="334.0" stroke="#151f2b" stroke-width="1" stroke-linecap="round" stroke-dasharray="1 7" opacity="0.9"/><line x1="744.0" y1="116.0" x2="744.0" y2="334.0" stroke="#151f2b" stroke-width="1" stroke-linecap="round" opacity="0.9"/><text x="224.2" y="357.6" font-family="JetBrains Mono" font-size="10.5" font-weight="500" fill="#5b6b7e" text-anchor="middle">beat 1</text><text x="372.8" y="357.6" font-family="JetBrains Mono" font-size="10.5" font-weight="500" fill="#5b6b7e" text-anchor="middle">beat 2</text><text x="521.2" y="357.6" font-family="JetBrains Mono" font-size="10.5" font-weight="500" fill="#5b6b7e" text-anchor="middle">beat 3</text><text x="669.8" y="357.6" font-family="JetBrains Mono" font-size="10.5" font-weight="500" fill="#5b6b7e" text-anchor="middle">beat 4</text><path d="M150.0,309.7 L253.9,309.7 L261.4,258.9 L261.4,258.9 L360.9,258.9 L372.8,140.3 L372.8,140.3 L435.1,140.3 L447.0,191.1 L447.0,191.1 L548.0,191.1 L558.4,309.7 L558.4,309.7 L657.9,309.7 L669.8,225.0 L669.8,225.0 L738.1,225.0 L738.1,330.0 L150.0,330.0 Z" fill="url(#area)" stroke="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M150.0,309.7 L253.9,309.7 L261.4,258.9 L261.4,258.9 L360.9,258.9 L372.8,140.3 L372.8,140.3 L435.1,140.3 L447.0,191.1 L447.0,191.1 L548.0,191.1 L558.4,309.7 L558.4,309.7 L657.9,309.7 L669.8,225.0 L669.8,225.0 L738.1,225.0" fill="none" stroke="#00d4a8" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.28"/><path d="M253.9,309.7 L261.4,258.9" fill="none" stroke="#f5a623" stroke-width="15.399999999999999" stroke-linecap="round" stroke-linejoin="round" opacity="0.13"/><path d="M253.9,309.7 L261.4,258.9" fill="none" stroke="#f5a623" stroke-width="9.35" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M253.9,309.7 L261.4,258.9" fill="none" stroke="#f5a623" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M360.9,258.9 L372.8,140.3" fill="none" stroke="#f5a623" stroke-width="15.399999999999999" stroke-linecap="round" stroke-linejoin="round" opacity="0.13"/><path d="M360.9,258.9 L372.8,140.3" fill="none" stroke="#f5a623" stroke-width="9.35" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M360.9,258.9 L372.8,140.3" fill="none" stroke="#f5a623" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M435.1,140.3 L447.0,191.1" fill="none" stroke="#f5a623" stroke-width="15.399999999999999" stroke-linecap="round" stroke-linejoin="round" opacity="0.13"/><path d="M435.1,140.3 L447.0,191.1" fill="none" stroke="#f5a623" stroke-width="9.35" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M435.1,140.3 L447.0,191.1" fill="none" stroke="#f5a623" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M548.0,191.1 L558.4,309.7" fill="none" stroke="#f5a623" stroke-width="15.399999999999999" stroke-linecap="round" stroke-linejoin="round" opacity="0.13"/><path d="M548.0,191.1 L558.4,309.7" fill="none" stroke="#f5a623" stroke-width="9.35" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M548.0,191.1 L558.4,309.7" fill="none" stroke="#f5a623" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M657.9,309.7 L669.8,225.0" fill="none" stroke="#f5a623" stroke-width="15.399999999999999" stroke-linecap="round" stroke-linejoin="round" opacity="0.13"/><path d="M657.9,309.7 L669.8,225.0" fill="none" stroke="#f5a623" stroke-width="9.35" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M657.9,309.7 L669.8,225.0" fill="none" stroke="#f5a623" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M150.0,309.7 L253.9,309.7" fill="none" stroke="#00d4a8" stroke-width="16.799999999999997" stroke-linecap="round" stroke-linejoin="round" opacity="0.13"/><path d="M150.0,309.7 L253.9,309.7" fill="none" stroke="#00d4a8" stroke-width="10.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M150.0,309.7 L253.9,309.7" fill="none" stroke="#00d4a8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><path d="M261.4,258.9 L360.9,258.9" fill="none" stroke="#00d4a8" stroke-width="16.799999999999997" stroke-linecap="round" stroke-linejoin="round" opacity="0.13"/><path d="M261.4,258.9 L360.9,258.9" fill="none" stroke="#00d4a8" stroke-width="10.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M261.4,258.9 L360.9,258.9" fill="none" stroke="#00d4a8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><path d="M372.8,140.3 L435.1,140.3" fill="none" stroke="#00d4a8" stroke-width="16.799999999999997" stroke-linecap="round" stroke-linejoin="round" opacity="0.13"/><path d="M372.8,140.3 L435.1,140.3" fill="none" stroke="#00d4a8" stroke-width="10.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M372.8,140.3 L435.1,140.3" fill="none" stroke="#00d4a8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><path d="M447.0,191.1 L548.0,191.1" fill="none" stroke="#00d4a8" stroke-width="16.799999999999997" stroke-linecap="round" stroke-linejoin="round" opacity="0.13"/><path d="M447.0,191.1 L548.0,191.1" fill="none" stroke="#00d4a8" stroke-width="10.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M447.0,191.1 L548.0,191.1" fill="none" stroke="#00d4a8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><path d="M558.4,309.7 L657.9,309.7" fill="none" stroke="#00d4a8" stroke-width="16.799999999999997" stroke-linecap="round" stroke-linejoin="round" opacity="0.13"/><path d="M558.4,309.7 L657.9,309.7" fill="none" stroke="#00d4a8" stroke-width="10.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M558.4,309.7 L657.9,309.7" fill="none" stroke="#00d4a8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><path d="M669.8,225.0 L738.1,225.0" fill="none" stroke="#00d4a8" stroke-width="16.799999999999997" stroke-linecap="round" stroke-linejoin="round" opacity="0.13"/><path d="M669.8,225.0 L738.1,225.0" fill="none" stroke="#00d4a8" stroke-width="10.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M669.8,225.0 L738.1,225.0" fill="none" stroke="#00d4a8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="150.0" cy="309.7" r="12.8" fill="url(#node)"/><circle cx="150.0" cy="309.7" r="4" fill="#00d4a8"/><circle cx="261.4" cy="258.9" r="12.8" fill="url(#node)"/><circle cx="261.4" cy="258.9" r="4" fill="#00d4a8"/><circle cx="372.8" cy="140.3" r="12.8" fill="url(#node)"/><circle cx="372.8" cy="140.3" r="4" fill="#00d4a8"/><circle cx="447.0" cy="191.1" r="12.8" fill="url(#node)"/><circle cx="447.0" cy="191.1" r="4" fill="#00d4a8"/><circle cx="558.4" cy="309.7" r="12.8" fill="url(#node)"/><circle cx="558.4" cy="309.7" r="4" fill="#00d4a8"/><circle cx="669.8" cy="225.0" r="12.8" fill="url(#node)"/><circle cx="669.8" cy="225.0" r="4" fill="#00d4a8"/><circle cx="366.8" cy="199.6" r="6" fill="none" stroke="#f5a623" stroke-width="2"/><line x1="371.8" y1="196.6" x2="492.0" y2="167.0" stroke="#f5a623" stroke-width="1" stroke-linecap="round" stroke-dasharray="2 3" opacity="0.85"/><rect x="498.0" y="142.0" width="236.0" height="50.0" rx="10" fill="#191204" stroke="#f5a623" stroke-width="1.3"/><text x="516.0" y="162.7" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="#f5a623" text-anchor="start" letter-spacing="0.08em">PORTAMENTO</text><text x="516.0" y="181.2" font-family="Lora" font-size="12.5" font-weight="500" fill="#f0f4f8" text-anchor="start">the pitch bends between notes</text><rect x="534.0" y="37.0" width="224.0" height="34.0" rx="17.0" fill="#0c121a" stroke="#1b2735" stroke-width="1.2"/><circle cx="540.9" cy="54.0" r="3.6" fill="#00d4a8"/><text x="552.2" y="58.2" font-family="JetBrains Mono" font-size="12.5" font-weight="600" fill="#f0f4f8" text-anchor="start" letter-spacing="0.02em">1 BAR · ~112 BPM · Eb MINOR</text><line x1="66" y1="396" x2="90" y2="396" stroke="#00d4a8" stroke-width="6" stroke-linecap="round"/><text x="98.0" y="400.2" font-family="Lora" font-size="12.5" font-weight="500" fill="#93a4ba" text-anchor="start">held note</text><line x1="214" y1="396" x2="238" y2="396" stroke="#f5a623" stroke-width="5" stroke-linecap="round"/><text x="246.0" y="400.2" font-family="Lora" font-size="12.5" font-weight="500" fill="#93a4ba" text-anchor="start">glide — the punch</text><text x="744.0" y="417.1" font-family="JetBrains Mono" font-size="9" font-weight="500" fill="#5b6b7e" text-anchor="end">MusicProductionWiki</text><text x="36.0" y="418.2" font-family="Lora" font-size="12.5" font-weight="500" fill="#93a4ba" text-anchor="start" font-style="italic">Same percussive hit each time — the movement that makes it sing is the pitch gliding between notes. Pattern illustrative.</text></svg></div><div class="fig-m"><svg id="amld-contour-m" viewBox="0 0 384 640" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Amapiano log-drum pitch contour over one bar at about 112 BPM in E-flat minor. Teal held notes are connected by amber portamento glides; the punch is the glide between notes, not the hit." style="display:block;width:100%;height:auto;"><defs><radialGradient id="wash" cx="16%" cy="-6%" r="118%"><stop offset="0%" stop-color="#00d4a8" stop-opacity="0.09"/><stop offset="52%" stop-color="#080b0f" stop-opacity="0"/></radialGradient><linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#00d4a8" stop-opacity="0.22"/><stop offset="100%" stop-color="#00d4a8" stop-opacity="0"/></linearGradient><radialGradient id="node" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00d4a8" stop-opacity="0.55"/><stop offset="100%" stop-color="#00d4a8" stop-opacity="0"/></radialGradient></defs><rect width="384" height="640" fill="#080b0f"/><rect width="384" height="640" fill="url(#wash)"/><text x="24.0" y="40.0" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#f5a623" text-anchor="start" letter-spacing="0.12em">THE AMAPIANO LOG DRUM</text><text x="24.0" y="74.0" font-family="Lora" font-size="22" font-weight="600" fill="#f0f4f8" text-anchor="start">The groove is the glide,</text><text x="24.0" y="100.0" font-family="Lora" font-size="22" font-weight="600" fill="#f0f4f8" text-anchor="start">not the hit.</text><rect x="24.0" y="124.0" width="336.0" height="296.0" rx="14" fill="#0c121a" stroke="#1b2735" stroke-width="1.2"/><rect x="24.0" y="124.0" width="336.0" height="2.5" rx="14" fill="#ffffff" opacity="0.03"/><line x1="88.0" y1="172.1" x2="360.0" y2="172.1" stroke="#151f2b" stroke-width="1" stroke-linecap="round" stroke-dasharray="1 7"/><text x="76.0" y="176.5" font-family="JetBrains Mono" font-size="13" font-weight="600" fill="#5b6b7e" text-anchor="end">Db2</text><line x1="88.0" y1="227.2" x2="360.0" y2="227.2" stroke="#151f2b" stroke-width="1" stroke-linecap="round" stroke-dasharray="1 7"/><text x="76.0" y="231.6" font-family="JetBrains Mono" font-size="13" font-weight="600" fill="#5b6b7e" text-anchor="end">Bb1</text><line x1="88.0" y1="264.0" x2="360.0" y2="264.0" stroke="#151f2b" stroke-width="1" stroke-linecap="round" stroke-dasharray="1 7"/><text x="76.0" y="268.4" font-family="JetBrains Mono" font-size="13" font-weight="600" fill="#5b6b7e" text-anchor="end">Ab1</text><line x1="88.0" y1="300.8" x2="360.0" y2="300.8" stroke="#151f2b" stroke-width="1" stroke-linecap="round" stroke-dasharray="1 7"/><text x="76.0" y="305.2" font-family="JetBrains Mono" font-size="13" font-weight="600" fill="#5b6b7e" text-anchor="end">Gb1</text><line x1="88.0" y1="355.9" x2="360.0" y2="355.9" stroke="#151f2b" stroke-width="1" stroke-linecap="round" stroke-dasharray="1 7"/><text x="76.0" y="360.4" font-family="JetBrains Mono" font-size="13" font-weight="600" fill="#5b6b7e" text-anchor="end">Eb1</text><line x1="96.0" y1="146.0" x2="96.0" y2="382.0" stroke="#151f2b" stroke-width="1" stroke-linecap="round" opacity="0.9"/><line x1="162.0" y1="146.0" x2="162.0" y2="382.0" stroke="#151f2b" stroke-width="1" stroke-linecap="round" stroke-dasharray="1 7" opacity="0.9"/><line x1="228.0" y1="146.0" x2="228.0" y2="382.0" stroke="#151f2b" stroke-width="1" stroke-linecap="round" stroke-dasharray="1 7" opacity="0.9"/><line x1="294.0" y1="146.0" x2="294.0" y2="382.0" stroke="#151f2b" stroke-width="1" stroke-linecap="round" stroke-dasharray="1 7" opacity="0.9"/><line x1="360.0" y1="146.0" x2="360.0" y2="382.0" stroke="#151f2b" stroke-width="1" stroke-linecap="round" opacity="0.9"/><text x="129.0" y="407.9" font-family="JetBrains Mono" font-size="11.5" font-weight="500" fill="#5b6b7e" text-anchor="middle">beat 1</text><text x="195.0" y="407.9" font-family="JetBrains Mono" font-size="11.5" font-weight="500" fill="#5b6b7e" text-anchor="middle">beat 2</text><text x="261.0" y="407.9" font-family="JetBrains Mono" font-size="11.5" font-weight="500" fill="#5b6b7e" text-anchor="middle">beat 3</text><text x="327.0" y="407.9" font-family="JetBrains Mono" font-size="11.5" font-weight="500" fill="#5b6b7e" text-anchor="middle">beat 4</text><path d="M96.0,355.9 L142.2,355.9 L145.5,300.8 L145.5,300.8 L189.7,300.8 L195.0,172.1 L195.0,172.1 L222.7,172.1 L228.0,227.2 L228.0,227.2 L272.9,227.2 L277.5,355.9 L277.5,355.9 L321.7,355.9 L327.0,264.0 L327.0,264.0 L357.4,264.0 L357.4,378.0 L96.0,378.0 Z" fill="url(#area)" stroke="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M96.0,355.9 L142.2,355.9 L145.5,300.8 L145.5,300.8 L189.7,300.8 L195.0,172.1 L195.0,172.1 L222.7,172.1 L228.0,227.2 L228.0,227.2 L272.9,227.2 L277.5,355.9 L277.5,355.9 L321.7,355.9 L327.0,264.0 L327.0,264.0 L357.4,264.0" fill="none" stroke="#00d4a8" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.28"/><path d="M142.2,355.9 L145.5,300.8" fill="none" stroke="#f5a623" stroke-width="16.799999999999997" stroke-linecap="round" stroke-linejoin="round" opacity="0.13"/><path d="M142.2,355.9 L145.5,300.8" fill="none" stroke="#f5a623" stroke-width="10.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M142.2,355.9 L145.5,300.8" fill="none" stroke="#f5a623" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><path d="M189.7,300.8 L195.0,172.1" fill="none" stroke="#f5a623" stroke-width="16.799999999999997" stroke-linecap="round" stroke-linejoin="round" opacity="0.13"/><path d="M189.7,300.8 L195.0,172.1" fill="none" stroke="#f5a623" stroke-width="10.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M189.7,300.8 L195.0,172.1" fill="none" stroke="#f5a623" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><path d="M222.7,172.1 L228.0,227.2" fill="none" stroke="#f5a623" stroke-width="16.799999999999997" stroke-linecap="round" stroke-linejoin="round" opacity="0.13"/><path d="M222.7,172.1 L228.0,227.2" fill="none" stroke="#f5a623" stroke-width="10.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M222.7,172.1 L228.0,227.2" fill="none" stroke="#f5a623" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><path d="M272.9,227.2 L277.5,355.9" fill="none" stroke="#f5a623" stroke-width="16.799999999999997" stroke-linecap="round" stroke-linejoin="round" opacity="0.13"/><path d="M272.9,227.2 L277.5,355.9" fill="none" stroke="#f5a623" stroke-width="10.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M272.9,227.2 L277.5,355.9" fill="none" stroke="#f5a623" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><path d="M321.7,355.9 L327.0,264.0" fill="none" stroke="#f5a623" stroke-width="16.799999999999997" stroke-linecap="round" stroke-linejoin="round" opacity="0.13"/><path d="M321.7,355.9 L327.0,264.0" fill="none" stroke="#f5a623" stroke-width="10.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M321.7,355.9 L327.0,264.0" fill="none" stroke="#f5a623" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><path d="M96.0,355.9 L142.2,355.9" fill="none" stroke="#00d4a8" stroke-width="18.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.13"/><path d="M96.0,355.9 L142.2,355.9" fill="none" stroke="#00d4a8" stroke-width="11.049999999999999" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M96.0,355.9 L142.2,355.9" fill="none" stroke="#00d4a8" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M145.5,300.8 L189.7,300.8" fill="none" stroke="#00d4a8" stroke-width="18.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.13"/><path d="M145.5,300.8 L189.7,300.8" fill="none" stroke="#00d4a8" stroke-width="11.049999999999999" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M145.5,300.8 L189.7,300.8" fill="none" stroke="#00d4a8" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M195.0,172.1 L222.7,172.1" fill="none" stroke="#00d4a8" stroke-width="18.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.13"/><path d="M195.0,172.1 L222.7,172.1" fill="none" stroke="#00d4a8" stroke-width="11.049999999999999" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M195.0,172.1 L222.7,172.1" fill="none" stroke="#00d4a8" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M228.0,227.2 L272.9,227.2" fill="none" stroke="#00d4a8" stroke-width="18.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.13"/><path d="M228.0,227.2 L272.9,227.2" fill="none" stroke="#00d4a8" stroke-width="11.049999999999999" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M228.0,227.2 L272.9,227.2" fill="none" stroke="#00d4a8" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M277.5,355.9 L321.7,355.9" fill="none" stroke="#00d4a8" stroke-width="18.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.13"/><path d="M277.5,355.9 L321.7,355.9" fill="none" stroke="#00d4a8" stroke-width="11.049999999999999" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M277.5,355.9 L321.7,355.9" fill="none" stroke="#00d4a8" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M327.0,264.0 L357.4,264.0" fill="none" stroke="#00d4a8" stroke-width="18.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.13"/><path d="M327.0,264.0 L357.4,264.0" fill="none" stroke="#00d4a8" stroke-width="11.049999999999999" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M327.0,264.0 L357.4,264.0" fill="none" stroke="#00d4a8" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="96.0" cy="355.9" r="14.7" fill="url(#node)"/><circle cx="96.0" cy="355.9" r="4.6" fill="#00d4a8"/><circle cx="145.5" cy="300.8" r="14.7" fill="url(#node)"/><circle cx="145.5" cy="300.8" r="4.6" fill="#00d4a8"/><circle cx="195.0" cy="172.1" r="14.7" fill="url(#node)"/><circle cx="195.0" cy="172.1" r="4.6" fill="#00d4a8"/><circle cx="228.0" cy="227.2" r="14.7" fill="url(#node)"/><circle cx="228.0" cy="227.2" r="4.6" fill="#00d4a8"/><circle cx="277.5" cy="355.9" r="14.7" fill="url(#node)"/><circle cx="277.5" cy="355.9" r="4.6" fill="#00d4a8"/><circle cx="327.0" cy="264.0" r="14.7" fill="url(#node)"/><circle cx="327.0" cy="264.0" r="4.6" fill="#00d4a8"/><circle cx="192.4" cy="236.4" r="6" fill="none" stroke="#f5a623" stroke-width="2"/><line x1="196.4" y1="233.4" x2="192.0" y2="147.0" stroke="#f5a623" stroke-width="1" stroke-linecap="round" stroke-dasharray="2 3" opacity="0.85"/><rect x="196.0" y="132.0" width="152.0" height="30.0" rx="15.0" fill="#191204" stroke="#f5a623" stroke-width="1.3"/><text x="272.0" y="151.4" font-family="JetBrains Mono" font-size="13" font-weight="700" fill="#f5a623" text-anchor="middle" letter-spacing="0.04em">PORTAMENTO</text><rect x="24.0" y="390.0" width="336.0" height="40.0" rx="20.0" fill="#0c121a" stroke="#1b2735" stroke-width="1.2"/><circle cx="71.0" cy="410.0" r="3.6" fill="#00d4a8"/><text x="82.6" y="414.4" font-family="JetBrains Mono" font-size="13" font-weight="600" fill="#f0f4f8" text-anchor="start" letter-spacing="0.02em">~112 BPM · Eb MINOR · GLIDE ON</text><line x1="24" y1="470" x2="48" y2="470" stroke="#00d4a8" stroke-width="7" stroke-linecap="round"/><text x="58.0" y="474.8" font-family="Lora" font-size="14" font-weight="500" fill="#93a4ba" text-anchor="start">held note</text><line x1="196" y1="470" x2="220" y2="470" stroke="#f5a623" stroke-width="6" stroke-linecap="round"/><text x="230.0" y="474.8" font-family="Lora" font-size="14" font-weight="500" fill="#93a4ba" text-anchor="start">glide — the punch</text><line x1="24.0" y1="506.0" x2="360.0" y2="506.0" stroke="#151f2b" stroke-width="1.2" stroke-linecap="round"/><text x="24.0" y="564.8" font-family="Lora" font-size="14" font-weight="500" fill="#93a4ba" text-anchor="start" font-style="italic">The movement is the pitch gliding</text><text x="24.0" y="586.8" font-family="Lora" font-size="14" font-weight="500" fill="#93a4ba" text-anchor="start" font-style="italic">between notes — not the hit.</text><text x="24.0" y="608.8" font-family="Lora" font-size="14" font-weight="500" fill="#93a4ba" text-anchor="start" font-style="italic">Pattern illustrative.</text><text x="360.0" y="632.2" font-family="JetBrains Mono" font-size="12.5" font-weight="700" fill="#5b6b7e" text-anchor="end">MusicProductionWiki.com</text></svg></div><figcaption class="diagram-caption">The log-drum bassline over one bar: the same percussive hit each time, but the pitch glides between notes. The amber slides are the portamento - the movement that makes it sing.</figcaption></figure>
+
+<p>Notice what the figure is telling you: the same percussive hit fires on every note, but the line never stays still. It holds a pitch just long enough to register, then bends — sometimes a small step, sometimes a dramatic leap up an octave — into the next. Flatten those bends and you have a stiff bass. Keep them, and the bass sings. Everything else we do in this article is in service of that one movement. Get the glide right and a mediocre tone will still groove; get the glide wrong and the finest tone in the world will sit there like a brick.</p>
+
+<h2 id="s-origin">Where the sound comes from — and who it belongs to</h2>
+
+<p>Recreating a sound well means knowing whose sound it is. Amapiano — the word means "the pianos" in Zulu — grew out of the townships of Gauteng, the province that holds Johannesburg and Pretoria, through the first half of the 2010s. It is a genuinely South African synthesis of kwaito, deep house, jazz, and the local Bacardi house sound, mid-tempo and hypnotic, and for a while it barely had a name. What we now call amapiano was for a time simply called "number." The renaming is usually credited to the duo MFR Souls, who helped give the genre its identity.</p>
+
+<p>The log drum itself has a contested but traceable lineage. Its invention is frequently credited to the producer MDU aka TRP, while the sound was pushed into the mainstream by a now-famous cohort — Kabza De Small, DJ Maphorisa, MFR Souls, Vigro Deep and others — who turned a regional bass trick into a global signature. I want to be straight with you about the limits of that history: the genre grew collectively, across countless bedrooms and taxis and street parties, and no single person owns it. When you make a log drum, you are borrowing from a living culture. Borrow with respect, credit where you can, and understand that fluency here is the same kind of fluency you'd want before making <a href="how-to-make-afrobeats.html">afrobeats</a> or any other tradition that isn't originally yours. The full story of the style — its swing, its chords, its arrangement conventions — is worth studying in our dedicated guide to <a href="how-to-make-amapiano.html">making amapiano</a>; here we stay locked on the bass.</p>
+
+<p>It's worth grasping just how far this sound has travelled, because that context keeps your productions honest. In barely a decade amapiano has gone from Gauteng street parties to one of the most streamed genres on the continent and a real force in global pop — crossing over into Nigerian afrobeats, feeding UK and US releases, filling festival stages far from where it began. That reach cuts both ways for a producer: the log drum is now instantly recognisable, which means a lazy imitation is instantly recognisable too. The records that travel are made by people who understood the groove from the inside, not by people who slapped a preset over a house beat. Aim to be the former.</p>
+
+<h2 id="s-source">Choosing the source: why FM, and why triangle</h2>
+
+<p>Now to the build. Everything downstream depends on picking a raw tone with the right DNA, and for the log drum that DNA is a low fundamental with a hard, slightly metallic edge on the attack. Two routes get you there, and the community has settled on both.</p>
+
+<p>The first and most authentic is frequency modulation. FM synthesis produces that distinctive hollow, bell-and-wood character because the modulator adds inharmonic overtones that a plain oscillator can't. This is the sound of Logic's EFM-1, FL's DX10, or an FM patch in <a href="serum-2-vs-vital.html">Serum or Vital</a> — a carrier tuned low, a modulator a couple of ratios above it, and a healthy dose of modulation on the attack that decays away fast. The metallic "pock" you hear at the front of every good log drum is the FM index blooming for a few milliseconds and then collapsing. If you're weighing which synth to reach for, our roundup of the <a href="best-synth-plugins.html">best synth plugins</a> flags which ones make FM approachable versus painful.</p>
+
+<p>The second route is a plain triangle wave, sometimes layered with a sine for pure sub and a marimba or kalimba sample for the woody knock. A triangle is soft and rounded — close to a sine but with just enough odd harmonics to give the ear something to grab. On its own it lacks bite, which is why we'll add that bite later with saturation, but as a foundation it's warm, controllable, and forgiving. Many producers blend the two ideas: a triangle or sine for the fundamental, a whisper of FM or a percussion layer for the attack. There is no single correct source, which is the whole point — the character is built by what you do <em>to</em> the tone, not by the tone alone.</p>
+
+<p>If FM is new to you, here's the shortcut that gets most people ninety percent of the way there. Set a carrier tuned low to your root, add a single modulator at a simple ratio — a modulator one or two octaves up is a safe, musical starting point — and route an envelope to the modulation amount so the FM is loud for the first few milliseconds and then falls to almost nothing. That short burst of modulation is the entire metallic attack; the low carrier left behind is your bass. Everything else is refinement. You do not need a six-operator monster or a wall of ratios. One carrier, one modulator, one fast envelope on the index, and you already have something that reads as a log drum before you've added a single effect.</p>
+
+<h2 id="s-thump">The thump: two fast envelopes doing all the work</h2>
+
+<p>Every log-drum note is a tiny event with two envelopes racing through it, and getting their shapes right is the difference between a percussive knock and a droning organ note. The first is the amplitude envelope. It has an instant attack — no fade-in at all — a fast decay, essentially no sustain, and a short release. That shape is what makes the sound percussive: it hits and it's gone, the way a mallet leaves a drum. The second, and the one people forget, is a fast pitch envelope on the attack: a quick blip of extra pitch at the very start of the note that drops away in a few dozen milliseconds. That blip is the "thump." It's the same trick that gives a kick drum its punch, and on a log drum it's what turns a smooth bass note into something that reads as a strike.</p>
+
+<figure class="diagram-wrap" id="amld-fig-thump" style="background:#080b0f;border:1px solid #1a2332;border-radius:12px;padding:16px 14px 12px;"><div class="fig-d"><svg id="amld-thump-d" viewBox="0 0 780 432" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The amapiano log drum's thump as two fast envelopes over about 220 milliseconds: an amber pitch envelope that drops sharply on the attack, and a teal amplitude envelope with an instant attack and fast decay to zero." style="display:block;width:100%;height:auto;"><defs><radialGradient id="wash" cx="16%" cy="-6%" r="118%"><stop offset="0%" stop-color="#00d4a8" stop-opacity="0.09"/><stop offset="52%" stop-color="#080b0f" stop-opacity="0"/></radialGradient><linearGradient id="aamp" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#00d4a8" stop-opacity="0.24"/><stop offset="100%" stop-color="#00d4a8" stop-opacity="0"/></linearGradient><radialGradient id="nT" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00d4a8" stop-opacity="0.55"/><stop offset="100%" stop-color="#00d4a8" stop-opacity="0"/></radialGradient><radialGradient id="nA" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#f5a623" stop-opacity="0.55"/><stop offset="100%" stop-color="#f5a623" stop-opacity="0"/></radialGradient></defs><rect width="780" height="432" fill="#080b0f"/><rect width="780" height="432" fill="url(#wash)"/><text x="36.0" y="34.0" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="#f5a623" text-anchor="start" letter-spacing="0.16em">THE AMAPIANO LOG DRUM · THE THUMP</text><text x="36.0" y="66.0" font-family="Lora" font-size="24" font-weight="600" fill="#f0f4f8" text-anchor="start">One hit, two fast envelopes.</text><rect x="60.0" y="96.0" width="684.0" height="270.0" rx="14" fill="#0c121a" stroke="#1b2735" stroke-width="1.2"/><rect x="60.0" y="96.0" width="684.0" height="2.5" rx="14" fill="#ffffff" opacity="0.03"/><line x1="180.0" y1="196.0" x2="744.0" y2="196.0" stroke="#151f2b" stroke-width="1.2" stroke-linecap="round"/><line x1="180.0" y1="118.0" x2="744.0" y2="118.0" stroke="#151f2b" stroke-width="1" stroke-linecap="round" stroke-dasharray="1 7" opacity="0.7"/><text x="166.0" y="161.1" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#f5a623" text-anchor="end">PITCH ENV</text><line x1="180.0" y1="330.0" x2="744.0" y2="330.0" stroke="#151f2b" stroke-width="1.2" stroke-linecap="round"/><line x1="180.0" y1="230.0" x2="744.0" y2="230.0" stroke="#151f2b" stroke-width="1" stroke-linecap="round" stroke-dasharray="1 7" opacity="0.7"/><text x="166.0" y="284.1" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#00d4a8" text-anchor="end">AMP ENV</text><path d="M180.0,230.0 L188.8,243.3 L197.6,254.9 L206.4,264.9 L215.2,273.6 L224.1,281.1 L232.9,287.7 L241.7,293.3 L250.5,298.2 L259.3,302.4 L268.1,306.1 L276.9,309.3 L285.8,312.1 L294.6,314.5 L303.4,316.5 L312.2,318.3 L321.0,319.9 L329.8,321.2 L338.6,322.4 L347.4,323.4 L356.2,324.3 L365.1,325.1 L373.9,325.7 L382.7,326.3 L391.5,326.8 L400.3,327.2 L409.1,327.6 L417.9,327.9 L426.8,328.2 L435.6,328.4 L444.4,328.6 L453.2,328.8 L462.0,329.0 L470.8,329.1 L479.6,329.2 L488.4,329.3 L497.2,329.4 L506.1,329.5 L514.9,329.6 L523.7,329.6 L532.5,329.7 L541.3,329.7 L550.1,329.8 L558.9,329.8 L567.8,329.8 L576.6,329.8 L585.4,329.9 L594.2,329.9 L603.0,329.9 L611.8,329.9 L620.6,329.9 L629.4,329.9 L638.2,329.9 L647.1,329.9 L655.9,330.0 L664.7,330.0 L673.5,330.0 L682.3,330.0 L691.1,330.0 L699.9,330.0 L708.8,330.0 L717.6,330.0 L726.4,330.0 L735.2,330.0 L744.0,330.0 L744.0,330.0 L180.0,330.0 Z" fill="url(#aamp)" stroke="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M180.0,230.0 L188.8,243.3 L197.6,254.9 L206.4,264.9 L215.2,273.6 L224.1,281.1 L232.9,287.7 L241.7,293.3 L250.5,298.2 L259.3,302.4 L268.1,306.1 L276.9,309.3 L285.8,312.1 L294.6,314.5 L303.4,316.5 L312.2,318.3 L321.0,319.9 L329.8,321.2 L338.6,322.4 L347.4,323.4 L356.2,324.3 L365.1,325.1 L373.9,325.7 L382.7,326.3 L391.5,326.8 L400.3,327.2 L409.1,327.6 L417.9,327.9 L426.8,328.2 L435.6,328.4 L444.4,328.6 L453.2,328.8 L462.0,329.0 L470.8,329.1 L479.6,329.2 L488.4,329.3 L497.2,329.4 L506.1,329.5 L514.9,329.6 L523.7,329.6 L532.5,329.7 L541.3,329.7 L550.1,329.8 L558.9,329.8 L567.8,329.8 L576.6,329.8 L585.4,329.9 L594.2,329.9 L603.0,329.9 L611.8,329.9 L620.6,329.9 L629.4,329.9 L638.2,329.9 L647.1,329.9 L655.9,330.0 L664.7,330.0 L673.5,330.0 L682.3,330.0 L691.1,330.0 L699.9,330.0 L708.8,330.0 L717.6,330.0 L726.4,330.0 L735.2,330.0 L744.0,330.0" fill="none" stroke="#00d4a8" stroke-width="12.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.12"/><path d="M180.0,230.0 L188.8,243.3 L197.6,254.9 L206.4,264.9 L215.2,273.6 L224.1,281.1 L232.9,287.7 L241.7,293.3 L250.5,298.2 L259.3,302.4 L268.1,306.1 L276.9,309.3 L285.8,312.1 L294.6,314.5 L303.4,316.5 L312.2,318.3 L321.0,319.9 L329.8,321.2 L338.6,322.4 L347.4,323.4 L356.2,324.3 L365.1,325.1 L373.9,325.7 L382.7,326.3 L391.5,326.8 L400.3,327.2 L409.1,327.6 L417.9,327.9 L426.8,328.2 L435.6,328.4 L444.4,328.6 L453.2,328.8 L462.0,329.0 L470.8,329.1 L479.6,329.2 L488.4,329.3 L497.2,329.4 L506.1,329.5 L514.9,329.6 L523.7,329.6 L532.5,329.7 L541.3,329.7 L550.1,329.8 L558.9,329.8 L567.8,329.8 L576.6,329.8 L585.4,329.9 L594.2,329.9 L603.0,329.9 L611.8,329.9 L620.6,329.9 L629.4,329.9 L638.2,329.9 L647.1,329.9 L655.9,330.0 L664.7,330.0 L673.5,330.0 L682.3,330.0 L691.1,330.0 L699.9,330.0 L708.8,330.0 L717.6,330.0 L726.4,330.0 L735.2,330.0 L744.0,330.0" fill="none" stroke="#00d4a8" stroke-width="7.6499999999999995" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M180.0,230.0 L188.8,243.3 L197.6,254.9 L206.4,264.9 L215.2,273.6 L224.1,281.1 L232.9,287.7 L241.7,293.3 L250.5,298.2 L259.3,302.4 L268.1,306.1 L276.9,309.3 L285.8,312.1 L294.6,314.5 L303.4,316.5 L312.2,318.3 L321.0,319.9 L329.8,321.2 L338.6,322.4 L347.4,323.4 L356.2,324.3 L365.1,325.1 L373.9,325.7 L382.7,326.3 L391.5,326.8 L400.3,327.2 L409.1,327.6 L417.9,327.9 L426.8,328.2 L435.6,328.4 L444.4,328.6 L453.2,328.8 L462.0,329.0 L470.8,329.1 L479.6,329.2 L488.4,329.3 L497.2,329.4 L506.1,329.5 L514.9,329.6 L523.7,329.6 L532.5,329.7 L541.3,329.7 L550.1,329.8 L558.9,329.8 L567.8,329.8 L576.6,329.8 L585.4,329.9 L594.2,329.9 L603.0,329.9 L611.8,329.9 L620.6,329.9 L629.4,329.9 L638.2,329.9 L647.1,329.9 L655.9,330.0 L664.7,330.0 L673.5,330.0 L682.3,330.0 L691.1,330.0 L699.9,330.0 L708.8,330.0 L717.6,330.0 L726.4,330.0 L735.2,330.0 L744.0,330.0" fill="none" stroke="#00d4a8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="180.0" cy="230.0" r="12.8" fill="url(#nT)"/><circle cx="180.0" cy="230.0" r="4" fill="#00d4a8"/><path d="M180.0,118.0 L188.8,138.9 L197.6,154.2 L206.4,165.5 L215.2,173.7 L224.1,179.7 L232.9,184.0 L241.7,187.2 L250.5,189.6 L259.3,191.3 L268.1,192.6 L276.9,193.5 L285.8,194.2 L294.6,194.7 L303.4,195.0 L312.2,195.3 L321.0,195.5 L329.8,195.6 L338.6,195.7 L347.4,195.8 L356.2,195.8 L365.1,195.9 L373.9,195.9 L382.7,195.9 L391.5,196.0 L400.3,196.0 L409.1,196.0 L417.9,196.0 L426.8,196.0 L435.6,196.0 L444.4,196.0 L453.2,196.0 L462.0,196.0 L470.8,196.0 L479.6,196.0 L488.4,196.0 L497.2,196.0 L506.1,196.0 L514.9,196.0 L523.7,196.0 L532.5,196.0 L541.3,196.0 L550.1,196.0 L558.9,196.0 L567.8,196.0 L576.6,196.0 L585.4,196.0 L594.2,196.0 L603.0,196.0 L611.8,196.0 L620.6,196.0 L629.4,196.0 L638.2,196.0 L647.1,196.0 L655.9,196.0 L664.7,196.0 L673.5,196.0 L682.3,196.0 L691.1,196.0 L699.9,196.0 L708.8,196.0 L717.6,196.0 L726.4,196.0 L735.2,196.0 L744.0,196.0" fill="none" stroke="#f5a623" stroke-width="12.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.12"/><path d="M180.0,118.0 L188.8,138.9 L197.6,154.2 L206.4,165.5 L215.2,173.7 L224.1,179.7 L232.9,184.0 L241.7,187.2 L250.5,189.6 L259.3,191.3 L268.1,192.6 L276.9,193.5 L285.8,194.2 L294.6,194.7 L303.4,195.0 L312.2,195.3 L321.0,195.5 L329.8,195.6 L338.6,195.7 L347.4,195.8 L356.2,195.8 L365.1,195.9 L373.9,195.9 L382.7,195.9 L391.5,196.0 L400.3,196.0 L409.1,196.0 L417.9,196.0 L426.8,196.0 L435.6,196.0 L444.4,196.0 L453.2,196.0 L462.0,196.0 L470.8,196.0 L479.6,196.0 L488.4,196.0 L497.2,196.0 L506.1,196.0 L514.9,196.0 L523.7,196.0 L532.5,196.0 L541.3,196.0 L550.1,196.0 L558.9,196.0 L567.8,196.0 L576.6,196.0 L585.4,196.0 L594.2,196.0 L603.0,196.0 L611.8,196.0 L620.6,196.0 L629.4,196.0 L638.2,196.0 L647.1,196.0 L655.9,196.0 L664.7,196.0 L673.5,196.0 L682.3,196.0 L691.1,196.0 L699.9,196.0 L708.8,196.0 L717.6,196.0 L726.4,196.0 L735.2,196.0 L744.0,196.0" fill="none" stroke="#f5a623" stroke-width="7.6499999999999995" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M180.0,118.0 L188.8,138.9 L197.6,154.2 L206.4,165.5 L215.2,173.7 L224.1,179.7 L232.9,184.0 L241.7,187.2 L250.5,189.6 L259.3,191.3 L268.1,192.6 L276.9,193.5 L285.8,194.2 L294.6,194.7 L303.4,195.0 L312.2,195.3 L321.0,195.5 L329.8,195.6 L338.6,195.7 L347.4,195.8 L356.2,195.8 L365.1,195.9 L373.9,195.9 L382.7,195.9 L391.5,196.0 L400.3,196.0 L409.1,196.0 L417.9,196.0 L426.8,196.0 L435.6,196.0 L444.4,196.0 L453.2,196.0 L462.0,196.0 L470.8,196.0 L479.6,196.0 L488.4,196.0 L497.2,196.0 L506.1,196.0 L514.9,196.0 L523.7,196.0 L532.5,196.0 L541.3,196.0 L550.1,196.0 L558.9,196.0 L567.8,196.0 L576.6,196.0 L585.4,196.0 L594.2,196.0 L603.0,196.0 L611.8,196.0 L620.6,196.0 L629.4,196.0 L638.2,196.0 L647.1,196.0 L655.9,196.0 L664.7,196.0 L673.5,196.0 L682.3,196.0 L691.1,196.0 L699.9,196.0 L708.8,196.0 L717.6,196.0 L726.4,196.0 L735.2,196.0 L744.0,196.0" fill="none" stroke="#f5a623" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="180.0" cy="118.0" r="12.8" fill="url(#nA)"/><circle cx="180.0" cy="118.0" r="4" fill="#f5a623"/><line x1="359.5" y1="224.0" x2="359.5" y2="336.0" stroke="#f5a623" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 3" opacity="0.8"/><rect x="315.5" y="203.0" width="88.0" height="22.0" rx="11.0" fill="#191204" stroke="#f5a623" stroke-width="1.2"/><text x="359.5" y="217.7" font-family="JetBrains Mono" font-size="11" font-weight="600" fill="#f5a623" text-anchor="middle" letter-spacing="0.02em">≈70 ms</text><line x1="180.0" y1="342.0" x2="180.0" y2="347.0" stroke="#5b6b7e" stroke-width="1.2" stroke-linecap="round"/><text x="180.0" y="361.6" font-family="JetBrains Mono" font-size="10.5" font-weight="500" fill="#5b6b7e" text-anchor="middle">0</text><line x1="308.2" y1="342.0" x2="308.2" y2="347.0" stroke="#5b6b7e" stroke-width="1.2" stroke-linecap="round"/><text x="308.2" y="361.6" font-family="JetBrains Mono" font-size="10.5" font-weight="500" fill="#5b6b7e" text-anchor="middle">50</text><line x1="436.4" y1="342.0" x2="436.4" y2="347.0" stroke="#5b6b7e" stroke-width="1.2" stroke-linecap="round"/><text x="436.4" y="361.6" font-family="JetBrains Mono" font-size="10.5" font-weight="500" fill="#5b6b7e" text-anchor="middle">100</text><line x1="564.5" y1="342.0" x2="564.5" y2="347.0" stroke="#5b6b7e" stroke-width="1.2" stroke-linecap="round"/><text x="564.5" y="361.6" font-family="JetBrains Mono" font-size="10.5" font-weight="500" fill="#5b6b7e" text-anchor="middle">150</text><line x1="692.7" y1="342.0" x2="692.7" y2="347.0" stroke="#5b6b7e" stroke-width="1.2" stroke-linecap="round"/><text x="692.7" y="361.6" font-family="JetBrains Mono" font-size="10.5" font-weight="500" fill="#5b6b7e" text-anchor="middle">200</text><text x="744.0" y="361.6" font-family="JetBrains Mono" font-size="10.5" font-weight="500" fill="#5b6b7e" text-anchor="end">ms</text><circle cx="215.9" cy="174.2" r="6" fill="none" stroke="#f5a623" stroke-width="2"/><line x1="220.9" y1="172.2" x2="446.0" y2="145.0" stroke="#f5a623" stroke-width="1" stroke-linecap="round" stroke-dasharray="2 3" opacity="0.85"/><rect x="452.0" y="120.0" width="290.0" height="50.0" rx="10" fill="#191204" stroke="#f5a623" stroke-width="1.3"/><text x="470.0" y="140.7" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="#f5a623" text-anchor="start" letter-spacing="0.05em">THE PITCH BLIP = THE THUMP</text><text x="470.0" y="159.2" font-family="Lora" font-size="12.5" font-weight="500" fill="#f0f4f8" text-anchor="start">a fast downward pitch env on the attack</text><rect x="511.0" y="37.0" width="250.0" height="34.0" rx="17.0" fill="#0c121a" stroke="#1b2735" stroke-width="1.2"/><circle cx="517.1" cy="54.0" r="3.6" fill="#f5a623"/><text x="528.1" y="58.1" font-family="JetBrains Mono" font-size="12" font-weight="600" fill="#f0f4f8" text-anchor="start" letter-spacing="0.02em">PITCH-ENV ~+10 st · DECAY ~70 ms</text><line x1="66" y1="396" x2="90" y2="396" stroke="#f5a623" stroke-width="5" stroke-linecap="round"/><text x="98.0" y="400.2" font-family="Lora" font-size="12.5" font-weight="500" fill="#93a4ba" text-anchor="start">pitch envelope</text><line x1="230" y1="396" x2="254" y2="396" stroke="#00d4a8" stroke-width="6" stroke-linecap="round"/><text x="262.0" y="400.2" font-family="Lora" font-size="12.5" font-weight="500" fill="#93a4ba" text-anchor="start">amp envelope</text><text x="744.0" y="417.1" font-family="JetBrains Mono" font-size="9" font-weight="500" fill="#5b6b7e" text-anchor="end">MusicProductionWiki</text><text x="36.0" y="418.2" font-family="Lora" font-size="12.5" font-weight="500" fill="#93a4ba" text-anchor="start" font-style="italic">The 'log' in log drum — a fast pitch drop plus a fast amp decay give the woody, percussive pock. Envelope shapes illustrative.</text></svg></div><div class="fig-m"><svg id="amld-thump-m" viewBox="0 0 384 656" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The amapiano log drum's thump as two fast envelopes over about 220 milliseconds: an amber pitch envelope that drops sharply on the attack, and a teal amplitude envelope with an instant attack and fast decay to zero." style="display:block;width:100%;height:auto;"><defs><radialGradient id="wash" cx="16%" cy="-6%" r="118%"><stop offset="0%" stop-color="#00d4a8" stop-opacity="0.09"/><stop offset="52%" stop-color="#080b0f" stop-opacity="0"/></radialGradient><linearGradient id="aamp" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#00d4a8" stop-opacity="0.24"/><stop offset="100%" stop-color="#00d4a8" stop-opacity="0"/></linearGradient><radialGradient id="nT" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#00d4a8" stop-opacity="0.55"/><stop offset="100%" stop-color="#00d4a8" stop-opacity="0"/></radialGradient><radialGradient id="nA" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#f5a623" stop-opacity="0.55"/><stop offset="100%" stop-color="#f5a623" stop-opacity="0"/></radialGradient></defs><rect width="384" height="656" fill="#080b0f"/><rect width="384" height="656" fill="url(#wash)"/><text x="24.0" y="40.0" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#f5a623" text-anchor="start" letter-spacing="0.12em">THE AMAPIANO LOG DRUM</text><text x="24.0" y="74.0" font-family="Lora" font-size="22" font-weight="600" fill="#f0f4f8" text-anchor="start">One hit, two fast</text><text x="24.0" y="100.0" font-family="Lora" font-size="22" font-weight="600" fill="#f0f4f8" text-anchor="start">envelopes.</text><rect x="24.0" y="128.0" width="336.0" height="300.0" rx="14" fill="#0c121a" stroke="#1b2735" stroke-width="1.2"/><rect x="24.0" y="128.0" width="336.0" height="2.5" rx="14" fill="#ffffff" opacity="0.03"/><line x1="118.0" y1="236.0" x2="360.0" y2="236.0" stroke="#151f2b" stroke-width="1.2" stroke-linecap="round"/><line x1="118.0" y1="150.0" x2="360.0" y2="150.0" stroke="#151f2b" stroke-width="1" stroke-linecap="round" stroke-dasharray="1 7" opacity="0.7"/><text x="104.0" y="197.4" font-family="JetBrains Mono" font-size="13" font-weight="700" fill="#f5a623" text-anchor="end">PITCH ENV</text><line x1="118.0" y1="392.0" x2="360.0" y2="392.0" stroke="#151f2b" stroke-width="1.2" stroke-linecap="round"/><line x1="118.0" y1="286.0" x2="360.0" y2="286.0" stroke="#151f2b" stroke-width="1" stroke-linecap="round" stroke-dasharray="1 7" opacity="0.7"/><text x="104.0" y="343.4" font-family="JetBrains Mono" font-size="13" font-weight="700" fill="#00d4a8" text-anchor="end">AMP ENV</text><path d="M118.0,286.0 L121.8,300.1 L125.6,312.4 L129.3,323.0 L133.1,332.2 L136.9,340.2 L140.7,347.1 L144.5,353.1 L148.2,358.3 L152.0,362.8 L155.8,366.7 L159.6,370.1 L163.4,373.0 L167.2,375.5 L170.9,377.7 L174.7,379.6 L178.5,381.3 L182.3,382.7 L186.1,384.0 L189.8,385.0 L193.6,386.0 L197.4,386.8 L201.2,387.5 L205.0,388.1 L208.8,388.6 L212.5,389.0 L216.3,389.4 L220.1,389.8 L223.9,390.1 L227.7,390.3 L231.4,390.6 L235.2,390.7 L239.0,390.9 L242.8,391.1 L246.6,391.2 L250.3,391.3 L254.1,391.4 L257.9,391.5 L261.7,391.5 L265.5,391.6 L269.2,391.7 L273.0,391.7 L276.8,391.7 L280.6,391.8 L284.4,391.8 L288.2,391.8 L291.9,391.9 L295.7,391.9 L299.5,391.9 L303.3,391.9 L307.1,391.9 L310.8,391.9 L314.6,391.9 L318.4,391.9 L322.2,392.0 L326.0,392.0 L329.8,392.0 L333.5,392.0 L337.3,392.0 L341.1,392.0 L344.9,392.0 L348.7,392.0 L352.4,392.0 L356.2,392.0 L360.0,392.0 L360.0,392.0 L118.0,392.0 Z" fill="url(#aamp)" stroke="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M118.0,286.0 L121.8,300.1 L125.6,312.4 L129.3,323.0 L133.1,332.2 L136.9,340.2 L140.7,347.1 L144.5,353.1 L148.2,358.3 L152.0,362.8 L155.8,366.7 L159.6,370.1 L163.4,373.0 L167.2,375.5 L170.9,377.7 L174.7,379.6 L178.5,381.3 L182.3,382.7 L186.1,384.0 L189.8,385.0 L193.6,386.0 L197.4,386.8 L201.2,387.5 L205.0,388.1 L208.8,388.6 L212.5,389.0 L216.3,389.4 L220.1,389.8 L223.9,390.1 L227.7,390.3 L231.4,390.6 L235.2,390.7 L239.0,390.9 L242.8,391.1 L246.6,391.2 L250.3,391.3 L254.1,391.4 L257.9,391.5 L261.7,391.5 L265.5,391.6 L269.2,391.7 L273.0,391.7 L276.8,391.7 L280.6,391.8 L284.4,391.8 L288.2,391.8 L291.9,391.9 L295.7,391.9 L299.5,391.9 L303.3,391.9 L307.1,391.9 L310.8,391.9 L314.6,391.9 L318.4,391.9 L322.2,392.0 L326.0,392.0 L329.8,392.0 L333.5,392.0 L337.3,392.0 L341.1,392.0 L344.9,392.0 L348.7,392.0 L352.4,392.0 L356.2,392.0 L360.0,392.0" fill="none" stroke="#00d4a8" stroke-width="14.0" stroke-linecap="round" stroke-linejoin="round" opacity="0.12"/><path d="M118.0,286.0 L121.8,300.1 L125.6,312.4 L129.3,323.0 L133.1,332.2 L136.9,340.2 L140.7,347.1 L144.5,353.1 L148.2,358.3 L152.0,362.8 L155.8,366.7 L159.6,370.1 L163.4,373.0 L167.2,375.5 L170.9,377.7 L174.7,379.6 L178.5,381.3 L182.3,382.7 L186.1,384.0 L189.8,385.0 L193.6,386.0 L197.4,386.8 L201.2,387.5 L205.0,388.1 L208.8,388.6 L212.5,389.0 L216.3,389.4 L220.1,389.8 L223.9,390.1 L227.7,390.3 L231.4,390.6 L235.2,390.7 L239.0,390.9 L242.8,391.1 L246.6,391.2 L250.3,391.3 L254.1,391.4 L257.9,391.5 L261.7,391.5 L265.5,391.6 L269.2,391.7 L273.0,391.7 L276.8,391.7 L280.6,391.8 L284.4,391.8 L288.2,391.8 L291.9,391.9 L295.7,391.9 L299.5,391.9 L303.3,391.9 L307.1,391.9 L310.8,391.9 L314.6,391.9 L318.4,391.9 L322.2,392.0 L326.0,392.0 L329.8,392.0 L333.5,392.0 L337.3,392.0 L341.1,392.0 L344.9,392.0 L348.7,392.0 L352.4,392.0 L356.2,392.0 L360.0,392.0" fill="none" stroke="#00d4a8" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M118.0,286.0 L121.8,300.1 L125.6,312.4 L129.3,323.0 L133.1,332.2 L136.9,340.2 L140.7,347.1 L144.5,353.1 L148.2,358.3 L152.0,362.8 L155.8,366.7 L159.6,370.1 L163.4,373.0 L167.2,375.5 L170.9,377.7 L174.7,379.6 L178.5,381.3 L182.3,382.7 L186.1,384.0 L189.8,385.0 L193.6,386.0 L197.4,386.8 L201.2,387.5 L205.0,388.1 L208.8,388.6 L212.5,389.0 L216.3,389.4 L220.1,389.8 L223.9,390.1 L227.7,390.3 L231.4,390.6 L235.2,390.7 L239.0,390.9 L242.8,391.1 L246.6,391.2 L250.3,391.3 L254.1,391.4 L257.9,391.5 L261.7,391.5 L265.5,391.6 L269.2,391.7 L273.0,391.7 L276.8,391.7 L280.6,391.8 L284.4,391.8 L288.2,391.8 L291.9,391.9 L295.7,391.9 L299.5,391.9 L303.3,391.9 L307.1,391.9 L310.8,391.9 L314.6,391.9 L318.4,391.9 L322.2,392.0 L326.0,392.0 L329.8,392.0 L333.5,392.0 L337.3,392.0 L341.1,392.0 L344.9,392.0 L348.7,392.0 L352.4,392.0 L356.2,392.0 L360.0,392.0" fill="none" stroke="#00d4a8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="118.0" cy="286.0" r="14.7" fill="url(#nT)"/><circle cx="118.0" cy="286.0" r="4.6" fill="#00d4a8"/><path d="M118.0,150.0 L121.8,173.1 L125.6,190.0 L129.3,202.3 L133.1,211.4 L136.9,218.0 L140.7,222.8 L144.5,226.4 L148.2,228.9 L152.0,230.8 L155.8,232.2 L159.6,233.2 L163.4,234.0 L167.2,234.5 L170.9,234.9 L174.7,235.2 L178.5,235.4 L182.3,235.6 L186.1,235.7 L189.8,235.8 L193.6,235.8 L197.4,235.9 L201.2,235.9 L205.0,235.9 L208.8,236.0 L212.5,236.0 L216.3,236.0 L220.1,236.0 L223.9,236.0 L227.7,236.0 L231.4,236.0 L235.2,236.0 L239.0,236.0 L242.8,236.0 L246.6,236.0 L250.3,236.0 L254.1,236.0 L257.9,236.0 L261.7,236.0 L265.5,236.0 L269.2,236.0 L273.0,236.0 L276.8,236.0 L280.6,236.0 L284.4,236.0 L288.2,236.0 L291.9,236.0 L295.7,236.0 L299.5,236.0 L303.3,236.0 L307.1,236.0 L310.8,236.0 L314.6,236.0 L318.4,236.0 L322.2,236.0 L326.0,236.0 L329.8,236.0 L333.5,236.0 L337.3,236.0 L341.1,236.0 L344.9,236.0 L348.7,236.0 L352.4,236.0 L356.2,236.0 L360.0,236.0" fill="none" stroke="#f5a623" stroke-width="14.0" stroke-linecap="round" stroke-linejoin="round" opacity="0.12"/><path d="M118.0,150.0 L121.8,173.1 L125.6,190.0 L129.3,202.3 L133.1,211.4 L136.9,218.0 L140.7,222.8 L144.5,226.4 L148.2,228.9 L152.0,230.8 L155.8,232.2 L159.6,233.2 L163.4,234.0 L167.2,234.5 L170.9,234.9 L174.7,235.2 L178.5,235.4 L182.3,235.6 L186.1,235.7 L189.8,235.8 L193.6,235.8 L197.4,235.9 L201.2,235.9 L205.0,235.9 L208.8,236.0 L212.5,236.0 L216.3,236.0 L220.1,236.0 L223.9,236.0 L227.7,236.0 L231.4,236.0 L235.2,236.0 L239.0,236.0 L242.8,236.0 L246.6,236.0 L250.3,236.0 L254.1,236.0 L257.9,236.0 L261.7,236.0 L265.5,236.0 L269.2,236.0 L273.0,236.0 L276.8,236.0 L280.6,236.0 L284.4,236.0 L288.2,236.0 L291.9,236.0 L295.7,236.0 L299.5,236.0 L303.3,236.0 L307.1,236.0 L310.8,236.0 L314.6,236.0 L318.4,236.0 L322.2,236.0 L326.0,236.0 L329.8,236.0 L333.5,236.0 L337.3,236.0 L341.1,236.0 L344.9,236.0 L348.7,236.0 L352.4,236.0 L356.2,236.0 L360.0,236.0" fill="none" stroke="#f5a623" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.22"/><path d="M118.0,150.0 L121.8,173.1 L125.6,190.0 L129.3,202.3 L133.1,211.4 L136.9,218.0 L140.7,222.8 L144.5,226.4 L148.2,228.9 L152.0,230.8 L155.8,232.2 L159.6,233.2 L163.4,234.0 L167.2,234.5 L170.9,234.9 L174.7,235.2 L178.5,235.4 L182.3,235.6 L186.1,235.7 L189.8,235.8 L193.6,235.8 L197.4,235.9 L201.2,235.9 L205.0,235.9 L208.8,236.0 L212.5,236.0 L216.3,236.0 L220.1,236.0 L223.9,236.0 L227.7,236.0 L231.4,236.0 L235.2,236.0 L239.0,236.0 L242.8,236.0 L246.6,236.0 L250.3,236.0 L254.1,236.0 L257.9,236.0 L261.7,236.0 L265.5,236.0 L269.2,236.0 L273.0,236.0 L276.8,236.0 L280.6,236.0 L284.4,236.0 L288.2,236.0 L291.9,236.0 L295.7,236.0 L299.5,236.0 L303.3,236.0 L307.1,236.0 L310.8,236.0 L314.6,236.0 L318.4,236.0 L322.2,236.0 L326.0,236.0 L329.8,236.0 L333.5,236.0 L337.3,236.0 L341.1,236.0 L344.9,236.0 L348.7,236.0 L352.4,236.0 L356.2,236.0 L360.0,236.0" fill="none" stroke="#f5a623" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="118.0" cy="150.0" r="14.7" fill="url(#nA)"/><circle cx="118.0" cy="150.0" r="4.6" fill="#f5a623"/><line x1="195.0" y1="280.0" x2="195.0" y2="398.0" stroke="#f5a623" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 3" opacity="0.8"/><rect x="147.0" y="259.0" width="96.0" height="22.0" rx="11.0" fill="#191204" stroke="#f5a623" stroke-width="1.2"/><text x="195.0" y="274.1" font-family="JetBrains Mono" font-size="12" font-weight="600" fill="#f5a623" text-anchor="middle" letter-spacing="0.02em">≈70 ms</text><line x1="118.0" y1="404.0" x2="118.0" y2="409.0" stroke="#5b6b7e" stroke-width="1.2" stroke-linecap="round"/><text x="118.0" y="425.9" font-family="JetBrains Mono" font-size="11.5" font-weight="500" fill="#5b6b7e" text-anchor="middle">0</text><line x1="173.0" y1="404.0" x2="173.0" y2="409.0" stroke="#5b6b7e" stroke-width="1.2" stroke-linecap="round"/><text x="173.0" y="425.9" font-family="JetBrains Mono" font-size="11.5" font-weight="500" fill="#5b6b7e" text-anchor="middle">50</text><line x1="228.0" y1="404.0" x2="228.0" y2="409.0" stroke="#5b6b7e" stroke-width="1.2" stroke-linecap="round"/><text x="228.0" y="425.9" font-family="JetBrains Mono" font-size="11.5" font-weight="500" fill="#5b6b7e" text-anchor="middle">100</text><line x1="283.0" y1="404.0" x2="283.0" y2="409.0" stroke="#5b6b7e" stroke-width="1.2" stroke-linecap="round"/><text x="283.0" y="425.9" font-family="JetBrains Mono" font-size="11.5" font-weight="500" fill="#5b6b7e" text-anchor="middle">150</text><line x1="338.0" y1="404.0" x2="338.0" y2="409.0" stroke="#5b6b7e" stroke-width="1.2" stroke-linecap="round"/><text x="338.0" y="425.9" font-family="JetBrains Mono" font-size="11.5" font-weight="500" fill="#5b6b7e" text-anchor="middle">200</text><text x="360.0" y="425.9" font-family="JetBrains Mono" font-size="11.5" font-weight="500" fill="#5b6b7e" text-anchor="end">ms</text><circle cx="133.4" cy="211.9" r="6" fill="none" stroke="#f5a623" stroke-width="2"/><line x1="137.4" y1="209.9" x2="146.0" y2="165.0" stroke="#f5a623" stroke-width="1" stroke-linecap="round" stroke-dasharray="2 3" opacity="0.85"/><rect x="150.0" y="150.0" width="200.0" height="30.0" rx="15.0" fill="#191204" stroke="#f5a623" stroke-width="1.3"/><text x="250.0" y="169.4" font-family="JetBrains Mono" font-size="13" font-weight="700" fill="#f5a623" text-anchor="middle" letter-spacing="0.03em">BLIP = THE THUMP</text><rect x="24.0" y="430.0" width="336.0" height="40.0" rx="20.0" fill="#0c121a" stroke="#1b2735" stroke-width="1.2"/><circle cx="68.1" cy="450.0" r="3.6" fill="#f5a623"/><text x="79.5" y="454.2" font-family="JetBrains Mono" font-size="12.5" font-weight="600" fill="#f0f4f8" text-anchor="start" letter-spacing="0.02em">PITCH-ENV ~+10 st · DECAY ~70 ms</text><line x1="24" y1="506" x2="48" y2="506" stroke="#f5a623" stroke-width="6" stroke-linecap="round"/><text x="58.0" y="510.8" font-family="Lora" font-size="14" font-weight="500" fill="#93a4ba" text-anchor="start">pitch envelope</text><line x1="210" y1="506" x2="234" y2="506" stroke="#00d4a8" stroke-width="7" stroke-linecap="round"/><text x="244.0" y="510.8" font-family="Lora" font-size="14" font-weight="500" fill="#93a4ba" text-anchor="start">amp envelope</text><line x1="24.0" y1="538.0" x2="360.0" y2="538.0" stroke="#151f2b" stroke-width="1.2" stroke-linecap="round"/><text x="24.0" y="576.8" font-family="Lora" font-size="14" font-weight="500" fill="#93a4ba" text-anchor="start" font-style="italic">A fast pitch drop + a fast amp decay</text><text x="24.0" y="598.8" font-family="Lora" font-size="14" font-weight="500" fill="#93a4ba" text-anchor="start" font-style="italic">make the woody percussive pock.</text><text x="24.0" y="620.8" font-family="Lora" font-size="14" font-weight="500" fill="#93a4ba" text-anchor="start" font-style="italic">Envelope shapes illustrative.</text><text x="360.0" y="644.2" font-family="JetBrains Mono" font-size="12.5" font-weight="700" fill="#5b6b7e" text-anchor="end">MusicProductionWiki.com</text></svg></div><figcaption class="diagram-caption">One log-drum note as two fast envelopes: an amber pitch blip on the attack and a teal amplitude envelope that hits and decays in a blink. Envelope shapes are illustrative starting points.</figcaption></figure>
+
+<p>Study the two curves together. The amplitude envelope jumps to full and decays within roughly seventy milliseconds — fast enough to feel like a hit, slow enough to keep body. The pitch envelope spikes and settles even faster, in the first thirty milliseconds or so, well before the note has finished sounding. The exact millisecond values are a matter of taste and were never published for any famous track, so treat them as starting points, not gospel. What is not negotiable is the character: both envelopes are fast, the pitch one faster than the amp one, and neither has any meaningful sustain. If your log drum feels like it's humming rather than knocking, your decays are too long — pull them down before you touch anything else.</p>
+
+<h2 id="s-glide">The glide: setting the portamento that makes it walk</h2>
+
+<p>We've reached the heart of it. Portamento — glide — is the control that slides the pitch smoothly from one note to the next instead of jumping instantly. Almost every synth has it, sometimes labelled "glide," "porta," or "slide," usually as a time value in milliseconds. Turn it up and consecutive notes bend into each other; turn it to zero and you get a stepped, stiff bass that is technically correct and emotionally dead.</p>
+
+<p>The craft is in the amount. Too little and the movement disappears. Too much and the pitch is still sliding when the next note arrives, smearing the groove into mush. The sweet spot lets each note establish itself and then bend cleanly into the next, so the ear hears distinct notes connected by audible slides. Crucially, glide interacts with your pattern: big interval leaps need a touch less glide time to stay legible, while small steps can take more. This is not something you can dial in with numbers from a blog — you have to hear it move. So stop reading for a moment and go move it yourself.</p>
+
+<style id="amld-live-css">#amld-live{--void:#080b0f;--ink:#f0f4f8;--sub:#93a4ba;--mut:#5b6b7e;--teal:#00d4a8;--amber:#f5a623;
+    --panel:#0c121a;--bd:#1b2735;background:linear-gradient(180deg,#0a1016,#080b0f);border:1px solid #1a2332;
+    border-radius:16px;padding:18px 18px 15px;max-width:780px;margin:1.9rem auto;box-sizing:border-box}
+  #amld-live *{box-sizing:border-box}
+  .amld-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+  .amld-kick{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.16em;color:var(--amber)}
+  .amld-ttl{font-family:'Lora',serif;font-size:20px;font-weight:600;color:var(--ink);margin:2px 0 0}
+  .amld-sub{font-family:'Lora',serif;font-size:12.5px;color:var(--sub);margin:3px 0 0}
+  .amld-livewrap{display:flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;letter-spacing:.12em;color:var(--mut)}
+  .amld-dot{width:9px;height:9px;border-radius:50%;background:var(--mut);transition:background .2s}
+  #amld-live.playing .amld-dot{background:var(--teal);animation:amldpulse 1.1s infinite}
+  #amld-live.playing .amld-livewrap{color:var(--teal)}
+  @keyframes amldpulse{0%{box-shadow:0 0 0 0 rgba(0,212,168,.55)}70%{box-shadow:0 0 0 8px rgba(0,212,168,0)}100%{box-shadow:0 0 0 0 rgba(0,212,168,0)}}
+  .amld-stage{width:100%;height:auto;display:block;border-radius:12px;touch-action:manipulation}
+  .amld-ctrls{margin-top:14px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:13px}
+  @media(max-width:560px){.amld-ctrls{grid-template-columns:1fr 1fr}}
+  .amld-ctl label{display:block;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.05em;color:var(--sub);margin-bottom:7px}
+  .amld-ctl label b{color:var(--teal);font-weight:700;float:right}
+  .amld-ctl input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:4px;background:#16202c;outline:none;cursor:pointer}
+  .amld-ctl input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--teal);cursor:pointer;box-shadow:0 0 8px rgba(0,212,168,.6);border:2px solid #06120e}
+  .amld-ctl input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--teal);cursor:pointer;border:2px solid #06120e}
+  .amld-ctl.glide label b{color:var(--amber)}
+  .amld-ctl.glide input[type=range]::-webkit-slider-thumb{background:var(--amber);box-shadow:0 0 8px rgba(245,166,35,.6)}
+  .amld-ctl.glide input[type=range]::-moz-range-thumb{background:var(--amber)}
+  .amld-row{margin-top:13px;display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+  .amld-btn{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--ink);background:var(--panel);border:1px solid var(--bd);border-radius:9px;padding:10px 18px;cursor:pointer;transition:.15s}
+  .amld-btn:hover{border-color:var(--teal);color:var(--teal)}
+  .amld-play{background:var(--teal);color:#04120d;border-color:var(--teal);min-width:112px;box-shadow:0 0 16px rgba(0,212,168,.25)}
+  #amld-live.playing .amld-play{background:var(--panel);color:var(--teal);box-shadow:none}
+  .amld-seg{display:inline-flex;border:1px solid var(--bd);border-radius:9px;overflow:hidden}
+  .amld-seg button{font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:700;color:var(--sub);background:var(--panel);border:0;padding:9px 15px;cursor:pointer}
+  .amld-seg button.on{background:#0c1a16;color:var(--teal)}
+  .amld-pill{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:var(--sub);background:var(--panel);border:1px solid var(--bd);border-radius:20px;padding:7px 13px;cursor:pointer;transition:.15s}
+  .amld-pill:hover{border-color:var(--amber);color:var(--amber)}
+  .amld-read{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mut);text-align:right}
+  .amld-read b{color:var(--amber)}
+  .amld-cap{margin-top:12px;font-family:'Lora',serif;font-style:italic;font-size:12.5px;color:var(--sub)}
+</style>
+<figure class="diagram-wrap fig-interactive" id="amld-live" role="group" aria-label="Log Drum Designer — a playable amapiano log-drum step sequencer. Tap the grid to place bass notes, press play, and adjust glide, punch and pitch envelope to shape the sound.">
+  <div class="amld-head">
+    <div>
+      <div class="amld-kick">THE AMAPIANO LOG DRUM · PROGRAM IT</div>
+      <div class="amld-ttl">Log Drum Designer</div>
+      <div class="amld-sub">Tap the grid to place notes. Press play. Drag <b style="color:#f5a623;font-style:normal">Glide</b> to hear the log drum sing between them.</div>
+    </div>
+    <div class="amld-livewrap"><span class="amld-dot" aria-hidden="true"></span><span id="amld-livelbl">READY</span></div>
+  </div>
+
+  <svg class="amld-stage" id="amld-svg" viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" role="application"
+       aria-label="Step sequencer grid, six pitch rows by sixteen steps. Tap a cell to place or clear a note.">
+    <defs>
+      <linearGradient id="amld-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1620"/><stop offset="1" stop-color="#080b0f"/></linearGradient>
+      <linearGradient id="amld-cellon" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#12efb6"/><stop offset="1" stop-color="#00b892"/></linearGradient>
+      <filter id="amld-glowT" x="-40%" y="-60%" width="180%" height="220%"><feGaussianBlur stdDeviation="2.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <filter id="amld-glowA" x="-50%" y="-80%" width="200%" height="260%"><feGaussianBlur stdDeviation="3.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <radialGradient id="amld-comet" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#fff" stop-opacity="0.95"/><stop offset="45%" stop-color="#f5a623" stop-opacity="0.85"/><stop offset="100%" stop-color="#f5a623" stop-opacity="0"/></radialGradient>
+    </defs>
+    <rect width="760" height="300" fill="url(#amld-sky)"/>
+    <g id="amld-beatbg"></g>
+    <rect id="amld-playcol" x="0" y="0" width="0" height="0" fill="#ffffff" opacity="0.05" rx="4"></rect>
+    <g id="amld-grid"></g>
+    <path id="amld-area" fill="none"></path>
+    <path id="amld-glide" fill="none" stroke="#f5a623" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#amld-glowA)" opacity="0.95"></path>
+    <path id="amld-held" fill="none" stroke="#00d4a8" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#amld-glowT)" opacity="0.95"></path>
+    <g id="amld-cells"></g>
+    <circle id="amld-cometdot" r="11" fill="url(#amld-comet)" opacity="0"></circle>
+    <g id="amld-labels"></g>
+    <g id="amld-steps"></g>
+  </svg>
+
+  <div class="amld-ctrls" id="amld-ctrls"></div>
+  <div class="amld-row" id="amld-row1"></div>
+  <div class="amld-row" id="amld-row2"></div>
+
+  <figcaption class="amld-cap" id="amld-cap">Everything you hear is generated live in your browser. On a real track you'd tune the log drum down into the sub — here it's pitched up so laptop speakers can play it.</figcaption>
+</figure>
+<script>
+(function(){
+  "use strict";
+  var root=document.getElementById("amld-live"); if(!root) return;
+  var NS="http://www.w3.org/2000/svg";
+  var gBeat=document.getElementById("amld-beatbg"),gGrid=document.getElementById("amld-grid"),
+      gCells=document.getElementById("amld-cells"),gLabels=document.getElementById("amld-labels"),
+      gSteps=document.getElementById("amld-steps"),pHeld=document.getElementById("amld-held"),
+      pGlide=document.getElementById("amld-glide"),pArea=document.getElementById("amld-area"),
+      playCol=document.getElementById("amld-playcol"),comet=document.getElementById("amld-cometdot"),
+      liveLbl=document.getElementById("amld-livelbl");
+
+  var COLS=16, ROWS=[["Eb4",12],["Db4",10],["Bb3",7],["Ab3",5],["Gb3",3],["Eb3",0]], R=ROWS.length;
+  var GX0=92,GX1=744,GY0=20,GY1=250, CW=(GX1-GX0)/COLS, CH=(GY1-GY0)/R;
+  function cx(c){ return GX0+c*CW; } function cyRow(r){ return GY0+r*CH; }
+  function cellCX(c){ return GX0+(c+0.5)*CW; } function cellCY(r){ return GY0+(r+0.5)*CH; }
+  function rowOf(semi){ for(var r=0;r<R;r++){ if(ROWS[r][1]===semi) return r; } return -1; }
+
+  // pattern[col] = semitone or null (monophonic bass)
+  var pattern=[0,null,3,null, 10,null,7,null, 0,null,5,3, null,7,null,10];
+  var P={src:"fm",glide:0.55,pitchEnv:0.55,punch:0.5,bpm:112,playing:false};
+  var cellEls=[];
+
+  function buildStatic(){
+    // beat-group shading (every 4 steps)
+    for(var g=0; g<COLS; g+=4){
+      var rr=document.createElementNS(NS,"rect");
+      rr.setAttribute("x",cx(g)); rr.setAttribute("y",GY0); rr.setAttribute("width",CW*4-2);
+      rr.setAttribute("height",GY1-GY0); rr.setAttribute("rx","6");
+      rr.setAttribute("fill", (g/4)%2===0 ? "#0c141d" : "#0a1119"); gBeat.appendChild(rr);
+    }
+    // grid cell outlines + interactive hitboxes
+    for(var r=0;r<R;r++){ for(var c=0;c<COLS;c++){
+      var x=cx(c)+2, y=cyRow(r)+2, w=CW-4, h=CH-4;
+      var base=document.createElementNS(NS,"rect");
+      base.setAttribute("x",x);base.setAttribute("y",y);base.setAttribute("width",w);base.setAttribute("height",h);
+      base.setAttribute("rx","4");base.setAttribute("fill","#0e1621");base.setAttribute("stroke","#1b2836");base.setAttribute("stroke-width","1");
+      base.setAttribute("data-c",c);base.setAttribute("data-r",r);
+      base.style.cursor="pointer"; base.style.transition="fill .1s";
+      (function(rect){ rect.addEventListener("click",function(){ toggle(+rect.getAttribute("data-c"),+rect.getAttribute("data-r")); });
+        rect.addEventListener("mouseenter",function(){ if(rect.getAttribute("data-on")!=="1") rect.setAttribute("fill","#152232"); });
+        rect.addEventListener("mouseleave",function(){ if(rect.getAttribute("data-on")!=="1") rect.setAttribute("fill","#0e1621"); });
+      })(base);
+      gGrid.appendChild(base); cellEls.push(base);
+    }}
+    // pitch labels (left)
+    for(var r2=0;r2<R;r2++){ var t=document.createElementNS(NS,"text");
+      t.setAttribute("x",GX0-12);t.setAttribute("y",cellCY(r2)+4);t.setAttribute("text-anchor","end");
+      t.setAttribute("font-family","JetBrains Mono");t.setAttribute("font-size","11");t.setAttribute("font-weight","600");t.setAttribute("fill","#5b6b7e");
+      t.textContent=ROWS[r2][0]; gLabels.appendChild(t); }
+    // step numbers (beats)
+    for(var b=0;b<4;b++){ var s=document.createElementNS(NS,"text");
+      s.setAttribute("x",cellCX(b*4));s.setAttribute("y",GY1+22);s.setAttribute("text-anchor","middle");
+      s.setAttribute("font-family","JetBrains Mono");s.setAttribute("font-size","11");s.setAttribute("font-weight","700");s.setAttribute("fill","#5b6b7e");
+      s.textContent="beat "+(b+1); gSteps.appendChild(s); }
+  }
+
+  function cellIndex(c,r){ return r*COLS+c; }
+  function toggle(c,r){ var semi=ROWS[r][1]; pattern[c]=(pattern[c]===semi)?null:semi; paintCells(); renderContour(); }
+
+  function paintCells(){
+    for(var r=0;r<R;r++){ for(var c=0;c<COLS;c++){ var el=cellEls[cellIndex(c,r)], on=(pattern[c]===ROWS[r][1]);
+      if(on){ el.setAttribute("fill","url(#amld-cellon)"); el.setAttribute("stroke","#12efb6"); el.setAttribute("data-on","1"); }
+      else { el.setAttribute("fill","#0e1621"); el.setAttribute("stroke","#1b2836"); el.setAttribute("data-on","0"); } } }
+  }
+
+  // glowing contour threading the placed notes (held teal + amber glide)
+  function activeCols(){ var a=[]; for(var c=0;c<COLS;c++){ if(pattern[c]!==null) a.push(c); } return a; }
+  function renderContour(){
+    var ac=activeCols(), held="", glide="", areaPts=[];
+    for(var k=0;k<ac.length;k++){ var c=ac[k], y=cellCY(rowOf(pattern[c])), x0=cellCX(c);
+      var nextC=(k+1<ac.length)?ac[k+1]:COLS, xEnd=cellCX(Math.min(nextC,COLS-1))+(nextC>=COLS?CW/2:0);
+      if(nextC>=COLS) xEnd=GX1-2;
+      var glideW=(xEnd-x0)*0.6*P.glide, xHold=Math.max(x0+4,xEnd-glideW-2);
+      held+="M"+x0.toFixed(1)+","+y.toFixed(1)+" L"+xHold.toFixed(1)+","+y.toFixed(1)+" ";
+      areaPts.push([x0,y],[xHold,y]);
+      if(k+1<ac.length){ var y2=cellCY(rowOf(pattern[ac[k+1]])), dx=(xEnd-xHold)*0.42;
+        glide+="M"+xHold.toFixed(1)+","+y.toFixed(1)+" C"+(xHold+dx).toFixed(1)+","+y.toFixed(1)+" "+(xEnd-dx).toFixed(1)+","+y2.toFixed(1)+" "+xEnd.toFixed(1)+","+y2.toFixed(1)+" ";
+        areaPts.push([xEnd,y2]); }
+    }
+    pHeld.setAttribute("d",held.trim()); pGlide.setAttribute("d",glide.trim());
+    if(areaPts.length>1){ var ad="M"+areaPts.map(function(p){return p[0].toFixed(1)+","+p[1].toFixed(1);}).join(" L");
+      ad+=" L"+areaPts[areaPts.length-1][0].toFixed(1)+","+GY1+" L"+areaPts[0][0].toFixed(1)+","+GY1+" Z";
+      pArea.setAttribute("d",ad); pArea.setAttribute("fill","rgba(0,212,168,0.07)"); } else pArea.setAttribute("d","");
+    updateRead();
+  }
+
+  var readEl;
+  function updateRead(){ if(!readEl) return; readEl.textContent=""; var b=document.createElement("b"); b.textContent="glide "+Math.round(P.glide*100)+"%";
+    readEl.appendChild(document.createTextNode(P.src.toUpperCase()+" · ")); readEl.appendChild(b); readEl.appendChild(document.createTextNode(" · "+P.bpm+" BPM")); }
+
+  // ================= AUDIO =================
+  var AC=null,master=null,comp=null,sched=null,nextTime=0,stepIdx=0,prevFreq=null,startTime=0,DRIVE=null;
+  var LOOKAHEAD=0.025,AHEAD=0.14;
+  function baseFreq(semi){ return 155.56*Math.pow(2,semi/12); }
+  function makeDrive(k){ var n=1024,c=new Float32Array(n); for(var i=0;i<n;i++){ var x=i*2/n-1; c[i]=(1+k)*x/(1+k*Math.abs(x)); } return c; }
+  function ensureAudio(){ if(AC) return; var Ctx=window.AudioContext||window.webkitAudioContext; if(!Ctx) return;
+    AC=new Ctx(); DRIVE=makeDrive(3.2);
+    comp=AC.createDynamicsCompressor(); comp.threshold.value=-18; comp.knee.value=22; comp.ratio.value=5; comp.attack.value=0.003; comp.release.value=0.18;
+    master=AC.createGain(); master.gain.value=1.9; master.connect(comp); comp.connect(AC.destination); }
+  function voice(t,freq){
+    var g=P.glide,spb=60/P.bpm,stepDur=spb/4,glideT=Math.min(stepDur*1.4,0.02+g*stepDur*1.6);
+    var car=AC.createOscillator(); car.type=(P.src==="tri")?"triangle":"sine";
+    car.frequency.setValueAtTime(prevFreq||freq,t);
+    if(prevFreq&&g>0.01) car.frequency.linearRampToValueAtTime(freq,t+glideT); else car.frequency.setValueAtTime(freq,t);
+    var cents=P.pitchEnv*900; car.detune.setValueAtTime(cents,t); car.detune.linearRampToValueAtTime(0,t+0.03+P.pitchEnv*0.05);
+    var mod=null,mg=null; if(P.src==="fm"){ mod=AC.createOscillator(); mg=AC.createGain();
+      mod.frequency.setValueAtTime(freq*2.0,t); mg.gain.setValueAtTime(freq*(1.8+P.pitchEnv*1.8),t); mg.gain.exponentialRampToValueAtTime(freq*0.12,t+0.07);
+      mod.connect(mg); mg.connect(car.frequency); mod.start(t); }
+    var shaper=AC.createWaveShaper(); shaper.curve=DRIVE; shaper.oversample="2x";
+    var lp=AC.createBiquadFilter(); lp.type="lowpass"; lp.frequency.setValueAtTime(1600+P.pitchEnv*3800,t);
+    lp.frequency.exponentialRampToValueAtTime(700+P.punch*900,t+0.09); lp.Q.value=0.9;
+    var amp=AC.createGain(); var dec=0.05+(1-P.punch)*0.24;
+    amp.gain.setValueAtTime(0.0001,t); amp.gain.linearRampToValueAtTime(0.95,t+0.004); amp.gain.exponentialRampToValueAtTime(0.0006,t+dec);
+    car.connect(shaper); shaper.connect(lp); lp.connect(amp); amp.connect(master);
+    car.start(t); var stop=t+dec+0.06; car.stop(stop); if(mod) mod.stop(stop);
+    var ck=AC.createOscillator(),cg=AC.createGain(); ck.type="triangle"; ck.frequency.setValueAtTime(freq*4.0,t);
+    cg.gain.setValueAtTime(0.0001,t); cg.gain.linearRampToValueAtTime(0.22+P.punch*0.18,t+0.002); cg.gain.exponentialRampToValueAtTime(0.0004,t+0.03);
+    ck.connect(cg); cg.connect(master); ck.start(t); ck.stop(t+0.05);
+    prevFreq=freq;
+  }
+  function scheduler(){ var spb=60/P.bpm,stepDur=spb/4;
+    while(nextTime<AC.currentTime+AHEAD){ var s=pattern[stepIdx]; if(s!==null) voice(nextTime,baseFreq(s));
+      nextTime+=stepDur; stepIdx=(stepIdx+1)%COLS; if(stepIdx===0) prevFreq=null; } }
+  var raf=null;
+  function tick(){ if(!P.playing){ comet.setAttribute("opacity","0"); playCol.setAttribute("opacity","0"); return; }
+    var spb=60/P.bpm,barDur=spb*4,into=(AC.currentTime-startTime)%barDur,frac=into/barDur;
+    var step=Math.floor(frac*COLS); playCol.setAttribute("x",cx(step)); playCol.setAttribute("y",GY0);
+    playCol.setAttribute("width",CW); playCol.setAttribute("height",GY1-GY0); playCol.setAttribute("opacity","0.09");
+    // comet rides the contour where a note exists in/near this step
+    var x=GX0+frac*(GX1-GX0);
+    if(pattern[step]!==null){ comet.setAttribute("cx",cellCX(step)); comet.setAttribute("cy",cellCY(rowOf(pattern[step]))); comet.setAttribute("opacity","0.95"); }
+    else comet.setAttribute("opacity","0");
+    raf=requestAnimationFrame(tick); }
+  function play(){ ensureAudio(); if(!AC) return; if(AC.state==="suspended") AC.resume();
+    P.playing=true; root.classList.add("playing"); liveLbl.textContent="LIVE";
+    stepIdx=0; prevFreq=null; nextTime=AC.currentTime+0.06; startTime=nextTime;
+    sched=setInterval(scheduler,LOOKAHEAD*1000); raf=requestAnimationFrame(tick); }
+  function stop(){ P.playing=false; root.classList.remove("playing"); liveLbl.textContent="READY";
+    if(sched){ clearInterval(sched); sched=null; } if(raf){ cancelAnimationFrame(raf); raf=null; }
+    comet.setAttribute("opacity","0"); playCol.setAttribute("opacity","0"); }
+
+  // ================= UI =================
+  function slider(cls,labelText,val,min,max,step,fmt,onin){
+    var wrap=document.createElement("div"); wrap.className="amld-ctl"+(cls?" "+cls:"");
+    var lab=document.createElement("label"); var b=document.createElement("b"); b.textContent=fmt(val);
+    lab.appendChild(document.createTextNode(labelText)); lab.appendChild(b);
+    var inp=document.createElement("input"); inp.type="range"; inp.min=min; inp.max=max; inp.step=step; inp.value=val;
+    inp.addEventListener("input",function(){ var v=parseFloat(inp.value); b.textContent=fmt(v); onin(v); renderContour(); });
+    wrap.appendChild(lab); wrap.appendChild(inp); return wrap;
+  }
+  var pct=function(v){return Math.round(v*100)+"%";}, bpmf=function(v){return Math.round(v)+"";};
+  var ctrls=document.getElementById("amld-ctrls");
+  ctrls.appendChild(slider("glide","GLIDE",P.glide,0,1,0.01,pct,function(v){P.glide=v;}));
+  ctrls.appendChild(slider("","PITCH ENV",P.pitchEnv,0,1,0.01,pct,function(v){P.pitchEnv=v;}));
+  ctrls.appendChild(slider("","PUNCH",P.punch,0,1,0.01,pct,function(v){P.punch=v;}));
+  ctrls.appendChild(slider("","TEMPO",P.bpm,90,124,1,bpmf,function(v){P.bpm=v;}));
+
+  var row1=document.getElementById("amld-row1");
+  var playBtn=document.createElement("button"); playBtn.className="amld-btn amld-play"; playBtn.type="button"; playBtn.textContent="▶ Play";
+  playBtn.addEventListener("click",function(){ if(P.playing){ stop(); playBtn.textContent="▶ Play"; } else { play(); playBtn.textContent="■ Stop"; } });
+  row1.appendChild(playBtn);
+  var seg=document.createElement("div"); seg.className="amld-seg";
+  [["fm","FM"],["tri","TRI"]].forEach(function(o){ var b=document.createElement("button"); b.type="button"; b.textContent=o[1]; if(o[0]===P.src) b.className="on";
+    b.addEventListener("click",function(){ P.src=o[0]; Array.prototype.forEach.call(seg.children,function(c){c.className="";}); b.className="on"; updateRead(); }); seg.appendChild(b); });
+  row1.appendChild(seg);
+  readEl=document.createElement("div"); readEl.className="amld-read"; row1.appendChild(readEl);
+
+  var row2=document.getElementById("amld-row2");
+  var lab2=document.createElement("span"); lab2.style.cssText="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.08em;color:#5b6b7e;margin-right:2px"; lab2.textContent="GROOVES"; row2.appendChild(lab2);
+  var GROOVES=[["Classic",[0,null,3,null,10,null,7,null,0,null,5,3,null,7,null,10]],
+               ["Rolling",[0,0,null,3,5,null,7,null,10,null,7,5,3,null,0,null]],
+               ["Sparse",[0,null,null,null,7,null,null,3,null,null,10,null,null,null,5,null]],
+               ["Bounce",[0,null,0,3,null,5,null,3,7,null,5,null,10,null,7,5]],
+               ["Deep",[0,null,null,3,null,null,0,null,5,null,null,3,null,7,null,null]],
+               ["Skank",[0,null,null,7,null,3,null,null,0,null,10,null,5,null,7,null]],
+               ["Ladder",[0,3,null,5,7,null,10,null,12,10,null,7,5,null,3,null]]];
+  GROOVES.forEach(function(gr){ var b=document.createElement("button"); b.type="button"; b.className="amld-pill"; b.textContent=gr[0];
+    b.addEventListener("click",function(){ pattern=gr[1].slice(); paintCells(); renderContour(); }); row2.appendChild(b); });
+
+  buildStatic(); paintCells(); renderContour();
+})();
+</script>
+
+<p>Program a few notes, hit play, and drag the Glide control from zero to full. At zero you'll hear a blocky, almost comical stepped bass. As you push it up, the line comes alive — the notes start leaning into one another, and somewhere in the upper-middle of the range you'll feel it click into that unmistakable amapiano walk. Then change the pattern and do it again, because the ideal glide depends entirely on the notes you've written. That relationship between your melody and your glide is the thing no preset can give you, and it's why the log drum rewards players over patch-hunters.</p>
+
+<h2 id="s-melody">Playing it like a melody, not a bassline</h2>
+
+<p>Which raises the question of what notes to write. A log drum is played melodically. It follows the chord progression, outlines the key, and leaves deliberate space so it can dart back in. Think of it less as a bass holding roots and more as a lead instrument that happens to live in the low end — a call-and-response partner to the chords and the shakers rather than a static foundation. This is a real shift in mindset if you come from genres where the bass simply doubles the kick.</p>
+
+<p>Space is as important as the notes. Because the log drum is so full — carrying kick, sub, and pitch at once — a wall of constant notes turns to sludge fast. The classic amapiano feel comes from the bass playing a phrase, dropping out for a beat while the shakers and the airy percussion keep the pulse, and then answering itself. Leave the gaps. They're where the groove breathes, and they're where the next glide gets its running start. If you've built melodic basslines in <a href="how-to-make-drum-and-bass.html">drum and bass</a> or written hooks in <a href="how-to-make-hyperpop.html">hyperpop</a>, you already have the instinct; here you're aiming it at the sub.</p>
+
+<h2 id="s-chain">The full chain, stage by stage</h2>
+
+<p>Let's assemble everything into a signal path you can rebuild anywhere. The beauty of the log drum is that no single stage is exotic — it's the specific combination and order that produces the magic. Here is the whole chain at a glance.</p>
+
+<figure class="diagram-wrap" id="amld-fig-chain" style="background:#080b0f;border:1px solid #1a2332;border-radius:12px;padding:16px 14px 12px;"><div class="fig-d"><svg id="amld-chain-d" viewBox="0 0 780 392" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The amapiano log drum signal chain in five stages: a triangle or FM source, a fast pitch envelope with portamento glide (highlighted as what makes it a log drum), a fast amplitude envelope, saturation, and EQ or glue." style="display:block;width:100%;height:auto;"><defs><radialGradient id="wash" cx="16%" cy="-6%" r="118%"><stop offset="0%" stop-color="#00d4a8" stop-opacity="0.09"/><stop offset="52%" stop-color="#080b0f" stop-opacity="0"/></radialGradient></defs><rect width="780" height="392" fill="#080b0f"/><rect width="780" height="392" fill="url(#wash)"/><text x="36.0" y="34.0" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="#f5a623" text-anchor="start" letter-spacing="0.16em">THE AMAPIANO LOG DRUM · SIGNAL CHAIN</text><text x="36.0" y="66.0" font-family="Lora" font-size="23" font-weight="600" fill="#f0f4f8" text-anchor="start">Five ordinary stages — one makes it a log drum.</text><rect x="36.0" y="92.0" width="708.0" height="224.0" rx="14" fill="#0c121a" stroke="#1b2735" stroke-width="1.2"/><rect x="36.0" y="92.0" width="708.0" height="2.5" rx="14" fill="#ffffff" opacity="0.03"/><rect x="56.0" y="122.0" width="124.0" height="150.0" rx="12" fill="#111a26" stroke="#3d5169" stroke-width="1.5"/><text x="118.0" y="145.7" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="#b4c4d6" text-anchor="middle" letter-spacing="0.02em">01  SOURCE</text><rect x="72.0" y="166.0" width="92.0" height="52.0" rx="9" fill="#080d13" stroke="#243244" stroke-width="1"/><path d="M79.0,192.0 L80.6,189.5 L82.2,186.5 L83.9,184.1 L85.5,183.3 L87.1,184.0 L88.8,185.7 L90.4,187.3 L92.0,188.1 L93.6,188.3 L95.2,188.5 L96.9,189.7 L98.5,192.0 L100.1,194.9 L101.8,197.3 L103.4,198.5 L105.0,198.2 L106.6,197.2 L108.2,196.5 L109.9,196.6 L111.5,197.3 L113.1,197.7 L114.8,197.0 L116.4,194.9 L118.0,192.0 L119.6,189.4 L121.2,188.0 L122.9,187.7 L124.5,187.9 L126.1,187.6 L127.8,186.5 L129.4,185.0 L131.0,184.0 L132.6,184.4 L134.2,186.4 L135.9,189.3 L137.5,192.0 L139.1,193.8 L140.8,194.6 L142.4,195.2 L144.0,196.3 L145.6,198.2 L147.2,200.4 L148.9,201.8 L150.5,201.6 L152.1,199.7 L153.8,196.8 L155.4,194.0 L157.0,192.0" fill="none" stroke="#00d4a8" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round"/><text x="118.0" y="254.1" font-family="Lora" font-size="12" font-weight="500" fill="#93a4ba" text-anchor="middle">triangle / FM</text><line x1="182.0" y1="197.0" x2="188.0" y2="197.0" stroke="#f5a623" stroke-width="1.6" stroke-linecap="round"/><path d="M190.0,197.0 l-7 -4 l0 8 z" fill="#f5a623"/><rect x="192.0" y="122.0" width="124.0" height="150.0" rx="12" fill="#12211c" stroke="#f5a623" stroke-width="1.9"/><text x="254.0" y="145.7" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="#f5a623" text-anchor="middle" letter-spacing="0.02em">02  PITCH + GLIDE</text><rect x="208.0" y="166.0" width="92.0" height="52.0" rx="9" fill="#080d13" stroke="#243244" stroke-width="1"/><path d="M215.0,204.0 L241.5,204.0 L263.4,180.0 L293.0,180.0" fill="none" stroke="#f5a623" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="215.0" cy="204.0" r="2.6" fill="#f5a623"/><circle cx="293.0" cy="180.0" r="2.6" fill="#f5a623"/><text x="254.0" y="254.1" font-family="Lora" font-size="12" font-weight="500" fill="#93a4ba" text-anchor="middle">pitch env + glide</text><line x1="318.0" y1="197.0" x2="324.0" y2="197.0" stroke="#f5a623" stroke-width="1.6" stroke-linecap="round"/><path d="M326.0,197.0 l-7 -4 l0 8 z" fill="#f5a623"/><rect x="328.0" y="122.0" width="124.0" height="150.0" rx="12" fill="#111a26" stroke="#3d5169" stroke-width="1.5"/><text x="390.0" y="145.7" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="#b4c4d6" text-anchor="middle" letter-spacing="0.02em">03  AMP ENV</text><rect x="344.0" y="166.0" width="92.0" height="52.0" rx="9" fill="#080d13" stroke="#243244" stroke-width="1"/><path d="M351.0,204.0 L351.0,179.2 L353.4,181.7 L355.9,183.9 L358.3,186.0 L360.8,187.8 L363.2,189.4 L365.6,190.9 L368.1,192.2 L370.5,193.4 L372.9,194.5 L375.4,195.4 L377.8,196.3 L380.2,197.1 L382.7,197.8 L385.1,198.4 L387.6,199.0 L390.0,199.5 L392.4,199.9 L394.9,200.3 L397.3,200.7 L399.8,201.0 L402.2,201.3 L404.6,201.6 L407.1,201.8 L409.5,202.1 L411.9,202.3 L414.4,202.4 L416.8,202.6 L419.2,202.7 L421.7,202.9 L424.1,203.0 L426.6,203.1 L429.0,203.2" fill="none" stroke="#00d4a8" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round"/><text x="390.0" y="254.1" font-family="Lora" font-size="12" font-weight="500" fill="#93a4ba" text-anchor="middle">attack + decay</text><line x1="454.0" y1="197.0" x2="460.0" y2="197.0" stroke="#7c8da0" stroke-width="1.6" stroke-linecap="round"/><path d="M462.0,197.0 l-7 -4 l0 8 z" fill="#7c8da0"/><rect x="464.0" y="122.0" width="124.0" height="150.0" rx="12" fill="#111a26" stroke="#3d5169" stroke-width="1.5"/><text x="526.0" y="145.7" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="#b4c4d6" text-anchor="middle" letter-spacing="0.02em">04  SATURATION</text><rect x="480.0" y="166.0" width="92.0" height="52.0" rx="9" fill="#080d13" stroke="#243244" stroke-width="1"/><path d="M487.0,203.8 L488.9,203.8 L490.9,203.7 L492.9,203.6 L494.8,203.5 L496.8,203.4 L498.7,203.2 L500.6,203.0 L502.6,202.7 L504.6,202.4 L506.5,202.0 L508.4,201.5 L510.4,200.9 L512.4,200.2 L514.3,199.4 L516.2,198.4 L518.2,197.4 L520.1,196.1 L522.1,194.8 L524.0,193.4 L526.0,192.0 L528.0,190.6 L529.9,189.2 L531.9,187.9 L533.8,186.6 L535.8,185.6 L537.7,184.6 L539.6,183.8 L541.6,183.1 L543.5,182.5 L545.5,182.0 L547.5,181.6 L549.4,181.3 L551.4,181.0 L553.3,180.8 L555.2,180.6 L557.2,180.5 L559.1,180.4 L561.1,180.3 L563.0,180.2 L565.0,180.2" fill="none" stroke="#00d4a8" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round"/><line x1="487.0" y1="192.0" x2="565.0" y2="192.0" stroke="#5b6b7e" stroke-width="0.8" stroke-linecap="round" stroke-dasharray="2 3" opacity="0.6"/><text x="526.0" y="254.1" font-family="Lora" font-size="12" font-weight="500" fill="#93a4ba" text-anchor="middle">drive · grit</text><line x1="590.0" y1="197.0" x2="596.0" y2="197.0" stroke="#7c8da0" stroke-width="1.6" stroke-linecap="round"/><path d="M598.0,197.0 l-7 -4 l0 8 z" fill="#7c8da0"/><rect x="600.0" y="122.0" width="124.0" height="150.0" rx="12" fill="#111a26" stroke="#3d5169" stroke-width="1.5"/><text x="662.0" y="145.7" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="#b4c4d6" text-anchor="middle" letter-spacing="0.02em">05  EQ / GLUE</text><rect x="616.0" y="166.0" width="92.0" height="52.0" rx="9" fill="#080d13" stroke="#243244" stroke-width="1"/><path d="M623.0,184.8 L640.2,184.0 L655.8,192.8 L668.2,181.6 L680.7,196.0 L701.0,204.0" fill="none" stroke="#00d4a8" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round"/><line x1="623.0" y1="205.6" x2="701.0" y2="205.6" stroke="#151f2b" stroke-width="1" stroke-linecap="round"/><text x="662.0" y="254.1" font-family="Lora" font-size="12" font-weight="500" fill="#93a4ba" text-anchor="middle">tight lows · ping</text><line x1="254.0" y1="272.0" x2="254.0" y2="288.0" stroke="#f5a623" stroke-width="1.4" stroke-linecap="round"/><path d="M254.0,288.0 l-5 -8 l10 0 z" fill="#f5a623"/><rect x="186.0" y="276.0" width="408.0" height="30.0" rx="8" fill="#191204" stroke="#f5a623" stroke-width="1.3"/><text x="390.0" y="295.1" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#f5a623" text-anchor="middle" letter-spacing="0.03em">FM SOURCE + PITCH GLIDE = LOG DRUM</text><text x="36.0" y="350.2" font-family="Lora" font-size="12.5" font-weight="500" fill="#93a4ba" text-anchor="start" font-style="italic">Every stage is ordinary synthesis. The FM source and the pitch glide (stage 02) are what turn a bass into a log drum. Community technique.</text><text x="744.0" y="349.1" font-family="JetBrains Mono" font-size="9" font-weight="500" fill="#5b6b7e" text-anchor="end">MusicProductionWiki</text></svg></div><div class="fig-m"><svg id="amld-chain-m" viewBox="0 0 384 556" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The amapiano log drum signal chain in five stages: a triangle or FM source, a fast pitch envelope with portamento glide (highlighted as what makes it a log drum), a fast amplitude envelope, saturation, and EQ or glue." style="display:block;width:100%;height:auto;"><defs><radialGradient id="wash" cx="16%" cy="-6%" r="118%"><stop offset="0%" stop-color="#00d4a8" stop-opacity="0.09"/><stop offset="52%" stop-color="#080b0f" stop-opacity="0"/></radialGradient></defs><rect width="384" height="556" fill="#080b0f"/><rect width="384" height="556" fill="url(#wash)"/><text x="24.0" y="36.0" font-family="JetBrains Mono" font-size="11.5" font-weight="700" fill="#f5a623" text-anchor="start" letter-spacing="0.10em">THE AMAPIANO LOG DRUM</text><text x="24.0" y="66.0" font-family="Lora" font-size="19" font-weight="600" fill="#f0f4f8" text-anchor="start">Five stages — one makes</text><text x="24.0" y="89.0" font-family="Lora" font-size="19" font-weight="600" fill="#f0f4f8" text-anchor="start">it a log drum.</text><rect x="24.0" y="110.0" width="336.0" height="56.0" rx="12" fill="#111a26" stroke="#33465c" stroke-width="1.3"/><rect x="38.0" y="117.0" width="54.0" height="42.0" rx="9" fill="#080d13" stroke="#243244" stroke-width="1"/><path d="M43.0,138.0 L43.9,136.1 L44.8,133.9 L45.8,132.1 L46.7,131.4 L47.6,132.0 L48.5,133.3 L49.4,134.5 L50.3,135.1 L51.2,135.2 L52.2,135.4 L53.1,136.3 L54.0,138.0 L54.9,140.2 L55.8,142.0 L56.8,142.8 L57.7,142.6 L58.6,141.9 L59.5,141.4 L60.4,141.5 L61.3,142.0 L62.2,142.3 L63.2,141.7 L64.1,140.1 L65.0,138.0 L65.9,136.1 L66.8,135.0 L67.8,134.8 L68.7,134.9 L69.6,134.7 L70.5,133.9 L71.4,132.8 L72.3,132.0 L73.2,132.3 L74.2,133.8 L75.1,136.0 L76.0,138.0 L76.9,139.3 L77.8,140.0 L78.8,140.4 L79.7,141.2 L80.6,142.6 L81.5,144.3 L82.4,145.4 L83.3,145.2 L84.2,143.8 L85.2,141.6 L86.1,139.5 L87.0,138.0" fill="none" stroke="#00d4a8" stroke-width="3.1" stroke-linecap="round" stroke-linejoin="round"/><text x="108.0" y="137.1" font-family="JetBrains Mono" font-size="15" font-weight="700" fill="#f0f4f8" text-anchor="start">01  SOURCE</text><text x="108.0" y="154.8" font-family="Lora" font-size="14" font-weight="500" fill="#93a4ba" text-anchor="start">triangle / FM</text><line x1="58.0" y1="166.0" x2="58.0" y2="174.0" stroke="#f5a623" stroke-width="1.4" stroke-linecap="round"/><path d="M58.0,175.0 l-4 -7 l8 0 z" fill="#f5a623" transform="rotate(180 58.0 171.0)"/><rect x="24.0" y="176.0" width="336.0" height="56.0" rx="12" fill="#12211c" stroke="#f5a623" stroke-width="1.7"/><rect x="24.0" y="176.0" width="4.0" height="56.0" rx="2" fill="#f5a623"/><rect x="38.0" y="183.0" width="54.0" height="42.0" rx="9" fill="#080d13" stroke="#243244" stroke-width="1"/><path d="M43.0,213.0 L58.0,213.0 L70.3,195.0 L87.0,195.0" fill="none" stroke="#f5a623" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="43.0" cy="213.0" r="2.6" fill="#f5a623"/><circle cx="87.0" cy="195.0" r="2.6" fill="#f5a623"/><text x="108.0" y="203.1" font-family="JetBrains Mono" font-size="15" font-weight="700" fill="#f5a623" text-anchor="start">02  PITCH + GLIDE</text><text x="108.0" y="220.8" font-family="Lora" font-size="14" font-weight="500" fill="#93a4ba" text-anchor="start">pitch env + glide</text><line x1="58.0" y1="232.0" x2="58.0" y2="240.0" stroke="#f5a623" stroke-width="1.4" stroke-linecap="round"/><path d="M58.0,241.0 l-4 -7 l8 0 z" fill="#f5a623" transform="rotate(180 58.0 237.0)"/><rect x="24.0" y="242.0" width="336.0" height="56.0" rx="12" fill="#111a26" stroke="#33465c" stroke-width="1.3"/><rect x="38.0" y="249.0" width="54.0" height="42.0" rx="9" fill="#080d13" stroke="#243244" stroke-width="1"/><path d="M43.0,279.0 L43.0,260.4 L44.4,262.3 L45.8,264.0 L47.1,265.5 L48.5,266.8 L49.9,268.1 L51.2,269.2 L52.6,270.2 L54.0,271.1 L55.4,271.9 L56.8,272.6 L58.1,273.2 L59.5,273.8 L60.9,274.3 L62.2,274.8 L63.6,275.2 L65.0,275.6 L66.4,275.9 L67.8,276.3 L69.1,276.5 L70.5,276.8 L71.9,277.0 L73.2,277.2 L74.6,277.4 L76.0,277.5 L77.4,277.7 L78.8,277.8 L80.1,277.9 L81.5,278.1 L82.9,278.1 L84.2,278.2 L85.6,278.3 L87.0,278.4" fill="none" stroke="#00d4a8" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round"/><text x="108.0" y="269.1" font-family="JetBrains Mono" font-size="15" font-weight="700" fill="#f0f4f8" text-anchor="start">03  AMP ENV</text><text x="108.0" y="286.8" font-family="Lora" font-size="14" font-weight="500" fill="#93a4ba" text-anchor="start">attack + decay</text><line x1="58.0" y1="298.0" x2="58.0" y2="306.0" stroke="#7c8da0" stroke-width="1.4" stroke-linecap="round"/><path d="M58.0,307.0 l-4 -7 l8 0 z" fill="#7c8da0" transform="rotate(180 58.0 303.0)"/><rect x="24.0" y="308.0" width="336.0" height="56.0" rx="12" fill="#111a26" stroke="#33465c" stroke-width="1.3"/><rect x="38.0" y="315.0" width="54.0" height="42.0" rx="9" fill="#080d13" stroke="#243244" stroke-width="1"/><path d="M43.0,344.9 L44.1,344.8 L45.2,344.8 L46.3,344.7 L47.4,344.6 L48.5,344.5 L49.6,344.4 L50.7,344.2 L51.8,344.0 L52.9,343.8 L54.0,343.5 L55.1,343.1 L56.2,342.7 L57.3,342.2 L58.4,341.6 L59.5,340.8 L60.6,340.0 L61.7,339.1 L62.8,338.1 L63.9,337.1 L65.0,336.0 L66.1,334.9 L67.2,333.9 L68.3,332.9 L69.4,332.0 L70.5,331.2 L71.6,330.4 L72.7,329.8 L73.8,329.3 L74.9,328.9 L76.0,328.5 L77.1,328.2 L78.2,328.0 L79.3,327.8 L80.4,327.6 L81.5,327.5 L82.6,327.4 L83.7,327.3 L84.8,327.2 L85.9,327.2 L87.0,327.1" fill="none" stroke="#00d4a8" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round"/><line x1="43.0" y1="336.0" x2="87.0" y2="336.0" stroke="#5b6b7e" stroke-width="0.8" stroke-linecap="round" stroke-dasharray="2 3" opacity="0.6"/><text x="108.0" y="335.1" font-family="JetBrains Mono" font-size="15" font-weight="700" fill="#f0f4f8" text-anchor="start">04  SATURATION</text><text x="108.0" y="352.8" font-family="Lora" font-size="14" font-weight="500" fill="#93a4ba" text-anchor="start">drive · grit</text><line x1="58.0" y1="364.0" x2="58.0" y2="372.0" stroke="#7c8da0" stroke-width="1.4" stroke-linecap="round"/><path d="M58.0,373.0 l-4 -7 l8 0 z" fill="#7c8da0" transform="rotate(180 58.0 369.0)"/><rect x="24.0" y="374.0" width="336.0" height="56.0" rx="12" fill="#111a26" stroke="#33465c" stroke-width="1.3"/><rect x="38.0" y="381.0" width="54.0" height="42.0" rx="9" fill="#080d13" stroke="#243244" stroke-width="1"/><path d="M43.0,396.6 L52.7,396.0 L61.5,402.6 L68.5,394.2 L75.6,405.0 L87.0,411.0" fill="none" stroke="#00d4a8" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round"/><line x1="43.0" y1="412.2" x2="87.0" y2="412.2" stroke="#151f2b" stroke-width="1" stroke-linecap="round"/><text x="108.0" y="401.1" font-family="JetBrains Mono" font-size="15" font-weight="700" fill="#f0f4f8" text-anchor="start">05  EQ / GLUE</text><text x="108.0" y="418.8" font-family="Lora" font-size="14" font-weight="500" fill="#93a4ba" text-anchor="start">tight lows · ping</text><line x1="24.0" y1="444.0" x2="360.0" y2="444.0" stroke="#151f2b" stroke-width="1.2" stroke-linecap="round"/><text x="24.0" y="470.4" font-family="Lora" font-size="13" font-weight="500" fill="#93a4ba" text-anchor="start" font-style="italic">Every stage is ordinary synthesis; the FM</text><text x="24.0" y="490.4" font-family="Lora" font-size="13" font-weight="500" fill="#93a4ba" text-anchor="start" font-style="italic">source + pitch glide make it a log drum.</text><text x="360.0" y="546.1" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#5b6b7e" text-anchor="end">MusicProductionWiki.com</text></svg></div><figcaption class="diagram-caption">The whole chain in five stages. Every stage is ordinary synthesis; the FM source and the pitch glide (stage 02) are what turn a bass into a log drum.</figcaption></figure>
+
+<p>Read it left to right and you'll see there are no secrets, only decisions. The source is an FM or triangle tone. The pitch stage adds the fast attack blip and, above all, the glide. The amplitude stage delivers the percussive envelope. Then saturation and EQ finish the job. Every one of those stages is ordinary synthesis you'd use on a dozen other sounds; what makes it a log drum is that the second stage — the pitch movement — is treated as the star rather than an afterthought. Get the order wrong, or skip the glide, and you have a generic bass. Respect the sequence and you have the real thing.</p>
+
+<h2 id="s-sat">Saturation: where the wood and the warmth come from</h2>
+
+<p>A clean synth tone, even a good FM one, tends to sound sterile in this context. Saturation fixes that, and it does more heavy lifting than beginners expect. Driving the signal — with a saturator, a tube or tape emulation, a touch of distortion, or a waveshaper — generates new harmonics above the fundamental. Those harmonics are what let a very low note be heard at all on small speakers, because your laptop or phone can't reproduce a 40-hertz fundamental but it can reproduce its overtones, and your brain reconstructs the missing bass. Saturation is therefore not just flavour; it's an audibility strategy.</p>
+
+<p>It's also where much of the "woody" quality lives. The right drive emphasises the upper-mid knock — that hollow, mallet-on-log character — and glues the sub and the attack into one cohesive body rather than two layers sitting awkwardly together. Go gently: a little saturation warms and thickens, but too much turns the log drum harsh and fizzy, and harshness is the fastest way to make a mix tiring. Add drive until the sound reads clearly on a phone speaker, then back off a hair. The same restraint that serves you when you <a href="how-to-mix-bass.html">mix bass</a> in any genre applies double here, because this one element is doing several jobs at once.</p>
+
+<h2 id="s-eq">EQ and glue: making one sound do three jobs</h2>
+
+<p>Because the log drum is simultaneously your kick, your sub, and a melodic bass, EQ is less about carving and more about balancing three roles in one signal. Keep the sub region tight and controlled so it delivers weight without booming or eating all your headroom. Roll off the very lowest rumble that only wastes energy. Preserve and often gently lift the woody upper-mid "ping," because that's the part that cuts through on small systems and gives the sound its identity. And tame any harsh, fizzy top that heavy saturation may have introduced.</p>
+
+<p>Keep the low end mono. Stereo information down in the sub is a recipe for a weak, phasey low end that falls apart on club systems, so anything below rough the low-mids should sit dead centre — the width in amapiano comes from the shakers, pads, and vocals, not the bass. If you find the log drum and the kick fighting, remember that in true amapiano the log drum frequently <em>is</em> the kick's low-frequency role, which is why many productions use a softer, punchier kick that stays out of the sub and lets the log drum own it. The broader principles here are the same ones you'd apply when you <a href="how-to-mix-drums.html">mix drums</a>: decide who owns each frequency band and don't let two elements fight for it.</p>
+
+<h2 id="s-groove">Programming the groove: pattern, swing, and interplay</h2>
+
+<p>A log drum lives or dies by its rhythmic relationship with the rest of the beat. Amapiano typically sits somewhere around 108 to 115 beats per minute — slow enough to feel heavy, with earlier tracks nearer the bottom of that range and newer, faster "private school" styles pushing past it. Within that tempo, the log drum plays syncopated, swung phrases that lock with the shaker pattern and answer the chords. The swing is not optional; a perfectly straight log-drum line sounds robotic. Nudge your notes off the grid, or use your DAW's groove templates, until the phrase has that slightly lazy, human lean.</p>
+
+<p>The most important interplay is with the percussion. In a classic amapiano beat, the continuous shakers and rimshots keep strict time, which is precisely what frees the log drum to be loose and conversational — it can leave huge gaps and dart back in because the groove is being held elsewhere. This division of labour is the genre's engine. When you build the rest of the beat, whether you're following our walkthrough on <a href="how-to-make-a-beat.html">making a beat</a> or working in a house-adjacent style like <a href="how-to-make-house-music.html">house</a>, think of the log drum as one voice in a conversation, not a metronome. Give it something to answer.</p>
+
+<h2 id="s-tune">Tuning it to your track</h2>
+
+<p>A log drum that sounds enormous in isolation can vanish in a mix, and the usual culprit is key. Because the sound has such a strong pitched component, it must be tuned to the key of your song or it will clash with the chords and read as "off" even to listeners who couldn't name why. Set your synth's master tuning or the note range so the log drum's fundamental sits on the root of your progression, and write its melody within the scale. This is more demanding than tuning a formless 808 sub, precisely because the log drum's pitch is so audible — but it's also what lets it function as a melodic instrument rather than just weight.</p>
+
+<p>Watch the register, too. Tuned too low, the log drum disappears on small speakers and turns to mud on big ones; tuned too high, it loses its authority and starts to sound like a lead. The pocket is a low bass register that still lets the pitched movement be heard clearly. The interactive above is deliberately pitched up so it plays on laptop speakers; on a real production you'd tune it down into the sub and lean harder on saturation to keep it audible. Finding that balance for your specific song, speakers, and mix is the last mile, and it's worth the patience.</p>
+
+<h2 id="s-wrong">Why your first log drum sounds wrong</h2>
+
+<p>Let me save you the frustration of chasing the wrong fix, because the failure modes here are few and specific, and once you can name them you can solve them in seconds. If your log drum sounds <em>flat and stiff</em>, the problem is almost always glide — you've built a correct sound and forgotten to make it walk. If it sounds like it's <em>droning or humming</em> rather than knocking, your amplitude decay is too long; pull it down until each note is short and percussive. If it <em>disappears</em> the moment the rest of the track comes in, especially on small speakers, you're missing saturation — you have a fundamental with no harmonics to carry it. If it sounds <em>out of tune or unsettling</em> in a way you can't quite place, it isn't tuned to your key. And if the low end turns to <em>mud</em>, you're either playing too many notes with no space, or you've left stereo width on the sub.</p>
+
+<p>Notice that every one of those problems maps back to a single stage of the chain we built, which is exactly why understanding the chain beats hoarding presets. A preset can't tell you why it stopped working in your track. The chain can. When something's off, walk the stages in order — source, pitch and glide, envelope, saturation, EQ — and you'll find the culprit before you've finished the list. This diagnostic habit, more than any single setting, is what separates producers who can fix their sound from producers who can only reroll it and hope.</p>
+
+<h2 id="s-ear">Train your ear on the real thing</h2>
+
+<p>No article can substitute for the one thing that will make you fluent: listening, closely and often, to log drums made by the people who define the sound. Pull up a handful of reference tracks and don't just enjoy them — interrogate them. Where does the bass leave gaps? How long does it hold a note before it slides? How much does the pitch actually move between hits, and does the glide feel fast or lazy? Try to hum the line back. If you can sing the walk, you can program it.</p>
+
+<p>Then A/B ruthlessly. Put your attempt next to a reference at matched loudness and listen for the specific ways they differ — usually it's the movement and the space, not the tone. This is the same discipline that lets you nail any signature sound, whether you're reverse-engineering a <a href="how-to-recreate-the-303-acid-sound.html">303 acid line</a> or the screaming <a href="how-to-recreate-the-hoover-sound.html">hoover</a>: you train your ear on the target until the gap between what you hear and what you made becomes obvious, and then you close it. Your ears improve faster than your patches ever will, and they're the tool you'll still have when the plugins change.</p>
+
+<h2 id="s-further">Taking it further</h2>
+
+<p>Once the fundamentals are solid, the log drum becomes a playground. Layering is the obvious next step: stack a pure sine sub beneath your main tone for extra weight, or a short mallet or kalimba sample on top for a sharper knock, tucking each layer in so they read as one instrument. You can automate the glide time across a phrase for expressive slides, modulate the filter for movement, or vary the saturation between sections so the drop hits harder than the verse. Newer strains of the genre push the log drum brighter, faster, and more distorted, so don't feel bound to the classic template — the tradition is still being written.</p>
+
+<p>Arrangement is the last lever, and an underused one. The log drum doesn't have to stay identical for a whole track — some of the most effective amapiano productions let it evolve, holding a sparse, patient figure through the intro, opening into its full gliding phrase at the drop, then stripping back again to give the ear a rest before it returns. Muting it entirely for a bar or two and letting the shakers and chords carry the groove makes its return hit twice as hard. Treat the log drum as a character with an arc across the arrangement, not a loop you set once and forget, and the whole track gains momentum.</p>
+
+<p>And the deeper skill you're really building is transferable. The habit of thinking about a bass as a moving, pitched, percussive voice rather than a static root will improve everything you make. It's the same lens that helps you shape a <a href="how-to-recreate-the-reese-bass.html">Reese bass</a> or program the growl in a <a href="how-to-recreate-the-dubstep-growl-bass.html">dubstep growl bass</a> — different genres, same underlying truth that movement is what makes low end come alive. Learn the log drum properly and you haven't just learned one sound; you've learned to listen to bass differently.</p>
+
+<h2 id="s-honesty">A short honesty note on sources</h2>
+
+<p>One thing I owe you before you go build. Much of the specific sound-design method above — the FM routing, the envelope shapes, the exact glide amounts — is community-established technique, reverse-engineered by producers over years, not documentation published by the originators. The people who invented the log drum did not release patch sheets. What is well-documented is the genre's history and the broad behaviour of the sound; what is inferred is the precise millisecond settings. I've tried to keep that line visible throughout and to flag what's confirmed versus what's a good working starting point, because you deserve to know which is which. Trust is built by admitting the edges of what's known, and the edges here are real. Now go make it walk.</p>
+
+<h2 id="s-drills">Three drills to lock it in</h2>
+<div class="exercise-block"><div class="exercise-header"><span class="exercise-badge exercise-badge--beginner">Beginner</span><span class="exercise-title">Hear the glide</span></div>
+<ol><li>In any synth, load a triangle or a simple FM patch and tune it low.</li><li>Give it an instant attack and a short decay so it knocks rather than drones.</li><li>Play two notes a few semitones apart with glide switched off, then switch glide on and play them again.</li><li>That difference &mdash; stepped versus singing &mdash; is the entire log drum. Sit with it before you go further.</li></ol></div>
+<div class="exercise-block"><div class="exercise-header"><span class="exercise-badge exercise-badge--intermediate">Intermediate</span><span class="exercise-title">Program a bar that walks</span></div>
+<ol><li>Use the sequencer above, or your piano roll, to write a syncopated one-bar phrase in a minor key with deliberate gaps.</li><li>Tune the log drum so its fundamental lands on your root note.</li><li>Dial the glide until the notes lean into each other without smearing &mdash; big leaps need a touch less.</li><li>Add saturation until it reads clearly on a phone speaker, then back off a hair.</li></ol></div>
+<div class="exercise-block"><div class="exercise-header"><span class="exercise-badge exercise-badge--advanced">Advanced</span><span class="exercise-title">Layer, automate, and A/B</span></div>
+<ol><li>Layer a pure sine sub beneath your tone and a short mallet or kalimba on top; tuck both in so they read as one instrument.</li><li>Automate the glide time or the saturation across a section so the drop hits harder than the intro.</li><li>Put your bar next to a reference track at matched loudness and close the gap &mdash; usually it is the movement and the space, not the tone.</li></ol></div>
+<h2 id="s-mistakes">Common mistakes</h2>
+<div class="mistake-box"><div class="mistake-box-label">No glide</div><p>The big one: a correct tone with the portamento at zero. It thuds, it doesn't walk. The punch is the glide between notes, not the volume of the hit &mdash; turn it on before you touch anything else.</p></div>
+<div class="mistake-box"><div class="mistake-box-label">Decays too long</div><p>If the log drum hums or drones instead of knocking, the amplitude decay is too long. Pull it down until each note is short and percussive, with essentially no sustain.</p></div>
+<div class="mistake-box"><div class="mistake-box-label">No saturation</div><p>A clean low tone vanishes on laptops and phones. Drive it so it generates upper harmonics the small speaker can reproduce &mdash; that is how the ear reconstructs the missing sub.</p></div>
+<div class="mistake-box"><div class="mistake-box-label">Not tuned to the key</div><p>Because the log drum's pitch is so audible, an untuned one clashes with the chords and sounds &ldquo;off&rdquo; even to listeners who can't say why. Set its fundamental to your root and write within the scale.</p></div>
+<div class="mistake-box"><div class="mistake-box-label">Mud: too many notes or a stereo sub</div><p>The log drum is full enough to carry the low end alone, so a wall of constant notes turns to sludge &mdash; leave gaps. And keep the sub mono; stereo information down low falls apart on club systems.</p></div>
+<h2 id="s-faq">Frequently Asked Questions</h2>
+<div class="faq-accordion">
+<div class="faq-accordion-item"><div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">What actually makes the amapiano log drum sound?</span></div></div><div class="faq-accordion-a"><p>A hybrid tone &mdash; part kick, part 808, part synth bass, part woody knock &mdash; shaped by a fast pitch envelope and a percussive amp envelope, and above all the portamento glide between notes. The part beginners miss is the glide: the movement is the sound, not the tone alone.</p></div></div>
+<div class="faq-accordion-item"><div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">What synth should I use to make a log drum?</span></div></div><div class="faq-accordion-a"><p>FM synthesis gives the most authentic result &mdash; Logic's EFM-1, FL's DX10, or an FM patch in Serum or Vital. A triangle or sine layered with a marimba/kalimba sample also works. Famously, the sound is widely understood to have started life as a stock bass preset inside FL Studio.</p></div></div>
+<div class="faq-accordion-item"><div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Can I make a log drum with free plugins?</span></div></div><div class="faq-accordion-a"><p>Yes. Vital is a free synth that does FM and wavetable, and any synth with glide, a fast envelope and a saturation unit will get you there. Paid tools are shortcuts, not a secret ingredient.</p></div></div>
+<div class="faq-accordion-item"><div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Why does my log drum sound flat and stiff?</span></div></div><div class="faq-accordion-a"><p>Almost always missing glide. A log drum leans out of one note and slides into the next; with portamento at zero you get a stepped bass that's technically correct and emotionally dead. Turn the glide up until it walks.</p></div></div>
+<div class="faq-accordion-item"><div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">What tempo is amapiano?</span></div></div><div class="faq-accordion-a"><p>Typically around 108 to 115 BPM &mdash; slow enough to feel heavy, with earlier tracks nearer the bottom of that range and newer, faster &ldquo;private school&rdquo; styles pushing past it.</p></div></div>
+<div class="faq-accordion-item"><div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">How is a log drum different from an 808?</span></div></div><div class="faq-accordion-a"><p>They're cousins. An 808 is prized for being a clean, static sub. A log drum is a pitched, percussive, gliding hybrid that acts as the kick and the bass at once and moves melodically around the beat rather than just holding a root.</p></div></div>
+<div class="faq-accordion-item"><div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Do I need to clear anything to release a log-drum track?</span></div></div><div class="faq-accordion-a"><p>No. Building a log drum is your own synthesis, so there's nothing to sample and nothing to clear &mdash; just don't sample an actual record. Beyond the law, treat the tradition with respect: you're borrowing from a living South African culture.</p></div></div>
+<div class="faq-accordion-item"><div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Why does a good log drum sound &ldquo;woody&rdquo;?</span></div></div><div class="faq-accordion-a"><p>FM synthesis adds inharmonic overtones, and saturation emphasises an upper-mid knock &mdash; together they read to the ear like a mallet striking a hollow log, which is exactly where the instrument gets its name.</p></div></div>
+</div>
+<section class="related-section">
+<h2>Keep building the sound</h2>
+<div class="related-grid">
+<a href="how-to-recreate-the-808-bass.html" class="related-card"><div class="related-card-tag">Recreation</div><h3 class="related-card-title">Recreate the 808 Bass</h3><p class="related-card-desc">The clean sub cousin &mdash; the log drum is what happens when an 808 learns to sing.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-make-amapiano.html" class="related-card"><div class="related-card-tag">Guide</div><h3 class="related-card-title">How to Make Amapiano</h3><p class="related-card-desc">The full genre: the chords, the swing, the shakers and the arrangement around your log drum.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-recreate-the-reese-bass.html" class="related-card"><div class="related-card-tag">Recreation</div><h3 class="related-card-title">Recreate the Reese Bass</h3><p class="related-card-desc">Another bass defined by movement &mdash; different genre, same lesson.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="serum-2-vs-vital.html" class="related-card"><div class="related-card-tag">Comparison</div><h3 class="related-card-title">Serum 2 vs Vital</h3><p class="related-card-desc">The paid-vs-free synth showdown for building FM log drums.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="best-synth-plugins.html" class="related-card"><div class="related-card-tag">Roundup</div><h3 class="related-card-title">Best Synth Plugins</h3><p class="related-card-desc">Which synths make FM approachable instead of painful.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-mix-bass.html" class="related-card"><div class="related-card-tag">Guide</div><h3 class="related-card-title">How to Mix Bass</h3><p class="related-card-desc">Sitting one very full low-end element in a real mix without mud.</p><span class="related-card-meta">Read article &rarr;</span></a>
+</div>
+</section>
+</div>
+</article>
+
+    <aside aria-label="Article sidebar">
+      <div class="sidebar-widget toc-widget" aria-labelledby="tocHeading">
+        <div class="sidebar-widget-header"><h2 class="sidebar-widget-title" id="tocHeading">In This Article</h2></div>
+        <div class="sidebar-widget-body"><ul class="toc-list"><li><a href="#s-what">What a log drum is</a></li><li><a href="#s-idea">The one idea: the glide</a></li><li><a href="#s-origin">Where it came from</a></li><li><a href="#s-source">Choosing the source</a></li><li><a href="#s-thump">The thump: two envelopes</a></li><li><a href="#s-glide">The glide: portamento</a></li><li><a href="#s-melody">Play it like a melody</a></li><li><a href="#s-chain">The full chain</a></li><li><a href="#s-sat">Saturation: wood & warmth</a></li><li><a href="#s-eq">EQ & glue</a></li><li><a href="#s-groove">Programming the groove</a></li><li><a href="#s-tune">Tuning it to your track</a></li><li><a href="#s-wrong">Why yours sounds wrong</a></li><li><a href="#s-ear">Train your ear</a></li><li><a href="#s-further">Taking it further</a></li><li><a href="#s-honesty">An honesty note on sources</a></li><li><a href="#s-drills">Three drills</a></li><li><a href="#s-mistakes">Common mistakes</a></li><li><a href="#s-faq">FAQ</a></li></ul></div>
+      </div>
+      <div class="sidebar-widget" style="background:var(--bg-void);border-color:var(--border-default);">
+        <div class="sidebar-widget-body" style="padding:1.5rem;">
+          <p style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.5rem;">Newsletter</p>
+          <h3 style="font-family:var(--font-display);color:var(--text-primary);font-size:1.1rem;margin-bottom:.5rem;">The Producer's Briefing</h3>
+          <p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:1rem;line-height:1.55;">Weekly tips, gear news, and technique guides. Free.</p>
+          <form class="newsletter-form-js" style="display:flex;flex-direction:column;gap:.5rem;" novalidate>
+            <input type="email" name="email" class="form-input" placeholder="Your email" required />
+            <button type="submit" class="btn-newsletter" style="font-size:.82rem;padding:.65rem 1rem;">Subscribe Free</button>
+          </form>
+        </div>
+      <div class="sidebar-widget" style="margin-top:1.5rem;">
+        <div class="sidebar-widget-header" style="text-align:center;">
+          <h2 class="sidebar-widget-title">Related Articles</h2>
+        </div>
+        <div class="sidebar-widget-body" style="padding:1rem;">
+<ul style="list-style:none;padding:0;margin:0;text-align:center;"><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="how-to-use-autotune.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">How to Use Auto-Tune</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Guide</span></li><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="best-pitch-correction-plugins.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">Best Pitch-Correction Plugins</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Roundup</span></li><li style="padding:.6rem 0;"><a href="how-to-recreate-the-daft-punk-robot-voice.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">Daft Punk Robot Voice</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Recreations</span></li></ul>
+        </div>
+      </div>
+      </div>
+    </aside>
+  </div>
+</main>
+<section class="newsletter-section" id="newsletter" aria-labelledby="newsletterHeading">
+  <div class="container">
+    <div class="newsletter-inner">
+      <div class="newsletter-content">
+        <p class="newsletter-label">Newsletter</p>
+        <h2 id="newsletterHeading" class="newsletter-title">The Producer's <em>Briefing</em></h2>
+        <p class="newsletter-desc">Weekly techniques, gear news, and music business insights. Free.</p>
+      </div>
+      <div class="newsletter-form-wrap">
+        <form class="newsletter-form-js" novalidate>
+          <input type="email" name="email" class="form-input" placeholder="Your email address" required />
+          <button type="submit" class="btn-newsletter">Subscribe Free</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<footer class="site-footer" role="contentinfo">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="../index.html" class="site-logo"><span class="logo-wordmark">Music<span>Production</span>Wiki</span><span class="logo-tagline">The Producer's Reference</span></a>
+    </div>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <div class="footer-col">
+        <h3 class="footer-col-title">Categories</h3>
+        <ul>
+          <li><a href="../categories/reviews.html">Reviews</a></li>
+          <li><a href="../categories/comparisons.html">Comparisons</a></li>
+          <li><a href="../categories/ai-music.html">AI Music</a></li>
+          <li><a href="../categories/daws.html">DAWs</a></li>
+          <li><a href="../categories/plugins.html">Plugins</a></li>
+          <li><a href="../categories/hardware.html">Gear</a></li>
+          <li><a href="../categories/techniques.html">Techniques</a></li>
+          <li><a href="../categories/music-business.html">Music Business</a></li>
+          <li><a href="../categories/glossary.html">Glossary</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">Popular</h3>
+        <ul>
+          <li><a href="../articles/suno-vs-udio.html">Suno vs Udio</a></li>
+          <li><a href="../articles/best-daw-for-beginners.html">Best DAW for Beginners</a></li>
+          <li><a href="../articles/focusrite-scarlett-2i2-gen-4-review.html">Scarlett 2i2 Review</a></li>
+          <li><a href="../articles/sidechain-compression-guide.html">Sidechain Compression</a></li>
+          <li><a href="../articles/best-compressor-plugins.html">Best Compressor Plugins</a></li>
+          <li><a href="../articles/what-is-gain-staging.html">What Is Gain Staging</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">About</h3>
+        <ul>
+          <li><a href="../about.html">About MPW</a></li>
+          <li><a href="../about.html#team">Our Team</a></li>
+          <li><a href="../about.html#methodology">Review Methodology</a></li>
+          <li><a href="../about.html#affiliate">Affiliate Disclosure</a></li>
+          <li><a href="../about.html#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="footer-bottom"><div class="container"><p>© <span id="copyrightYear"></span> MusicProductionWiki.com. All rights reserved. Content by the Music Production Wiki Team.</p></div></div>
+</footer>
+<script src="../js/main.js"></script>
+<script>document.getElementById('copyrightYear').textContent = new Date().getFullYear();</script>
+
+<button id="mpwBackTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  aria-label="Back to top"
+  style="position:fixed;bottom:1.5rem;right:1.5rem;width:2.5rem;height:2.5rem;border-radius:50%;
+         background:var(--teal);color:#000;border:none;cursor:pointer;display:none;
+         align-items:center;justify-content:center;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3);">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <polyline points="18 15 12 9 6 15"/>
+  </svg>
+</button>
+<script>
+(function(){
+  var btn=document.getElementById('mpwBackTop');
+  var bar=document.getElementById('readingProgress');
+  var art=document.querySelector('.article-body');
+  window.addEventListener('scroll',function(){
+    var st=window.scrollY||document.documentElement.scrollTop;
+    btn.style.display=st>400?'flex':'none';
+    if(bar&&art){
+      var h=art.getBoundingClientRect().height;
+      var top=art.getBoundingClientRect().top+st;
+      var pct=Math.min(100,Math.max(0,(st-top+window.innerHeight)*100/h));
+      bar.style.width=pct+'%';
+      bar.setAttribute('aria-valuenow',Math.round(pct));
+    }
+  });
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<!-- MPW universal search: one overlay, one Fuse index (/search-index.json) -->
+<div class="usearch" id="usearch" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="usearch-box">
+    <div class="usearch-top">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input id="usearchInput" type="text" placeholder="Search tools, articles, the Bible…" autocomplete="off">
+      <kbd>esc</kbd>
+    </div>
+    <div class="usearch-results" id="usearchResults"></div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
+<script>
+(function(){
+  // === production parity: lazy-load index on first open, build Fuse once ===
+  var data=null, fuse=null;
+  var overlay=document.getElementById('usearch');
+  var input=document.getElementById('usearchInput');
+  var box=document.getElementById('usearchResults');
+  var sel=-1, current=[];
+  // article slugs are bare; bible/ and tools/ slugs carry their prefix (verified vs live search-index.json)
+  function urlFor(s){ return (s.indexOf('bible/')===0||s.indexOf('tools/')===0) ? '/'+s : '/articles/'+s; }
+
+  function buildFuse(arr){
+    data=arr;
+    fuse=new Fuse(data,{keys:['title','category','description'],threshold:0.34,ignoreLocation:true,minMatchCharLength:2});
+  }
+  function ensureIndex(cb){
+    if(fuse){cb();return;}
+    // PRODUCTION: one shared index, lazy-loaded on first open.
+    fetch('/search-index.json').then(function(r){return r.json();}).then(function(arr){
+      buildFuse(arr); cb();
+    }).catch(function(){ box.textContent='Search failed to load.'; });
+  }
+
+  function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  function render(results){
+    current=results;
+    while(box.firstChild) box.removeChild(box.firstChild);   // no innerHTML
+    if(!input.value.trim()){ var p=document.createElement('div'); p.className='usearch-empty'; p.textContent='Start typing to search everything.'; box.appendChild(p); return; }
+    if(!results.length){ var n=document.createElement('div'); n.className='usearch-empty'; n.textContent='No results for "'+input.value+'".'; box.appendChild(n); return; }
+    results.slice(0,12).forEach(function(r,i){
+      var e=r.item||r;
+      var a=document.createElement('a'); a.href=urlFor(e.slug); if(i===sel)a.className='sel';
+      var top=document.createElement('div'); top.className='ur-top';
+      var t=document.createElement('span'); t.className='ur-title'; t.textContent=e.title;
+      var c=document.createElement('span'); c.className='ur-cat'; c.setAttribute('data-c',e.category||''); c.textContent=e.category||'';
+      top.appendChild(t); top.appendChild(c); a.appendChild(top);
+      if(e.description){ var d=document.createElement('div'); d.className='ur-desc'; d.textContent=e.description; a.appendChild(d); }
+      box.appendChild(a);
+    });
+  }
+
+  function open(q){ ensureIndex(function(){ overlay.classList.add('open'); input.focus(); if(q!=null){input.value=q;} sel=-1; render(input.value?fuse.search(input.value):[]); }); }
+  function close(){ overlay.classList.remove('open'); }
+
+  // wire every nav's search button to the shared overlay
+  document.querySelectorAll('[data-nav-search]').forEach(function(b){ b.addEventListener('click',function(){open(null);}); });
+  input.addEventListener('input',function(){ sel=-1; render(fuse?fuse.search(input.value):[]); });
+  input.addEventListener('keydown',function(e){
+    if(e.key==='Escape')close();
+    else if(e.key==='ArrowDown'){e.preventDefault(); sel=Math.min(sel+1,Math.min(current.length,12)-1); render(current);}
+    else if(e.key==='ArrowUp'){e.preventDefault(); sel=Math.max(sel-1,0); render(current);}
+    else if(e.key==='Enter'&&current[sel]){ var e2=current[sel].item||current[sel]; location.href=urlFor(e2.slug); }
+  });
+  overlay.addEventListener('click',function(e){ if(e.target===overlay)close(); });
+  document.addEventListener('keydown',function(e){ if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();open(null);} });
+})();
+</script>
+<script id="toc-bar-js">
+(function(){
+  var body=document.querySelector('.article-body');
+  var track=document.getElementById('tocBarTrack');
+  if(!body||!track)return;
+  var heads=[].slice.call(body.querySelectorAll('h2[id]'));
+  if(!heads.length)return;
+  heads.forEach(function(h){
+    var a=document.createElement('a');a.href='#'+h.id;
+    var t=h.textContent.trim();var i=t.indexOf(':');if(i>0)t=t.slice(0,i);
+    a.textContent=t;track.appendChild(a);
+  });
+  var links=[].slice.call(track.querySelectorAll('a'));
+  function onScroll(){
+    var y=window.scrollY+130,cur=heads[0].id;
+    heads.forEach(function(h){if(h.offsetTop<=y)cur=h.id;});
+    links.forEach(function(l){var on=l.getAttribute('href')==='#'+cur;l.classList.toggle('active',on);
+      if(on)l.scrollIntoView({inline:'center',block:'nearest'});});
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+})();
+</script>
+<script>
+function mpwFaqToggle(el){
+  var answer = el.nextElementSibling;
+  if(!answer || !answer.classList.contains('faq-accordion-a')) return;
+  var isOpen = answer.classList.contains('open');
+  document.querySelectorAll('.faq-accordion-a.open').forEach(function(a){
+    a.classList.remove('open');
+    var q = a.previousElementSibling;
+    if(q){ var ic = q.querySelector('.faq-accordion-icon, .faq-plus'); if(ic) ic.classList.remove('open'); }
+  });
+  if(!isOpen){
+    answer.classList.add('open');
+    var icon = el.querySelector('.faq-accordion-icon, .faq-plus');
+    if(icon) icon.classList.add('open');
+  }
+}
+</script>
+<style>.faq-plus.open{transform:rotate(45deg);transition:transform .2s ease}</style>
+</body>
+</html>
