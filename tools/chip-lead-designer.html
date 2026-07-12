@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>Chip Lead Designer &mdash; Free Chiptune / NES Pulse Synth Tool | MusicProductionWiki</title>
+<meta name="description" content="Design a chiptune lead live in your browser: drag the pad to morph the pulse duty cycle from hollow to nasal, speed the arpeggio until three notes fuse into one chord, then copy the recipe into any DAW. Free 8-bit / NES synth.">
+<meta property="og:title" content="Chip Lead Designer &mdash; MusicProductionWiki">
+<meta property="og:description" content="Drag the pad to morph the pulse timbre and speed the arpeggio until it fuses into a chord. Copy the chiptune recipe into any DAW.">
+<meta property="og:url" content="https://musicproductionwiki.com/tools/chip-lead-designer.html">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://musicproductionwiki.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://musicproductionwiki.com/tools/chip-lead-designer.html">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-79VB543KCT"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-79VB543KCT');</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What makes a chiptune lead sound 8-bit?","acceptedAnswer":{"@type":"Answer","text":"A pulse (square) wave with an adjustable duty cycle, played under a strict voice budget. The pulse channel's only tone control is the duty cycle, and cycling a chord's notes on one voice very fast fakes harmony. That thin, buzzy pulse timbre plus the fast arpeggio is the recognisable 8-bit lead."}},
+{"@type":"Question","name":"Why do the pulse channels only give three timbres if there are four duty cycles?","acceptedAnswer":{"@type":"Answer","text":"The 2A03 offers 12.5%, 25%, 50% and 75% duty, but 25% and 75% are mirror images that sound identical. That leaves three distinct timbres per pulse channel: thin and nasal (12.5%), reedy (25%) and hollow square (50%)."}},
+{"@type":"Question","name":"How do you play a chord with only one pulse channel?","acceptedAnswer":{"@type":"Answer","text":"You cycle the chord's notes on that one channel extremely fast, a 1/16 to 1/64 arpeggio often changing note every frame, so the ear stops hearing separate pitches and fuses them into one perceived chord. Raising the arp rate in this tool demonstrates exactly that."}},
+{"@type":"Question","name":"Is the audio in this tool a sample?","acceptedAnswer":{"@type":"Answer","text":"No. It is a Web Audio synth generating the pulse lead live in your browser, band-limited so it never aliases. Nothing is recorded, downloaded or uploaded."}}
+]}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
+{"@type":"ListItem","position":1,"name":"Home","item":"https://musicproductionwiki.com"},
+{"@type":"ListItem","position":2,"name":"Tools","item":"https://musicproductionwiki.com/tools/"},
+{"@type":"ListItem","position":3,"name":"Chip Lead Designer","item":"https://musicproductionwiki.com/tools/chip-lead-designer.html"}
+]}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="../js/main.js" defer></script>
+<style id="mpw-unav-css">
+
+.mnav-wrap,.usearch{--ink:#09090d;--panel:#0f0f18;--panel2:#15151f;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);--amber:#f5a623;--teal:#00e8a2;--teal-d:rgba(0,232,162,.12);--text:#f2f2f7;--t2:#9a9ab2;--t3:#56566f;--sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'DM Mono',ui-monospace,SFMono-Regular,monospace;}
+.mnav-wrap *,.mnav-wrap *::before,.mnav-wrap *::after,.usearch *,.usearch *::before,.usearch *::after{box-sizing:border-box;margin:0;padding:0}
+.mnav-wrap{background:var(--ink);border-bottom:1px solid var(--line);position:relative}
+.mnav{height:60px;display:flex;align-items:center}
+.mnav-in{max-width:1180px;margin:0 auto;padding:0 22px;width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.mnav-brand{display:flex;align-items:center;gap:10px;color:var(--text);text-decoration:none;flex:0 0 auto}
+.mnav-word{font-weight:700;font-size:15px;letter-spacing:-.02em}
+.mnav-links{display:flex;align-items:center;gap:6px;margin-left:8px}
+.mnav-flat,.mnav-trigger{color:var(--t2);background:none;border:0;font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;padding:8px 12px;border-radius:8px;display:inline-flex;align-items:center;gap:6px}
+.mnav-flat:hover,.mnav-trigger:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.caret{font-size:9px;color:var(--t3);transition:transform .18s}
+.mnav-right{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.mnav-search{background:none;border:0;color:var(--t2);cursor:pointer;display:flex;padding:6px;border-radius:8px}
+.mnav-search:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.mnav-cta{border:1px solid var(--teal);color:var(--teal);text-decoration:none;padding:7px 15px;border-radius:8px;font-size:13px;font-weight:600;white-space:nowrap}
+.mnav-cta:hover{background:var(--teal-d)}
+.mnav-wrap[data-section="tools"] .mnav-flat[data-nav="tools"]{color:var(--text);font-weight:600}
+.mnav-wrap[data-section="articles"] .mnav-trigger[data-nav="articles"]{color:var(--text);font-weight:600}
+.mnav-flat[data-nav="bible"],.drw-link[data-nav="bible"]{color:#f5a623!important;font-weight:600}
+.mnav-flat[data-nav="bible"]:hover,.drw-link[data-nav="bible"]:hover{color:#ffc04d!important}
+.mnav-item{position:relative}
+.mnav-panel,.mnav-panel-wide{position:absolute;top:calc(100% + 6px);left:0;z-index:50;display:none;background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:14px;box-shadow:0 24px 60px -24px rgba(0,0,0,.9);min-width:240px}
+.mnav-panel-wide{grid-template-columns:1fr 1fr;gap:8px 22px;min-width:520px}
+.mnav-item:hover .mnav-panel,.mnav-item:focus-within .mnav-panel,.mnav-item:hover .mnav-panel-wide,.mnav-item:focus-within .mnav-panel-wide{display:grid}
+.mnav-item:hover .caret{transform:rotate(180deg)}
+.mp-col{display:flex;flex-direction:column}
+.mp-head{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);padding:6px 10px 8px}
+.mnav-panel a{display:flex;flex-direction:column;gap:1px;padding:8px 10px;border-radius:9px;text-decoration:none}
+.mnav-panel a:hover{background:rgba(255,255,255,.05)}
+.mp-name{color:var(--text);font-size:13.5px;font-weight:600}.mp-desc{color:var(--t2);font-size:11.5px}
+.mnav-sub{display:none;background:var(--panel);border-bottom:1px solid var(--line)}
+.mnav-wrap[data-section="bible"] .mnav-sub{display:block}
+.mnav-sub-in{max-width:1180px;margin:0 auto;padding:10px 22px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.mnav-sub-in::-webkit-scrollbar{display:none}
+.mnav-sub-in a{flex:0 0 auto;color:var(--t2);text-decoration:none;font-size:12.5px;font-family:var(--mono);border:1px solid var(--line2);border-radius:99px;padding:5px 12px;white-space:nowrap}
+.mnav-sub-in a:hover{color:var(--teal);border-color:rgba(0,232,162,.4)}
+.mnav-toggle{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.mnav-burger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:8px;border-radius:8px}
+.mnav-burger span{display:block;width:20px;height:2px;background:var(--text);border-radius:2px;transition:.2s}
+.mnav-drawer{display:none;flex-direction:column;padding:6px 18px 16px;background:var(--ink);border-bottom:1px solid var(--line)}
+.mnav-drawer details{border-bottom:1px solid var(--line)}
+.mnav-drawer summary{list-style:none;cursor:pointer;padding:13px 2px;font-size:15px;font-weight:600;color:var(--text);display:flex;justify-content:space-between}
+.mnav-drawer summary::-webkit-details-marker{display:none}
+.mnav-drawer summary::after{content:"+";color:var(--t3)}
+.mnav-drawer details[open] summary::after{content:"\2013"}
+.mnav-acc{display:flex;flex-direction:column;padding:0 0 10px 12px}
+.mnav-acc a{color:var(--t2);text-decoration:none;font-size:14px;padding:8px 0}
+.drw-link{color:var(--t2);text-decoration:none;font-size:15px;font-weight:600;padding:13px 2px;border-bottom:1px solid var(--line)}
+.drw-cta{color:var(--teal);text-decoration:none;font-weight:600;font-size:15px;padding:14px 2px}
+.mnav-toggle:checked ~ .mnav-drawer{display:flex}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(2){opacity:0}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+@media(max-width:860px){.mnav-links,.mnav-cta{display:none}.mnav-burger{display:flex}}
+
+.usearch{position:fixed;inset:0;z-index:10000;display:none;background:rgba(6,6,11,.78);backdrop-filter:blur(6px);padding:80px 20px 20px}
+.usearch.open{display:block}
+.usearch-box{max-width:620px;margin:0 auto;background:var(--panel);border:1px solid var(--line2);border-radius:16px;overflow:hidden;box-shadow:0 40px 90px -30px rgba(0,0,0,.95)}
+.usearch-top{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.usearch-top svg{color:var(--t3);flex:0 0 auto}
+.usearch-top input{flex:1;background:none;border:0;outline:none;color:var(--text);font-family:var(--sans);font-size:17px}
+.usearch-top input::placeholder{color:var(--t3)}
+.usearch-top kbd{font-family:var(--mono);font-size:11px;color:var(--t3);border:1px solid var(--line2);border-radius:6px;padding:2px 7px}
+.usearch-results{max-height:56vh;overflow-y:auto;padding:8px}
+.usearch-results a{display:block;padding:11px 14px;border-radius:10px;text-decoration:none;transition:background .12s}
+.usearch-results a:hover,.usearch-results a.sel{background:rgba(255,255,255,.05)}
+.ur-top{display:flex;align-items:baseline;gap:9px}
+.ur-title{color:var(--text);font-size:14.5px;font-weight:600}
+.ur-cat{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.06);color:var(--t2);flex:0 0 auto}
+.ur-cat[data-c="Tools"]{background:var(--teal-d);color:var(--teal);border:1px solid rgba(0,232,162,.4)}
+.ur-cat[data-c="Bible"]{background:rgba(245,166,35,.18);color:#f5a623;border:1px solid rgba(245,166,35,.4)}
+.ur-desc{color:var(--t2);font-size:12.5px;line-height:1.45;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.usearch-empty{padding:30px;text-align:center;color:var(--t3);font-size:13.5px}
+.mnav-wrap{position:sticky;top:0;z-index:1000;line-height:1.4}
+.entry-nav{display:none}
+[id].entry-section{scroll-margin-top:90px}
+.entry-main h2{scroll-margin-top:90px}
+.entry-sidebar{top:78px;height:calc(100vh - 98px)}
+@media(max-width:768px){
+  .entry-nav{display:block!important;top:60px!important}
+  [id].entry-section{scroll-margin-top:130px!important}
+  .entry-main h2{scroll-margin-top:130px!important}
+}
+.mnav-panel,.mnav-panel-wide{max-height:min(72vh,560px);overflow-y:auto}
+.mnav-drawer{padding:10px 18px 18px;gap:0}
+.drw-label{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--t3);margin:12px 2px 8px}
+.drw-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.drw-card{display:flex;align-items:center;padding:12px 14px;border-radius:10px;text-decoration:none;font-size:13.5px;font-weight:600;color:var(--text);background:var(--panel);border:1px solid var(--line2)}
+.drw-card:hover{border-color:var(--teal);color:var(--teal)}
+.drw-feat{display:flex;align-items:center;gap:8px;padding:13px 16px;border-radius:10px;text-decoration:none;font-size:14px;font-weight:700;color:var(--text);background:var(--panel);border:1px solid var(--line2);margin-top:8px}
+.drw-feat-bible{color:#f5a623;background:rgba(245,166,35,.08);border-color:rgba(245,166,35,.30)}
+.drw-feat-bible:hover{border-color:rgba(245,166,35,.6)}
+.drw-cta{display:block;text-align:center;padding:14px;border-radius:10px;background:var(--teal);color:#06281f;font-weight:800;font-size:14px;text-decoration:none;margin-top:12px}
+@media(max-width:860px){
+  .mnav-wrap,.usearch{--t2:#c8c8da;--t3:#9696b0}
+  .drw-label{color:#bdbdd0;font-weight:500}
+  .usearch-top input::placeholder{color:#9696b0}
+  .drw-card,.drw-feat{background:#20202e;border:1.5px solid #45455c}
+  .drw-feat-bible{background:rgba(245,166,35,.12);border:1.5px solid rgba(245,166,35,.6)}
+}
+html{overflow-x:clip!important;max-width:none!important}body{overflow-x:clip!important}
+</style>
+
+<style>
+:root{
+  --bg:#0d0d1a;--bg2:#111120;--bg3:#16162a;--bg4:#1c1c32;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--border3:rgba(255,255,255,0.18);
+  --amber:#f5a623;--amber2:rgba(245,166,35,0.12);--amber3:rgba(245,166,35,0.06);
+  --teal:#00e8a2;--teal2:rgba(0,232,162,0.1);--red:#ff3d5a;
+  --text:#f0f0f4;--text2:#a0a0b8;--text3:#5a5a7a;
+  --mono:'DM Mono',monospace;--sans:'DM Sans',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;
+  background-image:radial-gradient(900px 500px at 15% -5%,rgba(245,166,35,0.06),transparent 60%),
+                   radial-gradient(800px 500px at 100% 0%,rgba(0,232,162,0.05),transparent 55%);}
+.tool-page{max-width:980px;margin:0 auto;padding:32px 20px 80px}
+@media(max-width:600px){.tool-page{padding:22px 16px 60px}}
+.tool-breadcrumb{font-size:12px;color:var(--text3);margin-bottom:18px;font-family:var(--mono)}
+.tool-breadcrumb a{color:var(--text2);text-decoration:none}
+.tool-breadcrumb a:hover{color:var(--teal)}
+.tool-breadcrumb-sep{margin:0 7px;opacity:.5}
+.tool-page-title{margin-bottom:18px}
+.tool-page-title h1{font-size:clamp(27px,5vw,38px);font-weight:900;letter-spacing:-0.03em;line-height:1.05;margin-bottom:10px}
+.tool-page-title h1 .acc{color:var(--amber)}
+.tool-page-desc{font-size:16px;color:var(--text2);line-height:1.6;max-width:640px}
+.thow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0 24px}
+.thow-step{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.thow-n{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--amber);letter-spacing:.1em;margin-bottom:5px}
+.thow-t{font-size:13px;color:var(--text2);line-height:1.45}
+@media(max-width:640px){.thow{grid-template-columns:1fr;gap:8px}}
+.thc{background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:14px 18px;
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:12px}
+.thc-brand{display:flex;align-items:center;gap:12px}
+.thc-mark{width:32px;height:32px;border-radius:8px;background:var(--teal);display:flex;align-items:center;justify-content:center}
+.thc-name{font-size:14px;font-weight:600;color:var(--text)}
+.thc-sub{font-size:11px;color:var(--amber);font-family:var(--mono);letter-spacing:.04em}
+.thc-right{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.thc-badge{font-size:10px;font-family:var(--mono);font-weight:700;color:var(--amber);
+  border:1px solid rgba(245,166,35,0.4);border-radius:4px;padding:4px 10px;letter-spacing:0.1em}
+.thc-related{font-size:13px;color:var(--text2);text-decoration:none;transition:color .15s}
+.thc-related:hover{color:var(--teal)}
+.tsec{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px}
+.tsec-label{font-size:9px;font-family:var(--mono);font-weight:700;color:var(--amber);
+  letter-spacing:0.18em;text-transform:uppercase;margin-bottom:14px}
+.share-embed{margin-top:26px}
+.embed-box{margin-top:12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px}
+.embed-box code{font-family:var(--mono);font-size:11.5px;color:var(--text2);word-break:break-all;display:block;line-height:1.5}
+.embed-copy{margin-top:8px;background:var(--bg4);border:1px solid var(--border2);color:var(--text2);font-family:var(--mono);
+  font-size:11px;font-weight:600;padding:6px 12px;border-radius:6px;cursor:pointer}
+.embed-copy:hover{border-color:var(--teal);color:var(--teal)}
+.tfaq{margin-top:30px}
+.tfaq h2{font-size:20px;font-weight:800;letter-spacing:-0.02em;margin-bottom:14px}
+.tfaq-q{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px}
+.tfaq-q h3{font-size:14.5px;font-weight:700;color:var(--text);margin-bottom:6px}
+.tfaq-q p{font-size:13.5px;color:var(--text2);line-height:1.6}
+.trelated{margin-top:44px;padding-top:30px;border-top:1px solid var(--border)}
+.trelated-label{font-size:9px;font-family:var(--mono);font-weight:700;color:var(--text3);letter-spacing:0.15em;margin-bottom:14px}
+.trelated-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.trelated-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;text-decoration:none;transition:border-color .15s}
+.trelated-card:hover{border-color:var(--border2)}
+.trelated-name{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px}
+.trelated-desc{display:block;font-size:12px;color:var(--text3)}
+.growl-recipe{border:1px solid var(--border,rgba(255,255,255,.1));border-radius:10px;overflow:hidden;margin-top:6px}
+.gr-row{display:flex;gap:14px;padding:11px 14px;border-bottom:1px solid var(--border,rgba(255,255,255,.07));font-size:13.5px;line-height:1.5}
+.gr-row:last-child{border-bottom:none}
+.gr-k{flex:0 0 92px;font-family:var(--mono,monospace);font-weight:700;color:var(--teal,#00e8a2);text-transform:uppercase;font-size:11.5px;letter-spacing:.04em;padding-top:1px}
+.gr-v{color:var(--text2,#9a9ab2)}
+.gr-note{font-size:12.5px;color:var(--text2,#9a9ab2);margin-top:10px;line-height:1.5}
+body.embed-mode .mnav,body.embed-mode footer,body.embed-mode .tool-breadcrumb,body.embed-mode .thow,body.embed-mode .thc,body.embed-mode .tfaq,body.embed-mode .trelated,body.embed-mode .share-embed{display:none!important;}
+body.embed-mode{background:#0a0a0f;}
+body.embed-mode .tool-page{max-width:100%;padding:14px 16px 20px;margin:0;}
+body.embed-mode .tool-page-title h1{font-size:24px;margin-bottom:6px;}
+body.embed-mode .tool-page-desc{display:none;}
+</style>
+</head>
+<body>
+<div class="mnav-wrap" data-section="tools">
+  <input type="checkbox" id="mnav-toggle" class="mnav-toggle" aria-hidden="true">
+  <nav class="mnav" aria-label="Main navigation">
+    <div class="mnav-in">
+      <a class="mnav-brand" href="/"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="6" stroke="#f5a623" stroke-width="1.7"/><path d="M7 15V9l3 3 3-5 4 8" stroke="#00e8a2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="mnav-word">MusicProductionWiki</span></a>
+      <div class="mnav-links">
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="articles">Articles <span class="caret">&#9662;</span></button><div class="mnav-panel mnav-panel-wide"><div class="mp-col"><div class="mp-head">Techniques &amp; Analysis</div><a href="/categories/techniques"><span class="mp-name">Techniques</span><span class="mp-desc">Mixing, mastering, sound design</span></a><a href="/categories/reviews"><span class="mp-name">Reviews</span><span class="mp-desc">Honest. No paid placements.</span></a><a href="/categories/comparisons"><span class="mp-name">Comparisons</span><span class="mp-desc">Head-to-head</span></a><a href="/categories/breakdowns"><span class="mp-name">Breakdowns</span><span class="mp-desc">Track-by-track</span></a><a href="/categories/recreations"><span class="mp-name">Recreations</span><span class="mp-desc">Recreate iconic sounds</span></a><a href="/genres"><span class="mp-name">Genres</span><span class="mp-desc">Every genre &amp; style</span></a></div><div class="mp-col"><div class="mp-head">Reference &amp; Business</div><a href="/categories/ai-music"><span class="mp-name">AI Music</span><span class="mp-desc">Suno, Udio, AI tools</span></a><a href="/categories/music-business"><span class="mp-name">Music Business</span><span class="mp-desc">Royalties, licensing, sync</span></a></div></div></div>
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="gear">Gear <span class="caret">&#9662;</span></button><div class="mnav-panel"><div class="mp-col"><a href="/categories/daws"><span class="mp-name">DAWs</span><span class="mp-desc">Every major DAW</span></a><a href="/categories/plugins"><span class="mp-name">Plugins</span><span class="mp-desc">EQ, comp, reverb, synths</span></a><a href="/categories/hardware"><span class="mp-name">Hardware</span><span class="mp-desc">Interfaces, mics, monitors</span></a></div></div></div>
+        <a class="mnav-flat" href="/tools/" data-nav="tools">Tools</a>
+        <a class="mnav-flat" href="/bible/" data-nav="bible">The Bible</a>
+      </div>
+      <div class="mnav-right">
+        <button class="mnav-search" data-nav-search aria-label="Search"><svg width="17" height="17" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <a class="mnav-cta" href="https://theproducersbriefing.beehiiv.com">Sound Better &rarr;</a>
+        <label class="mnav-burger" for="mnav-toggle"><span></span><span></span><span></span></label>
+      </div>
+    </div>
+  </nav>
+  <div class="mnav-drawer">
+    <div class="drw-label">Articles</div>
+    <div class="drw-grid">
+      <a href="/categories/techniques" class="drw-card">Techniques</a><a href="/categories/reviews" class="drw-card">Reviews</a><a href="/categories/comparisons" class="drw-card">Comparisons</a><a href="/categories/breakdowns" class="drw-card">Breakdowns</a><a href="/categories/recreations" class="drw-card">Recreations</a><a href="/genres" class="drw-card">Genres</a><a href="/categories/ai-music" class="drw-card">AI Music</a><a href="/categories/music-business" class="drw-card">Music Business</a>
+    </div>
+    <div class="drw-label">Gear</div>
+    <div class="drw-grid">
+      <a href="/categories/daws" class="drw-card">DAWs</a><a href="/categories/plugins" class="drw-card">Plugins</a><a href="/categories/hardware" class="drw-card">Hardware</a>
+    </div>
+    <a href="/bible/" class="drw-feat drw-feat-bible">&#9670; The Producer's Bible</a>
+    <a href="/tools/" class="drw-feat">The Producer's Tools</a>
+    <a href="https://theproducersbriefing.beehiiv.com" class="drw-cta">Sound Better &rarr;</a>
+  </div>
+</div>
+
+<main id="main-content">
+<div class="tool-page">
+  <nav class="tool-breadcrumb" aria-label="Breadcrumb">
+    <a href="/">Home</a><span class="tool-breadcrumb-sep">&#8250;</span>
+    <a href="/tools/">Tools</a><span class="tool-breadcrumb-sep">&#8250;</span>
+    <span aria-current="page">Chip Lead Designer</span>
+  </nav>
+  <div class="tool-page-title">
+    <h1>Chip Lead <span class="acc">Designer</span></h1>
+    <p class="tool-page-desc">Design a chiptune <b>pulse lead</b> live &mdash; drag the pad to morph the <b>duty cycle</b> from hollow to nasal, then raise the <b>arpeggio rate</b> until three notes fuse into a single chord. The duty-cycle timbre and the fake-chord arpeggio are the whole 8-bit sound. Copy the recipe into any DAW.</p>
+  </div>
+  <div class="thow">
+    <div class="thow-step"><div class="thow-n">01 &middot; DRAG</div><div class="thow-t">Drag the pad right for a thinner, more nasal pulse timbre.</div></div>
+    <div class="thow-step"><div class="thow-n">02 &middot; FUSE</div><div class="thow-t">Drag up to speed the arpeggio until three notes become one chord.</div></div>
+    <div class="thow-step"><div class="thow-n">03 &middot; BUILD</div><div class="thow-t">Copy the recipe below into any DAW with a pulse-width synth.</div></div>
+  </div>
+  <div class="thc">
+    <div class="thc-brand">
+      <div class="thc-mark"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="7.2" fill="none" stroke="#0a0a0b" stroke-width="1.6"/><path d="M9 9 L9 3.4" stroke="#0a0a0b" stroke-width="1.8" stroke-linecap="round"/><circle cx="9" cy="9" r="1.4" fill="#0a0a0b"/></svg></div>
+      <div><div class="thc-name">MusicProductionWiki.com</div><div class="thc-sub">&#9670; The Producer's Tools</div></div>
+    </div>
+    <div class="thc-right"><span class="thc-badge">INTERACTIVE TOOL</span><a href="/tools/" class="thc-related">All Tools &rarr;</a></div>
+  </div>
+<div class="cld-live" id="cld-live">
+<style>
+#cld-live{position:relative;background:radial-gradient(120% 80% at 12% 0%,rgba(34,197,94,.10),transparent 60%),#0a0f0c;border:1px solid rgba(34,197,94,.35);border-radius:16px;margin:2rem 0;overflow:hidden;box-shadow:0 24px 60px -30px rgba(34,197,94,.35),inset 0 1px 0 rgba(255,255,255,.03);}
+#cld-live *{box-sizing:border-box;}
+#cld-live .dl-bar{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.9rem 1.15rem;background:linear-gradient(135deg,rgba(34,197,94,.14),rgba(34,197,94,.02));border-bottom:1px solid rgba(34,197,94,.22);}
+#cld-live .dl-title{display:flex;flex-direction:column;gap:2px;}
+#cld-live .dl-kick{font-family:var(--font-mono,ui-monospace,monospace);font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#22c55e;}
+#cld-live .dl-sub{font-family:var(--font-mono,ui-monospace,monospace);font-size:.66rem;letter-spacing:.03em;color:#6b7c70;}
+#cld-live .dl-live{display:flex;align-items:center;gap:7px;font-family:var(--font-mono,ui-monospace,monospace);font-size:.62rem;font-weight:700;letter-spacing:.12em;color:#6b7c70;text-transform:uppercase;}
+#cld-live .dl-dot{width:8px;height:8px;border-radius:50%;background:#2a3a30;transition:background .2s;}
+#cld-live.is-on .dl-dot{background:#22c55e;animation:cldpulse 1.4s ease-out infinite;}
+#cld-live.is-on .dl-live{color:#22c55e;}
+@keyframes cldpulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,.55)}100%{box-shadow:0 0 0 9px rgba(34,197,94,0)}}
+#cld-live .dl-body{padding:16px 18px 20px;}
+#cld-live .dl-stage{position:relative;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.06);}
+#cld-live #cldCanvas{width:100%;height:330px;display:block;background:#080b0f;cursor:grab;touch-action:none;}
+#cld-live #cldCanvas:active{cursor:grabbing;}
+#cld-live .dl-tag{position:absolute;font-family:var(--font-mono,ui-monospace,monospace);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#6b7c70;pointer-events:none;}
+#cld-live .dl-charwrap{position:absolute;top:12px;right:14px;text-align:right;pointer-events:none;}
+#cld-live .dl-char{font-family:var(--font-mono,ui-monospace,monospace);font-size:15px;font-weight:700;color:#22c55e;letter-spacing:.03em;}
+#cld-live .dl-charsub{font-family:var(--font-mono,ui-monospace,monospace);font-size:10.5px;color:#8a9bb0;margin-top:2px;}
+#cld-live .dl-hint{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;font-family:var(--font-mono,ui-monospace,monospace);font-size:12px;color:#7d9a86;pointer-events:none;transition:opacity .3s;}
+#cld-live.is-on .dl-hint{opacity:0;}
+#cld-live .dl-scope{margin-top:10px;position:relative;border-radius:10px;border:1px solid rgba(255,255,255,.06);overflow:hidden;background:#080b0f;}
+#cld-live #cldScope{width:100%;height:60px;display:block;}
+#cld-live .dl-scope-lab{position:absolute;top:6px;left:10px;font-family:var(--font-mono,ui-monospace,monospace);font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#6b7c70;pointer-events:none;}
+#cld-live .dl-controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:16px;}
+#cld-live .dl-play{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(180deg,#2fe06a,#1fbf55);color:#04210f;border:none;font-weight:800;font-size:14px;padding:11px 20px;border-radius:10px;cursor:pointer;font-family:inherit;box-shadow:0 8px 20px -8px rgba(34,197,94,.7);transition:transform .08s;}
+#cld-live .dl-play:active{transform:translateY(1px);}
+#cld-live .dl-knobs{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;margin-top:16px;}
+#cld-live .dl-field{display:flex;align-items:center;gap:12px;}
+#cld-live .dl-field label{font-family:var(--font-mono,ui-monospace,monospace);font-size:11.5px;font-weight:700;color:#22c55e;white-space:nowrap;min-width:64px;letter-spacing:.02em;}
+#cld-live .dl-field input[type=range]{flex:1;accent-color:#22c55e;height:4px;}
+#cld-live .dl-val{font-family:var(--font-mono,ui-monospace,monospace);font-size:11.5px;color:#c8d2ce;min-width:52px;text-align:right;}
+#cld-live .dl-presets{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;}
+#cld-live .dl-plabel{width:100%;font-family:var(--font-mono,ui-monospace,monospace);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#6b7c70;margin-bottom:2px;}
+#cld-live .dl-tbtn{background:#0e1a12;color:#22c55e;border:1px solid rgba(34,197,94,.35);border-radius:20px;font-family:var(--font-mono,ui-monospace,monospace);font-weight:700;cursor:pointer;padding:8px 15px;font-size:12px;transition:background .15s,box-shadow .15s;}
+#cld-live .dl-tbtn:hover{background:rgba(34,197,94,.14);box-shadow:0 0 0 1px rgba(34,197,94,.5);}
+#cld-live .dl-tbtn[aria-pressed=true]{background:#22c55e;color:#04210f;}
+#cld-live .dl-read{margin-top:16px;font-size:.86rem;line-height:1.55;color:#c8d2ce;background:rgba(34,197,94,.05);border-left:3px solid #22c55e;border-radius:0 8px 8px 0;padding:.7rem .95rem;}
+#cld-live .dl-note{font-size:.72rem;color:#4d5c52;margin:12px 0 0;font-style:italic;text-align:center;}
+@media(max-width:600px){#cld-live .dl-knobs{grid-template-columns:1fr;}#cld-live #cldCanvas{height:290px;}}
+</style>
+<div class="dl-bar">
+  <div class="dl-title"><span class="dl-kick">&#9654;&nbsp;Chip Lead Designer</span><span class="dl-sub">drag &middot; listen &middot; one pulse voice, three timbres, fake chords</span></div>
+  <div class="dl-live"><span class="dl-dot"></span><span>Live</span></div>
+</div>
+<div class="dl-body">
+<div class="dl-stage">
+  <canvas id="cldCanvas" aria-label="An interactive XY pad. Drag left-to-right to change the pulse duty cycle from hollow to nasal, and up to speed the arpeggio until three notes fuse into one chord. A live spectrum shows the harmonics. Press play to hear it."></canvas>
+  <span class="dl-tag" style="left:12px;bottom:10px;">hollow</span>
+  <span class="dl-tag" style="right:12px;bottom:10px;">nasal</span>
+  <span class="dl-tag" style="left:12px;top:44px;">notes fuse &rarr; chord</span>
+  <span class="dl-tag" style="left:12px;bottom:26px;transform:rotate(-90deg);transform-origin:left bottom;">arp rate &uarr;</span>
+  <span class="dl-tag" style="left:50%;bottom:10px;transform:translateX(-50%);">duty &rarr;</span>
+  <div class="dl-charwrap"><div class="dl-char" id="cldChar">REEDY &middot; FAST ARP</div><div class="dl-charsub" id="cldCharSub">duty 25% &middot; 14 notes/s</div></div>
+  <div class="dl-hint" id="cldHint">&#9654;&nbsp; press play, then drag the pad</div>
+</div>
+<div class="dl-scope"><canvas id="cldScope" aria-hidden="true"></canvas><span class="dl-scope-lab">Waveform &middot; duty</span></div>
+<div class="dl-controls">
+  <button class="dl-play" id="cldPlay" type="button">&#9654;&nbsp;Play</button>
+  <button class="dl-tbtn" id="cldBass" type="button" aria-pressed="false">+ Triangle bass</button>
+</div>
+<div class="dl-knobs">
+  <div class="dl-field"><label for="cldVib">Vibrato</label><input type="range" id="cldVib" min="0" max="40" value="0"><span class="dl-val" id="cldVibVal">0 cents</span></div>
+  <div class="dl-field"><label for="cldNote">Note</label><input type="range" id="cldNote" min="55" max="79" value="72"><span class="dl-val" id="cldNoteVal">C5</span></div>
+</div>
+<div class="dl-presets"><span class="dl-plabel">Presets</span></div>
+<div class="dl-read" id="cldRead">Drag right for a thinner, more nasal timbre; drag up to speed the arpeggio until the three notes stop sounding separate and fuse into a single chord. That fused chord out of one voice &mdash; plus the duty-cycle timbre &mdash; is the whole chiptune lead.</div>
+<p class="dl-note">Sound is generated live in your browser &mdash; nothing is recorded or uploaded. Press Play once to allow audio.</p>
+</div>
+<script>
+/* MPW Chip Engine — shared by the article centerpiece and the standalone tool.
+   Vanilla JS, no innerHTML, gesture-gated WebAudio, id-scoped by the host block.
+   Band-limited pulse via analytic duty-cycle coefficients (no alias). Fast-arp scheduler
+   fuses a triad into a chord; triangle-bass toggle at C-2-octaves (laptop-audible). */
+(function (global) {
+  "use strict";
+  function ChipEngine() {
+    this.ac = null; this.started = false; this.nodes = null; this.sched = null;
+    this.p = { duty: 0.25, arpRate: 14, pattern: 'major', vib: 0, note: 72, wave: 'pulse', triBass: false, running: false };
+    this._step = 0; this._next = 0;
+  }
+  var PAT = { major: [0, 4, 7], minor: [0, 3, 7], octave: [0, 12], power: [0, 7, 12], single: [0] };
+  ChipEngine.prototype.noteHz = function (m) { return 440 * Math.pow(2, (m - 69) / 12); };
+  ChipEngine.prototype._wave = function (ac, duty) {
+    var nyq = ac.sampleRate / 2;
+    var maxN = Math.max(8, Math.floor(nyq / this.noteHz(this.p.note + 12)) - 1);
+    if (maxN > 64) maxN = 64;
+    var real = new Float32Array(maxN + 1), imag = new Float32Array(maxN + 1);
+    if (this.p.wave === 'triangle') {
+      for (var n = 1; n <= maxN; n += 2) {
+        var s = (((n - 1) / 2) % 2 === 0) ? 1 : -1;
+        imag[n] = s * (8 / (Math.PI * Math.PI)) / (n * n);
+      }
+    } else {
+      for (var n2 = 1; n2 <= maxN; n2++) real[n2] = (2 / (n2 * Math.PI)) * Math.sin(n2 * Math.PI * duty);
+    }
+    return ac.createPeriodicWave(real, imag, { disableNormalization: false });
+  };
+  ChipEngine.prototype.start = function () {
+    if (this.started) return;
+    var AC = global.AudioContext || global.webkitAudioContext; if (!AC) return;
+    var ac = new AC(); this.ac = ac;
+    var osc = ac.createOscillator(); osc.setPeriodicWave(this._wave(ac, this.p.duty)); osc.frequency.value = this.noteHz(this.p.note);
+    var pg = ac.createGain(); pg.gain.value = 0.0;
+    var vib = ac.createOscillator(); vib.type = 'sine'; vib.frequency.value = 6;
+    var vg = ac.createGain(); vg.gain.value = this.p.vib; vib.connect(vg); vg.connect(osc.detune);
+    var tri = ac.createOscillator(); tri.type = 'triangle'; tri.frequency.value = this.noteHz(this.p.note - 24);
+    var tg = ac.createGain(); tg.gain.value = 0.0;
+    var lp = ac.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 12000; lp.Q.value = 0.5;
+    var master = ac.createGain(); master.gain.value = 0.0;
+    var comp = ac.createDynamicsCompressor(); comp.threshold.value = -14; comp.ratio.value = 6; comp.attack.value = 0.003; comp.release.value = 0.12;
+    var an = ac.createAnalyser(); an.fftSize = 2048;
+    osc.connect(pg); pg.connect(lp); tri.connect(tg); tg.connect(lp);
+    lp.connect(master); master.connect(comp); comp.connect(an); an.connect(ac.destination);
+    osc.start(); vib.start(); tri.start();
+    this.nodes = { osc: osc, pg: pg, vib: vib, vg: vg, tri: tri, tg: tg, lp: lp, master: master, an: an };
+    this.started = true; this.apply();
+  };
+  ChipEngine.prototype.apply = function () {
+    if (!this.nodes) return; var n = this.nodes, ac = this.ac, t = ac.currentTime;
+    n.osc.setPeriodicWave(this._wave(ac, this.p.duty));
+    n.vg.gain.setTargetAtTime(this.p.vib, t, 0.02);
+    n.tri.frequency.setTargetAtTime(this.noteHz(this.p.note - 24), t, 0.02);
+    if (this.p.running) n.tg.gain.setTargetAtTime(this.p.triBass ? 0.5 : 0.0, t, 0.02);
+    if (this.p.arpRate < 0.5) n.osc.frequency.setTargetAtTime(this.noteHz(this.p.note), t, 0.02);
+  };
+  ChipEngine.prototype._scheduler = function () {
+    var ac = this.ac, LA = 0.03;
+    while (this._next < ac.currentTime + LA) {
+      var offs = PAT[this.p.pattern] || PAT.single;
+      var semi = offs[this._step % offs.length];
+      var f = this.noteHz(this.p.note + semi);
+      this.nodes.osc.frequency.setValueAtTime(f, this._next);
+      this.nodes.pg.gain.setValueAtTime(0.85, this._next);
+      var dur = 1 / Math.max(1, this.p.arpRate);
+      this.nodes.pg.gain.setTargetAtTime(0.5, this._next + dur * 0.4, 0.02);
+      this._step++; this._next += dur;
+    }
+  };
+  ChipEngine.prototype._startSched = function () {
+    if (this.sched) return; var self = this;
+    this._step = 0; this._next = this.ac.currentTime + 0.04;
+    this.sched = setInterval(function () { self._scheduler(); }, 20);
+  };
+  ChipEngine.prototype._stopSched = function () { if (this.sched) { clearInterval(this.sched); this.sched = null; } };
+  ChipEngine.prototype.play = function () {
+    this.start(); if (!this.nodes) return;
+    if (this.ac.state === 'suspended') this.ac.resume();
+    this.p.running = true;
+    this.nodes.master.gain.setTargetAtTime(0.2, this.ac.currentTime, 0.02);
+    this.nodes.tg.gain.setTargetAtTime(this.p.triBass ? 0.5 : 0.0, this.ac.currentTime, 0.02);
+    if (this.p.arpRate >= 0.5) { this._startSched(); this.nodes.pg.gain.setTargetAtTime(0.5, this.ac.currentTime, 0.02); }
+    else { this.nodes.osc.frequency.setTargetAtTime(this.noteHz(this.p.note), this.ac.currentTime, 0.02); this.nodes.pg.gain.setTargetAtTime(0.55, this.ac.currentTime, 0.02); }
+  };
+  ChipEngine.prototype.stop = function () {
+    if (!this.nodes) return; this.p.running = false; this._stopSched();
+    this.nodes.master.gain.setTargetAtTime(0.0, this.ac.currentTime, 0.02);
+    this.nodes.tg.gain.setTargetAtTime(0.0, this.ac.currentTime, 0.02);
+  };
+  ChipEngine.prototype.set = function (k, v) {
+    this.p[k] = v;
+    if (k === 'arpRate' && this.p.running && this.nodes) {
+      if (v >= 0.5) this._startSched();
+      else { this._stopSched(); this.nodes.osc.frequency.setTargetAtTime(this.noteHz(this.p.note), this.ac.currentTime, 0.02); this.nodes.pg.gain.setTargetAtTime(0.55, this.ac.currentTime, 0.02); }
+    }
+    this.apply();
+  };
+  global.MPWChipEngine = ChipEngine;
+})(typeof window !== 'undefined' ? window : this);
+
+</script>
+<script>
+/* Chip Lead Designer UI — mirrors the growl pad/spectrum/scope/presets/readout.
+   XY pad: X = duty (hollow->nasal), Y = arp rate (held->fused chord). Green signal. */
+(function () {
+  "use strict";
+  var root = document.getElementById('cld-live'); if (!root) return;
+  var $ = function (id) { return document.getElementById(id); };
+  var cv = $('cldCanvas'), sc = $('cldScope');
+  if (!cv || !window.MPWChipEngine) return;
+  var ctx = cv.getContext('2d'), sctx = sc.getContext('2d');
+  var eng = new window.MPWChipEngine();
+  var GREEN = '34,197,94', TEAL = '0,212,168';
+  var NOTES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+  function noteName(m) { return NOTES[((m % 12) + 12) % 12] + (Math.floor(m / 12) - 1); }
+  var dpr = Math.min(window.devicePixelRatio || 1, 2);
+  function resize() { [cv, sc].forEach(function (c) { var r = c.getBoundingClientRect(); c.width = Math.max(1, r.width * dpr); c.height = Math.max(1, r.height * dpr); }); }
+
+  // XY <-> params.  X: duty 0.50 (left) .. 0.10 (right).  Y: arpRate 0 (bottom) .. 26 (top)
+  function dutyToX(d) { return (0.50 - d) / 0.40; }
+  function xToDuty(x) { return 0.50 - x * 0.40; }
+  function arpToY(a) { return 1 - Math.max(0, Math.min(1, a / 26)); }
+  function yToArp(y) { return (1 - y) * 26; }
+
+  function charOf() {
+    var d = eng.p.duty, a = eng.p.arpRate;
+    var timbre = d > 0.40 ? "HOLLOW" : (d > 0.20 ? "REEDY" : "NASAL");
+    var tech = a < 0.5 ? "HELD NOTE" : (a < 8 ? "SLOW ARP" : (a < 18 ? "FAST ARP" : "CHORD (fused)"));
+    return { a: timbre + " \u00b7 " + tech, b: "duty " + Math.round(d * 1000) / 10 + "% \u00b7 " + (a < 0.5 ? "1 note" : (Math.round(a) + " notes/s")) };
+  }
+
+  function drawPad() {
+    var w = cv.width, h = cv.height;
+    ctx.clearRect(0, 0, w, h);
+    var g = ctx.createLinearGradient(0, h, w, 0);
+    g.addColorStop(0, "#080b0f"); g.addColorStop(0.6, "#0a1410"); g.addColorStop(1, "rgba(" + GREEN + ",0.10)");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+    var rg = ctx.createRadialGradient(w * 0.85, h * 0.15, 0, w * 0.85, h * 0.15, w * 0.6);
+    rg.addColorStop(0, "rgba(" + GREEN + ",0.12)"); rg.addColorStop(1, "transparent");
+    ctx.fillStyle = rg; ctx.fillRect(0, 0, w, h);
+    ctx.strokeStyle = "rgba(255,255,255,0.045)"; ctx.lineWidth = dpr;
+    var i;
+    for (i = 1; i < 8; i++) { var X = i / 8 * w; ctx.beginPath(); ctx.moveTo(X, 0); ctx.lineTo(X, h); ctx.stroke(); }
+    for (i = 1; i < 5; i++) { var Y = i / 5 * h; ctx.beginPath(); ctx.moveTo(0, Y); ctx.lineTo(w, Y); ctx.stroke(); }
+    // live spectrum envelope (green)
+    if (eng.nodes && eng.p.running) {
+      var an = eng.nodes.an, bins = an.frequencyBinCount, data = new Uint8Array(bins);
+      an.getByteFrequencyData(data);
+      var used = Math.floor(bins * 0.42), k;
+      ctx.beginPath(); ctx.moveTo(0, h);
+      for (k = 0; k < used; k++) { var x = k / (used - 1) * w, v = data[k] / 255, y = h - v * h * 0.9; ctx.lineTo(x, y); }
+      ctx.lineTo(w, h); ctx.closePath();
+      var sg = ctx.createLinearGradient(0, 0, 0, h);
+      sg.addColorStop(0, "rgba(" + GREEN + ",0.30)"); sg.addColorStop(1, "rgba(" + GREEN + ",0.02)");
+      ctx.fillStyle = sg; ctx.fill();
+      ctx.save(); ctx.shadowColor = "rgba(" + GREEN + ",0.8)"; ctx.shadowBlur = 10 * dpr;
+      ctx.beginPath();
+      for (k = 0; k < used; k++) { var x2 = k / (used - 1) * w, v2 = data[k] / 255, y2 = h - v2 * h * 0.9; if (k === 0) ctx.moveTo(x2, y2); else ctx.lineTo(x2, y2); }
+      ctx.strokeStyle = "rgba(" + GREEN + ",0.75)"; ctx.lineWidth = 2 * dpr; ctx.stroke(); ctx.restore();
+    }
+    // puck + guides + fuse ring (when arp fast)
+    var px = dutyToX(eng.p.duty) * w, py = arpToY(eng.p.arpRate) * h;
+    ctx.strokeStyle = "rgba(" + GREEN + ",0.18)"; ctx.lineWidth = dpr; ctx.setLineDash([4 * dpr, 5 * dpr]);
+    ctx.beginPath(); ctx.moveTo(px, 0); ctx.lineTo(px, h); ctx.moveTo(0, py); ctx.lineTo(w, py); ctx.stroke(); ctx.setLineDash([]);
+    if (eng.p.running && eng.p.arpRate >= 8) {
+      var phase = (performance.now() / 1000) * Math.min(eng.p.arpRate, 26) * 0.25;
+      var r = (18 + 7 * Math.sin(phase * 2 * Math.PI)) * dpr;
+      ctx.beginPath(); ctx.arc(px, py, r, 0, 7); ctx.strokeStyle = "rgba(" + GREEN + ",0.35)"; ctx.lineWidth = 2 * dpr; ctx.stroke();
+    }
+    ctx.save(); ctx.shadowColor = "rgba(" + GREEN + ",0.9)"; ctx.shadowBlur = 16 * dpr;
+    ctx.beginPath(); ctx.arc(px, py, 11 * dpr, 0, 7); ctx.fillStyle = "#22c55e"; ctx.fill(); ctx.restore();
+    ctx.beginPath(); ctx.arc(px, py, 11 * dpr, 0, 7); ctx.strokeStyle = "#eafff2"; ctx.lineWidth = 1.5 * dpr; ctx.stroke();
+  }
+
+  function drawScope() {
+    var w = sc.width, h = sc.height;
+    sctx.clearRect(0, 0, w, h); sctx.fillStyle = "#080b0f"; sctx.fillRect(0, 0, w, h);
+    sctx.strokeStyle = "rgba(255,255,255,0.05)"; sctx.lineWidth = dpr;
+    sctx.beginPath(); sctx.moveTo(0, h * 0.78); sctx.lineTo(w, h * 0.78); sctx.stroke();
+    // draw the actual pulse waveform for current duty (teaches duty->shape)
+    var per = w / 3, top = h * 0.2, base = h * 0.78, d = eng.p.duty, pts = [[0, base]], j;
+    for (j = 0; j < 3; j++) { var xs = j * per, xh = xs + d * per, xe = xs + per; pts.push([xs, base], [xs, top], [xh, top], [xh, base], [xe, base]); }
+    sctx.lineJoin = "round"; sctx.lineCap = "round";
+    sctx.strokeStyle = "rgba(" + GREEN + ",0.28)"; sctx.lineWidth = 5 * dpr; strokePts(pts);
+    sctx.strokeStyle = "rgba(" + GREEN + ",0.95)"; sctx.lineWidth = 2.2 * dpr; strokePts(pts);
+  }
+  function strokePts(pts) { sctx.beginPath(); sctx.moveTo(pts[0][0], pts[0][1]); for (var i = 1; i < pts.length; i++) sctx.lineTo(pts[i][0], pts[i][1]); sctx.stroke(); }
+
+  var raf = requestAnimationFrame(function loop() { drawPad(); drawScope(); raf = requestAnimationFrame(loop); });
+
+  function setFromXY(clientX, clientY) {
+    var r = cv.getBoundingClientRect();
+    var mx = Math.max(0, Math.min(1, (clientX - r.left) / r.width));
+    var my = Math.max(0, Math.min(1, (clientY - r.top) / r.height));
+    eng.set('duty', xToDuty(mx));
+    eng.set('arpRate', yToArp(my));
+    syncHud();
+  }
+  function syncHud() {
+    var c = charOf(); $('cldChar').textContent = c.a; $('cldCharSub').textContent = c.b;
+  }
+  function on(state) { root.classList.toggle('is-on', state); $('cldPlay').textContent = state ? "\u25A0 Stop" : "\u25B6 Play"; }
+
+  var dragging = false;
+  cv.addEventListener('pointerdown', function (e) { dragging = true; try { cv.setPointerCapture(e.pointerId); } catch (x) {} eng.play(); on(true); setFromXY(e.clientX, e.clientY); e.preventDefault(); });
+  cv.addEventListener('pointermove', function (e) { if (dragging) setFromXY(e.clientX, e.clientY); });
+  cv.addEventListener('pointerup', function () { dragging = false; });
+  cv.addEventListener('pointercancel', function () { dragging = false; });
+  $('cldPlay').addEventListener('click', function () { if (eng.p.running) { eng.stop(); on(false); } else { eng.play(); on(true); } });
+
+  $('cldVib').addEventListener('input', function () { var v = +this.value; eng.set('vib', v); $('cldVibVal').textContent = v + " cents"; });
+  $('cldNote').addEventListener('input', function () { var v = +this.value; eng.set('note', v); $('cldNoteVal').textContent = noteName(v); });
+  var bassBtn = $('cldBass');
+  bassBtn.addEventListener('click', function () { var on2 = bassBtn.getAttribute('aria-pressed') !== 'true'; bassBtn.setAttribute('aria-pressed', on2); eng.set('triBass', on2); });
+
+  var PRESETS = [
+    { name: "Held note", st: { duty: 0.5, arpRate: 0, pattern: 'single' } },
+    { name: "Nasal lead", st: { duty: 0.125, arpRate: 0, pattern: 'single' } },
+    { name: "Slow arp \u00b7 maj", st: { duty: 0.25, arpRate: 8, pattern: 'major' } },
+    { name: "Fast-arp chord", st: { duty: 0.25, arpRate: 22, pattern: 'major' } },
+    { name: "Power 5th", st: { duty: 0.5, arpRate: 20, pattern: 'power' } },
+    { name: "Octave + bass", st: { duty: 0.5, arpRate: 16, pattern: 'octave', triBass: true } }
+  ];
+  (function () {
+    var row = root.querySelector('.dl-presets'); if (!row) return;
+    PRESETS.forEach(function (p) {
+      var b = document.createElement('button'); b.type = "button"; b.className = "dl-tbtn"; b.textContent = p.name;
+      b.addEventListener('click', function () {
+        eng.set('triBass', !!p.st.triBass); bassBtn.setAttribute('aria-pressed', !!p.st.triBass);
+        for (var k in p.st) { if (k !== 'triBass') eng.set(k, p.st[k]); }
+        eng.play(); on(true); syncHud();
+      });
+      row.appendChild(b);
+    });
+  })();
+
+  window.addEventListener('resize', function () { resize(); });
+  resize(); syncHud();
+})();
+
+</script>
+</div>
+  <div class="tsec" style="margin-top:16px">
+    <div class="tsec-label">Copy the recipe into your synth or DAW</div>
+    <div class="growl-recipe">
+      <div class="gr-row"><span class="gr-k">Source</span><span class="gr-v">A pulse/square oscillator with an adjustable duty cycle (12.5 / 25 / 50%). Use two pulse voices: one for lead, one for harmony.</span></div>
+      <div class="gr-row"><span class="gr-k">Chords</span><span class="gr-v">One voice can&rsquo;t hold a chord &mdash; cycle the triad fast (1/16&ndash;1/64, near audio rate) so the ear fuses it. Automate the note, not a held chord.</span></div>
+      <div class="gr-row"><span class="gr-k">Bass</span><span class="gr-v">A triangle wave an octave or two down. On real hardware it has no volume control &mdash; just on/off &mdash; so keep it steady.</span></div>
+      <div class="gr-row"><span class="gr-k">Percussion</span><span class="gr-v">White noise through a fast decay envelope: short for hats, longer with a pitch drop for kicks and snares.</span></div>
+      <div class="gr-row"><span class="gr-k">Movement</span><span class="gr-v">Duty-cycle changes plus a touch of vibrato give the static waveform life without any effects.</span></div>
+      <div class="gr-row"><span class="gr-k">Tempo</span><span class="gr-v">Free &mdash; town/menu themes ~80&ndash;110, stage music 120&ndash;140, boss themes 150&ndash;180 BPM.</span></div>
+    </div>
+    <p class="gr-note">Free route: any DAW&rsquo;s stock pulse/square synth + a triangle for bass. Purpose-built chip plug-ins add authentic quirks, but stock instruments are plenty.</p>
+  </div>
+  <div class="share-embed">
+    <div class="tsec-label">Share this tool</div>
+    <div style="display:flex;gap:8px;flex-wrap:nowrap">
+      <button id="toolCopyBtn" onclick="(function(b){navigator.clipboard.writeText(window.location.href).then(function(){var t=b.textContent;b.textContent='Copied!';setTimeout(function(){b.textContent=t},2000)}).catch(function(){});})(this)" style="flex:1;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:700;padding:9px 12px;border-radius:8px;background:#f5a623;color:#000;border:none;cursor:pointer;font-family:inherit;white-space:nowrap;box-sizing:border-box">Copy Link</button>
+      <a id="toolShareX" href="#" target="_blank" rel="noopener" style="flex:1;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:700;padding:9px 12px;border-radius:8px;background:#000;color:#fff;border:1px solid #333;text-decoration:none;white-space:nowrap;box-sizing:border-box">Share on X</a>
+      <a id="toolShareReddit" href="#" target="_blank" rel="noopener" style="flex:1;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:700;padding:9px 12px;border-radius:8px;background:#ff4500;color:#fff;border:none;text-decoration:none;white-space:nowrap;box-sizing:border-box"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>Reddit</a>
+    </div>
+    <div class="embed-box">
+      <div class="tsec-label" style="margin-bottom:8px">Embed on your site</div>
+      <code id="embedCode">&lt;iframe src="https://musicproductionwiki.com/tools/chip-lead-designer.html?embed=true" width="100%" height="1000" style="border:0;border-radius:12px" title="Chip Lead Designer" loading="lazy"&gt;&lt;/iframe&gt;</code>
+      <button class="embed-copy" id="embedCopy" type="button">Copy embed code</button>
+    </div>
+  </div>
+  <div class="tfaq">
+    <h2>Chiptune lead FAQ</h2>
+    <div class="tfaq-q"><h3>What makes a chiptune lead sound 8-bit?</h3><p>A pulse (square) wave with an adjustable <b>duty cycle</b>, played under a strict voice budget. The pulse channel&rsquo;s only tone control is that duty cycle, and cycling a chord&rsquo;s notes on one voice very fast fakes harmony. Drag the pad here: right for a thinner, more nasal timbre, up until the arpeggio fuses into a chord.</p></div>
+    <div class="tfaq-q"><h3>Why only three timbres from four duty cycles?</h3><p>The 2A03 offers 12.5%, 25%, 50% and 75%, but a 25% and a 75% pulse are mirror images that sound identical. That leaves three genuinely distinct timbres per channel: thin/nasal (12.5%), reedy (25%) and hollow square (50%).</p></div>
+    <div class="tfaq-q"><h3>How do you play a chord with one pulse channel?</h3><p>You cycle the chord&rsquo;s notes on that one channel extremely fast &mdash; a 1/16 to 1/64 arpeggio, often changing every frame &mdash; so the ear fuses them into one perceived chord. Raising the arp rate above shows the notes stop sounding separate.</p></div>
+    <div class="tfaq-q"><h3>Is the audio a sample?</h3><p>No &mdash; it&rsquo;s a Web Audio synth generating the pulse lead live in your browser, band-limited so it never aliases. Nothing is recorded, downloaded or uploaded.</p></div>
+  </div>
+  <div class="trelated">
+    <div class="trelated-label">RELATED</div>
+    <div class="trelated-grid">
+      <a href="/articles/how-to-recreate-the-chiptune-sound.html" class="trelated-card"><span class="trelated-name">Recreate the Chiptune Sound</span><span class="trelated-desc">The full 8-bit / NES step-by-step guide</span></a>
+      <a href="/tools/growl-bass-designer.html" class="trelated-card"><span class="trelated-name">Growl Bass Designer</span><span class="trelated-desc">Design a live dubstep growl bass</span></a>
+      <a href="/tools/acid-filter-explorer.html" class="trelated-card"><span class="trelated-name">Acid Filter Explorer</span><span class="trelated-desc">Sweep a live TB-303 resonant filter</span></a>
+    </div>
+  </div>
+  </div>
+</main>
+
+<footer style="border-top:1px solid var(--border);padding:24px 20px;text-align:center;margin-top:40px">
+  <p style="font-size:12px;color:var(--text3)">
+    &copy; 2026 <a href="https://www.musicproductionwiki.com" style="color:var(--amber);text-decoration:none">MusicProductionWiki.com</a>
+    &nbsp;&middot;&nbsp; <a href="/tools/" style="color:var(--text2);text-decoration:none">All Tools</a>
+    &nbsp;&middot;&nbsp; <a href="/bible/" style="color:var(--text2);text-decoration:none">Producer's Bible</a>
+    &nbsp;&middot;&nbsp; <a href="https://theproducersbriefing.beehiiv.com" style="color:var(--text2);text-decoration:none">Newsletter</a>
+  </p>
+</footer>
+<script>
+(function(){
+  var title=document.title;
+  var url=window.location.href;
+  var xBtn=document.getElementById('toolShareX');
+  var rdBtn=document.getElementById('toolShareReddit');
+  if(xBtn)xBtn.href='https://x.com/intent/tweet?text='+encodeURIComponent(title)+' via @mpwikiofficial&url='+encodeURIComponent(url);
+  if(rdBtn)rdBtn.href='https://www.reddit.com/submit?url='+encodeURIComponent(url)+'&title='+encodeURIComponent(title);
+})();
+</script>
+<script>
+(function(){if(new URLSearchParams(location.search).get('embed')==='true'){document.body.classList.add('embed-mode');}})();
+</script>
+
+<div class="usearch" id="usearch" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="usearch-box">
+    <div class="usearch-top">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input id="usearchInput" type="text" placeholder="Search tools, articles, the Bible…" autocomplete="off">
+      <kbd>esc</kbd>
+    </div>
+    <div class="usearch-results" id="usearchResults"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
+<script>
+(function(){
+  var data=null, fuse=null;
+  var overlay=document.getElementById('usearch');
+  var input=document.getElementById('usearchInput');
+  var box=document.getElementById('usearchResults');
+  var sel=-1, current=[];
+  function urlFor(s){ return (s.indexOf('bible/')===0||s.indexOf('tools/')===0) ? '/'+s : '/articles/'+s; }
+  function buildFuse(arr){
+    data=arr;
+    fuse=new Fuse(data,{keys:['title','category','description'],threshold:0.34,ignoreLocation:true,minMatchCharLength:2});
+  }
+  function ensureIndex(cb){
+    if(fuse){cb();return;}
+    fetch('/search-index.json').then(function(r){return r.json();}).then(function(arr){
+      buildFuse(arr); cb();
+    }).catch(function(){ box.textContent='Search failed to load.'; });
+  }
+  function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function render(results){
+    current=results;
+    while(box.firstChild) box.removeChild(box.firstChild);
+    if(!input.value.trim()){ var p=document.createElement('div'); p.className='usearch-empty'; p.textContent='Start typing to search everything.'; box.appendChild(p); return; }
+    if(!results.length){ var n=document.createElement('div'); n.className='usearch-empty'; n.textContent='No results for "'+input.value+'".'; box.appendChild(n); return; }
+    results.slice(0,12).forEach(function(r,i){
+      var e=r.item||r;
+      var a=document.createElement('a'); a.href=urlFor(e.slug); if(i===sel)a.className='sel';
+      var top=document.createElement('div'); top.className='ur-top';
+      var t=document.createElement('span'); t.className='ur-title'; t.textContent=e.title;
+      var c=document.createElement('span'); c.className='ur-cat'; c.setAttribute('data-c',e.category||''); c.textContent=e.category||'';
+      top.appendChild(t); top.appendChild(c); a.appendChild(top);
+      if(e.description){ var d=document.createElement('div'); d.className='ur-desc'; d.textContent=e.description; a.appendChild(d); }
+      box.appendChild(a);
+    });
+  }
+  function open(q){ ensureIndex(function(){ overlay.classList.add('open'); input.focus(); if(q!=null){input.value=q;} sel=-1; render(input.value?fuse.search(input.value):[]); }); }
+  function close(){ overlay.classList.remove('open'); }
+  document.querySelectorAll('[data-nav-search]').forEach(function(b){ b.addEventListener('click',function(){open(null);}); });
+  input.addEventListener('input',function(){ sel=-1; render(fuse?fuse.search(input.value):[]); });
+  input.addEventListener('keydown',function(e){
+    if(e.key==='Escape')close();
+    else if(e.key==='ArrowDown'){e.preventDefault(); sel=Math.min(sel+1,Math.min(current.length,12)-1); render(current);}
+    else if(e.key==='ArrowUp'){e.preventDefault(); sel=Math.max(sel-1,0); render(current);}
+    else if(e.key==='Enter'&&current[sel]){ var e2=current[sel].item||current[sel]; location.href=urlFor(e2.slug); }
+  });
+  overlay.addEventListener('click',function(e){ if(e.target===overlay)close(); });
+  document.addEventListener('keydown',function(e){ if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();open(null);} });
+})();
+</script>
+</body>
+</html>
