@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kick Designer — Hardstyle Kick Instrument</title>
+<style>
+  :root{
+    --void:#080b0f; --base:#0d1117; --surface:#131920; --elevated:#1a2332;
+    --border:#212c3a; --line:#28384a; --ink:#f0f4f8; --sub:#8a9bb0; --muted:#566578;
+    --teal:#00d4a8; --red:#ef4444; --reddim:#ef8f8f;
+    --disp:'Lora',Georgia,serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{background:var(--void);color:var(--ink);font-family:var(--mono)}
+  .hk-wrap{max-width:880px;margin:0 auto;padding:26px 20px 40px}
+  .hk-head{display:flex;align-items:center;gap:12px;margin-bottom:4px}
+  .hk-kick{font-family:var(--mono);font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--teal);font-size:12px}
+  .hk-dot{width:9px;height:9px;border-radius:50%;background:var(--muted);transition:background .08s}
+  .hk-dot.on{background:var(--red);box-shadow:0 0 10px var(--red)}
+  .hk-title{font-family:var(--disp);font-weight:700;font-size:30px;line-height:1.05;margin:6px 0 2px}
+  .hk-sub{color:var(--sub);font-size:14px;max-width:640px;line-height:1.4}
+  .hk-scope-wrap{margin:20px 0 10px;background:var(--base);border:1.3px solid var(--border);border-radius:16px;padding:14px;
+    background-image:radial-gradient(120% 90% at 20% 0%, color-mix(in srgb, var(--red) 10%, transparent) 0%, transparent 55%)}
+  #hk-scope{display:block;width:100%;height:190px;border-radius:10px;background:#0a0e13}
+  .hk-transport{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
+  .hk-btn{font-family:var(--mono);font-weight:600;font-size:14px;padding:11px 20px;border-radius:10px;cursor:pointer;
+    border:1.4px solid var(--teal);background:color-mix(in srgb,var(--teal) 13%,#0c1219);color:var(--teal)}
+  .hk-btn.play{border-color:var(--red);background:color-mix(in srgb,var(--red) 15%,#120c0c);color:var(--red)}
+  .hk-btn:active{transform:translateY(1px)}
+  .hk-tempo{margin-top:16px;background:var(--surface);border:1.3px solid var(--border);border-radius:12px;padding:14px 16px}
+  .hk-tempo label{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;color:var(--sub);margin-bottom:9px;letter-spacing:.04em;text-transform:uppercase}
+  .hk-tempo label b{color:var(--red);font-weight:700;font-size:15px;letter-spacing:0}
+  .hk-tempo input[type=range]{width:100%;accent-color:var(--red)}
+  .hk-tempo-hint{display:block;color:var(--muted);font-size:12px;margin-top:7px}
+  .hk-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 22px;margin-top:20px}
+  @media(max-width:560px){.hk-grid{grid-template-columns:1fr}}
+  .hk-ctrl label{display:flex;justify-content:space-between;font-size:13px;color:var(--sub);margin-bottom:7px}
+  .hk-ctrl label b{color:var(--ink);font-weight:600}
+  .hk-ctrl input[type=range]{width:100%;accent-color:var(--red)}
+  .hk-note{display:flex;gap:6px;flex-wrap:wrap}
+  .hk-note button{font-family:var(--mono);font-size:13px;padding:7px 11px;border-radius:8px;cursor:pointer;
+    border:1.3px solid var(--border);background:var(--surface);color:var(--sub)}
+  .hk-note button.sel{border-color:var(--teal);color:var(--teal);background:color-mix(in srgb,var(--teal) 12%,transparent)}
+  .hk-presets{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px}
+  .hk-pill{font-family:var(--mono);font-size:13px;padding:8px 16px;border-radius:999px;cursor:pointer;
+    border:1.3px solid var(--teal);background:color-mix(in srgb,var(--teal) 10%,transparent);color:var(--teal)}
+  .hk-foot{color:var(--muted);font-size:12.5px;margin-top:20px;line-height:1.5}
+  .hk-fallback{display:none;color:var(--sub);font-size:14px;padding:16px;border:1px dashed var(--border);border-radius:10px;margin-top:16px}
+</style>
+</head>
+<body>
+<div class="hk-wrap">
+  <div class="hk-head">
+    <span class="hk-dot" id="hk-dot"></span>
+    <span class="hk-kick">Recreation · Hardstyle Kick</span>
+  </div>
+  <h1 class="hk-title">Kick Designer</h1>
+  <p class="hk-sub">Design a hardstyle kick from its two parts — a clicky <b style="color:var(--red)">tok</b> and a pitched, distorted <b style="color:var(--red)">tail</b>. Drive the distortion, drop the pitch, and tune the tail to a key. Loops at your tempo.</p>
+
+  <div class="hk-scope-wrap">
+    <canvas id="hk-scope" width="820" height="190"></canvas>
+  </div>
+
+  <div class="hk-transport">
+    <button class="hk-btn play" id="hk-play" type="button">▶ Play loop</button>
+    <button class="hk-btn" id="hk-once" type="button">Single hit</button>
+  </div>
+
+  <div class="hk-tempo">
+    <label>Tempo <b id="hk-bpmval">150 BPM</b></label>
+    <input id="hk-bpm" type="range" min="120" max="170" step="1" value="150">
+    <span class="hk-tempo-hint">hardstyle sits ≈ 150–160</span>
+  </div>
+
+  <div class="hk-grid">
+    <div class="hk-ctrl">
+      <label>Transient (tok) <b id="hk-l-tok">50%</b></label>
+      <input id="hk-tok" type="range" min="0" max="100" step="1" value="50">
+    </div>
+    <div class="hk-ctrl">
+      <label>Distortion drive <b id="hk-l-drive">60%</b></label>
+      <input id="hk-drive" type="range" min="0" max="100" step="1" value="60">
+    </div>
+    <div class="hk-ctrl">
+      <label>Pitch-drop depth <b id="hk-l-pdep">24 st</b></label>
+      <input id="hk-pdep" type="range" min="6" max="40" step="1" value="24">
+    </div>
+    <div class="hk-ctrl">
+      <label>Pitch-drop time <b id="hk-l-ptime">120 ms</b></label>
+      <input id="hk-ptime" type="range" min="40" max="260" step="5" value="120">
+    </div>
+    <div class="hk-ctrl">
+      <label>Tail length <b id="hk-l-len">320 ms</b></label>
+      <input id="hk-len" type="range" min="150" max="600" step="10" value="320">
+    </div>
+    <div class="hk-ctrl">
+      <label>Tail tune (root) <b id="hk-l-root">C2</b></label>
+      <div class="hk-note" id="hk-roots"></div>
+    </div>
+  </div>
+
+  <div class="hk-presets" id="hk-presets"></div>
+
+  <div style="display:flex;gap:8px;flex-wrap:nowrap;margin-top:24px;padding-top:14px;border-top:1px solid var(--border);align-items:center">
+    <button id="hk-copyBtn" type="button" style="flex:1;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:700;padding:9px 12px;border-radius:8px;background:#f5a623;color:#000;border:none;cursor:pointer;font-family:inherit;white-space:nowrap;box-sizing:border-box"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;flex:0 0 auto"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy Link</button>
+    <a id="hk-shareX" href="#" target="_blank" rel="noopener" style="flex:1;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:700;padding:9px 12px;border-radius:8px;background:#000;color:#fff;border:1px solid #333;text-decoration:none;white-space:nowrap;box-sizing:border-box"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="width:13px;height:13px;flex:0 0 auto"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.26 5.632 5.905-5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>Share on X</a>
+    <a id="hk-shareReddit" href="#" target="_blank" rel="noopener" style="flex:1;min-width:0;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:700;padding:9px 12px;border-radius:8px;background:#ff4500;color:#fff;border:none;text-decoration:none;white-space:nowrap;box-sizing:border-box"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="width:13px;height:13px;flex:0 0 auto"><path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/></svg>Reddit</a>
+  </div>
+
+  <div class="hk-fallback" id="hk-fallback">Your browser blocked the Web Audio engine. The Kick Designer needs audio to play — try a desktop browser with sound enabled.</div>
+
+  <p class="hk-foot">Audition build. This is the instrument that becomes the article centerpiece and the standalone tool. Sound isn't tuned to the tools bar yet — that pass happens with ears on it.</p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var NOTES=["G1","A1","B1","C2","D2","E2","F2","G2","A2","C3"];
+  var NOTE_HZ={G1:49.00,A1:55.00,B1:61.74,C2:65.41,D2:73.42,E2:82.41,F2:87.31,G2:98.00,A2:110.00,C3:130.81};
+  var state={tok:0.5,drive:0.6,pdep:24,ptime:0.120,len:0.320,root:"C2",bpm:150};
+  var ctx=null, playing=false, timer=null, nextTime=0, curBuf=null, dot=document.getElementById("hk-dot");
+
+  // ---------- DSP: render one kick to a Float32Array (deterministic, node-testable) ----------
+  function renderKick(sr,p){
+    var N=Math.floor(sr*(p.len+0.06));
+    var out=new Float32Array(N);
+    var rootHz=NOTE_HZ[p.root]||65.41;
+    var startHz=rootHz*Math.pow(2, p.pdep/12);      // pitch-drop depth in semitones above root
+    var ptau=Math.max(0.008,p.ptime/3);             // pitch env time-constant
+    var atau=Math.max(0.05,p.len/3.2);              // amplitude decay
+    var phase=0;
+    var driveK=1+p.drive*22;                         // waveshaper drive
+    var tanhD=Math.tanh(driveK);
+    // one-pole lowpass state (loudness chain: tame fizz after distortion)
+    var lp=0, lpCoef=0.35;
+    var tokTau=0.006, tokDur=0.014;
+    for(var i=0;i<N;i++){
+      var t=i/sr;
+      // pitched tail: instantaneous freq follows a downward exponential to root
+      var f=rootHz+(startHz-rootHz)*Math.exp(-t/ptau);
+      phase+=2*Math.PI*f/sr;
+      var tail=Math.sin(phase);
+      var aTail=Math.exp(-t/atau)*(1-Math.exp(-t/0.004)); // decay w/ tiny attack
+      tail*=aTail;
+      // distortion (waveshaper) -> manufactures the harmonic ladder / "bark"
+      var dist=Math.tanh(driveK*tail)/tanhD;
+      // tok: clicky punch at the very front (high sine burst + noise), fast decay
+      var tok=0;
+      if(t<tokDur){
+        var env=Math.exp(-t/tokTau);
+        var click=Math.sin(2*Math.PI*1400*t)*0.6 + (Math.random()*2-1)*0.4;
+        tok=click*env*p.tok;
+      }
+      var s=dist*0.9 + tok;
+      // loudness chain: lowpass -> soft limit
+      lp=lp+lpCoef*(s-lp);
+      s=lp;
+      s=Math.tanh(s*1.4);                             // soft limiter
+      out[i]=s;
+    }
+    // normalize peak to 0.92
+    var peak=1e-6;
+    for(var j=0;j<N;j++){ var a=Math.abs(out[j]); if(a>peak)peak=a; }
+    var g=0.92/peak;
+    for(var k=0;k<N;k++) out[k]*=g;
+    return out;
+  }
+
+  // ---------- audio plumbing ----------
+  function ensureCtx(){
+    if(ctx) return ctx;
+    var AC=window.AudioContext||window.webkitAudioContext;
+    if(!AC){ document.getElementById("hk-fallback").style.display="block"; return null; }
+    ctx=new AC();
+    return ctx;
+  }
+  function makeBuffer(){
+    var c=ensureCtx(); if(!c) return null;
+    var data=renderKick(c.sampleRate,state);
+    var buf=c.createBuffer(1,data.length,c.sampleRate);
+    buf.copyToChannel(data,0);
+    curBuf=buf;
+    drawScope(data);
+    return buf;
+  }
+  function playOnce(when){
+    var c=ensureCtx(); if(!c) return;
+    if(!curBuf) makeBuffer();
+    var src=c.createBufferSource();
+    src.buffer=curBuf;
+    var g=c.createGain(); g.gain.value=0.9;
+    src.connect(g); g.connect(c.destination);
+    src.start(when||c.currentTime);
+    // flash the live dot at the hit
+    var lead=Math.max(0,(when||c.currentTime)-c.currentTime)*1000;
+    window.setTimeout(function(){ dot.classList.add("on"); window.setTimeout(function(){dot.classList.remove("on");},70); }, lead);
+  }
+  function scheduler(){
+    var c=ctx; if(!c) return;
+    var beat=60/state.bpm;
+    while(nextTime < c.currentTime+0.15){
+      playOnce(nextTime);
+      nextTime+=beat;
+    }
+  }
+  function startLoop(){
+    var c=ensureCtx(); if(!c) return;
+    if(c.state==="suspended") c.resume();
+    makeBuffer();
+    playing=true;
+    document.getElementById("hk-play").textContent="■ Stop";
+    nextTime=c.currentTime+0.08;
+    timer=window.setInterval(scheduler,25);
+  }
+  function stopLoop(){
+    playing=false;
+    document.getElementById("hk-play").textContent="▶ Play loop";
+    if(timer){ window.clearInterval(timer); timer=null; }
+  }
+
+  // ---------- scope ----------
+  var cv=document.getElementById("hk-scope"), g2=cv.getContext("2d");
+  function sizeCanvas(){
+    var dpr=window.devicePixelRatio||1;
+    var w=cv.clientWidth||820, h=cv.clientHeight||190;
+    cv.width=Math.round(w*dpr); cv.height=Math.round(h*dpr);
+    g2.setTransform(dpr,0,0,dpr,0,0);
+    if(curBuf) drawScope(curBuf.getChannelData(0));
+  }
+  function drawScope(data){
+    var w=cv.clientWidth||820, h=cv.clientHeight||190, mid=h/2;
+    g2.clearRect(0,0,w,h);
+    g2.strokeStyle="#243141"; g2.lineWidth=1; g2.beginPath(); g2.moveTo(0,mid); g2.lineTo(w,mid); g2.stroke();
+    var step=Math.max(1,Math.floor(data.length/w));
+    // filled + glow (layered stroke)
+    function trace(){ g2.beginPath();
+      for(var x=0;x<w;x++){ var idx=Math.min(data.length-1,x*step); var y=mid-data[idx]*mid*0.92; if(x===0)g2.moveTo(x,y); else g2.lineTo(x,y); }
+    }
+    g2.strokeStyle="rgba(239,68,68,0.28)"; g2.lineWidth=5; trace(); g2.stroke();
+    g2.strokeStyle="#ef4444"; g2.lineWidth=2; trace(); g2.stroke();
+  }
+
+  // ---------- UI wiring ----------
+  function pct(v){ return Math.round(v*100)+"%"; }
+  function bind(id,fn){ var el=document.getElementById(id); el.addEventListener("input",fn); return el; }
+  function refresh(rebuild){ if(rebuild!==false) makeBuffer(); }
+  bind("hk-tok",function(e){ state.tok=+e.target.value/100; document.getElementById("hk-l-tok").textContent=e.target.value+"%"; refresh(); });
+  bind("hk-drive",function(e){ state.drive=+e.target.value/100; document.getElementById("hk-l-drive").textContent=e.target.value+"%"; refresh(); });
+  bind("hk-pdep",function(e){ state.pdep=+e.target.value; document.getElementById("hk-l-pdep").textContent=e.target.value+" st"; refresh(); });
+  bind("hk-ptime",function(e){ state.ptime=+e.target.value/1000; document.getElementById("hk-l-ptime").textContent=e.target.value+" ms"; refresh(); });
+  bind("hk-len",function(e){ state.len=+e.target.value/1000; document.getElementById("hk-l-len").textContent=e.target.value+" ms"; refresh(); });
+  bind("hk-bpm",function(e){ state.bpm=+e.target.value; document.getElementById("hk-bpmval").textContent=e.target.value+" BPM"; });
+
+  // root note buttons
+  var rootsWrap=document.getElementById("hk-roots");
+  NOTES.forEach(function(n){
+    var b=document.createElement("button"); b.type="button"; b.textContent=n; if(n===state.root)b.className="sel";
+    b.addEventListener("click",function(){
+      state.root=n; document.getElementById("hk-l-root").textContent=n;
+      Array.prototype.forEach.call(rootsWrap.children,function(c){c.className=(c.textContent===n)?"sel":"";});
+      makeBuffer();
+    });
+    rootsWrap.appendChild(b);
+  });
+
+  // presets
+  var PRESETS={
+    "Euphoric":{tok:0.45,drive:0.5,pdep:20,ptime:0.140,len:0.360,root:"C2"},
+    "Raw":{tok:0.6,drive:0.85,pdep:30,ptime:0.090,len:0.280,root:"G1"},
+    "Early bounce":{tok:0.55,drive:0.35,pdep:24,ptime:0.110,len:0.240,root:"D2"}
+  };
+  var pWrap=document.getElementById("hk-presets");
+  Object.keys(PRESETS).forEach(function(name){
+    var b=document.createElement("button"); b.type="button"; b.className="hk-pill"; b.textContent=name;
+    b.addEventListener("click",function(){ applyPreset(PRESETS[name]); });
+    pWrap.appendChild(b);
+  });
+  function applyPreset(p){
+    state.tok=p.tok; state.drive=p.drive; state.pdep=p.pdep; state.ptime=p.ptime; state.len=p.len; state.root=p.root;
+    setRange("hk-tok",Math.round(p.tok*100),"hk-l-tok",Math.round(p.tok*100)+"%");
+    setRange("hk-drive",Math.round(p.drive*100),"hk-l-drive",Math.round(p.drive*100)+"%");
+    setRange("hk-pdep",p.pdep,"hk-l-pdep",p.pdep+" st");
+    setRange("hk-ptime",Math.round(p.ptime*1000),"hk-l-ptime",Math.round(p.ptime*1000)+" ms");
+    setRange("hk-len",Math.round(p.len*1000),"hk-l-len",Math.round(p.len*1000)+" ms");
+    document.getElementById("hk-l-root").textContent=p.root;
+    Array.prototype.forEach.call(rootsWrap.children,function(c){c.className=(c.textContent===p.root)?"sel":"";});
+    makeBuffer();
+  }
+  function setRange(id,val,lid,ltext){ var el=document.getElementById(id); el.value=val; if(lid)document.getElementById(lid).textContent=ltext; }
+
+  document.getElementById("hk-play").addEventListener("click",function(){ playing?stopLoop():startLoop(); });
+  document.getElementById("hk-once").addEventListener("click",function(){
+    var c=ensureCtx(); if(!c)return; if(c.state==="suspended")c.resume(); makeBuffer(); playOnce();
+  });
+  window.addEventListener("resize",sizeCanvas);
+
+  // ---------- share bar (cloned from live delay-time-calculator) ----------
+  (function(){
+    var title=document.title, url=window.location.href;
+    var xBtn=document.getElementById("hk-shareX"), rdBtn=document.getElementById("hk-shareReddit");
+    if(xBtn) xBtn.href="https://x.com/intent/tweet?text="+encodeURIComponent(title)+" via @mpwikiofficial&url="+encodeURIComponent(url);
+    if(rdBtn) rdBtn.href="https://www.reddit.com/submit?url="+encodeURIComponent(url)+"&title="+encodeURIComponent(title);
+    var cp=document.getElementById("hk-copyBtn");
+    if(cp) cp.addEventListener("click",function(){
+      var b=cp; if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(window.location.href).then(function(){var t=b.textContent;b.textContent="Copied!";window.setTimeout(function(){b.textContent=t;},2000);}).catch(function(){});
+      }
+    });
+  })();
+
+  // initial paint (no audio until user gesture)
+  sizeCanvas();
+  // draw a silent placeholder from a default render (no ctx needed for the visual)
+  drawScope(renderKick(44100,state));
+})();
+</script>
+</body>
+</html>
