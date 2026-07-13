@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Recreate the French house sound: loop a disco sample or saw chords, sweep a resonant filter to the groove, sidechain, saturate — the Daft Punk filter method." />
+  <title>How to Recreate the French House Sound (The Daft Punk Filter)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <style>
+    #readingProgress{position:fixed;top:0;left:0;height:3px;background:var(--teal);width:0%;z-index:200;transition:width 0.1s linear;}
+    .quick-answer{background:linear-gradient(135deg,rgba(0,212,168,0.08),rgba(167,139,250,0.06));border:1px solid rgba(0,212,168,0.3);border-left:4px solid var(--teal);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .quick-answer-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.6rem;}
+    .quick-answer p{font-size:1rem;line-height:1.65;color:var(--text-primary);margin:0;}
+    .skill-badge{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .6rem;border-radius:4px;margin-left:.6rem;vertical-align:middle;position:relative;top:-2px;}
+    .skill-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .skill-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .skill-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .settings-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .settings-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .settings-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .settings-table tr:last-child td{border-bottom:none;}
+    .settings-table tr:hover td{background:var(--bg-surface);}
+    .settings-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .settings-table .mono{font-family:var(--font-mono);font-size:.82rem;color:var(--teal);}
+    .mistake-box{background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);border-left:4px solid #ef4444;border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .mistake-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#ef4444;margin-bottom:.4rem;}
+    .mistake-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference{border-left:3px solid var(--purple);padding:.75rem 1.25rem;margin:1.25rem 0;background:rgba(167,139,250,0.05);border-radius:0 6px 6px 0;}
+    .pro-reference-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:.35rem;}
+    .pro-reference p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .pro-reference strong{color:var(--text-primary);}
+    .listening-prescription{background:var(--bg-void);border:1px solid var(--border-default);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;position:relative;}
+    .listening-prescription::before{content:'🎧';position:absolute;top:-14px;left:1.5rem;background:var(--bg-void);padding:0 .4rem;font-size:1.1rem;}
+    .listening-prescription-label{font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--purple);margin-bottom:.75rem;}
+    .listening-prescription p{font-size:.9rem;line-height:1.7;color:var(--text-secondary);margin:0 0 .5rem;}
+    .listening-record{font-weight:600;color:var(--text-primary);}
+    .decision-framework{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.75rem 0;}
+    .decision-framework-title{font-family:var(--font-display);font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:1rem;}
+    .decision-item{display:flex;gap:1rem;padding:.65rem 0;border-bottom:1px solid var(--border-subtle);font-size:.88rem;line-height:1.55;}
+    .decision-item:last-child{border-bottom:none;}
+    .decision-if{color:var(--text-muted);font-style:italic;min-width:2rem;}
+    .decision-then{color:var(--text-primary);}
+    .decision-then strong{color:var(--teal);}
+    .exercise-block{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.5rem 1.75rem;margin:1.25rem 0;}
+    .exercise-header{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;}
+    .exercise-badge{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.25rem .7rem;border-radius:4px;}
+    .exercise-badge--beginner{background:rgba(0,212,168,0.15);color:var(--teal);}
+    .exercise-badge--intermediate{background:rgba(251,191,36,0.15);color:#fbbf24;}
+    .exercise-badge--advanced{background:rgba(167,139,250,0.15);color:var(--purple);}
+    .exercise-title{font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--text-primary);}
+    .exercise-block ol{margin:0;padding-left:1.25rem;color:var(--text-secondary);font-size:.88rem;line-height:1.7;}
+    .exercise-block ol li{margin-bottom:.4rem;}
+    .version-line{font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono);background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:4px;padding:.4rem .75rem;margin:.75rem 0 1.5rem;display:inline-block;}
+    .go-deeper{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:10px;padding:1.75rem;margin:2.5rem 0;}
+    .go-deeper-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--text-primary);margin-bottom:1.25rem;}
+    .go-deeper-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;}
+    .go-deeper-item{background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:7px;padding:1rem 1.1rem;}
+    .go-deeper-item-label{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.35rem;}
+    .go-deeper-item a{font-size:.88rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;}
+    .go-deeper-item p{font-size:.78rem;color:var(--text-muted);margin:.3rem 0 0;}
+    .citation{font-size:.78rem;color:var(--text-muted);font-style:italic;margin-top:.25rem;}
+    .diagram-wrap{margin:1.9rem auto;max-width:100%;}
+    .diagram-wrap img{width:100%;height:auto;display:block;border:1px solid var(--border-subtle);border-radius:10px;}
+    .diagram-wrap picture{display:block;}
+    .diagram-caption{font-size:.78rem;color:var(--text-muted);text-align:center;margin-top:.75rem;font-style:italic;}
+    .highlight-box{background:rgba(0,212,168,0.06);border:1px solid rgba(0,212,168,0.2);border-radius:8px;padding:1.25rem 1.5rem;margin:1.25rem 0;}
+    .highlight-box-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.4rem;}
+    .highlight-box p{font-size:.88rem;line-height:1.6;color:var(--text-secondary);margin:0;}
+    .stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin:1.5rem 0;}
+    .stat-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem;text-align:center;}
+    .stat-number{font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--teal);display:block;}
+    .stat-label{font-size:.78rem;color:var(--text-secondary);margin-top:.25rem;}
+    .action-steps{counter-reset:steps;list-style:none;padding:0;margin:1.5rem 0;}
+    .action-steps li{counter-increment:steps;display:flex;gap:1rem;padding:.85rem 0;border-bottom:1px solid var(--border-subtle);font-size:.9rem;color:var(--text-secondary);line-height:1.6;}
+    .action-steps li:last-child{border-bottom:none;}
+    .action-steps li::before{content:counter(steps);background:var(--teal);color:#000;font-weight:800;font-size:.75rem;width:1.6rem;height:1.6rem;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem;}
+    .genre-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin:1.5rem 0;}
+    .genre-card{background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;padding:1.1rem 1.25rem;}
+    .genre-card-name{font-family:var(--font-display);font-size:.85rem;font-weight:700;color:var(--teal);margin-bottom:.4rem;}
+    .genre-card p{font-size:.82rem;color:var(--text-secondary);line-height:1.55;margin:0;}
+    .comparison-table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.75rem 0;border-radius:8px;border:1px solid var(--border-subtle);overflow:hidden;}
+    .comparison-table th{background:var(--bg-elevated);color:var(--text-primary);font-family:var(--font-display);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border-default);}
+    .comparison-table td{padding:.7rem 1rem;border-bottom:1px solid var(--border-subtle);color:var(--text-secondary);line-height:1.5;}
+    .comparison-table tr:last-child td{border-bottom:none;}
+    .comparison-table td:first-child{color:var(--text-primary);font-weight:500;}
+    .affiliate-cta{display:inline-flex;align-items:center;gap:.5rem;background:rgba(0,212,168,0.1);border:1px solid rgba(0,212,168,0.25);color:var(--teal);font-size:.82rem;font-weight:600;padding:.45rem .9rem;border-radius:6px;text-decoration:none;}
+
+    .faq-accordion{margin:1.75rem 0;}
+    .faq-accordion-item{background:var(--bg-surface);border:1px solid var(--border-subtle);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;margin-bottom:8px;overflow:hidden;}
+    .faq-accordion-q{display:flex;align-items:flex-start;padding:1rem 1.25rem;cursor:pointer;gap:.75rem;}
+    .faq-accordion-q:hover{background:var(--bg-elevated);}
+    .faq-accordion-icon{width:16px;height:16px;flex-shrink:0;margin-top:3px;color:var(--purple);transition:transform .2s ease;}
+    .faq-accordion-icon.open{transform:rotate(45deg);}
+    .faq-accordion-q-inner{display:flex;flex-direction:column;}
+    .faq-accordion-label{font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin-bottom:.2rem;}
+    .faq-accordion-q-text{font-size:.92rem;font-weight:600;color:var(--text-primary);line-height:1.45;font-family:var(--font-display);}
+    .faq-accordion-a{display:none;padding:0 1.25rem 1rem 2.75rem;font-size:.88rem;color:var(--text-secondary);line-height:1.7;border-top:1px solid var(--border-subtle);padding-top:.85rem;}
+    .faq-accordion-a.open{display:block;}
+    .sourcebox{border:1px solid var(--border-default);border-radius:10px;overflow:hidden;margin:1.9rem 0;background:var(--bg-surface);}
+    .sourcebox-head{padding:1.1rem 1.4rem;border-bottom:1px solid var(--border-default);background:var(--bg-void);}
+    .sourcebox-kicker{display:block;font-family:var(--font-display);font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:.3rem;}
+    .sourcebox-sub{display:block;font-size:.82rem;color:var(--text-secondary);line-height:1.5;}
+    .sourcebox-row{display:flex;gap:0;border-bottom:1px solid var(--border-subtle);}
+    .sourcebox-row:last-child{border-bottom:none;}
+    .sourcebox-tag{flex:0 0 168px;padding:1.1rem 1.2rem;font-family:var(--font-mono);font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;line-height:1.4;}
+    .sourcebox-body{padding:1.1rem 1.3rem 1.1rem 0;flex:1;}
+    .sourcebox-body p{font-size:.9rem;line-height:1.65;color:var(--text-secondary);margin:0;}
+    .sourcebox-body strong{color:var(--text-primary);}
+    .sourcebox-cite{display:block;margin-top:.55rem;font-size:.76rem;font-style:italic;color:var(--text-muted);line-height:1.5;}
+    .sourcebox-confirmed{border-left:4px solid var(--teal);} .sourcebox-confirmed .sourcebox-tag{color:var(--teal);}
+    .sourcebox-disputed{border-left:4px solid #f59e0b;} .sourcebox-disputed .sourcebox-tag{color:#f59e0b;}
+    .sourcebox-inferred{border-left:4px solid var(--purple);} .sourcebox-inferred .sourcebox-tag{color:var(--purple);}
+    @media(max-width:600px){.sourcebox-row{flex-direction:column;}.sourcebox-tag{flex-basis:auto;padding-bottom:.2rem;}.sourcebox-body{padding:.2rem 1.2rem 1.1rem;}}
+    .diagram-wrap svg{display:block;width:100%;height:auto;border-radius:8px;}
+    .fig-m{display:none;}
+    @media(max-width:600px){.fig-d{display:none;}.fig-m{display:block;}}
+    .tool-embed{margin:1.9rem 0;border:1px solid rgba(245,158,11,0.35);border-radius:12px;overflow:hidden;background:#0a0a0f;}
+    .tool-embed-bar{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.7rem 1rem;background:linear-gradient(135deg,rgba(245,158,11,0.12),rgba(245,158,11,0.03));border-bottom:1px solid rgba(245,158,11,0.28);}
+    .tool-embed-kicker{font-family:var(--font-mono);font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#f59e0b;}
+    .tool-embed-open{flex-shrink:0;font-family:var(--font-mono);font-size:.72rem;font-weight:700;color:#f59e0b;text-decoration:none;}
+    .tool-embed-open:hover{text-decoration:underline;}
+    .tool-embed-frame{width:100%;height:1000px;border:0;display:block;background:#0a0a0f;}
+    @media(max-width:600px){.tool-embed-frame{height:1080px;}}
+    .tool-embed-note{font-size:.82rem;line-height:1.5;color:var(--text-secondary);margin:0;padding:.7rem 1rem;border-top:1px solid rgba(255,255,255,0.06);}
+  </style>
+  <link rel="canonical" href="https://musicproductionwiki.com/articles/how-to-recreate-the-french-house-sound.html"/>
+  <!-- Open Graph -->
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="How to Recreate the French House Sound"/>
+  <meta property="og:description" content="Recreate the French house sound from scratch: loop a disco sample or saw chords, sweep a resonant filter to the groove, sidechain the pump, saturate and glue — the Daft Punk filter house method."/>
+  <meta property="og:url" content="https://musicproductionwiki.com/articles/how-to-recreate-the-french-house-sound.html"/>
+  <meta property="og:site_name" content="Music Production Wiki"/>
+  <meta property="og:image" content="https://musicproductionwiki.com/images/how-to-recreate-the-french-house-sound-poster.png"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="article:author" content="Music Production Wiki Team"/>
+  <meta property="article:section" content="Recreations"/>
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="How to Recreate the French House Sound"/>
+  <meta name="twitter:description" content="Recreate the French house sound from scratch: loop a disco sample or saw chords, sweep a resonant filter to the groove, sidechain the pump, saturate and glue — the Daft Punk filter house method."/>
+  <meta name="twitter:image" content="https://musicproductionwiki.com/images/how-to-recreate-the-french-house-sound-poster.png"/>
+  <!-- Organization schema -->
+  <!-- WebSite schema -->
+<style id="toc-skin">
+.toc-widget .sidebar-widget-header{margin-bottom:.35rem}
+.toc-list{counter-reset:tocnum;list-style:none;margin:0;padding:0}
+.toc-list li{counter-increment:tocnum;position:relative;margin:0;border-left:2px solid var(--border-subtle);transition:border-color .15s ease,background .15s ease}
+.toc-list li a{display:flex;gap:.7rem;align-items:baseline;padding:.5rem .85rem .5rem 1rem;font-size:.82rem;line-height:1.45;font-weight:500;color:var(--text-secondary);text-decoration:none;transition:color .15s ease}
+.toc-list li a::before{content:counter(tocnum,decimal-leading-zero);font-family:var(--font-mono,ui-monospace,monospace);font-size:.7rem;font-weight:600;letter-spacing:.04em;color:var(--text-muted);flex:0 0 auto;min-width:1.5em;padding-top:.05rem}
+.toc-list li a:hover{color:var(--text-primary)}
+.toc-list li.active{border-left-color:var(--teal);background:linear-gradient(90deg,rgba(0,212,168,.08),transparent 80%)}
+.toc-list li.active a{color:var(--teal);font-weight:600}
+.toc-list li.active a:hover{color:var(--teal)}
+.toc-list li.active a::before{color:var(--teal)}
+</style>
+<style id="toc-bar-css">
+.toc-bar{display:none}
+@media (max-width: 900px){
+.toc-bar{display:block;position:sticky;top:60px;z-index:400;background:var(--bg-void);border-bottom:1px solid var(--border-default);overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(to right,#000 88%,transparent 100%);mask-image:linear-gradient(to right,#000 88%,transparent 100%)}
+.toc-bar::-webkit-scrollbar{display:none}
+.toc-bar-track{display:flex;gap:4px;padding:9px 10px;min-width:max-content}
+.toc-bar-track a{color:var(--text-secondary);text-decoration:none;font-family:var(--font-mono,ui-monospace,monospace);font-size:10px;text-transform:uppercase;letter-spacing:.05em;padding:6px 10px;border-radius:4px;white-space:nowrap;min-height:30px;display:inline-flex;align-items:center;transition:color .15s,background .15s}
+.toc-bar-track a.active{color:var(--teal);background:var(--bg-elevated)}
+.article-body h2[id]{scroll-margin-top:116px}
+}
+@media (max-width: 900px) and (hover:hover){.toc-bar-track a:hover{color:var(--teal)}}
+</style>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How to Recreate the French House Sound",
+  "description": "Recreate the French house sound from scratch: loop a disco sample or saw chords, sweep a resonant filter to the groove, sidechain the pump, saturate and glue — the Daft Punk filter house method.",
+  "image": [
+    "https://musicproductionwiki.com/images/how-to-recreate-the-french-house-sound-poster.png"
+  ],
+  "author": {
+    "@type": "Organization",
+    "name": "Music Production Wiki"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Music Production Wiki",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://musicproductionwiki.com/og-image.png"
+    }
+  },
+  "datePublished": "2026-07-12",
+  "dateModified": "2026-07-11",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://musicproductionwiki.com/articles/how-to-recreate-the-french-house-sound.html"
+  },
+  "articleSection": "Recreations"
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://musicproductionwiki.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Recreations",
+      "item": "https://musicproductionwiki.com/categories/recreations.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "French House Sound",
+      "item": "https://musicproductionwiki.com/articles/how-to-recreate-the-french-house-sound.html"
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What tempo is French house?", "acceptedAnswer": {"@type": "Answer", "text": "French house sits around 120 to 128 BPM with a steady four-on-the-floor kick — fast enough to drive a dancefloor, slow enough to keep the disco swing."}}, {"@type": "Question", "name": "What is the French touch filter?", "acceptedAnswer": {"@type": "Answer", "text": "It is a resonant low-pass filter swept across a looped sample or chord bed, automated so the cutoff opens and closes to the groove. That moving cutoff — from muffled to bright — is the sound of French house."}}, {"@type": "Question", "name": "Do I have to sample a disco record?", "acceptedAnswer": {"@type": "Answer", "text": "No. You can replay the part yourself — stack sawtooth waves into rich chords or play a funky Rhodes line — and filter that. Replaying also sidesteps sample clearance entirely."}}, {"@type": "Question", "name": "How do I get the pumping sound?", "acceptedAnswer": {"@type": "Answer", "text": "Route your kick as a sidechain trigger into a compressor on the loop, with a fast attack and a tempo-timed release. Raise the amount until the loop ducks on every kick and springs back between hits."}}, {"@type": "Question", "name": "What plugins do I need for French house?", "acceptedAnswer": {"@type": "Answer", "text": "Only stock tools: a resonant low-pass filter, a compressor with an external sidechain, and a saturator. Dedicated filter and console plugins add polish and speed but are not required."}}, {"@type": "Question", "name": "Is French house the same as the 303 acid sound?", "acceptedAnswer": {"@type": "Answer", "text": "No. The 303 filters a single squelchy mono note into an acid line, while French house filters a whole looped chord bed that opens up over a phrase. Same idea — a resonant filter moving — but very different results."}}, {"@type": "Question", "name": "How long should the filter take to open?", "acceptedAnswer": {"@type": "Answer", "text": "For the big build, often 8 or 16 bars from nearly shut to wide open, with faster rhythmic movement inside each bar. It is a feel, not a fixed number — time it to your arrangement."}}, {"@type": "Question", "name": "Do I need to clear a sample for a French house track?", "acceptedAnswer": {"@type": "Answer", "text": "If you release a track built on a copyrighted recording, yes — you owe both the master and the composition rights. Replaying the part yourself turns that legal risk into something you fully own."}}]}
+</script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Music Production Wiki",
+  "url": "https://musicproductionwiki.com/",
+  "logo": "https://musicproductionwiki.com/og-image.png"
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Music Production Wiki",
+  "url": "https://musicproductionwiki.com/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://musicproductionwiki.com/search.html?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+  </script>
+</head>
+<body>
+
+
+
+<style id="mpw-unav-css">
+
+.mnav-wrap,.usearch{--ink:#09090d;--panel:#0f0f18;--panel2:#15151f;--line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);--amber:#f5a623;--teal:#00e8a2;--teal-d:rgba(0,232,162,.12);--text:#f2f2f7;--t2:#9a9ab2;--t3:#56566f;--sans:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;--mono:'DM Mono',ui-monospace,SFMono-Regular,monospace;}
+.mnav-wrap *,.mnav-wrap *::before,.mnav-wrap *::after,.usearch *,.usearch *::before,.usearch *::after{box-sizing:border-box;margin:0;padding:0}
+/* host-CSS shield: a page loading style.css (articles) must not bleed its body font/color/line-height into the bar. Direct rule on .mnav-wrap beats inherited body styles. */
+.mnav-wrap,.usearch{font-family:var(--sans);font-size:14px;font-weight:400;font-style:normal;line-height:1.4;letter-spacing:normal;color:var(--text);text-align:left;text-transform:none}
+/* S91 host-CSS isolation (:where() = zero-specificity; beats style.css bare a/li by source order, LOSES to nav's own .drw-card/.mnav-flat classes) */
+:where(.mnav-wrap,.usearch) a{color:inherit;text-decoration:none;background:none;border:0;font:inherit;letter-spacing:inherit}
+:where(.mnav-wrap,.usearch) ul,:where(.mnav-wrap,.usearch) ol{list-style:none;margin:0;padding:0;border:0}
+:where(.mnav-wrap,.usearch) li{margin:0;padding:0;border:0;font-size:inherit;line-height:inherit;color:inherit;background:none}
+:where(.mnav-wrap,.usearch) h1,:where(.mnav-wrap,.usearch) h2,:where(.mnav-wrap,.usearch) h3,:where(.mnav-wrap,.usearch) h4,:where(.mnav-wrap,.usearch) h5,:where(.mnav-wrap,.usearch) h6,:where(.mnav-wrap,.usearch) p{margin:0;padding:0;border:0;font:inherit;color:inherit;line-height:inherit;letter-spacing:inherit;text-transform:none}
+:where(.mnav-wrap,.usearch) button{font:inherit;color:inherit;background:none;border:0;letter-spacing:inherit;text-align:inherit}
+:where(.mnav-wrap,.usearch) svg{display:inline-block;vertical-align:middle}
+:where(.mnav-wrap,.usearch) img{max-width:none}
+.mnav-wrap{background:var(--ink);border-bottom:1px solid var(--line);position:relative}
+.mnav{height:60px;display:flex;align-items:center}
+.mnav-in{max-width:1180px;margin:0 auto;padding:0 22px;width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.mnav-brand{display:flex;align-items:center;gap:10px;color:var(--text);text-decoration:none;flex:0 0 auto}
+.mnav-word{font-weight:700;font-size:15px;letter-spacing:-.02em}
+.mnav-links{display:flex;align-items:center;gap:6px;margin-left:8px}
+.mnav-flat,.mnav-trigger{color:var(--t2);background:none;border:0;font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;padding:8px 12px;border-radius:8px;display:inline-flex;align-items:center;gap:6px}
+.mnav-flat:hover,.mnav-trigger:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.caret{font-size:9px;color:var(--t3);transition:transform .18s}
+.mnav-right{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+.mnav-search{background:none;border:0;color:var(--t2);cursor:pointer;display:flex;padding:6px;border-radius:8px}
+.mnav-search:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.mnav-cta{border:1px solid var(--teal);color:var(--teal);text-decoration:none;padding:7px 15px;border-radius:8px;font-size:13px;font-weight:600;white-space:nowrap}
+.mnav-cta:hover{background:var(--teal-d)}
+.mnav-wrap[data-section="tools"] .mnav-flat[data-nav="tools"]{color:var(--text);font-weight:600}
+.mnav-wrap[data-section="articles"] .mnav-trigger[data-nav="articles"]{color:var(--text);font-weight:600}
+/* Bible = amber brand color, desktop link + mobile drawer */
+.mnav-flat[data-nav="bible"],.drw-link[data-nav="bible"]{color:#f5a623!important;font-weight:600}
+.mnav-flat[data-nav="bible"]:hover,.drw-link[data-nav="bible"]:hover{color:#ffc04d!important}
+.mnav-item{position:relative}
+.mnav-panel,.mnav-panel-wide{position:absolute;top:calc(100% + 6px);left:0;z-index:50;display:none;background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:14px;box-shadow:0 24px 60px -24px rgba(0,0,0,.9);min-width:240px}
+.mnav-panel-wide{grid-template-columns:1fr 1fr;gap:8px 22px;min-width:520px}
+.mnav-item:hover .mnav-panel,.mnav-item:focus-within .mnav-panel,.mnav-item:hover .mnav-panel-wide,.mnav-item:focus-within .mnav-panel-wide{display:grid}
+.mnav-item:hover .caret{transform:rotate(180deg)}
+.mp-col{display:flex;flex-direction:column}
+.mp-head{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);padding:6px 10px 8px}
+.mnav-panel a{display:flex;flex-direction:column;gap:1px;padding:8px 10px;border-radius:9px;text-decoration:none}
+.mnav-panel a:hover{background:rgba(255,255,255,.05)}
+.mp-name{color:var(--text);font-size:13.5px;font-weight:600}.mp-desc{color:var(--t2);font-size:11.5px}
+.mnav-sub{display:none;background:var(--panel);border-bottom:1px solid var(--line)}
+.mnav-wrap[data-section="bible"] .mnav-sub{display:block}
+.mnav-sub-in{max-width:1180px;margin:0 auto;padding:10px 22px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.mnav-sub-in::-webkit-scrollbar{display:none}
+.mnav-sub-in a{flex:0 0 auto;color:var(--t2);text-decoration:none;font-size:12.5px;font-family:var(--mono);border:1px solid var(--line2);border-radius:99px;padding:5px 12px;white-space:nowrap}
+.mnav-sub-in a:hover{color:var(--teal);border-color:rgba(0,232,162,.4)}
+.mnav-toggle{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.mnav-burger{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:8px;border-radius:8px}
+.mnav-burger span{display:block;width:20px;height:2px;background:var(--text);border-radius:2px;transition:.2s}
+.mnav-drawer{display:none;flex-direction:column;padding:6px 18px 16px;background:var(--ink);border-bottom:1px solid var(--line)}
+.mnav-drawer details{border-bottom:1px solid var(--line)}
+.mnav-drawer summary{list-style:none;cursor:pointer;padding:13px 2px;font-size:15px;font-weight:600;color:var(--text);display:flex;justify-content:space-between}
+.mnav-drawer summary::-webkit-details-marker{display:none}
+.mnav-drawer summary::after{content:"+";color:var(--t3)}
+.mnav-drawer details[open] summary::after{content:"\2013"}
+.mnav-acc{display:flex;flex-direction:column;padding:0 0 10px 12px}
+.mnav-acc a{color:var(--t2);text-decoration:none;font-size:14px;padding:8px 0}
+.drw-link{color:var(--t2);text-decoration:none;font-size:15px;font-weight:600;padding:13px 2px;border-bottom:1px solid var(--line)}
+.drw-cta{color:var(--teal);text-decoration:none;font-weight:600;font-size:15px;padding:14px 2px}
+.mnav-toggle:checked ~ .mnav-drawer{display:flex}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(2){opacity:0}
+.mnav-toggle:checked ~ .mnav .mnav-burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+@media(max-width:860px){.mnav-links,.mnav-cta{display:none}.mnav-burger{display:flex}}
+
+/* ===== UNIFIED SEARCH OVERLAY ===== */
+.usearch{position:fixed;inset:0;z-index:10000;display:none;background:rgba(6,6,11,.78);backdrop-filter:blur(6px);padding:80px 20px 20px}
+.usearch.open{display:block}
+.usearch-box{max-width:620px;margin:0 auto;background:var(--panel);border:1px solid var(--line2);border-radius:16px;overflow:hidden;box-shadow:0 40px 90px -30px rgba(0,0,0,.95)}
+.usearch-top{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.usearch-top svg{color:var(--t3);flex:0 0 auto}
+.usearch-top input{flex:1;background:none;border:0;outline:none;color:var(--text);font-family:var(--sans);font-size:17px}
+.usearch-top input::placeholder{color:var(--t3)}
+.usearch-top kbd{font-family:var(--mono);font-size:11px;color:var(--t3);border:1px solid var(--line2);border-radius:6px;padding:2px 7px}
+.usearch-results{max-height:56vh;overflow-y:auto;padding:8px}
+.usearch-results a{display:block;padding:11px 14px;border-radius:10px;text-decoration:none;transition:background .12s}
+.usearch-results a:hover,.usearch-results a.sel{background:rgba(255,255,255,.05)}
+.ur-top{display:flex;align-items:baseline;gap:9px}
+.ur-title{color:var(--text);font-size:14.5px;font-weight:600}
+.ur-cat{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:rgba(255,255,255,.06);color:var(--t2);flex:0 0 auto}
+.ur-cat[data-c="Tools"]{background:var(--teal-d);color:var(--teal);border:1px solid rgba(0,232,162,.4)}
+.ur-cat[data-c="Bible"]{background:rgba(245,166,35,.18);color:#f5a623;border:1px solid rgba(245,166,35,.4)}
+.ur-desc{color:var(--t2);font-size:12.5px;line-height:1.45;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.usearch-empty{padding:30px;text-align:center;color:var(--t3);font-size:13.5px}
+/* --- sticky-header + entry-page chrome (pilot, refined for density) ---
+   entry nav = 60px main bar only (no category sub-bar). Desktop: hide the horizontal section
+   nav (the sticky sidebar TOC covers sections) and retune offsets to the 60px nav. Mobile: the
+   sidebar is hidden, so SHOW the section nav flush under the bar. All in THIS block. --- */
+.mnav-wrap{position:sticky;top:0;z-index:1000;line-height:1.4}
+.entry-nav{display:none}
+[id].entry-section{scroll-margin-top:90px}
+.entry-main h2{scroll-margin-top:90px}
+.entry-sidebar{top:78px;height:calc(100vh - 98px)}
+@media(max-width:768px){
+  .entry-nav{display:block!important;top:60px!important}
+  [id].entry-section{scroll-margin-top:130px!important}
+  .entry-main h2{scroll-margin-top:130px!important}
+}
+/* dropdown overflow safety */
+.mnav-panel,.mnav-panel-wide{max-height:min(72vh,560px);overflow-y:auto}
+/* mobile drawer: category CARD grid (slick old-nav look), CSS-only */
+.mnav-drawer{padding:10px 18px 18px;gap:0}
+.drw-label{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--t3);margin:12px 2px 8px}
+.drw-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.drw-card{display:flex;align-items:center;padding:12px 14px;border-radius:10px;text-decoration:none;font-size:13.5px;font-weight:600;color:var(--text);background:var(--panel);border:1px solid var(--line2)}
+.drw-card:hover{border-color:var(--teal);color:var(--teal)}
+.drw-feat{display:flex;align-items:center;gap:8px;padding:13px 16px;border-radius:10px;text-decoration:none;font-size:14px;font-weight:700;color:var(--text);background:var(--panel);border:1px solid var(--line2);margin-top:8px}
+.drw-feat-bible{color:#f5a623;background:rgba(245,166,35,.08);border-color:rgba(245,166,35,.30)}
+.drw-feat-bible:hover{border-color:rgba(245,166,35,.6)}
+.drw-cta{display:block;text-align:center;padding:14px;border-radius:10px;background:var(--teal);color:#06281f;font-weight:800;font-size:14px;text-decoration:none;margin-top:12px}
+/* mobile sunlight legibility: lift the intentionally-dim greys in glare (nav + search only), scoped */
+@media(max-width:860px){
+  .mnav-wrap,.usearch{--t2:#c8c8da;--t3:#9696b0}
+  .drw-label{color:#bdbdd0;font-weight:500}
+  .usearch-top input::placeholder{color:#9696b0}
+  .drw-card,.drw-feat{background:#20202e;border:1.5px solid #45455c}
+  .drw-feat-bible{background:rgba(245,166,35,.12);border:1.5px solid rgba(245,166,35,.6)}
+}
+html{overflow-x:clip!important;max-width:none!important}body{overflow-x:clip!important}
+</style>
+<!-- MPW universal nav -->
+<div class="mnav-wrap" data-section="articles">
+  <input type="checkbox" id="mnav-toggle" class="mnav-toggle" aria-hidden="true">
+  <nav class="mnav" aria-label="Main navigation">
+    <div class="mnav-in">
+      <a class="mnav-brand" href="/"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="6" stroke="#f5a623" stroke-width="1.7"/><path d="M7 15V9l3 3 3-5 4 8" stroke="#00e8a2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="mnav-word">MusicProductionWiki</span></a>
+      <div class="mnav-links">
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="articles">Articles <span class="caret">&#9662;</span></button><div class="mnav-panel mnav-panel-wide"><div class="mp-col"><div class="mp-head">Techniques & Analysis</div><a href="/categories/techniques"><span class="mp-name">Techniques</span><span class="mp-desc">Mixing, mastering, sound design</span></a><a href="/categories/reviews"><span class="mp-name">Reviews</span><span class="mp-desc">Honest. No paid placements.</span></a><a href="/categories/comparisons"><span class="mp-name">Comparisons</span><span class="mp-desc">Head-to-head</span></a><a href="/categories/breakdowns"><span class="mp-name">Breakdowns</span><span class="mp-desc">Track-by-track</span></a><a href="/categories/recreations"><span class="mp-name">Recreations</span><span class="mp-desc">Recreate iconic sounds</span></a><a href="/genres"><span class="mp-name">Genres</span><span class="mp-desc">Every genre & style</span></a></div><div class="mp-col"><div class="mp-head">Reference & Business</div><a href="/categories/ai-music"><span class="mp-name">AI Music</span><span class="mp-desc">Suno, Udio, AI tools</span></a><a href="/categories/music-business"><span class="mp-name">Music Business</span><span class="mp-desc">Royalties, licensing, sync</span></a></div></div></div>
+        <div class="mnav-item"><button class="mnav-trigger" data-nav="gear">Gear <span class="caret">&#9662;</span></button><div class="mnav-panel"><div class="mp-col"><a href="/categories/daws"><span class="mp-name">DAWs</span><span class="mp-desc">Every major DAW</span></a><a href="/categories/plugins"><span class="mp-name">Plugins</span><span class="mp-desc">EQ, comp, reverb, synths</span></a><a href="/categories/hardware"><span class="mp-name">Hardware</span><span class="mp-desc">Interfaces, mics, monitors</span></a></div></div></div>
+        <a class="mnav-flat" href="/tools/" data-nav="tools">Tools</a>
+        <a class="mnav-flat" href="/bible/" data-nav="bible">The Bible</a>
+      </div>
+      <div class="mnav-right">
+        <button class="mnav-search" data-nav-search aria-label="Search"><svg width="17" height="17" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+        <a class="mnav-cta" href="https://theproducersbriefing.beehiiv.com">Sound Better &rarr;</a>
+        <label class="mnav-burger" for="mnav-toggle"><span></span><span></span><span></span></label>
+      </div>
+    </div>
+  </nav>
+  <div class="mnav-drawer">
+    <div class="drw-label">Articles</div>
+    <div class="drw-grid">
+      <a href="/categories/techniques" class="drw-card">Techniques</a><a href="/categories/reviews" class="drw-card">Reviews</a><a href="/categories/comparisons" class="drw-card">Comparisons</a><a href="/categories/breakdowns" class="drw-card">Breakdowns</a><a href="/categories/recreations" class="drw-card">Recreations</a><a href="/genres" class="drw-card">Genres</a><a href="/categories/ai-music" class="drw-card">AI Music</a><a href="/categories/music-business" class="drw-card">Music Business</a>
+    </div>
+    <div class="drw-label">Gear</div>
+    <div class="drw-grid">
+      <a href="/categories/daws" class="drw-card">DAWs</a><a href="/categories/plugins" class="drw-card">Plugins</a><a href="/categories/hardware" class="drw-card">Hardware</a>
+    </div>
+    <a href="/bible/" class="drw-feat drw-feat-bible">&#9670; The Producer's Bible</a>
+    <a href="/tools/" class="drw-feat">The Producer's Tools</a>
+    <a href="https://theproducersbriefing.beehiiv.com" class="drw-cta">Sound Better &rarr;</a>
+  </div>
+</div>
+
+
+<div class="container">
+  <nav class="breadcrumb" aria-label="Breadcrumb"><ol>
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="../categories/recreations.html">Recreations</a></li>
+    <li><span aria-current="page">French House Sound</span></li>
+  </ol></nav>
+</div>
+<nav class="toc-bar" aria-label="Section navigation"><div class="toc-bar-track" id="tocBarTrack"></div></nav>
+<main class="container" id="main-content">
+  <div class="article-layout">
+    <article aria-labelledby="articleTitle">
+      <header class="article-header">
+        <div class="article-tags"><span class="article-tag teal"><a href="../categories/recreations.html" style="color:inherit;text-decoration:none;">Recreations</a></span>
+<span class="article-tag teal"><a href="../categories/techniques/sound-design.html" style="color:inherit;text-decoration:none;">Sound Design</a></span></div>
+        <h1 id="articleTitle">How to Recreate the French House Sound</h1>
+        <div class="article-header-meta">
+          <div class="article-author"><div class="author-avatar" aria-hidden="true">MP</div><span class="author-name">The Music Production Wiki Team</span></div>
+          <span class="meta-divider"></span><span class="meta-item">Updated July 2026&nbsp;&middot;&nbsp;12 min read</span>
+        </div>
+      </header>
+      <div class="article-body">
+<p style="font-size:1.06rem;line-height:1.7;">You know it the instant a track lifts a dusty disco loop out of the murk and slowly opens it up until the whole room is bright and pumping &mdash; the sound of Daft Punk, Stardust and a generation of Paris producers. It feels like magic, but it is mostly one move done with taste: a looped sample or chord bed swept through a <strong>resonant filter that opens and closes to the groove</strong>, glued together by a hard sidechain pump. This guide builds the &ldquo;French touch&rdquo; sound from its four moves, shows you the figure that makes the filter click, and points you at the exact stock tools to do it &mdash; so you make the sound yourself instead of buying a construction kit.</p>
+
+<div class="sourcebox">
+  <div class="sourcebox-head">
+    <span class="sourcebox-kicker">What we actually know</span>
+    <span class="sourcebox-sub">This category cites its sources instead of guessing. Here is what is documented, what is community technique, and what is an honest estimate &mdash; before you read a word of method.</span>
+  </div>
+  <div class="sourcebox-row sourcebox-confirmed">
+    <div class="sourcebox-tag">Confirmed</div>
+    <div class="sourcebox-body">
+      <p>French house &mdash; also called <strong>French touch</strong> or <strong>filter house</strong> &mdash; is a Paris movement of the mid-1990s built on filtering and looping 1970s&ndash;80s disco and funk records. Its cornerstones are <strong>Daft Punk&rsquo;s <em>Homework</em> (1997)</strong> and <strong>Stardust&rsquo;s &ldquo;Music Sounds Better with You&rdquo;</strong> (released 20&nbsp;July 1998 on Bangalter&rsquo;s Roul&eacute; label, and built on a looped guitar lick from <strong>Chaka Khan&rsquo;s &ldquo;Fate&rdquo; (1981)</strong>). The signature &ldquo;pump&rdquo; came from heavy kick-triggered sidechain compression, classically the Alesis&nbsp;3630. Tempo sits around <strong>120&ndash;128&nbsp;BPM</strong>, four-on-the-floor.</p>
+      <span class="sourcebox-cite">Sources: artist and label retrospectives; release metadata; genre histories.</span>
+    </div>
+  </div>
+  <div class="sourcebox-row sourcebox-disputed">
+    <div class="sourcebox-tag">Community technique (not an official recipe)</div>
+    <div class="sourcebox-body">
+      <p>The taught method &mdash; a disco/funk loop or sawtooth chord bed run through an <strong>automated resonant low-pass</strong> that opens over 8&ndash;16 bars and wahs to the groove, over a hard kick sidechain, with saturation and glue compression, and a vocoder or talk-box vocal on top &mdash; is producer-forum and tutorial consensus. Period filters people reach for include the Sherman FilterBank and Mutronics Mutator; a phaser is a common garnish, not the core.</p>
+      <span class="sourcebox-cite">Sources: long-standing producer forums and tutorials; presented as technique, not fact.</span>
+    </div>
+  </div>
+  <div class="sourcebox-row sourcebox-inferred">
+    <div class="sourcebox-tag">Inferred (labelled)</div>
+    <div class="sourcebox-body">
+      <p>Exact cutoff curves, resonance amounts and phaser depth vary track to track and were never published as a standard. Where this guide gives a specific number, it is a <strong>defensible starting point</strong> for your own build, labelled as such &mdash; not a measurement of any one record.</p>
+    </div>
+  </div>
+</div>
+
+<h2 id="s-1">It&rsquo;s a filter, not a preset</h2>
+<p>If you take one thing from this guide, take this: in French house, the <strong>filter is the instrument</strong>. Everything else &mdash; the disco loop, the four-on-the-floor kick, the vocal hook &mdash; is a stage for a single, patient gesture: a resonant low-pass that starts almost shut, so the music sounds like it is playing in the next room, and then slowly opens until the whole spectrum floods back in. That build from muffled to brilliant is the tension-and-release the entire genre is built on.</p>
+<p>Producers who chase the sound with a preset always miss, because there is no preset for a gesture. What you are learning is <em>when</em> to open the filter and <em>how</em> fast &mdash; the same skill a <a href="how-to-recreate-the-303-acid-sound.html">303 acid line</a> demands, except here you are filtering a whole loop rather than a single squelchy note. Get the movement right and cheap sounds turn gold; get it wrong and the best samples in the world sit there flat.</p>
+
+<h2 id="s-2">Where the sound came from</h2>
+<p>French house was a small scene with an outsized shadow. In mid-1990s Paris, a cluster of producers started treating old records as raw material &mdash; looping a bar of disco or funk, then filtering it into something new. Daft Punk&rsquo;s <em>Homework</em> (1997) put the sound on the map, and a year later Thomas Bangalter, Alan Braxe and singer Benjamin Diamond cut &ldquo;Music Sounds Better with You&rdquo; as <strong>Stardust</strong> &mdash; a single built on four bars of a Chaka Khan record that became one of the best-selling dance tracks of 1998 and, for many, the definition of the style.</p>
+<p>The lineage matters because it tells you what the sound is <em>for</em>: joy, motion, nostalgia weaponised for a dancefloor. It is the same Paris orbit that produced the <a href="how-to-recreate-the-daft-punk-robot-voice.html">Daft Punk robot voice</a>, and it fed straight into later, rougher offshoots like the Ed Banger sound. When you build a French house track you are not copying a plugin &mdash; you are joining a specific tradition of filtered, pumping, disco-drunk house.</p>
+
+<h2 id="s-3">The four moves that make it French house</h2>
+<p>Strip the style to its mechanics and you get four moves, in order of importance. First, a <strong>looped source</strong> &mdash; a sampled disco/funk bar or a replayed sawtooth chord bed. Second, the <strong>resonant filter automation</strong> that opens and closes it to the groove; this is the one that does the work. Third, the <strong>sidechain pump</strong> &mdash; a hard kick-triggered duck that makes the whole loop breathe in time. Fourth, <strong>saturation and glue</strong> that fuse it into one warm, dense wall of sound. A vocoder or talk-box vocal is the classic flavour on top, and a phaser is an optional garnish.</p>
+<p>Notice what is <em>not</em> on that list: a specific synth, a specific sample, a magic plugin. The moves are cheap and stock; the taste is everything. The rest of this guide takes them one at a time, and three figures show you exactly what the filter, the reveal and the full chain look like.</p>
+
+<h2 id="s-4">The source: a disco loop or a saw bed</h2>
+<p>You start with something to filter, and you have two honest choices. The traditional route is to <strong>sample a bar</strong> of a 1970s&ndash;80s disco, funk or soul record &mdash; a guitar lick, a string stab, a Rhodes chord &mdash; and loop it. That is how the classics were made, and it carries the grit and swing of the original recording for free. The modern, clearance-safe route is to <strong>replay it yourself</strong>: stack detuned sawtooth waves into rich seventh and ninth chords, or play a funky guitar/Rhodes part, and treat that as your loop. If you want help building the harmony, our guide to <a href="chord-progressions-that-work.html">chord progressions that work</a> and <a href="best-synth-plugins.html">the best synth plugins</a> are good starting points.</p>
+<p>Whichever you pick, keep the loop short &mdash; one or two bars &mdash; and make sure it already grooves before you touch a filter. The filter reveals what is there; it cannot rescue a boring loop. This is the same lesson every genre from <a href="how-to-make-house-music.html">house</a> to <a href="how-to-make-tech-house.html">tech house</a> teaches: the loop is the song.</p>
+
+<h2 id="s-5">The filter is the whole trick</h2>
+<p>Here is the move that defines the genre. Put a <strong>resonant low-pass filter</strong> across your loop and automate its cutoff so it rides up and down with the groove. Two things are happening at once. Over the long arc &mdash; often 8 or 16 bars &mdash; the cutoff climbs from nearly closed to wide open, so the track blooms from muffled to brilliant across a phrase. Underneath that, faster rhythmic movement makes the loop &ldquo;wah&rdquo; on the beat. The figure below shows one bar of that motion: the magenta line is the cutoff, and the teal field beneath it is the spectrum that survives &mdash; everything under the line is audible, everything above is cut.</p>
+<figure class="diagram-wrap" id="fh-fig-filter" style="background:#080b0f;border:1px solid #1a2332;border-radius:14px;padding:16px 14px 12px;margin:26px 0;">
+<div class="fig-d"><svg viewBox="0 0 720 412" style="display:block;width:100%;height:auto;" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A resonant low-pass filter cutoff sweeping up and down over one bar; the spectrum below the moving cutoff line is passed, everything above is cut."><defs><linearGradient id="fh-pass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ec4899" stop-opacity="0.34"/><stop offset="0.55" stop-color="#ec4899" stop-opacity="0.13"/><stop offset="1" stop-color="#ec4899" stop-opacity="0.03"/></linearGradient><linearGradient id="fh-cut" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#080b0f" stop-opacity="0.0"/><stop offset="1" stop-color="#080b0f" stop-opacity="0.55"/></linearGradient><filter id="fh-glow" x="-20%" y="-40%" width="140%" height="180%"><feGaussianBlur stdDeviation="4.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><rect x="0" y="0" width="720" height="412" fill="#080b0f"/><text x="360.0" y="34" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="12.5" letter-spacing="3.2" fill="#ec4899">THE FRENCH TOUCH FILTER</text><text x="360.0" y="62" text-anchor="middle" font-family="Lora, Georgia, serif" font-size="23" font-style="italic" fill="#f0f4f8">One resonant cutoff, breathing over the bar</text><rect x="66" y="90" width="590" height="206" rx="10" fill="#0d1117" stroke="#212c3a" stroke-width="1.4"/><text x="54" y="300.0" text-anchor="end" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="11" fill="#566578">sub</text><line x1="66" y1="238.3" x2="656" y2="238.3" stroke="#28384a" stroke-width="1" stroke-dasharray="1 8" opacity="0.6"/><text x="54" y="242.3" text-anchor="end" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="11" fill="#566578">low</text><line x1="66" y1="182.7" x2="656" y2="182.7" stroke="#28384a" stroke-width="1" stroke-dasharray="1 8" opacity="0.6"/><text x="54" y="186.7" text-anchor="end" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="11" fill="#566578">mid</text><line x1="66" y1="131.2" x2="656" y2="131.2" stroke="#28384a" stroke-width="1" stroke-dasharray="1 8" opacity="0.6"/><text x="54" y="135.2" text-anchor="end" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="11" fill="#566578">high</text><text x="54" y="94.0" text-anchor="end" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="11" fill="#566578">air</text><line x1="66.0" y1="90" x2="66.0" y2="296" stroke="#212c3a" stroke-width="1.4" opacity="0.75"/><text x="73.0" y="318" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="12" fill="#8a9bb0">1</text><line x1="213.5" y1="90" x2="213.5" y2="296" stroke="#212c3a" stroke-width="1.4" opacity="0.75"/><text x="220.5" y="318" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="12" fill="#8a9bb0">2</text><line x1="361.0" y1="90" x2="361.0" y2="296" stroke="#212c3a" stroke-width="1.4" opacity="0.75"/><text x="368.0" y="318" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="12" fill="#8a9bb0">3</text><line x1="508.5" y1="90" x2="508.5" y2="296" stroke="#212c3a" stroke-width="1.4" opacity="0.75"/><text x="515.5" y="318" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="12" fill="#8a9bb0">4</text><line x1="656.0" y1="90" x2="656.0" y2="296" stroke="#212c3a" stroke-width="1" opacity="0.75"/><line x1="102.9" y1="288" x2="102.9" y2="296" stroke="#28384a" stroke-width="1" opacity="0.5"/><line x1="139.8" y1="288" x2="139.8" y2="296" stroke="#28384a" stroke-width="1" opacity="0.5"/><line x1="176.6" y1="288" x2="176.6" y2="296" stroke="#28384a" stroke-width="1" opacity="0.5"/><line x1="250.4" y1="288" x2="250.4" y2="296" stroke="#28384a" stroke-width="1" opacity="0.5"/><line x1="287.2" y1="288" x2="287.2" y2="296" stroke="#28384a" stroke-width="1" opacity="0.5"/><line x1="324.1" y1="288" x2="324.1" y2="296" stroke="#28384a" stroke-width="1" opacity="0.5"/><line x1="397.9" y1="288" x2="397.9" y2="296" stroke="#28384a" stroke-width="1" opacity="0.5"/><line x1="434.8" y1="288" x2="434.8" y2="296" stroke="#28384a" stroke-width="1" opacity="0.5"/><line x1="471.6" y1="288" x2="471.6" y2="296" stroke="#28384a" stroke-width="1" opacity="0.5"/><line x1="545.4" y1="288" x2="545.4" y2="296" stroke="#28384a" stroke-width="1" opacity="0.5"/><line x1="582.2" y1="288" x2="582.2" y2="296" stroke="#28384a" stroke-width="1" opacity="0.5"/><line x1="619.1" y1="288" x2="619.1" y2="296" stroke="#28384a" stroke-width="1" opacity="0.5"/><text x="652" y="318" text-anchor="end" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="11" fill="#566578">1 BAR</text><clipPath id="fh-clip"><rect x="66" y="90" width="590" height="206" rx="10"/></clipPath><g clip-path="url(#fh-clip)"><rect x="66" y="90" width="590" height="206" fill="url(#fh-cut)"/><path d="M66.0,238.3 C67.5,237.6 72.1,236.6 75.2,234.2 C78.3,231.9 81.4,227.6 84.4,224.3 C87.5,220.9 90.6,216.5 93.7,214.0 C96.7,211.4 99.8,209.3 102.9,208.9 C105.9,208.4 109.0,209.6 112.1,211.3 C115.2,213.0 118.2,216.5 121.3,219.0 C124.4,221.5 127.5,224.9 130.5,226.4 C133.6,228.0 136.7,228.9 139.8,228.1 C142.8,227.3 145.9,224.7 149.0,221.6 C152.0,218.5 155.1,213.5 158.2,209.4 C161.3,205.3 164.3,200.2 167.4,197.0 C170.5,193.7 173.6,191.0 176.6,189.9 C179.7,188.9 182.8,189.5 185.8,190.6 C188.9,191.7 192.0,194.7 195.1,196.7 C198.1,198.8 201.2,201.7 204.3,202.8 C207.4,203.9 210.4,204.4 213.5,203.3 C216.6,202.2 219.6,199.3 222.7,195.9 C225.8,192.6 228.9,187.4 231.9,183.1 C235.0,178.8 238.1,173.6 241.2,170.3 C244.2,166.9 247.3,164.2 250.4,163.1 C253.4,162.1 256.5,162.7 259.6,163.9 C262.7,165.2 265.7,168.2 268.8,170.5 C271.9,172.7 275.0,175.8 278.0,177.2 C281.1,178.5 284.2,179.3 287.2,178.5 C290.3,177.7 293.4,175.3 296.5,172.3 C299.5,169.3 302.6,164.6 305.7,160.8 C308.8,157.0 311.8,152.3 314.9,149.6 C318.0,146.8 321.1,144.6 324.1,144.2 C327.2,143.7 330.3,145.0 333.3,146.9 C336.4,148.8 339.5,152.6 342.6,155.6 C345.6,158.5 348.7,162.4 351.8,164.5 C354.9,166.6 357.9,168.3 361.0,168.3 C364.1,168.3 367.1,166.6 370.2,164.5 C373.3,162.4 376.4,158.5 379.4,155.6 C382.5,152.6 385.6,148.8 388.7,146.9 C391.7,145.0 394.8,143.7 397.9,144.2 C400.9,144.6 404.0,146.8 407.1,149.6 C410.2,152.3 413.2,157.0 416.3,160.8 C419.4,164.6 422.5,169.3 425.5,172.3 C428.6,175.3 431.7,177.7 434.8,178.5 C437.8,179.3 440.9,178.5 444.0,177.2 C447.0,175.8 450.1,172.7 453.2,170.5 C456.3,168.2 459.3,165.2 462.4,163.9 C465.5,162.7 468.6,162.1 471.6,163.1 C474.7,164.2 477.8,166.9 480.8,170.3 C483.9,173.6 487.0,178.8 490.1,183.1 C493.1,187.4 496.2,192.6 499.3,195.9 C502.4,199.3 505.4,202.2 508.5,203.3 C511.6,204.4 514.6,203.9 517.7,202.8 C520.8,201.7 523.9,198.8 526.9,196.7 C530.0,194.7 533.1,191.7 536.2,190.6 C539.2,189.5 542.3,188.9 545.4,189.9 C548.4,191.0 551.5,193.7 554.6,197.0 C557.7,200.2 560.7,205.3 563.8,209.4 C566.9,213.5 570.0,218.5 573.0,221.6 C576.1,224.7 579.2,227.3 582.2,228.1 C585.3,228.9 588.4,228.0 591.5,226.4 C594.5,224.9 597.6,221.5 600.7,219.0 C603.8,216.5 606.8,213.0 609.9,211.3 C613.0,209.6 616.1,208.4 619.1,208.9 C622.2,209.3 625.3,211.4 628.3,214.0 C631.4,216.5 634.5,220.9 637.6,224.3 C640.6,227.6 643.7,231.9 646.8,234.2 C649.9,236.6 654.5,237.6 656.0,238.3 L656.0,296 L66.0,296 Z" fill="url(#fh-pass)"/></g><text x="243" y="280" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="11" letter-spacing="1.5" fill="#5eead4" opacity="0.85">SPECTRUM PASSING</text><path d="M66.0,238.3 C67.5,237.6 72.1,236.6 75.2,234.2 C78.3,231.9 81.4,227.6 84.4,224.3 C87.5,220.9 90.6,216.5 93.7,214.0 C96.7,211.4 99.8,209.3 102.9,208.9 C105.9,208.4 109.0,209.6 112.1,211.3 C115.2,213.0 118.2,216.5 121.3,219.0 C124.4,221.5 127.5,224.9 130.5,226.4 C133.6,228.0 136.7,228.9 139.8,228.1 C142.8,227.3 145.9,224.7 149.0,221.6 C152.0,218.5 155.1,213.5 158.2,209.4 C161.3,205.3 164.3,200.2 167.4,197.0 C170.5,193.7 173.6,191.0 176.6,189.9 C179.7,188.9 182.8,189.5 185.8,190.6 C188.9,191.7 192.0,194.7 195.1,196.7 C198.1,198.8 201.2,201.7 204.3,202.8 C207.4,203.9 210.4,204.4 213.5,203.3 C216.6,202.2 219.6,199.3 222.7,195.9 C225.8,192.6 228.9,187.4 231.9,183.1 C235.0,178.8 238.1,173.6 241.2,170.3 C244.2,166.9 247.3,164.2 250.4,163.1 C253.4,162.1 256.5,162.7 259.6,163.9 C262.7,165.2 265.7,168.2 268.8,170.5 C271.9,172.7 275.0,175.8 278.0,177.2 C281.1,178.5 284.2,179.3 287.2,178.5 C290.3,177.7 293.4,175.3 296.5,172.3 C299.5,169.3 302.6,164.6 305.7,160.8 C308.8,157.0 311.8,152.3 314.9,149.6 C318.0,146.8 321.1,144.6 324.1,144.2 C327.2,143.7 330.3,145.0 333.3,146.9 C336.4,148.8 339.5,152.6 342.6,155.6 C345.6,158.5 348.7,162.4 351.8,164.5 C354.9,166.6 357.9,168.3 361.0,168.3 C364.1,168.3 367.1,166.6 370.2,164.5 C373.3,162.4 376.4,158.5 379.4,155.6 C382.5,152.6 385.6,148.8 388.7,146.9 C391.7,145.0 394.8,143.7 397.9,144.2 C400.9,144.6 404.0,146.8 407.1,149.6 C410.2,152.3 413.2,157.0 416.3,160.8 C419.4,164.6 422.5,169.3 425.5,172.3 C428.6,175.3 431.7,177.7 434.8,178.5 C437.8,179.3 440.9,178.5 444.0,177.2 C447.0,175.8 450.1,172.7 453.2,170.5 C456.3,168.2 459.3,165.2 462.4,163.9 C465.5,162.7 468.6,162.1 471.6,163.1 C474.7,164.2 477.8,166.9 480.8,170.3 C483.9,173.6 487.0,178.8 490.1,183.1 C493.1,187.4 496.2,192.6 499.3,195.9 C502.4,199.3 505.4,202.2 508.5,203.3 C511.6,204.4 514.6,203.9 517.7,202.8 C520.8,201.7 523.9,198.8 526.9,196.7 C530.0,194.7 533.1,191.7 536.2,190.6 C539.2,189.5 542.3,188.9 545.4,189.9 C548.4,191.0 551.5,193.7 554.6,197.0 C557.7,200.2 560.7,205.3 563.8,209.4 C566.9,213.5 570.0,218.5 573.0,221.6 C576.1,224.7 579.2,227.3 582.2,228.1 C585.3,228.9 588.4,228.0 591.5,226.4 C594.5,224.9 597.6,221.5 600.7,219.0 C603.8,216.5 606.8,213.0 609.9,211.3 C613.0,209.6 616.1,208.4 619.1,208.9 C622.2,209.3 625.3,211.4 628.3,214.0 C631.4,216.5 634.5,220.9 637.6,224.3 C640.6,227.6 643.7,231.9 646.8,234.2 C649.9,236.6 654.5,237.6 656.0,238.3" fill="none" stroke="#ec4899" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" filter="url(#fh-glow)"/><path d="M66.0,238.3 C67.5,237.6 72.1,236.6 75.2,234.2 C78.3,231.9 81.4,227.6 84.4,224.3 C87.5,220.9 90.6,216.5 93.7,214.0 C96.7,211.4 99.8,209.3 102.9,208.9 C105.9,208.4 109.0,209.6 112.1,211.3 C115.2,213.0 118.2,216.5 121.3,219.0 C124.4,221.5 127.5,224.9 130.5,226.4 C133.6,228.0 136.7,228.9 139.8,228.1 C142.8,227.3 145.9,224.7 149.0,221.6 C152.0,218.5 155.1,213.5 158.2,209.4 C161.3,205.3 164.3,200.2 167.4,197.0 C170.5,193.7 173.6,191.0 176.6,189.9 C179.7,188.9 182.8,189.5 185.8,190.6 C188.9,191.7 192.0,194.7 195.1,196.7 C198.1,198.8 201.2,201.7 204.3,202.8 C207.4,203.9 210.4,204.4 213.5,203.3 C216.6,202.2 219.6,199.3 222.7,195.9 C225.8,192.6 228.9,187.4 231.9,183.1 C235.0,178.8 238.1,173.6 241.2,170.3 C244.2,166.9 247.3,164.2 250.4,163.1 C253.4,162.1 256.5,162.7 259.6,163.9 C262.7,165.2 265.7,168.2 268.8,170.5 C271.9,172.7 275.0,175.8 278.0,177.2 C281.1,178.5 284.2,179.3 287.2,178.5 C290.3,177.7 293.4,175.3 296.5,172.3 C299.5,169.3 302.6,164.6 305.7,160.8 C308.8,157.0 311.8,152.3 314.9,149.6 C318.0,146.8 321.1,144.6 324.1,144.2 C327.2,143.7 330.3,145.0 333.3,146.9 C336.4,148.8 339.5,152.6 342.6,155.6 C345.6,158.5 348.7,162.4 351.8,164.5 C354.9,166.6 357.9,168.3 361.0,168.3 C364.1,168.3 367.1,166.6 370.2,164.5 C373.3,162.4 376.4,158.5 379.4,155.6 C382.5,152.6 385.6,148.8 388.7,146.9 C391.7,145.0 394.8,143.7 397.9,144.2 C400.9,144.6 404.0,146.8 407.1,149.6 C410.2,152.3 413.2,157.0 416.3,160.8 C419.4,164.6 422.5,169.3 425.5,172.3 C428.6,175.3 431.7,177.7 434.8,178.5 C437.8,179.3 440.9,178.5 444.0,177.2 C447.0,175.8 450.1,172.7 453.2,170.5 C456.3,168.2 459.3,165.2 462.4,163.9 C465.5,162.7 468.6,162.1 471.6,163.1 C474.7,164.2 477.8,166.9 480.8,170.3 C483.9,173.6 487.0,178.8 490.1,183.1 C493.1,187.4 496.2,192.6 499.3,195.9 C502.4,199.3 505.4,202.2 508.5,203.3 C511.6,204.4 514.6,203.9 517.7,202.8 C520.8,201.7 523.9,198.8 526.9,196.7 C530.0,194.7 533.1,191.7 536.2,190.6 C539.2,189.5 542.3,188.9 545.4,189.9 C548.4,191.0 551.5,193.7 554.6,197.0 C557.7,200.2 560.7,205.3 563.8,209.4 C566.9,213.5 570.0,218.5 573.0,221.6 C576.1,224.7 579.2,227.3 582.2,228.1 C585.3,228.9 588.4,228.0 591.5,226.4 C594.5,224.9 597.6,221.5 600.7,219.0 C603.8,216.5 606.8,213.0 609.9,211.3 C613.0,209.6 616.1,208.4 619.1,208.9 C622.2,209.3 625.3,211.4 628.3,214.0 C631.4,216.5 634.5,220.9 637.6,224.3 C640.6,227.6 643.7,231.9 646.8,234.2 C649.9,236.6 654.5,237.6 656.0,238.3" fill="none" stroke="#f9a8d4" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/><line x1="325.6" y1="132.1" x2="325.6" y2="140.1" stroke="#ec4899" stroke-width="1.4"/><circle cx="325.6" cy="144.1" r="3.5" fill="#f9a8d4"/><circle cx="136.8" cy="228.4" r="3.5" fill="#f9a8d4"/><rect x="273.0" y="102.1" width="105.2" height="30" rx="6" fill="#131920" stroke="#9d2c66" stroke-width="1"/><text x="325.6" y="117.1" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="12.5" fill="#f9a8d4">OPEN</text><text x="325.6" y="130.1" text-anchor="middle" font-family="Lora, Georgia, serif" font-size="10.5" fill="#8a9bb0">full spectrum</text><rect x="84.2" y="244.4" width="105.2" height="30" rx="6" fill="#131920" stroke="#9d2c66" stroke-width="1"/><text x="136.8" y="259.4" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="12.5" fill="#f9a8d4">CLOSED</text><text x="136.8" y="272.4" text-anchor="middle" font-family="Lora, Georgia, serif" font-size="10.5" fill="#8a9bb0">muffled, dark</text><circle cx="455.4" cy="168.6" r="3.5" fill="#f9a8d4"/><rect x="487.2" y="98.0" width="162.8" height="30" rx="6" fill="#131920" stroke="#9d2c66" stroke-width="1"/><text x="568.6" y="113.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="12.5" fill="#f9a8d4">+ resonance</text><text x="568.6" y="126.0" text-anchor="middle" font-family="Lora, Georgia, serif" font-size="10.5" fill="#8a9bb0">emphasis at the cutoff</text><text transform="translate(24,193.0) rotate(-90)" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="11.5" letter-spacing="2" fill="#8a9bb0">CUTOFF FREQ</text><text x="360.0" y="392" text-anchor="middle" font-family="Lora, Georgia, serif" font-size="12" font-style="italic" fill="#566578">Illustrative — the rhythmic cutoff sweep is the French-house signature; exact automation varies by track.</text></svg></div>
+<div class="fig-m"><svg viewBox='0 0 360 466' style='display:block;width:100%;height:auto;' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='A resonant low-pass cutoff breathing up and down over one bar; the teal spectrum below the moving magenta cutoff line is what passes through.'><defs><linearGradient id='hm2-pass' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#00d4a8' stop-opacity='0.50'/><stop offset='0.5' stop-color='#00d4a8' stop-opacity='0.24'/><stop offset='1' stop-color='#00d4a8' stop-opacity='0.06'/></linearGradient><filter id='hm2-glow' x='-20%' y='-40%' width='140%' height='180%'><feGaussianBlur stdDeviation='3.2' result='b'/><feMerge><feMergeNode in='b'/><feMergeNode in='SourceGraphic'/></feMerge></filter><clipPath id='hm2-clip'><rect x='40' y='104' width='290' height='244' rx='10'/></clipPath></defs><rect width='360' height='466' fill='#080b0f'/><text x='180.0' y='34.0' text-anchor='middle' font-family="'JetBrains Mono', ui-monospace, monospace" font-size='11.5' fill='#ec4899' letter-spacing='2.4'>THE FRENCH TOUCH FILTER</text><text x='180.0' y='64.0' text-anchor='middle' font-family="Lora, Georgia, serif" font-size='17' fill='#f0f4f8' font-style='italic'>One cutoff, breathing over the bar</text><text x='180.0' y='88.0' text-anchor='middle' font-family="Lora, Georgia, serif" font-size='11.5' fill='#8a9bb0' font-style='italic'>teal = what passes  ·  magenta = the cutoff</text><rect x='40' y='104' width='290' height='244' rx='10' fill='#0d1117' stroke='#212c3a' stroke-width='1.3'/><text transform='translate(20,226.0) rotate(-90)' text-anchor='middle' font-family="'JetBrains Mono', ui-monospace, monospace" font-size='11' letter-spacing='2' fill='#8a9bb0'>CUTOFF ↑</text><line x1='40.0' y1='104' x2='40.0' y2='348' stroke='#212c3a' stroke-width='1' opacity='0.6'/><text x='76.2' y='368.0' text-anchor='middle' font-family="'JetBrains Mono', ui-monospace, monospace" font-size='11' fill='#566578'>1</text><line x1='112.5' y1='104' x2='112.5' y2='348' stroke='#212c3a' stroke-width='1' opacity='0.6'/><text x='148.8' y='368.0' text-anchor='middle' font-family="'JetBrains Mono', ui-monospace, monospace" font-size='11' fill='#566578'>2</text><line x1='185.0' y1='104' x2='185.0' y2='348' stroke='#212c3a' stroke-width='1' opacity='0.6'/><text x='221.2' y='368.0' text-anchor='middle' font-family="'JetBrains Mono', ui-monospace, monospace" font-size='11' fill='#566578'>3</text><line x1='257.5' y1='104' x2='257.5' y2='348' stroke='#212c3a' stroke-width='1' opacity='0.6'/><text x='293.8' y='368.0' text-anchor='middle' font-family="'JetBrains Mono', ui-monospace, monospace" font-size='11' fill='#566578'>4</text><line x1='330.0' y1='104' x2='330.0' y2='348' stroke='#212c3a' stroke-width='1' opacity='0.6'/><g clip-path='url(#hm2-clip)'><path d='M40.0,310.7 C41.5,310.7 41.5,310.5 43.0,310.5 C44.5,310.5 44.5,310.0 46.0,310.0 C47.6,310.0 47.6,309.1 49.1,309.1 C50.6,309.1 50.6,307.9 52.1,307.9 C53.6,307.9 53.6,306.3 55.1,306.3 C56.6,306.3 56.6,304.4 58.1,304.4 C59.6,304.4 59.6,302.2 61.1,302.2 C62.7,302.2 62.7,299.6 64.2,299.6 C65.7,299.6 65.7,296.8 67.2,296.8 C68.7,296.8 68.7,293.6 70.2,293.6 C71.7,293.6 71.7,290.2 73.2,290.2 C74.7,290.2 74.7,286.5 76.2,286.5 C77.8,286.5 77.8,282.5 79.3,282.5 C80.8,282.5 80.8,278.4 82.3,278.4 C83.8,278.4 83.8,274.0 85.3,274.0 C86.8,274.0 86.8,269.4 88.3,269.4 C89.8,269.4 89.8,264.6 91.4,264.6 C92.9,264.6 92.9,259.7 94.4,259.7 C95.9,259.7 95.9,254.6 97.4,254.6 C98.9,254.6 98.9,249.4 100.4,249.4 C101.9,249.4 101.9,244.1 103.4,244.1 C104.9,244.1 104.9,238.8 106.5,238.8 C108.0,238.8 108.0,233.4 109.5,233.4 C111.0,233.4 111.0,228.0 112.5,228.0 C114.0,228.0 114.0,222.6 115.5,222.6 C117.0,222.6 117.0,217.2 118.5,217.2 C120.1,217.2 120.1,211.9 121.6,211.9 C123.1,211.9 123.1,206.6 124.6,206.6 C126.1,206.6 126.1,201.4 127.6,201.4 C129.1,201.4 129.1,196.3 130.6,196.3 C132.1,196.3 132.1,191.4 133.6,191.4 C135.2,191.4 135.2,186.6 136.7,186.6 C138.2,186.6 138.2,182.0 139.7,182.0 C141.2,182.0 141.2,177.6 142.7,177.6 C144.2,177.6 144.2,173.5 145.7,173.5 C147.2,173.5 147.2,169.5 148.8,169.5 C150.3,169.5 150.3,165.8 151.8,165.8 C153.3,165.8 153.3,162.4 154.8,162.4 C156.3,162.4 156.3,159.2 157.8,159.2 C159.3,159.2 159.3,156.4 160.8,156.4 C162.3,156.4 162.3,153.8 163.9,153.8 C165.4,153.8 165.4,151.6 166.9,151.6 C168.4,151.6 168.4,149.7 169.9,149.7 C171.4,149.7 171.4,148.1 172.9,148.1 C174.4,148.1 174.4,146.9 175.9,146.9 C177.4,146.9 177.4,146.0 179.0,146.0 C180.5,146.0 180.5,145.5 182.0,145.5 C183.5,145.5 183.5,145.3 185.0,145.3 C186.5,145.3 186.5,145.5 188.0,145.5 C189.5,145.5 189.5,146.0 191.0,146.0 C192.6,146.0 192.6,146.9 194.1,146.9 C195.6,146.9 195.6,148.1 197.1,148.1 C198.6,148.1 198.6,149.7 200.1,149.7 C201.6,149.7 201.6,151.6 203.1,151.6 C204.6,151.6 204.6,153.8 206.1,153.8 C207.7,153.8 207.7,156.4 209.2,156.4 C210.7,156.4 210.7,159.2 212.2,159.2 C213.7,159.2 213.7,162.4 215.2,162.4 C216.7,162.4 216.7,165.8 218.2,165.8 C219.7,165.8 219.7,169.5 221.2,169.5 C222.8,169.5 222.8,173.5 224.3,173.5 C225.8,173.5 225.8,177.6 227.3,177.6 C228.8,177.6 228.8,182.0 230.3,182.0 C231.8,182.0 231.8,186.6 233.3,186.6 C234.8,186.6 234.8,191.4 236.4,191.4 C237.9,191.4 237.9,196.3 239.4,196.3 C240.9,196.3 240.9,201.4 242.4,201.4 C243.9,201.4 243.9,206.6 245.4,206.6 C246.9,206.6 246.9,211.9 248.4,211.9 C249.9,211.9 249.9,217.2 251.5,217.2 C253.0,217.2 253.0,222.6 254.5,222.6 C256.0,222.6 256.0,228.0 257.5,228.0 C259.0,228.0 259.0,233.4 260.5,233.4 C262.0,233.4 262.0,238.8 263.5,238.8 C265.1,238.8 265.1,244.1 266.6,244.1 C268.1,244.1 268.1,249.4 269.6,249.4 C271.1,249.4 271.1,254.6 272.6,254.6 C274.1,254.6 274.1,259.7 275.6,259.7 C277.1,259.7 277.1,264.6 278.6,264.6 C280.2,264.6 280.2,269.4 281.7,269.4 C283.2,269.4 283.2,274.0 284.7,274.0 C286.2,274.0 286.2,278.4 287.7,278.4 C289.2,278.4 289.2,282.5 290.7,282.5 C292.2,282.5 292.2,286.5 293.8,286.5 C295.3,286.5 295.3,290.2 296.8,290.2 C298.3,290.2 298.3,293.6 299.8,293.6 C301.3,293.6 301.3,296.8 302.8,296.8 C304.3,296.8 304.3,299.6 305.8,299.6 C307.3,299.6 307.3,302.2 308.9,302.2 C310.4,302.2 310.4,304.4 311.9,304.4 C313.4,304.4 313.4,306.3 314.9,306.3 C316.4,306.3 316.4,307.9 317.9,307.9 C319.4,307.9 319.4,309.1 320.9,309.1 C322.4,309.1 322.4,310.0 324.0,310.0 C325.5,310.0 325.5,310.5 327.0,310.5 C328.5,310.5 328.5,310.7 330.0,310.7 L330.0,348.0 L40.0,348.0 Z' fill='url(#hm2-pass)'/><line x1='52.1' y1='310.9' x2='52.1' y2='348.0' stroke='#00d4a8' stroke-width='1' opacity='0.15'/><line x1='64.2' y1='302.6' x2='64.2' y2='348.0' stroke='#00d4a8' stroke-width='1' opacity='0.15'/><line x1='76.2' y1='289.5' x2='76.2' y2='348.0' stroke='#00d4a8' stroke-width='1' opacity='0.15'/><line x1='88.3' y1='272.4' x2='88.3' y2='348.0' stroke='#00d4a8' stroke-width='1' opacity='0.15'/><line x1='100.4' y1='252.4' x2='100.4' y2='348.0' stroke='#00d4a8' stroke-width='1' opacity='0.15'/><line x1='112.5' y1='231.0' x2='112.5' y2='348.0' stroke='#00d4a8' stroke-width='1' opacity='0.15'/><line x1='124.6' y1='209.6' x2='124.6' y2='348.0' stroke='#00d4a8' stroke-width='1' opacity='0.15'/><line x1='136.7' y1='189.6' x2='136.7' y2='348.0' stroke='#00d4a8' stroke-width='1' opacity='0.15'/><line x1='148.8' y1='172.5' x2='148.8' y2='348.0' stroke='#00d4a8' stroke-width='1' opacity='0.15'/><line x1='160.8' y1='159.4' x2='160.8' y2='348.0' stroke='#00d4a8' stroke-width='1' opacity='0.15'/><line x1='172.9' y1='151.1' x2='172.9' y2='348.0' stroke='#00d4a8' stroke-width='1' opacity='0.15'/><line x1='185.0' y1='148.3' x2='185.0' y2='348.0' stroke='#00d4a8' stroke-width='1' opacity='0.15'/><line x1='197.1' y1='151.1' x2='197.1' y2='348.0' stroke='#00d4a8' stroke-width='1' opacity='0.15'/><line x1='209.2' y1='159.4' x2='209.2' y2='348.0' stroke='#00d4a8' stroke-width='1' opacity='0.15'/><line x1='221.2' y1='172.5' x2='221.2' y2='348.0' stroke='#00d4a8' stroke-width='1' opacity='0.15'/><line x1='233.3' y1='189.6' x2='233.3' y2='348.0' stroke='#00d4a8' stroke-width='1' opacity='0.15'/><line x1='245.4' y1='209.6' x2='245.4' y2='348.0' stroke='#00d4a8' stroke-width='1' opacity='0.15'/><line x1='257.5' y1='231.0' x2='257.5' y2='348.0' stroke='#00d4a8' stroke-width='1' opacity='0.15'/><line x1='269.6' y1='252.4' x2='269.6' y2='348.0' stroke='#00d4a8' stroke-width='1' opacity='0.15'/><line x1='281.7' y1='272.4' x2='281.7' y2='348.0' stroke='#00d4a8' stroke-width='1' opacity='0.15'/><line x1='293.8' y1='289.5' x2='293.8' y2='348.0' stroke='#00d4a8' stroke-width='1' opacity='0.15'/><line x1='305.8' y1='302.6' x2='305.8' y2='348.0' stroke='#00d4a8' stroke-width='1' opacity='0.15'/><line x1='317.9' y1='310.9' x2='317.9' y2='348.0' stroke='#00d4a8' stroke-width='1' opacity='0.15'/><path d='M40.0,310.7 C41.5,310.7 41.5,310.5 43.0,310.5 C44.5,310.5 44.5,310.0 46.0,310.0 C47.6,310.0 47.6,309.1 49.1,309.1 C50.6,309.1 50.6,307.9 52.1,307.9 C53.6,307.9 53.6,306.3 55.1,306.3 C56.6,306.3 56.6,304.4 58.1,304.4 C59.6,304.4 59.6,302.2 61.1,302.2 C62.7,302.2 62.7,299.6 64.2,299.6 C65.7,299.6 65.7,296.8 67.2,296.8 C68.7,296.8 68.7,293.6 70.2,293.6 C71.7,293.6 71.7,290.2 73.2,290.2 C74.7,290.2 74.7,286.5 76.2,286.5 C77.8,286.5 77.8,282.5 79.3,282.5 C80.8,282.5 80.8,278.4 82.3,278.4 C83.8,278.4 83.8,274.0 85.3,274.0 C86.8,274.0 86.8,269.4 88.3,269.4 C89.8,269.4 89.8,264.6 91.4,264.6 C92.9,264.6 92.9,259.7 94.4,259.7 C95.9,259.7 95.9,254.6 97.4,254.6 C98.9,254.6 98.9,249.4 100.4,249.4 C101.9,249.4 101.9,244.1 103.4,244.1 C104.9,244.1 104.9,238.8 106.5,238.8 C108.0,238.8 108.0,233.4 109.5,233.4 C111.0,233.4 111.0,228.0 112.5,228.0 C114.0,228.0 114.0,222.6 115.5,222.6 C117.0,222.6 117.0,217.2 118.5,217.2 C120.1,217.2 120.1,211.9 121.6,211.9 C123.1,211.9 123.1,206.6 124.6,206.6 C126.1,206.6 126.1,201.4 127.6,201.4 C129.1,201.4 129.1,196.3 130.6,196.3 C132.1,196.3 132.1,191.4 133.6,191.4 C135.2,191.4 135.2,186.6 136.7,186.6 C138.2,186.6 138.2,182.0 139.7,182.0 C141.2,182.0 141.2,177.6 142.7,177.6 C144.2,177.6 144.2,173.5 145.7,173.5 C147.2,173.5 147.2,169.5 148.8,169.5 C150.3,169.5 150.3,165.8 151.8,165.8 C153.3,165.8 153.3,162.4 154.8,162.4 C156.3,162.4 156.3,159.2 157.8,159.2 C159.3,159.2 159.3,156.4 160.8,156.4 C162.3,156.4 162.3,153.8 163.9,153.8 C165.4,153.8 165.4,151.6 166.9,151.6 C168.4,151.6 168.4,149.7 169.9,149.7 C171.4,149.7 171.4,148.1 172.9,148.1 C174.4,148.1 174.4,146.9 175.9,146.9 C177.4,146.9 177.4,146.0 179.0,146.0 C180.5,146.0 180.5,145.5 182.0,145.5 C183.5,145.5 183.5,145.3 185.0,145.3 C186.5,145.3 186.5,145.5 188.0,145.5 C189.5,145.5 189.5,146.0 191.0,146.0 C192.6,146.0 192.6,146.9 194.1,146.9 C195.6,146.9 195.6,148.1 197.1,148.1 C198.6,148.1 198.6,149.7 200.1,149.7 C201.6,149.7 201.6,151.6 203.1,151.6 C204.6,151.6 204.6,153.8 206.1,153.8 C207.7,153.8 207.7,156.4 209.2,156.4 C210.7,156.4 210.7,159.2 212.2,159.2 C213.7,159.2 213.7,162.4 215.2,162.4 C216.7,162.4 216.7,165.8 218.2,165.8 C219.7,165.8 219.7,169.5 221.2,169.5 C222.8,169.5 222.8,173.5 224.3,173.5 C225.8,173.5 225.8,177.6 227.3,177.6 C228.8,177.6 228.8,182.0 230.3,182.0 C231.8,182.0 231.8,186.6 233.3,186.6 C234.8,186.6 234.8,191.4 236.4,191.4 C237.9,191.4 237.9,196.3 239.4,196.3 C240.9,196.3 240.9,201.4 242.4,201.4 C243.9,201.4 243.9,206.6 245.4,206.6 C246.9,206.6 246.9,211.9 248.4,211.9 C249.9,211.9 249.9,217.2 251.5,217.2 C253.0,217.2 253.0,222.6 254.5,222.6 C256.0,222.6 256.0,228.0 257.5,228.0 C259.0,228.0 259.0,233.4 260.5,233.4 C262.0,233.4 262.0,238.8 263.5,238.8 C265.1,238.8 265.1,244.1 266.6,244.1 C268.1,244.1 268.1,249.4 269.6,249.4 C271.1,249.4 271.1,254.6 272.6,254.6 C274.1,254.6 274.1,259.7 275.6,259.7 C277.1,259.7 277.1,264.6 278.6,264.6 C280.2,264.6 280.2,269.4 281.7,269.4 C283.2,269.4 283.2,274.0 284.7,274.0 C286.2,274.0 286.2,278.4 287.7,278.4 C289.2,278.4 289.2,282.5 290.7,282.5 C292.2,282.5 292.2,286.5 293.8,286.5 C295.3,286.5 295.3,290.2 296.8,290.2 C298.3,290.2 298.3,293.6 299.8,293.6 C301.3,293.6 301.3,296.8 302.8,296.8 C304.3,296.8 304.3,299.6 305.8,299.6 C307.3,299.6 307.3,302.2 308.9,302.2 C310.4,302.2 310.4,304.4 311.9,304.4 C313.4,304.4 313.4,306.3 314.9,306.3 C316.4,306.3 316.4,307.9 317.9,307.9 C319.4,307.9 319.4,309.1 320.9,309.1 C322.4,309.1 322.4,310.0 324.0,310.0 C325.5,310.0 325.5,310.5 327.0,310.5 C328.5,310.5 328.5,310.7 330.0,310.7' fill='none' stroke='#5eead4' stroke-width='1.4' opacity='0.55' transform='translate(0,3)'/><text x='185.0' y='334.0' text-anchor='middle' font-family="'JetBrains Mono', ui-monospace, monospace" font-size='10.5' fill='#5eead4' letter-spacing='1.2' opacity='0.9'>SPECTRUM PASSING</text></g><path d='M40.0,310.7 C41.5,310.7 41.5,310.5 43.0,310.5 C44.5,310.5 44.5,310.0 46.0,310.0 C47.6,310.0 47.6,309.1 49.1,309.1 C50.6,309.1 50.6,307.9 52.1,307.9 C53.6,307.9 53.6,306.3 55.1,306.3 C56.6,306.3 56.6,304.4 58.1,304.4 C59.6,304.4 59.6,302.2 61.1,302.2 C62.7,302.2 62.7,299.6 64.2,299.6 C65.7,299.6 65.7,296.8 67.2,296.8 C68.7,296.8 68.7,293.6 70.2,293.6 C71.7,293.6 71.7,290.2 73.2,290.2 C74.7,290.2 74.7,286.5 76.2,286.5 C77.8,286.5 77.8,282.5 79.3,282.5 C80.8,282.5 80.8,278.4 82.3,278.4 C83.8,278.4 83.8,274.0 85.3,274.0 C86.8,274.0 86.8,269.4 88.3,269.4 C89.8,269.4 89.8,264.6 91.4,264.6 C92.9,264.6 92.9,259.7 94.4,259.7 C95.9,259.7 95.9,254.6 97.4,254.6 C98.9,254.6 98.9,249.4 100.4,249.4 C101.9,249.4 101.9,244.1 103.4,244.1 C104.9,244.1 104.9,238.8 106.5,238.8 C108.0,238.8 108.0,233.4 109.5,233.4 C111.0,233.4 111.0,228.0 112.5,228.0 C114.0,228.0 114.0,222.6 115.5,222.6 C117.0,222.6 117.0,217.2 118.5,217.2 C120.1,217.2 120.1,211.9 121.6,211.9 C123.1,211.9 123.1,206.6 124.6,206.6 C126.1,206.6 126.1,201.4 127.6,201.4 C129.1,201.4 129.1,196.3 130.6,196.3 C132.1,196.3 132.1,191.4 133.6,191.4 C135.2,191.4 135.2,186.6 136.7,186.6 C138.2,186.6 138.2,182.0 139.7,182.0 C141.2,182.0 141.2,177.6 142.7,177.6 C144.2,177.6 144.2,173.5 145.7,173.5 C147.2,173.5 147.2,169.5 148.8,169.5 C150.3,169.5 150.3,165.8 151.8,165.8 C153.3,165.8 153.3,162.4 154.8,162.4 C156.3,162.4 156.3,159.2 157.8,159.2 C159.3,159.2 159.3,156.4 160.8,156.4 C162.3,156.4 162.3,153.8 163.9,153.8 C165.4,153.8 165.4,151.6 166.9,151.6 C168.4,151.6 168.4,149.7 169.9,149.7 C171.4,149.7 171.4,148.1 172.9,148.1 C174.4,148.1 174.4,146.9 175.9,146.9 C177.4,146.9 177.4,146.0 179.0,146.0 C180.5,146.0 180.5,145.5 182.0,145.5 C183.5,145.5 183.5,145.3 185.0,145.3 C186.5,145.3 186.5,145.5 188.0,145.5 C189.5,145.5 189.5,146.0 191.0,146.0 C192.6,146.0 192.6,146.9 194.1,146.9 C195.6,146.9 195.6,148.1 197.1,148.1 C198.6,148.1 198.6,149.7 200.1,149.7 C201.6,149.7 201.6,151.6 203.1,151.6 C204.6,151.6 204.6,153.8 206.1,153.8 C207.7,153.8 207.7,156.4 209.2,156.4 C210.7,156.4 210.7,159.2 212.2,159.2 C213.7,159.2 213.7,162.4 215.2,162.4 C216.7,162.4 216.7,165.8 218.2,165.8 C219.7,165.8 219.7,169.5 221.2,169.5 C222.8,169.5 222.8,173.5 224.3,173.5 C225.8,173.5 225.8,177.6 227.3,177.6 C228.8,177.6 228.8,182.0 230.3,182.0 C231.8,182.0 231.8,186.6 233.3,186.6 C234.8,186.6 234.8,191.4 236.4,191.4 C237.9,191.4 237.9,196.3 239.4,196.3 C240.9,196.3 240.9,201.4 242.4,201.4 C243.9,201.4 243.9,206.6 245.4,206.6 C246.9,206.6 246.9,211.9 248.4,211.9 C249.9,211.9 249.9,217.2 251.5,217.2 C253.0,217.2 253.0,222.6 254.5,222.6 C256.0,222.6 256.0,228.0 257.5,228.0 C259.0,228.0 259.0,233.4 260.5,233.4 C262.0,233.4 262.0,238.8 263.5,238.8 C265.1,238.8 265.1,244.1 266.6,244.1 C268.1,244.1 268.1,249.4 269.6,249.4 C271.1,249.4 271.1,254.6 272.6,254.6 C274.1,254.6 274.1,259.7 275.6,259.7 C277.1,259.7 277.1,264.6 278.6,264.6 C280.2,264.6 280.2,269.4 281.7,269.4 C283.2,269.4 283.2,274.0 284.7,274.0 C286.2,274.0 286.2,278.4 287.7,278.4 C289.2,278.4 289.2,282.5 290.7,282.5 C292.2,282.5 292.2,286.5 293.8,286.5 C295.3,286.5 295.3,290.2 296.8,290.2 C298.3,290.2 298.3,293.6 299.8,293.6 C301.3,293.6 301.3,296.8 302.8,296.8 C304.3,296.8 304.3,299.6 305.8,299.6 C307.3,299.6 307.3,302.2 308.9,302.2 C310.4,302.2 310.4,304.4 311.9,304.4 C313.4,304.4 313.4,306.3 314.9,306.3 C316.4,306.3 316.4,307.9 317.9,307.9 C319.4,307.9 319.4,309.1 320.9,309.1 C322.4,309.1 322.4,310.0 324.0,310.0 C325.5,310.0 325.5,310.5 327.0,310.5 C328.5,310.5 328.5,310.7 330.0,310.7' fill='none' stroke='#ec4899' stroke-width='3.0' stroke-linecap='round' stroke-linejoin='round' filter='url(#hm2-glow)'/><path d='M40.0,310.7 C41.5,310.7 41.5,310.5 43.0,310.5 C44.5,310.5 44.5,310.0 46.0,310.0 C47.6,310.0 47.6,309.1 49.1,309.1 C50.6,309.1 50.6,307.9 52.1,307.9 C53.6,307.9 53.6,306.3 55.1,306.3 C56.6,306.3 56.6,304.4 58.1,304.4 C59.6,304.4 59.6,302.2 61.1,302.2 C62.7,302.2 62.7,299.6 64.2,299.6 C65.7,299.6 65.7,296.8 67.2,296.8 C68.7,296.8 68.7,293.6 70.2,293.6 C71.7,293.6 71.7,290.2 73.2,290.2 C74.7,290.2 74.7,286.5 76.2,286.5 C77.8,286.5 77.8,282.5 79.3,282.5 C80.8,282.5 80.8,278.4 82.3,278.4 C83.8,278.4 83.8,274.0 85.3,274.0 C86.8,274.0 86.8,269.4 88.3,269.4 C89.8,269.4 89.8,264.6 91.4,264.6 C92.9,264.6 92.9,259.7 94.4,259.7 C95.9,259.7 95.9,254.6 97.4,254.6 C98.9,254.6 98.9,249.4 100.4,249.4 C101.9,249.4 101.9,244.1 103.4,244.1 C104.9,244.1 104.9,238.8 106.5,238.8 C108.0,238.8 108.0,233.4 109.5,233.4 C111.0,233.4 111.0,228.0 112.5,228.0 C114.0,228.0 114.0,222.6 115.5,222.6 C117.0,222.6 117.0,217.2 118.5,217.2 C120.1,217.2 120.1,211.9 121.6,211.9 C123.1,211.9 123.1,206.6 124.6,206.6 C126.1,206.6 126.1,201.4 127.6,201.4 C129.1,201.4 129.1,196.3 130.6,196.3 C132.1,196.3 132.1,191.4 133.6,191.4 C135.2,191.4 135.2,186.6 136.7,186.6 C138.2,186.6 138.2,182.0 139.7,182.0 C141.2,182.0 141.2,177.6 142.7,177.6 C144.2,177.6 144.2,173.5 145.7,173.5 C147.2,173.5 147.2,169.5 148.8,169.5 C150.3,169.5 150.3,165.8 151.8,165.8 C153.3,165.8 153.3,162.4 154.8,162.4 C156.3,162.4 156.3,159.2 157.8,159.2 C159.3,159.2 159.3,156.4 160.8,156.4 C162.3,156.4 162.3,153.8 163.9,153.8 C165.4,153.8 165.4,151.6 166.9,151.6 C168.4,151.6 168.4,149.7 169.9,149.7 C171.4,149.7 171.4,148.1 172.9,148.1 C174.4,148.1 174.4,146.9 175.9,146.9 C177.4,146.9 177.4,146.0 179.0,146.0 C180.5,146.0 180.5,145.5 182.0,145.5 C183.5,145.5 183.5,145.3 185.0,145.3 C186.5,145.3 186.5,145.5 188.0,145.5 C189.5,145.5 189.5,146.0 191.0,146.0 C192.6,146.0 192.6,146.9 194.1,146.9 C195.6,146.9 195.6,148.1 197.1,148.1 C198.6,148.1 198.6,149.7 200.1,149.7 C201.6,149.7 201.6,151.6 203.1,151.6 C204.6,151.6 204.6,153.8 206.1,153.8 C207.7,153.8 207.7,156.4 209.2,156.4 C210.7,156.4 210.7,159.2 212.2,159.2 C213.7,159.2 213.7,162.4 215.2,162.4 C216.7,162.4 216.7,165.8 218.2,165.8 C219.7,165.8 219.7,169.5 221.2,169.5 C222.8,169.5 222.8,173.5 224.3,173.5 C225.8,173.5 225.8,177.6 227.3,177.6 C228.8,177.6 228.8,182.0 230.3,182.0 C231.8,182.0 231.8,186.6 233.3,186.6 C234.8,186.6 234.8,191.4 236.4,191.4 C237.9,191.4 237.9,196.3 239.4,196.3 C240.9,196.3 240.9,201.4 242.4,201.4 C243.9,201.4 243.9,206.6 245.4,206.6 C246.9,206.6 246.9,211.9 248.4,211.9 C249.9,211.9 249.9,217.2 251.5,217.2 C253.0,217.2 253.0,222.6 254.5,222.6 C256.0,222.6 256.0,228.0 257.5,228.0 C259.0,228.0 259.0,233.4 260.5,233.4 C262.0,233.4 262.0,238.8 263.5,238.8 C265.1,238.8 265.1,244.1 266.6,244.1 C268.1,244.1 268.1,249.4 269.6,249.4 C271.1,249.4 271.1,254.6 272.6,254.6 C274.1,254.6 274.1,259.7 275.6,259.7 C277.1,259.7 277.1,264.6 278.6,264.6 C280.2,264.6 280.2,269.4 281.7,269.4 C283.2,269.4 283.2,274.0 284.7,274.0 C286.2,274.0 286.2,278.4 287.7,278.4 C289.2,278.4 289.2,282.5 290.7,282.5 C292.2,282.5 292.2,286.5 293.8,286.5 C295.3,286.5 295.3,290.2 296.8,290.2 C298.3,290.2 298.3,293.6 299.8,293.6 C301.3,293.6 301.3,296.8 302.8,296.8 C304.3,296.8 304.3,299.6 305.8,299.6 C307.3,299.6 307.3,302.2 308.9,302.2 C310.4,302.2 310.4,304.4 311.9,304.4 C313.4,304.4 313.4,306.3 314.9,306.3 C316.4,306.3 316.4,307.9 317.9,307.9 C319.4,307.9 319.4,309.1 320.9,309.1 C322.4,309.1 322.4,310.0 324.0,310.0 C325.5,310.0 325.5,310.5 327.0,310.5 C328.5,310.5 328.5,310.7 330.0,310.7' fill='none' stroke='#f9a8d4' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round' opacity='0.9'/><circle cx='185.0' cy='145.3' r='3.4' fill='#f9a8d4'/><rect x='155.2' y='112.0' width='59.6' height='30' rx='7' fill='#131920' stroke='#9d2c66' stroke-width='1'/><text x='185.0' y='131.8' text-anchor='middle' font-family="'JetBrains Mono', ui-monospace, monospace" font-size='14' fill='#f9a8d4' letter-spacing='0.5'>OPEN</text><circle cx='69.0' cy='294.9' r='3.4' fill='#f9a8d4'/><rect x='88.8' y='280.9' width='76.4' height='30' rx='7' fill='#131920' stroke='#9d2c66' stroke-width='1'/><text x='127.0' y='300.7' text-anchor='middle' font-family="'JetBrains Mono', ui-monospace, monospace" font-size='14' fill='#f9a8d4' letter-spacing='0.5'>CLOSED</text><text x='180.0' y='440.0' text-anchor='middle' font-family="Lora, Georgia, serif" font-size='11.5' fill='#566578' font-style='italic'>The rhythmic cutoff sweep is the French-house</text><text x='180.0' y='458.0' text-anchor='middle' font-family="Lora, Georgia, serif" font-size='11.5' fill='#566578' font-style='italic'>signature; the resonant peak rides the open cutoff.</text></svg></div>
+<figcaption class="diagram-caption">One bar of the French touch filter: the magenta cutoff sweeps up and down to the groove; the teal spectrum beneath it is what you hear. Illustrative.</figcaption>
+</figure>
+<p>The resonance control is what gives the sweep its vocal, singing edge &mdash; a bump of emphasis right at the cutoff frequency. A touch is musical; too much and it whistles. Draw the automation by hand rather than using an LFO if you can, so the opening lands exactly where the arrangement wants it. <em>(A live, playable version of this filter &mdash; the French Filter Explorer &mdash; is coming to this page so you can hear every control in real time.)</em></p>
+
+<h2 id="s-6">Closed vs open: what the sweep reveals</h2>
+<p>It helps to see the same loop with the filter shut and with it wide open, because the difference is the whole effect. Closed, the low-pass rolls the highs off steeply &mdash; the loop is dark, muffled, all body and no air, as if heard through a wall. Open, the full spectrum returns and the loop snaps into focus. The resonant peak rides along the cutoff as it moves, so the brightest, most vocal part of the sound is always sitting right at the edge of what the filter is letting through.</p>
+<figure class="diagram-wrap" id="fh-fig-reveal" style="background:#080b0f;border:1px solid #1a2332;border-radius:14px;padding:16px 14px 12px;margin:26px 0;">
+<div class="fig-d"><svg viewBox="0 0 720 412" style="display:block;width:100%;height:auto;" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The same loop spectrum with the filter closed (highs rolled off) versus open (full range revealed)."><rect width="720" height="412" fill="#080b0f"/><text x="360.0" y="32" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="12.5" letter-spacing="3.2" fill="#ec4899">WHAT THE SWEEP REVEALS</text><text x="360.0" y="60" text-anchor="middle" font-family="Lora, Georgia, serif" font-size="22" font-style="italic" fill="#f0f4f8">The same loop — filter closed vs. open</text><rect x="52" y="106" width="278" height="214" rx="9" fill="#0d1117" stroke="#212c3a" stroke-width="1.3"/><line x1="110.6" y1="126" x2="110.6" y2="296" stroke="#28384a" stroke-width="1" stroke-dasharray="1 8" opacity="0.5"/><text x="110.6" y="314" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="10.5" fill="#566578">100</text><line x1="203.4" y1="126" x2="203.4" y2="296" stroke="#28384a" stroke-width="1" stroke-dasharray="1 8" opacity="0.5"/><text x="203.4" y="314" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="10.5" fill="#566578">1k</text><line x1="296.3" y1="126" x2="296.3" y2="296" stroke="#28384a" stroke-width="1" stroke-dasharray="1 8" opacity="0.5"/><text x="296.3" y="314" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="10.5" fill="#566578">10k</text><path d="M62.0,228.9 C62.5,228.2 63.9,226.3 64.9,224.8 C65.9,223.4 66.8,221.9 67.8,220.3 C68.8,218.7 69.7,217.0 70.7,215.3 C71.7,213.6 72.6,211.8 73.6,210.0 C74.6,208.2 75.5,206.3 76.5,204.4 C77.5,202.4 78.4,200.5 79.4,198.5 C80.4,196.6 81.3,194.6 82.3,192.7 C83.3,190.7 84.2,188.8 85.2,186.9 C86.2,185.0 87.1,183.1 88.1,181.4 C89.1,179.6 90.0,177.8 91.0,176.2 C92.0,174.6 92.9,173.1 93.9,171.7 C94.9,170.2 95.8,168.9 96.8,167.8 C97.8,166.6 98.7,165.6 99.7,164.7 C100.7,163.9 101.6,163.1 102.6,162.6 C103.6,162.0 104.5,161.7 105.5,161.4 C106.4,161.2 107.4,161.2 108.4,161.3 C109.3,161.4 110.3,161.6 111.3,162.0 C112.2,162.4 113.2,163.0 114.2,163.6 C115.1,164.3 116.1,165.1 117.1,165.9 C118.0,166.6 119.0,167.5 120.0,168.3 C120.9,169.1 121.9,169.9 122.9,170.4 C123.8,170.9 124.8,171.3 125.8,171.3 C126.7,171.3 127.7,171.0 128.7,170.1 C129.6,169.3 130.6,168.0 131.6,166.3 C132.5,164.5 133.5,162.1 134.5,159.6 C135.4,157.1 136.4,154.0 137.4,151.3 C138.3,148.5 139.3,145.4 140.3,143.2 C141.2,141.0 142.2,138.9 143.2,137.9 C144.1,137.0 145.1,136.3 146.1,137.5 C147.0,138.7 148.0,141.3 149.0,145.4 C149.9,149.4 150.9,155.6 151.9,161.8 C152.8,168.0 153.8,175.7 154.8,182.8 C155.7,189.9 156.7,197.5 157.7,204.2 C158.6,211.0 159.6,217.5 160.6,223.2 C161.5,228.9 162.5,234.0 163.5,238.4 C164.4,242.7 165.4,246.4 166.4,249.6 C167.3,252.8 168.3,255.3 169.3,257.6 C170.2,259.8 171.2,261.6 172.2,263.2 C173.1,264.8 174.1,266.1 175.1,267.3 C176.0,268.5 177.0,269.5 178.0,270.4 C178.9,271.4 179.9,272.2 180.9,272.9 C181.8,273.7 182.8,274.3 183.8,275.0 C184.7,275.6 185.7,276.2 186.7,276.7 C187.6,277.3 188.6,277.8 189.6,278.2 C190.5,278.7 191.5,279.2 192.4,279.6 C193.4,280.0 194.4,280.4 195.3,280.8 C196.3,281.2 197.3,281.5 198.2,281.9 C199.2,282.2 200.2,282.5 201.1,282.8 C202.1,283.1 203.1,283.4 204.0,283.7 C205.0,284.0 206.0,284.3 206.9,284.6 C207.9,284.8 208.9,285.1 209.8,285.3 C210.8,285.6 211.8,285.8 212.7,286.0 C213.7,286.3 214.7,286.5 215.6,286.7 C216.6,286.9 217.6,287.1 218.5,287.3 C219.5,287.5 220.5,287.7 221.4,287.9 C222.4,288.1 223.4,288.3 224.3,288.5 C225.3,288.7 226.3,288.8 227.2,289.0 C228.2,289.2 229.2,289.3 230.1,289.5 C231.1,289.7 232.1,289.8 233.0,290.0 C234.0,290.1 235.0,290.2 235.9,290.4 C236.9,290.5 237.9,290.7 238.8,290.8 C239.8,290.9 240.8,291.0 241.7,291.2 C242.7,291.3 243.7,291.4 244.6,291.5 C245.6,291.6 246.6,291.8 247.5,291.9 C248.5,292.0 249.5,292.1 250.4,292.2 C251.4,292.3 252.4,292.4 253.3,292.5 C254.3,292.5 255.3,292.7 256.2,292.7 C257.2,292.8 258.2,292.8 259.1,292.9 C260.1,292.9 261.1,292.9 262.0,292.9 C263.0,292.9 264.0,292.9 264.9,292.9 C265.9,292.9 266.9,292.9 267.8,292.9 C268.8,292.9 269.8,292.9 270.7,292.9 C271.7,292.9 272.7,292.9 273.6,292.9 C274.6,292.9 275.6,292.9 276.5,292.9 C277.5,292.9 278.4,292.9 279.4,292.9 C280.4,292.9 281.3,292.9 282.3,292.9 C283.3,292.9 284.2,292.9 285.2,292.9 C286.2,292.9 287.1,292.9 288.1,292.9 C289.1,292.9 290.0,292.9 291.0,292.9 C292.0,292.9 292.9,292.9 293.9,292.9 C294.9,292.9 295.8,292.9 296.8,292.9 C297.8,292.9 298.7,292.9 299.7,292.9 C300.7,292.9 301.6,292.9 302.6,292.9 C303.6,292.9 304.5,292.9 305.5,292.9 C306.5,292.9 307.4,292.9 308.4,292.9 C309.4,292.9 310.3,292.9 311.3,292.9 C312.3,292.9 313.2,292.9 314.2,292.9 C315.2,292.9 316.1,292.9 317.1,292.9 C318.1,292.9 319.5,292.9 320.0,292.9 L320.0,296 L62.0,296 Z" fill="#00d4a8" opacity="0.16"/><path d="M62.0,228.9 C62.5,228.2 63.9,226.3 64.9,224.8 C65.9,223.4 66.8,221.9 67.8,220.3 C68.8,218.7 69.7,217.0 70.7,215.3 C71.7,213.6 72.6,211.8 73.6,210.0 C74.6,208.2 75.5,206.3 76.5,204.4 C77.5,202.4 78.4,200.5 79.4,198.5 C80.4,196.6 81.3,194.6 82.3,192.7 C83.3,190.7 84.2,188.8 85.2,186.9 C86.2,185.0 87.1,183.1 88.1,181.4 C89.1,179.6 90.0,177.8 91.0,176.2 C92.0,174.6 92.9,173.1 93.9,171.7 C94.9,170.2 95.8,168.9 96.8,167.8 C97.8,166.6 98.7,165.6 99.7,164.7 C100.7,163.9 101.6,163.1 102.6,162.6 C103.6,162.0 104.5,161.7 105.5,161.4 C106.4,161.2 107.4,161.2 108.4,161.3 C109.3,161.4 110.3,161.6 111.3,162.0 C112.2,162.4 113.2,163.0 114.2,163.6 C115.1,164.3 116.1,165.1 117.1,165.9 C118.0,166.6 119.0,167.5 120.0,168.3 C120.9,169.1 121.9,169.9 122.9,170.4 C123.8,170.9 124.8,171.3 125.8,171.3 C126.7,171.3 127.7,171.0 128.7,170.1 C129.6,169.3 130.6,168.0 131.6,166.3 C132.5,164.5 133.5,162.1 134.5,159.6 C135.4,157.1 136.4,154.0 137.4,151.3 C138.3,148.5 139.3,145.4 140.3,143.2 C141.2,141.0 142.2,138.9 143.2,137.9 C144.1,137.0 145.1,136.3 146.1,137.5 C147.0,138.7 148.0,141.3 149.0,145.4 C149.9,149.4 150.9,155.6 151.9,161.8 C152.8,168.0 153.8,175.7 154.8,182.8 C155.7,189.9 156.7,197.5 157.7,204.2 C158.6,211.0 159.6,217.5 160.6,223.2 C161.5,228.9 162.5,234.0 163.5,238.4 C164.4,242.7 165.4,246.4 166.4,249.6 C167.3,252.8 168.3,255.3 169.3,257.6 C170.2,259.8 171.2,261.6 172.2,263.2 C173.1,264.8 174.1,266.1 175.1,267.3 C176.0,268.5 177.0,269.5 178.0,270.4 C178.9,271.4 179.9,272.2 180.9,272.9 C181.8,273.7 182.8,274.3 183.8,275.0 C184.7,275.6 185.7,276.2 186.7,276.7 C187.6,277.3 188.6,277.8 189.6,278.2 C190.5,278.7 191.5,279.2 192.4,279.6 C193.4,280.0 194.4,280.4 195.3,280.8 C196.3,281.2 197.3,281.5 198.2,281.9 C199.2,282.2 200.2,282.5 201.1,282.8 C202.1,283.1 203.1,283.4 204.0,283.7 C205.0,284.0 206.0,284.3 206.9,284.6 C207.9,284.8 208.9,285.1 209.8,285.3 C210.8,285.6 211.8,285.8 212.7,286.0 C213.7,286.3 214.7,286.5 215.6,286.7 C216.6,286.9 217.6,287.1 218.5,287.3 C219.5,287.5 220.5,287.7 221.4,287.9 C222.4,288.1 223.4,288.3 224.3,288.5 C225.3,288.7 226.3,288.8 227.2,289.0 C228.2,289.2 229.2,289.3 230.1,289.5 C231.1,289.7 232.1,289.8 233.0,290.0 C234.0,290.1 235.0,290.2 235.9,290.4 C236.9,290.5 237.9,290.7 238.8,290.8 C239.8,290.9 240.8,291.0 241.7,291.2 C242.7,291.3 243.7,291.4 244.6,291.5 C245.6,291.6 246.6,291.8 247.5,291.9 C248.5,292.0 249.5,292.1 250.4,292.2 C251.4,292.3 252.4,292.4 253.3,292.5 C254.3,292.5 255.3,292.7 256.2,292.7 C257.2,292.8 258.2,292.8 259.1,292.9 C260.1,292.9 261.1,292.9 262.0,292.9 C263.0,292.9 264.0,292.9 264.9,292.9 C265.9,292.9 266.9,292.9 267.8,292.9 C268.8,292.9 269.8,292.9 270.7,292.9 C271.7,292.9 272.7,292.9 273.6,292.9 C274.6,292.9 275.6,292.9 276.5,292.9 C277.5,292.9 278.4,292.9 279.4,292.9 C280.4,292.9 281.3,292.9 282.3,292.9 C283.3,292.9 284.2,292.9 285.2,292.9 C286.2,292.9 287.1,292.9 288.1,292.9 C289.1,292.9 290.0,292.9 291.0,292.9 C292.0,292.9 292.9,292.9 293.9,292.9 C294.9,292.9 295.8,292.9 296.8,292.9 C297.8,292.9 298.7,292.9 299.7,292.9 C300.7,292.9 301.6,292.9 302.6,292.9 C303.6,292.9 304.5,292.9 305.5,292.9 C306.5,292.9 307.4,292.9 308.4,292.9 C309.4,292.9 310.3,292.9 311.3,292.9 C312.3,292.9 313.2,292.9 314.2,292.9 C315.2,292.9 316.1,292.9 317.1,292.9 C318.1,292.9 319.5,292.9 320.0,292.9" fill="none" stroke="#00d4a8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/><line x1="145.9" y1="124" x2="145.9" y2="296" stroke="#ec4899" stroke-width="2" stroke-dasharray="4 4" opacity="0.9"/><circle cx="145.9" cy="137.3" r="4" fill="#f9a8d4"/><rect x="119.5" y="275.0" width="52.8" height="16" rx="4" fill="#0d1117" opacity="0.9"/><text x="145.9" y="288.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="10.5" fill="#ec4899">cutoff</text><rect x="64" y="92" width="76" height="26" rx="6" fill="#131920" stroke="#9d2c66" stroke-width="1"/><text x="102" y="110" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="12.5" letter-spacing="1.5" fill="#f9a8d4">CLOSED</text><text x="191" y="330" text-anchor="middle" font-family="Lora, Georgia, serif" font-size="11.5" font-style="italic" fill="#8a9bb0">highs rolled off — muffled</text><rect x="390" y="106" width="278" height="214" rx="9" fill="#0d1117" stroke="#212c3a" stroke-width="1.3"/><line x1="448.6" y1="126" x2="448.6" y2="296" stroke="#28384a" stroke-width="1" stroke-dasharray="1 8" opacity="0.5"/><text x="448.6" y="314" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="10.5" fill="#566578">100</text><line x1="541.4" y1="126" x2="541.4" y2="296" stroke="#28384a" stroke-width="1" stroke-dasharray="1 8" opacity="0.5"/><text x="541.4" y="314" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="10.5" fill="#566578">1k</text><line x1="634.3" y1="126" x2="634.3" y2="296" stroke="#28384a" stroke-width="1" stroke-dasharray="1 8" opacity="0.5"/><text x="634.3" y="314" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="10.5" fill="#566578">10k</text><path d="M400.0,228.9 C400.5,228.2 401.9,226.3 402.9,224.8 C403.9,223.4 404.8,221.9 405.8,220.3 C406.8,218.7 407.7,217.0 408.7,215.3 C409.7,213.6 410.6,211.8 411.6,210.0 C412.6,208.2 413.5,206.3 414.5,204.4 C415.5,202.4 416.4,200.5 417.4,198.5 C418.4,196.6 419.3,194.6 420.3,192.7 C421.3,190.7 422.2,188.8 423.2,186.9 C424.2,185.0 425.1,183.1 426.1,181.4 C427.1,179.6 428.0,177.8 429.0,176.2 C430.0,174.6 430.9,173.1 431.9,171.7 C432.9,170.2 433.8,168.9 434.8,167.8 C435.8,166.6 436.7,165.6 437.7,164.7 C438.7,163.9 439.6,163.1 440.6,162.6 C441.6,162.0 442.5,161.7 443.5,161.4 C444.4,161.2 445.4,161.2 446.4,161.3 C447.3,161.4 448.3,161.7 449.3,162.1 C450.2,162.5 451.2,163.1 452.2,163.8 C453.1,164.5 454.1,165.4 455.1,166.4 C456.0,167.4 457.0,168.5 458.0,169.7 C458.9,170.8 459.9,172.1 460.9,173.4 C461.8,174.8 462.8,176.2 463.8,177.6 C464.7,179.0 465.7,180.5 466.7,182.0 C467.6,183.4 468.6,184.9 469.6,186.4 C470.5,187.8 471.5,189.2 472.5,190.6 C473.4,191.9 474.4,193.3 475.4,194.5 C476.3,195.7 477.3,196.9 478.3,198.0 C479.2,199.0 480.2,200.0 481.2,200.9 C482.1,201.7 483.1,202.5 484.1,203.2 C485.0,203.8 486.0,204.3 487.0,204.7 C487.9,205.1 488.9,205.4 489.9,205.6 C490.8,205.8 491.8,205.8 492.8,205.7 C493.7,205.6 494.7,205.4 495.7,205.1 C496.6,204.8 497.6,204.4 498.6,203.8 C499.5,203.3 500.5,202.6 501.5,201.9 C502.4,201.2 503.4,200.3 504.4,199.4 C505.3,198.5 506.3,197.5 507.3,196.4 C508.2,195.3 509.2,194.1 510.2,192.9 C511.1,191.7 512.1,190.4 513.1,189.1 C514.0,187.8 515.0,186.4 516.0,185.0 C516.9,183.6 517.9,182.1 518.9,180.7 C519.8,179.2 520.8,177.7 521.8,176.2 C522.7,174.7 523.7,173.2 524.7,171.7 C525.6,170.2 526.6,168.7 527.6,167.3 C528.5,165.8 529.5,164.3 530.4,162.9 C531.4,161.5 532.4,160.1 533.3,158.7 C534.3,157.3 535.3,156.0 536.2,154.7 C537.2,153.5 538.2,152.2 539.1,151.1 C540.1,149.9 541.1,148.8 542.0,147.7 C543.0,146.7 544.0,145.7 544.9,144.8 C545.9,143.9 546.9,143.0 547.8,142.3 C548.8,141.5 549.8,140.8 550.7,140.2 C551.7,139.6 552.7,139.0 553.6,138.6 C554.6,138.2 555.6,137.8 556.5,137.5 C557.5,137.2 558.5,137.0 559.4,136.9 C560.4,136.8 561.4,136.8 562.3,136.8 C563.3,136.9 564.3,137.0 565.2,137.2 C566.2,137.5 567.2,137.8 568.1,138.1 C569.1,138.5 570.1,138.9 571.0,139.5 C572.0,140.0 573.0,140.6 573.9,141.2 C574.9,141.9 575.9,142.6 576.8,143.3 C577.8,144.1 578.8,145.0 579.7,145.8 C580.7,146.7 581.7,147.7 582.6,148.6 C583.6,149.6 584.6,150.6 585.5,151.7 C586.5,152.7 587.5,153.8 588.4,154.9 C589.4,156.1 590.4,157.2 591.3,158.4 C592.3,159.6 593.3,160.8 594.2,162.0 C595.2,163.2 596.2,164.4 597.1,165.6 C598.1,166.8 599.1,168.1 600.0,169.3 C601.0,170.6 602.0,171.8 602.9,173.0 C603.9,174.3 604.9,175.5 605.8,176.8 C606.8,178.0 607.8,179.2 608.7,180.4 C609.7,181.6 610.7,182.8 611.6,184.0 C612.6,185.2 613.6,186.4 614.5,187.5 C615.5,188.7 616.4,189.8 617.4,191.0 C618.4,192.1 619.3,193.2 620.3,194.3 C621.3,195.3 622.2,196.4 623.2,197.4 C624.2,198.5 625.1,199.5 626.1,200.5 C627.1,201.5 628.0,202.5 629.0,203.4 C630.0,204.4 630.9,205.3 631.9,206.2 C632.9,207.2 633.8,208.0 634.8,208.9 C635.8,209.8 636.7,210.6 637.7,211.5 C638.7,212.3 639.6,213.1 640.6,213.9 C641.6,214.7 642.5,215.5 643.5,216.2 C644.5,217.0 645.4,217.7 646.4,218.5 C647.4,219.2 648.3,219.9 649.3,220.6 C650.3,221.2 651.2,221.9 652.2,222.6 C653.2,223.2 654.1,223.8 655.1,224.5 C656.1,225.1 657.5,226.0 658.0,226.3 L658.0,296 L400.0,296 Z" fill="#00d4a8" opacity="0.16"/><path d="M400.0,228.9 C400.5,228.2 401.9,226.3 402.9,224.8 C403.9,223.4 404.8,221.9 405.8,220.3 C406.8,218.7 407.7,217.0 408.7,215.3 C409.7,213.6 410.6,211.8 411.6,210.0 C412.6,208.2 413.5,206.3 414.5,204.4 C415.5,202.4 416.4,200.5 417.4,198.5 C418.4,196.6 419.3,194.6 420.3,192.7 C421.3,190.7 422.2,188.8 423.2,186.9 C424.2,185.0 425.1,183.1 426.1,181.4 C427.1,179.6 428.0,177.8 429.0,176.2 C430.0,174.6 430.9,173.1 431.9,171.7 C432.9,170.2 433.8,168.9 434.8,167.8 C435.8,166.6 436.7,165.6 437.7,164.7 C438.7,163.9 439.6,163.1 440.6,162.6 C441.6,162.0 442.5,161.7 443.5,161.4 C444.4,161.2 445.4,161.2 446.4,161.3 C447.3,161.4 448.3,161.7 449.3,162.1 C450.2,162.5 451.2,163.1 452.2,163.8 C453.1,164.5 454.1,165.4 455.1,166.4 C456.0,167.4 457.0,168.5 458.0,169.7 C458.9,170.8 459.9,172.1 460.9,173.4 C461.8,174.8 462.8,176.2 463.8,177.6 C464.7,179.0 465.7,180.5 466.7,182.0 C467.6,183.4 468.6,184.9 469.6,186.4 C470.5,187.8 471.5,189.2 472.5,190.6 C473.4,191.9 474.4,193.3 475.4,194.5 C476.3,195.7 477.3,196.9 478.3,198.0 C479.2,199.0 480.2,200.0 481.2,200.9 C482.1,201.7 483.1,202.5 484.1,203.2 C485.0,203.8 486.0,204.3 487.0,204.7 C487.9,205.1 488.9,205.4 489.9,205.6 C490.8,205.8 491.8,205.8 492.8,205.7 C493.7,205.6 494.7,205.4 495.7,205.1 C496.6,204.8 497.6,204.4 498.6,203.8 C499.5,203.3 500.5,202.6 501.5,201.9 C502.4,201.2 503.4,200.3 504.4,199.4 C505.3,198.5 506.3,197.5 507.3,196.4 C508.2,195.3 509.2,194.1 510.2,192.9 C511.1,191.7 512.1,190.4 513.1,189.1 C514.0,187.8 515.0,186.4 516.0,185.0 C516.9,183.6 517.9,182.1 518.9,180.7 C519.8,179.2 520.8,177.7 521.8,176.2 C522.7,174.7 523.7,173.2 524.7,171.7 C525.6,170.2 526.6,168.7 527.6,167.3 C528.5,165.8 529.5,164.3 530.4,162.9 C531.4,161.5 532.4,160.1 533.3,158.7 C534.3,157.3 535.3,156.0 536.2,154.7 C537.2,153.5 538.2,152.2 539.1,151.1 C540.1,149.9 541.1,148.8 542.0,147.7 C543.0,146.7 544.0,145.7 544.9,144.8 C545.9,143.9 546.9,143.0 547.8,142.3 C548.8,141.5 549.8,140.8 550.7,140.2 C551.7,139.6 552.7,139.0 553.6,138.6 C554.6,138.2 555.6,137.8 556.5,137.5 C557.5,137.2 558.5,137.0 559.4,136.9 C560.4,136.8 561.4,136.8 562.3,136.8 C563.3,136.9 564.3,137.0 565.2,137.2 C566.2,137.5 567.2,137.8 568.1,138.1 C569.1,138.5 570.1,138.9 571.0,139.5 C572.0,140.0 573.0,140.6 573.9,141.2 C574.9,141.9 575.9,142.6 576.8,143.3 C577.8,144.1 578.8,145.0 579.7,145.8 C580.7,146.7 581.7,147.7 582.6,148.6 C583.6,149.6 584.6,150.6 585.5,151.7 C586.5,152.7 587.5,153.8 588.4,154.9 C589.4,156.1 590.4,157.2 591.3,158.4 C592.3,159.6 593.3,160.8 594.2,162.0 C595.2,163.2 596.2,164.4 597.1,165.6 C598.1,166.8 599.1,168.1 600.0,169.3 C601.0,170.6 602.0,171.8 602.9,173.0 C603.9,174.3 604.9,175.5 605.8,176.8 C606.8,178.0 607.8,179.2 608.7,180.4 C609.7,181.6 610.7,182.8 611.6,184.0 C612.6,185.2 613.6,186.4 614.5,187.5 C615.5,188.7 616.4,189.8 617.4,191.0 C618.4,192.1 619.3,193.2 620.3,194.3 C621.3,195.3 622.2,196.4 623.2,197.4 C624.2,198.5 625.1,199.5 626.1,200.5 C627.1,201.5 628.0,202.5 629.0,203.4 C630.0,204.4 630.9,205.3 631.9,206.2 C632.9,207.2 633.8,208.0 634.8,208.9 C635.8,209.8 636.7,210.6 637.7,211.5 C638.7,212.3 639.6,213.1 640.6,213.9 C641.6,214.7 642.5,215.5 643.5,216.2 C644.5,217.0 645.4,217.7 646.4,218.5 C647.4,219.2 648.3,219.9 649.3,220.6 C650.3,221.2 651.2,221.9 652.2,222.6 C653.2,223.2 654.1,223.8 655.1,224.5 C656.1,225.1 657.5,226.0 658.0,226.3" fill="none" stroke="#00d4a8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/><line x1="630.0" y1="124" x2="630.0" y2="296" stroke="#ec4899" stroke-width="2" stroke-dasharray="4 4" opacity="0.9"/><circle cx="630.0" cy="204.4" r="4" fill="#f9a8d4"/><rect x="603.6" y="275.0" width="52.8" height="16" rx="4" fill="#0d1117" opacity="0.9"/><text x="630.0" y="288.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="10.5" fill="#ec4899">cutoff</text><rect x="402" y="92" width="60" height="26" rx="6" fill="#131920" stroke="#9d2c66" stroke-width="1"/><text x="432" y="110" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="12.5" letter-spacing="1.5" fill="#f9a8d4">OPEN</text><text x="529" y="330" text-anchor="middle" font-family="Lora, Georgia, serif" font-size="11.5" font-style="italic" fill="#8a9bb0">full range — bright, present</text><defs><marker id="mh" markerWidth="9" markerHeight="9" refX="6" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#ec4899"/></marker></defs><path d="M338,183.0 C360.0,183.0 360.0,243.0 382,243.0" fill="none" stroke="#ec4899" stroke-width="2.4" marker-end="url(#mh)"/><text x="360" y="175.0" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="10.5" fill="#f9a8d4">open it</text><text x="360.0" y="394" text-anchor="middle" font-family="Lora, Georgia, serif" font-size="12" font-style="italic" fill="#566578">Illustrative — a resonant low-pass sweeping open; the resonant peak rides the cutoff as highs return.</text></svg></div>
+<div class="fig-m"><svg viewBox='0 0 360 500' style='display:block;width:100%;height:auto;' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The same loop spectrum with the filter closed (highs rolled off) versus open (full range restored with a resonant peak at the cutoff).'><defs><marker id='f2-ar' markerWidth='10' markerHeight='10' refX='6' refY='4.5' orient='auto'><path d='M0,0 L10,4.5 L0,9 Z' fill='#ec4899'/></marker></defs><rect width='360' height='500' fill='#080b0f'/><text x='180.0' y='32.0' text-anchor='middle' font-family="'JetBrains Mono', ui-monospace, monospace" font-size='11.5' fill='#ec4899' letter-spacing='2.4'>WHAT THE SWEEP REVEALS</text><text x='180.0' y='60.0' text-anchor='middle' font-family="Lora, Georgia, serif" font-size='17' fill='#f0f4f8' font-style='italic'>The same loop, closed vs open</text><rect x='40' y='84' width='290' height='134' rx='9' fill='#0d1117' stroke='#212c3a' stroke-width='1.2'/><line x1='92.2' y1='92' x2='92.2' y2='196.0' stroke='#28384a' stroke-width='1' stroke-dasharray='1 8' opacity='0.5'/><text x='92.2' y='210.0' text-anchor='middle' font-family="'JetBrains Mono', ui-monospace, monospace" font-size='9.5' fill='#566578'>100</text><line x1='190.8' y1='92' x2='190.8' y2='196.0' stroke='#28384a' stroke-width='1' stroke-dasharray='1 8' opacity='0.5'/><text x='190.8' y='210.0' text-anchor='middle' font-family="'JetBrains Mono', ui-monospace, monospace" font-size='9.5' fill='#566578'>1k</text><line x1='295.2' y1='92' x2='295.2' y2='196.0' stroke='#28384a' stroke-width='1' stroke-dasharray='1 8' opacity='0.5'/><text x='295.2' y='210.0' text-anchor='middle' font-family="'JetBrains Mono', ui-monospace, monospace" font-size='9.5' fill='#566578'>10k</text><path d='M40.0,118.0 L43.2,116.4 L46.4,114.9 L49.7,113.4 L52.9,112.1 L56.1,110.8 L59.3,109.7 L62.6,108.6 L65.8,107.7 L69.0,106.9 L72.2,106.2 L75.4,105.7 L78.7,105.3 L81.9,105.0 L85.1,105.0 L88.3,105.0 L91.6,105.3 L94.8,105.8 L98.0,106.5 L101.2,107.6 L104.4,109.3 L107.7,111.8 L110.9,115.4 L114.1,120.4 L117.3,127.0 L120.6,135.3 L123.8,144.8 L127.0,154.6 L130.2,163.9 L133.4,171.9 L136.7,178.4 L139.9,183.4 L143.1,187.0 L146.3,189.6 L149.6,191.5 L152.8,192.8 L156.0,193.7 L159.2,194.4 L162.4,194.8 L165.7,195.1 L168.9,195.4 L172.1,195.5 L175.3,195.6 L178.6,195.7 L181.8,195.8 L185.0,195.8 L188.2,195.9 L191.4,195.9 L194.7,195.9 L197.9,195.9 L201.1,196.0 L204.3,196.0 L207.6,196.0 L210.8,196.0 L214.0,196.0 L217.2,196.0 L220.4,196.0 L223.7,196.0 L226.9,196.0 L230.1,196.0 L233.3,196.0 L236.6,196.0 L239.8,196.0 L243.0,196.0 L246.2,196.0 L249.4,196.0 L252.7,196.0 L255.9,196.0 L259.1,196.0 L262.3,196.0 L265.6,196.0 L268.8,196.0 L272.0,196.0 L275.2,196.0 L278.4,196.0 L281.7,196.0 L284.9,196.0 L288.1,196.0 L291.3,196.0 L294.6,196.0 L297.8,196.0 L301.0,196.0 L304.2,196.0 L307.4,196.0 L310.7,196.0 L313.9,196.0 L317.1,196.0 L320.3,196.0 L323.6,196.0 L326.8,196.0 L330.0,196.0 L330.0,196.0 L40.0,196.0 Z' fill='#00d4a8' opacity='0.24'/><path d='M40.0,118.0 L43.2,116.4 L46.4,114.9 L49.7,113.4 L52.9,112.1 L56.1,110.8 L59.3,109.7 L62.6,108.6 L65.8,107.7 L69.0,106.9 L72.2,106.2 L75.4,105.7 L78.7,105.3 L81.9,105.0 L85.1,105.0 L88.3,105.0 L91.6,105.3 L94.8,105.8 L98.0,106.5 L101.2,107.6 L104.4,109.3 L107.7,111.8 L110.9,115.4 L114.1,120.4 L117.3,127.0 L120.6,135.3 L123.8,144.8 L127.0,154.6 L130.2,163.9 L133.4,171.9 L136.7,178.4 L139.9,183.4 L143.1,187.0 L146.3,189.6 L149.6,191.5 L152.8,192.8 L156.0,193.7 L159.2,194.4 L162.4,194.8 L165.7,195.1 L168.9,195.4 L172.1,195.5 L175.3,195.6 L178.6,195.7 L181.8,195.8 L185.0,195.8 L188.2,195.9 L191.4,195.9 L194.7,195.9 L197.9,195.9 L201.1,196.0 L204.3,196.0 L207.6,196.0 L210.8,196.0 L214.0,196.0 L217.2,196.0 L220.4,196.0 L223.7,196.0 L226.9,196.0 L230.1,196.0 L233.3,196.0 L236.6,196.0 L239.8,196.0 L243.0,196.0 L246.2,196.0 L249.4,196.0 L252.7,196.0 L255.9,196.0 L259.1,196.0 L262.3,196.0 L265.6,196.0 L268.8,196.0 L272.0,196.0 L275.2,196.0 L278.4,196.0 L281.7,196.0 L284.9,196.0 L288.1,196.0 L291.3,196.0 L294.6,196.0 L297.8,196.0 L301.0,196.0 L304.2,196.0 L307.4,196.0 L310.7,196.0 L313.9,196.0 L317.1,196.0 L320.3,196.0 L323.6,196.0 L326.8,196.0 L330.0,196.0' fill='none' stroke='#00d4a8' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' opacity='0.95'/><line x1='127.0' y1='94' x2='127.0' y2='196.0' stroke='#ec4899' stroke-width='2' stroke-dasharray='4 4' opacity='0.9'/><circle cx='127.0' cy='154.6' r='3.4' fill='#f9a8d4'/><text x='135.0' y='157.7' text-anchor='start' font-family="'JetBrains Mono', ui-monospace, monospace" font-size='10.5' fill='#f9a8d4'>cutoff</text><rect x='52.8' y='95.0' width='74.4' height='29' rx='7' fill='#131920' stroke='#9d2c66' stroke-width='1'/><text x='90.0' y='114.3' text-anchor='middle' font-family="'JetBrains Mono', ui-monospace, monospace" font-size='14' fill='#f9a8d4' letter-spacing='0.5'>CLOSED</text><line x1='180.0' y1='221' x2='180.0' y2='251' stroke='#ec4899' stroke-width='2.4' marker-end='url(#f2-ar)'/><text x='218.0' y='240.0' text-anchor='start' font-family="'JetBrains Mono', ui-monospace, monospace" font-size='11.5' fill='#f9a8d4'>open it</text><rect x='40' y='268' width='290' height='134' rx='9' fill='#0d1117' stroke='#212c3a' stroke-width='1.2'/><line x1='92.2' y1='276' x2='92.2' y2='380.0' stroke='#28384a' stroke-width='1' stroke-dasharray='1 8' opacity='0.5'/><text x='92.2' y='394.0' text-anchor='middle' font-family="'JetBrains Mono', ui-monospace, monospace" font-size='9.5' fill='#566578'>100</text><line x1='190.8' y1='276' x2='190.8' y2='380.0' stroke='#28384a' stroke-width='1' stroke-dasharray='1 8' opacity='0.5'/><text x='190.8' y='394.0' text-anchor='middle' font-family="'JetBrains Mono', ui-monospace, monospace" font-size='9.5' fill='#566578'>1k</text><line x1='295.2' y1='276' x2='295.2' y2='380.0' stroke='#28384a' stroke-width='1' stroke-dasharray='1 8' opacity='0.5'/><text x='295.2' y='394.0' text-anchor='middle' font-family="'JetBrains Mono', ui-monospace, monospace" font-size='9.5' fill='#566578'>10k</text><path d='M40.0,302.0 L43.2,300.4 L46.4,298.9 L49.7,297.4 L52.9,296.1 L56.1,294.8 L59.3,293.7 L62.6,292.6 L65.8,291.7 L69.0,290.9 L72.2,290.2 L75.4,289.7 L78.7,289.3 L81.9,289.0 L85.1,288.9 L88.3,288.9 L91.6,289.1 L94.8,289.4 L98.0,289.8 L101.2,290.3 L104.4,291.0 L107.7,291.7 L110.9,292.5 L114.1,293.3 L117.3,294.2 L120.6,295.2 L123.8,296.2 L127.0,297.2 L130.2,298.2 L133.4,299.2 L136.7,300.2 L139.9,301.1 L143.1,302.1 L146.3,303.0 L149.6,303.8 L152.8,304.6 L156.0,305.3 L159.2,306.0 L162.4,306.6 L165.7,307.2 L168.9,307.7 L172.1,308.2 L175.3,308.6 L178.6,309.0 L181.8,309.3 L185.0,309.6 L188.2,309.9 L191.4,310.1 L194.7,310.4 L197.9,310.6 L201.1,310.8 L204.3,311.0 L207.6,311.2 L210.8,311.5 L214.0,311.7 L217.2,311.9 L220.4,312.1 L223.7,312.3 L226.9,312.6 L230.1,312.8 L233.3,313.0 L236.6,313.2 L239.8,313.3 L243.0,313.3 L246.2,313.1 L249.4,312.2 L252.7,310.2 L255.9,306.7 L259.1,301.5 L262.3,295.0 L265.6,288.7 L268.8,284.6 L272.0,284.4 L275.2,288.7 L278.4,296.5 L281.7,306.0 L284.9,315.4 L288.1,323.4 L291.3,329.9 L294.6,335.1 L297.8,339.6 L301.0,343.8 L304.2,347.7 L307.4,351.5 L310.7,355.1 L313.9,358.4 L317.1,361.4 L320.3,364.2 L323.6,366.6 L326.8,368.7 L330.0,370.5 L330.0,380.0 L40.0,380.0 Z' fill='#00d4a8' opacity='0.24'/><path d='M40.0,302.0 L43.2,300.4 L46.4,298.9 L49.7,297.4 L52.9,296.1 L56.1,294.8 L59.3,293.7 L62.6,292.6 L65.8,291.7 L69.0,290.9 L72.2,290.2 L75.4,289.7 L78.7,289.3 L81.9,289.0 L85.1,288.9 L88.3,288.9 L91.6,289.1 L94.8,289.4 L98.0,289.8 L101.2,290.3 L104.4,291.0 L107.7,291.7 L110.9,292.5 L114.1,293.3 L117.3,294.2 L120.6,295.2 L123.8,296.2 L127.0,297.2 L130.2,298.2 L133.4,299.2 L136.7,300.2 L139.9,301.1 L143.1,302.1 L146.3,303.0 L149.6,303.8 L152.8,304.6 L156.0,305.3 L159.2,306.0 L162.4,306.6 L165.7,307.2 L168.9,307.7 L172.1,308.2 L175.3,308.6 L178.6,309.0 L181.8,309.3 L185.0,309.6 L188.2,309.9 L191.4,310.1 L194.7,310.4 L197.9,310.6 L201.1,310.8 L204.3,311.0 L207.6,311.2 L210.8,311.5 L214.0,311.7 L217.2,311.9 L220.4,312.1 L223.7,312.3 L226.9,312.6 L230.1,312.8 L233.3,313.0 L236.6,313.2 L239.8,313.3 L243.0,313.3 L246.2,313.1 L249.4,312.2 L252.7,310.2 L255.9,306.7 L259.1,301.5 L262.3,295.0 L265.6,288.7 L268.8,284.6 L272.0,284.4 L275.2,288.7 L278.4,296.5 L281.7,306.0 L284.9,315.4 L288.1,323.4 L291.3,329.9 L294.6,335.1 L297.8,339.6 L301.0,343.8 L304.2,347.7 L307.4,351.5 L310.7,355.1 L313.9,358.4 L317.1,361.4 L320.3,364.2 L323.6,366.6 L326.8,368.7 L330.0,370.5' fill='none' stroke='#00d4a8' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' opacity='0.95'/><line x1='272.0' y1='278' x2='272.0' y2='380.0' stroke='#ec4899' stroke-width='2' stroke-dasharray='4 4' opacity='0.9'/><circle cx='272.0' cy='284.4' r='3.4' fill='#f9a8d4'/><text x='264.0' y='341.7' text-anchor='end' font-family="'JetBrains Mono', ui-monospace, monospace" font-size='10.5' fill='#f9a8d4'>cutoff</text><text x='272.0' y='275.4' text-anchor='middle' font-family="'JetBrains Mono', ui-monospace, monospace" font-size='10.5' fill='#f9a8d4'>+ resonance</text><rect x='61.2' y='279.0' width='57.6' height='29' rx='7' fill='#131920' stroke='#9d2c66' stroke-width='1'/><text x='90.0' y='298.3' text-anchor='middle' font-family="'JetBrains Mono', ui-monospace, monospace" font-size='14' fill='#f9a8d4' letter-spacing='0.5'>OPEN</text><text x='180.0' y='442.0' text-anchor='middle' font-family="Lora, Georgia, serif" font-size='11.5' fill='#566578' font-style='italic'>Closing removes the highs; opening restores them,</text><text x='180.0' y='460.0' text-anchor='middle' font-family="Lora, Georgia, serif" font-size='11.5' fill='#566578' font-style='italic'>with the resonant peak riding the cutoff.</text></svg></div>
+<figcaption class="diagram-caption">The same loop with the filter closed (highs rolled off, muffled) and wide open (full spectrum revealed). The resonant peak rides the cutoff. Illustrative.</figcaption>
+</figure>
+<p>This is exactly what makes the build so satisfying on a dancefloor: for sixteen bars the crowd is promised a sound they can only half-hear, and when the filter finally opens on the drop, the release is physical. It is the opposite move to a <a href="how-to-recreate-the-303-acid-sound.html">303 acid line</a>, where the filter squelches a single mono note &mdash; here the filter is revealing an entire chord bed.</p>
+
+<h2 id="s-7">The pump: sidechain compression</h2>
+<p>The second signature is the <strong>pump</strong>. Route your kick as a sidechain trigger into a compressor on the loop, set a fast attack and a musical release, and dial in enough gain reduction that the loop audibly ducks on every kick and springs back between hits. That rhythmic breathing &mdash; the loop swelling in the gaps &mdash; is as much a part of French house as the filter. The classic hardware was the Alesis&nbsp;3630; any compressor with an external sidechain does the job today. Our <a href="sidechain-compression-guide.html">sidechain compression guide</a> covers the mechanics, and there are DAW-specific walk-throughs for <a href="how-to-sidechain-in-ableton.html">Ableton</a> and <a href="how-to-sidechain-in-fl-studio.html">FL Studio</a>.</p>
+<p>Set the depth by ear against the kick: you want the loop to lean on the beat, not disappear. Back the amount off and you get subtle bounce; push it and you get the full four-on-the-floor throb. If your low end fights the kick, treat it the way you would in any dance track &mdash; see <a href="how-to-mix-bass.html">how to mix bass</a> and <a href="how-to-mix-kick-and-bass.html">how to mix kick and bass</a>.</p>
+
+<h2 id="s-8">Saturation and glue: the wall of sound</h2>
+<p>French house does not sound thin or clinical &mdash; it sounds like a warm, saturated wall. After the filter and the pump, drive the loop through <strong>saturation</strong> to add harmonics and glue, then a bus compressor to fuse everything into one moving block. This is where a filtered sample stops sounding like a sample and starts sounding like a record. Tape and console-style saturation are the natural fit; our roundups of <a href="best-saturation-plugins.html">saturation plugins</a> and <a href="best-tape-saturation-plugins.html">tape saturation plugins</a> point at good options, most of them with a stock equivalent already in your DAW.</p>
+<p>A useful trick is <strong>parallel saturation</strong>: blend a heavily driven copy of the loop under the clean one, so you get the density without frying the transients. Drive the loop bus, not the master &mdash; you want the sample to sound thick and fused, while your kick and drums stay clean and punchy on their own channels. Keep it tasteful: the goal is warmth, not distortion for its own sake &mdash; if the loop turns crunchy rather than lush, you have gone too far. A little goes a long way, and the pump plus the filter are already doing most of the emotional work.</p>
+
+<h2 id="s-9">The vocal: vocoder, talk box, and filtered chops</h2>
+<p>The final flavour is the voice. French house loves a <strong>vocoder or talk-box</strong> vocal &mdash; robotic, filtered, sitting somewhere between instrument and lyric &mdash; or a short sung phrase chopped and looped like the rest of the track. It is the human hook that keeps a filtered instrumental from feeling like an exercise. If you want to build one, our guide to <a href="how-to-use-vocoders-and-talk-boxes.html">vocoders and talk boxes</a> walks through both, and the same Paris toolkit produced the <a href="how-to-recreate-the-daft-punk-robot-voice.html">Daft Punk robot voice</a>.</p>
+<p>You do not always need one &mdash; plenty of French touch records are pure filtered instrumentals &mdash; but when a track needs a focal point, a processed vocal is the genre-correct answer.</p>
+
+<p>Mechanically, a vocoder wants two inputs: a <em>carrier</em> and a <em>modulator</em>. Feed your sung or spoken take in as the modulator and use a bright, harmonically rich synth &mdash; the same sawtooth chord bed works well &mdash; as the carrier; the vocoder stamps the voice&rsquo;s formants onto the synth while you play the pitch from the keyboard. A talk box does the same job acoustically, forcing an instrument through a tube into the mouth, which is why its vowels sound more organic and harder to tame. For the chopped route, pitch a short vocal phrase to your key and run it through the <strong>same resonant filter</strong> as the loop, so the voice lives in the track&rsquo;s world instead of floating over it. Whichever you pick, keep it close to mono, high-pass the mud, and duck it with the kick like everything else.</p>
+<h2 id="s-10">The whole chain, in order</h2>
+<p>Put the moves together and the signal path is short and repeatable. A looped source feeds the resonant filter; the filtered loop hits the sidechain compressor keyed by the kick; that pumps into saturation and glue; and out comes the pumping French-house groove. The figure lays it out stage by stage, with the resonant filter marked as the star.</p>
+<figure class="diagram-wrap" id="fh-fig-chain" style="background:#080b0f;border:1px solid #1a2332;border-radius:14px;padding:16px 14px 12px;margin:26px 0;">
+<div class="fig-d"><svg viewBox="0 0 720 432" style="display:block;width:100%;height:auto;" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The French-house signal chain: a looped source into a rhythmically automated resonant filter, then sidechain pump, saturation and glue to the output."><rect width="720" height="432" fill="#080b0f"/><text x="360.0" y="34" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="12.5" letter-spacing="3.2" fill="#ec4899">THE SIGNAL CHAIN</text><text x="360.0" y="62" text-anchor="middle" font-family="Lora, Georgia, serif" font-size="22" font-style="italic" fill="#f0f4f8">Loop in, pumping groove out</text><defs><marker id="ah" markerWidth="9" markerHeight="9" refX="5" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 Z" fill="#5eead4"/></marker></defs><line x1="144.0" y1="170.0" x2="172.0" y2="170.0" stroke="#0f5f52" stroke-width="2.4" marker-end="url(#ah)"/><line x1="278.0" y1="170.0" x2="306.0" y2="170.0" stroke="#0f5f52" stroke-width="2.4" marker-end="url(#ah)"/><line x1="412.0" y1="170.0" x2="440.0" y2="170.0" stroke="#0f5f52" stroke-width="2.4" marker-end="url(#ah)"/><line x1="546.0" y1="170.0" x2="574.0" y2="170.0" stroke="#0f5f52" stroke-width="2.4" marker-end="url(#ah)"/><rect x="40.0" y="118" width="104" height="104" rx="12" fill="#131920" stroke="#0f5f52" stroke-width="1.4"/><circle cx="56.0" cy="134" r="10" fill="#0d1117" stroke="#0f5f52" stroke-width="1.2"/><text x="56.0" y="138" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="11" fill="#5eead4">1</text><path d="M62.0,180.0 L63.5,177.2 L65.0,174.7 L66.5,172.7 L68.0,171.4 L69.5,171.0 L71.0,171.4 L72.5,172.7 L74.0,174.7 L75.5,177.2 L77.0,180.0 L78.5,182.8 L80.0,185.3 L81.5,187.3 L83.0,188.6 L84.5,189.0 L86.0,188.6 L87.5,187.3 L89.0,185.3 L90.5,182.8 L92.0,180.0 L93.5,177.2 L95.0,174.7 L96.5,172.7 L98.0,171.4 L99.5,171.0 L101.0,171.4 L102.5,172.7 L104.0,174.7 L105.5,177.2 L107.0,180.0 L108.5,182.8 L110.0,185.3 L111.5,187.3 L113.0,188.6 L114.5,189.0 L116.0,188.6 L117.5,187.3 L119.0,185.3 L120.5,182.8 L122.0,180.0" fill="none" stroke="#00d4a8" stroke-width="2.2" stroke-linecap="round"/><path d="M58.0,174 q-6,6 0,12" fill="none" stroke="#00d4a8" stroke-width="2" stroke-linecap="round"/><path d="M55.0,182 l3,4 l3,-4 z" fill="#00d4a8"/><path d="M126.0,174 q6,6 0,12" fill="none" stroke="#00d4a8" stroke-width="2" stroke-linecap="round"/><path d="M129.0,182 l-3,4 l-3,-4 z" fill="#00d4a8"/><text x="92.0" y="244" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="11.5" letter-spacing="0.6" fill="#5eead4">LOOP</text><text x="92.0" y="262" text-anchor="middle" font-family="Lora, Georgia, serif" font-size="11.5" font-style="italic" fill="#8a9bb0">disco / funk loop</text><text x="92.0" y="277" text-anchor="middle" font-family="Lora, Georgia, serif" font-size="11.5" font-style="italic" fill="#8a9bb0">or saw chord bed</text><rect x="174.0" y="118" width="104" height="104" rx="12" fill="#1a2332" stroke="#ec4899" stroke-width="2.2"/><rect x="171.0" y="115" width="110" height="110" rx="14" fill="none" stroke="#ec4899" stroke-width="1" opacity="0.35"/><circle cx="190.0" cy="134" r="10" fill="#0d1117" stroke="#ec4899" stroke-width="1.2"/><text x="190.0" y="138" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="11" fill="#f9a8d4">2</text><path d="M194.0,182.0 212.0,181.0 224.0,179.0 234.0,164.0 240.0,184.0 258.0,196.0" fill="none" stroke="#ec4899" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><line x1="234.0" y1="160" x2="234.0" y2="198" stroke="#ec4899" stroke-width="1.4" stroke-dasharray="3 3" opacity="0.8"/><path d="M226.0,170 l-6,-5 l0,10 z" fill="#ec4899"/><path d="M242.0,184 l6,5 l0,-10 z" fill="#ec4899"/><text x="226.0" y="244" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="11.5" letter-spacing="0.6" fill="#f9a8d4">RESONANT FILTER</text><text x="226.0" y="262" text-anchor="middle" font-family="Lora, Georgia, serif" font-size="11.5" font-style="italic" fill="#8a9bb0">rhythmic cutoff</text><text x="226.0" y="277" text-anchor="middle" font-family="Lora, Georgia, serif" font-size="11.5" font-style="italic" fill="#8a9bb0">automation</text><rect x="308.0" y="118" width="104" height="104" rx="12" fill="#131920" stroke="#0f5f52" stroke-width="1.4"/><circle cx="324.0" cy="134" r="10" fill="#0d1117" stroke="#0f5f52" stroke-width="1.2"/><text x="324.0" y="138" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="11" fill="#5eead4">3</text><path d="M328.0,192 L328.0,184.5 L328.7,184.3 L329.4,183.5 L330.1,182.4 L330.8,180.8 L331.6,178.9 L332.3,176.7 L333.0,174.4 L333.7,172.1 L334.4,169.8 L335.1,167.6 L335.8,165.7 L336.5,164.1 L337.2,163.0 L338.0,162.2 L338.7,162.0 L339.4,162.2 L340.1,163.0 L340.8,164.1 L341.5,165.7 L342.2,167.6 L342.9,169.8 L343.6,172.1 L344.4,174.4 L345.1,176.7 L345.8,178.9 L346.5,180.8 L347.2,182.4 L347.9,183.5 L348.6,184.3 L349.3,184.5 L350.0,184.3 L350.8,183.5 L351.5,182.4 L352.2,180.8 L352.9,178.9 L353.6,176.7 L354.3,174.4 L355.0,172.1 L355.7,169.8 L356.4,167.6 L357.2,165.7 L357.9,164.1 L358.6,163.0 L359.3,162.2 L360.0,162.0 L360.7,162.2 L361.4,163.0 L362.1,164.1 L362.8,165.7 L363.6,167.6 L364.3,169.8 L365.0,172.1 L365.7,174.4 L366.4,176.7 L367.1,178.9 L367.8,180.8 L368.5,182.4 L369.2,183.5 L370.0,184.3 L370.7,184.5 L371.4,184.3 L372.1,183.5 L372.8,182.4 L373.5,180.8 L374.2,178.9 L374.9,176.7 L375.6,174.4 L376.4,172.1 L377.1,169.8 L377.8,167.6 L378.5,165.7 L379.2,164.1 L379.9,163.0 L380.6,162.2 L381.3,162.0 L382.0,162.2 L382.8,163.0 L383.5,164.1 L384.2,165.7 L384.9,167.6 L385.6,169.8 L386.3,172.1 L387.0,174.4 L387.7,176.7 L388.4,178.9 L389.2,180.8 L389.9,182.4 L390.6,183.5 L391.3,184.3 L392.0,184.5 L392.0,192 Z" fill="#00d4a8" opacity="0.20"/><path d="M328.0,192 L328.0,184.5 L328.7,184.3 L329.4,183.5 L330.1,182.4 L330.8,180.8 L331.6,178.9 L332.3,176.7 L333.0,174.4 L333.7,172.1 L334.4,169.8 L335.1,167.6 L335.8,165.7 L336.5,164.1 L337.2,163.0 L338.0,162.2 L338.7,162.0 L339.4,162.2 L340.1,163.0 L340.8,164.1 L341.5,165.7 L342.2,167.6 L342.9,169.8 L343.6,172.1 L344.4,174.4 L345.1,176.7 L345.8,178.9 L346.5,180.8 L347.2,182.4 L347.9,183.5 L348.6,184.3 L349.3,184.5 L350.0,184.3 L350.8,183.5 L351.5,182.4 L352.2,180.8 L352.9,178.9 L353.6,176.7 L354.3,174.4 L355.0,172.1 L355.7,169.8 L356.4,167.6 L357.2,165.7 L357.9,164.1 L358.6,163.0 L359.3,162.2 L360.0,162.0 L360.7,162.2 L361.4,163.0 L362.1,164.1 L362.8,165.7 L363.6,167.6 L364.3,169.8 L365.0,172.1 L365.7,174.4 L366.4,176.7 L367.1,178.9 L367.8,180.8 L368.5,182.4 L369.2,183.5 L370.0,184.3 L370.7,184.5 L371.4,184.3 L372.1,183.5 L372.8,182.4 L373.5,180.8 L374.2,178.9 L374.9,176.7 L375.6,174.4 L376.4,172.1 L377.1,169.8 L377.8,167.6 L378.5,165.7 L379.2,164.1 L379.9,163.0 L380.6,162.2 L381.3,162.0 L382.0,162.2 L382.8,163.0 L383.5,164.1 L384.2,165.7 L384.9,167.6 L385.6,169.8 L386.3,172.1 L387.0,174.4 L387.7,176.7 L388.4,178.9 L389.2,180.8 L389.9,182.4 L390.6,183.5 L391.3,184.3 L392.0,184.5 L392.0,192 Z" fill="none" stroke="#00d4a8" stroke-width="2" stroke-linejoin="round"/><circle cx="338.7" cy="199" r="2.4" fill="#00d4a8"/><circle cx="360.0" cy="199" r="2.4" fill="#00d4a8"/><circle cx="381.3" cy="199" r="2.4" fill="#00d4a8"/><text x="360.0" y="244" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="11.5" letter-spacing="0.6" fill="#5eead4">SIDECHAIN</text><text x="360.0" y="262" text-anchor="middle" font-family="Lora, Georgia, serif" font-size="11.5" font-style="italic" fill="#8a9bb0">kick ducks it —</text><text x="360.0" y="277" text-anchor="middle" font-family="Lora, Georgia, serif" font-size="11.5" font-style="italic" fill="#8a9bb0">the pump</text><rect x="442.0" y="118" width="104" height="104" rx="12" fill="#131920" stroke="#0f5f52" stroke-width="1.4"/><circle cx="458.0" cy="134" r="10" fill="#0d1117" stroke="#0f5f52" stroke-width="1.2"/><text x="458.0" y="138" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="11" fill="#5eead4">4</text><rect x="468.0" y="154" width="52" height="44" rx="5" fill="none" stroke="#212c3a" stroke-width="1.2"/><line x1="468.0" y1="176" x2="520.0" y2="176" stroke="#28384a" stroke-width="1" stroke-dasharray="1 4"/><path d="M473.0,193 C486.0,193 492.0,159 515.0,159" fill="none" stroke="#00d4a8" stroke-width="2.4" stroke-linecap="round"/><text x="494.0" y="244" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="11.5" letter-spacing="0.6" fill="#5eead4">SATURATION</text><text x="494.0" y="262" text-anchor="middle" font-family="Lora, Georgia, serif" font-size="11.5" font-style="italic" fill="#8a9bb0">drive + warmth,</text><text x="494.0" y="277" text-anchor="middle" font-family="Lora, Georgia, serif" font-size="11.5" font-style="italic" fill="#8a9bb0">glue</text><rect x="576.0" y="118" width="104" height="104" rx="12" fill="#131920" stroke="#0f5f52" stroke-width="1.4"/><circle cx="592.0" cy="134" r="10" fill="#0d1117" stroke="#0f5f52" stroke-width="1.2"/><text x="592.0" y="138" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="11" fill="#5eead4">5</text><path d="M606.0,169 h9 l12,-11 v36 l-12,-11 h-9 z" fill="#00d4a8" opacity="0.85"/><path d="M635.0,169.7 a 9 9 0 0 1 0 12.6" fill="none" stroke="#00d4a8" stroke-width="2" stroke-linecap="round"/><path d="M635.0,165.5 a 15 15 0 0 1 0 21.0" fill="none" stroke="#00d4a8" stroke-width="2" stroke-linecap="round"/><text x="628.0" y="244" text-anchor="middle" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="11.5" letter-spacing="0.6" fill="#5eead4">OUT</text><text x="628.0" y="262" text-anchor="middle" font-family="Lora, Georgia, serif" font-size="11.5" font-style="italic" fill="#8a9bb0">the pumping</text><text x="628.0" y="277" text-anchor="middle" font-family="Lora, Georgia, serif" font-size="11.5" font-style="italic" fill="#8a9bb0">French-house groove</text><text x="360.0" y="302" text-anchor="middle" font-family="Lora, Georgia, serif" font-size="12" font-style="italic" fill="#566578">A phaser on the loop is a common garnish — optional, not the core move.</text><text x="360.0" y="412" text-anchor="middle" font-family="Lora, Georgia, serif" font-size="12" font-style="italic" fill="#566578">Illustrative — signal flow of the classic French-touch chain; order and gear vary.</text></svg></div>
+<div class="fig-m"><svg viewBox='0 0 360 470' style='display:block;width:100%;height:auto;' xmlns='http://www.w3.org/2000/svg' role='img' aria-label='The French-house signal chain: a disco or saw-chord loop into a rhythmically-swept resonant low-pass, then saturation, then sidechain to the kick, out to the filtered pumping bed.'><defs><marker id='f3-ar' markerWidth='9' markerHeight='9' refX='5.5' refY='4' orient='auto'><path d='M0,0 L9,4 L0,8 Z' fill='#566578'/></marker></defs><rect width='360' height='470' fill='#080b0f'/><text x='180.0' y='32.0' text-anchor='middle' font-family="'JetBrains Mono', ui-monospace, monospace" font-size='11.5' fill='#ec4899' letter-spacing='2.8'>THE SIGNAL CHAIN</text><text x='180.0' y='60.0' text-anchor='middle' font-family="Lora, Georgia, serif" font-size='17' fill='#f0f4f8' font-style='italic'>Loop in, pumping groove out</text><rect x='55' y='82' width='250' height='46' rx='10' fill='#0d1117' stroke='#243244' stroke-width='1.2'/><rect x='55' y='82' width='5' height='46' rx='2.5' fill='#00d4a8'/><text x='183.0' y='101.0' text-anchor='middle' font-family="'JetBrains Mono', ui-monospace, monospace" font-size='13' fill='#f0f4f8' letter-spacing='0.6'>LOOP</text><text x='183.0' y='117.0' text-anchor='middle' font-family="Lora, Georgia, serif" font-size='10.5' fill='#8a9bb0' font-style='italic'>disco / funk loop or saw bed</text><rect x='55' y='150' width='250' height='46' rx='10' fill='#0d1117' stroke='#243244' stroke-width='1.2'/><rect x='55' y='150' width='5' height='46' rx='2.5' fill='#ec4899'/><text x='183.0' y='169.0' text-anchor='middle' font-family="'JetBrains Mono', ui-monospace, monospace" font-size='13' fill='#f9a8d4' letter-spacing='0.6'>RESONANT FILTER</text><text x='183.0' y='185.0' text-anchor='middle' font-family="Lora, Georgia, serif" font-size='10.5' fill='#8a9bb0' font-style='italic'>rhythmic cutoff automation — the move</text><rect x='55' y='218' width='250' height='46' rx='10' fill='#0d1117' stroke='#243244' stroke-width='1.2'/><rect x='55' y='218' width='5' height='46' rx='2.5' fill='#00d4a8'/><text x='183.0' y='237.0' text-anchor='middle' font-family="'JetBrains Mono', ui-monospace, monospace" font-size='13' fill='#f0f4f8' letter-spacing='0.6'>SIDECHAIN</text><text x='183.0' y='253.0' text-anchor='middle' font-family="Lora, Georgia, serif" font-size='10.5' fill='#8a9bb0' font-style='italic'>kick ducks it — the pump</text><rect x='55' y='286' width='250' height='46' rx='10' fill='#0d1117' stroke='#243244' stroke-width='1.2'/><rect x='55' y='286' width='5' height='46' rx='2.5' fill='#00d4a8'/><text x='183.0' y='305.0' text-anchor='middle' font-family="'JetBrains Mono', ui-monospace, monospace" font-size='13' fill='#f0f4f8' letter-spacing='0.6'>SATURATION</text><text x='183.0' y='321.0' text-anchor='middle' font-family="Lora, Georgia, serif" font-size='10.5' fill='#8a9bb0' font-style='italic'>drive, warmth, glue</text><rect x='55' y='354' width='250' height='46' rx='10' fill='#0d1117' stroke='#243244' stroke-width='1.2'/><rect x='55' y='354' width='5' height='46' rx='2.5' fill='#00d4a8'/><text x='183.0' y='373.0' text-anchor='middle' font-family="'JetBrains Mono', ui-monospace, monospace" font-size='13' fill='#5eead4' letter-spacing='0.6'>OUT</text><text x='183.0' y='389.0' text-anchor='middle' font-family="Lora, Georgia, serif" font-size='10.5' fill='#8a9bb0' font-style='italic'>the pumping French-house groove</text><line x1='180.0' y1='129' x2='180.0' y2='149' stroke='#566578' stroke-width='2.2' marker-end='url(#f3-ar)'/><line x1='180.0' y1='197' x2='180.0' y2='217' stroke='#566578' stroke-width='2.2' marker-end='url(#f3-ar)'/><line x1='180.0' y1='265' x2='180.0' y2='285' stroke='#566578' stroke-width='2.2' marker-end='url(#f3-ar)'/><line x1='180.0' y1='333' x2='180.0' y2='353' stroke='#566578' stroke-width='2.2' marker-end='url(#f3-ar)'/><text x='180.0' y='430.0' text-anchor='middle' font-family="Lora, Georgia, serif" font-size='11.5' fill='#566578' font-style='italic'>The resonant filter sweep is the signature move;</text><text x='180.0' y='448.0' text-anchor='middle' font-family="Lora, Georgia, serif" font-size='11.5' fill='#566578' font-style='italic'>a phaser on the loop is optional garnish.</text></svg></div>
+<figcaption class="diagram-caption">The French-house signal chain: a looped source into the resonant filter, then the sidechain pump, saturation and glue. Illustrative.</figcaption>
+</figure>
+<p>Build it in that order every time. Get the loop grooving, then the filter movement, then the pump, then the glue &mdash; and only reach for a phaser or extra colour once the core is working. Reversing the order (polishing before the filter move is right) is how tracks end up sounding busy and lifeless at once.</p>
+
+<p>Two placement details separate a pro chain from a muddy one. Keep the kick <em>out</em> of this bus &mdash; the filter and the pump belong to the loop, while the kick stays full-range and untouched underneath it. And put broad tone-shaping EQ before the saturator but your reverb and delay sends <em>after</em> the sidechain, so the wet tail blooms into the gaps the pump opens rather than pumping along with the dry signal. Watch the level handed from stage to stage as well &mdash; a quick read of <a href="what-is-gain-staging.html">what gain staging is</a> keeps the saturator from seeing a signal too hot to behave.</p>
+<h2 id="s-11">Playing it: tempo, four-on-the-floor, and groove</h2>
+<p>French house lives at <strong>120&ndash;128&nbsp;BPM</strong> with a steady four-on-the-floor kick, an open hat on the off-beats and a punchy sampled or replayed bassline locked to the loop. The drums are simple on purpose &mdash; the filter and the pump supply the movement, so the beat just needs to hold the floor. If you are new to programming a groove, start with <a href="how-to-make-a-beat.html">how to make a beat</a> and the broader <a href="how-to-make-house-music.html">house</a> workflow, then borrow the four-on-the-floor spine and let the filter do the talking.</p>
+<p>Swing is lighter here than in <a href="how-to-recreate-the-lo-fi-hip-hop-sound.html">lo-fi hip-hop</a> &mdash; the pocket is tight and driving rather than loose and dragging. The human feel comes from the filter automation and the pump, not from off-grid drums.</p>
+
+<h2 id="s-arrange">Arranging the build: intro, drop, and breakdown</h2>
+<p>The filter is not just a sound &mdash; it is your arrangement. French house tracks are structured <em>around</em> the sweep. A typical build opens with the loop heavily filtered, so the intro sounds distant and muffled and the crowd leans in. Over the next 8 or 16 bars the cutoff climbs, the highs return, and the track blooms into the <strong>drop</strong>, where the filter sits wide open, the pump is at full depth and the whole loop is bright and driving. Then a <strong>breakdown</strong> closes the filter again to reset the tension before the next open section.</p>
+<p>That is the entire dramatic shape, and it is drawn with one automation lane. Think of the cutoff as a volume knob for excitement: closed is anticipation, open is release. Plan where your track should breathe in and where it should let go, then draw the filter to match &mdash; long, patient rises into each drop, quick closes at the breakdowns. Get that macro shape right and even a two-chord loop will carry a five-minute record. It is the same tension-and-release logic behind a <a href="how-to-make-house-music.html">house</a> build, concentrated into a single moving filter.</p>
+
+<p>The bass is where most of the groove is won or lost. In classic French touch the low end often rides inside the filtered loop itself; when you add a separate bassline, tuck it under the kick and duck it with the same sidechain so the two never scrap over the sub &mdash; <a href="how-to-mix-kick-and-bass.html">how to mix kick and bass</a> covers that balance in depth. Write the bass to speak in the kick&rsquo;s gaps, on the off-beats or the &lsquo;and&rsquo; of each beat, and the track begins to walk on its own. Up top, a clap on two and four with a shaker riding sixteenths adds momentum without clutter, because the filtered loop is already carrying the melody.</p>
+<h2 id="s-12">Recreate it with free and stock tools first</h2>
+<p>You do not need a single paid plugin. Every DAW ships a resonant low-pass filter with automatable cutoff and resonance, a compressor with an external sidechain, and a saturator. That is the whole rig: filter, sidechain, saturation. Load a loop, draw the cutoff automation, key the compressor off your kick, warm it with the stock saturator, and you are ninety percent of the way to the record. Build it from scratch with a <a href="best-synth-plugins.html">stock or free synth</a> for the chord bed and you also own every part of it outright.</p>
+<p>Prove it to yourself before you spend money: the exercises at the end of this guide use nothing but stock tools, and they will teach your ears the filter move faster than any preset pack.</p>
+
+<p>It helps to know the stock rig by name. In Ableton that is <strong>Auto Filter</strong> for the sweep, <strong>Compressor</strong> with its sidechain tab keyed to the kick, and <strong>Saturator</strong> or the <strong>Glue Compressor</strong> for the wall. FL Studio users reach for <strong>Fruity Love Philter</strong> or <strong>Fruity Filter</strong>, and route the pump with Fruity Peak Controller or the sidechain option in Fruity Limiter, since there is no native sidechain input. Logic ships Auto Filter, a sidechain-able Compressor and Clip Distortion; in Reaper the whole rig comes out of ReaEQ, ReaComp and a little stock saturation. The names change from DAW to DAW; the three jobs &mdash; filter, pump, glue &mdash; never do.</p>
+<h2 id="s-13">The paid shortcuts, and what they buy you</h2>
+<p>Once the move is in your hands, dedicated tools make it faster and sweeter. A purpose-built resonant filter plugin &mdash; the modern descendant of hardware like the Sherman FilterBank &mdash; gives you smoother, more musical sweeps, self-oscillating resonance and tempo-synced automation that a stock band-pass cannot. Character saturators, tape emulations and console channel-strips add the exact grit and glue the classics printed to tape; a good bus compressor gives you the pump with more control than the old Alesis&nbsp;3630 ever offered. None of it is required &mdash; it buys polish and speed, not the sound itself. Compressors matter most here, since the pump is central; our picks for <a href="best-compressor-plugins.html">compressor plugins</a> are a good place to look. If you would rather replay the chord bed than sample, a modern wavetable synth like those compared in <a href="serum-2-vs-vital.html">Serum 2 vs Vital</a> will build fat saw stacks in seconds.</p>
+<p>Spend on the pump and the filter before anything else. A great compressor and a great filter will do more for a French house track than a folder full of sample packs.</p>
+
+<h2 id="s-14">Sampling, replay, and clearing it</h2>
+<p>French house is sample-heavy by design, and that raises a real question the moment you plan to release. If you build a track on someone else&rsquo;s recording, you owe <strong>two</strong> sets of rights &mdash; the master (the recording) and the composition (the song) &mdash; and you generally must clear both before release. This is not theoretical: Stardust&rsquo;s Chaka Khan sample on &ldquo;Music Sounds Better with You&rdquo; was properly licensed, while an undeclared Jane Fonda sample on Bob Sinclar&rsquo;s 1998 &ldquo;Gym Tonic&rdquo; ended in a dispute that had to be settled by lawyers. Our guides on <a href="how-to-clear-a-sample.html">how to clear a sample</a> and <a href="how-much-does-it-cost-to-clear-a-sample.html">what clearance costs</a> lay out the process.</p>
+<p>The clean way around all of it is to <strong>replay the part yourself</strong> &mdash; play the disco chords on saws or a Rhodes, filter those, and you own the whole thing. You keep the sound and lose the legal risk. For anything you do sample, the same rule holds across every genre, from a <a href="how-to-make-a-remix.html">remix</a> to a filtered house loop: clear it, or replay it.</p>
+
+<h2 id="s-15">The mistakes that keep it sounding amateur</h2>
+<p>Four errors account for most failed French house tracks. The first is a <strong>static filter</strong> &mdash; setting a cutoff and leaving it, so the loop never blooms. The move is the automation, not the setting. The second is <strong>too much resonance</strong>, which turns the musical singing edge into a whistle. The third is a <strong>weak pump</strong> &mdash; a timid sidechain that never makes the loop breathe. The fourth is <strong>over-saturating</strong> until the warmth becomes crunch.</p>
+<p>Every one of these is a proportion problem, not a gear problem. Use a firm hand on the filter movement and the pump, a light hand on resonance and saturation, and keep the loop grooving underneath it all. Then master it with restraint &mdash; see <a href="how-to-master-a-song.html">how to master a song</a> &mdash; and it will sit next to the classics.</p>
+
+<p>Two subtler errors sink otherwise-solid tracks. The first is letting the filter swallow the kick: if the sweep sits on the master or on a bus that includes the drums, closing the cutoff drags the kick down with it and the floor drops out &mdash; keep the filter on the loop alone, with the kick routed around it. The second is over-wiring the pump: duck the bass with the kick, but do not sidechain the reverb and delay returns so hard that the whole space gasps on every beat. A little tail movement is groove; a lot is seasickness. Both are wiring problems you solve once and never revisit.</p>
+<h2 id="s-drills">Build the skill: three drills</h2>
+<p>Reading about the filter is one thing; feeling it under your hands is another. These three drills take you from &ldquo;I made a house loop&rdquo; to &ldquo;I know exactly which move is doing the work.&rdquo;</p>
+<div class="exercise-block">
+  <div class="exercise-header"><span class="skill-badge skill-badge--beginner">Beginner</span><span class="exercise-title">Hear the wah</span></div>
+  <ol>
+    <li>Load a two-bar disco or saw-chord loop and put a resonant low-pass across it &mdash; no other effects.</li>
+    <li>Automate the cutoff so it opens and closes once per bar. Add a little resonance.</li>
+    <li>Toggle the automation off and on. That difference &mdash; static versus breathing &mdash; is the entire French touch, in one control.</li>
+    <li>Push the resonance too far on purpose until it whistles, then back it off to where it just sings. That edge is your target.</li>
+  </ol>
+</div>
+<div class="exercise-block">
+  <div class="exercise-header"><span class="skill-badge skill-badge--intermediate">Intermediate</span><span class="exercise-title">Build the pump</span></div>
+  <ol>
+    <li>On the same loop, add a four-on-the-floor kick and a compressor on the loop keyed by the kick.</li>
+    <li>Set a fast attack and a release timed to the tempo, and raise the amount until the loop ducks on every kick.</li>
+    <li>Find the point where the loop leans on the beat and swells in the gaps &mdash; that breathing is the pump.</li>
+    <li>Mute the kick trigger and hear how flat and static the same loop becomes without it.</li>
+  </ol>
+</div>
+<div class="exercise-block">
+  <div class="exercise-header"><span class="skill-badge skill-badge--advanced">Advanced</span><span class="exercise-title">Open a full phrase</span></div>
+  <ol>
+    <li>Draw the cutoff nearly shut for the first 16 bars and fully open on bar 17 &mdash; the classic long build and drop.</li>
+    <li>Layer the rhythmic per-bar wah underneath that slow arc, and add saturation and glue after the filter.</li>
+    <li>A/B the closed intro against the open drop. That release &mdash; not any plugin &mdash; is what makes it French house.</li>
+    <li>Now replay the chord bed on saws instead of sampling it, and you own the whole track.</li>
+  </ol>
+</div>
+
+<h2 id="s-faq">Frequently Asked Questions</h2>
+<div class="faq-accordion">
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">What tempo is French house?</span></div></div>
+<div class="faq-accordion-a"><p>French house sits around 120 to 128 BPM with a steady four-on-the-floor kick &mdash; fast enough to drive a dancefloor, slow enough to keep the disco swing.</p></div>
+</div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">What is the French touch filter?</span></div></div>
+<div class="faq-accordion-a"><p>It is a resonant low-pass filter swept across a looped sample or chord bed, automated so the cutoff opens and closes to the groove. That moving cutoff &mdash; from muffled to bright &mdash; is the sound of French house.</p></div>
+</div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Do I have to sample a disco record?</span></div></div>
+<div class="faq-accordion-a"><p>No. You can replay the part yourself &mdash; stack sawtooth waves into rich chords or play a funky Rhodes line &mdash; and filter that. Replaying also sidesteps sample clearance entirely.</p></div>
+</div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">How do I get the pumping sound?</span></div></div>
+<div class="faq-accordion-a"><p>Route your kick as a sidechain trigger into a compressor on the loop, with a fast attack and a tempo-timed release. Raise the amount until the loop ducks on every kick and springs back between hits.</p></div>
+</div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">What plugins do I need for French house?</span></div></div>
+<div class="faq-accordion-a"><p>Only stock tools: a resonant low-pass filter, a compressor with an external sidechain, and a saturator. Dedicated filter and console plugins add polish and speed but are not required.</p></div>
+</div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Is French house the same as the 303 acid sound?</span></div></div>
+<div class="faq-accordion-a"><p>No. The 303 filters a single squelchy mono note into an acid line, while French house filters a whole looped chord bed that opens up over a phrase. Same idea &mdash; a resonant filter moving &mdash; but very different results.</p></div>
+</div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">How long should the filter take to open?</span></div></div>
+<div class="faq-accordion-a"><p>For the big build, often 8 or 16 bars from nearly shut to wide open, with faster rhythmic movement inside each bar. It is a feel, not a fixed number &mdash; time it to your arrangement.</p></div>
+</div>
+<div class="faq-accordion-item">
+<div class="faq-accordion-q" onclick="mpwFaqToggle(this)"><svg class="faq-plus" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><div class="faq-accordion-q-inner"><span class="faq-accordion-label">Q</span><span class="faq-accordion-q-text">Do I need to clear a sample for a French house track?</span></div></div>
+<div class="faq-accordion-a"><p>If you release a track built on a copyrighted recording, yes &mdash; you owe both the master and the composition rights. Replaying the part yourself turns that legal risk into something you fully own.</p></div>
+</div>
+</div>
+
+
+<section class="related-section">
+<h2>Keep building the sound</h2>
+<div class="related-grid">
+<a href="how-to-recreate-the-303-acid-sound.html" class="related-card"><div class="related-card-tag">Recreation</div><h3 class="related-card-title">Recreate the 303 Acid Sound</h3><p class="related-card-desc">The filter cousin — a mono acid line, not a loop.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-recreate-the-daft-punk-robot-voice.html" class="related-card"><div class="related-card-tag">Recreation</div><h3 class="related-card-title">Recreate the Daft Punk Robot Voice</h3><p class="related-card-desc">Same Paris lineage, the vocoder side.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="how-to-make-house-music.html" class="related-card"><div class="related-card-tag">Guide</div><h3 class="related-card-title">How to Make House Music</h3><p class="related-card-desc">The four-on-the-floor foundation underneath it.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="sidechain-compression-guide.html" class="related-card"><div class="related-card-tag">Guide</div><h3 class="related-card-title">Sidechain Compression Guide</h3><p class="related-card-desc">The pump that makes the loop breathe.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="best-compressor-plugins.html" class="related-card"><div class="related-card-tag">Product</div><h3 class="related-card-title">Best Compressor Plugins</h3><p class="related-card-desc">The compressors that do the pumping.</p><span class="related-card-meta">Read article &rarr;</span></a>
+<a href="serum-2-vs-vital.html" class="related-card"><div class="related-card-tag">Comparison</div><h3 class="related-card-title">Serum 2 vs Vital</h3><p class="related-card-desc">Build the saw chord bed to filter.</p><span class="related-card-meta">Read article &rarr;</span></a>
+</div>
+</section>
+</div>
+</article>
+
+    <aside aria-label="Article sidebar">
+      <div class="sidebar-widget toc-widget" aria-labelledby="tocHeading">
+        <div class="sidebar-widget-header"><h2 class="sidebar-widget-title" id="tocHeading">In This Article</h2></div>
+        <div class="sidebar-widget-body"><ul class="toc-list"><li><a href="#s-1">It&rsquo;s a filter, not a preset</a></li><li><a href="#s-2">Where the sound came from</a></li><li><a href="#s-3">The four moves that make it French house</a></li><li><a href="#s-4">The source: a disco loop or a saw bed</a></li><li><a href="#s-5">The filter is the whole trick</a></li><li><a href="#s-6">Closed vs open: what the sweep reveals</a></li><li><a href="#s-7">The pump: sidechain compression</a></li><li><a href="#s-8">Saturation and glue: the wall of sound</a></li><li><a href="#s-9">The vocal: vocoder, talk box, and filtered chops</a></li><li><a href="#s-10">The whole chain, in order</a></li><li><a href="#s-11">Playing it: tempo, four-on-the-floor, and groove</a></li><li><a href="#s-arrange">Arranging the build: intro, drop, and breakdown</a></li><li><a href="#s-12">Recreate it with free and stock tools first</a></li><li><a href="#s-13">The paid shortcuts, and what they buy you</a></li><li><a href="#s-14">Sampling, replay, and clearing it</a></li><li><a href="#s-15">The mistakes that keep it sounding amateur</a></li><li><a href="#s-drills">Build the skill: three drills</a></li><li><a href="#s-faq">Frequently Asked Questions</a></li></ul></div>
+      </div>
+      <div class="sidebar-widget" style="background:var(--bg-void);border-color:var(--border-default);">
+        <div class="sidebar-widget-body" style="padding:1.5rem;">
+          <p style="font-size:.7rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:.5rem;">Newsletter</p>
+          <h3 style="font-family:var(--font-display);color:var(--text-primary);font-size:1.1rem;margin-bottom:.5rem;">The Producer's Briefing</h3>
+          <p style="font-size:.82rem;color:var(--text-secondary);margin-bottom:1rem;line-height:1.55;">Weekly tips, gear news, and technique guides. Free.</p>
+          <form class="newsletter-form-js" style="display:flex;flex-direction:column;gap:.5rem;" novalidate>
+            <input type="email" name="email" class="form-input" placeholder="Your email" required />
+            <button type="submit" class="btn-newsletter" style="font-size:.82rem;padding:.65rem 1rem;">Subscribe Free</button>
+          </form>
+        </div>
+      <div class="sidebar-widget" style="margin-top:1.5rem;">
+        <div class="sidebar-widget-header" style="text-align:center;">
+          <h2 class="sidebar-widget-title">Related Articles</h2>
+        </div>
+        <div class="sidebar-widget-body" style="padding:1rem;">
+<ul style="list-style:none;padding:0;margin:0;text-align:center;"><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="how-to-use-autotune.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">How to Use Auto-Tune</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Guide</span></li><li style="padding:.6rem 0;border-bottom:1px solid var(--border-subtle);"><a href="best-pitch-correction-plugins.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">Best Pitch-Correction Plugins</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Roundup</span></li><li style="padding:.6rem 0;"><a href="how-to-recreate-the-daft-punk-robot-voice.html" style="font-size:.85rem;font-weight:600;color:var(--text-primary);text-decoration:none;line-height:1.4;display:block;">Daft Punk Robot Voice</a><span style="font-size:.72rem;color:var(--teal);display:block;margin-top:.2rem;">Recreations</span></li></ul>
+        </div>
+      </div>
+      </div>
+    </aside>
+  </div>
+</main>
+<section class="newsletter-section" id="newsletter" aria-labelledby="newsletterHeading">
+  <div class="container">
+    <div class="newsletter-inner">
+      <div class="newsletter-content">
+        <p class="newsletter-label">Newsletter</p>
+        <h2 id="newsletterHeading" class="newsletter-title">The Producer's <em>Briefing</em></h2>
+        <p class="newsletter-desc">Weekly techniques, gear news, and music business insights. Free.</p>
+      </div>
+      <div class="newsletter-form-wrap">
+        <form class="newsletter-form-js" novalidate>
+          <input type="email" name="email" class="form-input" placeholder="Your email address" required />
+          <button type="submit" class="btn-newsletter">Subscribe Free</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<footer class="site-footer" role="contentinfo">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="../index.html" class="site-logo"><span class="logo-wordmark">Music<span>Production</span>Wiki</span><span class="logo-tagline">The Producer's Reference</span></a>
+    </div>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <div class="footer-col">
+        <h3 class="footer-col-title">Categories</h3>
+        <ul>
+          <li><a href="../categories/reviews.html">Reviews</a></li>
+          <li><a href="../categories/comparisons.html">Comparisons</a></li>
+          <li><a href="../categories/ai-music.html">AI Music</a></li>
+          <li><a href="../categories/daws.html">DAWs</a></li>
+          <li><a href="../categories/plugins.html">Plugins</a></li>
+          <li><a href="../categories/hardware.html">Gear</a></li>
+          <li><a href="../categories/techniques.html">Techniques</a></li>
+          <li><a href="../categories/music-business.html">Music Business</a></li>
+          <li><a href="../categories/glossary.html">Glossary</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">Popular</h3>
+        <ul>
+          <li><a href="../articles/suno-vs-udio.html">Suno vs Udio</a></li>
+          <li><a href="../articles/best-daw-for-beginners.html">Best DAW for Beginners</a></li>
+          <li><a href="../articles/focusrite-scarlett-2i2-gen-4-review.html">Scarlett 2i2 Review</a></li>
+          <li><a href="../articles/sidechain-compression-guide.html">Sidechain Compression</a></li>
+          <li><a href="../articles/best-compressor-plugins.html">Best Compressor Plugins</a></li>
+          <li><a href="../articles/what-is-gain-staging.html">What Is Gain Staging</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col-title">About</h3>
+        <ul>
+          <li><a href="../about.html">About MPW</a></li>
+          <li><a href="../about.html#team">Our Team</a></li>
+          <li><a href="../about.html#methodology">Review Methodology</a></li>
+          <li><a href="../about.html#affiliate">Affiliate Disclosure</a></li>
+          <li><a href="../about.html#contact">Contact</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="footer-bottom"><div class="container"><p>© <span id="copyrightYear"></span> MusicProductionWiki.com. All rights reserved. Content by the Music Production Wiki Team.</p></div></div>
+</footer>
+<script src="../js/main.js"></script>
+<script>document.getElementById('copyrightYear').textContent = new Date().getFullYear();</script>
+
+<button id="mpwBackTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  aria-label="Back to top"
+  style="position:fixed;bottom:1.5rem;right:1.5rem;width:2.5rem;height:2.5rem;border-radius:50%;
+         background:var(--teal);color:#000;border:none;cursor:pointer;display:none;
+         align-items:center;justify-content:center;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3);">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <polyline points="18 15 12 9 6 15"/>
+  </svg>
+</button>
+<script>
+(function(){
+  var btn=document.getElementById('mpwBackTop');
+  var bar=document.getElementById('readingProgress');
+  var art=document.querySelector('.article-body');
+  window.addEventListener('scroll',function(){
+    var st=window.scrollY||document.documentElement.scrollTop;
+    btn.style.display=st>400?'flex':'none';
+    if(bar&&art){
+      var h=art.getBoundingClientRect().height;
+      var top=art.getBoundingClientRect().top+st;
+      var pct=Math.min(100,Math.max(0,(st-top+window.innerHeight)*100/h));
+      bar.style.width=pct+'%';
+      bar.setAttribute('aria-valuenow',Math.round(pct));
+    }
+  });
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<!-- MPW universal search: one overlay, one Fuse index (/search-index.json) -->
+<div class="usearch" id="usearch" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="usearch-box">
+    <div class="usearch-top">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input id="usearchInput" type="text" placeholder="Search tools, articles, the Bible…" autocomplete="off">
+      <kbd>esc</kbd>
+    </div>
+    <div class="usearch-results" id="usearchResults"></div>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
+<script>
+(function(){
+  // === production parity: lazy-load index on first open, build Fuse once ===
+  var data=null, fuse=null;
+  var overlay=document.getElementById('usearch');
+  var input=document.getElementById('usearchInput');
+  var box=document.getElementById('usearchResults');
+  var sel=-1, current=[];
+  // article slugs are bare; bible/ and tools/ slugs carry their prefix (verified vs live search-index.json)
+  function urlFor(s){ return (s.indexOf('bible/')===0||s.indexOf('tools/')===0) ? '/'+s : '/articles/'+s; }
+
+  function buildFuse(arr){
+    data=arr;
+    fuse=new Fuse(data,{keys:['title','category','description'],threshold:0.34,ignoreLocation:true,minMatchCharLength:2});
+  }
+  function ensureIndex(cb){
+    if(fuse){cb();return;}
+    // PRODUCTION: one shared index, lazy-loaded on first open.
+    fetch('/search-index.json').then(function(r){return r.json();}).then(function(arr){
+      buildFuse(arr); cb();
+    }).catch(function(){ box.textContent='Search failed to load.'; });
+  }
+
+  function esc(s){return (s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  function render(results){
+    current=results;
+    while(box.firstChild) box.removeChild(box.firstChild);   // no innerHTML
+    if(!input.value.trim()){ var p=document.createElement('div'); p.className='usearch-empty'; p.textContent='Start typing to search everything.'; box.appendChild(p); return; }
+    if(!results.length){ var n=document.createElement('div'); n.className='usearch-empty'; n.textContent='No results for "'+input.value+'".'; box.appendChild(n); return; }
+    results.slice(0,12).forEach(function(r,i){
+      var e=r.item||r;
+      var a=document.createElement('a'); a.href=urlFor(e.slug); if(i===sel)a.className='sel';
+      var top=document.createElement('div'); top.className='ur-top';
+      var t=document.createElement('span'); t.className='ur-title'; t.textContent=e.title;
+      var c=document.createElement('span'); c.className='ur-cat'; c.setAttribute('data-c',e.category||''); c.textContent=e.category||'';
+      top.appendChild(t); top.appendChild(c); a.appendChild(top);
+      if(e.description){ var d=document.createElement('div'); d.className='ur-desc'; d.textContent=e.description; a.appendChild(d); }
+      box.appendChild(a);
+    });
+  }
+
+  function open(q){ ensureIndex(function(){ overlay.classList.add('open'); input.focus(); if(q!=null){input.value=q;} sel=-1; render(input.value?fuse.search(input.value):[]); }); }
+  function close(){ overlay.classList.remove('open'); }
+
+  // wire every nav's search button to the shared overlay
+  document.querySelectorAll('[data-nav-search]').forEach(function(b){ b.addEventListener('click',function(){open(null);}); });
+  input.addEventListener('input',function(){ sel=-1; render(fuse?fuse.search(input.value):[]); });
+  input.addEventListener('keydown',function(e){
+    if(e.key==='Escape')close();
+    else if(e.key==='ArrowDown'){e.preventDefault(); sel=Math.min(sel+1,Math.min(current.length,12)-1); render(current);}
+    else if(e.key==='ArrowUp'){e.preventDefault(); sel=Math.max(sel-1,0); render(current);}
+    else if(e.key==='Enter'&&current[sel]){ var e2=current[sel].item||current[sel]; location.href=urlFor(e2.slug); }
+  });
+  overlay.addEventListener('click',function(e){ if(e.target===overlay)close(); });
+  document.addEventListener('keydown',function(e){ if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();open(null);} });
+})();
+</script>
+<script id="toc-bar-js">
+(function(){
+  var body=document.querySelector('.article-body');
+  var track=document.getElementById('tocBarTrack');
+  if(!body||!track)return;
+  var heads=[].slice.call(body.querySelectorAll('h2[id]'));
+  if(!heads.length)return;
+  heads.forEach(function(h){
+    var a=document.createElement('a');a.href='#'+h.id;
+    var t=h.textContent.trim();var i=t.indexOf(':');if(i>0)t=t.slice(0,i);
+    a.textContent=t;track.appendChild(a);
+  });
+  var links=[].slice.call(track.querySelectorAll('a'));
+  function onScroll(){
+    var y=window.scrollY+130,cur=heads[0].id;
+    heads.forEach(function(h){if(h.offsetTop<=y)cur=h.id;});
+    links.forEach(function(l){var on=l.getAttribute('href')==='#'+cur;l.classList.toggle('active',on);
+      if(on)l.scrollIntoView({inline:'center',block:'nearest'});});
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+})();
+</script>
+<script>
+function mpwFaqToggle(el){
+  var answer = el.nextElementSibling;
+  if(!answer || !answer.classList.contains('faq-accordion-a')) return;
+  var isOpen = answer.classList.contains('open');
+  document.querySelectorAll('.faq-accordion-a.open').forEach(function(a){
+    a.classList.remove('open');
+    var q = a.previousElementSibling;
+    if(q){ var ic = q.querySelector('.faq-accordion-icon, .faq-plus'); if(ic) ic.classList.remove('open'); }
+  });
+  if(!isOpen){
+    answer.classList.add('open');
+    var icon = el.querySelector('.faq-accordion-icon, .faq-plus');
+    if(icon) icon.classList.add('open');
+  }
+}
+</script>
+<style>.faq-plus.open{transform:rotate(45deg);transition:transform .2s ease}</style>
+</body>
+</html>
